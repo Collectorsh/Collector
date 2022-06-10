@@ -1,0 +1,25 @@
+.phantom-button {
+  border: 3px #9946ff solid;
+  background-color: #1c1c1c;
+  border-radius: 30px;
+  color: #eee;
+  font-weight: bold;
+}
+
+.phantom-button:hover {
+  border: 3px #31f292 solid;
+}
+
+.phantom-button img {
+  height: 29px;
+  vertical-align: middle;
+  display: inline;
+}
+
+.phantom-button span {
+  vertical-align: middle;
+  margin-left: 10px;
+  font-size: 1.2em;
+  padding-top: 2.5px;
+  display: inline;
+}

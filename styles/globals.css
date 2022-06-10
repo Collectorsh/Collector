@@ -1,0 +1,372 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.Toastify__toast-container {
+  padding: 16px;
+  width: 500px;
+  box-sizing: border-box;
+  color: #fff;
+}
+
+:root {
+  html,
+  body {
+    background: #ffffff;
+    color: #1c1c1c;
+  }
+}
+
+[data-theme="dark"] {
+  html,
+  body {
+    background: #000000;
+    color: #eee;
+  }
+}
+
+.dark {
+  background: #000000;
+  color: #eee;
+}
+
+h1 {
+  font-family: "DM Serif Text", serif;
+}
+
+h4 {
+  font-weight: 600;
+}
+
+.wallet-adapter-modal-title {
+  font-family: sans-serif;
+}
+
+.masonry-grid {
+  display: -webkit-box; /* Not needed if autoprefixing */
+  display: -ms-flexbox; /* Not needed if autoprefixing */
+  display: flex;
+  margin-left: -6rem; /* gutter size offset */
+  width: auto;
+}
+.masonry-grid_column {
+  padding-left: 6rem; /* gutter size */
+  background-clip: padding-box;
+}
+
+/* Style your items */
+.masonry-grid_column > div {
+  margin-bottom: 6rem;
+}
+
+@media (max-width: 1100px) {
+  .masonry-grid {
+    margin-left: -4rem; /* gutter size offset */
+  }
+  .masonry-grid_column {
+    padding-left: 4rem; /* gutter size */
+    background-clip: padding-box;
+  }
+  .masonry-grid_column > div {
+    margin-bottom: 3rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .masonry-grid {
+    margin-left: -2rem; /* gutter size offset */
+  }
+  .masonry-grid_column {
+    padding-left: 2rem; /* gutter size */
+    background-clip: padding-box;
+  }
+  .masonry-grid_column > div {
+    margin-bottom: 1.3rem;
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.top-collectors::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.top-collectors {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.landscape {
+  grid-column-end: span 2;
+  opacity: 1 !important;
+  transition: opacity 1s !important;
+}
+
+.loaded {
+  opacity: 1 !important;
+  transition: opacity 1s !important;
+}
+
+.exchange-offer {
+  background: #d0dc27;
+  color: #000;
+  padding: 3px 5px;
+}
+
+.button {
+  border: 3px #000 solid;
+  background-color: #000000;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #fff;
+  vertical-align: middle;
+  opacity: 1;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+.button-changable {
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+.external-link {
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+.mint span {
+  float: right;
+}
+
+.mint a {
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: -5px;
+}
+
+.nav-border {
+  border-bottom: 1px #eaeaea solid;
+  background-color: #f1f1f1;
+}
+
+.featured {
+  background-color: #31f292;
+  padding: 0.3rem 1rem;
+  color: #222;
+  display: inline-block;
+}
+
+.about {
+  color: #9946ff;
+}
+
+.about-icons {
+  background: #9946ff;
+}
+
+#collectibles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 200px));
+  column-gap: 60px;
+  row-gap: 35px;
+  align-items: start;
+  text-align: center;
+  justify-content: start;
+}
+
+.collectible {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  box-sizing: border-box;
+  background: transparent;
+  width: 200px;
+  height: 240px;
+}
+
+.collage {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+  padding: 1rem;
+}
+
+.image-container {
+  width: 200px;
+  height: 200px;
+  cursor: move;
+}
+
+.green {
+  color: #31f292;
+}
+
+.purple {
+  color: #9946ff;
+}
+
+.purple-border {
+  border: 3px #9946ff solid;
+}
+
+.about-twitter svg {
+  width: 20px;
+  height: 20px;
+}
+
+.toggle-bg:after {
+  content: "";
+  @apply absolute top-0.5 left-0.5 bg-white border border-gray-300 rounded-full h-5 w-5 transition shadow-sm;
+}
+input:checked + .toggle-bg:after {
+  transform: translateX(100%);
+  @apply border-white;
+}
+input:checked + .toggle-bg {
+  @apply bg-greeny border-greeny;
+}
+
+.tippy-box {
+  background-color: #eee !important;
+  color: #111 !important;
+}
+
+.tippy-arrow {
+  color: #eee !important;
+}
+
+.react-select-container {
+  background-color: #1e1e1e !important;
+  color: #fff !important;
+  border-color: #444 !important;
+}
+
+.react-select__control {
+  background-color: transparent !important;
+  color: #fff !important;
+  border-color: #444 !important;
+}
+
+.react-select__multi-value__remove svg {
+  fill: #000;
+}
+
+.css-1okebmr-indicatorSeparator {
+  background-color: #555 !important;
+}
+
+.css-tlfecz-indicatorContainer {
+  color: #555 !important;
+}
+
+.react-select__input {
+  color: #999 !important;
+}
+
+.slick-prev {
+  left: 10px;
+  z-index: 999;
+  width: 30px;
+  height: 30px;
+}
+
+.slick-next {
+  right: 10px;
+  z-index: 999;
+  width: 30px;
+  height: 30px;
+}
+
+.slick-list {
+  border-radius: 10px;
+}
+
+.slick-next:before,
+.slick-prev:before {
+  font-size: 30px;
+}
+
+.slick-dots {
+  bottom: 20px;
+  width: 100%;
+  margin: 0;
+  list-style: none;
+  text-align: center;
+}
+
+.slick-dots li button:before {
+  font-size: 15px;
+  line-height: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  content: "•";
+  text-align: center;
+  opacity: 0.25;
+  color: #fff;
+}
+
+.slick-slide img {
+  margin: auto;
+}
+
+.button,
+.menu {
+  font-family: "DM Sans", "Roboto", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+#grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
+  column-gap: 70px;
+  row-gap: 55px;
+  align-items: start;
+  text-align: center;
+  justify-content: start;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  width: 320px;
+  height: 400px;
+}
+
+.grid-image-container {
+  width: 300px;
+  height: 300px;
+  overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  #grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(100vw, 100vw));
+    row-gap: 25px;
+  }
+  .grid-item {
+    width: calc(100vw - 30px);
+    height: 400px;
+  }
+  .grid-image-container {
+    width: calc(100vw - 50px);
+    height: 300px;
+    overflow: hidden;
+  }
+}

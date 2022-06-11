@@ -7,7 +7,7 @@ export function borderWidth(user) {
 export function shadow(user) {
   if (!user) return "0 1px 2px 0 rgb(0 0 0 / 0.05)";
 
-  return user.shadow ? "0 1px 2px 0 rgb(0 0 0 / 0.05)" : "none";
+  return user.shadow ? "0 2px 4px 0 rgb(0 0 0 / 0.05)" : "none";
 }
 
 export function rounded(user) {

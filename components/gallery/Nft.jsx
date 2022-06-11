@@ -2,8 +2,6 @@ import Link from "next/link";
 import Script from "next/script";
 import React, { useState, useEffect } from "react";
 import { cdnImage } from "/utils/cdnImage";
-import { borderWidth, shadow, rounded } from "/utils/layoutOptions";
-import EstimatedValue from "/components/gallery/EstimatedValue";
 import { addDefaultSource } from "/utils/addDefaultSource";
 
 export default function Nft({ user, token }) {
@@ -29,12 +27,11 @@ export default function Nft({ user, token }) {
   return (
     <>
       <div
-        className="overflow-hidden border-dark3 relative"
-        style={{
-          borderWidth: borderWidth(user),
-          borderRadius: rounded(user),
-          boxShadow: shadow(user),
-        }}
+        className={`overflow-hidden border-dark3 relative ${
+          user && user.shadow && "shadow-lg"
+        } ${user && user.border && "border-8"} ${
+          user && user.rounded && "rounded-2xl"
+        }`}
       >
         <Link href={`/nft/${token.mint}`} title="">
           <a>
@@ -67,7 +64,6 @@ export default function Nft({ user, token }) {
                 onError={(e) => addDefaultSource(e, token.mint, token.image)}
               />
             )}
-            {user && user.estimated_value && <EstimatedValue token={token} />}
           </a>
         </Link>
       </div>

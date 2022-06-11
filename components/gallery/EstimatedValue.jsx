@@ -3,7 +3,9 @@ import { roundToTwo } from "/utils/roundToTwo";
 import getEstimatedValue from "/data/getEstimatedValue";
 import EstimatedValueContext from "/contexts/estimated_value";
 
-export default function EstimatedValue({ token }) {
+export default function EstimatedValue({ user, token }) {
+  if (user && !user.estimated_value) return null;
+
   const [totalEstimate, setTotalEstimate] = useContext(EstimatedValueContext);
   const [estimate, setEstimate] = useState();
 
@@ -38,9 +40,9 @@ export default function EstimatedValue({ token }) {
   return (
     <>
       {estimate && (
-        <div className="rounded-[100px] backdrop-blur-lg bg-white/60 px-4 py-2 font-semibold cursor-pointer absolute bottom-2 left-2 hover:scale-105">
+        <p className="text-sm clear-both text-dark3 dark:text-gray-300 bg-offwhite dark:bg-dark1 w-fit px-2 py-1 rounded mt-2">
           Estimate: ◎{roundToTwo(estimate / 1000000000)}
-        </div>
+        </p>
       )}
     </>
   );

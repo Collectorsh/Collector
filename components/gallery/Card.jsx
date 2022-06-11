@@ -5,12 +5,15 @@ import Listings from "/components/gallery/Listings";
 import ShowOffers from "/components/gallery/ShowOffers";
 import AcceptOffers from "/components/gallery/AcceptOffers";
 import Nft from "/components/gallery/Nft";
-import NameAndDescription from "/components/gallery/NameAndDescription";
+import MetaContainer from "/components/gallery/MetaContainer";
+import EstimatedValue from "/components/gallery/EstimatedValue";
 
 function Card(props) {
   const user = props.user;
   const isMounted = useRef(true);
   const [token, setToken] = useState();
+
+  if (user && !user.estimated_value) return null;
 
   const initGetData = useCallback(async (tok) => {
     try {
@@ -37,7 +40,8 @@ function Card(props) {
           <Listings token={token} />
           <ShowOffers token={token} />
           <AcceptOffers token={token} />
-          <NameAndDescription user={user} token={token} />
+          <MetaContainer user={user} token={token} />
+          <EstimatedValue user={user} token={token} />
         </>
       )}
     </div>

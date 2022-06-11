@@ -213,8 +213,8 @@ export default function Settings() {
                           </label>
                         </div>
                         <div className="text-gray-500">
-                          Do you want images and descriptions to have a faint
-                          drop shadow?
+                          Do you want images and descriptions to have a drop
+                          shadow?
                         </div>
                       </dd>
                     </div>

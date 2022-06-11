@@ -1,8 +1,6 @@
 import Link from "next/link";
 
-export default function ArtistDetails({ user, token }) {
-  if (user && !user.show_artist_name) return null;
-
+export default function ArtistDetails({ token }) {
   return (
     <>
       {token.artist_name && (

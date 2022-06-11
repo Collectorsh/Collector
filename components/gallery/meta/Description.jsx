@@ -1,13 +1,7 @@
-export default function Description({ user, token }) {
-  if (user && !user.names && !user.description) return null;
-
+export default function Description({ token }) {
   return (
-    <>
-      {(!user || user.description) && (
-        <p className="text-sm clear-both text-dark3 dark:text-gray-300 break-words">
-          {token.description}
-        </p>
-      )}
-    </>
+    <p className="text-sm clear-both text-dark3 dark:text-gray-300 break-words">
+      {token.description}
+    </p>
   );
 }

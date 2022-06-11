@@ -3,9 +3,7 @@ import { roundToTwo } from "/utils/roundToTwo";
 import getEstimatedValue from "/data/getEstimatedValue";
 import EstimatedValueContext from "/contexts/estimated_value";
 
-export default function EstimatedValue({ user, token }) {
-  if (user && !user.estimated_value) return null;
-
+export default function EstimatedValue({ token }) {
   const [totalEstimate, setTotalEstimate] = useContext(EstimatedValueContext);
   const [estimate, setEstimate] = useState();
 

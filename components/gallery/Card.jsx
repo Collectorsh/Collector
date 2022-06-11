@@ -13,8 +13,6 @@ function Card(props) {
   const isMounted = useRef(true);
   const [token, setToken] = useState();
 
-  if (user && !user.estimated_value) return null;
-
   const initGetData = useCallback(async (tok) => {
     try {
       const res = await getMetadataFromUri(tok);
@@ -41,7 +39,7 @@ function Card(props) {
           <ShowOffers token={token} />
           <AcceptOffers token={token} />
           <MetaContainer user={user} token={token} />
-          <EstimatedValue user={user} token={token} />
+          {user && user.estimated_value && <EstimatedValue token={token} />}
         </>
       )}
     </div>

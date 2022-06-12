@@ -9,7 +9,7 @@ export default function Home() {
   const [user] = useContext(UserContext);
 
   return (
-    <div className="min-h-screen dark:bg-black">
+    <div className="dark:bg-black">
       <MainNavigation />
       {!user && (
         <>

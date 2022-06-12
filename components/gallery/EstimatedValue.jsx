@@ -38,7 +38,7 @@ export default function EstimatedValue({ token }) {
   return (
     <>
       {estimate && (
-        <p className="text-sm clear-both text-dark3 dark:text-gray-300 bg-offwhite dark:bg-dark1 w-fit px-2 py-1 rounded mt-2">
+        <p className="text-sm clear-both text-dark3 dark:text-gray-300 bg-whitish dark:bg-dark3 w-fit px-2 py-1 rounded mt-4">
           Estimate: ◎{roundToTwo(estimate / 1000000000)}
         </p>
       )}

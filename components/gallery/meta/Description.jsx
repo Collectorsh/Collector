@@ -1,6 +1,6 @@
 export default function Description({ token }) {
   return (
-    <p className="text-sm clear-both text-dark3 dark:text-gray-300 break-words">
+    <p className="text-sm clear-both text-dark3 dark:text-gray-300 break-words mt-2">
       {token.description}
     </p>
   );

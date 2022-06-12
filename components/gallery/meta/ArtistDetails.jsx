@@ -4,23 +4,29 @@ export default function ArtistDetails({ token }) {
   return (
     <>
       {token.artist_name && (
-        <div className="mb-4">
+        <div className="">
           {token.artist_name && (
-            <p className="font-normal text-sm left text-dark1 dark:text-gray-400 float-left">
-              {token.artist_name}
-              {token.artist_twitter && (
-                <>
-                  <span> {"/"} </span>
+            <>
+              <p className="font-semibold text-xs left text-dark1 dark:text-gray-400">
+                {token.artist_twitter && (
                   <Link
                     href={`https://twitter.com/${token.artist_twitter.substring(
                       1
                     )}`}
                   >
-                    <a target="_blank">{token.artist_twitter}</a>
+                    <a
+                      className="cursor-pointer hover:underline"
+                      target="_blank"
+                    >
+                      {token.artist_twitter}
+                    </a>
                   </Link>
-                </>
-              )}
-            </p>
+                )}
+                {!token.artist_twitter && token.artist_name && (
+                  <span>{token.artist_name}</span>
+                )}
+              </p>
+            </>
           )}
         </div>
       )}

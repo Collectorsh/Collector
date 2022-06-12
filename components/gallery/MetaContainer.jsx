@@ -4,7 +4,7 @@ import ArtistDetails from "/components/gallery/meta/ArtistDetails";
 
 export default function MetaContainer({ user, token }) {
   return (
-    <div className="mt-2">
+    <div className="mt-3">
       {user && (
         <>
           {user.names && <Name user={user} token={token} />}

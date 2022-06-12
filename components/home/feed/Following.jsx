@@ -13,7 +13,7 @@ export default function Following() {
   const [wonSelected, setWonSelected] = useState(true);
   const [saleSelected, setSaleSelected] = useState(true);
   const [listingSelected, setListingSelected] = useState(true);
-  const [user, setUser] = useContext(UserContext);
+  const [user] = useContext(UserContext);
 
   const fetchFeed = useCallback(async (apiKey) => {
     let res = await getFeedFollowing(apiKey);

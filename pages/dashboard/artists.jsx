@@ -26,7 +26,7 @@ export default function Artists() {
   };
 
   return (
-    <div className="min-h-screen dark:bg-black">
+    <div className="dark:bg-black">
       <CheckLoggedIn />
       <Toaster />
       <MainNavigation />

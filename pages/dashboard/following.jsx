@@ -25,7 +25,7 @@ export default function Following() {
   }, [user]);
 
   return (
-    <div className="min-h-screen dark:bg-black">
+    <div className="dark:bg-black">
       <CheckLoggedIn />
       <MainNavigation />
       <div className="mx-auto px-2 md:px-4 lg:px-12">

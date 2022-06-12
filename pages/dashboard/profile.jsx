@@ -70,7 +70,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen dark:bg-black min-h-screen">
+    <div className="dark:bg-black">
       <CheckLoggedIn />
       <Toaster />
       <MainNavigation />

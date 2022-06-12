@@ -66,7 +66,7 @@ function Nft({ image, token }) {
   /////////////////////////////////////////////////////////////////////////////////////
 
   return (
-    <div className="min-h-screen dark:bg-black">
+    <div className="dark:bg-black">
       <Head>
         {token && (
           <>

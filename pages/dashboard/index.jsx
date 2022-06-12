@@ -25,7 +25,7 @@ export default function Collection() {
   }, []);
 
   return (
-    <div className="dark:bg-black min-h-screen">
+    <div className="dark:bg-black">
       <CheckLoggedIn />
       <Toaster />
       <MainNavigation />
@@ -35,7 +35,7 @@ export default function Collection() {
           {tokens ? (
             <CollectionContainer tkns={tokens} user={user} />
           ) : (
-            <div className="mt-4 w-[50px] mx-auto h-64">
+            <div className="mt-48 w-[50px] mx-auto h-64">
               <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
             </div>
           )}

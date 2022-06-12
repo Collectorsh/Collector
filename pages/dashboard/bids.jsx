@@ -30,7 +30,7 @@ function Bids() {
   }, [user]);
 
   return (
-    <div className="min-h-screen dark:bg-black min-h-screen">
+    <div className="dark:bg-black">
       <CheckLoggedIn />
       <MainNavigation />
       <div className="mx-auto px-2 md:px-4 lg:px-12 mt-16 sm:mt-36">

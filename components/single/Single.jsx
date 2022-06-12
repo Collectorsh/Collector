@@ -16,6 +16,7 @@ import { sortHighestOffer } from "/utils/sortHighestOffer";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function Single({ token, refetch }) {
+  console.log(token);
   const { publicKey } = useWallet();
   const [singleNft] = useContext(SingleNftContext);
   const [listing, setListing] = useState();
@@ -60,7 +61,7 @@ export default function Single({ token, refetch }) {
         pauseOnHover
         theme="dark"
       />
-      <div className="mb-8 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:mb-0 mt-6 md:mt-12 overflow-hidden">
+      <div className="mb-8 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:mb-0 mt-24 md:mt-32 overflow-hidden">
         <div className="overflow-hidden lg:block col-span-1 mb-8 lg:mr-8 relative">
           <Image token={token} size="large" />
         </div>

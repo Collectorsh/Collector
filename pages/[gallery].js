@@ -32,7 +32,7 @@ function Gallery({ user, tokens }) {
   }, []);
 
   return (
-    <div className="min-h-screen dark:bg-black min-h-screen">
+    <div className="dark:bg-black">
       <Head>
         {user && tokens.length > 0 && (
           <>

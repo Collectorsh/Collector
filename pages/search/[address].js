@@ -27,7 +27,7 @@ export default function Search() {
   }, [address]);
 
   return (
-    <div className="min-h-screen dark:bg-black min-h-screen">
+    <div className="dark:bg-black mt-32">
       <MainNavigation publicKey={address} />
       <div className="mx-auto px-2 md:px-4 lg:px-12">
         <div className="mx-auto px-2 md:px-0">

@@ -34,7 +34,7 @@ export default function Featured() {
       <h1 className="text-4xl font-extrabold text-black dark:text-whitish text-center pt-8">
         Featured
       </h1>
-      <div className="bg-black dark:bg-black mt-8 pb-4 dark:border-t dark:border-b dark:border-dark3">
+      <div className="bg-black dark:bg-black mt-8 pb-4 dark:border-t dark:border-b dark:border-dark3 mb-12">
         <div className="bg-black dark:bg-black pt-8">
           <Slider {...settings}>
             <div className="px-4 text-center align-center">

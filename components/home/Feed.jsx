@@ -23,8 +23,7 @@ export default function Feed() {
 
   return (
     <>
-      <div id="feed" className="w-full"></div>
-      <div className="sm:flex mb-0 mt-8 sm:mt-12">
+      <div id="feed" className="sm:flex mb-0">
         <div className="h-fit sm:h-[calc(100vh-80px)] sm:sticky sm:top-[80px] w-full sm:w-52 md:w-64 px-2">
           <ul>
             <li className="mb-2">

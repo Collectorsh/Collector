@@ -29,7 +29,7 @@ export default function MainNavigation(props) {
   }
 
   return (
-    <div className="mx-auto mb-28">
+    <div className="mx-auto mb-20">
       <nav className="mx-auto py-4 md:py-2 px-0 md:px-4 lg:px-12 bg-white dark:bg-black fixed w-full z-40 top-0">
         <div className="px-4 md:px-0">
           <div className="flex">

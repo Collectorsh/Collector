@@ -5,6 +5,7 @@ import {
   CalendarIcon,
   CollectionIcon,
   SparklesIcon,
+  ChevronUpIcon,
   LightningBoltIcon,
 } from "@heroicons/react/outline";
 import Activity from "/components/home/feed/Activity";
@@ -20,6 +21,10 @@ export default function Feed() {
   const updateFeedSelected = (feed) => {
     setFeedSelected(feed);
   };
+
+  function scrollToFeed() {
+    document.getElementById("feed").scrollIntoView({ behavior: "smooth" });
+  }
 
   return (
     <>
@@ -129,6 +134,13 @@ export default function Feed() {
               {feedSelected === "galleries" && <Galleries />}
             </div>
           </div>
+        </div>
+
+        <div
+          className="fixed bottom-2 right-2 bg-whitish rounded-full cursor-pointer p-2"
+          onClick={scrollToFeed}
+        >
+          <ChevronUpIcon className="h-6 w-6" aria-hidden="true" />
         </div>
       </div>
     </>

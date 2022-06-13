@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useCallback } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import getFeed from "/data/home/getFeed";
 import Bid from "/components/home/feed/activity/Bid";
 import Won from "/components/home/feed/activity/Won";
 import Sale from "/components/home/feed/activity/Sale";
 import Listing from "/components/home/feed/activity/Listing";
+import cloneDeep from "lodash/cloneDeep";
 import { Oval } from "react-loader-spinner";
+import { ChevronUpIcon } from "@heroicons/react/outline";
 
 export default function Activity() {
+  const [infiniteScrollItems, setInfiniteScrollItems] = useState();
+  const [feedsSelected, setFeedsSelected] = useState([
+    "bid",
+    "sale",
+    "won",
+    "listing",
+  ]);
+  const [results, setResults] = useState();
   const [activity, setActivity] = useState();
-  const [bidSelected, setBidSelected] = useState(true);
-  const [wonSelected, setWonSelected] = useState(true);
-  const [saleSelected, setSaleSelected] = useState(true);
-  const [listingSelected, setListingSelected] = useState(true);
 
   const fetchFeed = useCallback(async () => {
     let res = await getFeed();
@@ -22,7 +29,35 @@ export default function Activity() {
     fetchFeed();
   }, []);
 
-  function style(selected) {
+  useEffect(() => {
+    if (!activity) return;
+
+    const items = activity.filter((a) => feedsSelected.includes(a.type));
+    setResults(items);
+    setInfiniteScrollItems(items.slice(0, 5));
+  }, [activity, feedsSelected]);
+
+  function fetchData() {
+    setInfiniteScrollItems((currentDisplayedItems) =>
+      results.slice(0, currentDisplayedItems.length + 5)
+    );
+  }
+
+  function updateSelected(type) {
+    if (feedsSelected.includes(type)) {
+      let clonedItems = cloneDeep(feedsSelected);
+      let index = clonedItems.indexOf(type);
+      clonedItems.splice(index, 1);
+      setFeedsSelected(clonedItems);
+    } else {
+      let clonedItems = cloneDeep(feedsSelected);
+      let items = clonedItems.concat(type);
+      setFeedsSelected(items);
+    }
+  }
+
+  function style(type) {
+    let selected = feedsSelected.includes(type);
     let styles;
     if (selected) {
       styles =
@@ -37,12 +72,12 @@ export default function Activity() {
 
   return (
     <div>
-      {!activity && (
+      {!infiniteScrollItems && (
         <div className="mt-4 w-[50px] h-64 mx-auto mt-20">
           <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
         </div>
       )}
-      {activity && (
+      {infiniteScrollItems && (
         <>
           <h2 className="text-5xl font-extrabold mb-8 text-black w-fit pt-5 inline-block dark:text-whitish">
             Activity
@@ -52,40 +87,44 @@ export default function Activity() {
           </h2>
           <div className="mb-12">
             <button
-              className={style(bidSelected)}
-              onClick={() => setBidSelected(!bidSelected)}
+              className={style("bid")}
+              onClick={() => updateSelected("bid")}
             >
               New Bids
             </button>
             <button
-              className={style(wonSelected)}
-              onClick={() => setWonSelected(!wonSelected)}
+              className={style("won")}
+              onClick={() => updateSelected("won")}
             >
               Auctions Won
             </button>
             <button
-              className={style(saleSelected)}
-              onClick={() => setSaleSelected(!saleSelected)}
+              className={style("sale")}
+              onClick={() => updateSelected("sale")}
             >
               Sales
             </button>
             <button
-              className={style(listingSelected)}
-              onClick={() => setListingSelected(!listingSelected)}
+              className={style("listing")}
+              onClick={() => updateSelected("listing")}
             >
               Listings
             </button>
           </div>
-          {activity.map((item, index) => (
-            <div key={index} className="sm:max-w-2xl">
-              {item.type === "won" && wonSelected && <Won item={item} />}
-              {item.type === "bid" && bidSelected && <Bid item={item} />}
-              {item.type === "sale" && saleSelected && <Sale item={item} />}
-              {item.type === "listing" && listingSelected && (
-                <Listing item={item} />
-              )}
-            </div>
-          ))}
+          <InfiniteScroll
+            dataLength={infiniteScrollItems.length}
+            next={fetchData}
+            hasMore={infiniteScrollItems.length !== results.length}
+          >
+            {infiniteScrollItems.map((item, index) => (
+              <div key={index} className="sm:max-w-2xl">
+                {item.type === "won" && <Won item={item} />}
+                {item.type === "bid" && <Bid item={item} />}
+                {item.type === "sale" && <Sale item={item} />}
+                {item.type === "listing" && <Listing item={item} />}
+              </div>
+            ))}
+          </InfiniteScroll>
         </>
       )}
     </div>

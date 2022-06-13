@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { success, error } from "/utils/toast";
 import DragAndDrop from "/components/dashboard/gallery/DragAndDrop";
 import Hidden from "/components/dashboard/gallery/Hidden";

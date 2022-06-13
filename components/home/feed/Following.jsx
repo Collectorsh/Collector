@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import getFeedFollowing from "/data/home/getFeedFollowing";
 import Bid from "/components/home/feed/activity/Bid";
 import Won from "/components/home/feed/activity/Won";
@@ -9,11 +10,15 @@ import UserContext from "/contexts/user";
 
 export default function Following() {
   const [activity, setActivity] = useState();
-  const [bidSelected, setBidSelected] = useState(true);
-  const [wonSelected, setWonSelected] = useState(true);
-  const [saleSelected, setSaleSelected] = useState(true);
-  const [listingSelected, setListingSelected] = useState(true);
   const [user] = useContext(UserContext);
+  const [infiniteScrollItems, setInfiniteScrollItems] = useState();
+  const [feedsSelected, setFeedsSelected] = useState([
+    "bid",
+    "sale",
+    "won",
+    "listing",
+  ]);
+  const [results, setResults] = useState();
 
   const fetchFeed = useCallback(async (apiKey) => {
     let res = await getFeedFollowing(apiKey);
@@ -25,7 +30,35 @@ export default function Following() {
     fetchFeed(user.api_key);
   }, [user]);
 
-  function style(selected) {
+  useEffect(() => {
+    if (!activity) return;
+
+    const items = activity.filter((a) => feedsSelected.includes(a.type));
+    setResults(items);
+    setInfiniteScrollItems(items.slice(0, 5));
+  }, [activity, feedsSelected]);
+
+  function fetchData() {
+    setInfiniteScrollItems((currentDisplayedItems) =>
+      results.slice(0, currentDisplayedItems.length + 5)
+    );
+  }
+
+  function updateSelected(type) {
+    if (feedsSelected.includes(type)) {
+      let clonedItems = cloneDeep(feedsSelected);
+      let index = clonedItems.indexOf(type);
+      clonedItems.splice(index, 1);
+      setFeedsSelected(clonedItems);
+    } else {
+      let clonedItems = cloneDeep(feedsSelected);
+      let items = clonedItems.concat(type);
+      setFeedsSelected(items);
+    }
+  }
+
+  function style(type) {
+    let selected = feedsSelected.includes(type);
     let styles;
     if (selected) {
       styles =
@@ -34,7 +67,7 @@ export default function Following() {
       styles = "dark:text-whitish";
     }
     styles +=
-      " cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1 px-1 xl:py-1.5 xl:px-2.5 font-bold border border-4 mb-2";
+      " cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1 px-1 xl:py-1.5 xl:px-2.5 font-bold border border-4";
     return styles;
   }
 
@@ -45,14 +78,14 @@ export default function Following() {
           You need to sign-in to see your feed.
         </p>
       )}
-      {!activity && user && (
+      {!infiniteScrollItems && user && (
         <div className="mt-4 w-[50px] h-64 mx-auto mt-20">
           <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
         </div>
       )}
-      {activity && (
+      {infiniteScrollItems && (
         <>
-          {activity.length > 0 ? (
+          {infiniteScrollItems.length > 0 ? (
             <>
               <h2 className="text-5xl font-extrabold mb-8 text-black w-fit pt-5 inline-block dark:text-whitish">
                 Following
@@ -62,40 +95,44 @@ export default function Following() {
               </h2>
               <div className="mb-12">
                 <button
-                  className={style(bidSelected)}
-                  onClick={() => setBidSelected(!bidSelected)}
+                  className={style("bid")}
+                  onClick={() => updateSelected("bid")}
                 >
                   New Bids
                 </button>
                 <button
-                  className={style(wonSelected)}
-                  onClick={() => setWonSelected(!wonSelected)}
+                  className={style("won")}
+                  onClick={() => updateSelected("won")}
                 >
                   Auctions Won
                 </button>
                 <button
-                  className={style(saleSelected)}
-                  onClick={() => setSaleSelected(!saleSelected)}
+                  className={style("sale")}
+                  onClick={() => updateSelected("sale")}
                 >
                   Sales
                 </button>
                 <button
-                  className={style(listingSelected)}
-                  onClick={() => setListingSelected(!listingSelected)}
+                  className={style("listing")}
+                  onClick={() => updateSelected("listing")}
                 >
                   Listings
                 </button>
               </div>
-              {activity.map((item, index) => (
-                <div key={index} className="sm:max-w-2xl">
-                  {item.type === "won" && wonSelected && <Won item={item} />}
-                  {item.type === "bid" && bidSelected && <Bid item={item} />}
-                  {item.type === "sale" && saleSelected && <Sale item={item} />}
-                  {item.type === "listing" && listingSelected && (
-                    <Listing item={item} />
-                  )}
-                </div>
-              ))}
+              <InfiniteScroll
+                dataLength={infiniteScrollItems.length}
+                next={fetchData}
+                hasMore={infiniteScrollItems.length !== results.length}
+              >
+                {infiniteScrollItems.map((item, index) => (
+                  <div key={index} className="sm:max-w-2xl">
+                    {item.type === "won" && <Won item={item} />}
+                    {item.type === "bid" && <Bid item={item} />}
+                    {item.type === "sale" && <Sale item={item} />}
+                    {item.type === "listing" && <Listing item={item} />}
+                  </div>
+                ))}
+              </InfiniteScroll>
             </>
           ) : (
             <p className="dark:text-whitish">

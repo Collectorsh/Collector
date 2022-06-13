@@ -85,7 +85,8 @@ export default function GalleryNavigation({ user }) {
           <div className="hidden md:flex text-right items-center col-span-3 md:col-span-4 justify-end">
             {loggedInUser && loggedInUser.username !== user.username && (
               <>
-                {loggedInUser.following.find((f) => f.id === user.id) ? (
+                {loggedInUser.following &&
+                loggedInUser.following.find((f) => f.id === user.id) ? (
                   <Tippy
                     content={`Stop following ${user.username}`}
                     className="bg-gray-300"

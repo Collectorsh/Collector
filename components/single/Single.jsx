@@ -16,7 +16,6 @@ import { sortHighestOffer } from "/utils/sortHighestOffer";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function Single({ token, refetch }) {
-  console.log(token);
   const { publicKey } = useWallet();
   const [singleNft] = useContext(SingleNftContext);
   const [listing, setListing] = useState();

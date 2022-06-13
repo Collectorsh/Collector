@@ -8,7 +8,7 @@ import Moment from "react-moment";
 
 export default function Bid({ item }) {
   return (
-    <div className="mb-12 md:mt-14">
+    <div className="mb-12">
       {item.twitter_profile_image && (
         <img
           src={item.twitter_profile_image}

@@ -136,12 +136,12 @@ export default function Feed() {
           </div>
         </div>
 
-        <div
+        {/* <div
           className="fixed bottom-2 right-2 bg-whitish rounded-full cursor-pointer p-2"
           onClick={scrollToFeed}
         >
           <ChevronUpIcon className="h-6 w-6" aria-hidden="true" />
-        </div>
+        </div> */}
       </div>
     </>
   );

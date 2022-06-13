@@ -30,17 +30,17 @@ export default function Feed() {
     <>
       <div id="feed" className="sm:flex mb-0">
         <div className="h-fit sm:h-[calc(100vh-80px)] sm:sticky sm:top-[80px] w-full sm:w-52 md:w-64 px-2">
-          <ul>
+          <ul className="text-sm">
             <li className="mb-2">
               <a
-                className={`flex items-center px-4 py-2 text-black dark:text-white rounded-md ${
+                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "activity"
-                    ? "bg-gray-100 dark:text-[#000]"
-                    : "hover:bg-gray-200 dark:hover:text-black cursor-pointer"
+                    ? "bg-gray-100 dark:bg-dark3"
+                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => updateFeedSelected("activity")}
               >
-                <SparklesIcon className="h-6 w-6" aria-hidden="true" />
+                <SparklesIcon className="h-5 w-5" aria-hidden="true" />
 
                 <span className="mx-4 font-medium">Activity</span>
               </a>
@@ -48,14 +48,14 @@ export default function Feed() {
 
             <li className="mb-2">
               <a
-                className={`flex items-center px-4 py-2 text-black dark:text-white rounded-md ${
+                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "following"
-                    ? "bg-gray-100 dark:text-[#000]"
-                    : "hover:bg-gray-200 dark:hover:text-black cursor-pointer"
+                    ? "bg-gray-100 dark:bg-dark3"
+                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => updateFeedSelected("following")}
               >
-                <StarIcon className="h-6 w-6" aria-hidden="true" />
+                <StarIcon className="h-5 w-5" aria-hidden="true" />
 
                 <span className="mx-4 font-medium">Following</span>
               </a>
@@ -63,14 +63,14 @@ export default function Feed() {
 
             <li className="mb-2">
               <a
-                className={`flex items-center px-4 py-2 text-black dark:text-white rounded-md ${
+                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "auctions"
-                    ? "bg-gray-100 dark:text-[#000]"
-                    : "hover:bg-gray-200 dark:hover:text-black cursor-pointer"
+                    ? "bg-gray-100 dark:bg-dark3"
+                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => setFeedSelected("auctions")}
               >
-                <CalendarIcon className="h-6 w-6" aria-hidden="true" />
+                <CalendarIcon className="h-5 w-5" aria-hidden="true" />
 
                 <span className="mx-4 font-medium">Ending Soon</span>
               </a>
@@ -78,14 +78,14 @@ export default function Feed() {
 
             {/* <li className="mb-2">
               <a
-                className={`flex items-center px-4 py-2 text-black dark:text-white rounded-md ${
+                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "buynow"
-                    ? "bg-gray-100 dark:text-[#000]"
-                    : "hover:bg-gray-200 dark:hover:text-black cursor-pointer"
+                    ? "bg-gray-100 dark:bg-dark3"
+                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => setFeedSelected("buynow")}
               >
-                <LightningBoltIcon className="h-6 w-6" aria-hidden="true" />
+                <LightningBoltIcon className="h-5 w-5" aria-hidden="true" />
 
                 <span className="mx-4 font-medium">Buy Now</span>
               </a>
@@ -93,14 +93,14 @@ export default function Feed() {
 
             <li className="mb-2">
               <a
-                className={`flex items-center px-4 py-2 text-black dark:text-white rounded-md ${
+                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "listings"
-                    ? "bg-gray-100 dark:text-[#000]"
-                    : "hover:bg-gray-200 dark:hover:text-black cursor-pointer"
+                    ? "bg-gray-100 dark:bg-dark3"
+                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => setFeedSelected("listings")}
               >
-                <ClipboardListIcon className="h-6 w-6" aria-hidden="true" />
+                <ClipboardListIcon className="h-5 w-5" aria-hidden="true" />
 
                 <span className="mx-4 font-medium">Listings</span>
               </a>
@@ -108,14 +108,14 @@ export default function Feed() {
 
             <li className="mb-2">
               <a
-                className={`flex items-center px-4 py-2 text-black dark:text-white rounded-md ${
+                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "galleries"
-                    ? "bg-gray-100 dark:text-[#000]"
-                    : "hover:bg-gray-200 dark:hover:text-black cursor-pointer"
+                    ? "bg-gray-100 dark:bg-dark3"
+                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => setFeedSelected("galleries")}
               >
-                <CollectionIcon className="h-6 w-6" aria-hidden="true" />
+                <CollectionIcon className="h-5 w-5" aria-hidden="true" />
 
                 <span className="mx-4 font-medium">Galleries</span>
               </a>

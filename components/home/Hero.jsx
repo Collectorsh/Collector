@@ -22,7 +22,7 @@ export default function Hero() {
           <div className="lg:grid lg:grid-cols-7 lg:gap-x-8 mb-8 lg:mb-0">
             <div className="col-span-4 align-middle xl:mr-20 lg:mt-12 mb-6">
               <h1 className="font-bold tracking-wide text-black dark:text-whitish text-center">
-                <p className="text-5xl">Collect</p>
+                <p className="text-5xl">Discover</p>
                 <p className="mt-4 text-5xl">&amp;</p>
                 <p className="mt-4 text-5xl">Share</p>
                 <p className="mt-6 text-5xl">Beautiful Art</p>

@@ -50,6 +50,7 @@ export default function MyApp({ Component, pageProps }) {
             type="text/css"
             href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
           />
+          <title>Discover &amp; Share Beautiful Art</title>
         </Head>
       </div>
       <PlausibleProvider domain="collector.sh">

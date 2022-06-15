@@ -29,7 +29,7 @@ export default function Feed() {
       <ShowScrollToTop />
       <div id="feed"></div>
       <div className="sm:flex mb-0">
-        <div className="h-fit sm:h-[calc(100vh-80px)] sm:sticky sm:top-[80px] w-full sm:w-52 md:w-64 px-2">
+        <div className="h-fit sm:h-[calc(100vh-80px)] sm:sticky sm:top-[80px] w-full sm:w-52 md:w-64 px-2 lg:ml-9">
           <ul className="text-sm">
             <li className="mb-2">
               <a

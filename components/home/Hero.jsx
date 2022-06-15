@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Slider from "react-slick";
 import { ChevronDownIcon } from "@heroicons/react/outline";
+import { scrollToFeed } from "/utils/scrollToFeed";
 
 export default function Hero() {
   const settings = {
@@ -13,10 +14,6 @@ export default function Hero() {
     autoplay: true,
     autoplaySpeed: 2000,
   };
-
-  function scrollToFeed() {
-    document.getElementById("feed").scrollIntoView({ behavior: "smooth" });
-  }
 
   return (
     <>

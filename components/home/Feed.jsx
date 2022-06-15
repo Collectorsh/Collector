@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StarIcon,
   ClipboardListIcon,
@@ -14,6 +14,8 @@ import Auctions from "/components/home/feed/Auctions";
 import Listings from "/components/home/feed/Listings";
 import Galleries from "/components/home/feed/Galleries";
 import BuyNow from "/components/home/feed/BuyNow";
+import ShowScrollToTop from "/components/home/ShowScrollToTop";
+import { scrollToFeed } from "/utils/scrollToFeed";
 
 export default function Feed() {
   const [feedSelected, setFeedSelected] = useState("activity");
@@ -22,13 +24,11 @@ export default function Feed() {
     setFeedSelected(feed);
   };
 
-  function scrollToFeed() {
-    document.getElementById("feed").scrollIntoView({ behavior: "smooth" });
-  }
-
   return (
     <>
-      <div id="feed" className="sm:flex mb-0">
+      <ShowScrollToTop />
+      <div id="feed"></div>
+      <div className="sm:flex mb-0">
         <div className="h-fit sm:h-[calc(100vh-80px)] sm:sticky sm:top-[80px] w-full sm:w-52 md:w-64 px-2">
           <ul className="text-sm">
             <li className="mb-2">
@@ -123,7 +123,10 @@ export default function Feed() {
           </ul>
         </div>
 
-        <div className="sm:flex-1 sm:flex sm:border-l border-black dark:border-gray-400">
+        <div
+          id="feed-content"
+          className="sm:flex-1 sm:flex sm:border-l border-black dark:border-gray-400"
+        >
           <div className="sm:flex-1">
             <div className="mx-4 sm:mx-6 lg:mx-16">
               {feedSelected === "activity" && <Activity />}
@@ -136,12 +139,13 @@ export default function Feed() {
           </div>
         </div>
 
-        {/* <div
+        <div
+          id="scroll-to-top"
           className="fixed bottom-2 right-2 bg-whitish rounded-full cursor-pointer p-2"
           onClick={scrollToFeed}
         >
           <ChevronUpIcon className="h-6 w-6" aria-hidden="true" />
-        </div> */}
+        </div>
       </div>
     </>
   );

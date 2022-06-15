@@ -370,3 +370,7 @@ input:checked + .toggle-bg {
     overflow: hidden;
   }
 }
+
+#scroll-to-top {
+  visibility: hidden;
+}

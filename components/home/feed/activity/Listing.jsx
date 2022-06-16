@@ -28,8 +28,10 @@ export default function Listing({ item }) {
         </Link>
         {item.attributes.brand_name && (
           <span> by {item.attributes.brand_name} </span>
-        )}{" "}
-        for ◎{roundToTwo(item.attributes.amount / 1000000000)}
+        )}
+        {item.attributes.amount && (
+          <> for ◎{roundToTwo(item.attributes.amount / 1000000000)}</>
+        )}
       </p>
       <p className="text-xs mt-3 mb-1 text-gray-400 dark:text-whitish clear-both">
         <Moment date={item.time} unix fromNow /> on{" "}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StarIcon,
   ClipboardListIcon,
@@ -7,6 +7,7 @@ import {
   SparklesIcon,
   ChevronUpIcon,
   LightningBoltIcon,
+  LightBulbIcon,
 } from "@heroicons/react/outline";
 import Activity from "/components/home/feed/Activity";
 import Following from "/components/home/feed/Following";
@@ -14,6 +15,7 @@ import Auctions from "/components/home/feed/Auctions";
 import Listings from "/components/home/feed/Listings";
 import Galleries from "/components/home/feed/Galleries";
 import BuyNow from "/components/home/feed/BuyNow";
+import NewArtists from "/components/home/feed/NewArtists";
 import ShowScrollToTop from "/components/home/ShowScrollToTop";
 import { scrollToFeed } from "/utils/scrollToFeed";
 
@@ -75,7 +77,7 @@ export default function Feed() {
               </a>
             </li>
 
-            {/* <li className="mb-2">
+            <li className="mb-2">
               <a
                 className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "buynow"
@@ -88,7 +90,22 @@ export default function Feed() {
 
                 <span className="mx-4 font-medium">Buy Now</span>
               </a>
-            </li> */}
+            </li>
+
+            <li className="mb-2">
+              <a
+                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
+                  feedSelected === "new"
+                    ? "bg-gray-100 dark:bg-dark3"
+                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
+                }`}
+                onClick={() => setFeedSelected("new")}
+              >
+                <LightBulbIcon className="h-5 w-5" aria-hidden="true" />
+
+                <span className="mx-4 font-medium">New Artists</span>
+              </a>
+            </li>
 
             <li className="mb-2">
               <a
@@ -101,7 +118,7 @@ export default function Feed() {
               >
                 <ClipboardListIcon className="h-5 w-5" aria-hidden="true" />
 
-                <span className="mx-4 font-medium">Listings</span>
+                <span className="mx-4 font-medium">Collector Listings</span>
               </a>
             </li>
 
@@ -134,6 +151,7 @@ export default function Feed() {
               {feedSelected === "buynow" && <BuyNow />}
               {feedSelected === "listings" && <Listings />}
               {feedSelected === "galleries" && <Galleries />}
+              {feedSelected === "new" && <NewArtists />}
             </div>
           </div>
         </div>

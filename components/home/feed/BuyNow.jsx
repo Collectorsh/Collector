@@ -46,10 +46,15 @@ export default function BuyNow() {
                   <a className="font-bold">{item.attributes.name}</a>
                 </Link>
                 {item.attributes.artist_name && (
-                  <span> by {item.attributes.artist_name} </span>
+                  <span>
+                    {" "}
+                    by <strong>{item.attributes.artist_name}</strong>{" "}
+                  </span>
                 )}{" "}
-                was listed on {item.attributes.marketplace} for ◎
-                {roundToTwo(item.attributes.amount / 1000000000)}
+                was listed on {item.attributes.marketplace}
+                {item.attributes.amount && (
+                  <> for ◎{roundToTwo(item.attributes.amount / 1000000000)}</>
+                )}
               </p>
               <p className="text-xs mt-1 mb-1 text-gray-400 dark:text-whitish clear-both">
                 <Moment date={item.time} unix fromNow />

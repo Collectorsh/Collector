@@ -14,7 +14,6 @@ import Auctions from "/components/home/feed/Auctions";
 import Listings from "/components/home/feed/Listings";
 import Galleries from "/components/home/feed/Galleries";
 import BuyNow from "/components/home/feed/BuyNow";
-import NewArtists from "/components/home/feed/NewArtists";
 import ShowScrollToTop from "/components/home/ShowScrollToTop";
 import { scrollToFeed } from "/utils/scrollToFeed";
 
@@ -135,7 +134,6 @@ export default function Feed() {
               {feedSelected === "buynow" && <BuyNow />}
               {feedSelected === "listings" && <Listings />}
               {feedSelected === "galleries" && <Galleries />}
-              {feedSelected === "new" && <NewArtists />}
             </div>
           </div>
         </div>

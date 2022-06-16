@@ -7,7 +7,6 @@ import {
   SparklesIcon,
   ChevronUpIcon,
   LightningBoltIcon,
-  LightBulbIcon,
 } from "@heroicons/react/outline";
 import Activity from "/components/home/feed/Activity";
 import Following from "/components/home/feed/Following";
@@ -89,21 +88,6 @@ export default function Feed() {
                 <LightningBoltIcon className="h-5 w-5" aria-hidden="true" />
 
                 <span className="mx-4 font-medium">Buy Now</span>
-              </a>
-            </li>
-
-            <li className="mb-2">
-              <a
-                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
-                  feedSelected === "new"
-                    ? "bg-gray-100 dark:bg-dark3"
-                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
-                }`}
-                onClick={() => setFeedSelected("new")}
-              >
-                <LightBulbIcon className="h-5 w-5" aria-hidden="true" />
-
-                <span className="mx-4 font-medium">New Artists</span>
               </a>
             </li>
 

@@ -43,7 +43,7 @@ export default function BuyNow() {
       {infiniteScrollItems && (
         <>
           <h2 className="text-5xl font-extrabold mb-8 text-black w-fit pt-5 inline-block dark:text-whitish">
-            Buy Now
+            All Listings
           </h2>
           <InfiniteScroll
             dataLength={infiniteScrollItems.length}

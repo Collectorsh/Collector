@@ -36,7 +36,7 @@ export default function Listings() {
         {listings && (
           <>
             <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-5 inline-block dark:text-white">
-              Listings
+              Buy Now
             </h2>
             <GridView items={listings} type="listing" />
           </>

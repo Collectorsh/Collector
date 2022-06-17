@@ -84,9 +84,9 @@ export default function Feed() {
                 }`}
                 onClick={() => setFeedSelected("buynow")}
               >
-                <LightningBoltIcon className="h-5 w-5" aria-hidden="true" />
+                <ClipboardListIcon className="h-5 w-5" aria-hidden="true" />
 
-                <span className="mx-4 font-medium">Buy Now</span>
+                <span className="mx-4 font-medium">All Listings</span>
               </a>
             </li>
 
@@ -99,9 +99,9 @@ export default function Feed() {
                 }`}
                 onClick={() => setFeedSelected("listings")}
               >
-                <ClipboardListIcon className="h-5 w-5" aria-hidden="true" />
+                <LightningBoltIcon className="h-5 w-5" aria-hidden="true" />
 
-                <span className="mx-4 font-medium">Collector Listings</span>
+                <span className="mx-4 font-medium">Buy Now</span>
               </a>
             </li>
 

@@ -34,7 +34,7 @@ export default function Featured() {
       <h1 className="text-4xl font-extrabold text-black dark:text-whitish text-center pt-8">
         Featured
       </h1>
-      <p className="text-center mt-4">
+      <p className="dark:text-whitish text-center mt-4">
         Curated by{" "}
         <Link href="https://twitter.com/CompoundI3">
           <a className="underline">Compound</a>

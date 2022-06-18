@@ -30,17 +30,16 @@ export default function Featured() {
 
   return (
     <>
-      <div className="w-[200px] h-[1px] bg-black dark:bg-whitish mx-auto mt-10"></div>
-      <h1 className="text-4xl font-extrabold text-black dark:text-whitish text-center pt-8">
-        Featured
-      </h1>
-      <p className="dark:text-whitish text-center mt-4">
-        Curated by{" "}
-        <Link href="https://twitter.com/CompoundI3">
-          <a className="underline">Compound</a>
-        </Link>
-      </p>
       <div className="bg-black dark:bg-black mt-8 pb-4 dark:border-t dark:border-b dark:border-dark3 mb-12">
+        <h1 className="text-4xl font-extrabold text-white text-center pt-4">
+          Featured
+        </h1>
+        <p className="text-whitish text-center mt-3">
+          Curated by{" "}
+          <Link href="https://twitter.com/CompoundI3">
+            <a className="underline">Compound</a>
+          </Link>
+        </p>
         <div className="bg-black dark:bg-black pt-8">
           <Slider {...settings}>
             <div className="px-4 text-center align-center">

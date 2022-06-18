@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import getFeedFollowing from "/data/home/getFeedFollowing";
-import Bid from "/components/home/feed/activity/Bid";
-import Won from "/components/home/feed/activity/Won";
-import Sale from "/components/home/feed/activity/Sale";
-import Listing from "/components/home/feed/activity/Listing";
+import Details from "/components/home/feed/Details";
 import { Oval } from "react-loader-spinner";
 import UserContext from "/contexts/user";
 import FeedFilters from "/components/home/feed/filters/FeedFilters";
@@ -65,7 +62,7 @@ export default function Following() {
       )}
       {infiniteScrollItems && (
         <>
-          {infiniteScrollItems.length > 0 ? (
+          {infiniteScrollItems.length > 0 && (
             <>
               <h2 className="text-5xl font-extrabold mb-8 text-black w-fit pt-5 inline-block dark:text-whitish">
                 Following
@@ -81,19 +78,11 @@ export default function Following() {
               >
                 {infiniteScrollItems.map((item, index) => (
                   <div key={index} className="sm:max-w-2xl">
-                    {item.type === "won" && <Won item={item} />}
-                    {item.type === "bid" && <Bid item={item} />}
-                    {item.type === "sale" && <Sale item={item} />}
-                    {item.type === "listing" && <Listing item={item} />}
+                    <Details item={item} />
                   </div>
                 ))}
               </InfiniteScroll>
             </>
-          ) : (
-            <p className="dark:text-whitish">
-              You aren&apos;t following anybody. You can follow Collector&apos;s
-              on their gallery page.
-            </p>
           )}
         </>
       )}

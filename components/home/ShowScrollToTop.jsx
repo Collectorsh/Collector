@@ -13,6 +13,10 @@ export default function ShowScrollToTp() {
       },
       false
     );
+
+    return () => {
+      window.removeEventListener("scroll", () => {});
+    };
   }, []);
 
   return null;

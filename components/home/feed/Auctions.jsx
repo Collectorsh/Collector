@@ -40,7 +40,7 @@ export default function Auctions() {
       {auctions.length > 0 && (
         <>
           <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-5 inline-block dark:text-white">
-            Ending Soon
+            Live Auctions
           </h2>
           {infiniteScrollItems && (
             <InfiniteScroll

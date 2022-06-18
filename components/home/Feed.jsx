@@ -11,7 +11,7 @@ import {
 import Activity from "/components/home/feed/Activity";
 import Following from "/components/home/feed/Following";
 import Auctions from "/components/home/feed/Auctions";
-import Listings from "/components/home/feed/Listings";
+import AllListings from "/components/home/feed/AllListings";
 import Galleries from "/components/home/feed/Galleries";
 import BuyNow from "/components/home/feed/BuyNow";
 import ShowScrollToTop from "/components/home/ShowScrollToTop";
@@ -71,22 +71,7 @@ export default function Feed() {
               >
                 <CalendarIcon className="h-5 w-5" aria-hidden="true" />
 
-                <span className="mx-4 font-medium">Ending Soon</span>
-              </a>
-            </li>
-
-            <li className="mb-2">
-              <a
-                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
-                  feedSelected === "buynow"
-                    ? "bg-gray-100 dark:bg-dark3"
-                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
-                }`}
-                onClick={() => setFeedSelected("buynow")}
-              >
-                <ClipboardListIcon className="h-5 w-5" aria-hidden="true" />
-
-                <span className="mx-4 font-medium">All Listings</span>
+                <span className="mx-4 font-medium">Live Auctions</span>
               </a>
             </li>
 
@@ -98,6 +83,21 @@ export default function Feed() {
                     : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => setFeedSelected("listings")}
+              >
+                <ClipboardListIcon className="h-5 w-5" aria-hidden="true" />
+
+                <span className="mx-4 font-medium">All Listings</span>
+              </a>
+            </li>
+
+            <li className="mb-2">
+              <a
+                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
+                  feedSelected === "buynow"
+                    ? "bg-gray-100 dark:bg-dark3"
+                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
+                }`}
+                onClick={() => setFeedSelected("buynow")}
               >
                 <LightningBoltIcon className="h-5 w-5" aria-hidden="true" />
 
@@ -132,7 +132,7 @@ export default function Feed() {
               {feedSelected === "following" && <Following />}
               {feedSelected === "auctions" && <Auctions />}
               {feedSelected === "buynow" && <BuyNow />}
-              {feedSelected === "listings" && <Listings />}
+              {feedSelected === "listings" && <AllListings />}
               {feedSelected === "galleries" && <Galleries />}
             </div>
           </div>

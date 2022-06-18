@@ -1,24 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import getFeed from "/data/home/getFeed";
+import getBuyNowFeed from "/data/home/getBuyNowFeed";
 import Details from "/components/home/feed/Details";
 import { Oval } from "react-loader-spinner";
-import FeedFilters from "/components/home/feed/filters/FeedFilters";
-import { updateFeedsSelected } from "/utils/updateFeedsSelected";
 
-export default function Activity() {
+export default function AllListings() {
   const [infiniteScrollItems, setInfiniteScrollItems] = useState();
-  const [feedsSelected, setFeedsSelected] = useState([
-    "bid",
-    "sale",
-    "won",
-    "listing",
-  ]);
-  const [results, setResults] = useState();
   const [activity, setActivity] = useState();
 
   const fetchFeed = useCallback(async () => {
-    let res = await getFeed();
+    let res = await getBuyNowFeed();
     setActivity(res.data);
   }, []);
 
@@ -29,25 +20,18 @@ export default function Activity() {
   useEffect(() => {
     if (!activity) return;
 
-    const items = activity.filter((a) => feedsSelected.includes(a.type));
-    setResults(items);
-    setInfiniteScrollItems(items.slice(0, 5));
-  }, [activity, feedsSelected]);
+    setInfiniteScrollItems(activity.slice(0, 5));
+  }, [activity]);
 
   function fetchData() {
     setInfiniteScrollItems((currentDisplayedItems) =>
-      results.slice(0, currentDisplayedItems.length + 5)
+      activity.slice(0, currentDisplayedItems.length + 5)
     );
-  }
-
-  function updateSelected(type) {
-    const selected = updateFeedsSelected(type, feedsSelected);
-    setFeedsSelected(selected);
   }
 
   return (
     <div>
-      {!infiniteScrollItems && (
+      {!activity && (
         <div className="mt-4 w-[50px] h-64 mx-auto mt-20">
           <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
         </div>
@@ -55,20 +39,16 @@ export default function Activity() {
       {infiniteScrollItems && (
         <>
           <h2 className="text-5xl font-extrabold mb-8 text-black w-fit pt-5 inline-block dark:text-whitish">
-            Activity
+            All Listings
           </h2>
-          <FeedFilters
-            updateSelected={updateSelected}
-            feedsSelected={feedsSelected}
-          />
           <InfiniteScroll
             dataLength={infiniteScrollItems.length}
             next={fetchData}
-            hasMore={infiniteScrollItems.length !== results.length}
+            hasMore={infiniteScrollItems.length !== activity.length}
           >
             {infiniteScrollItems.map((item, index) => (
               <div key={index} className="sm:max-w-2xl">
-                <Details item={item} />
+                <Details item={{ ...item, ...{ type: "listing" } }} />
               </div>
             ))}
           </InfiniteScroll>

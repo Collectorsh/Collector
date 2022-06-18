@@ -12,7 +12,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { host } from "/config/settings";
 import DarkMode from "/components/navigation/DarkMode";
-import { HomeIcon, StarIcon, ShareIcon } from "@heroicons/react/solid";
+import { HomeIcon, ShareIcon } from "@heroicons/react/solid";
 import TwitterLogo from "/components/logos/TwitterLogo";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";

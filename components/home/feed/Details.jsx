@@ -93,10 +93,13 @@ export default function Details({ item }) {
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>
             {item.attributes.artist_name && (
-              <> by {item.attributes.artist_name}</>
+              <span> by {item.attributes.artist_name}</span>
             )}
             {item.attributes.amount && (
-              <> for ◎{roundToTwo(item.attributes.amount / 1000000000)}</>
+              <span>
+                {" "}
+                for ◎{roundToTwo(item.attributes.amount / 1000000000)}
+              </span>
             )}
           </p>
         )}
@@ -112,6 +115,7 @@ export default function Details({ item }) {
                 item.attributes.highest_bidder_username
               )}
             >
+              {" "}
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>{" "}
             by {item.attributes.brand_name}

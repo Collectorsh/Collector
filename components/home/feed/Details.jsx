@@ -21,7 +21,7 @@ export default function Details({ item }) {
 
   return (
     <div className="mb-12">
-      <div className="float-left">
+      <div className="float-left w-11/12">
         {item.twitter_profile_image && (
           <img
             src={item.twitter_profile_image}
@@ -93,20 +93,17 @@ export default function Details({ item }) {
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>
             {item.attributes.artist_name && (
-              <span> by {item.attributes.artist_name}</span>
+              <> by {item.attributes.artist_name}</>
             )}
             {item.attributes.amount && (
-              <span>
-                {" "}
-                for ◎{roundToTwo(item.attributes.amount / 1000000000)}
-              </span>
+              <> for ◎{roundToTwo(item.attributes.amount / 1000000000)}</>
             )}
           </p>
         )}
 
         {item.type === "bid" && (
           <p className="text-sm dark:text-whitish overflow-hidden mb-3">
-            Placed a bid for ◎{roundToTwo(item.amount / 1000000000)} on
+            Placed a bid for ◎{roundToTwo(item.amount / 1000000000)} on{" "}
             <Link
               href={marketplaceLink(
                 item.attributes.source,
@@ -115,7 +112,6 @@ export default function Details({ item }) {
                 item.attributes.highest_bidder_username
               )}
             >
-              {" "}
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>{" "}
             by {item.attributes.brand_name}

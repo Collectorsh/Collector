@@ -55,7 +55,7 @@ export default function BuyNow() {
                 <p className="text-md dark:text-whitish overflow-hidden">
                   <Link
                     href={marketplaceLink(
-                      item.attributes.marketplace,
+                      item.attributes.source,
                       item.attributes.mint,
                       item.attributes.brand_name,
                       item.attributes.highest_bidder_username
@@ -69,7 +69,7 @@ export default function BuyNow() {
                       by <strong>{item.attributes.artist_name}</strong>{" "}
                     </span>
                   )}{" "}
-                  was listed on {item.attributes.marketplace}
+                  was listed on {item.attributes.source}
                   {item.attributes.amount && (
                     <> for ◎{roundToTwo(item.attributes.amount / 1000000000)}</>
                   )}
@@ -80,7 +80,7 @@ export default function BuyNow() {
                 </p>
                 <Link
                   href={marketplaceLink(
-                    item.attributes.marketplace,
+                    item.attributes.source,
                     item.attributes.mint,
                     item.attributes.artist_name,
                     item.attributes.highest_bidder_username

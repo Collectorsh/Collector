@@ -17,7 +17,7 @@ export default function Sale({ item }) {
       <p className="text-md dark:text-whitish overflow-hidden">
         <Link
           href={marketplaceLink(
-            item.attributes.marketplace,
+            item.attributes.source,
             item.attributes.mint,
             item.attributes.brand_name,
             item.attributes.highest_bidder_username
@@ -30,13 +30,12 @@ export default function Sale({ item }) {
         {roundToTwo(item.attributes.amount / 1000000000)}
       </p>
       <p className="text-xs mt-3 mb-1 text-gray-400 dark:text-whitish clear-both">
-        <Moment date={item.time} unix fromNow /> on{" "}
-        {item.attributes.marketplace}
+        <Moment date={item.time} unix fromNow /> on {item.attributes.source}
         <span className="float-right">Sale</span>
       </p>
       <Link
         href={marketplaceLink(
-          item.attributes.marketplace,
+          item.attributes.source,
           item.attributes.mint,
           item.attributes.brand_name,
           item.attributes.highest_bidder_username

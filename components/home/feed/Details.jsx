@@ -120,7 +120,7 @@ export default function Details({ item }) {
       </div>
 
       <div className="float-right mt-2">
-        {user && item.user_id && (
+        {user && item.user_id && user.id !== item.user_id && (
           <>
             {user.following &&
             user.following.find((f) => f.id === item.user_id) ? (

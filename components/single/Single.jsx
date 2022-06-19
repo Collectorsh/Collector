@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import TokenDetails from "/components/single/TokenDetails";
-import Attributes from "/components/single/Attributes";
 import ShowActivities from "/components/single/ShowActivities";
 import Link from "next/link";
 import ShareToTwitter from "/components/ShareToTwitter";
@@ -130,11 +129,8 @@ export default function Single({ token, refetch }) {
               userOffer={userOffer}
             />
           </div>
-          <ShowActivities token={token} />
           <TokenDetails token={token} />
-          {token.attributes && Array.isArray(token.attributes) && (
-            <Attributes token={token} />
-          )}
+          <ShowActivities token={token} />
         </div>
       </div>
     </>

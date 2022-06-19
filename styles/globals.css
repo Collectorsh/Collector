@@ -374,3 +374,13 @@ input:checked + .toggle-bg {
 #scroll-to-top {
   visibility: hidden;
 }
+
+#accordion button {
+  border: none;
+}
+
+#accordion button span {
+  float: right;
+  position: absolute;
+  right: 0;
+}

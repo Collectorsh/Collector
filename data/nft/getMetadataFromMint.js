@@ -28,6 +28,26 @@ async function getMetadataFromMint(mint) {
   const metadataPDA = await Metadata.getPDA(new PublicKey(mint));
   single.address = metadataPDA.toBase58();
   const tokenMetadata = await Metadata.load(connection, metadataPDA);
+
+  // Get verified collection data
+  if (
+    tokenMetadata.data.collection &&
+    tokenMetadata.data.collection.verified === 1
+  ) {
+    const collectionPDA = await Metadata.getPDA(
+      new PublicKey(tokenMetadata.data.collection.key)
+    );
+    const collectionMetadata = await Metadata.load(connection, collectionPDA);
+    single.collection = {
+      name: collectionMetadata.data.data.name,
+      uri: collectionMetadata.data.data.uri,
+      mint: tokenMetadata.data.collection.key,
+    };
+    const collectionuridata = await axios.get(single.collection.uri);
+    single.collection.description = collectionuridata.data.description;
+    single.collection.image = collectionuridata.data.image;
+  }
+
   single.uri = tokenMetadata.data.data.uri || null;
   single.mint = tokenMetadata.data.mint || null;
   single.name = tokenMetadata.data.data.name || null;

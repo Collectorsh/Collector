@@ -20,7 +20,7 @@ export default function TokenDetails({ token }) {
     <>
       <div
         id="accordion"
-        class="text-black dark:text-whitish mt-12 grid place-items-center w-full bg-[#f8fafc] dark:bg-[#111] px-6 border border-blue-grey-50 dark:border-dark2 rounded-lg scroll-mt-48 overflow-x-scroll lg:overflow-visible"
+        className="text-black dark:text-whitish mt-12 grid place-items-center w-full bg-[#f8fafc] dark:bg-[#111] px-6 border border-blue-grey-50 dark:border-dark2 rounded-lg scroll-mt-48 overflow-x-scroll lg:overflow-visible"
       >
         <Fragment>
           {token.collection && (

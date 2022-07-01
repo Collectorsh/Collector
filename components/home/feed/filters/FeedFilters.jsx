@@ -14,7 +14,7 @@ export default function FeedFilters({ updateSelected, feedsSelected }) {
   }
 
   return (
-    <div className="mb-5">
+    <div className="mb-5 hidden sm:block">
       <h2 className="text-lg uppercase font-bold mb-2 dark:text-whitish">
         Filters
       </h2>

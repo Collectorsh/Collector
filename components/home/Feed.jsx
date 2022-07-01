@@ -39,7 +39,10 @@ export default function Feed() {
                 }`}
                 onClick={() => updateFeedSelected("activity")}
               >
-                <SparklesIcon className="h-5 w-5" aria-hidden="true" />
+                <SparklesIcon
+                  className="h-8 w-8 lg:w-5 lg:h-5"
+                  aria-hidden="true"
+                />
 
                 <span className="hidden lg:flex mx-4 font-medium">
                   Activity
@@ -56,7 +59,10 @@ export default function Feed() {
                 }`}
                 onClick={() => updateFeedSelected("following")}
               >
-                <StarIcon className="h-5 w-5" aria-hidden="true" />
+                <StarIcon
+                  className="h-8 w-8 lg:w-5 lg:h-5"
+                  aria-hidden="true"
+                />
 
                 <span className="hidden lg:flex mx-4 font-medium">
                   Following
@@ -73,7 +79,10 @@ export default function Feed() {
                 }`}
                 onClick={() => setFeedSelected("auctions")}
               >
-                <CalendarIcon className="h-5 w-5" aria-hidden="true" />
+                <CalendarIcon
+                  className="h-8 w-8 lg:w-5 lg:h-5"
+                  aria-hidden="true"
+                />
 
                 <span className="hidden lg:flex mx-4 font-medium">
                   Auctions
@@ -90,7 +99,10 @@ export default function Feed() {
                 }`}
                 onClick={() => setFeedSelected("listings")}
               >
-                <ClipboardListIcon className="h-5 w-5" aria-hidden="true" />
+                <ClipboardListIcon
+                  className="h-8 w-8 lg:w-5 lg:h-5"
+                  aria-hidden="true"
+                />
 
                 <span className="hidden lg:flex mx-4 font-medium">
                   Listings
@@ -107,7 +119,10 @@ export default function Feed() {
                 }`}
                 onClick={() => setFeedSelected("galleries")}
               >
-                <CollectionIcon className="h-5 w-5" aria-hidden="true" />
+                <CollectionIcon
+                  className="h-8 w-8 lg:w-5 lg:h-5"
+                  aria-hidden="true"
+                />
 
                 <span className="hidden lg:flex mx-4 font-medium">
                   Galleries

@@ -7,7 +7,6 @@ import { host } from "/config/settings";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import { addDefaultSource } from "/utils/addDefaultSource";
-import { gridItemImageSize } from "/utils/gridItemSize";
 
 export default function Hidden({ token, setVisibility, size }) {
   const [tokenData, setTokenData] = useState();
@@ -34,9 +33,7 @@ export default function Hidden({ token, setVisibility, size }) {
       {tokenData && (
         <>
           <img
-            className={`${gridItemImageSize(
-              size
-            )} bg-black dark:bg-dark3 shadow-2xl border-t border-l border-r border-gray-200 dark:border-dark3 object-center object-cover rounded-t-lg`}
+            className={`w-${size} h-${size} bg-black dark:bg-dark3 shadow-2xl border-t border-l border-r border-gray-200 dark:border-dark3 object-center object-cover rounded-t-lg`}
             src={cdnImage(token.mint)}
             onError={(e) => addDefaultSource(e, token.mint, token.image)}
           />

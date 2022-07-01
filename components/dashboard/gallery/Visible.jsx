@@ -9,7 +9,6 @@ import { cdnImage } from "/utils/cdnImage";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import { addDefaultSource } from "/utils/addDefaultSource";
-import { gridItemImageSize } from "/utils/gridItemSize";
 
 const Visible = forwardRef(function Visible(
   {
@@ -66,9 +65,7 @@ const Visible = forwardRef(function Visible(
       {tokenData && (
         <>
           <img
-            className={`${gridItemImageSize(
-              size
-            )} bg-black dark:bg-dark3 shadow-2xl dark:bg-dark3 object-center object-cover rounded-t-lg h-48 cursor-move border-t border-l border-r border-gray-200 dark:border-dark3`}
+            className={`w-${size} h-${size} bg-black dark:bg-dark3 shadow-2xl dark:bg-dark3 object-center object-cover rounded-t-lg cursor-move border-t border-l border-r border-gray-200 dark:border-dark3`}
             src={cdnImage(token.mint)}
             onError={(e) => addDefaultSource(e, token.mint, token.image)}
           />

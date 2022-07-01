@@ -10,7 +10,7 @@ import { ViewGridIcon } from "@heroicons/react/solid";
 
 export default function CollectionContainer({ tkns, user }) {
   const [tokens, setTokens] = useState([]);
-  const [size, setSize] = useState("large");
+  const [size, setSize] = useState(48);
 
   useEffect(() => {
     if (!tkns) return;
@@ -43,23 +43,16 @@ export default function CollectionContainer({ tkns, user }) {
       <div className="">
         <ViewGridIcon
           className={`h-8 w-8 inline cursor-pointer ${
-            size === "small" && "text-gray-500 dark:text-whitish"
+            size === 32 && "text-gray-500 dark:text-whitish"
           }`}
-          onClick={(e) => setSize("small")}
-          aria-hidden="true"
-        />
-        <ViewGridIcon
-          className={`h-9 w-9 inline cursor-pointer ${
-            size === "medium" && "text-gray-500 dark:text-whitish"
-          }`}
-          onClick={(e) => setSize("medium")}
+          onClick={(e) => setSize(32)}
           aria-hidden="true"
         />
         <ViewGridIcon
           className={`h-10 w-10 inline cursor-pointer ${
-            size === "large" && "text-gray-500 dark:text-whitish"
+            size === 48 && "text-gray-500 dark:text-whitish"
           }`}
-          onClick={(e) => setSize("large")}
+          onClick={(e) => setSize(48)}
           aria-hidden="true"
         />
       </div>

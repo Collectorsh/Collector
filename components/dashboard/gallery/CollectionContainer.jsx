@@ -40,7 +40,7 @@ export default function CollectionContainer({ tkns, user }) {
         tokens={tokens}
       />
 
-      <div className="">
+      <div className="hidden">
         <ViewGridIcon
           className={`h-8 w-8 inline cursor-pointer ${
             size === 32 && "text-gray-500 dark:text-whitish"

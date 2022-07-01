@@ -13,8 +13,8 @@ export default function Home() {
       <MainNavigation />
       {!user && (
         <>
-          <Hero />
-          <Featured />
+          {/* <Hero /> */}
+          {/* <Featured /> */}
         </>
       )}
       <Feed />

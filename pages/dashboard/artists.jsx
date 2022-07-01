@@ -30,7 +30,7 @@ export default function Artists() {
       <CheckLoggedIn />
       <Toaster />
       <MainNavigation />
-      <div className="mx-auto px-2 md:px-4 lg:px-12">
+      <div className="mx-auto px-4">
         <div className="mx-auto px-2 md:px-0 mt-16 sm:mt-36">
           <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-1 inline-block dark:text-whitish">
             Artists

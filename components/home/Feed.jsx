@@ -6,7 +6,6 @@ import {
   CollectionIcon,
   SparklesIcon,
   ChevronUpIcon,
-  LightningBoltIcon,
 } from "@heroicons/react/outline";
 import Activity from "/components/home/feed/Activity";
 import Following from "/components/home/feed/Following";
@@ -14,6 +13,7 @@ import Auctions from "/components/home/feed/Auctions";
 import AllListings from "/components/home/feed/AllListings";
 import Galleries from "/components/home/feed/Galleries";
 import BuyNow from "/components/home/feed/BuyNow";
+import RightColumn from "/components/home/RightColumn";
 import ShowScrollToTop from "/components/home/ShowScrollToTop";
 import { scrollToFeed } from "/utils/scrollToFeed";
 
@@ -27,8 +27,8 @@ export default function Feed() {
   return (
     <>
       <ShowScrollToTop />
-      <div className="sm:flex mb-0">
-        <div className="h-fit sm:h-[calc(100vh-80px)] sm:sticky sm:top-[80px] w-full sm:w-52 md:w-64 px-2 lg:ml-9">
+      <div className="flex">
+        <div className="h-fit h-[calc(100vh-80px)] sticky top-[80px] w-16 lg:w-64 px-2">
           <ul className="text-sm">
             <li className="mb-2">
               <a
@@ -41,7 +41,9 @@ export default function Feed() {
               >
                 <SparklesIcon className="h-5 w-5" aria-hidden="true" />
 
-                <span className="mx-4 font-medium">Activity</span>
+                <span className="hidden lg:flex mx-4 font-medium">
+                  Activity
+                </span>
               </a>
             </li>
 
@@ -56,7 +58,9 @@ export default function Feed() {
               >
                 <StarIcon className="h-5 w-5" aria-hidden="true" />
 
-                <span className="mx-4 font-medium">Following</span>
+                <span className="hidden lg:flex mx-4 font-medium">
+                  Following
+                </span>
               </a>
             </li>
 
@@ -71,7 +75,9 @@ export default function Feed() {
               >
                 <CalendarIcon className="h-5 w-5" aria-hidden="true" />
 
-                <span className="mx-4 font-medium">Live Auctions</span>
+                <span className="hidden lg:flex mx-4 font-medium">
+                  Auctions
+                </span>
               </a>
             </li>
 
@@ -86,22 +92,9 @@ export default function Feed() {
               >
                 <ClipboardListIcon className="h-5 w-5" aria-hidden="true" />
 
-                <span className="mx-4 font-medium">All Listings</span>
-              </a>
-            </li>
-
-            <li className="mb-2">
-              <a
-                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
-                  feedSelected === "buynow"
-                    ? "bg-gray-100 dark:bg-dark3"
-                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
-                }`}
-                onClick={() => setFeedSelected("buynow")}
-              >
-                <LightningBoltIcon className="h-5 w-5" aria-hidden="true" />
-
-                <span className="mx-4 font-medium">Buy Now</span>
+                <span className="hidden lg:flex mx-4 font-medium">
+                  Listings
+                </span>
               </a>
             </li>
 
@@ -116,7 +109,9 @@ export default function Feed() {
               >
                 <CollectionIcon className="h-5 w-5" aria-hidden="true" />
 
-                <span className="mx-4 font-medium">Galleries</span>
+                <span className="hidden lg:flex mx-4 font-medium">
+                  Galleries
+                </span>
               </a>
             </li>
           </ul>
@@ -124,10 +119,10 @@ export default function Feed() {
 
         <div
           id="feed"
-          className="sm:flex-1 sm:flex sm:border-l border-black dark:border-gray-400"
+          className="lg:flex-1 lg:flex lg:border-l border-whitish dark:border-dark3"
         >
-          <div className="sm:flex-1">
-            <div className="mx-4 sm:mx-6 lg:mx-16">
+          <div className="lg:flex-1">
+            <div className="mx-4 lg:mx-8">
               {feedSelected === "activity" && <Activity />}
               {feedSelected === "following" && <Following />}
               {feedSelected === "auctions" && <Auctions />}
@@ -137,6 +132,12 @@ export default function Feed() {
             </div>
           </div>
         </div>
+
+        {feedSelected !== "auctions" && (
+          <div className="hidden lg:block lg:w-80 xl:w-96 px-2">
+            <RightColumn />
+          </div>
+        )}
 
         <div
           id="scroll-to-top"

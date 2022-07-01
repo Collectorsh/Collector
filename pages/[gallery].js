@@ -50,7 +50,7 @@ function Gallery({ user, tokens }) {
         )}
       </Head>
       {user ? <GalleryNavigation user={user} /> : <MainNavigation />}
-      <div className="mx-auto px-2 md:px-4 lg:px-12 clear-both">
+      <div className="mx-auto px-4 clear-both">
         <div className="mx-auto px-2 pt-3 md:px-0">
           {tokens && <GalleryContainer tokens={tokens} user={user} />}
           {!user && (

@@ -14,11 +14,11 @@ export default function FeedFilters({ updateSelected, feedsSelected }) {
   }
 
   return (
-    <>
+    <div className="mb-5">
       <h2 className="text-lg uppercase font-bold mb-2 dark:text-whitish">
         Filters
       </h2>
-      <div className="mb-12">
+      <div className="pb-4">
         <button className={style("bid")} onClick={() => updateSelected("bid")}>
           New Bids
         </button>
@@ -38,6 +38,6 @@ export default function FeedFilters({ updateSelected, feedsSelected }) {
           Listings
         </button>
       </div>
-    </>
+    </div>
   );
 }

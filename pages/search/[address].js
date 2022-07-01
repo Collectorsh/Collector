@@ -29,7 +29,7 @@ export default function Search() {
   return (
     <div className="dark:bg-black mt-32">
       <MainNavigation publicKey={address} />
-      <div className="mx-auto px-2 md:px-4 lg:px-12">
+      <div className="mx-auto px-4">
         <div className="mx-auto px-2 md:px-0">
           {tokens && <GalleryContainer tokens={tokens} />}
           {!tokens && notFound && (

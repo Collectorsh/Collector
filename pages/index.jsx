@@ -11,12 +11,8 @@ export default function Home() {
   return (
     <div className="dark:bg-black">
       <MainNavigation />
-      {!user && (
-        <>
-          {/* <Hero /> */}
-          {/* <Featured /> */}
-        </>
-      )}
+      <Hero />
+      <Featured />
       <Feed />
     </div>
   );

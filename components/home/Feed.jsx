@@ -30,19 +30,16 @@ export default function Feed() {
       <div className="flex">
         <div className="h-fit h-[calc(100vh-80px)] sticky top-[80px] w-16 lg:w-64 px-2">
           <ul className="text-sm">
-            <li className="mb-2">
+            <li className="mb-4 lg:mb-2">
               <a
-                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
+                className={`flex items-center px-2 py-1 lg:px-4 lg:py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "activity"
                     ? "bg-gray-100 dark:bg-dark3"
                     : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => updateFeedSelected("activity")}
               >
-                <SparklesIcon
-                  className="h-8 w-8 lg:w-5 lg:h-5"
-                  aria-hidden="true"
-                />
+                <SparklesIcon className="w-5 h-5" aria-hidden="true" />
 
                 <span className="hidden lg:flex mx-4 font-medium">
                   Activity
@@ -50,19 +47,16 @@ export default function Feed() {
               </a>
             </li>
 
-            <li className="mb-2">
+            <li className="mb-4 lg:mb-2">
               <a
-                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
+                className={`flex items-center px-2 py-1 lg:px-4 lg:py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "following"
                     ? "bg-gray-100 dark:bg-dark3"
                     : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => updateFeedSelected("following")}
               >
-                <StarIcon
-                  className="h-8 w-8 lg:w-5 lg:h-5"
-                  aria-hidden="true"
-                />
+                <StarIcon className="w-5 h-5" aria-hidden="true" />
 
                 <span className="hidden lg:flex mx-4 font-medium">
                   Following
@@ -70,19 +64,16 @@ export default function Feed() {
               </a>
             </li>
 
-            <li className="mb-2">
+            <li className="mb-4 lg:mb-2">
               <a
-                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
+                className={`flex items-center px-2 py-1 lg:px-4 lg:py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "auctions"
                     ? "bg-gray-100 dark:bg-dark3"
                     : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => setFeedSelected("auctions")}
               >
-                <CalendarIcon
-                  className="h-8 w-8 lg:w-5 lg:h-5"
-                  aria-hidden="true"
-                />
+                <CalendarIcon className="w-5 h-5" aria-hidden="true" />
 
                 <span className="hidden lg:flex mx-4 font-medium">
                   Auctions
@@ -90,19 +81,16 @@ export default function Feed() {
               </a>
             </li>
 
-            <li className="mb-2">
+            <li className="mb-4 lg:mb-2">
               <a
-                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
+                className={`flex items-center px-2 py-1 lg:px-4 lg:py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "listings"
                     ? "bg-gray-100 dark:bg-dark3"
                     : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => setFeedSelected("listings")}
               >
-                <ClipboardListIcon
-                  className="h-8 w-8 lg:w-5 lg:h-5"
-                  aria-hidden="true"
-                />
+                <ClipboardListIcon className="w-5 h-5" aria-hidden="true" />
 
                 <span className="hidden lg:flex mx-4 font-medium">
                   Listings
@@ -110,19 +98,16 @@ export default function Feed() {
               </a>
             </li>
 
-            <li className="mb-2">
+            <li className="mb-4 lg:mb-2">
               <a
-                className={`flex items-center px-4 py-2 text-black dark:text-whitish rounded-md ${
+                className={`flex items-center px-2 py-1 lg:px-4 lg:py-2 text-black dark:text-whitish rounded-md ${
                   feedSelected === "galleries"
                     ? "bg-gray-100 dark:bg-dark3"
                     : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
                 }`}
                 onClick={() => setFeedSelected("galleries")}
               >
-                <CollectionIcon
-                  className="h-8 w-8 lg:w-5 lg:h-5"
-                  aria-hidden="true"
-                />
+                <CollectionIcon className="w-5 h-5" aria-hidden="true" />
 
                 <span className="hidden lg:flex mx-4 font-medium">
                   Galleries

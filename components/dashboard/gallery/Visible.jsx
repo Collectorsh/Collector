@@ -65,7 +65,9 @@ const Visible = forwardRef(function Visible(
       {tokenData && (
         <>
           <img
-            className={`w-${size} h-${size} bg-black dark:bg-dark3 shadow-2xl dark:bg-dark3 object-center object-cover rounded-t-lg cursor-move border-t border-l border-r border-gray-200 dark:border-dark3`}
+            className={`${
+              size === 32 ? "w-32 h-32" : "w-48 h-48"
+            } bg-black dark:bg-dark3 shadow-2xl dark:bg-dark3 object-center object-cover rounded-t-lg cursor-move border-t border-l border-r border-gray-200 dark:border-dark3`}
             src={cdnImage(token.mint)}
             onError={(e) => addDefaultSource(e, token.mint, token.image)}
           />

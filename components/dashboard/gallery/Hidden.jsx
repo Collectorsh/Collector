@@ -33,7 +33,9 @@ export default function Hidden({ token, setVisibility, size }) {
       {tokenData && (
         <>
           <img
-            className={`w-${size} h-${size} bg-black dark:bg-dark3 shadow-2xl border-t border-l border-r border-gray-200 dark:border-dark3 object-center object-cover rounded-t-lg`}
+            className={`${
+              size === 32 ? "w-32 h-32" : "w-48 h-48"
+            } bg-black dark:bg-dark3 shadow-2xl border-t border-l border-r border-gray-200 dark:border-dark3 object-center object-cover rounded-t-lg`}
             src={cdnImage(token.mint)}
             onError={(e) => addDefaultSource(e, token.mint, token.image)}
           />

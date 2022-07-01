@@ -40,7 +40,7 @@ export default function CollectionContainer({ tkns, user }) {
         tokens={tokens}
       />
 
-      <div className="hidden">
+      <div className="">
         <ViewGridIcon
           className={`h-8 w-8 inline cursor-pointer ${
             size === 32 && "text-gray-500 dark:text-whitish"
@@ -58,7 +58,7 @@ export default function CollectionContainer({ tkns, user }) {
       </div>
 
       <div className="clear-both mt-3 mb-10">
-        <div className="flex flex-wrap gap-6 justify-around">
+        <div className="flex flex-wrap gap-6">
           <DragAndDrop
             tokens={tokens}
             moveCard={moveCard}
@@ -72,7 +72,7 @@ export default function CollectionContainer({ tkns, user }) {
           Hidden
         </h2>
 
-        <div className="flex flex-wrap gap-6 justify-around">
+        <div className="flex flex-wrap gap-6">
           {Array.isArray(tokens) &&
             tokens.map((token, index) => {
               if (!token.visible)

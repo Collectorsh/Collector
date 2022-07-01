@@ -8,26 +8,26 @@ export default function DragAndDrop({
   toggleVisibilityOne,
   setTokenAcceptOffers,
   updates,
+  size,
 }) {
   return (
     <DndProvider backend={HTML5Backend} key={updates}>
-      <div id="collectibles">
-        {Array.isArray(tokens) &&
-          tokens.map((token, index) => {
-            if (token.visible)
-              return (
-                <Visible
-                  key={token.id}
-                  index={index}
-                  id={token.id}
-                  token={token}
-                  moveCard={moveCard}
-                  setVisibility={toggleVisibilityOne}
-                  setTokenAcceptOffers={setTokenAcceptOffers}
-                />
-              );
-          })}
-      </div>
+      {Array.isArray(tokens) &&
+        tokens.map((token, index) => {
+          if (token.visible)
+            return (
+              <Visible
+                key={token.id}
+                index={index}
+                id={token.id}
+                token={token}
+                moveCard={moveCard}
+                setVisibility={toggleVisibilityOne}
+                setTokenAcceptOffers={setTokenAcceptOffers}
+                size={size}
+              />
+            );
+        })}
     </DndProvider>
   );
 }

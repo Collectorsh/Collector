@@ -7,8 +7,9 @@ import { host } from "/config/settings";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import { addDefaultSource } from "/utils/addDefaultSource";
+import { gridItemImageSize } from "/utils/gridItemSize";
 
-export default function Hidden({ token, setVisibility }) {
+export default function Hidden({ token, setVisibility, size }) {
   const [tokenData, setTokenData] = useState();
 
   const initGetData = useCallback(async (tok) => {
@@ -29,15 +30,17 @@ export default function Hidden({ token, setVisibility }) {
   }
 
   return (
-    <div className="collectible relative" id={token.mint}>
+    <div className="flex-none relative" id={token.mint}>
       {tokenData && (
         <>
           <img
-            className="image-container bg-black dark:bg-dark3 shadow-2xl border-t border-l border-r border-gray-200 dark:border-dark3 object-center object-cover rounded-t-lg"
+            className={`${gridItemImageSize(
+              size
+            )} bg-black dark:bg-dark3 shadow-2xl border-t border-l border-r border-gray-200 dark:border-dark3 object-center object-cover rounded-t-lg`}
             src={cdnImage(token.mint)}
             onError={(e) => addDefaultSource(e, token.mint, token.image)}
           />
-          <div className="w-full bg-black dark:bg-dark3 shadow-2xl border-l border-r border-b border-gray-200 dark:border-dark3 px-2 py-2 rounded-b-lg">
+          <div className="w-full bg-black dark:bg-dark3 shadow-2xl border-l border-r border-b border-gray-200 dark:border-dark3 px-1 py-1 rounded-b-lg">
             <Tippy content="Make visible">
               <EyeOffIcon
                 className="h-4 w-4 text-white cursor-pointer focus:outline-none inline"
@@ -48,10 +51,10 @@ export default function Hidden({ token, setVisibility }) {
               />
             </Tippy>
             <button
-              className="rounded bg-gray-100 px-1 py-0.5 mt-1 font-bold text-xs cursor-pointer inline float-right"
+              className="rounded bg-gray-100 px-1 py-0.5 mt-1 font-semibold text-xs cursor-pointer inline float-right"
               onClick={(e) => goToNft()}
             >
-              List NFT
+              List
             </button>
           </div>
         </>

@@ -6,9 +6,11 @@ import Actions from "/components/dashboard/gallery/Actions";
 import update from "immutability-helper";
 import saveLayout from "/data/dashboard/saveLayout";
 import cloneDeep from "lodash/cloneDeep";
+import { ViewGridIcon } from "@heroicons/react/solid";
 
 export default function CollectionContainer({ tkns, user }) {
   const [tokens, setTokens] = useState([]);
+  const [size, setSize] = useState("large");
 
   useEffect(() => {
     if (!tkns) return;
@@ -38,19 +40,46 @@ export default function CollectionContainer({ tkns, user }) {
         tokens={tokens}
       />
 
-      <div className="clear-both mt-3 mb-10">
-        <DragAndDrop
-          tokens={tokens}
-          moveCard={moveCard}
-          toggleVisibilityOne={toggleVisibilityOne}
-          setTokenAcceptOffers={setTokenAcceptOffers}
+      <div className="">
+        <ViewGridIcon
+          className={`h-8 w-8 inline cursor-pointer ${
+            size === "small" && "text-gray-500 dark:text-whitish"
+          }`}
+          onClick={(e) => setSize("small")}
+          aria-hidden="true"
         />
+        <ViewGridIcon
+          className={`h-9 w-9 inline cursor-pointer ${
+            size === "medium" && "text-gray-500 dark:text-whitish"
+          }`}
+          onClick={(e) => setSize("medium")}
+          aria-hidden="true"
+        />
+        <ViewGridIcon
+          className={`h-10 w-10 inline cursor-pointer ${
+            size === "large" && "text-gray-500 dark:text-whitish"
+          }`}
+          onClick={(e) => setSize("large")}
+          aria-hidden="true"
+        />
+      </div>
+
+      <div className="clear-both mt-3 mb-10">
+        <div className="flex flex-wrap gap-6 justify-around">
+          <DragAndDrop
+            tokens={tokens}
+            moveCard={moveCard}
+            toggleVisibilityOne={toggleVisibilityOne}
+            setTokenAcceptOffers={setTokenAcceptOffers}
+            size={size}
+          />
+        </div>
 
         <h2 className="border-b border-b-black dark:border-b-white text-3xl font-extrabold mb-8 text-black w-fit py-1 inline-block mt-8 dark:text-whitish">
           Hidden
         </h2>
 
-        <div id="collectibles">
+        <div className="flex flex-wrap gap-6 justify-around">
           {Array.isArray(tokens) &&
             tokens.map((token, index) => {
               if (!token.visible)
@@ -59,6 +88,7 @@ export default function CollectionContainer({ tkns, user }) {
                     key={token.id}
                     token={token}
                     setVisibility={toggleVisibilityOne}
+                    size={size}
                   />
                 );
             })}

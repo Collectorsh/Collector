@@ -9,6 +9,7 @@ import { cdnImage } from "/utils/cdnImage";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import { addDefaultSource } from "/utils/addDefaultSource";
+import { gridItemImageSize } from "/utils/gridItemSize";
 
 const Visible = forwardRef(function Visible(
   {
@@ -18,6 +19,7 @@ const Visible = forwardRef(function Visible(
     isDragging,
     connectDragSource,
     connectDropTarget,
+    size,
   },
   ref
 ) {
@@ -60,15 +62,17 @@ const Visible = forwardRef(function Visible(
   }
 
   return (
-    <div className="collectible relative" ref={elementRef} id={token.mint}>
+    <div className="flex-none" ref={elementRef} id={token.mint}>
       {tokenData && (
         <>
           <img
-            className="bg-black dark:bg-dark3 shadow-2xl dark:bg-dark3 object-center object-cover rounded-t-lg h-48 cursor-move border-t border-l border-r border-gray-200 dark:border-dark3"
+            className={`${gridItemImageSize(
+              size
+            )} bg-black dark:bg-dark3 shadow-2xl dark:bg-dark3 object-center object-cover rounded-t-lg h-48 cursor-move border-t border-l border-r border-gray-200 dark:border-dark3`}
             src={cdnImage(token.mint)}
             onError={(e) => addDefaultSource(e, token.mint, token.image)}
           />
-          <div className="w-full bg-black dark:bg-dark3 shadow-2xl dark:bg-dark3 px-2 py-1.5 rounded-b-lg align-middle border-l border-r border-b border-gray-200 dark:border-dark3">
+          <div className="w-full bg-black dark:bg-dark3 shadow-2xl dark:bg-dark3 px-1 py-1 rounded-b-lg align-middle border-l border-r border-b border-gray-200 dark:border-dark3">
             <Tippy content="Make not visible" className="bg-gray-300">
               <EyeIcon
                 className="h-5 w-5 text-white cursor-pointer inline focus:outline-none"
@@ -86,10 +90,10 @@ const Visible = forwardRef(function Visible(
               />
             </Tippy>
             <button
-              className="rounded bg-gray-100 px-1 py-0.5 mt-1 font-bold text-xs cursor-pointer inline float-right"
+              className="rounded bg-gray-100 px-1 py-0.5 mt-1 font-semibold text-xs cursor-pointer inline float-right"
               onClick={(e) => goToNft()}
             >
-              List NFT
+              List
             </button>
           </div>
         </>

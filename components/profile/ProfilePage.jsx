@@ -85,7 +85,7 @@ function ProfilePage({ profileUser, following, followers }) {
         </div>
       </div>
 
-      <div className="max-w-7xl grid grid-cols-1 md:grid-cols-6 px-4 min-h-screen relative">
+      <div className="max-w-7xl grid grid-cols-1 md:grid-cols-6 min-h-screen relative">
         <div
           id="feed"
           className="col-span-1 md:col-span-3 order-last md:order-first"

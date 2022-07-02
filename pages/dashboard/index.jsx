@@ -30,7 +30,7 @@ export default function Collection() {
       <Toaster />
       <MainNavigation />
 
-      <div className="mx-auto px-2 px-4">
+      <div className="mx-auto px-4 md:px-8">
         <div className="mx-auto px-2 md:px-0">
           {tokens ? (
             <CollectionContainer tkns={tokens} user={user} />

@@ -1,36 +1,17 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import getFeed from "/data/home/getFeed";
 import Details from "/components/home/feed/Details";
-import { Oval } from "react-loader-spinner";
 
-export default function Activity({ user }) {
+export default function Activity({ activity }) {
   const [infiniteScrollItems, setInfiniteScrollItems] = useState();
-  const [feedsSelected, setFeedsSelected] = useState([
-    "bid",
-    "sale",
-    "won",
-    "listing",
-  ]);
   const [results, setResults] = useState();
-  const [activity, setActivity] = useState();
-
-  const fetchFeed = useCallback(async (user_id) => {
-    let res = await getFeed(user_id);
-    setActivity(res.data);
-  }, []);
-
-  useEffect(() => {
-    fetchFeed(user.id);
-  }, [user]);
 
   useEffect(() => {
     if (!activity) return;
 
-    const items = activity.filter((a) => feedsSelected.includes(a.type));
-    setResults(items);
-    setInfiniteScrollItems(items.slice(0, 5));
-  }, [activity, feedsSelected]);
+    setResults(activity);
+    setInfiniteScrollItems(activity.slice(0, 5));
+  }, [activity]);
 
   function fetchData() {
     setInfiniteScrollItems((currentDisplayedItems) =>
@@ -39,17 +20,12 @@ export default function Activity({ user }) {
   }
 
   return (
-    <div>
-      {!infiniteScrollItems && (
-        <div className="mt-4 w-[50px] h-64 mx-auto mt-20">
-          <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
-        </div>
-      )}
+    <div className="mt-16">
+      <h2 className="text-5xl font-extrabold text-black w-fit inline-block dark:text-white mb-6">
+        Activity
+      </h2>
       {infiniteScrollItems && (
         <>
-          <h2 className="text-5xl font-extrabold mb-8 text-black w-fit pt-5 inline-block dark:text-whitish">
-            Activity
-          </h2>
           <InfiniteScroll
             dataLength={infiniteScrollItems.length}
             next={fetchData}

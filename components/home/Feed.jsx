@@ -8,8 +8,17 @@ import RightColumn from "/components/home/RightColumn";
 export default function Feed({ feed }) {
   return (
     <>
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-6 px-4 min-h-screen relative">
-        <div id="feed" className="col-span-1 md:col-span-3">
+      <div
+        className={`max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-6 px-4 min-h-screen relative ${
+          feed === "auctions" && "md:grid-cols-1"
+        }`}
+      >
+        <div
+          id="feed"
+          className={`col-span-1 md:col-span-3 ${
+            feed === "auctions" && "md:col-span-1"
+          }`}
+        >
           {(feed === "activity" || !feed) && <Activity />}
           {feed === "following" && <Following />}
           {feed === "auctions" && <Auctions />}

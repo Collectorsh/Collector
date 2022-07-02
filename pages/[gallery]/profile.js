@@ -22,7 +22,7 @@ function Profile({ profileUser }) {
   return (
     <div className="dark:bg-black dark:text-whitish">
       <MainNavigation />
-      <div className="mx-auto px-4 clear-both">
+      <div className="mx-auto px-4 md:px-8 clear-both">
         <div className="mx-auto px-2 pt-3 md:px-0">
           {profileUser ? (
             <ProfilePage

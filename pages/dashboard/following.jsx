@@ -28,7 +28,7 @@ export default function Following() {
     <div className="dark:bg-black">
       <CheckLoggedIn />
       <MainNavigation />
-      <div className="mx-auto px-2 px-4">
+      <div className="mx-auto px-4 md:px-8">
         <div className="mx-auto px-2 md:px-0">
           <div className="mb-12">
             <div className="w-full mt-16 sm:mt-36 mb-6">

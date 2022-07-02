@@ -8,13 +8,13 @@ import Image from "/components/Image";
 
 export default function GridView({ items, type }) {
   return (
-    <div id="grid-container">
+    <div className="flex flex-wrap gap-6 md:gap-12 lg:gap-24 justify-center sm:justify-start">
       {items.map((item, index) => (
         <div
           key={index}
-          className="grid-item bg-white dark:bg-dark3 shadow-2xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
+          className="flex-none bg-white dark:bg-dark3 shadow-lg sm:shadow-2xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
         >
-          <div className="grid-image-container rounded-lg">
+          <div className="rounded-lg overflow-hidden">
             {type === "listing" && (
               <Link href={`/nft/${item.mintAddress}`}>
                 <a>

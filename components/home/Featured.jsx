@@ -19,7 +19,7 @@ export default function Featured({ updateFeed }) {
 
   return (
     <>
-      <div className="bg-black dark:bg-black dark:border-t dark:border-b dark:border-dark3 mb-12 w-full sticky top-[74px] z-10 mb-18">
+      <div className="bg-black dark:bg-black dark:border-t dark:border-b dark:border-dark3 w-full sticky top-[74px] z-10 mb-24">
         <h1 className="text-white text-center py-3 md:py-6 tracking-wide w-full">
           <div className="md:inline">
             <span

@@ -6,6 +6,7 @@ import CollectorUsername from "/components/CollectorUsername";
 import Collected from "/components/profile/Collected";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
+import { ViewGridIcon } from "@heroicons/react/outline";
 
 function ProfilePage({ profileUser, following, followers, activity, image }) {
   const [user, setUser] = useContext(UserContext);
@@ -35,53 +36,58 @@ function ProfilePage({ profileUser, following, followers, activity, image }) {
             <CollectorUsername username={profileUser.username} />
           </p>
         )}
-        {user && user.username !== profileUser.username && (
-          <div className="float-right">
-            {user.following &&
-            user.following.find((f) => f.id === profileUser.id) ? (
-              <Tippy
-                content={`Stop following ${profileUser.username}`}
-                className="bg-gray-300"
-              >
-                <button
-                  className="align-top cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-2 px-3 font-bold border border-4 bg-white text-black border-black hover:border-red-700 dark:hover:border-red-800 dark:bg-black dark:text-whitish dark:border-whitish"
-                  onClick={() => followUser(profileUser.id, "unfollow")}
-                >
-                  Following
-                </button>
-              </Tippy>
-            ) : (
-              <Tippy
-                content={`Follow ${profileUser.username}`}
-                className="bg-gray-300"
-              >
-                <button
-                  className="align-top cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-2 px-3 font-bold border border-4 bg-black text-white border-black dark:bg-whitish dark:text-black dark:border-whitish"
-                  onClick={() => followUser(profileUser.id, "follow")}
-                >
-                  + Follow
-                </button>
-              </Tippy>
-            )}
+
+        <div className="float-right">
+          <div className="inline">
+            <Link href={`/${profileUser.username}`}>
+              <a className="cursor-pointer rounded-3xl text-sm xl:text-md py-2.5 px-3 font-bold border border-4 bg-black text-white border-black dark:bg-whitish dark:text-black dark:border-whitish">
+                <ViewGridIcon
+                  className="h-5 w-5 inline mr-2 align-middle"
+                  aria-hidden="true"
+                />
+                <span className="align-middle">View Galley</span>
+              </a>
+            </Link>
           </div>
-        )}
+
+          {user && user.username !== profileUser.username && (
+            <div className="inline ml-4">
+              {user.following &&
+              user.following.find((f) => f.id === profileUser.id) ? (
+                <Tippy
+                  content={`Stop following ${profileUser.username}`}
+                  className="bg-gray-300"
+                >
+                  <button
+                    className="cursor-pointer rounded-3xl text-sm xl:text-md py-2 px-3 font-bold border border-4 bg-white text-black border-black hover:border-red-700 dark:hover:border-red-800 dark:bg-black dark:text-whitish dark:border-whitish"
+                    onClick={() => followUser(profileUser.id, "unfollow")}
+                  >
+                    Following
+                  </button>
+                </Tippy>
+              ) : (
+                <Tippy
+                  content={`Follow ${profileUser.username}`}
+                  className="bg-gray-300"
+                >
+                  <button
+                    className="cursor-pointer rounded-3xl text-sm xl:text-md py-2 px-3 font-bold border border-4 bg-black text-white border-black dark:bg-whitish dark:text-black dark:border-whitish"
+                    onClick={() => followUser(profileUser.id, "follow")}
+                  >
+                    + Follow
+                  </button>
+                </Tippy>
+              )}
+            </div>
+          )}
+        </div>
+
         <div className="mt-3">
           <p className="text-xl">
             <span>{followers && followers.length} Followers</span> &middot;{" "}
             <span>{following && following.length} Following</span>
           </p>
         </div>
-      </div>
-
-      <div className="mt-10">
-        <h2 className="text-4xl font-extrabold text-black w-fit inline-block dark:text-white mb-6">
-          Gallery
-        </h2>
-        <p className="">
-          <Link href={`/${profileUser.username}`}>
-            <a className="text-xl hover:underline">View Galley</a>
-          </Link>
-        </p>
       </div>
 
       <div className="mt-10">

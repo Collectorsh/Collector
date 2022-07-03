@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Moment from "react-moment";
 import Link from "next/link";
-import { marketplaceLink } from "/utils/marketplaceHelpers";
 import { roundToTwo } from "/utils/roundToTwo";
 import Image from "/components/Image";
 
@@ -15,7 +14,7 @@ export default function Collected({ activity }) {
   }, [activity]);
 
   return (
-    <div className="mt-16">
+    <div className="mt-10">
       <h2 className="text-4xl font-extrabold text-black w-fit inline-block dark:text-white mb-6">
         Collected
       </h2>

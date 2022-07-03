@@ -39,7 +39,7 @@ export default function Auctions() {
       )}
       {auctions.length > 0 && (
         <>
-          <h2 className="text-5xl font-extrabold mb-8 text-black w-fit inline-block dark:text-whitish">
+          <h2 className="text-4xl font-extrabold mb-8 text-black w-fit inline-block dark:text-whitish">
             Auctions
           </h2>
           {infiniteScrollItems && (

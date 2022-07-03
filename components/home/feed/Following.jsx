@@ -62,7 +62,7 @@ export default function Following() {
       )}
       {infiniteScrollItems && (
         <>
-          <h2 className="text-5xl font-extrabold mb-8 text-black w-fit inline-block dark:text-whitish">
+          <h2 className="text-4xl font-extrabold mb-8 text-black w-fit inline-block dark:text-whitish">
             Following
           </h2>
           {infiniteScrollItems.length > 0 && (

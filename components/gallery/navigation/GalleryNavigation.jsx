@@ -45,7 +45,7 @@ export default function GalleryNavigation({ user }) {
   };
 
   return (
-    <div className="mx-auto px-4 lg:px-12">
+    <div className="mx-auto px-4">
       <nav className="mx-auto pt-5 px-0 align-middle dark:bg-black">
         <div className="grid grid-cols-6">
           <div className="flex items-center col-span-3 md:col-span-2">

@@ -40,7 +40,7 @@ export default function Galleries() {
       )}
       {galleries && (
         <>
-          <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-5 inline-block dark:text-white">
+          <h2 className="text-4xl font-extrabold mb-8 text-black w-fit py-5 inline-block dark:text-white">
             Galleries
           </h2>
           {alphabet.map((letter, index) => (

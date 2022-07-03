@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import getUserFromUsername from "/data/user/getUserFromUsername";
-import getMetadata from "/data/nft/getMetadata";
+import getFeed from "/data/home/getFeed";
 import getUserFollows from "/data/user/getUserFollows";
 import ProfilePage from "/components/profile/ProfilePage";
 import MainNavigation from "/components/navigation/MainNavigation";
 
 function Profile({ profileUser }) {
+  const [activity, setActivity] = useState();
+  const [image, setImage] = useState();
   const [followers, setFollowers] = useState();
   const [following, setFollowing] = useState();
 
@@ -15,8 +17,16 @@ function Profile({ profileUser }) {
     setFollowing(res.following);
   }, []);
 
+  const fetchFeed = useCallback(async (user_id) => {
+    let res = await getFeed(user_id);
+    setActivity(res.data);
+    let resp = res.data.find((a) => a.type === "won" || a.type === "sale");
+    setImage(resp.attributes.image);
+  }, []);
+
   useEffect(() => {
     fetchUserFollows(profileUser.id);
+    fetchFeed(profileUser.id);
   }, [profileUser]);
 
   return (
@@ -29,6 +39,8 @@ function Profile({ profileUser }) {
               following={following}
               followers={followers}
               profileUser={profileUser}
+              activity={activity}
+              image={image}
             />
           ) : (
             <p>We couldn&apos;t find a user with that name</p>

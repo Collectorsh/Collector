@@ -40,12 +40,12 @@ function ProfilePage({ profileUser, following, followers, activity, image }) {
         <div className="float-right">
           <div className="inline">
             <Link href={`/${profileUser.username}`}>
-              <a className="cursor-pointer rounded-3xl text-sm xl:text-md py-2.5 px-3 font-bold border border-4 bg-black text-white border-black dark:bg-whitish dark:text-black dark:border-whitish">
+              <a className="align-middle cursor-pointer rounded-3xl text-sm xl:text-md py-2.5 px-3 font-bold border border-4 bg-black text-white border-black dark:bg-whitish dark:text-black dark:border-whitish">
                 <ViewGridIcon
-                  className="h-5 w-5 inline mr-2 align-middle"
+                  className="h-5 w-5 inline mr-2"
                   aria-hidden="true"
                 />
-                <span className="align-middle">View Galley</span>
+                <span className="">View Galley</span>
               </a>
             </Link>
           </div>

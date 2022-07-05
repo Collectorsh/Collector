@@ -1,24 +1,28 @@
+import React, { useState } from "react";
 import Activity from "/components/home/feed/Activity";
 import Following from "/components/home/feed/Following";
 import Auctions from "/components/home/feed/Auctions";
 import AllListings from "/components/home/feed/AllListings";
 import Galleries from "/components/home/feed/Galleries";
 import RightColumn from "/components/home/RightColumn";
+import FeedMenu from "/components/home/FeedMenu"
 
-export default function Feed({ feed }) {
+export default function Feed() {
+  const [feed, setFeed] = useState("activity");
+
+  const updateFeed = (feed) => {
+    setFeed(feed);
+  };
+
   return (
     <>
       <div
-        className={`max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-6 px-4 min-h-screen relative ${
-          feed === "auctions" && "md:grid-cols-1"
-        }`}
+        className="flex mr-4 md:ml-6 md:mr-6" id="feed"
       >
-        <div
-          id="feed"
-          className={`col-span-1 md:col-span-3 ${
-            feed === "auctions" && "md:col-span-1"
-          }`}
-        >
+        <div className="h-fit h-[calc(100vh-80px)] sticky top-[74px] w-16 md:w-56 xl:w-64 px-2 pt-2 md:pt-4">
+          <FeedMenu updateFeed={updateFeed} />
+        </div>
+        <div className="md:flex-1 pl-2 md:pl-12 lg:pr-12 pt-2 md:pt-4">
           {(feed === "activity" || !feed) && <Activity />}
           {feed === "following" && <Following />}
           {feed === "auctions" && <Auctions />}
@@ -26,7 +30,7 @@ export default function Feed({ feed }) {
           {feed === "galleries" && <Galleries />}
         </div>
         {feed !== "auctions" && (
-          <div className="hidden md:block col-span-2 col-start-5">
+          <div className="hidden lg:block lg:w-80 xl:w-96 px-2 pt-4">
             <RightColumn />
           </div>
         )}

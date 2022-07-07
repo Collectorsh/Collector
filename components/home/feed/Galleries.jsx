@@ -40,9 +40,6 @@ export default function Galleries() {
       )}
       {galleries && (
         <>
-          <h2 className="text-4xl font-extrabold mb-8 text-black w-fit inline-block dark:text-white">
-            Galleries
-          </h2>
           {alphabet.map((letter, index) => (
             <div key={index}>
               <h2 className="font-bold underline mb-4 dark:text-whitish">

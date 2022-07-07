@@ -30,10 +30,10 @@ function Profile({ profileUser }) {
   }, [profileUser]);
 
   return (
-    <div className="dark:bg-black dark:text-whitish">
+    <div className="px-4 xl:px-0 dark:bg-black dark:text-whitish">
       <MainNavigation />
-      <div className="mx-auto px-4 md:px-8 clear-both">
-        <div className="mx-auto px-2 pt-3 md:px-0">
+      <div className="mx-auto clear-both">
+        <div className="mx-auto pt-3 md:px-0">
           {profileUser ? (
             <ProfilePage
               following={following}

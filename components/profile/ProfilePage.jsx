@@ -17,7 +17,7 @@ function ProfilePage({ profileUser, following, followers, activity, image }) {
   };
 
   return (
-    <div className="mt-[74px]">
+    <>
       <div
         className="h-48 w-full bg-center bg-no-repeat bg-cover"
         style={{ backgroundImage: `url('${image}')` }}
@@ -93,7 +93,7 @@ function ProfilePage({ profileUser, following, followers, activity, image }) {
       <div className="mt-10">
         {activity && <Collected activity={activity} />}
       </div>
-    </div>
+    </>
   );
 }
 

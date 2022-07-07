@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { scrollToFeed } from "/utils/scrollToFeed";
-import {
-  StarIcon,
-  ClipboardListIcon,
-  CalendarIcon,
-  CollectionIcon,
-  SparklesIcon,
-} from "@heroicons/react/outline";
 
 export default function FeedMenu({ updateFeed }) {
   const router = useRouter();
@@ -24,87 +17,53 @@ export default function FeedMenu({ updateFeed }) {
     scrollToFeed();
   }, [router.query.feed]);
 
+  function style(type) {
+    let selected = feed === type;
+    let styles;
+    if (selected) {
+      styles =
+        "bg-black text-white border-black dark:bg-whitish dark:text-black dark:border-whitish";
+    } else {
+      styles = "dark:text-whitish";
+    }
+    styles +=
+      " cursor-pointer rounded-3xl mr-1 text-sm xl:text-md py-1 px-1 xl:py-1.5 xl:px-2.5 font-bold border border-4";
+    return styles;
+  }
+
   return (
     <>
-      <ul className="text-sm">
-        <li className="mb-4 md:mb-2">
+      <ul className="text-sm float-right mt-2">
+        <li className="inline-block">
           <a
-            className={`flex items-center px-2 py-1 md:px-4 md:py-2 text-black dark:text-whitish rounded-md ${
-              feed === "activity"
-                ? "bg-gray-100 dark:bg-dark3 font-bold"
-                : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer hover:font-bold"
-            }`}
+            className={style("activity")}
             onClick={() => changeFeed("activity")}
           >
-            <SparklesIcon className="w-5 h-5" aria-hidden="true" />
-
-            <span className="hidden md:flex mx-4">
-              Activity
-            </span>
+            <span className="">Activity</span>
           </a>
         </li>
-        <li className="mb-4 md:mb-2">
+        <li className="inline-block">
           <a
-            className={`flex items-center px-2 py-1 md:px-4 md:py-2 text-black dark:text-whitish rounded-md ${
-              feed === "following"
-                ? "bg-gray-100 dark:bg-dark3 font-bold"
-                : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer hover:font-bold"
-            }`}
+            className={style("following")}
             onClick={() => changeFeed("following")}
           >
-            <StarIcon className="w-5 h-5" aria-hidden="true" />
-
-            <span className="hidden md:flex mx-4">
-              Following
-            </span>
+            <span className="">Following</span>
           </a>
         </li>
-        <li className="mb-4 md:mb-2">
+        <li className="inline-block">
           <a
-            className={`flex items-center px-2 py-1 md:px-4 md:py-2 text-black dark:text-whitish rounded-md ${
-              feed === "auctions"
-                ? "bg-gray-100 dark:bg-dark3 font-bold"
-                : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer hover:font-bold"
-            }`}
+            className={style("auctions")}
             onClick={() => changeFeed("auctions")}
           >
-            <CalendarIcon className="w-5 h-5" aria-hidden="true" />
-
-            <span className="hidden md:flex mx-4">
-              Auctions
-            </span>
+            <span className="">Auctions</span>
           </a>
         </li>
-        <li className="mb-4 md:mb-2">
+        <li className="inline-block">
           <a
-            className={`flex items-center px-2 py-1 md:px-4 md:py-2 text-black dark:text-whitish rounded-md ${
-              feed === "listings"
-                ? "bg-gray-100 dark:bg-dark3 font-bold"
-                : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer hover:font-bold"
-            }`}
-            onClick={() => changeFeed("listings")}
-          >
-            <ClipboardListIcon className="w-5 h-5" aria-hidden="true" />
-
-            <span className="hidden md:flex mx-4">
-              Listings
-            </span>
-          </a>
-        </li>
-        <li className="mb-4 md:mb-2">
-          <a
-            className={`flex items-center px-2 py-1 md:px-4 md:py-2 text-black dark:text-whitish rounded-md ${
-              feed === "galleries"
-                ? "bg-gray-100 dark:bg-dark3 font-bold"
-                : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer hover:font-bold"
-            }`}
+            className={style("galleries")}
             onClick={() => changeFeed("galleries")}
           >
-            <CollectionIcon className="w-5 h-5" aria-hidden="true" />
-
-            <span className="hidden md:flex mx-4">
-              Galleries
-            </span>
+            <span className="">Galleries</span>
           </a>
         </li>
       </ul>

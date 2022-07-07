@@ -38,9 +38,6 @@ export default function AllListings() {
       )}
       {infiniteScrollItems && (
         <>
-          <h2 className="text-4xl font-extrabold mb-8 text-black w-fit inline-block dark:text-whitish">
-            Listings
-          </h2>
           <InfiniteScroll
             dataLength={infiniteScrollItems.length}
             next={fetchData}

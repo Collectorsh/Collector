@@ -26,7 +26,7 @@ export default function Listings({ user }) {
 
   return (
     <>
-      {listings && (
+      {listings && listings.length > 0 && (
         <div className="mt-10">
           <h2 className="text-4xl font-extrabold text-black w-fit inline-block dark:text-white mb-6">
             Listings

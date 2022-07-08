@@ -21,7 +21,9 @@ export default function Image({ token, size = "small" }) {
     let styles;
     if (size === "small") {
       styles =
-        "w-[600px] md:w-[550px] h-[400px] md:h-[400px] opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm";
+        "w-[600px] h-[400px] md:w-[500px] md:h-[300px] opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm";
+    } else if (size === "medium") {
+      styles = "md:w-[550px] md:h-[450px]";
     } else if (size === "large") {
       styles = "shadow-lg object-center object-cover";
     }

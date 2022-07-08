@@ -30,7 +30,7 @@ export default function Feed() {
           feed === "auctions" ? "grid-cols-1" : "grid-cols-12"
         }`}
       >
-        <div className={`col-span-12 sm:col-span-6 lg:col-span-5`}>
+        <div className={`col-span-12 md:col-span-7 lg:col-span-5`}>
           {(feed === "activity" || !feed) && <Activity />}
           {feed === "following" && <Following />}
           {feed === "auctions" && <Auctions />}
@@ -38,7 +38,7 @@ export default function Feed() {
           {feed === "galleries" && <Galleries />}
         </div>
         {(feed === "activity" || feed === "following") && (
-          <div className="hidden sm:block sm:col-span-4 sm:col-end-13">
+          <div className="hidden md:block md:col-span-4 md:col-end-13">
             <RightColumn />
           </div>
         )}

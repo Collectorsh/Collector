@@ -29,7 +29,7 @@ export default function Feed() {
           feed === "auctions" ? "grid-cols-1" : "grid-cols-12"
         }`}
       >
-        <div className={`col-span-12 md:col-span-7 lg:col-span-5`}>
+        <div className="col-span-12 md:col-span-7 lg:col-span-5 min-h-screen">
           {(feed === "activity" || !feed) && <Activity />}
           {feed === "following" && <Following />}
           {feed === "auctions" && <Auctions />}

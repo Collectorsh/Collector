@@ -33,8 +33,8 @@ function Bids() {
     <div className="dark:bg-black">
       <CheckLoggedIn />
       <MainNavigation />
-      <div className="mx-auto px-4 md:px-8 mt-16 sm:mt-36">
-        <div className="mx-auto px-2 md:px-0 clear-both">
+      <div className="mt-16 sm:mt-36">
+        <div className="clear-both">
           <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-1 inline-block dark:text-whitish">
             Bids
           </h2>

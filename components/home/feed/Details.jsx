@@ -9,7 +9,7 @@ import UserContext from "/contexts/user";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import unfollowFollowUser from "/data/user/unfollowFollowUser";
-import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/outline";
+import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/solid";
 
 export default function Details({ item }) {
   const [user, setUser] = useContext(UserContext);
@@ -129,7 +129,7 @@ export default function Details({ item }) {
                 className="bg-gray-300"
               >
                 <MinusCircleIcon
-                  className="h-6 w-6 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-red-600 dark:hover:text-red-600"
+                  className="h-8 w-8 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-red-600 dark:hover:text-red-600"
                   aria-hidden="true"
                   onClick={() => followUser(item.user_id, "unfollow")}
                 />
@@ -140,7 +140,7 @@ export default function Details({ item }) {
                 className="bg-gray-300"
               >
                 <PlusCircleIcon
-                  className="h-6 w-6 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-black dark:hover:text-white"
+                  className="h-8 w-8 cursor-pointer outline-none text-greeny hover:text-black dark:hover:text-white"
                   aria-hidden="true"
                   onClick={() => followUser(item.user_id, "follow")}
                 />

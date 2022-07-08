@@ -4,6 +4,7 @@ import UserContext from "/contexts/user";
 import unfollowFollowUser from "/data/user/unfollowFollowUser";
 import CollectorUsername from "/components/CollectorUsername";
 import Collected from "/components/profile/Collected";
+import Listings from "/components/profile/Listings";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import { ViewGridIcon } from "@heroicons/react/outline";
@@ -90,9 +91,8 @@ function ProfilePage({ profileUser, following, followers, activity, image }) {
         </div>
       </div>
 
-      <div className="mt-10">
-        {activity && <Collected activity={activity} />}
-      </div>
+      {profileUser && <Listings user={profileUser} />}
+      {activity && <Collected activity={activity} />}
     </>
   );
 }

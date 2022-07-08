@@ -161,7 +161,7 @@ export default function Details({ item }) {
         )}
       >
         <a>
-          <Image token={item.attributes} size="large" />
+          <Image token={item.attributes} size="small" />
         </a>
       </Link>
     </div>

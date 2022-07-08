@@ -1,22 +1,4 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { scrollToFeed } from "/utils/scrollToFeed";
-
-export default function FeedMenu({ updateFeed }) {
-  const router = useRouter();
-  const [feed, setFeed] = useState("activity");
-
-  const changeFeed = (feed) => {
-    router.push(`/?feed=${feed}`, undefined, { shallow: true });
-    setFeed(feed);
-  };
-
-  useEffect(() => {
-    if (!router.query.feed) return;
-    updateFeed(router.query.feed);
-    scrollToFeed();
-  }, [router.query.feed]);
-
+export default function FeedMenu({ feed, updateFeed }) {
   function style(type) {
     let selected = feed === type;
     let styles;
@@ -37,7 +19,7 @@ export default function FeedMenu({ updateFeed }) {
         <li className="inline-block">
           <a
             className={style("activity")}
-            onClick={() => changeFeed("activity")}
+            onClick={() => updateFeed("activity")}
           >
             <span className="">Activity</span>
           </a>
@@ -45,7 +27,7 @@ export default function FeedMenu({ updateFeed }) {
         <li className="inline-block">
           <a
             className={style("following")}
-            onClick={() => changeFeed("following")}
+            onClick={() => updateFeed("following")}
           >
             <span className="">Following</span>
           </a>
@@ -53,7 +35,7 @@ export default function FeedMenu({ updateFeed }) {
         <li className="inline-block">
           <a
             className={style("auctions")}
-            onClick={() => changeFeed("auctions")}
+            onClick={() => updateFeed("auctions")}
           >
             <span className="">Auctions</span>
           </a>
@@ -61,7 +43,7 @@ export default function FeedMenu({ updateFeed }) {
         <li className="inline-block">
           <a
             className={style("galleries")}
-            onClick={() => changeFeed("galleries")}
+            onClick={() => updateFeed("galleries")}
           >
             <span className="">Galleries</span>
           </a>

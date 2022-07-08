@@ -7,12 +7,14 @@ import Galleries from "/components/home/feed/Galleries";
 import RightColumn from "/components/home/RightColumn";
 import FeedMenu from "/components/home/FeedMenu";
 import { capitalize } from "/utils/capitalize";
+import { scrollToFeed } from "../../utils/scrollToFeed";
 
 export default function Feed() {
   const [feed, setFeed] = useState("activity");
 
   const updateFeed = (feed) => {
     setFeed(feed);
+    scrollToFeed();
   };
 
   return (
@@ -21,20 +23,22 @@ export default function Feed() {
         <span className="text-3xl sm:text-4xl block sm:inline-block text-center sm:text-left">
           {capitalize(feed)}
         </span>
-        <FeedMenu updateFeed={updateFeed} />
+        <FeedMenu feed={feed} updateFeed={updateFeed} />
       </h2>
-      <div className={`${feed === "auctions" ? "block" : "flex"}`}>
-        <div
-          className={`min-h-screen flex-1 ${feed !== "auctions" && "md:mr-12"}`}
-        >
+      <div
+        className={`grid ${
+          feed === "auctions" ? "grid-cols-1" : "grid-cols-12"
+        }`}
+      >
+        <div className={`col-span-12 sm:col-span-6 lg:col-span-5`}>
           {(feed === "activity" || !feed) && <Activity />}
           {feed === "following" && <Following />}
           {feed === "auctions" && <Auctions />}
           {feed === "listings" && <AllListings />}
           {feed === "galleries" && <Galleries />}
         </div>
-        {feed === "activity" && (
-          <div className="hidden md:block md:w-[300px] xl:w-96 px-2 pt-4">
+        {(feed === "activity" || feed === "following") && (
+          <div className="hidden sm:block sm:col-span-4 sm:col-end-13">
             <RightColumn />
           </div>
         )}

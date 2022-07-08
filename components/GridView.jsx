@@ -8,11 +8,11 @@ import Image from "/components/Image";
 
 export default function GridView({ items, type }) {
   return (
-    <div className="flex flex-wrap gap-6 md:gap-12 lg:gap-24 justify-center sm:justify-start">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-center sm:justify-start">
       {items.map((item, index) => (
         <div
           key={index}
-          className="flex-none bg-white dark:bg-dark3 shadow-lg sm:shadow-2xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
+          className="bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
         >
           <div className="rounded-lg overflow-hidden">
             {type === "listing" && (

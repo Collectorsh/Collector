@@ -17,8 +17,10 @@ export default function Feed() {
 
   return (
     <div id="feed" className="pl-2 px-4 xl:px-0 pt-2 md:pt-4 mt-16">
-      <h2 className="w-full pb-2 text-4xl font-extrabold mb-8 text-black w-fit inline-block dark:text-whitish border-b border-whitish dark:border-dark3 sticky top-0 z-40 pt-3 bg-white dark:bg-black">
-        {capitalize(feed)}
+      <h2 className="w-full pb-2 font-extrabold mb-8 text-black w-fit inline-block dark:text-whitish border-b border-whitish dark:border-dark3 sticky top-0 z-40 pt-3 bg-white dark:bg-black">
+        <span className="text-3xl sm:text-4xl block sm:inline-block text-center sm:text-left">
+          {capitalize(feed)}
+        </span>
         <FeedMenu updateFeed={updateFeed} />
       </h2>
       <div className={`${feed === "auctions" ? "block" : "flex"}`}>

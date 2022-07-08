@@ -21,7 +21,7 @@ export default function Image({ token, size = "small" }) {
     let styles;
     if (size === "small") {
       styles =
-        "h-80 w-80 opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm";
+        "w-[600px] md:-w[500px] h-[400px] md:h-[300px] opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm";
     } else if (size === "large") {
       styles = "shadow-lg object-center object-cover";
     }

@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import Activity from "/components/home/feed/Activity";
 import Following from "/components/home/feed/Following";
 import Auctions from "/components/home/feed/Auctions";
-import AllListings from "/components/home/feed/AllListings";
 import Galleries from "/components/home/feed/Galleries";
 import RightColumn from "/components/home/RightColumn";
 import FeedMenu from "/components/home/FeedMenu";
 import { capitalize } from "/utils/capitalize";
-import { scrollToFeed } from "../../utils/scrollToFeed";
+import { scrollToFeed } from "/utils/scrollToFeed";
 
 export default function Feed() {
   const [feed, setFeed] = useState("activity");
@@ -34,7 +33,6 @@ export default function Feed() {
           {(feed === "activity" || !feed) && <Activity />}
           {feed === "following" && <Following />}
           {feed === "auctions" && <Auctions />}
-          {feed === "listings" && <AllListings />}
           {feed === "galleries" && <Galleries />}
         </div>
         {(feed === "activity" || feed === "following") && (

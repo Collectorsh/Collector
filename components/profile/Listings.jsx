@@ -33,7 +33,7 @@ export default function Listings({ user }) {
           </h2>
 
           <div className="flex flex-wrap gap-8">
-            <GridView items={listings} type="listing" />
+            <GridView items={listings} type="collector_listing" />
           </div>
         </div>
       )}

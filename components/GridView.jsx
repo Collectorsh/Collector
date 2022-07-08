@@ -15,7 +15,7 @@ export default function GridView({ items, type }) {
           className="bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
         >
           <div className="rounded-lg overflow-hidden">
-            {type === "listing" && (
+            {(type === "listing" || type === "collector_listing") && (
               <Link href={`/nft/${item.mintAddress}`}>
                 <a>
                   <Image token={item} />
@@ -74,7 +74,7 @@ export default function GridView({ items, type }) {
 
               <div className="bg-black rounded-b-2xl px-[10px] py-3 text-gray-50 -mx-[10px] h-16">
                 <div className="text-sm">
-                  {type === "listing" && (
+                  {(type === "listing" || type === "collector_listing") && (
                     <span className="font-black dark:text-whitish">
                       ◎{roundToTwo(item.listings[0].price / 1000000000)}
                     </span>
@@ -115,6 +115,11 @@ export default function GridView({ items, type }) {
                         source={item.attributes.source}
                         color="white"
                       />
+                    </div>
+                  )}
+                  {type === "collector_listing" && (
+                    <div className="float-right">
+                      <MarketplaceLogo source={"collector"} color="white" />
                     </div>
                   )}
                   {type === "auction" && (

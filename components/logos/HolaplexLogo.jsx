@@ -1,6 +1,6 @@
-export default function HolaplexLogo() {
+export default function HolaplexLogo({ color }) {
   return (
-    <span className="font-sans text-sm text-black dark:text-white">
+    <span className="font-sans text-sm" style={{ color: color }}>
       👋 &nbsp;Holaplex
     </span>
   );

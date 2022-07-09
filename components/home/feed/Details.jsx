@@ -10,6 +10,7 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import unfollowFollowUser from "/data/user/unfollowFollowUser";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/solid";
+import ShareToTwitter from "/components/ShareToTwitter";
 
 export default function Details({ item }) {
   const [user, setUser] = useContext(UserContext);
@@ -17,6 +18,44 @@ export default function Details({ item }) {
   const followUser = async (user_id, action) => {
     let res = await unfollowFollowUser(user.api_key, user_id, action);
     setUser(res.data.user);
+  };
+
+  const formatTweet = (item) => {
+    let tweet = `${item.username} `;
+
+    if (item.type === "won") {
+      tweet += `won the auction for ${item.attributes.name} by ${
+        item.attributes.brand_name
+      } for ◎${roundToTwo(item.attributes.highest_bid / 1000000000)}`;
+    } else if (item.type === "listing") {
+      tweet += `listed ${item.attributes.name} by ${item.attributes.artist_name}`;
+      if (item.attributes.amount) {
+        tweet += ` for ◎${roundToTwo(item.attributes.amount / 1000000000)}`;
+      }
+    } else if (item.type === "bid") {
+      tweet += `placed a bid of ◎${roundToTwo(item.amount / 1000000000)} on ${
+        item.attributes.name
+      } by ${item.attributes.brand_name}`;
+    } else if (item.type === "sale") {
+      tweet += `purchased ${item.attributes.name} by ${
+        item.attributes.artist_name
+      } for ◎${roundToTwo(item.attributes.amount / 1000000000)}`;
+    }
+
+    tweet += "%0a%0a";
+
+    tweet += "Seen on the @collector_sh feed";
+
+    tweet += "%0a%0a";
+
+    tweet += `${marketplaceLink(
+      item.attributes.source,
+      item.attributes.mint,
+      item.attributes.brand_name,
+      item.attributes.highest_bidder_username
+    )}`;
+
+    return tweet;
   };
 
   return (
@@ -164,6 +203,14 @@ export default function Details({ item }) {
           <Image token={item.attributes} size="medium" />
         </a>
       </Link>
+
+      <span className="-ml-2">
+        <ShareToTwitter
+          url={formatTweet(item)}
+          size="18"
+          text="Share to Twitter"
+        />
+      </span>
     </div>
   );
 }

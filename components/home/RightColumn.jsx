@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import Link from "next/link";
 import getMostWins from "/data/home/getMostWins";
 import getMarketplaceStats from "/data/home/getMarketplaceStats";
@@ -6,11 +6,22 @@ import getMostFollowedArtists from "/data/home/getMostFollowedArtists";
 import CollectorUsername from "/components/CollectorUsername";
 import { roundToTwo } from "/utils/roundToTwo";
 import MarketplaceLogo from "/components/MarketplaceLogo";
+import UserContext from "/contexts/user";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
+import unfollowFollowUser from "/data/user/unfollowFollowUser";
+import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/solid";
 
 export default function RightColumn() {
+  const [user, setUser] = useContext(UserContext);
   const [mostWins, setMostWins] = useState();
   const [marketplaceStats, setMarketplaceStats] = useState();
   const [mostFollowedArtists, setMostFollowedArtists] = useState();
+
+  const followUser = async (user_id, action) => {
+    let res = await unfollowFollowUser(user.api_key, user_id, action);
+    setUser(res.data.user);
+  };
 
   const fetchMostWins = useCallback(async () => {
     let res = await getMostWins();
@@ -63,6 +74,38 @@ export default function RightColumn() {
                   {item.wins} auctions won
                 </p>
               </div>
+
+              <div className="float-right mt-2">
+                {user && item.user.id && user.id !== item.user.id && (
+                  <>
+                    {user.following &&
+                    user.following.find((f) => f.id === item.user.id) ? (
+                      <Tippy
+                        content={`Stop following ${item.user.username}`}
+                        className="bg-gray-300"
+                      >
+                        <MinusCircleIcon
+                          className="h-8 w-8 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-red-600 dark:hover:text-red-600"
+                          aria-hidden="true"
+                          onClick={() => followUser(item.user.id, "unfollow")}
+                        />
+                      </Tippy>
+                    ) : (
+                      <Tippy
+                        content={`Follow ${item.user.username}`}
+                        className="bg-gray-300"
+                      >
+                        <PlusCircleIcon
+                          className="h-8 w-8 cursor-pointer outline-none text-greeny hover:text-black dark:hover:text-white"
+                          aria-hidden="true"
+                          onClick={() => followUser(item.user.id, "follow")}
+                        />
+                      </Tippy>
+                    )}
+                  </>
+                )}
+              </div>
+
               <div className="clear-both"></div>
             </div>
           ))}

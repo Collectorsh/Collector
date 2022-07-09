@@ -9,13 +9,13 @@ export default function FeedMenu({ feed, updateFeed }) {
       styles = "dark:text-whitish";
     }
     styles +=
-      " cursor-pointer rounded-3xl ml-2 text-sm xl:text-md py-1.5 px-1.5 xl:py-1.5 xl:px-2.5 font-bold border border-4";
+      " cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1.5 px-1.5 xl:py-1.5 xl:px-2.5 font-bold border border-4";
     return styles;
   }
 
   return (
     <>
-      <ul className="text-sm sm:float-right mt-4 sm:mt-2 mb-4 sm:mb-0 text-center sm:text-right">
+      <ul className="text-sm py-4">
         <li className="inline-block">
           <a
             className={style("activity")}

@@ -144,7 +144,7 @@ export default function RightColumn() {
                   </dd>
                 </div>
                 <div className="py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-gray-500">Revenue</dt>
+                  <dt className="text-sm font-medium text-gray-500">Volume</dt>
                   <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1 sm:col-start-3">
                     ◎{roundToTwo(item.total / 1000000000)}
                   </dd>

@@ -9,7 +9,7 @@ export default function FeedMenu({ feed, updateFeed }) {
       styles = "dark:text-whitish";
     }
     styles +=
-      " cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1.5 px-1.5 xl:py-1.5 xl:px-2.5 font-bold border border-4";
+      " hover:bg-black hover:text-white hover:border-black dark:hover:bg-whitish dark:hover:text-white dark:hover:border-whitish dark:hover:text-black cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1.5 px-1.5 xl:py-1.5 xl:px-2.5 font-bold border border-4";
     return styles;
   }
 

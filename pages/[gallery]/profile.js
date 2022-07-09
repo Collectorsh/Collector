@@ -17,17 +17,26 @@ function Profile({ profileUser }) {
     setFollowing(res.following);
   }, []);
 
-  const fetchFeed = useCallback(async (user_id) => {
-    let res = await getFeed(user_id);
+  const fetchFeed = useCallback(async (profileUser) => {
+    let res = await getFeed(profileUser.id);
     setActivity(res.data);
-    let resp = res.data.find((a) => a.type === "won" || a.type === "sale");
-    setImage(resp.attributes.image);
+
+    if (profileUser.profile_image) {
+      setImage(profileUser.profile_image);
+    } else {
+      let resp = res.data.find((a) => a.type === "won" || a.type === "sale");
+      setImage(resp.attributes.image);
+    }
   }, []);
 
   useEffect(() => {
     fetchUserFollows(profileUser.id);
-    fetchFeed(profileUser.id);
+    fetchFeed(profileUser);
   }, [profileUser]);
+
+  const refreshProfileImage = (img) => {
+    setImage(img);
+  };
 
   return (
     <div className="dark:bg-black dark:text-whitish">
@@ -41,6 +50,7 @@ function Profile({ profileUser }) {
               profileUser={profileUser}
               activity={activity}
               image={image}
+              refreshProfileImage={refreshProfileImage}
             />
           ) : (
             <p>We couldn&apos;t find a user with that name</p>

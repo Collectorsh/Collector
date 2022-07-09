@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Moment from "react-moment";
-import Link from "next/link";
-import { roundToTwo } from "/utils/roundToTwo";
-import Image from "/components/Image";
 import GridView from "/components/GridView";
 
-export default function Collected({ activity }) {
+export default function Collected({
+  activity,
+  profileUser,
+  refreshProfileImage,
+}) {
   const [results, setResults] = useState();
 
   useEffect(() => {
@@ -21,7 +21,12 @@ export default function Collected({ activity }) {
           <h2 className="text-4xl font-extrabold text-black w-fit inline-block dark:text-white mb-6">
             Collected
           </h2>
-          <GridView items={results.slice(0, 12)} type="collected" />
+          <GridView
+            items={results.slice(0, 12)}
+            type="collected"
+            profileUser={profileUser}
+            refreshProfileImage={refreshProfileImage}
+          />
         </div>
       )}
     </>

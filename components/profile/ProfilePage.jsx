@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
 import UserContext from "/contexts/user";
 import unfollowFollowUser from "/data/user/unfollowFollowUser";
@@ -8,14 +8,30 @@ import Listings from "/components/profile/Listings";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import { ViewGridIcon } from "@heroicons/react/outline";
+import FollowingModal from "/components/profile/FollowingModal";
+import FollowersModal from "/components/profile/FollowersModal";
 
-function ProfilePage({ profileUser, following, followers, activity, image }) {
+function ProfilePage({
+  profileUser,
+  following,
+  followers,
+  activity,
+  image,
+  refreshProfileImage,
+}) {
   const [user, setUser] = useContext(UserContext);
+  const [followingModal, setFollowingModal] = useState(false);
+  const [followersModal, setFollowersModal] = useState(false);
 
   const followUser = async (user_id, action) => {
     let res = await unfollowFollowUser(user.api_key, user_id, action);
     setUser(res.data.user);
   };
+
+  function handleCloseModal() {
+    setFollowingModal(false);
+    setFollowersModal(false);
+  }
 
   return (
     <>
@@ -85,14 +101,43 @@ function ProfilePage({ profileUser, following, followers, activity, image }) {
 
         <div className="mt-3">
           <p className="text-xl">
-            <span>{followers && followers.length} Followers</span> &middot;{" "}
-            <span>{following && following.length} Following</span>
+            <span
+              className="hover:cursor-pointer hover:underline"
+              onClick={(e) => setFollowersModal(!followersModal)}
+            >
+              {followers && followers.length} Followers
+            </span>{" "}
+            &middot;{" "}
+            <span
+              className="hover:cursor-pointer hover:underline"
+              onClick={(e) => setFollowingModal(!followingModal)}
+            >
+              {following && following.length} Following
+            </span>
           </p>
         </div>
       </div>
 
       {profileUser && <Listings user={profileUser} />}
-      {activity && <Collected activity={activity} />}
+      {profileUser && activity && (
+        <Collected
+          activity={activity}
+          profileUser={profileUser}
+          refreshProfileImage={refreshProfileImage}
+        />
+      )}
+
+      <FollowingModal
+        open={followingModal}
+        closeModal={handleCloseModal}
+        following={following}
+      />
+
+      <FollowersModal
+        open={followersModal}
+        closeModal={handleCloseModal}
+        followers={followers}
+      />
     </>
   );
 }

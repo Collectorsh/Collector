@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import Link from "next/link";
 import MarketplaceLogo from "/components/MarketplaceLogo";
 import { roundToTwo } from "/utils/roundToTwo";
@@ -5,14 +6,45 @@ import { marketplaceLink } from "/utils/marketplaceHelpers";
 import CollectorUsername from "/components/CollectorUsername";
 import Moment from "react-moment";
 import Image from "/components/Image";
+import { CogIcon } from "@heroicons/react/outline";
+import { Fragment } from "react";
+import { Menu, Transition } from "@headlessui/react";
+import saveUser from "/data/user/saveUser";
+import UserContext from "/contexts/user";
+import { Toaster } from "react-hot-toast";
+import { success, error } from "/utils/toastMessages";
 
-export default function GridView({ items, type }) {
+export default function GridView({
+  items,
+  type,
+  profileUser,
+  refreshProfileImage,
+}) {
+  const [user, setUser] = useContext(UserContext);
+
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(" ");
+  }
+
+  const setProfileImage = async (item) => {
+    const res = await saveUser(user.api_key, {
+      profile_image: item.attributes.image,
+    });
+    if (res.data.status === "success") {
+      success("Profile image saved");
+      refreshProfileImage(item.attributes.image);
+    } else if (res.data.status === "error") {
+      error(res.data.msg);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-center sm:justify-start">
+      <Toaster />
       {items.map((item, index) => (
         <div
           key={index}
-          className="bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
+          className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
         >
           <div className="rounded-lg overflow-hidden">
             {(type === "listing" || type === "collector_listing") && (
@@ -146,6 +178,50 @@ export default function GridView({ items, type }) {
               </div>
             </div>
           </div>
+          {type === "collected" &&
+            user &&
+            profileUser &&
+            profileUser.id === user.id && (
+              <Menu as="div" className="absolute top-4 right-4">
+                <div>
+                  <Menu.Button className="inline-flex justify-center focus:outline-none">
+                    <CogIcon
+                      className="h-6 w-6 inline cursor-pointer text-gray-200"
+                      aria-hidden="true"
+                    />
+                  </Menu.Button>
+                </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="py-1">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            onClick={(e) => setProfileImage(item)}
+                            className={classNames(
+                              active
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block px-4 py-2 text-sm cursor-pointer"
+                            )}
+                          >
+                            Set as profile image
+                          </a>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            )}
         </div>
       ))}
     </div>

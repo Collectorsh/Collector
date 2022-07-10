@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import getMetadataFromUri from "/data/nft/getMetadataFromUri";
-import {} from "@heroicons/react/outline";
-import { HashtagIcon, EyeOffIcon } from "@heroicons/react/solid";
+import { EyeOffIcon } from "@heroicons/react/solid";
 import { cdnImage } from "/utils/cdnImage";
 import { host } from "/config/settings";
 import Tippy from "@tippyjs/react";
@@ -29,17 +28,20 @@ export default function Hidden({ token, setVisibility, size }) {
   }
 
   return (
-    <div className="flex-none relative" id={token.mint}>
+    <div
+      className={`bg-dark3 rounded-lg flex-none cursor-move relative ${
+        size === 32 ? "w-32 h-40" : "w-48 h-56"
+      }`}
+      id={token.mint}
+      style={{
+        backgroundImage: `url(${cdnImage(token.mint)}), url(${token.image})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       {tokenData && (
         <>
-          <img
-            className={`${
-              size === 32 ? "w-32 h-32" : "w-48 h-48"
-            } bg-black dark:bg-dark3 shadow-2xl border-t border-l border-r border-gray-200 dark:border-dark3 object-center object-cover rounded-t-lg`}
-            src={cdnImage(token.mint)}
-            onError={(e) => addDefaultSource(e, token.mint, token.image)}
-          />
-          <div className="w-full bg-black dark:bg-dark3 shadow-2xl border-l border-r border-b border-gray-200 dark:border-dark3 px-1 py-1 rounded-b-lg">
+          <div className="absolute bottom-0 w-full bg-black dark:bg-dark3 px-1 py-1 rounded-b-lg">
             <Tippy content="Make visible">
               <EyeOffIcon
                 className="h-4 w-4 text-white cursor-pointer focus:outline-none inline"

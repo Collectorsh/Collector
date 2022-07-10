@@ -1,28 +1,93 @@
 import React, { useState, useEffect } from "react";
 import { success, error } from "/utils/toast";
-import DragAndDrop from "/components/dashboard/gallery/DragAndDrop";
-import Hidden from "/components/dashboard/gallery/Hidden";
-import Actions from "/components/dashboard/gallery/Actions";
 import update from "immutability-helper";
 import saveLayout from "/data/dashboard/saveLayout";
 import cloneDeep from "lodash/cloneDeep";
-import { ViewGridIcon } from "@heroicons/react/solid";
+import { DragDropContext } from "react-beautiful-dnd";
+import Column from "./Column";
 
 export default function CollectionContainer({ tkns, user }) {
-  const [tokens, setTokens] = useState([]);
-  const [size, setSize] = useState(48);
+  const initialColumns = {
+    visible: {
+      id: "visible",
+      list: tkns.filter((t) => t.visible === true),
+    },
+    hidden: {
+      id: "hidden",
+      list: tkns.filter((t) => t.visible === false),
+    },
+  };
+  const [columns, setColumns] = useState(initialColumns);
 
-  useEffect(() => {
-    if (!tkns) return;
-    // Add an id for dnd
-    for (let i = 0; i < tkns.length; i += 1) {
-      tkns[i].id = i;
+  function onDragEnd({ source, destination }) {
+    // Make sure we have a valid destination
+    if (destination === undefined || destination === null) return null;
+
+    // If the source and destination columns are the same
+    // AND if the index is the same, the item isn't moving
+    if (
+      source.droppableId === destination.droppableId &&
+      destination.index === source.index
+    )
+      return null;
+
+    // Set start and end variables
+    const start = columns[source.droppableId];
+    const end = columns[destination.droppableId];
+
+    // If start is the same as end, we're in the same column
+    if (start === end) {
+      // Move the item within the list
+      // Start by making a new list without the dragged item
+      const newList = Array.from(start.list);
+      const [reorderedList] = newList.splice(source.index, 1);
+      newList.splice(destination.index, 0, reorderedList);
+
+      // Then create a new copy of the column object
+      const newCol = {
+        id: start.id,
+        list: newList,
+      };
+
+      // Update the state
+      setColumns((state) => ({ ...state, [newCol.id]: newCol }));
+      return null;
+    } else {
+      // If start is different from end, we need to update multiple columns
+      // Filter the start list like before
+      const newStartList = Array.from(start.list);
+      newStartList.splice(source.index, 1);
+
+      // Create a new start column
+      const newStartCol = {
+        id: start.id,
+        list: newStartList,
+      };
+
+      // Make a new end list array
+      const newEndList = end.list;
+
+      // Insert the item into the end list
+      newEndList.splice(destination.index, 0, start.list[source.index]);
+
+      // Create a new end column
+      const newEndCol = {
+        id: end.id,
+        list: newEndList,
+      };
+
+      // Update the state
+      setColumns((state) => ({
+        ...state,
+        [newStartCol.id]: newStartCol,
+        [newEndCol.id]: newEndCol,
+      }));
+      return null;
     }
-    setTokens(tkns);
-  }, [tkns]);
+  }
 
   return (
-    <div className="dark:bg-black min-h-screen pb-12 mt-16 sm:mt-36">
+    <div className="dark:bg-black min-h-screen pb-12 mt-16">
       <div className="mb-12">
         <h2 className="text-5xl font-extrabold text-black w-fit py-1 inline-block dark:text-whitish">
           Edit Gallery
@@ -30,183 +95,41 @@ export default function CollectionContainer({ tkns, user }) {
         <p className="dark:text-white">Drag and drop to curate your gallery.</p>
       </div>
 
-      <h2 className="border-b border-b-black dark:border-b-white align-middle text-3xl font-extrabold mb-8 text-black w-fit py-1 inline-block dark:text-whitish">
-        Visible
-      </h2>
-
-      <Actions
-        toggleVisibility={toggleVisibility}
-        handleSaveLayout={handleSaveLayout}
-        tokens={tokens}
-      />
-
-      <div className="">
-        <ViewGridIcon
-          className={`h-8 w-8 inline cursor-pointer ${
-            size === 32 && "text-gray-500 dark:text-whitish"
-          }`}
-          onClick={(e) => setSize(32)}
-          aria-hidden="true"
-        />
-        <ViewGridIcon
-          className={`h-10 w-10 inline cursor-pointer ${
-            size === 48 && "text-gray-500 dark:text-whitish"
-          }`}
-          onClick={(e) => setSize(48)}
-          aria-hidden="true"
-        />
-      </div>
-
-      <div className="clear-both mt-3 mb-10">
-        <div className="flex flex-wrap gap-6">
-          <DragAndDrop
-            tokens={tokens}
-            moveCard={moveCard}
-            toggleVisibilityOne={toggleVisibilityOne}
-            setTokenAcceptOffers={setTokenAcceptOffers}
-            size={size}
-          />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            margin: "24px auto",
+            width: "100%",
+            gap: "50px",
+          }}
+        >
+          <div>
+            <h2 className="border-b border-b-black dark:border-b-white align-middle text-3xl font-extrabold text-black w-fit py-1 inline-block dark:text-whitish">
+              Visible
+            </h2>
+          </div>
+          <div>
+            <h2 className="border-b border-b-black dark:border-b-white align-middle text-3xl font-extrabold text-black w-fit py-1 inline-block dark:text-whitish">
+              Hidden
+            </h2>
+          </div>
         </div>
-
-        <h2 className="border-b border-b-black dark:border-b-white text-3xl font-extrabold mb-8 text-black w-fit py-1 inline-block mt-8 dark:text-whitish">
-          Hidden
-        </h2>
-
-        <div className="flex flex-wrap gap-6">
-          {Array.isArray(tokens) &&
-            tokens.map((token, index) => {
-              if (!token.visible)
-                return (
-                  <Hidden
-                    key={token.id}
-                    token={token}
-                    setVisibility={toggleVisibilityOne}
-                    size={size}
-                  />
-                );
-            })}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            margin: "24px auto",
+            width: "100%",
+            gap: "50px",
+          }}
+        >
+          {Object.values(columns).map((col) => (
+            <Column col={col} key={col.id} />
+          ))}
         </div>
-      </div>
+      </DragDropContext>
     </div>
   );
-
-  async function setTokenAcceptOffers(mint, accepting) {
-    const clonedItems = cloneDeep(tokens);
-    let mint_id;
-    for (let i = 0; i < clonedItems.length; i += 1) {
-      if (clonedItems[i].mint === mint) mint_id = i;
-    }
-    let new_el = clonedItems[mint_id];
-    new_el.accept_offers = accepting;
-    setTokens(clonedItems);
-  }
-
-  async function handleSaveLayout(e) {
-    e.preventDefault();
-
-    let tkns = tokens.map((token) => ({
-      mint: token.mint,
-      visible: token.visible,
-      order_id: token.order_id,
-      accept_offers: token.accept_offers,
-    }));
-    saveLayout(user.api_key, tkns)
-      .then((res) => {
-        if (res.data.status === "error") {
-          error(res.data.msg);
-        } else {
-          success("Layout saved");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        error("An error has occurred");
-      });
-  }
-
-  function resetIds(tkns) {
-    let dndId = 0;
-    for (let i = 0; i < tkns.length; i += 1) {
-      if (tkns[i].visible === true) {
-        tkns[i].id = dndId;
-        tkns[i].order_id = dndId + 1;
-        dndId += 1;
-      }
-    }
-    for (let i = 0; i < tkns.length; i += 1) {
-      if (tkns[i].visible !== true) {
-        tkns[i].id = dndId;
-        tkns[i].order_id = dndId + 1;
-        dndId += 1;
-      }
-    }
-    return tkns;
-  }
-
-  async function toggleVisibility(vis) {
-    // set metadata visibility
-    const clonedItems = cloneDeep(tokens);
-    for (let i = 0; i < clonedItems.length; i += 1) {
-      clonedItems[i].visible = vis;
-    }
-    setTokens(resetIds(clonedItems));
-  }
-
-  async function toggleVisibilityOne(vis, mint) {
-    // set metadata visibility
-    const clonedItems = cloneDeep(tokens);
-    let mint_id;
-    for (let i = 0; i < clonedItems.length; i += 1) {
-      if (clonedItems[i].mint === mint) mint_id = i;
-    }
-    let new_el = clonedItems[mint_id];
-    new_el.visible = vis;
-    clonedItems.splice(mint_id, 1);
-
-    if (vis === true) {
-      clonedItems.push(new_el);
-    } else {
-      clonedItems.unshift(new_el);
-    }
-    setTokens(resetIds(clonedItems));
-  }
-
-  async function moveCard(dragIndex, hoverIndex) {
-    const dragCard = tokens[dragIndex];
-    setTokens(
-      update(tokens, {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, dragCard],
-        ],
-      })
-    );
-    let drag_order_id = tokens[dragIndex].order_id;
-    let hover_order_id = tokens[hoverIndex].order_id;
-
-    tokens[dragIndex].order_id = hover_order_id;
-
-    if (drag_order_id > hover_order_id) {
-      let new_id = hover_order_id + 1;
-      for (let i = 0; i < tokens.length; i += 1) {
-        if (tokens[i].visible !== true) continue;
-        if (tokens[i].order_id <= hover_order_id) continue;
-        new_id += 1;
-        tokens[i].order_id = new_id;
-      }
-    } else {
-      let new_id = 1;
-      for (let i = 0; i < tokens.length; i += 1) {
-        if (tokens[i].visible !== true) continue;
-        if (tokens[i].order_id >= hover_order_id) continue;
-        tokens[i].order_id = new_id;
-        new_id += 1;
-      }
-    }
-
-    tokens[dragIndex].order_id = hover_order_id;
-    let target_new_id =
-      drag_order_id > hover_order_id ? hover_order_id + 1 : hover_order_id - 1;
-    tokens[hoverIndex].order_id = target_new_id;
-  }
 }

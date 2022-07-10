@@ -31,7 +31,7 @@ export default function Artists() {
       <Toaster />
       <MainNavigation />
       <div>
-        <div className="mt-16 sm:mt-36">
+        <div className="mt-16">
           <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-1 inline-block dark:text-whitish">
             Artists
           </h2>

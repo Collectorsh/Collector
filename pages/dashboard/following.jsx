@@ -31,7 +31,7 @@ export default function Following() {
       <div>
         <div>
           <div className="mb-12">
-            <div className="w-full mt-16 sm:mt-36 mb-6">
+            <div className="w-full mt-16 mb-6">
               <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-1 inline-block dark:text-whitish">
                 Following
               </h2>

@@ -74,7 +74,7 @@ export default function Profile() {
       <MainNavigation />
 
       <div>
-        <div className="pb-12 mt-16 sm:mt-36">
+        <div className="pb-12 mt-16">
           <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-1 inline-block dark:text-whitish">
             Profile
           </h2>

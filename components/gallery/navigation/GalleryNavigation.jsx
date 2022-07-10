@@ -12,7 +12,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { host } from "/config/settings";
 import DarkMode from "/components/navigation/DarkMode";
-import { HomeIcon, ShareIcon } from "@heroicons/react/solid";
+import { HomeIcon, ShareIcon, UserCircleIcon } from "@heroicons/react/solid";
 import TwitterLogo from "/components/logos/TwitterLogo";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
@@ -45,7 +45,7 @@ export default function GalleryNavigation({ user }) {
   };
 
   return (
-    <div className="mx-auto px-4 lg:px-12">
+    <div className="mx-auto px-4">
       <nav className="mx-auto pt-5 px-0 align-middle dark:bg-black">
         <div className="grid grid-cols-6">
           <div className="flex items-center col-span-3 md:col-span-2">
@@ -120,9 +120,24 @@ export default function GalleryNavigation({ user }) {
               className="align-middle inline"
             >
               <HomeIcon
-                className="h-6 w-6 inline mr-4 ml-2 cursor-pointer text-slate-900 dark:text-gray-100 hover:scale-110"
+                className="h-6 w-6 inline mx-2 cursor-pointer text-slate-900 dark:text-gray-100 hover:scale-110"
                 aria-hidden="true"
               />
+            </Link>
+
+            <Link
+              href={`/${user.username}/profile`}
+              title="Profile"
+              className="align-middle inline"
+            >
+              <a>
+                <Tippy content="Profile" className="bg-gray-300">
+                  <UserCircleIcon
+                    className="h-6 w-6 inline mx-2 cursor-pointer text-slate-900 dark:text-gray-100 hover:scale-110"
+                    aria-hidden="true"
+                  />
+                </Tippy>
+              </a>
             </Link>
 
             <Link

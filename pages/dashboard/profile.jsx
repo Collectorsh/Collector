@@ -1,10 +1,8 @@
 import React, { useContext } from "react";
-import Link from "next/link";
 import UserContext from "/contexts/user";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { Toaster } from "react-hot-toast";
-import { host } from "/config/settings";
 import { success, error } from "/utils/toastMessages";
 import saveUser from "/data/user/saveUser";
 import getTwitterOAuthToken from "/data/dashboard/getTwitterOAuthToken";
@@ -75,8 +73,8 @@ export default function Profile() {
       <Toaster />
       <MainNavigation />
 
-      <div className="mx-auto px-2 px-4">
-        <div className="mx-auto px-2 md:px-0 pb-12 mt-16 sm:mt-36">
+      <div>
+        <div className="pb-12 mt-16 sm:mt-36">
           <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-1 inline-block dark:text-whitish">
             Profile
           </h2>

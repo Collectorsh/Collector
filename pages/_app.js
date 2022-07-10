@@ -63,7 +63,11 @@ export default function MyApp({ Component, pageProps }) {
                     <SingleNftProvider>
                       <EstimatedValueProvider>
                         <ThemeProvider enableSystem={true} attribute="class">
-                          <Component {...pageProps} />
+                          <div className="dark:bg-black">
+                            <div className="max-w-7xl mx-auto">
+                              <Component {...pageProps} />
+                            </div>
+                          </div>
                         </ThemeProvider>
                       </EstimatedValueProvider>
                     </SingleNftProvider>

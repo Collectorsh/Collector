@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import Link from "next/link";
 import MarketplaceLogo from "/components/MarketplaceLogo";
 import { roundToTwo } from "/utils/roundToTwo";
@@ -5,20 +6,63 @@ import { marketplaceLink } from "/utils/marketplaceHelpers";
 import CollectorUsername from "/components/CollectorUsername";
 import Moment from "react-moment";
 import Image from "/components/Image";
+import { CogIcon } from "@heroicons/react/outline";
+import { Fragment } from "react";
+import { Menu, Transition } from "@headlessui/react";
+import saveUser from "/data/user/saveUser";
+import UserContext from "/contexts/user";
+import { Toaster } from "react-hot-toast";
+import { success, error } from "/utils/toastMessages";
 
-export default function GridView({ items, type }) {
+export default function GridView({
+  items,
+  type,
+  profileUser,
+  refreshProfileImage,
+}) {
+  const [user, setUser] = useContext(UserContext);
+
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(" ");
+  }
+
+  const setProfileImage = async (item) => {
+    const res = await saveUser(user.api_key, {
+      profile_image: item.attributes.image,
+    });
+    if (res.data.status === "success") {
+      success("Profile image saved");
+      refreshProfileImage(item.attributes.image);
+    } else if (res.data.status === "error") {
+      error(res.data.msg);
+    }
+  };
+
   return (
-    <div id="grid-container">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-center sm:justify-start">
+      <Toaster />
       {items.map((item, index) => (
         <div
           key={index}
-          className="grid-item bg-white dark:bg-dark3 shadow-2xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
+          className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
         >
-          <div className="grid-image-container rounded-lg">
-            {type === "listing" && (
+          <div className="rounded-lg overflow-hidden">
+            {(type === "listing" || type === "collector_listing") && (
               <Link href={`/nft/${item.mintAddress}`}>
                 <a>
                   <Image token={item} />
+                </a>
+              </Link>
+            )}
+            {type === "collected" && (
+              <Link href={`/nft/${item.attributes.mint}`}>
+                <a>
+                  <Image
+                    token={{
+                      image: item.attributes.image,
+                      mint: item.attributes.mint,
+                    }}
+                  />
                 </a>
               </Link>
             )}
@@ -39,17 +83,30 @@ export default function GridView({ items, type }) {
           </div>
           <div>
             <div className="w-full">
-              <h3 className="text-md text-black dark:text-whitish font-medium my-2">
-                {item.name}
-              </h3>
-              {item.brand_name && (
-                <p className="dark:text-whitish text-xs -mt-2 mb-2">
-                  {item.brand_name}
-                </p>
-              )}
-              <div className="bg-black rounded-b-2xl px-[10px] py-5 text-gray-50 -mx-[10px]">
+              <div className="h-12">
+                <h3 className="text-md text-black dark:text-whitish font-medium my-2">
+                  {item.name || item.attributes.name}
+                </h3>
+                {item.brand_name && (
+                  <p className="dark:text-whitish text-xs -mt-2 mb-2">
+                    {item.brand_name}
+                  </p>
+                )}
+                {type === "collected" && item.type === "sale" && (
+                  <p className="dark:text-whitish text-xs -mt-2 mb-2">
+                    {item.attributes.artist_name}
+                  </p>
+                )}
+                {type === "collected" && item.type == "won" && (
+                  <p className="dark:text-whitish text-xs -mt-2 mb-2">
+                    {item.attributes.brand_name}
+                  </p>
+                )}
+              </div>
+
+              <div className="bg-black rounded-b-2xl px-[10px] py-3 text-gray-50 -mx-[10px] h-16">
                 <div className="text-sm">
-                  {type === "listing" && (
+                  {(type === "listing" || type === "collector_listing") && (
                     <span className="font-black dark:text-whitish">
                       ◎{roundToTwo(item.listings[0].price / 1000000000)}
                     </span>
@@ -61,6 +118,41 @@ export default function GridView({ items, type }) {
                         (item.highest_bid || item.reserve) / 1000000000
                       )}
                     </span>
+                  )}
+                  {type === "collected" && item.type == "won" && (
+                    <span className="font-black dark:text-whitish">
+                      ◎{roundToTwo(item.attributes.highest_bid / 1000000000)}
+                    </span>
+                  )}
+                  {type === "collected" && item.type === "sale" && (
+                    <span className="font-black dark:text-whitish">
+                      ◎{roundToTwo(item.attributes.amount / 1000000000)}
+                    </span>
+                  )}
+                  {type === "collected" && item.type === "won" && (
+                    <div className="float-right">
+                      <MarketplaceLogo
+                        source={item.attributes.source}
+                        color="white"
+                      />
+                      <div className="mt-1 text-right dark:text-whitish">
+                        {item.attributes.number_of_bids}{" "}
+                        {item.attributes.number_of_bids === 1 ? "bid" : "bids"}
+                      </div>
+                    </div>
+                  )}
+                  {type === "collected" && item.type === "sale" && (
+                    <div className="float-right">
+                      <MarketplaceLogo
+                        source={item.attributes.source}
+                        color="white"
+                      />
+                    </div>
+                  )}
+                  {type === "collector_listing" && (
+                    <div className="float-right">
+                      <MarketplaceLogo source={"collector"} color="white" />
+                    </div>
                   )}
                   {type === "auction" && (
                     <div className="float-right">
@@ -86,6 +178,50 @@ export default function GridView({ items, type }) {
               </div>
             </div>
           </div>
+          {type === "collected" &&
+            user &&
+            profileUser &&
+            profileUser.id === user.id && (
+              <Menu as="div" className="absolute top-4 right-4">
+                <div>
+                  <Menu.Button className="inline-flex justify-center focus:outline-none">
+                    <CogIcon
+                      className="h-6 w-6 inline cursor-pointer text-gray-200"
+                      aria-hidden="true"
+                    />
+                  </Menu.Button>
+                </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="py-1">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            onClick={(e) => setProfileImage(item)}
+                            className={classNames(
+                              active
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block px-4 py-2 text-sm cursor-pointer"
+                            )}
+                          >
+                            Set as profile image
+                          </a>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            )}
         </div>
       ))}
     </div>

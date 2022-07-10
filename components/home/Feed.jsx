@@ -1,152 +1,43 @@
 import React, { useState } from "react";
-import {
-  StarIcon,
-  ClipboardListIcon,
-  CalendarIcon,
-  CollectionIcon,
-  SparklesIcon,
-  ChevronUpIcon,
-} from "@heroicons/react/outline";
 import Activity from "/components/home/feed/Activity";
 import Following from "/components/home/feed/Following";
 import Auctions from "/components/home/feed/Auctions";
-import AllListings from "/components/home/feed/AllListings";
 import Galleries from "/components/home/feed/Galleries";
-import BuyNow from "/components/home/feed/BuyNow";
 import RightColumn from "/components/home/RightColumn";
-import ShowScrollToTop from "/components/home/ShowScrollToTop";
+import FeedMenu from "/components/home/FeedMenu";
+import { capitalize } from "/utils/capitalize";
 import { scrollToFeed } from "/utils/scrollToFeed";
 
 export default function Feed() {
-  const [feedSelected, setFeedSelected] = useState("activity");
+  const [feed, setFeed] = useState("activity");
 
-  const updateFeedSelected = (feed) => {
-    setFeedSelected(feed);
+  const updateFeed = (feed) => {
+    setFeed(feed);
+    scrollToFeed();
   };
 
   return (
-    <>
-      <ShowScrollToTop />
-      <div className="flex">
-        <div className="h-fit h-[calc(100vh-80px)] sticky top-[80px] w-16 lg:w-64 px-2">
-          <ul className="text-sm">
-            <li className="mb-4 lg:mb-2">
-              <a
-                className={`flex items-center px-2 py-1 lg:px-4 lg:py-2 text-black dark:text-whitish rounded-md ${
-                  feedSelected === "activity"
-                    ? "bg-gray-100 dark:bg-dark3"
-                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
-                }`}
-                onClick={() => updateFeedSelected("activity")}
-              >
-                <SparklesIcon className="w-5 h-5" aria-hidden="true" />
-
-                <span className="hidden lg:flex mx-4 font-medium">
-                  Activity
-                </span>
-              </a>
-            </li>
-
-            <li className="mb-4 lg:mb-2">
-              <a
-                className={`flex items-center px-2 py-1 lg:px-4 lg:py-2 text-black dark:text-whitish rounded-md ${
-                  feedSelected === "following"
-                    ? "bg-gray-100 dark:bg-dark3"
-                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
-                }`}
-                onClick={() => updateFeedSelected("following")}
-              >
-                <StarIcon className="w-5 h-5" aria-hidden="true" />
-
-                <span className="hidden lg:flex mx-4 font-medium">
-                  Following
-                </span>
-              </a>
-            </li>
-
-            <li className="mb-4 lg:mb-2">
-              <a
-                className={`flex items-center px-2 py-1 lg:px-4 lg:py-2 text-black dark:text-whitish rounded-md ${
-                  feedSelected === "auctions"
-                    ? "bg-gray-100 dark:bg-dark3"
-                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
-                }`}
-                onClick={() => setFeedSelected("auctions")}
-              >
-                <CalendarIcon className="w-5 h-5" aria-hidden="true" />
-
-                <span className="hidden lg:flex mx-4 font-medium">
-                  Auctions
-                </span>
-              </a>
-            </li>
-
-            <li className="mb-4 lg:mb-2">
-              <a
-                className={`flex items-center px-2 py-1 lg:px-4 lg:py-2 text-black dark:text-whitish rounded-md ${
-                  feedSelected === "listings"
-                    ? "bg-gray-100 dark:bg-dark3"
-                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
-                }`}
-                onClick={() => setFeedSelected("listings")}
-              >
-                <ClipboardListIcon className="w-5 h-5" aria-hidden="true" />
-
-                <span className="hidden lg:flex mx-4 font-medium">
-                  Listings
-                </span>
-              </a>
-            </li>
-
-            <li className="mb-4 lg:mb-2">
-              <a
-                className={`flex items-center px-2 py-1 lg:px-4 lg:py-2 text-black dark:text-whitish rounded-md ${
-                  feedSelected === "galleries"
-                    ? "bg-gray-100 dark:bg-dark3"
-                    : "hover:bg-gray-200 dark:hover:bg-dark3 cursor-pointer"
-                }`}
-                onClick={() => setFeedSelected("galleries")}
-              >
-                <CollectionIcon className="w-5 h-5" aria-hidden="true" />
-
-                <span className="hidden lg:flex mx-4 font-medium">
-                  Galleries
-                </span>
-              </a>
-            </li>
-          </ul>
+    <div id="feed" className="pl-2 px-4 xl:px-0 pt-2 md:pt-4 mt-16">
+      <h2 className="w-full pb-2 font-extrabold mb-8 text-black w-fit inline-block dark:text-whitish border-b border-whitish dark:border-dark3 sticky top-0 z-40 pt-3 bg-white dark:bg-black">
+        <FeedMenu feed={feed} updateFeed={updateFeed} />
+      </h2>
+      <div
+        className={`grid ${
+          feed === "auctions" ? "grid-cols-1" : "grid-cols-12"
+        }`}
+      >
+        <div className="col-span-12 md:col-span-7 lg:col-span-5 min-h-screen">
+          {(feed === "activity" || !feed) && <Activity />}
+          {feed === "following" && <Following />}
+          {feed === "auctions" && <Auctions />}
+          {feed === "galleries" && <Galleries />}
         </div>
-
-        <div
-          id="feed"
-          className="lg:flex-1 lg:flex lg:border-l border-whitish dark:border-dark3"
-        >
-          <div className="lg:flex-1">
-            <div className="mx-4 lg:mx-8">
-              {feedSelected === "activity" && <Activity />}
-              {feedSelected === "following" && <Following />}
-              {feedSelected === "auctions" && <Auctions />}
-              {feedSelected === "buynow" && <BuyNow />}
-              {feedSelected === "listings" && <AllListings />}
-              {feedSelected === "galleries" && <Galleries />}
-            </div>
-          </div>
-        </div>
-
-        {feedSelected !== "auctions" && (
-          <div className="hidden lg:block lg:w-80 xl:w-96 px-2">
+        {(feed === "activity" || feed === "following") && (
+          <div className="hidden md:block md:col-span-4 md:col-end-13">
             <RightColumn />
           </div>
         )}
-
-        <div
-          id="scroll-to-top"
-          className="fixed bottom-2 right-2 bg-whitish rounded-full cursor-pointer p-2"
-          onClick={scrollToFeed}
-        >
-          <ChevronUpIcon className="h-6 w-6" aria-hidden="true" />
-        </div>
       </div>
-    </>
+    </div>
   );
 }

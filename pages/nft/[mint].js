@@ -83,8 +83,8 @@ function Nft({ image, token }) {
 
       <MainNavigation />
 
-      <div className="mx-auto px-4">
-        <div className="mx-auto pb-4 px-2 md:px-0 -mt-4">
+      <div>
+        <div className="mx-auto pb-4 px-4 xl:px-0 -mt-20">
           <Single token={token} refetch={refetch} />
         </div>
       </div>

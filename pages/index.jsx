@@ -9,15 +9,10 @@ export default function Home() {
   const [user] = useContext(UserContext);
 
   return (
-    <div className="dark:bg-black">
+    <>
       <MainNavigation />
-      {!user && (
-        <>
-          <Hero />
-          <Featured />
-        </>
-      )}
+      <Hero />
       <Feed />
-    </div>
+    </>
   );
 }

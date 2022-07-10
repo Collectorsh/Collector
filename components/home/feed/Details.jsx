@@ -1,22 +1,59 @@
-import React, { useContext } from "react";
 import Link from "next/link";
 import { marketplaceLink } from "/utils/marketplaceHelpers";
 import Image from "/components/Image";
 import CollectorUsername from "/components/CollectorUsername";
 import { roundToTwo } from "/utils/roundToTwo";
 import Moment from "react-moment";
-import UserContext from "/contexts/user";
-import Tippy from "@tippyjs/react";
-import "tippy.js/dist/tippy.css";
-import unfollowFollowUser from "/data/user/unfollowFollowUser";
-import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/outline";
+import FollowButton from "/components/FollowButton";
+import ShareToTwitter from "/components/ShareToTwitter";
 
 export default function Details({ item }) {
-  const [user, setUser] = useContext(UserContext);
+  const formatTweet = (item) => {
+    let username = item.twitter_screen_name
+      ? `@${item.twitter_screen_name}`
+      : item.username;
+    let artistName = item.attributes.twitter
+      ? item.attributes.twitter
+      : item.attributes.artist_name || item.attributes.brand_name;
+    let name = item.attributes.name;
 
-  const followUser = async (user_id, action) => {
-    let res = await unfollowFollowUser(user.api_key, user_id, action);
-    setUser(res.data.user);
+    let tweet;
+
+    if (item.type === "won") {
+      let amount = `◎${roundToTwo(item.attributes.highest_bid / 1000000000)}`;
+
+      tweet = `${name} by ${artistName} was won by ${username} for ${amount}`;
+    } else if (item.type === "listing") {
+      let amount = `◎${roundToTwo(item.attributes.amount / 1000000000)}`;
+
+      tweet = `${name} by ${artistName} was listed by ${username}`;
+      if (amount) {
+        tweet += ` for ◎${roundToTwo(item.attributes.amount / 1000000000)}`;
+      }
+    } else if (item.type === "bid") {
+      let amount = `◎${roundToTwo(item.amount / 1000000000)}`;
+
+      tweet = `A bid for ${amount} was placed by ${username} on ${name} by ${artistName}`;
+    } else if (item.type === "sale") {
+      let amount = `◎${roundToTwo(item.attributes.amount / 1000000000)}`;
+
+      tweet = `${name} by ${artistName} was purchase by ${username} for ${amount}`;
+    }
+
+    tweet += "\n\n";
+
+    tweet += "Seen on the @collector_sh feed";
+
+    tweet += "\n\n";
+
+    tweet += `${marketplaceLink(
+      item.attributes.source,
+      item.attributes.mint,
+      item.attributes.brand_name,
+      item.attributes.highest_bidder_username
+    )}`;
+
+    return tweet;
   };
 
   return (
@@ -120,34 +157,7 @@ export default function Details({ item }) {
       </div>
 
       <div className="float-right mt-2">
-        {user && item.user_id && user.id !== item.user_id && (
-          <>
-            {user.following &&
-            user.following.find((f) => f.id === item.user_id) ? (
-              <Tippy
-                content={`Stop following ${item.username}`}
-                className="bg-gray-300"
-              >
-                <MinusCircleIcon
-                  className="h-6 w-6 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-red-600 dark:hover:text-red-600"
-                  aria-hidden="true"
-                  onClick={() => followUser(item.user_id, "unfollow")}
-                />
-              </Tippy>
-            ) : (
-              <Tippy
-                content={`Follow ${item.username}`}
-                className="bg-gray-300"
-              >
-                <PlusCircleIcon
-                  className="h-6 w-6 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-black dark:hover:text-white"
-                  aria-hidden="true"
-                  onClick={() => followUser(item.user_id, "follow")}
-                />
-              </Tippy>
-            )}
-          </>
-        )}
+        <FollowButton follow={item} />
       </div>
 
       <div className="clear-both"></div>
@@ -161,9 +171,17 @@ export default function Details({ item }) {
         )}
       >
         <a>
-          <Image token={item.attributes} size="large" />
+          <Image token={item.attributes} size="medium" />
         </a>
       </Link>
+
+      <span className="-ml-2">
+        <ShareToTwitter
+          url={formatTweet(item)}
+          size="18"
+          text="Share to Twitter"
+        />
+      </span>
     </div>
   );
 }

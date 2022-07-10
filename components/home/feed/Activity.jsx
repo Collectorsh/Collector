@@ -54,10 +54,6 @@ export default function Activity() {
       )}
       {infiniteScrollItems && (
         <>
-          <FeedFilters
-            updateSelected={updateSelected}
-            feedsSelected={feedsSelected}
-          />
           <div>
             <InfiniteScroll
               dataLength={infiniteScrollItems.length}

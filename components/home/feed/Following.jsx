@@ -49,7 +49,7 @@ export default function Following() {
   }
 
   return (
-    <div>
+    <div className="min-h-[500px]">
       {!user && (
         <p className="dark:text-whitish">
           You need to sign-in to see your feed.
@@ -64,10 +64,6 @@ export default function Following() {
         <>
           {infiniteScrollItems.length > 0 && (
             <>
-              <FeedFilters
-                updateSelected={updateSelected}
-                feedsSelected={feedsSelected}
-              />
               <div>
                 <InfiniteScroll
                   dataLength={infiniteScrollItems.length}

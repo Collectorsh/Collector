@@ -9,8 +9,8 @@ import ShareToTwitter from "/components/ShareToTwitter";
 
 export default function Details({ item }) {
   const formatTweet = (item) => {
-    let username = item.attributes.twitter_screen_name
-      ? `@${item.attributes.twitter_screen_name}`
+    let username = item.twitter_screen_name
+      ? `@${item.twitter_screen_name}`
       : item.username;
     let artistName = item.attributes.twitter
       ? item.attributes.twitter

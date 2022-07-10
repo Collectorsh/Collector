@@ -40,11 +40,11 @@ export default function Details({ item }) {
       tweet = `${name} by ${artistName} was purchase by ${username} for ${amount}`;
     }
 
-    tweet += "%0a%0a";
+    tweet += "\n\n";
 
     tweet += "Seen on the @collector_sh feed";
 
-    tweet += "%0a%0a";
+    tweet += "\n\n";
 
     tweet += `${marketplaceLink(
       item.attributes.source,

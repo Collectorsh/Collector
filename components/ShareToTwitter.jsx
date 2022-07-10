@@ -1,7 +1,7 @@
 export default function ShareToTwitter({ url, size, text, color }) {
   return (
     <a
-      href={`https://twitter.com/intent/tweet?text=${url}`}
+      href={encodeURI(`https://twitter.com/intent/tweet?text=${url}`)}
       title="Share to Twitter"
       target="_blank"
       rel="noreferrer"

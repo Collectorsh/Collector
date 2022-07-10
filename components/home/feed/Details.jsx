@@ -9,25 +9,35 @@ import ShareToTwitter from "/components/ShareToTwitter";
 
 export default function Details({ item }) {
   const formatTweet = (item) => {
-    let tweet = `${item.username} `;
+    let username = item.attributes.twitter_screen_name
+      ? `@${item.attributes.twitter_screen_name}`
+      : item.username;
+    let artistName = item.attributes.twitter
+      ? item.attributes.twitter
+      : item.attributes.artist_name || item.attributes.brand_name;
+    let name = item.attributes.name;
+
+    let tweet;
 
     if (item.type === "won") {
-      tweet += `won the auction for ${item.attributes.name} by ${
-        item.attributes.brand_name
-      } for ◎${roundToTwo(item.attributes.highest_bid / 1000000000)}`;
+      let amount = `◎${roundToTwo(item.attributes.highest_bid / 1000000000)}`;
+
+      tweet = `${name} by ${artistName} was won by ${username} for ${amount}`;
     } else if (item.type === "listing") {
-      tweet += `listed ${item.attributes.name} by ${item.attributes.artist_name}`;
-      if (item.attributes.amount) {
+      let amount = `◎${roundToTwo(item.attributes.amount / 1000000000)}`;
+
+      tweet = `${name} by ${artistName} was listed by ${username}`;
+      if (amount) {
         tweet += ` for ◎${roundToTwo(item.attributes.amount / 1000000000)}`;
       }
     } else if (item.type === "bid") {
-      tweet += `placed a bid of ◎${roundToTwo(item.amount / 1000000000)} on ${
-        item.attributes.name
-      } by ${item.attributes.brand_name}`;
+      let amount = `◎${roundToTwo(item.amount / 1000000000)}`;
+
+      tweet = `A bid for ${amount} was placed by ${username} on ${name} by ${artistName}`;
     } else if (item.type === "sale") {
-      tweet += `purchased ${item.attributes.name} by ${
-        item.attributes.artist_name
-      } for ◎${roundToTwo(item.attributes.amount / 1000000000)}`;
+      let amount = `◎${roundToTwo(item.attributes.amount / 1000000000)}`;
+
+      tweet = `${name} by ${artistName} was purchase by ${username} for ${amount}`;
     }
 
     tweet += "%0a%0a";

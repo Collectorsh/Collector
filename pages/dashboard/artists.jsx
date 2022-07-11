@@ -26,25 +26,27 @@ export default function Artists() {
   };
 
   return (
-    <div className="dark:bg-black">
-      <CheckLoggedIn />
-      <Toaster />
-      <MainNavigation />
-      <div>
-        <div className="mt-16 sm:mt-36">
-          <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-1 inline-block dark:text-whitish">
-            Artists
-          </h2>
-          <div className="mb-6">
-            <ArtistSearch user={user} handleFollow={updateFollowing} />
+    <div className="dark:bg-black dark:text-whitish">
+      <div className="max-w-7xl mx-auto">
+        <CheckLoggedIn />
+        <Toaster />
+        <MainNavigation />
+        <div>
+          <div className="mt-16 sm:mt-36">
+            <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-1 inline-block dark:text-whitish">
+              Artists
+            </h2>
+            <div className="mb-6">
+              <ArtistSearch user={user} handleFollow={updateFollowing} />
+            </div>
+            {following && (
+              <ArtistList
+                following={following}
+                handleFollow={updateFollowing}
+                user={user}
+              />
+            )}
           </div>
-          {following && (
-            <ArtistList
-              following={following}
-              handleFollow={updateFollowing}
-              user={user}
-            />
-          )}
         </div>
       </div>
     </div>

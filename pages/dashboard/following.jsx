@@ -25,22 +25,25 @@ export default function Following() {
   }, [user]);
 
   return (
-    <div className="dark:bg-black">
-      <CheckLoggedIn />
-      <MainNavigation />
-      <div>
+    <div className="dark:bg-black dark:text-whitish">
+      <div className="max-w-7xl mx-auto">
+        <CheckLoggedIn />
+        <MainNavigation />
         <div>
-          <div className="mb-12">
-            <div className="w-full mt-16 sm:mt-36 mb-6">
-              <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-1 inline-block dark:text-whitish">
-                Following
-              </h2>
-              {user && noAuctions && (
-                <p className="dark:text-gray-100">
-                  There&apos;s currently no auctions by artists that you follow
-                </p>
-              )}
-              {auctions && <FollowingAuctions auctions={auctions} />}
+          <div>
+            <div className="mb-12">
+              <div className="w-full mt-16 sm:mt-36 mb-6">
+                <h2 className="text-5xl font-extrabold mb-8 text-black w-fit py-1 inline-block dark:text-whitish">
+                  Following
+                </h2>
+                {user && noAuctions && (
+                  <p className="dark:text-gray-100">
+                    There&apos;s currently no auctions by artists that you
+                    follow
+                  </p>
+                )}
+                {auctions && <FollowingAuctions auctions={auctions} />}
+              </div>
             </div>
           </div>
         </div>

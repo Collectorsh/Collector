@@ -9,10 +9,12 @@ export default function Home() {
   const [user] = useContext(UserContext);
 
   return (
-    <>
-      <MainNavigation />
-      <Hero />
-      <Feed />
-    </>
+    <div className="dark:bg-black">
+      <div className="max-w-7xl mx-auto">
+        <MainNavigation />
+        <Hero />
+        <Feed />
+      </div>
+    </div>
   );
 }

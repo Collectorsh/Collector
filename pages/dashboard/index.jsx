@@ -25,20 +25,27 @@ export default function Collection() {
   }, []);
 
   return (
-    <div className="dark:bg-black">
-      <CheckLoggedIn />
-      <Toaster />
-      <MainNavigation />
+    <div className="dark:bg-black dark:text-whitish">
+      <div className="max-w-7xl mx-auto">
+        <CheckLoggedIn />
+        <Toaster />
+        <MainNavigation />
 
-      <div>
         <div>
-          {tokens ? (
-            <CollectionContainer tkns={tokens} user={user} />
-          ) : (
-            <div className="mt-48 w-[50px] mx-auto h-64">
-              <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
-            </div>
-          )}
+          <div>
+            {tokens ? (
+              <CollectionContainer tkns={tokens} user={user} />
+            ) : (
+              <div className="mt-48 w-[50px] mx-auto h-64">
+                <Oval
+                  color="#fff"
+                  secondaryColor="#000"
+                  height={50}
+                  width={50}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

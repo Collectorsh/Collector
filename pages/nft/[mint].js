@@ -67,25 +67,27 @@ function Nft({ image, token }) {
 
   return (
     <div className="dark:bg-black">
-      <Head>
-        {token && (
-          <>
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" content={token.name} />
-            <meta
-              name="twitter:description"
-              content={`View ${token.name} on Collector`}
-            />
-            <meta name="twitter:image" content={image} />
-          </>
-        )}
-      </Head>
+      <div className="max-w-7xl mx-auto">
+        <Head>
+          {token && (
+            <>
+              <meta name="twitter:card" content="summary_large_image" />
+              <meta name="twitter:title" content={token.name} />
+              <meta
+                name="twitter:description"
+                content={`View ${token.name} on Collector`}
+              />
+              <meta name="twitter:image" content={image} />
+            </>
+          )}
+        </Head>
 
-      <MainNavigation />
+        <MainNavigation />
 
-      <div>
-        <div className="mx-auto pb-4 px-4 xl:px-0 -mt-20">
-          <Single token={token} refetch={refetch} />
+        <div>
+          <div className="mx-auto pb-4 px-4 xl:px-0 -mt-20">
+            <Single token={token} refetch={refetch} />
+          </div>
         </div>
       </div>
     </div>

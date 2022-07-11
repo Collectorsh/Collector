@@ -11,6 +11,14 @@ export default function Image({ token, size = "small" }) {
     if (token.image.split(".").pop().includes("mp4")) {
       setVideoUrl(token.image);
     }
+    try {
+      let file = token.properties.files[0];
+      if (file.type === "video/mp4") {
+        setVideoUrl(file.uri);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }, [token.image]);
 
   const onImageLoad = (event) => {

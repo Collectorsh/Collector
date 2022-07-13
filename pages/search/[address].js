@@ -29,7 +29,7 @@ export default function Search() {
   return (
     <div className="dark:bg-black">
       <div className="max-w-7xl mx-auto">
-        <div className="dark:bg-black mt-32">
+        <div className="dark:bg-black">
           <MainNavigation publicKey={address} />
           <div className="mx-auto px-4">
             <div className="mx-auto px-2 md:px-0">

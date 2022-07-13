@@ -22,7 +22,7 @@ export default function CollectionContainer({ tkns, user }) {
   }, [tkns]);
 
   return (
-    <div className="dark:bg-black min-h-screen pb-12 mt-16 sm:mt-36">
+    <div className="dark:bg-black min-h-screen pb-12 mt-16">
       <div className="mb-12">
         <h2 className="text-5xl font-extrabold text-black w-fit py-1 inline-block dark:text-whitish">
           Edit Gallery

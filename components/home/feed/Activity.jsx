@@ -54,24 +54,19 @@ export default function Activity() {
       )}
       {infiniteScrollItems && (
         <>
-          <h2 className="text-5xl font-extrabold mb-8 text-black w-fit pt-5 inline-block dark:text-whitish">
-            Activity
-          </h2>
-          <FeedFilters
-            updateSelected={updateSelected}
-            feedsSelected={feedsSelected}
-          />
-          <InfiniteScroll
-            dataLength={infiniteScrollItems.length}
-            next={fetchData}
-            hasMore={infiniteScrollItems.length !== results.length}
-          >
-            {infiniteScrollItems.map((item, index) => (
-              <div key={index} className="sm:max-w-2xl">
-                <Details item={item} />
-              </div>
-            ))}
-          </InfiniteScroll>
+          <div>
+            <InfiniteScroll
+              dataLength={infiniteScrollItems.length}
+              next={fetchData}
+              hasMore={infiniteScrollItems.length !== results.length}
+            >
+              {infiniteScrollItems.map((item, index) => (
+                <div key={index}>
+                  <Details item={item} />
+                </div>
+              ))}
+            </InfiniteScroll>
+          </div>
         </>
       )}
     </div>

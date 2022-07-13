@@ -96,7 +96,9 @@ export default function Single({ token, refetch }) {
           )}
           <p className="inline">
             <ShareToTwitter
-              url={`${host}/nft/${token.mint}`}
+              url={`${token.name} ${
+                token.artist_twitter ? `by ${token.artist_twitter}` : ""
+              }\n\n${host}/nft/${token.mint}`}
               size="18"
               text="Tweet It"
             />

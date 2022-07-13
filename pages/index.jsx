@@ -10,14 +10,11 @@ export default function Home() {
 
   return (
     <div className="dark:bg-black">
-      <MainNavigation />
-      {!user && (
-        <>
-          <Hero />
-          <Featured />
-        </>
-      )}
-      <Feed />
+      <div className="max-w-7xl mx-auto">
+        <MainNavigation />
+        <Hero />
+        <Feed />
+      </div>
     </div>
   );
 }

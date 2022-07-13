@@ -29,7 +29,9 @@ export default function Image({ token, size = "small" }) {
     let styles;
     if (size === "small") {
       styles =
-        "h-80 w-96 lg:h-80 lg:w-80 xl:w-96 opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm";
+        "w-[600px] h-[400px] md:w-[500px] md:h-[300px] opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm";
+    } else if (size === "medium") {
+      styles = "md:w-[550px] md:h-[450px]";
     } else if (size === "large") {
       styles = "shadow-lg object-center object-cover";
     }

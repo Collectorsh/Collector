@@ -17,10 +17,10 @@ export default function Hero() {
 
   return (
     <>
-      <div className="mx-auto px-2 md:px-4 lg:px-12 pb-0 lg:pb-4 bg-white dark:bg-black mt-28">
-        <div className="mx-auto px-2 md:px-0">
-          <div className="lg:grid lg:grid-cols-7 lg:gap-x-8 mb-8 lg:mb-0">
-            <div className="col-span-4 align-middle xl:mr-20 lg:mt-12 mb-6">
+      <div className="mx-auto px-4 xl:px-0 pb-0 lg:pb-4 bg-white dark:bg-black mt-8">
+        <div className="mx-auto md:px-0">
+          <div className="lg:grid lg:grid-cols-7 lg:gap-x-8 mb-8 lg:mb-0 items-center">
+            <div className="col-span-4 align-middle xl:mr-20 lg:mt-12">
               <h1 className="font-bold tracking-wide text-black dark:text-whitish text-center">
                 <p className="text-5xl">Discover</p>
                 <p className="mt-4 text-5xl">&amp;</p>

@@ -1,14 +1,13 @@
 import { host } from "/config/settings";
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { DragSource, DropTarget } from "react-dnd";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import getMetadataFromUri from "/data/nft/getMetadataFromUri";
 import { EyeIcon } from "@heroicons/react/outline";
-import { TagIcon, HashtagIcon } from "@heroicons/react/solid";
+import { TagIcon } from "@heroicons/react/solid";
 import { cdnImage } from "/utils/cdnImage";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import { addDefaultSource } from "/utils/addDefaultSource";
 
 const Visible = forwardRef(function Visible(
   {
@@ -46,10 +45,6 @@ const Visible = forwardRef(function Visible(
     initGetData(token);
   }, [token, initGetData]);
 
-  useEffect(() => {
-    initGetData(token);
-  }, [acceptOffers]);
-
   function updateAcceptOffers() {
     let accepting = acceptOffers ? false : true;
     setAcceptOffers(accepting);
@@ -61,17 +56,21 @@ const Visible = forwardRef(function Visible(
   }
 
   return (
-    <div className="flex-none" ref={elementRef} id={token.mint}>
+    <div
+      className={`bg-dark3 rounded-lg flex-none cursor-move relative ${
+        size === 32 ? "w-32 h-40" : "w-48 h-56"
+      }`}
+      ref={elementRef}
+      id={token.mint}
+      style={{
+        backgroundImage: `url(${cdnImage(token.mint)}), url(${token.image})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       {tokenData && (
         <>
-          <img
-            className={`${
-              size === 32 ? "w-32 h-32" : "w-48 h-48"
-            } bg-black dark:bg-dark3 shadow-2xl dark:bg-dark3 object-center object-cover rounded-t-lg cursor-move border-t border-l border-r border-gray-200 dark:border-dark3`}
-            src={cdnImage(token.mint)}
-            onError={(e) => addDefaultSource(e, token.mint, token.image)}
-          />
-          <div className="w-full bg-black dark:bg-dark3 shadow-2xl dark:bg-dark3 px-1 py-1 rounded-b-lg align-middle border-l border-r border-b border-gray-200 dark:border-dark3">
+          <div className="absolute bottom-0 w-full bg-black dark:bg-dark3 dark:bg-dark3 px-1 py-1 rounded-b-lg align-middle">
             <Tippy content="Make not visible" className="bg-gray-300">
               <EyeIcon
                 className="h-5 w-5 text-white cursor-pointer inline focus:outline-none"

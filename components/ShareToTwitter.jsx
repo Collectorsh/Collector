@@ -1,7 +1,7 @@
 export default function ShareToTwitter({ url, size, text, color }) {
   return (
     <a
-      href={`https://twitter.com/intent/tweet?text=${url}`}
+      href={encodeURI(`https://twitter.com/intent/tweet?text=${url}`)}
       title="Share to Twitter"
       target="_blank"
       rel="noreferrer"
@@ -30,7 +30,11 @@ export default function ShareToTwitter({ url, size, text, color }) {
         </linearGradient>
         <path d="M46.105,11.02c-1.551,0.687-3.219,1.145-4.979,1.362c1.789-1.062,3.166-2.756,3.812-4.758	c-1.674,0.981-3.529,1.702-5.502,2.082C37.86,8.036,35.612,7,33.122,7c-4.783,0-8.661,3.843-8.661,8.582	c0,0.671,0.079,1.324,0.226,1.958c-7.196-0.361-13.579-3.782-17.849-8.974c-0.75,1.269-1.172,2.754-1.172,4.322	c0,2.979,1.525,5.602,3.851,7.147c-1.42-0.043-2.756-0.438-3.926-1.072c0,0.026,0,0.064,0,0.101c0,4.163,2.986,7.63,6.944,8.419	c-0.723,0.198-1.488,0.308-2.276,0.308c-0.559,0-1.104-0.063-1.632-0.158c1.102,3.402,4.299,5.889,8.087,5.963	c-2.964,2.298-6.697,3.674-10.756,3.674c-0.701,0-1.387-0.04-2.065-0.122C7.73,39.577,12.283,41,17.171,41	c15.927,0,24.641-13.079,24.641-24.426c0-0.372-0.012-0.742-0.029-1.108C43.483,14.265,44.948,12.751,46.105,11.02"></path>
       </svg>
-      {text && <span className="text-sm dark:text-whitish">{text}</span>}
+      {text && (
+        <span className="text-sm dark:text-whitish hover:underline">
+          {text}
+        </span>
+      )}
     </a>
   );
 }

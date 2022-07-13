@@ -29,9 +29,9 @@ export default function MainNavigation(props) {
   }
 
   return (
-    <div className="mx-auto mb-20">
-      <nav className="mx-auto py-4 md:py-2 px-0 md:px-4 lg:px-12 bg-white dark:bg-black fixed w-full z-40 top-0">
-        <div className="px-4 md:px-0">
+    <div className="mx-auto">
+      <nav className="px-4 xl:px-0 mx-auto py-4 md:py-2 bg-white dark:bg-black fixed w-full z-10 top-0 h-[74px] relative">
+        <div>
           <div className="flex">
             <div className="flex items-center col-span-1 w-[200px] lg:w-1/2">
               <div className="cursor-pointer md:my-3 w-[200px]">
@@ -93,7 +93,7 @@ export default function MainNavigation(props) {
         <Transition.Root show={open} as={Fragment}>
           <Dialog
             as="div"
-            className="fixed inset-0 overflow-hidden"
+            className="fixed inset-0 overflow-hidden z-20"
             onClose={() => setOpen(true)}
           >
             <div className="absolute inset-0 overflow-hidden">

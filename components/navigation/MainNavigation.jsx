@@ -4,6 +4,7 @@ import React, { useState, useContext, Fragment } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import UserContext from "/contexts/user";
 import { Dialog, Transition } from "@headlessui/react";
+import { XIcon } from "@heroicons/react/outline";
 import DarkMode from "/components/navigation/DarkMode";
 import ConnectWallet from "/components/wallet/ConnectWallet";
 import Profile from "/components/navigation/Profile";
@@ -30,7 +31,7 @@ export default function MainNavigation(props) {
 
   return (
     <div className="mx-auto">
-      <nav className="px-4 xl:px-0 mx-auto py-4 md:py-2 bg-white dark:bg-black fixed w-full z-10 top-0 h-[74px] relative">
+      <nav className="px-4 xl:px-0 mx-auto py-4 md:py-2 bg-white dark:bg-black fixed w-full z-20 top-0 h-[74px] relative">
         <div>
           <div className="flex">
             <div className="flex items-center col-span-1 w-[200px] lg:w-1/2">
@@ -108,6 +109,26 @@ export default function MainNavigation(props) {
               >
                 <Dialog.Overlay className="absolute inset-0 transition-opacity" />
               </Transition.Child>
+              <Transition.Child
+                as={Fragment}
+                enter="ease-in-out duration-500"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in-out duration-500"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <div className="absolute top-0 left-0 flex pt-4 pr-2 sm:-ml-10 sm:pr-4 z-30">
+                  <button
+                    type="button"
+                    className="rounded-md text-gray-800 hover:text-black outline-none focus:outline-none cursor-pointer ml-4 dark:text-white"
+                    onClick={() => setOpen(false)}
+                  >
+                    <span className="sr-only">Close panel</span>
+                    <XIcon className="h-6 w-6" aria-hidden="true" />
+                  </button>
+                </div>
+              </Transition.Child>
               <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
                 <Transition.Child
                   as={Fragment}
@@ -119,7 +140,7 @@ export default function MainNavigation(props) {
                   leaveTo="translate-x-full"
                 >
                   <div className="pointer-events-auto relative w-screen">
-                    <div className="flex h-full flex-col overflow-y-scroll bg-white dark:bg-black pb-6 shadow-xl pt-6">
+                    <div className="flex h-full flex-col overflow-y-scroll bg-white dark:bg-black pb-6 shadow-xl">
                       <div className="relative mt-12 flex-1 px-4 sm:px-6">
                         <div className="absolute inset-0 px-4 sm:px-6 mt-2">
                           <div className="mt-4 dark:text-gray-200">

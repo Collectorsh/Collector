@@ -255,6 +255,21 @@ export default function GalleryNavigation({ user }) {
                           </div>
                           <div className="mt-6 dark:text-gray-200">
                             <Link
+                              href={`/${user.username}/profile`}
+                              title="Profile"
+                              className="align-middle inline"
+                            >
+                              <a>
+                                <UserCircleIcon
+                                  className="h-6 w-6 inline mr-4 cursor-pointer text-slate-900 dark:text-gray-100 hover:scale-110"
+                                  aria-hidden="true"
+                                />
+                                <span className="-ml-2">Profile</span>
+                              </a>
+                            </Link>
+                          </div>
+                          <div className="mt-6 dark:text-gray-200">
+                            <Link
                               href={`https://twitter.com/intent/tweet?text=${host}/${user.username}`}
                               title="Share to Twitter"
                               className="align-middle inline"

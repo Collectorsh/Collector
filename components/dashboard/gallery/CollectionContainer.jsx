@@ -19,6 +19,21 @@ export default function CollectionContainer({ tkns, user }) {
   };
   const [columns, setColumns] = useState(initialColumns);
 
+  // Save the layout any time it changes
+  useEffect(() => {
+    let tokens = [];
+    let count = 1;
+    columns.visible.list.map((t) => {
+      tokens.push({ mint: t.mint, visible: true, order_id: count });
+      count += 1;
+    });
+    columns.hidden.list.map((t) => {
+      tokens.push({ mint: t.mint, visible: false, order_id: count });
+      count += 1;
+    });
+    saveLayout(user.api_key, tokens);
+  }, [columns]);
+
   function onDragEnd({ source, destination }) {
     // Make sure we have a valid destination
     if (destination === undefined || destination === null) return null;

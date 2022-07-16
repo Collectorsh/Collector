@@ -12,9 +12,11 @@ export default function Image({ token, size = "small" }) {
       setVideoUrl(token.image);
     }
     try {
-      let file = token.properties.files[0];
-      if (file.type === "video/mp4") {
-        setVideoUrl(file.uri);
+      if (token.properties) {
+        let file = token.properties.files[0];
+        if (file && file.type === "video/mp4") {
+          setVideoUrl(file.uri);
+        }
       }
     } catch (err) {
       console.log(err);

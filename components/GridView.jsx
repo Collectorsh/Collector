@@ -13,12 +13,14 @@ import saveUser from "/data/user/saveUser";
 import UserContext from "/contexts/user";
 import { Toaster } from "react-hot-toast";
 import { success, error } from "/utils/toastMessages";
+import ShowOffers from "/components/gallery/ShowOffers";
 
 export default function GridView({
   items,
   type,
   profileUser,
   refreshProfileImage,
+  showOffers,
 }) {
   const [user, setUser] = useContext(UserContext);
 
@@ -222,6 +224,7 @@ export default function GridView({
                 </Transition>
               </Menu>
             )}
+          {showOffers && <ShowOffers token={item} />}
         </div>
       ))}
     </div>

@@ -9,6 +9,7 @@ export default function Offers({ token }) {
   const [offer, setOffer] = useState();
 
   useEffect(() => {
+    if (!token.mint && token.mintAddress) token.mint = token.mintAddress;
     let item = listings.filter((l) => l.mintAddress === token.mint)[0];
     if (!item) return;
     let highest = sortHighestOffer(item.offers);

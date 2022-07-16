@@ -1,10 +1,11 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useContext, useCallback, useEffect } from "react";
 import GridView from "/components/GridView";
 import { useLazyQuery } from "@apollo/client";
 import { getListingsQuery } from "/queries/listings";
+import ListingsContext from "/contexts/listings";
 
 export default function Listings({ user }) {
-  const [listings, setListings] = useState();
+  const [listings, setListings] = useContext(ListingsContext);
 
   const [getListingsQl, { loading, error, data }] =
     useLazyQuery(getListingsQuery);
@@ -17,7 +18,7 @@ export default function Listings({ user }) {
       },
     });
     let listins = res.data.nfts.filter((l) => l.listings.length > 0);
-    setListings(listins);
+    setListings([...listings, ...listins]);
   }, []);
 
   useEffect(() => {
@@ -33,7 +34,11 @@ export default function Listings({ user }) {
           </h2>
 
           <div className="flex flex-wrap gap-8">
-            <GridView items={listings} type="collector_listing" />
+            <GridView
+              items={listings}
+              type="collector_listing"
+              showOffers={true}
+            />
           </div>
         </div>
       )}

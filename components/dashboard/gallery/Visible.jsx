@@ -88,7 +88,7 @@ const Visible = forwardRef(function Visible(
               />
             </Tippy>
             <button
-              className="rounded bg-gray-100 px-1 py-0.5 mt-1 font-semibold text-xs cursor-pointer inline float-right"
+              className="rounded bg-gray-100 px-1 py-0.5 mt-1 font-semibold text-black text-xs cursor-pointer inline float-right"
               onClick={(e) => goToNft()}
             >
               List

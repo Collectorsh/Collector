@@ -118,7 +118,7 @@ export default function RightColumn() {
         </div>
       )}
 
-      {/* {marketplaceStats && (
+      {marketplaceStats && (
         <div className="bg-offwhite dark:bg-dark1 rounded-lg px-3 py-2 mt-6">
           <h2 className="font-extrabold mb-6 text-xl dark:text-whitish">
             Marketplaces 7 days
@@ -159,7 +159,7 @@ export default function RightColumn() {
             </div>
           ))}
         </div>
-      )} */}
+      )}
     </>
   );
 }

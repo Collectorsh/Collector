@@ -87,7 +87,7 @@ export default function GridView({
             <div className="w-full">
               <div className="h-12">
                 <h3 className="text-md text-black dark:text-whitish font-medium my-2">
-                  {item.name || item.attributes.name}
+                  {item.name || (item.attributes && item.attributes.name)}
                 </h3>
                 {item.brand_name && (
                   <p className="dark:text-whitish text-xs -mt-2 mb-2">

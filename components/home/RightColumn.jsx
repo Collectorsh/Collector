@@ -34,6 +34,34 @@ export default function RightColumn() {
     fetchMostFollowedArtists();
   }, []);
 
+  function transactionName(type) {
+    var transName;
+    switch (type) {
+      case "auction":
+        transName = "Auctions";
+        break;
+      case "buy":
+        transName = "Instant Sales";
+        break;
+      case "edition":
+        transName = "Editions";
+        break;
+      case "offer":
+        transName = "Offers";
+        break;
+    }
+    return transName;
+  }
+
+  function calculateTotal(item) {
+    var totalAmount = 0.0;
+    item.results.map((r) => {
+      totalAmount += Number(r.total);
+    });
+    console.log(totalAmount);
+    return totalAmount;
+  }
+
   return (
     <>
       {mostWins && (
@@ -127,32 +155,25 @@ export default function RightColumn() {
             <div key={index} className="mt-4">
               <MarketplaceLogo source={item.name} />
               <dl className="mt-4">
-                <div className="py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-gray-500">
-                    Auctions
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1">
-                    {item.auctions}
-                  </dd>
-                  <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1">
-                    ◎{roundToTwo(item.auction_total / 1000000000)}
-                  </dd>
-                </div>
-                <div className="py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-gray-500">
-                    Instant Sales
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1">
-                    {item.sales}
-                  </dd>
-                  <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1">
-                    ◎{roundToTwo(item.sales_total / 1000000000)}
-                  </dd>
-                </div>
+                {item.results.map((result, index) => (
+                  <div key={index}>
+                    <div className="py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-500">
+                        {transactionName(result.type)}
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1">
+                        {result.count}
+                      </dd>
+                      <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1">
+                        ◎{roundToTwo(result.total / 1000000000)}
+                      </dd>
+                    </div>
+                  </div>
+                ))}
                 <div className="py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt className="text-sm font-medium text-gray-500">Volume</dt>
                   <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1 sm:col-start-3">
-                    ◎{roundToTwo(item.total / 1000000000)}
+                    ◎{roundToTwo(calculateTotal(item) / 1000000000)}
                   </dd>
                 </div>
               </dl>

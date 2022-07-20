@@ -21,6 +21,8 @@ export default function Single({ token, refetch }) {
   const [offer, setOffer] = useState(false);
   const [userOffer, setUserOffer] = useState(false);
 
+  console.log(singleNft);
+
   // Find the highest offer
   useEffect(() => {
     if (!singleNft.offers) return;

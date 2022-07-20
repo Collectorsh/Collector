@@ -3,9 +3,11 @@ import { gql } from "@apollo/client";
 export const getActivitiesQuery = gql`
   query GetActivities($auctionhouse: PublicKey!) {
     activities(auctionHouses: [$auctionhouse]) {
-      address
+      id
       metadata
-      auctionHouse
+      auctionHouse {
+        address
+      }
       price
       createdAt
       wallets {

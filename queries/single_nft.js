@@ -4,20 +4,20 @@ export const getNftQuery = gql`
   query GetNft($address: String!) {
     nft(address: $address) {
       listings {
-        address
+        id
         price
         createdAt
         canceledAt
         seller
         tradeState
         tradeStateBump
-        purchaseReceipt
         tokenSize
-        bump
-        auctionHouse
+        auctionHouse {
+          address
+        }
       }
       offers {
-        address
+        id
         tradeState
         price
         buyer

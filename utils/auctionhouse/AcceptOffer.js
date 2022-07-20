@@ -55,10 +55,14 @@ export default async function acceptOfferTransaction(
     process.env.NEXT_PUBLIC_AUCTIONHOUSE_TREASURY
   );
   const tokenAccount = new PublicKey(nft.associatedTokenAccountAddress);
-  const bidReceipt = new PublicKey(offer.address);
   const buyerPubkey = new PublicKey(offer.buyer);
 
   const [metadata] = await MetadataProgram.findMetadataAccount(tokenMint);
+
+  const [bidReceipt, _bidReceiptBump] =
+    await AuctionHouseProgram.findBidReceiptAddress(
+      new PublicKey(offer.tradeState)
+    );
 
   const [sellerTradeState, sellerTradeStateBump] =
     await AuctionHouseProgram.findTradeStateAddress(

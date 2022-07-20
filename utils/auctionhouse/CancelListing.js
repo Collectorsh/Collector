@@ -40,7 +40,6 @@ export default async function cancelListingTransaction(
   const treasuryMint = new PublicKey(
     process.env.NEXT_PUBLIC_AUCTIONHOUSE_TREASURY_MINT
   );
-  const receipt = new PublicKey(listing.address);
   const tokenAccount = new PublicKey(nft.associatedTokenAccountAddress);
 
   const buyerPrice = listing.price;
@@ -54,6 +53,11 @@ export default async function cancelListingTransaction(
     buyerPrice,
     1
   );
+
+  const [listingReceipt, _listingReceiptBump] =
+    await AuctionHouseProgram.findListingReceiptAddress(
+      new PublicKey(listing.tradeState)
+    );
 
   const cancelInstructionAccounts = {
     wallet: publicKey,
@@ -70,7 +74,7 @@ export default async function cancelListingTransaction(
   };
 
   const cancelListingReceiptAccounts = {
-    receipt,
+    receipt: listingReceipt,
     instruction: SYSVAR_INSTRUCTIONS_PUBKEY,
   };
 

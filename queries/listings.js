@@ -15,7 +15,7 @@ export const getListingsQuery = gql`
       mintAddress
       description
       listings {
-        address
+        id
         price
         createdAt
         canceledAt
@@ -23,13 +23,13 @@ export const getListingsQuery = gql`
         tradeState
         metadata
         tradeStateBump
-        purchaseReceipt
         tokenSize
-        bump
-        auctionHouse
+        auctionHouse {
+          address
+        }
       }
       offers {
-        address
+        id
         tradeState
         price
         buyer

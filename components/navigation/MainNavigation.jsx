@@ -4,7 +4,7 @@ import React, { useState, useContext, Fragment } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import UserContext from "/contexts/user";
 import { Dialog, Transition } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
+import { XIcon, BellIcon } from "@heroicons/react/outline";
 import DarkMode from "/components/navigation/DarkMode";
 import ConnectWallet from "/components/wallet/ConnectWallet";
 import Profile from "/components/navigation/Profile";
@@ -31,7 +31,7 @@ export default function MainNavigation(props) {
 
   return (
     <div className="mx-auto">
-      <nav className="px-4 xl:px-0 mx-auto py-4 md:py-2 bg-white dark:bg-black fixed w-full z-20 top-0 h-[74px] relative">
+      <nav className="border-b border-gray-200 dark:border-dark3 px-4 xl:px-0 mx-auto py-4 md:py-2 bg-white dark:bg-black fixed w-full z-20 top-0 h-[76px] relative">
         <div>
           <div className="flex">
             <div className="flex items-center col-span-1 w-[200px] lg:w-1/2">
@@ -47,25 +47,23 @@ export default function MainNavigation(props) {
             <div className="hidden md:flex text-right items-center col-span-1 justify-end w-full">
               {user && (
                 <>
-                  <p className="menu mr-6 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                    <Link href="/">Home</Link>
+                  <p className="menu mr-5 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                    <Link href="/">Help</Link>
                   </p>
                   <p className="menu mr-6 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                    <Link href="/dashboard">Gallery</Link>
-                  </p>
-                  <p className="menu mr-6 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                    <Link href="/dashboard/bids">Bids</Link>
-                  </p>
-                  <p className="menu mr-6 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                    <Link href="/dashboard/artists">Artists</Link>
-                  </p>
-                  <p className="menu mr-6 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                    <Link href="/dashboard/following">Following</Link>
+                    <div className="rounded-full h-8 w-8 border dark:border-dark3 shadow-lg">
+                      <BellIcon
+                        className="h-7 w-7 pt-0.5 pl-0.5"
+                        aria-hidden="true"
+                      />
+                    </div>
                   </p>
                 </>
               )}
               {user ? <Profile /> : <ConnectWallet />}
-              <DarkMode />
+              <div className="rounded-full h-8 w-8 border dark:border-dark3 shadow-lg">
+                <DarkMode />
+              </div>
             </div>
             {/* <!-- Mobile menu button --> */}
             <div className="flex md:hidden text-right items-center col-span-1 justify-end w-full">

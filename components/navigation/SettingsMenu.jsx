@@ -4,9 +4,9 @@ import { Fragment, useContext } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import UserContext from "/contexts/user";
-import { UserCircleIcon } from "@heroicons/react/solid";
+import { CogIcon } from "@heroicons/react/outline";
 
-export default function MainNavigation() {
+export default function SettingsMenu() {
   const router = useRouter();
   const wallet = useWallet();
   const [user, setUser] = useContext(UserContext);
@@ -21,23 +21,12 @@ export default function MainNavigation() {
   }
 
   return (
-    <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:pr-0 z-20">
-      {/* Profile dropdown */}
-      <Menu as="div" className="mr-6 relative">
-        <div>
-          <Menu.Button className="flex text-sm rounded-full focus:outline-none">
-            <span className="sr-only">Open user menu</span>
-            {user && user.twitter_profile_image ? (
-              <img
-                src={user.twitter_profile_image}
-                alt="default img"
-                className="h-8 w-8 rounded-full"
-              />
-            ) : (
-              <UserCircleIcon className="h-8 w-8 rounded-full bg-gray-50 text-black" />
-            )}
-          </Menu.Button>
-        </div>
+    <div className="relative -mt-9">
+      <Menu as="div" className="absolute top-0 right-0 inset-y-0 z-20">
+        <Menu.Button className="text-sm rounded-full focus:outline-none">
+          <span className="sr-only">settings menu</span>
+          <CogIcon className="h-12 w-12" aria-hidden="true" />
+        </Menu.Button>
         <Transition
           as={Fragment}
           enter="transition ease-out duration-100"
@@ -49,29 +38,23 @@ export default function MainNavigation() {
         >
           <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none text-left">
             <Menu.Item>
-              {publicKey ? (
-                <p className="bg-gray-50 rounded-xl shadow-lg mx-2 my-1 block px-4 py-2 text-sm text-gray-700">
-                  {publicKey.toBase58().substr(0, 4)}...
-                  {publicKey.toBase58().slice(-4)}
-                </p>
-              ) : (
-                <p>Connect</p>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              <Link href={`/${user.username}/profile`}>
+              <Link href={`/${user.username}/edit`}>
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Profile
+                  Edit Profile
                 </a>
               </Link>
             </Menu.Item>
             <Menu.Item>
-              <Link href="#">
-                <a
-                  onClick={signOut}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  Sign out
+              <Link href={`/${user.username}/gallery`}>
+                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Edit Gallery
+                </a>
+              </Link>
+            </Menu.Item>
+            <Menu.Item>
+              <Link href={`/${user.username}/follow`}>
+                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Follow Artists
                 </a>
               </Link>
             </Menu.Item>

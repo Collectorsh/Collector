@@ -68,7 +68,6 @@ export async function getServerSideProps(context) {
     let username = context.params.gallery;
     let res = await getUserFromUsername(username);
     let profileUser = res.user;
-    // let tokens = await getMetadata(user.public_keys);
     return { props: { profileUser } };
   } catch (err) {
     console.log(err);

@@ -23,9 +23,7 @@ export const getAllListingsQuery = gql`
         tradeState
         metadata
         tradeStateBump
-        purchaseReceipt
         tokenSize
-        bump
         auctionHouse {
           address
         }

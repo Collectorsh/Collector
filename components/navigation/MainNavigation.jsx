@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import React, { useState, useContext, Fragment } from "react";
+import React, { useState, useContext, useEffect, Fragment } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import UserContext from "/contexts/user";
 import { Dialog, Transition } from "@headlessui/react";
@@ -8,6 +8,7 @@ import { XIcon, BellIcon } from "@heroicons/react/outline";
 import DarkMode from "/components/navigation/DarkMode";
 import ConnectWallet from "/components/wallet/ConnectWallet";
 import Profile from "/components/navigation/Profile";
+import CreateUsernameModal from "/components/CreateUsernameModal";
 
 export default function MainNavigation(props) {
   const wallet = useWallet();
@@ -31,6 +32,7 @@ export default function MainNavigation(props) {
 
   return (
     <div className="mx-auto">
+      {user && !user.username && <CreateUsernameModal />}
       <nav className="border-b border-gray-200 dark:border-dark3 px-4 xl:px-0 mx-auto py-4 md:py-2 bg-white dark:bg-black fixed w-full z-20 top-0 h-[76px] relative">
         <div>
           <div className="flex">

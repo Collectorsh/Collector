@@ -58,7 +58,6 @@ export default function RightColumn() {
     item.results.map((r) => {
       totalAmount += Number(r.total);
     });
-    console.log(totalAmount);
     return totalAmount;
   }
 

@@ -25,7 +25,13 @@ function Profile({ profileUser }) {
       setImage(profileUser.profile_image);
     } else {
       let resp = res.data.find((a) => a.type === "won" || a.type === "sale");
-      setImage(resp.attributes.image);
+      if (resp) {
+        setImage(resp.attributes.image);
+      } else {
+        setImage(
+          "https://formfunction.imgix.net/nft-images/6AgwnaqCaQ9tlZhfuslnD.jpeg?q=70&auto=format&auto=compress"
+        );
+      }
     }
   }, []);
 

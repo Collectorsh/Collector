@@ -16,7 +16,7 @@ export default function Collected({
 
   return (
     <>
-      {results && (
+      {results && results.length > 0 && (
         <div className="mt-10 mb-10">
           <h2 className="text-4xl font-extrabold text-black w-fit inline-block dark:text-white mb-6">
             Collected

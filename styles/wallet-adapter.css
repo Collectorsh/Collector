@@ -70,7 +70,7 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 200ms ease, transform 200ms ease, visibility 200ms;
-  @apply left-0 sm:left-auto sm:right-0 bg-whitish text-black rounded-md shadow-lg py-1 w-56;
+  @apply left-0 sm:left-auto sm:right-0 bg-white text-black rounded-md shadow-lg py-1 w-56;
 }
 
 .wallet-adapter-dropdown-list-active {

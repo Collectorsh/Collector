@@ -29,10 +29,10 @@ export default function Listings({ user }) {
     <>
       {listings && listings.length > 0 && (
         <div className="mt-10">
-          <h2 className="text-4xl font-extrabold text-black w-fit inline-block dark:text-white mb-6">
+          <h2 className="text-4xl font-extrabold text-black w-fit inline-block dark:text-white">
             Listings
           </h2>
-
+          <div className="w-full border-b border-gray-200 dark:border-dark3 mt-3 mb-6"></div>
           <div className="flex flex-wrap gap-8">
             <GridView
               items={listings}

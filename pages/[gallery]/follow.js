@@ -3,6 +3,7 @@ import getUserFromUsername from "/data/user/getUserFromUsername";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 import MainNavigation from "/components/navigation/MainNavigation";
 import Artists from "/components/profile/edit/artists/Artists";
+import { XIcon } from "@heroicons/react/outline";
 
 function Follow({ profileUser }) {
   return (
@@ -12,7 +13,12 @@ function Follow({ profileUser }) {
         <MainNavigation />
         <div className="absolute right-4 mt-4 rounded-full h-8 w-8 text-3xl text-gray-400 cursor-pointer">
           <Link href={`/${profileUser.username}/profile`}>
-            <a>x</a>
+            <a>
+              <XIcon
+                className="h-8 w-8 cursor-pointer outline-none hover:text-dark3"
+                aria-hidden="true"
+              />
+            </a>
           </Link>
         </div>
         <div className="px-4 xl:px-0 mx-auto clear-both">

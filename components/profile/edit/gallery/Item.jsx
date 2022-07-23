@@ -25,7 +25,7 @@ export default function Item({ token, index, setTokenAcceptOffers }) {
   function updateAcceptOffers() {
     let accepting = acceptOffers ? false : true;
     setAcceptOffers(accepting);
-    setTokenAcceptOffers(token.mint, accepting);
+    setTokenAcceptOffers(token, accepting);
   }
 
   function goToNft() {
@@ -41,7 +41,7 @@ export default function Item({ token, index, setTokenAcceptOffers }) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <div className="col-span-10">
+          <div className="col-span-9">
             <img
               className="w-8 h-9 inline"
               src={cdnImage(token.mint)}
@@ -49,26 +49,19 @@ export default function Item({ token, index, setTokenAcceptOffers }) {
             />
             <span className="ml-2 text-sm dark:text-whitish">{token.name}</span>
           </div>
-          <div className="col-span-2">
-            <div className="absolute bottom-0 w-full bg-black dark:bg-dark3 dark:bg-dark3 px-1 py-1 rounded-b-lg align-middle">
-              <Tippy content="Make not visible" className="bg-gray-300">
-                <EyeIcon
-                  className="h-5 w-5 text-white cursor-pointer inline focus:outline-none"
-                  aria-hidden="true"
-                  onClick={(e) => setVisibility(false, token.mint)}
-                />
-              </Tippy>
+          <div className="col-span-3">
+            <div className="float-right">
               <Tippy content="Tag as Accepting Offers">
                 <TagIcon
-                  className={`h-4 w-4 cursor-pointer inline focus:outline-none ml-2 ${
-                    acceptOffers ? "text-green-700" : "text-white"
+                  className={`h-4 w-4 cursor-pointer inline focus:outline-none ${
+                    acceptOffers ? "text-green-700" : "text-gray-300"
                   }`}
                   aria-hidden="true"
                   onClick={(e) => updateAcceptOffers()}
                 />
               </Tippy>
               <button
-                className="rounded bg-gray-100 px-1 py-0.5 mt-1 font-semibold text-black text-xs cursor-pointer inline float-right"
+                className="rounded bg-gray-300 px-1 py-0.5 mt-1 font-semibold text-black text-xs cursor-pointer inline ml-2"
                 onClick={(e) => goToNft()}
               >
                 List

@@ -5,6 +5,7 @@ import CheckLoggedIn from "/components/CheckLoggedIn";
 import MainNavigation from "/components/navigation/MainNavigation";
 import Settings from "/components/profile/edit/profile/Settings";
 import Wallets from "/components/profile/edit/profile/Wallets";
+import { XIcon } from "@heroicons/react/outline";
 
 function Edit({ profileUser }) {
   const [selected, setSelected] = useState("settings");
@@ -20,7 +21,12 @@ function Edit({ profileUser }) {
         <MainNavigation />
         <div className="absolute right-4 mt-4 rounded-full h-8 w-8 text-3xl text-gray-400 cursor-pointer">
           <Link href={`/${profileUser.username}/profile`}>
-            <a>x</a>
+            <a>
+              <XIcon
+                className="h-8 w-8 cursor-pointer outline-none hover:text-dark3"
+                aria-hidden="true"
+              />
+            </a>
           </Link>
         </div>
         <div className="px-4 xl:px-0 mx-auto clear-both">
@@ -31,7 +37,7 @@ function Edit({ profileUser }) {
             <div className="w-full border-b border-gray-200 dark:border-dark3 pb-3">
               <ul className="font-bold">
                 <li
-                  className={`cursor-pointer hover:text-greeny inline px-2 mx-3 pb-3.5 ${
+                  className={`cursor-pointer hover:text-greeny inline px-2 mr-3 pb-3.5 ${
                     selected === "settings" &&
                     "text-greeny font-extrabold border-b border-b-2 border-greeny"
                   }`}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import getMetadata from "/data/nft/getMetadata";
 import { DragDropContext } from "react-beautiful-dnd";
+import saveLayout from "/data/dashboard/saveLayout";
 import { Oval } from "react-loader-spinner";
 import Column from "./Column";
 
@@ -25,6 +26,32 @@ export default function EditGallery({ user }) {
   useEffect(() => {
     getTokens(user);
   }, []);
+
+  // Save the layout any time it changes
+  useEffect(() => {
+    if (!columns) return;
+    let tokens = [];
+    let count = 1;
+    columns.visible.list.map((t) => {
+      tokens.push({
+        mint: t.mint,
+        visible: true,
+        order_id: count,
+        accept_offers: t.accept_offers,
+      });
+      count += 1;
+    });
+    columns.hidden.list.map((t) => {
+      tokens.push({
+        mint: t.mint,
+        visible: false,
+        order_id: count,
+        accept_offers: t.accept_offers,
+      });
+      count += 1;
+    });
+    saveLayout(user.api_key, tokens);
+  }, [columns]);
 
   function onDragEnd({ source, destination }) {
     // Make sure we have a valid destination
@@ -93,7 +120,20 @@ export default function EditGallery({ user }) {
     }
   }
 
-  function setTokenAcceptOffers(mint, accepting) {}
+  function setTokenAcceptOffers(token, accepting) {
+    const id = token.visible ? "visible" : "hidden";
+    const newList = Array.from(columns[id].list);
+    newList[token.order_id - 1].accept_offers = accepting;
+
+    // Then create a new copy of the column object
+    const newCol = {
+      id: id,
+      list: newList,
+    };
+
+    // Update the state
+    setColumns((state) => ({ ...state, [id]: newCol }));
+  }
 
   return (
     <div className="dark:bg-black min-h-screen pb-12 mt-16">

@@ -1,7 +1,7 @@
 import Item from "./Item";
 import { Droppable } from "react-beautiful-dnd";
 
-export default function Column({ col: { list, id } }) {
+export default function Column({ col: { list, id }, setTokenAcceptOffers }) {
   return (
     <Droppable droppableId={id}>
       {(provided) => (
@@ -14,7 +14,12 @@ export default function Column({ col: { list, id } }) {
           ref={provided.innerRef}
         >
           {list.map((token, index) => (
-            <Item token={token} key={token.mint} index={index} />
+            <Item
+              token={token}
+              key={token.mint}
+              index={index}
+              setTokenAcceptOffers={setTokenAcceptOffers}
+            />
           ))}
           {provided.placeholder}
         </div>

@@ -93,6 +93,8 @@ export default function EditGallery({ user }) {
     }
   }
 
+  function setTokenAcceptOffers(mint, accepting) {}
+
   return (
     <div className="dark:bg-black min-h-screen pb-12 mt-16">
       <div className="mb-12">
@@ -131,7 +133,11 @@ export default function EditGallery({ user }) {
             }}
           >
             {Object.values(columns).map((col) => (
-              <Column col={col} key={col.id} />
+              <Column
+                col={col}
+                key={col.id}
+                setTokenAcceptOffers={setTokenAcceptOffers}
+              />
             ))}
           </div>
         </DragDropContext>

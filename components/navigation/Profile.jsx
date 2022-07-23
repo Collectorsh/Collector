@@ -23,7 +23,7 @@ export default function MainNavigation() {
   return (
     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:pr-0 z-20">
       {/* Profile dropdown */}
-      <Menu as="div" className="mr-6 relative">
+      <Menu as="div" className="mr-8 relative">
         <div>
           <Menu.Button className="flex text-sm rounded-full focus:outline-none">
             <span className="sr-only">Open user menu</span>

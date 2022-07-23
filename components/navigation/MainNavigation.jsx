@@ -47,23 +47,23 @@ export default function MainNavigation(props) {
             <div className="hidden md:flex text-right items-center col-span-1 justify-end w-full">
               {user && (
                 <>
-                  <p className="menu mr-5 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                  <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                     <Link href="/">Help</Link>
                   </p>
-                  <p className="menu mr-6 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                    <div className="rounded-full h-8 w-8 border dark:border-dark3 shadow-lg">
-                      <BellIcon
-                        className="h-7 w-7 pt-0.5 pl-0.5"
-                        aria-hidden="true"
-                      />
-                    </div>
+                  <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                    <Link href={`/${user.username}/activity`}>
+                      <a>
+                        <BellIcon
+                          className="h-7 w-7 pt-0.5 pl-0.5"
+                          aria-hidden="true"
+                        />
+                      </a>
+                    </Link>
                   </p>
                 </>
               )}
               {user ? <Profile /> : <ConnectWallet />}
-              <div className="rounded-full h-8 w-8 border dark:border-dark3 shadow-lg">
-                <DarkMode />
-              </div>
+              <DarkMode />
             </div>
             {/* <!-- Mobile menu button --> */}
             <div className="flex md:hidden text-right items-center col-span-1 justify-end w-full">

@@ -17,7 +17,7 @@ export default function Feed() {
 
   return (
     <div id="feed" className="pl-2 px-4 xl:px-0 pt-2 md:pt-4 mt-16">
-      <h2 className="w-full pb-2 font-extrabold mb-8 text-black w-fit inline-block dark:text-whitish border-b border-whitish dark:border-dark3 sticky top-0 z-40 pt-3 bg-white dark:bg-black">
+      <h2 className="w-full pb-2 font-extrabold mb-8 text-black inline-block dark:text-whitish border-b border-whitish dark:border-dark3 sticky top-0 z-40 pt-3 bg-white dark:bg-black">
         <FeedMenu feed={feed} updateFeed={updateFeed} />
       </h2>
       <div

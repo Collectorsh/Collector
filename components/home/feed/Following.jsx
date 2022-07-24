@@ -4,7 +4,6 @@ import getFeedFollowing from "/data/home/getFeedFollowing";
 import Details from "/components/home/feed/Details";
 import { Oval } from "react-loader-spinner";
 import UserContext from "/contexts/user";
-import FeedFilters from "/components/home/feed/filters/FeedFilters";
 import { updateFeedsSelected } from "/utils/updateFeedsSelected";
 
 export default function Following() {

@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useRouter } from "next/router";
 import UserContext from "/contexts/user";
 import { Toaster } from "react-hot-toast";
 import { success, error } from "/utils/toastMessages";
@@ -8,6 +9,7 @@ import destroyTwitter from "/data/dashboard/destroyTwitter";
 import TwitterLogo from "/components/logos/TwitterLogo.jsx";
 
 export default function Settings() {
+  const router = useRouter();
   const [user, setUser] = useContext(UserContext);
 
   const connectTwitter = async () => {
@@ -56,7 +58,7 @@ export default function Settings() {
     if (res.data) {
       if (res.data.status === "success") {
         success("Updated successfully");
-        setUser(res.data.user);
+        router.push(`/${username}/edit`);
       } else {
         error(res.data.msg);
       }

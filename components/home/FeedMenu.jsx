@@ -9,46 +9,38 @@ export default function FeedMenu({ feed, updateFeed }) {
       styles = "dark:text-whitish";
     }
     styles +=
-      " hover:bg-black hover:text-white hover:border-black dark:hover:bg-whitish dark:hover:text-white dark:hover:border-whitish dark:hover:text-black cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1.5 px-1.5 xl:py-1.5 xl:px-2.5 font-bold border border-4";
+      " hover:bg-black hover:text-white hover:border-black dark:hover:bg-whitish dark:hover:text-white dark:hover:border-whitish dark:hover:text-black cursor-pointer rounded-3xl text-sm xl:text-md py-1.5 px-1.5 xl:py-1.5 xl:px-2.5 font-bold border border-4";
     return styles;
   }
 
   return (
-    <>
-      <ul className="text-sm py-4">
-        <li className="inline-block">
-          <a
-            className={style("activity")}
-            onClick={() => updateFeed("activity")}
-          >
-            <span className="">Activity</span>
-          </a>
-        </li>
-        <li className="inline-block">
-          <a
-            className={style("following")}
-            onClick={() => updateFeed("following")}
-          >
-            <span className="">Following</span>
-          </a>
-        </li>
-        <li className="inline-block">
-          <a
-            className={style("auctions")}
-            onClick={() => updateFeed("auctions")}
-          >
-            <span className="">Auctions</span>
-          </a>
-        </li>
-        <li className="inline-block">
-          <a
-            className={style("galleries")}
-            onClick={() => updateFeed("galleries")}
-          >
-            <span className="">Galleries</span>
-          </a>
-        </li>
-      </ul>
-    </>
+    <div className="flex text-sm my-4 justify-between sm:w-96">
+      <div>
+        <a className={style("activity")} onClick={() => updateFeed("activity")}>
+          <span className="">Activity</span>
+        </a>
+      </div>
+      <div>
+        <a
+          className={style("following")}
+          onClick={() => updateFeed("following")}
+        >
+          <span className="">Following</span>
+        </a>
+      </div>
+      <div>
+        <a className={style("auctions")} onClick={() => updateFeed("auctions")}>
+          <span className="">Auctions</span>
+        </a>
+      </div>
+      <div>
+        <a
+          className={style("galleries")}
+          onClick={() => updateFeed("galleries")}
+        >
+          <span className="">Galleries</span>
+        </a>
+      </div>
+    </div>
   );
 }

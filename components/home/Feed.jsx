@@ -5,7 +5,6 @@ import Auctions from "/components/home/feed/Auctions";
 import Galleries from "/components/home/feed/Galleries";
 import RightColumn from "/components/home/RightColumn";
 import FeedMenu from "/components/home/FeedMenu";
-import { capitalize } from "/utils/capitalize";
 import { scrollToFeed } from "/utils/scrollToFeed";
 
 export default function Feed() {

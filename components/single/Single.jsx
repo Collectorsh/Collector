@@ -1,9 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import TokenDetails from "/components/single/TokenDetails";
 import ShowActivities from "/components/single/ShowActivities";
-import Link from "next/link";
-import ShareToTwitter from "/components/ShareToTwitter";
-import { host } from "/config/settings";
 import ShowListing from "/components/single/ShowListing";
 import ShowSell from "/components/single/ShowSell";
 import ShowMakeOffer from "/components/single/ShowMakeOffer";
@@ -13,6 +10,8 @@ import SingleNftContext from "/contexts/single_nft";
 import { sortHighestListing } from "/utils/sortHighestListing";
 import { sortHighestOffer } from "/utils/sortHighestOffer";
 import { useWallet } from "@solana/wallet-adapter-react";
+import getOwnerCollectorName from "/data/getOwnerCollectorName";
+import Meta from "/components/single/Meta";
 
 export default function Single({ token, refetch }) {
   const { publicKey } = useWallet();
@@ -20,8 +19,17 @@ export default function Single({ token, refetch }) {
   const [listing, setListing] = useState();
   const [offer, setOffer] = useState(false);
   const [userOffer, setUserOffer] = useState(false);
+  const [collector, setCollector] = useState();
 
-  console.log(singleNft);
+  // Find the owners name
+  const asyncGetUser = useCallback(async (address) => {
+    let res = await getOwnerCollectorName(address);
+    if (res.status === "success") setCollector(res.username);
+  }, []);
+
+  useEffect(() => {
+    asyncGetUser(token.owner);
+  }, [token]);
 
   // Find the highest offer
   useEffect(() => {
@@ -69,47 +77,13 @@ export default function Single({ token, refetch }) {
           <h1 className="text-4xl mb-2 dark:text-white tracking-wide">
             {token.name}
           </h1>
-          {token.artist_name && (
-            <p className="text-black dark:text-white text-semibold inline">
-              <span className="font-semibold text-sm">{token.artist_name}</span>
-            </p>
-          )}
-          {token.artist_name && token.artist_twitter && (
-            <p className="text-black dark:text-white text-semibold inline mx-2 text-sm">
-              {"//"}
-            </p>
-          )}
-          {token.artist_twitter && (
-            <>
-              <Link
-                href={`https://twitter.com/${token.artist_twitter}`}
-                title={token.artist_twitter}
-              >
-                <a>
-                  <p className="text-black dark:text-white text-semibold inline text-sm">
-                    {token.artist_twitter}
-                  </p>
-                </a>
-              </Link>
-              <p className="text-black dark:text-white text-semibold inline ml-2 text-sm">
-                {"//"}
-              </p>
-            </>
-          )}
-          <p className="inline">
-            <ShareToTwitter
-              url={`${token.name} ${
-                token.artist_twitter ? `by ${token.artist_twitter}` : ""
-              }\n\n${host}/nft/${token.mint}`}
-              size="18"
-              text="Tweet It"
-            />
-          </p>
+
           {token.description && (
-            <p className="my-4 text-black dark:text-white text-sm">
+            <p className="mt-4 mb-8 text-black dark:text-white text-sm">
               {token.description}
             </p>
           )}
+
           <div className="mt-8">
             <ShowListing
               token={token}
@@ -133,6 +107,7 @@ export default function Single({ token, refetch }) {
               userOffer={userOffer}
             />
           </div>
+          <Meta token={token} collector={collector} />
           <TokenDetails token={token} />
           <ShowActivities token={token} />
         </div>

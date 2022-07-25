@@ -6,6 +6,7 @@ import getListingCategories from "/data/listings/getListingCategories";
 import TopArtists from "/components/listings/TopArtists";
 import TopSellers from "/components/listings/TopSellers";
 import Recent from "/components/listings/Recent";
+import { Oval } from "react-loader-spinner";
 
 const _ = require("lodash");
 
@@ -81,13 +82,17 @@ export default function Listings() {
     <div className="dark:bg-black">
       <div className="max-w-7xl mx-auto mb-10">
         <MainNavigation />
-        {topArtists && listings && (
-          <TopArtists listings={topArtistsListings()} />
+        {topArtists && topSellers && listings ? (
+          <>
+            <TopArtists listings={topArtistsListings()} />
+            <TopSellers listings={topSellersListings()} />
+            <Recent listings={recentListings()} />
+          </>
+        ) : (
+          <div className="mt-4 w-[50px] h-64 mx-auto mt-20">
+            <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
+          </div>
         )}
-        {topSellers && listings && (
-          <TopSellers listings={topSellersListings()} />
-        )}
-        {listings && <Recent listings={recentListings()} />}
       </div>
     </div>
   );

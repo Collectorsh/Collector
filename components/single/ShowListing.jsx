@@ -67,7 +67,7 @@ export default function ShowListing({
     setProcessing(false);
   };
 
-  const cancelNow = async () => {
+  const cancelNow = async (token, offer) => {
     setProcessing(true);
     await cancelOfferTransaction(
       offer,

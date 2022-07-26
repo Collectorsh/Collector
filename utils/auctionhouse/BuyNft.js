@@ -51,7 +51,11 @@ export default async function buyNftTransaction(
     process.env.NEXT_PUBLIC_AUCTIONHOUSE_TREASURY
   );
 
-  const listingReceipt = new PublicKey(listing.address);
+  const [listingReceipt, _listingReceiptBump] =
+    await AuctionHouseProgram.findListingReceiptAddress(
+      new PublicKey(listing.tradeState)
+    );
+
   const sellerPaymentReceiptAccount = new PublicKey(listing.seller);
   const sellerTradeState = new PublicKey(listing.tradeState);
   const buyerPrice = listing.price;

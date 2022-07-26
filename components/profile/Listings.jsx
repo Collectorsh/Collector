@@ -1,24 +1,14 @@
 import React, { useContext, useCallback, useEffect } from "react";
 import GridView from "/components/GridView";
-import { useLazyQuery } from "@apollo/client";
-import { getListingsQuery } from "/queries/listings";
 import ListingsContext from "/contexts/listings";
+import getUserListings from "/data/listings/getUserListings";
 
 export default function Listings({ user }) {
   const [listings, setListings] = useContext(ListingsContext);
 
-  const [getListingsQl, { loading, error, data }] =
-    useLazyQuery(getListingsQuery);
-
   const fetchListings = useCallback(async () => {
-    const res = await getListingsQl({
-      variables: {
-        auctionHouses: process.env.NEXT_PUBLIC_AUCTIONHOUSE,
-        owners: user.public_keys,
-      },
-    });
-    let listins = res.data.nfts.filter((l) => l.listings.length > 0);
-    setListings([...listings, ...listins]);
+    const res = await getUserListings(user.id);
+    setListings([...listings, ...res.data.listings]);
   }, []);
 
   useEffect(() => {
@@ -34,11 +24,7 @@ export default function Listings({ user }) {
           </h2>
           <div className="w-full border-b border-gray-200 dark:border-dark3 mt-3 mb-6"></div>
           <div className="flex flex-wrap gap-8">
-            <GridView
-              items={listings}
-              type="collector_listing"
-              showOffers={true}
-            />
+            <GridView items={listings} type="listing" />
           </div>
         </div>
       )}

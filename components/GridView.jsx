@@ -49,8 +49,10 @@ export default function GridView({
           className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
         >
           <div className="rounded-lg overflow-hidden">
-            {(type === "listing" || type === "collector_listing") && (
-              <Link href={`/nft/${item.mintAddress}`}>
+            {type === "listing" && (
+              <Link
+                href={marketplaceLink(item.source, item.mint, item.artist_name)}
+              >
                 <a>
                   <Image token={item} />
                 </a>
@@ -108,9 +110,9 @@ export default function GridView({
 
               <div className="bg-black rounded-b-2xl px-[10px] py-3 text-gray-50 -mx-[10px] h-16">
                 <div className="text-sm">
-                  {(type === "listing" || type === "collector_listing") && (
+                  {type === "listing" && (
                     <span className="font-black dark:text-whitish">
-                      ◎{roundToTwo(item.listings[0].price / 1000000000)}
+                      ◎{roundToTwo(item.amount / 1000000000)}
                     </span>
                   )}
                   {type === "auction" && (
@@ -151,9 +153,9 @@ export default function GridView({
                       />
                     </div>
                   )}
-                  {type === "collector_listing" && (
+                  {type === "listing" && (
                     <div className="float-right">
-                      <MarketplaceLogo source={"collector"} color="white" />
+                      <MarketplaceLogo source={item.source} color="white" />
                     </div>
                   )}
                   {type === "auction" && (
@@ -165,10 +167,9 @@ export default function GridView({
                       </div>
                     </div>
                   )}
-                  {type === "listing" && item.listings[0].username && (
+                  {type === "listing" && item.username && (
                     <div className="float-right dark:text-whitish">
-                      listed by{" "}
-                      <CollectorUsername username={item.listings[0].username} />
+                      listed by <CollectorUsername username={item.username} />
                     </div>
                   )}
                 </div>

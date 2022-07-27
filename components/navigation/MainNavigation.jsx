@@ -47,11 +47,11 @@ export default function MainNavigation(props) {
               </div>
             </div>
             <div className="hidden md:flex text-right items-center col-span-1 justify-end w-full">
+              <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                <Link href="/faq">FAQ</Link>
+              </p>
               {user && (
                 <>
-                  <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                    <Link href="/">Help</Link>
-                  </p>
                   <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                     <Link href={`/${user.username}/activity`}>
                       <a>

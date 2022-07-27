@@ -136,7 +136,7 @@ export default function EditGallery({ user }) {
   }
 
   return (
-    <div className="dark:bg-black min-h-screen pb-12 mt-16">
+    <div className="dark:bg-black min-h-screen pb-12 mt-8 lg:mt-16">
       <div className="mb-12">
         <p className="dark:text-white">Drag and drop to curate your gallery.</p>
       </div>

@@ -57,7 +57,7 @@ export default function Wallets() {
     <>
       <Toaster />
       <div>
-        <div className="pb-12 mt-16">
+        <div className="mt=8 lg:mt-16">
           <div className="bg-white shadow overflow-hidden sm:rounded-lg dark:border-dark2 dark:bg-dark2 clear-both mt-10">
             <div className="px-4 py-5 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">

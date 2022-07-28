@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import GridView from "/components/GridView";
 import getUserListings from "/data/listings/getUserListings";
 

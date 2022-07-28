@@ -3,7 +3,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import getFeed from "/data/home/getFeed";
 import Details from "/components/home/feed/Details";
 import { Oval } from "react-loader-spinner";
-import FeedFilters from "/components/home/feed/filters/FeedFilters";
 import { updateFeedsSelected } from "/utils/updateFeedsSelected";
 
 export default function Activity() {

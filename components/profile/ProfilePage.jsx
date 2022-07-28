@@ -7,9 +7,10 @@ import Collected from "/components/profile/Collected";
 import Listings from "/components/profile/Listings";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import { ViewGridIcon } from "@heroicons/react/outline";
+import { ViewGridIcon, CogIcon } from "@heroicons/react/outline";
 import FollowingModal from "/components/profile/FollowingModal";
 import FollowersModal from "/components/profile/FollowersModal";
+import SettingsMenu from "/components/navigation/SettingsMenu";
 
 function ProfilePage({
   profileUser,
@@ -40,11 +41,13 @@ function ProfilePage({
         style={{ backgroundImage: `url('${image}')` }}
       />
 
-      {profileUser.twitter_profile_image && (
+      {profileUser.twitter_profile_image ? (
         <img
           src={profileUser.twitter_profile_image}
           className="w-16 h-16 mr-4 rounded-full -mt-8 ml-4"
         />
+      ) : (
+        <div className="w-16 h-16 mr-4 rounded-full -mt-8 ml-4 bg-gray-100"></div>
       )}
 
       <div className="mb-0">
@@ -54,7 +57,7 @@ function ProfilePage({
           </p>
         )}
 
-        <div className="float-right">
+        <div className="float-right relative">
           <div className="inline">
             <Link href={`/${profileUser.username}`}>
               <a className="align-middle cursor-pointer rounded-3xl text-sm xl:text-md py-2.5 px-3 font-bold border border-4 bg-black text-white border-black dark:bg-whitish dark:text-black dark:border-whitish">
@@ -66,6 +69,12 @@ function ProfilePage({
               </a>
             </Link>
           </div>
+
+          {user && user.username === profileUser.username && (
+            <div className="inline ml-16">
+              <SettingsMenu username={user.username} />
+            </div>
+          )}
 
           {user && user.username !== profileUser.username && (
             <div className="inline ml-4">

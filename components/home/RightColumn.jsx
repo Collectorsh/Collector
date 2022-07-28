@@ -7,8 +7,11 @@ import CollectorUsername from "/components/CollectorUsername";
 import { roundToTwo } from "/utils/roundToTwo";
 import MarketplaceLogo from "/components/MarketplaceLogo";
 import FollowButton from "/components/FollowButton";
+import { numberWithCommas } from "/utils/numberWithCommas";
+import UserContext from "/contexts/user";
 
 export default function RightColumn() {
+  const [user] = useContext(UserContext);
   const [mostWins, setMostWins] = useState();
   const [marketplaceStats, setMarketplaceStats] = useState();
   const [mostFollowedArtists, setMostFollowedArtists] = useState();
@@ -58,7 +61,6 @@ export default function RightColumn() {
     item.results.map((r) => {
       totalAmount += Number(r.total);
     });
-    console.log(totalAmount);
     return totalAmount;
   }
 
@@ -124,7 +126,11 @@ export default function RightColumn() {
                   {item.artist.name && (
                     <p className="inline mr-2 dark:text-whitish">
                       <Link
-                        href={`https://twitter.com/${item.artist.twitter}`}
+                        href={
+                          user
+                            ? `/${user.username}/follow`
+                            : `https://twitter.com/${item.artist.twitter}`
+                        }
                         title=""
                       >
                         <a className="font-bold hover:underline">
@@ -162,10 +168,13 @@ export default function RightColumn() {
                         {transactionName(result.type)}
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1">
-                        {result.count}
+                        {numberWithCommas(result.count)}
                       </dd>
                       <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1">
-                        ◎{roundToTwo(result.total / 1000000000)}
+                        ◎
+                        {numberWithCommas(
+                          roundToTwo(result.total / 1000000000)
+                        )}
                       </dd>
                     </div>
                   </div>
@@ -173,7 +182,10 @@ export default function RightColumn() {
                 <div className="py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt className="text-sm font-medium text-gray-500">Volume</dt>
                   <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1 sm:col-start-3">
-                    ◎{roundToTwo(calculateTotal(item) / 1000000000)}
+                    ◎
+                    {numberWithCommas(
+                      roundToTwo(calculateTotal(item) / 1000000000)
+                    )}
                   </dd>
                 </div>
               </dl>

@@ -40,6 +40,9 @@ export const getAllListingsQuery = gql`
         associatedTokenAccountAddress
         address
       }
+      creators {
+        address
+      }
     }
   }
 `;

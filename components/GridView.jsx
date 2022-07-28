@@ -96,6 +96,11 @@ export default function GridView({
                     {item.brand_name}
                   </p>
                 )}
+                {item.artist_name && (
+                  <p className="dark:text-whitish text-xs -mt-1.5 mb-2">
+                    {item.artist_name}
+                  </p>
+                )}
                 {type === "collected" && item.type === "sale" && (
                   <p className="dark:text-whitish text-xs -mt-2 mb-2">
                     {item.attributes.artist_name}

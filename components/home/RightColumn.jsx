@@ -8,8 +8,10 @@ import { roundToTwo } from "/utils/roundToTwo";
 import MarketplaceLogo from "/components/MarketplaceLogo";
 import FollowButton from "/components/FollowButton";
 import { numberWithCommas } from "/utils/numberWithCommas";
+import UserContext from "/contexts/user";
 
 export default function RightColumn() {
+  const [user] = useContext(UserContext);
   const [mostWins, setMostWins] = useState();
   const [marketplaceStats, setMarketplaceStats] = useState();
   const [mostFollowedArtists, setMostFollowedArtists] = useState();
@@ -124,7 +126,11 @@ export default function RightColumn() {
                   {item.artist.name && (
                     <p className="inline mr-2 dark:text-whitish">
                       <Link
-                        href={`https://twitter.com/${item.artist.twitter}`}
+                        href={
+                          user
+                            ? `/${user.username}/follow`
+                            : `https://twitter.com/${item.artist.twitter}`
+                        }
                         title=""
                       >
                         <a className="font-bold hover:underline">

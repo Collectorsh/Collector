@@ -8,7 +8,7 @@ export default function Listings({ user }) {
 
   const fetchListings = useCallback(async () => {
     const res = await getUserListings(user.id);
-    setListings([...listings, ...res.data.listings]);
+    setListings(res.data.listings);
   }, []);
 
   useEffect(() => {

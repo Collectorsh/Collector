@@ -59,7 +59,7 @@ export default function CreateUsernameModal() {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="text-center p-8 relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
+            <div className="dark:bg-dark3 text-center p-8 relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
               <h2 className="tracking-wide text-center my-5 text-4xl font-bold text-gray-800 w-full py-1 inline-block dark:text-whitish">
                 Welcome to Collector
               </h2>

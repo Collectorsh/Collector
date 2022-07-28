@@ -1,10 +1,9 @@
-import React, { useContext, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import GridView from "/components/GridView";
-import ListingsContext from "/contexts/listings";
 import getUserListings from "/data/listings/getUserListings";
 
 export default function Listings({ user }) {
-  const [listings, setListings] = useContext(ListingsContext);
+  const [listings, setListings] = useState();
 
   const fetchListings = useCallback(async () => {
     const res = await getUserListings(user.id);

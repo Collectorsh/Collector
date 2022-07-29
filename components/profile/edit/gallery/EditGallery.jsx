@@ -41,6 +41,7 @@ export default function EditGallery() {
         visible: true,
         order_id: count,
         accept_offers: t.accept_offers,
+        image: t.image,
       });
       count += 1;
     });
@@ -50,6 +51,7 @@ export default function EditGallery() {
         visible: false,
         order_id: count,
         accept_offers: t.accept_offers,
+        image: t.image,
       });
       count += 1;
     });

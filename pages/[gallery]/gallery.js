@@ -56,7 +56,7 @@ function Gallery({ profileUser }) {
                 </li>
               </ul>
             </div>
-            {selected === "gallery" && <EditGallery user={profileUser} />}
+            {selected === "gallery" && <EditGallery />}
             {selected === "settings" && <Settings />}
           </div>
         </div>

@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
 import UserContext from "/contexts/user";
-import CheckLoggedIn from "/components/CheckLoggedIn";
-import MainNavigation from "/components/navigation/MainNavigation";
 import { Toaster } from "react-hot-toast";
 import { success, error } from "/utils/toastMessages";
 import saveUser from "/data/user/saveUser";

@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
+import UserContext from "/contexts/user";
 import getMetadata from "/data/nft/getMetadata";
 import { DragDropContext } from "react-beautiful-dnd";
 import saveLayout from "/data/dashboard/saveLayout";
 import { Oval } from "react-loader-spinner";
 import Column from "./Column";
 
-export default function EditGallery({ user }) {
+export default function EditGallery() {
+  const [user, setUser] = useContext(UserContext);
   const [columns, setColumns] = useState();
 
-  const getTokens = useCallback(async (user) => {
-    let tokens = await getMetadata(user.public_keys);
+  const getTokens = useCallback(async (u) => {
+    let tokens = await getMetadata(u.public_keys);
     const initialColumns = {
       visible: {
         id: "visible",
@@ -24,8 +26,9 @@ export default function EditGallery({ user }) {
   }, []);
 
   useEffect(() => {
+    if (!user) return;
     getTokens(user);
-  }, []);
+  }, [user]);
 
   // Save the layout any time it changes
   useEffect(() => {

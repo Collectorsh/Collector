@@ -29,7 +29,7 @@ export default function Item({ token, index, setTokenAcceptOffers }) {
   }
 
   function goToNft() {
-    window.open(`${host}/nft/${token.mint}`, "_ blank");
+    window.open(`/nft/${token.mint}`, "_ blank");
   }
 
   return (

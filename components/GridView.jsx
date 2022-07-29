@@ -87,38 +87,50 @@ export default function GridView({
           </div>
           <div>
             <div className="w-full">
-              <div className="h-12">
-                <h3 className="text-md text-black dark:text-whitish font-medium my-2">
+              <div className="h-12 my-1">
+                <h3 className="text-md text-black dark:text-whitish font-medium">
                   {item.name || (item.attributes && item.attributes.name)}
                 </h3>
                 {item.brand_name && (
-                  <p className="dark:text-whitish text-xs -mt-2 mb-2">
-                    {item.brand_name}
-                  </p>
+                  <p className="dark:text-whitish text-xs">{item.brand_name}</p>
                 )}
-                {item.artist_name && (
-                  <p className="dark:text-whitish text-xs -mt-1.5 mb-2">
-                    {item.artist_name}
-                  </p>
+                {type === "listing" && (
+                  <div className="clear-both mt-0.5">
+                    {item.twitter_profile_image && (
+                      <img
+                        src={item.twitter_profile_image}
+                        className="w-4 h-4 mr-1 rounded-full float-left"
+                      />
+                    )}
+                    {item.artist_name && (
+                      <p className="dark:text-whitish text-xs mb-2">
+                        @{item.artist_name}
+                      </p>
+                    )}
+                  </div>
                 )}
-                {type === "collected" && item.type === "sale" && (
-                  <p className="dark:text-whitish text-xs -mt-2 mb-2">
-                    {item.attributes.artist_name}
-                  </p>
-                )}
-                {type === "collected" && item.type == "won" && (
-                  <p className="dark:text-whitish text-xs -mt-2 mb-2">
-                    {item.attributes.brand_name}
-                  </p>
-                )}
+                {type === "collected" &&
+                  item.type === "sale" &&
+                  item.attributes.artist_name && (
+                    <p className="dark:text-whitish text-xs">
+                      @{item.attributes.artist_name}
+                    </p>
+                  )}
+                {type === "collected" &&
+                  item.type == "won" &&
+                  item.attributes.brand_name && (
+                    <p className="dark:text-whitish text-xs">
+                      @{item.attributes.brand_name}
+                    </p>
+                  )}
               </div>
 
               <div className="bg-black rounded-b-2xl px-[10px] py-3 text-gray-50 -mx-[10px] h-16">
                 <div className="text-sm">
                   {type === "listing" && (
-                    <span className="font-black dark:text-whitish">
+                    <div className="font-black dark:text-whitish mt-1 float-left">
                       ◎{roundToTwo(item.amount / 1000000000)}
-                    </span>
+                    </div>
                   )}
                   {type === "auction" && (
                     <span className="font-black dark:text-whitish">
@@ -138,19 +150,7 @@ export default function GridView({
                       ◎{roundToTwo(item.attributes.amount / 1000000000)}
                     </span>
                   )}
-                  {type === "collected" && item.type === "won" && (
-                    <div className="float-right">
-                      <MarketplaceLogo
-                        source={item.attributes.source}
-                        color="white"
-                      />
-                      <div className="mt-1 text-right dark:text-whitish">
-                        {item.attributes.number_of_bids}{" "}
-                        {item.attributes.number_of_bids === 1 ? "bid" : "bids"}
-                      </div>
-                    </div>
-                  )}
-                  {type === "collected" && item.type === "sale" && (
+                  {type === "collected" && (
                     <div className="float-right">
                       <MarketplaceLogo
                         source={item.attributes.source}
@@ -159,7 +159,7 @@ export default function GridView({
                     </div>
                   )}
                   {type === "listing" && (
-                    <div className="float-right">
+                    <div className="float-right mt-1">
                       <MarketplaceLogo source={item.source} color="white" />
                     </div>
                   )}
@@ -170,11 +170,6 @@ export default function GridView({
                         {item.number_bids}{" "}
                         {item.number_bids === 1 ? "bid" : "bids"}
                       </div>
-                    </div>
-                  )}
-                  {type === "listing" && item.username && (
-                    <div className="float-right dark:text-whitish">
-                      listed by <CollectorUsername username={item.username} />
                     </div>
                   )}
                 </div>

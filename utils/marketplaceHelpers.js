@@ -17,6 +17,6 @@ export function marketplaceLink(
     return `https://formfunction.xyz/@/${mint}`;
   }
   if (source === "collector") {
-    return `https://collector.sh/nft/${mint}`;
+    return `/nft/${mint}`;
   }
 }

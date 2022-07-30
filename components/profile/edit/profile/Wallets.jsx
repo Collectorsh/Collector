@@ -1,7 +1,5 @@
 import React, { useEffect, useContext } from "react";
 import UserContext from "/contexts/user";
-import CheckLoggedIn from "/components/CheckLoggedIn";
-import MainNavigation from "/components/navigation/MainNavigation";
 import { Toaster } from "react-hot-toast";
 import { success, error } from "/utils/toastMessages";
 import deleteWalletAddress from "/data/dashboard/deleteWalletAddress.js";
@@ -34,8 +32,6 @@ export default function Wallets() {
   // Detect publicKey change and add wallet
   useEffect(() => {
     if (!publicKey || !user) return;
-    console.log(user.public_keys);
-    console.log(publicKey);
     if (user.public_keys.includes(publicKey.toBase58())) return;
     verifyAddress(publicKey, signMessage, user.api_key).then((res) => {
       if (res.data.status === "success") {

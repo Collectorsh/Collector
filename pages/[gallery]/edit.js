@@ -5,6 +5,7 @@ import CheckLoggedIn from "/components/CheckLoggedIn";
 import MainNavigation from "/components/navigation/MainNavigation";
 import Settings from "/components/profile/edit/profile/Settings";
 import Wallets from "/components/profile/edit/profile/Wallets";
+import Notifications from "/components/profile/edit/profile/Notifications";
 import { XIcon } from "@heroicons/react/outline";
 
 function Edit({ profileUser }) {
@@ -47,6 +48,15 @@ function Edit({ profileUser }) {
                 </li>
                 <li
                   className={`cursor-pointer hover:text-greeny inline px-2 mx-3 pb-3.5 ${
+                    selected === "notifications" &&
+                    "text-greeny font-extrabold border-b border-b-2 border-greeny"
+                  }`}
+                  onClick={() => changeSelected("notifications")}
+                >
+                  Notifications
+                </li>
+                <li
+                  className={`cursor-pointer hover:text-greeny inline px-2 mx-3 pb-3.5 ${
                     selected === "wallets" &&
                     "text-greeny font-extrabold border-b border-b-2 border-greeny"
                   }`}
@@ -57,6 +67,7 @@ function Edit({ profileUser }) {
               </ul>
             </div>
             {selected === "settings" && <Settings />}
+            {selected === "notifications" && <Notifications />}
             {selected === "wallets" && <Wallets />}
           </div>
         </div>

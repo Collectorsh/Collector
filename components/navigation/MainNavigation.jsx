@@ -150,52 +150,39 @@ export default function MainNavigation(props) {
                             <span className="-ml-2">Toggle Dark Mode</span>
                           </div>
                           <div className="mt-6 dark:text-gray-200">
-                            <p
-                              className={`text-xl cursor-pointer border-b-2 py-2 border-gray-100 dark:border-dark3 ${
-                                path === "/" ? "font-bold" : ""
-                              }`}
-                            >
-                              <Link href="/">Home</Link>
-                            </p>
                             {user && (
                               <>
-                                <div className="mt-0">
-                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/dashboard">Gallery</Link>
-                                  </p>
-                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/dashboard/bids">Bids</Link>
-                                  </p>
-                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/dashboard/artists">
-                                      Artists
-                                    </Link>
-                                  </p>
-                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/dashboard/following">
-                                      Following
-                                    </Link>
-                                  </p>
-                                </div>
                                 <div className="mt-6">
+                                  <p
+                                    className={`text-xl cursor-pointer border-b-2 py-2 border-gray-100 dark:border-dark3 ${
+                                      path === "/" ? "font-bold" : ""
+                                    }`}
+                                  >
+                                    <Link href="/">Home</Link>
+                                  </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/dashboard/profile">
+                                    <Link href={`/${user.username}/activity`}>
+                                      Activity
+                                    </Link>
+                                  </p>
+                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                    <Link href={`/${user.username}/profile`}>
                                       Profile
                                     </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/dashboard/settings">
-                                      Settings
+                                    <Link href={`/${user.username}/edit`}>
+                                      Edit Profile
                                     </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/dashboard/notifications">
-                                      Notifications
+                                    <Link href={`/${user.username}/gallery`}>
+                                      Edit Gallery
                                     </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/dashboard/wallets">
-                                      Wallets
+                                    <Link href={`/${user.username}/follow`}>
+                                      Follow Artists
                                     </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">

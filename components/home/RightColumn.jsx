@@ -125,20 +125,9 @@ export default function RightColumn() {
                 <div className="mb-0">
                   {item.artist.name && (
                     <p className="inline mr-2 dark:text-whitish">
-                      <Link
-                        href={
-                          user
-                            ? `/${user.username}/follow`
-                            : `https://twitter.com/${item.artist.twitter}`
-                        }
-                        title=""
-                      >
-                        <a className="font-bold hover:underline">
-                          <span className="px-0.5 dark:text-white">
-                            {item.artist.name}
-                          </span>
-                        </a>
-                      </Link>
+                      <span className="px-0.5 dark:text-white">
+                        {item.artist.name}
+                      </span>
                     </p>
                   )}
                 </div>
@@ -146,6 +135,11 @@ export default function RightColumn() {
                   {item.followers} followers
                 </p>
               </div>
+
+              <div className="float-right mt-2">
+                <FollowButton follow={item.artist} />
+              </div>
+
               <div className="clear-both"></div>
             </div>
           ))}

@@ -7,7 +7,9 @@ const FollowingContext = createContext();
 export const FollowingProvider = ({ children }) => {
   const [following, setFollowing] = useState([]);
 
-  const [getFollowingQl] = useLazyQuery(getFollowingQuery);
+  const [getFollowingQl] = useLazyQuery(getFollowingQuery, {
+    fetchPolicy: "network-only",
+  });
 
   const updateFollowing = useCallback(async (pubKeys) => {
     const res = await getFollowingQl({

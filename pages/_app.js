@@ -11,6 +11,7 @@ import { ExchangeOffersProvider } from "/contexts/exchange_offers";
 import { ListingsProvider } from "/contexts/listings";
 import { ActivitiesProvider } from "/contexts/activities";
 import { SingleNftProvider } from "/contexts/single_nft";
+import { FollowingProvider } from "/contexts/following";
 import PlausibleProvider from "next-plausible";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
@@ -62,9 +63,11 @@ export default function MyApp({ Component, pageProps }) {
                   <ActivitiesProvider>
                     <SingleNftProvider>
                       <EstimatedValueProvider>
-                        <ThemeProvider enableSystem={true} attribute="class">
-                          <Component {...pageProps} />
-                        </ThemeProvider>
+                        <FollowingProvider>
+                          <ThemeProvider enableSystem={true} attribute="class">
+                            <Component {...pageProps} />
+                          </ThemeProvider>
+                        </FollowingProvider>
                       </EstimatedValueProvider>
                     </SingleNftProvider>
                   </ActivitiesProvider>

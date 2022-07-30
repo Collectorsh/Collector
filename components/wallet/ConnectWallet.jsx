@@ -1,21 +1,15 @@
 import React, { useEffect, useContext, useCallback } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import {
-  WalletMultiButton,
-  useWalletModal,
-} from "@solana/wallet-adapter-react-ui";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import getApiKey from "/data/user/getApiKey";
 import UserContext from "/contexts/user";
+import FollowingContext from "/contexts/following";
 import getUserFromApiKey from "/data/user/getUserFromApiKey";
 
 export default function ConnectWallet() {
   const { publicKey, signMessage } = useWallet();
-  const { setVisible } = useWalletModal();
   const [user, setUser] = useContext(UserContext);
-
-  const logIn = () => {
-    setVisible(true);
-  };
+  const [following, updateFollowing] = useContext(FollowingContext);
 
   const asyncGetApiKey = useCallback(async (publicKey, signMessage) => {
     if (!publicKey || !signMessage) return;
@@ -47,6 +41,11 @@ export default function ConnectWallet() {
     } else {
       asyncGetApiKey(publicKey, signMessage);
     }
+  }, [publicKey]);
+
+  useEffect(() => {
+    if (!publicKey) return;
+    updateFollowing(publicKey);
   }, [publicKey]);
 
   return (

@@ -9,10 +9,10 @@ export const FollowingProvider = ({ children }) => {
 
   const [getFollowingQl] = useLazyQuery(getFollowingQuery);
 
-  const updateFollowing = useCallback(async (pubKey) => {
+  const updateFollowing = useCallback(async (pubKeys) => {
     const res = await getFollowingQl({
       variables: {
-        from: pubKey,
+        from: pubKeys,
       },
     });
     const flw = res.data.connections.map((c) => c.to.address);

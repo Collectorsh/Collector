@@ -17,6 +17,7 @@ export default function ConnectWallet() {
     let res = await getApiKey(publicKey, signMessage);
     if (res.data.status === "success") {
       localStorage.setItem("api_key", res.data.user.api_key);
+      updateFollowing(res.data.user.public_keys);
       setUser(res.data.user);
     }
   }, []);
@@ -24,6 +25,7 @@ export default function ConnectWallet() {
   const asyncGetUser = useCallback(async (apiKey) => {
     let res = await getUserFromApiKey(apiKey);
     if (res.data.status === "success") {
+      updateFollowing(res.data.user.public_keys);
       setUser(res.data.user);
     }
     if (res.data.status === "error" && res.data.msg === "API Key not found") {
@@ -43,14 +45,8 @@ export default function ConnectWallet() {
     }
   }, [publicKey]);
 
-  useEffect(() => {
-    if (!publicKey) return;
-    updateFollowing(publicKey);
-  }, [publicKey]);
-
   return (
     <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-      {/* <span onClick={logIn}>Sign In</span> */}
       <WalletMultiButton />
     </div>
   );

@@ -35,6 +35,9 @@ export const getListingsQuery = gql`
         buyer
         createdAt
         tradeState
+        auctionHouse {
+          address
+        }
       }
       owner {
         associatedTokenAccountAddress

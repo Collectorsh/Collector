@@ -5,6 +5,7 @@ export function sortHighestListing(token, listings) {
   let results = clonedListings.filter(
     (l) =>
       l.seller === token.owner &&
+      l.auctionHouse &&
       l.auctionHouse.address === process.env.NEXT_PUBLIC_AUCTIONHOUSE
   );
   if (results) {

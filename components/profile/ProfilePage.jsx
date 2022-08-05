@@ -65,7 +65,7 @@ function ProfilePage({
                   className="h-5 w-5 inline mr-2"
                   aria-hidden="true"
                 />
-                <span className="">View Galley</span>
+                <span className="">View Gallery</span>
               </a>
             </Link>
           </div>

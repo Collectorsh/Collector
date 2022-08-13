@@ -49,6 +49,7 @@ export default function Image({ token, size = "small" }) {
             muted
             loop
             playsInline
+            controls
             id="video"
             className={style()}
             onLoadedData={onImageLoad}

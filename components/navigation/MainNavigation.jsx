@@ -10,12 +10,13 @@ import ConnectWallet from "/components/wallet/ConnectWallet";
 import Profile from "/components/navigation/Profile";
 import CreateUsernameModal from "/components/CreateUsernameModal";
 
-export default function MainNavigation(props) {
+export default function MainNavigation() {
   const wallet = useWallet();
   const router = useRouter();
   const path = router.asPath;
   const [user, setUser] = useContext(UserContext);
   const [open, setOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   function toggleMenu() {
     console.log(!open);
@@ -30,9 +31,14 @@ export default function MainNavigation(props) {
     });
   }
 
+  useEffect(() => {
+    if (user && !user.username) setShowModal(true);
+    if (user && user.username) setShowModal(false);
+  }, [user]);
+
   return (
     <div className="mx-auto">
-      {user && !user.username && <CreateUsernameModal />}
+      {showModal && <CreateUsernameModal />}
       <nav className="border-b border-gray-200 dark:border-dark3 px-4 xl:px-0 mx-auto py-4 md:py-2 bg-white dark:bg-black fixed w-full z-20 top-0 h-[76px] relative">
         <div>
           <div className="flex">

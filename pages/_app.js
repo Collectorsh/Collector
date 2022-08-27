@@ -11,7 +11,6 @@ import { ExchangeOffersProvider } from "/contexts/exchange_offers";
 import { ListingsProvider } from "/contexts/listings";
 import { ActivitiesProvider } from "/contexts/activities";
 import { SingleNftProvider } from "/contexts/single_nft";
-import PlausibleProvider from "next-plausible";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
@@ -53,27 +52,25 @@ export default function MyApp({ Component, pageProps }) {
           <title>Discover &amp; Share Beautiful Art</title>
         </Head>
       </div>
-      <PlausibleProvider domain="collector.sh">
-        <ApolloProvider client={client}>
-          <WalletContextProvider>
-            <UserProvider>
-              <ExchangeOffersProvider>
-                <ListingsProvider>
-                  <ActivitiesProvider>
-                    <SingleNftProvider>
-                      <EstimatedValueProvider>
-                        <ThemeProvider enableSystem={true} attribute="class">
-                          <Component {...pageProps} />
-                        </ThemeProvider>
-                      </EstimatedValueProvider>
-                    </SingleNftProvider>
-                  </ActivitiesProvider>
-                </ListingsProvider>
-              </ExchangeOffersProvider>
-            </UserProvider>
-          </WalletContextProvider>
-        </ApolloProvider>
-      </PlausibleProvider>
+      <ApolloProvider client={client}>
+        <WalletContextProvider>
+          <UserProvider>
+            <ExchangeOffersProvider>
+              <ListingsProvider>
+                <ActivitiesProvider>
+                  <SingleNftProvider>
+                    <EstimatedValueProvider>
+                      <ThemeProvider enableSystem={true} attribute="class">
+                        <Component {...pageProps} />
+                      </ThemeProvider>
+                    </EstimatedValueProvider>
+                  </SingleNftProvider>
+                </ActivitiesProvider>
+              </ListingsProvider>
+            </ExchangeOffersProvider>
+          </UserProvider>
+        </WalletContextProvider>
+      </ApolloProvider>
     </>
   );
 }

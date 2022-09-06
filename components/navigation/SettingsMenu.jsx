@@ -44,20 +44,6 @@ export default function SettingsMenu() {
                 </a>
               </Link>
             </Menu.Item>
-            <Menu.Item>
-              <Link href={`/${user.username}/gallery`}>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Edit Gallery
-                </a>
-              </Link>
-            </Menu.Item>
-            <Menu.Item>
-              <Link href={`/${user.username}/follow`}>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Follow Artists
-                </a>
-              </Link>
-            </Menu.Item>
           </Menu.Items>
         </Transition>
       </Menu>

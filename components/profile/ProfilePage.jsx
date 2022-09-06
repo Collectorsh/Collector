@@ -7,7 +7,7 @@ import Collected from "/components/profile/Collected";
 import Listings from "/components/profile/Listings";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import { ViewGridIcon, CogIcon } from "@heroicons/react/outline";
+import { ViewGridIcon } from "@heroicons/react/outline";
 import FollowingModal from "/components/profile/FollowingModal";
 import FollowersModal from "/components/profile/FollowersModal";
 import SettingsMenu from "/components/navigation/SettingsMenu";

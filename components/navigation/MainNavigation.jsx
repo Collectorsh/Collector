@@ -8,6 +8,8 @@ import { XIcon, BellIcon } from "@heroicons/react/outline";
 import DarkMode from "/components/navigation/DarkMode";
 import ConnectWallet from "/components/wallet/ConnectWallet";
 import Profile from "/components/navigation/Profile";
+import Gallery from "/components/navigation/Gallery";
+import Activity from "/components/navigation/Activity";
 import CreateUsernameModal from "/components/CreateUsernameModal";
 
 export default function MainNavigation() {
@@ -39,7 +41,7 @@ export default function MainNavigation() {
   return (
     <div className="mx-auto">
       {showModal && <CreateUsernameModal />}
-      <nav className="border-b border-gray-200 dark:border-dark3 px-4 xl:px-0 mx-auto py-4 md:py-2 bg-white dark:bg-black fixed w-full z-20 top-0 h-[76px] relative">
+      <nav className="px-4 xl:px-0 mx-auto py-4 md:py-2 bg-white dark:bg-black fixed w-full z-20 top-0 h-[76px] relative">
         <div>
           <div className="flex">
             <div className="flex items-center col-span-1 w-[200px] lg:w-1/2">
@@ -53,21 +55,15 @@ export default function MainNavigation() {
               </div>
             </div>
             <div className="hidden md:flex text-right items-center col-span-1 justify-end w-full">
-              <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                <Link href="/faq">FAQ</Link>
-              </p>
+              {!user && (
+                <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                  <Link href="/faq">FAQ</Link>
+                </p>
+              )}
               {user && (
                 <>
-                  <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                    <Link href={`/${user.username}/activity`}>
-                      <a>
-                        <BellIcon
-                          className="h-7 w-7 pt-0.5 pl-0.5"
-                          aria-hidden="true"
-                        />
-                      </a>
-                    </Link>
-                  </p>
+                  <Gallery />
+                  <Activity />
                 </>
               )}
               {user ? <Profile /> : <ConnectWallet />}

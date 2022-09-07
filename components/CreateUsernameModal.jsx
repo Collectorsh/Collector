@@ -2,10 +2,12 @@ import React, { useContext, useState, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import UserContext from "/contexts/user";
 import saveUser from "/data/user/saveUser";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function CreateUsernameModal() {
   const [user, setUser] = useContext(UserContext);
   const [error, setError] = useState();
+  const wallet = useWallet();
 
   function setOpen() {}
 
@@ -21,6 +23,13 @@ export default function CreateUsernameModal() {
     } else {
       setError("An error occurred");
     }
+  };
+
+  const clearData = async () => {
+    wallet.disconnect().then(() => {
+      localStorage.removeItem("api_key");
+      setUser(null);
+    });
   };
 
   return (
@@ -86,6 +95,12 @@ export default function CreateUsernameModal() {
                 onClick={(e) => saveAll(e)}
               >
                 Save
+              </button>
+              <button
+                className="cursor-pointer absolute bottom-2 right-4 text-sm"
+                onClick={(e) => clearData(e)}
+              >
+                clear data
               </button>
             </div>
           </Transition.Child>

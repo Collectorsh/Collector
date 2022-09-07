@@ -36,6 +36,7 @@ export default function MainNavigation() {
   useEffect(() => {
     if (user && !user.username) setShowModal(true);
     if (user && user.username) setShowModal(false);
+    if (!user) setShowModal(false);
   }, [user]);
 
   return (

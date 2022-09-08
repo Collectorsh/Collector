@@ -3,7 +3,6 @@ import Link from "next/link";
 import MarketplaceLogo from "/components/MarketplaceLogo";
 import { roundToTwo } from "/utils/roundToTwo";
 import { marketplaceLink } from "/utils/marketplaceHelpers";
-import CollectorUsername from "/components/CollectorUsername";
 import Moment from "react-moment";
 import Image from "/components/Image";
 import { CogIcon } from "@heroicons/react/outline";

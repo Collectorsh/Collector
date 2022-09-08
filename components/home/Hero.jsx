@@ -1,18 +1,35 @@
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Slider from "react-slick";
 import { ChevronDownIcon } from "@heroicons/react/outline";
 import { scrollToFeed } from "/utils/scrollToFeed";
+import getLiveAuctions from "/data/home/getLiveAuctions";
+import { marketplaceLink } from "/utils/marketplaceHelpers";
+import MarketplaceLogo from "/components/MarketplaceLogo";
+import { roundToTwo } from "/utils/roundToTwo";
+import Moment from "react-moment";
 
 export default function Hero() {
+  const [auctions, setAuctions] = useState();
+
+  const fetchLiveAuctions = useCallback(async () => {
+    let res = await getLiveAuctions();
+    setAuctions(res.data);
+  }, []);
+
+  useEffect(() => {
+    fetchLiveAuctions();
+  }, []);
+
   const settings = {
-    dots: true,
+    dots: false,
     arrows: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 5000,
   };
 
   return (
@@ -42,78 +59,60 @@ export default function Hero() {
               </div>
             </div>
             <div className="lg:gap-y-8 col-end-8 col-span-3 relative">
-              <Slider {...settings}>
-                <div className="overflow-hidden col-span-2 relative">
-                  <Link href="/nightman">
-                    <a>
-                      <img
-                        src="https://cdn.collector.sh/HmPGk2T2caGcLWT3NRyfk4nAb1mP45Hg6wNFJvBQjyQo"
-                        alt=""
-                        className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover rounded-lg"
-                      />
-                    </a>
-                  </Link>
-                  <div className="bg-black text-white rounded-3xl px-4 py-2.5 absolute top-2 left-2 cursor-pointer">
-                    Nightman&apos;s Gallery
-                  </div>
-                </div>
-                <div className="overflow-hidden col-span-2 relative">
-                  <Link href="/CryptoVulture">
-                    <a>
-                      <img
-                        src="https://cdn.collector.sh/AthbABzFE4b47vQhxjwvf62gZhqwzGBCRPDnxBbQfCuB"
-                        alt=""
-                        className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover rounded-lg"
-                      />
-                    </a>
-                  </Link>
-                  <div className="bg-black text-white rounded-3xl px-4 py-2.5 absolute top-2 left-2 cursor-pointer">
-                    CryptoVulture&apos;s Gallery
-                  </div>
-                </div>
-                <div className="overflow-hidden col-span-2 relative">
-                  <Link href="/Wetiko">
-                    <a>
-                      <img
-                        src="https://cdn.collector.sh/8bec5JCs47Soz1VnWJt3M3f828FZPtDPH6q5fqBnJjPb"
-                        alt=""
-                        className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover rounded-lg"
-                      />
-                    </a>
-                  </Link>
-                  <div className="bg-black text-white rounded-3xl px-4 py-2.5 absolute top-2 left-2 cursor-pointer">
-                    Wetiko&apos;s Gallery
-                  </div>
-                </div>
-                <div className="overflow-hidden col-span-2 relative">
-                  <Link href="/laurenceantony">
-                    <a>
-                      <img
-                        src="https://cdn.collector.sh/BMZtCxTWWvQ4GNrypfPjnXHQbD8ULo3FciNeFfybfvus"
-                        alt=""
-                        className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover rounded-lg"
-                      />
-                    </a>
-                  </Link>
-                  <div className="bg-black text-white rounded-3xl px-4 py-2.5 absolute top-2 left-2 cursor-pointer">
-                    LaurenceAntony&apos;s Gallery
-                  </div>
-                </div>
-                <div className="overflow-hidden col-span-2 relative">
-                  <Link href="/Js">
-                    <a>
-                      <img
-                        src="https://cdn.collector.sh/74xJA3qxVzUbhHEHTSj4xL2CfnCTJhghLWRTMmBbeR8j"
-                        alt=""
-                        className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover rounded-lg"
-                      />
-                    </a>
-                  </Link>
-                  <div className="bg-black text-white rounded-3xl px-4 py-2.5 absolute top-2 left-2 cursor-pointer">
-                    Js&apos;s Gallery
-                  </div>
-                </div>
-              </Slider>
+              {auctions && (
+                <Slider {...settings}>
+                  {auctions.map((item, index) => (
+                    <>
+                      <div
+                        key={index}
+                        className="overflow-hidden col-span-2 relative -mt-2"
+                      >
+                        <Link
+                          href={marketplaceLink(
+                            item.source,
+                            item.mint,
+                            item.artist_name
+                          )}
+                        >
+                          <a>
+                            <img
+                              src={item.image}
+                              alt=""
+                              className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover rounded-lg"
+                            />
+                          </a>
+                        </Link>
+                        <div className="bg-black text-white rounded-3xl px-4 py-2.5 absolute top-4 left-2 cursor-pointer">
+                          <Link href={`/${item.username}/profile`}>
+                            <a>@{item.username}</a>
+                          </Link>
+                        </div>
+                      </div>
+                      <div className="mt-2 text-center">
+                        <h2>
+                          <Link
+                            href={marketplaceLink(
+                              item.source,
+                              item.mint,
+                              item.artist_name
+                            )}
+                          >
+                            <a>
+                              {item.name} ◎
+                              {roundToTwo(
+                                (item.highest_bid || item.reserve) / 1000000000
+                              )}{" "}
+                              ends <Moment date={item.end_time} unix fromNow />
+                              <br />
+                              <MarketplaceLogo source={item.source} />
+                            </a>
+                          </Link>
+                        </h2>
+                      </div>
+                    </>
+                  ))}
+                </Slider>
+              )}
             </div>
           </div>
         </div>

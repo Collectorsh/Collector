@@ -88,7 +88,7 @@ export default function Hero() {
                           </Link>
                         </div>
                       </div>
-                      <div className="mt-2 text-center">
+                      <div className="mt-2 text-center dark:text-white">
                         <h2>
                           <Link
                             href={marketplaceLink(

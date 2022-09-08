@@ -50,7 +50,7 @@ export default function Hero() {
                   className="py-3 px-4 rounded-3xl bg-black text-white dark:bg-whitish dark:text-black cursor-pointer"
                   onClick={scrollToFeed}
                 >
-                  View Feed{" "}
+                  Galleries{" "}
                   <ChevronDownIcon
                     className="h-6 w-6 inline -mt-1"
                     aria-hidden="true"

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import getMetadataFromUri from "/data/nft/getMetadataFromUri";
 import { cdnImage } from "/utils/cdnImage";
-import { addDefaultSource } from "/utils/addDefaultSource";
 import { TagIcon } from "@heroicons/react/solid";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
@@ -32,6 +31,11 @@ export default function Item({ token, index, setTokenAcceptOffers }) {
     window.open(`/nft/${token.mint}`, "_ blank");
   }
 
+  function addDefaultSource(e, url) {
+    if (!url) return;
+    e.target.src = url;
+  }
+
   return (
     <Draggable draggableId={token.mint} index={index}>
       {(provided) => (
@@ -45,7 +49,7 @@ export default function Item({ token, index, setTokenAcceptOffers }) {
             <img
               className="w-8 h-9 inline"
               src={cdnImage(token.mint)}
-              onError={(e) => addDefaultSource(e, token.mint, token.image)}
+              onError={(e) => addDefaultSource(e, token.image)}
             />
             <span className="ml-2 text-sm dark:text-whitish">{token.name}</span>
           </div>
@@ -57,12 +61,12 @@ export default function Item({ token, index, setTokenAcceptOffers }) {
                     acceptOffers ? "text-green-700" : "text-gray-300"
                   }`}
                   aria-hidden="true"
-                  onClick={(e) => updateAcceptOffers()}
+                  onClick={() => updateAcceptOffers()}
                 />
               </Tippy>
               <button
                 className="rounded bg-gray-300 px-1 py-0.5 mt-1 font-semibold text-black text-xs cursor-pointer inline ml-2"
-                onClick={(e) => goToNft()}
+                onClick={() => goToNft()}
               >
                 List
               </button>

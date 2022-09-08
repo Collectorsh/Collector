@@ -61,6 +61,9 @@ export default function MainNavigation() {
                   <Link href="/faq">FAQ</Link>
                 </p>
               )}
+              <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                <Link href="/feed">Feed</Link>
+              </p>
               {user && (
                 <>
                   <Gallery />

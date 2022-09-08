@@ -5,18 +5,16 @@ import Auctions from "/components/home/feed/Auctions";
 import Galleries from "/components/home/feed/Galleries";
 import RightColumn from "/components/home/RightColumn";
 import FeedMenu from "/components/home/FeedMenu";
-import { scrollToFeed } from "/utils/scrollToFeed";
 
 export default function Feed() {
   const [feed, setFeed] = useState("activity");
 
   const updateFeed = (feed) => {
     setFeed(feed);
-    scrollToFeed();
   };
 
   return (
-    <div id="feed" className="pl-2 px-4 xl:px-0 pt-2 md:pt-4 mt-16">
+    <div id="feed" className="pl-2 px-4 xl:px-0 pt-2 md:pt-4">
       <h2 className="w-full pb-2 font-extrabold mb-8 text-black inline-block dark:text-whitish border-b border-whitish dark:border-dark3 sticky top-0 z-40 pt-3 bg-white dark:bg-black">
         <FeedMenu feed={feed} updateFeed={updateFeed} />
       </h2>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import getNewestGalleries from "/data/home/getNewestGalleries";
 import getPopularGalleries from "/data/home/getPopularGalleries";
 import { Oval } from "react-loader-spinner";
+import { cdnImage } from "/utils/cdnImage";
 
 export default function GalleriesPage() {
   const [newest, setNewest] = useState([]);
@@ -22,6 +23,11 @@ export default function GalleriesPage() {
     fetchNewestGalleries();
     fetchPopularGalleries();
   }, []);
+
+  function addDefaultSource(e, url) {
+    if (!url) return;
+    e.target.src = url;
+  }
 
   return (
     <>
@@ -47,7 +53,10 @@ export default function GalleriesPage() {
                 <div className="rounded-lg overflow-hidden">
                   <Link href={`/${item.username}`}>
                     <a>
-                      <img src={item.image} />
+                      <img
+                        src={cdnImage(item.mint)}
+                        onError={(e) => addDefaultSource(e, item.image)}
+                      />
                     </a>
                   </Link>
                 </div>
@@ -85,7 +94,10 @@ export default function GalleriesPage() {
                 <div className="rounded-lg overflow-hidden">
                   <Link href={`/${item.username}`}>
                     <a>
-                      <img src={item.image} />
+                      <img
+                        src={cdnImage(item.mint)}
+                        onError={(e) => addDefaultSource(e, item.image)}
+                      />
                     </a>
                   </Link>
                 </div>

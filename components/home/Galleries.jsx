@@ -61,24 +61,26 @@ export default function GalleriesPage() {
                     </a>
                   </Link>
                 </div>
-                <Link href={`/${item.username}`}>
-                  <a>
-                    {item.twitter_profile_image && (
-                      <img
-                        src={item.twitter_profile_image}
-                        className="w-8 h-8 mr-1.5 rounded-full float-left"
-                      />
-                    )}
-
-                    <div className="mt-2">
-                      {item.username && (
-                        <p className="inline font-bold leading-7">
-                          @{item.username}
-                        </p>
+                <div className="mt-2">
+                  <Link href={`/${item.username}`}>
+                    <a>
+                      {item.twitter_profile_image && (
+                        <img
+                          src={item.twitter_profile_image}
+                          className="w-8 h-8 mr-1.5 rounded-full float-left"
+                        />
                       )}
-                    </div>
-                  </a>
-                </Link>
+
+                      <div className="mt-2">
+                        {item.username && (
+                          <p className="inline font-bold leading-7 dark:text-white">
+                            @{item.username}
+                          </p>
+                        )}
+                      </div>
+                    </a>
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
@@ -113,24 +115,26 @@ export default function GalleriesPage() {
                     </a>
                   </Link>
                 </div>
-                <Link href={`/${item.username}`}>
-                  <a>
-                    {item.twitter_profile_image && (
-                      <img
-                        src={item.twitter_profile_image}
-                        className="w-8 h-8 mr-1.5 rounded-full float-left"
-                      />
-                    )}
-
-                    <div className="mt-2">
-                      {item.username && (
-                        <p className="inline font-bold leading-7">
-                          @{item.username}
-                        </p>
+                <div className="mt-2">
+                  <Link href={`/${item.username}`}>
+                    <a>
+                      {item.twitter_profile_image && (
+                        <img
+                          src={item.twitter_profile_image}
+                          className="w-8 h-8 mr-1.5 rounded-full float-left"
+                        />
                       )}
-                    </div>
-                  </a>
-                </Link>
+
+                      <div className="mt-2">
+                        {item.username && (
+                          <p className="inline font-bold leading-7 dark:text-white">
+                            @{item.username}
+                          </p>
+                        )}
+                      </div>
+                    </a>
+                  </Link>
+                </div>
               </div>
             ))}
           </div>

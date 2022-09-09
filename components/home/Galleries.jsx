@@ -4,6 +4,7 @@ import getNewestGalleries from "/data/home/getNewestGalleries";
 import getPopularGalleries from "/data/home/getPopularGalleries";
 import { Oval } from "react-loader-spinner";
 import { cdnImage } from "/utils/cdnImage";
+import CollectorUsername from "/components/CollectorUsername";
 
 export default function GalleriesPage() {
   const [newest, setNewest] = useState([]);
@@ -48,7 +49,7 @@ export default function GalleriesPage() {
             {popular.map((item, index) => (
               <div
                 key={index}
-                className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
+                className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3 pb-2"
               >
                 <div className="rounded-lg overflow-hidden">
                   <Link href={`/${item.username}`}>
@@ -62,9 +63,20 @@ export default function GalleriesPage() {
                 </div>
                 <Link href={`/${item.username}`}>
                   <a>
-                    <h2 className="my-2 text-bold dark:text-white">
-                      @{item.username}
-                    </h2>
+                    {item.twitter_profile_image && (
+                      <img
+                        src={item.twitter_profile_image}
+                        className="w-8 h-8 mr-1.5 rounded-full float-left"
+                      />
+                    )}
+
+                    <div className="mt-2">
+                      {item.username && (
+                        <p className="inline font-bold leading-7">
+                          @{item.username}
+                        </p>
+                      )}
+                    </div>
                   </a>
                 </Link>
               </div>
@@ -89,7 +101,7 @@ export default function GalleriesPage() {
             {newest.map((item, index) => (
               <div
                 key={index}
-                className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
+                className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3 pb-2"
               >
                 <div className="rounded-lg overflow-hidden">
                   <Link href={`/${item.username}`}>
@@ -103,9 +115,20 @@ export default function GalleriesPage() {
                 </div>
                 <Link href={`/${item.username}`}>
                   <a>
-                    <h2 className="my-2 text-bold dark:text-white">
-                      @{item.username}
-                    </h2>
+                    {item.twitter_profile_image && (
+                      <img
+                        src={item.twitter_profile_image}
+                        className="w-8 h-8 mr-1.5 rounded-full float-left"
+                      />
+                    )}
+
+                    <div className="mt-2">
+                      {item.username && (
+                        <p className="inline font-bold leading-7">
+                          @{item.username}
+                        </p>
+                      )}
+                    </div>
                   </a>
                 </Link>
               </div>

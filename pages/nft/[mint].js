@@ -12,7 +12,7 @@ import SingleNftContext from "/contexts/single_nft";
 
 function Nft({ image, token }) {
   const [activities, setActivities] = useContext(ActivitiesContext);
-  const [singleNft, setSingleNft] = useContext(SingleNftContext);
+  const [, setSingleNft] = useContext(SingleNftContext);
 
   /////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +21,7 @@ function Nft({ image, token }) {
     fetchPolicy: "network-only",
   });
 
-  const fetchNft = useCallback(async () => {
+  const fetchNft = useCallback(async (token) => {
     const res = await getNftQl({
       variables: { address: token.address },
     });
@@ -30,8 +30,8 @@ function Nft({ image, token }) {
 
   // Run once on page load
   useEffect(() => {
-    fetchNft();
-  }, []);
+    fetchNft(token);
+  }, [token, fetchNft]);
 
   /////////////////////////////////////////////////////////////////////////////////////
 

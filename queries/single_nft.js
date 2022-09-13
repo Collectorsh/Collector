@@ -22,6 +22,9 @@ export const getNftQuery = gql`
         price
         buyer
         createdAt
+        auctionHouse {
+          address
+        }
       }
       creators {
         address

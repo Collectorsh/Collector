@@ -6,6 +6,7 @@ import {
   SystemProgram,
   Transaction,
   SYSVAR_SLOT_HASHES_PUBKEY,
+  PublicKey,
 } from "@solana/web3.js";
 import { sendTransactions, SequenceType } from "./connection";
 
@@ -208,14 +209,14 @@ const getMetadata = async (mint) => {
 
 export const getCandyMachineCreator = async (candyMachine) => {
   return await anchor.web3.PublicKey.findProgramAddress(
-    [Buffer.from("candy_machine"), candyMachine.toBuffer()],
+    [Buffer.from("candy_machine"), new PublicKey(candyMachine).toBuffer()],
     CANDY_MACHINE_PROGRAM
   );
 };
 
 export const getCollectionPDA = async (candyMachineAddress) => {
   return await anchor.web3.PublicKey.findProgramAddress(
-    [Buffer.from("collection"), candyMachineAddress.toBuffer()],
+    [Buffer.from("collection"), new PublicKey(candyMachineAddress).toBuffer()],
     CANDY_MACHINE_PROGRAM
   );
 };
@@ -285,7 +286,7 @@ export const createAccountsForMint = async (candyMachine, payer) => {
         candyMachine.program.provider.wallet,
         [instructions],
         [signers],
-        SequenceType.StopOnFailure,
+        "StopOnFailure",
         "singleGossip",
         () => {},
         () => false,
@@ -512,7 +513,7 @@ export const mintOneToken = async (
         candyMachine.program.provider.wallet,
         instructionsMatrix,
         signersMatrix,
-        SequenceType.StopOnFailure,
+        "StopOnFailure",
         "singleGossip",
         () => {},
         () => false,

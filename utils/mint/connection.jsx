@@ -89,7 +89,7 @@ export async function sendTransactionsWithManualRetry(
           wallet,
           instructions,
           filteredSigners,
-          SequenceType.StopOnFailure,
+          "StopOnFailure",
           "single"
         );
         ids = ids.concat(txs.map((t) => t.txid));
@@ -116,7 +116,7 @@ export const sendTransactions = async (
   wallet,
   instructionSet,
   signersSet,
-  sequenceType = Parallel,
+  sequenceType = "Parallel",
   commitment = "singleGossip",
   successCallback = (txid, ind) => {},
   failCallback = (txid, ind) => false,
@@ -181,7 +181,7 @@ export const sendTransactions = async (
       signedTransaction: signedTxns[i],
     });
 
-    if (sequenceType !== SequenceType.Parallel) {
+    if (sequenceType !== "Parallel") {
       try {
         await signedTxnPromise.then(({ txid, slot }) =>
           successCallback(txid, i)
@@ -192,7 +192,7 @@ export const sendTransactions = async (
         console.log("Caught failure:", e);
 
         failCallback(signedTxns[i], i);
-        if (sequenceType === SequenceType.StopOnFailure) {
+        if (sequenceType === "StopOnFailure") {
           return {
             number: i,
             txs: await Promise.all(pendingTxns),
@@ -204,7 +204,7 @@ export const sendTransactions = async (
     }
   }
 
-  if (sequenceType !== SequenceType.Parallel) {
+  if (sequenceType !== "Parallel") {
     const result = await Promise.all(pendingTxns);
     return { number: signedTxns.length, txs: result };
   }

@@ -18,6 +18,7 @@ import { MintCountdown } from "/utils/mint/MintCountdown";
 import { MintButton } from "/utils/mint/MintButton";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import { GatewayProvider } from "@civic/solana-gateway-react";
 
 export default function Mint() {
   const txTimeout = DEFAULT_TIMEOUT;

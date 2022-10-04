@@ -27,7 +27,7 @@ const config = (function (environment) {
   }
 })(process.env.NEXT_PUBLIC_REACT_APP_STAGE);
 
-export const rpcHost = "https://ssc-dao.genesysgo.net/";
+export const rpcHost = process.env.NEXT_PUBLIC_RPC;
 export const apiHost = config.apiHost;
 export const host = config.host;
 export const dao21 = config.dao21;

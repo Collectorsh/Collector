@@ -20,6 +20,9 @@ module.exports = {
         whitish: "#E7E7E7",
         offwhite: "#F7F7F7",
       },
+      backgroundImage: {
+        "mint-bg": "url('/images/mintbg.png')",
+      },
     },
   },
   plugins: [],

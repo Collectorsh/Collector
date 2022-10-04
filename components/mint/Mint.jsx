@@ -398,19 +398,19 @@ export default function Mint() {
   }, [refreshCandyMachineState]);
 
   return (
-    <Container style={{ marginTop: 100 }}>
+    <Container className="mt-12">
       <Container maxWidth="xs" style={{ position: "relative" }}>
         <Paper
           style={{
             padding: 24,
             paddingBottom: 10,
-            backgroundColor: "#151A1F",
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
             borderRadius: 6,
           }}
         >
           {!wallet.connected ? (
-            <h1 className="text-white w-fit mx-auto">
-              Connect your wallet to mint
+            <h1 className="text-greeny w-fit mx-auto text-xl font-sans font-bold uppercase">
+              Connect your wallet
             </h1>
           ) : (
             <>

@@ -13,7 +13,7 @@ import {
   mintOneToken,
 } from "/utils/mint/candy-machine";
 import { DEFAULT_TIMEOUT } from "/utils/mint/connection";
-import { formatNumber, toDate } from "/utils/mint/utils";
+import { formatNumber, toDate, getAtaForMint } from "/utils/mint/utils";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import { MintButton } from "/utils/mint/MintButton";
 import Grid from "@material-ui/core/Grid";
@@ -214,7 +214,7 @@ export default function Mint() {
           // );
 
           setIsActive((cndy.state.isActive = active));
-          setIsPresale(false);
+          setIsPresale((cndy.state.isPresale = presale));
           setCandyMachine(cndy);
 
           const txnEstimate =
@@ -368,6 +368,9 @@ export default function Mint() {
     let active = !isActive || isPresale;
 
     if (active) {
+      if (candyMachine.state.isWhitelistOnly && !isWhitelistUser) {
+        active = false;
+      }
       if (endDate && Date.now() >= endDate.getTime()) {
         active = false;
       }
@@ -536,15 +539,18 @@ export default function Mint() {
                   />
                 </GatewayProvider>
               ) : (
-                <MintButton
-                  candyMachine={candyMachine}
-                  isMinting={isUserMinting}
-                  setIsMinting={(val) => setIsUserMinting(val)}
-                  onMint={onMint}
-                  isActive={
-                    isActive || (isPresale && isWhitelistUser && isValidBalance)
-                  }
-                />
+                <>
+                  <MintButton
+                    candyMachine={candyMachine}
+                    isMinting={isUserMinting}
+                    setIsMinting={(val) => setIsUserMinting(val)}
+                    onMint={onMint}
+                    isActive={
+                      isActive ||
+                      (isPresale && isWhitelistUser && isValidBalance)
+                    }
+                  />
+                </>
               )}
             </>
           )}

@@ -16,10 +16,10 @@ export default function Mint() {
           }}
         >
           <h1 className="text-white w-fit mx-auto text-xl font-sans font-bold">
-            WL: Tomorrow, 10/7, 2pm EST
+            WL: Oct 7th, 2pm EST
           </h1>
           <h1 className="text-white w-fit mx-auto text-xl font-sans font-bold">
-            Public: Tomorrow, 10/7, 4pm EST
+            Public: Oct 7th, 4pm EST
           </h1>
           <h1 className="text-white w-fit mx-auto text-xl font-sans font-bold">
             Supply: 521

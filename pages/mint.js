@@ -1,5 +1,5 @@
 import MainNavigation from "/components/navigation/MainNavigation";
-import Mint from "/components/mint/MintHolding";
+import Mint from "/components/mint/Mint";
 import { createTheme, ThemeProvider } from "@material-ui/core";
 import { ToastContainer } from "react-toastify";
 

@@ -4,7 +4,6 @@ import { roundToTwo } from "/utils/roundToTwo";
 import { marketplaceLink } from "/utils/marketplaceHelpers";
 import Image from "/components/Image";
 import ShowOffers from "/components/gallery/ShowOffers";
-import EstimatedValue from "/components/gallery/EstimatedValue";
 
 export default function BuynowListings({ listings, user }) {
   return (
@@ -50,9 +49,11 @@ export default function BuynowListings({ listings, user }) {
                 <div className="text-sm">
                   <div className="font-black dark:text-whitish mt-1 float-left">
                     ◎{roundToTwo(item.amount / 1000000000)}
-                    {user && user.token_holder && (
+                    {user && user.token_holder && item.estimate && (
                       <div className="absolute top-0 right-4">
-                        <EstimatedValue token={item} />
+                        <p className="text-sm clear-both text-dark3 dark:text-gray-300 bg-whitish dark:bg-dark3 w-fit px-2 py-1 rounded mt-4">
+                          Estimate: ◎{roundToTwo(item.estimate / 1000000000)}
+                        </p>
                       </div>
                     )}
                   </div>

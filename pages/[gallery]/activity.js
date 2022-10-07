@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import getUserFromUsername from "/data/user/getUserFromUsername";
+import Buynow from "/components/profile/activity/Buynow";
 import Following from "/components/profile/activity/Following";
 import Bids from "/components/profile/activity/Bids";
 import MainNavigation from "/components/navigation/MainNavigation";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 
 function Activity({ profileUser }) {
-  const [selected, setSelected] = useState("following");
+  const [selected, setSelected] = useState("buynow");
 
   const changeSelected = (sel) => {
     setSelected(sel);
@@ -26,12 +27,21 @@ function Activity({ profileUser }) {
               <ul className="font-bold">
                 <li
                   className={`cursor-pointer hover:text-greeny inline px-2 mr-3 pb-3.5 ${
+                    selected === "buynow" &&
+                    "text-greeny font-extrabold border-b border-b-2 border-greeny"
+                  }`}
+                  onClick={() => changeSelected("buynow")}
+                >
+                  Buy Now
+                </li>
+                <li
+                  className={`cursor-pointer hover:text-greeny inline px-2 mr-3 pb-3.5 ${
                     selected === "following" &&
                     "text-greeny font-extrabold border-b border-b-2 border-greeny"
                   }`}
                   onClick={() => changeSelected("following")}
                 >
-                  Following
+                  Auctions
                 </li>
                 <li
                   className={`cursor-pointer hover:text-greeny inline px-2 mx-3 pb-3.5 ${
@@ -40,10 +50,11 @@ function Activity({ profileUser }) {
                   }`}
                   onClick={() => changeSelected("bids")}
                 >
-                  Bids
+                  My Bids
                 </li>
               </ul>
             </div>
+            {selected === "buynow" && <Buynow />}
             {selected === "following" && <Following />}
             {selected === "bids" && <Bids />}
           </div>

@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import * as anchor from "@project-serum/anchor";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Container } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import {
@@ -33,6 +34,7 @@ export default function Mint() {
   const [discountPrice, setDiscountPrice] = useState();
   const [needTxnSplit, setNeedTxnSplit] = useState(true);
   const [setupTxn, setSetupTxn] = useState();
+  const { setVisible } = useWalletModal();
 
   const wallet = useWallet();
   const rpcUrl = process.env.NEXT_PUBLIC_CANDYMACHINE_RPC;
@@ -412,7 +414,10 @@ export default function Mint() {
           }}
         >
           {!wallet.connected ? (
-            <h1 className="text-greeny w-fit mx-auto text-xl font-sans font-bold uppercase">
+            <h1
+              className="text-greeny w-fit mx-auto text-xl font-sans font-bold uppercase cursor-pointer"
+              onClick={() => setVisible(true)}
+            >
               Connect your wallet
             </h1>
           ) : (

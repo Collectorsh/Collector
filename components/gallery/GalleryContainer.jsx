@@ -22,7 +22,7 @@ export default function GalleryContainer({ tokens, user }) {
 
   useEffect(() => {
     if (!user) return;
-    fetchExchangeOffers();
+    // fetchExchangeOffers();
   }, [user]);
 
   useEffect(() => {

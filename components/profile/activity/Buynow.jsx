@@ -3,7 +3,6 @@ import BuynowListings from "/components/profile/activity/BuynowListings";
 import getFollowingBuynow from "/data/artists/getFollowingBuynow";
 import ArtistFilter from "/components/profile/activity/ArtistFilter";
 import UserContext from "/contexts/user";
-import Select from "react-select";
 import { sortListings } from "./sortHelper";
 
 export default function Following() {
@@ -21,7 +20,9 @@ export default function Following() {
   const initFollowingBuynow = useCallback(async (user) => {
     let res = await getFollowingBuynow(user.api_key);
     if (res.status === "success" && res.listings.length > 0) {
-      setListings(res.listings);
+      const response = sortListings("az", res.listings);
+      setListings(response);
+      setResults(response);
     } else {
       setNoListings(true);
     }
@@ -32,35 +33,32 @@ export default function Following() {
     initFollowingBuynow(user);
   }, [user]);
 
-  useEffect(() => {
-    const res = sortListings(sortBy, results);
-
-    setSortedResults(res);
-  }, [results, sortBy]);
-
-  const SORT_OPTIONS = [
-    { value: "az", label: "Artist A-Z" },
-    { value: "za", label: "Artist Z-A" },
-    { value: "deals", label: "Best Deals" },
-  ];
-
-  const onSortChange = (sortOption) => {
-    if (sortOption !== null) {
-      setSortBy(sortOption.value);
+  const toggleDeals = () => {
+    if (sortBy === "az") {
+      setSortBy("deals");
+      const response = sortListings("deals", results);
+      setResults(response);
     } else {
       setSortBy("az");
+      const response = sortListings("az", results);
+      setResults(response);
     }
   };
 
   return (
     <div className="pt-6">
-      <Select
-        options={SORT_OPTIONS}
-        onChange={onSortChange}
-        placeholder="Sort By"
-        isClearable={true}
-        className="w-fit"
-      />
+      {user && user.token_holder && (
+        <button
+          className={`float-right ml-6 cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1 px-1 xl:py-1.5 xl:px-2.5 font-bold border border-4 border-black hover:bg-black hover:text-white dark:hover:bg-whitish dark:hover:text-black dark:border-whitish ${
+            sortBy === "az"
+              ? "bg-white text-black dark:bg-black dark:text-whitish"
+              : "bg-black text-white dark:bg-whitish dark:text-black"
+          }`}
+          onClick={() => toggleDeals()}
+        >
+          Best Deals
+        </button>
+      )}
       <ArtistFilter allResults={listings} filteredResults={filteredResults} />
       <div>
         <div>
@@ -71,7 +69,7 @@ export default function Following() {
                   There&apos;s currently no listings by artists that you follow
                 </p>
               )}
-              <BuynowListings listings={sortedResults} user={user} />
+              <BuynowListings listings={results} user={user} />
             </div>
           </div>
         </div>

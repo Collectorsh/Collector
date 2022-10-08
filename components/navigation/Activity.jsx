@@ -15,7 +15,7 @@ export default function Activity() {
           <Menu.Button className="flex text-sm rounded-full focus:outline-none">
             <span className="sr-only">Open user menu</span>
             <p className="menu text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-              Activity
+              Explore
               <ChevronDownIcon
                 className="h-4 w-4 ml-1 inline"
                 aria-hidden="true"
@@ -36,7 +36,7 @@ export default function Activity() {
             <Menu.Item>
               <Link href={`/${user.username}/activity`}>
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  View Activity
+                  Following &amp; Bids
                 </a>
               </Link>
             </Menu.Item>

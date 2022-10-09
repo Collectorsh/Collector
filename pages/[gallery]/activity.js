@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import getUserFromUsername from "/data/user/getUserFromUsername";
 import Buynow from "/components/profile/activity/Buynow";
 import Following from "/components/profile/activity/Following";
@@ -7,11 +8,17 @@ import MainNavigation from "/components/navigation/MainNavigation";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 
 function Activity({ profileUser }) {
-  const [selected, setSelected] = useState("buynow");
+  const router = useRouter();
+  const { id } = router.query;
+  const [selected, setSelected] = useState(id || "buynow");
 
   const changeSelected = (sel) => {
     setSelected(sel);
   };
+
+  useEffect(() => {
+    setSelected(id);
+  }, [id]);
 
   return (
     <div className="dark:bg-black dark:text-whitish">
@@ -21,7 +28,7 @@ function Activity({ profileUser }) {
         <div className="px-4 xl:px-0 mx-auto clear-both">
           <div className="mx-auto pt-3 md:px-0">
             <h2 className="tracking-wide text-center mt-14 mb-10 text-4xl font-bold text-gray-800 w-full py-1 inline-block dark:text-whitish">
-              Following &amp; Bids
+              Collect
             </h2>
             <div className="w-full border-b border-gray-200 dark:border-dark3 pb-3">
               <ul className="font-bold">

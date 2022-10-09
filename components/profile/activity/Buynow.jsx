@@ -49,7 +49,7 @@ export default function Following() {
     <div className="pt-6">
       {user && user.token_holder && (
         <button
-          className={`float-right ml-6 cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1 px-1 xl:py-1.5 xl:px-2.5 font-bold border border-4 border-black hover:bg-black hover:text-white dark:hover:bg-whitish dark:hover:text-black dark:border-whitish ${
+          className={`sm:float-right sm:ml-6 mb-6 sm:mb-0 cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1 px-1 xl:py-1.5 xl:px-2.5 font-bold border border-4 border-black hover:bg-black hover:text-white dark:hover:bg-whitish dark:hover:text-black dark:border-whitish ${
             sortBy === "az"
               ? "bg-white text-black dark:bg-black dark:text-whitish"
               : "bg-black text-white dark:bg-whitish dark:text-black"

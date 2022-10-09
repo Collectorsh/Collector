@@ -38,7 +38,7 @@ export default function GalleryContainer({ tokens, user }) {
 
   return (
     <div className="clear-both w-full mt-6">
-      {user && user.estimated_value && user.token_holder && (
+      {user && user.estimated_value && (
         <div className="pb-8">
           <h2 className="text-base text-lg font-semibold leading-4 text-black dark:text-white inline">
             Estimated: ◎{roundToTwo(runningTotal / 1000000000)}

@@ -17,6 +17,26 @@ export default function ArtistList({ following, handleFollow, user }) {
     handleFollow(res.following);
   };
 
+  const changeListingNotify = async (artist, state) => {
+    const res = await updateFollowing(
+      user.api_key,
+      artist,
+      state,
+      "notify_listing"
+    );
+    handleFollow(res.following);
+  };
+
+  const changeEditionNotify = async (artist, state) => {
+    const res = await updateFollowing(
+      user.api_key,
+      artist,
+      state,
+      "notify_edition"
+    );
+    handleFollow(res.following);
+  };
+
   const changeEndNotify = async (artist, state) => {
     const res = await updateFollowing(
       user.api_key,
@@ -54,13 +74,25 @@ export default function ArtistList({ following, handleFollow, user }) {
                   scope="col"
                   className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-gray-600 dark:text-gray-400 ng-star-inserted"
                 >
-                  Notify on Auction Start
+                  Buy Now Listing
                 </th>
                 <th
                   scope="col"
                   className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-gray-600 dark:text-gray-400 ng-star-inserted"
                 >
-                  Notify before Auction End
+                  New Edition
+                </th>
+                <th
+                  scope="col"
+                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-gray-600 dark:text-gray-400 ng-star-inserted"
+                >
+                  Auction Start
+                </th>
+                <th
+                  scope="col"
+                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-gray-600 dark:text-gray-400 ng-star-inserted"
+                >
+                  Auction End
                 </th>
                 <th
                   scope="col"
@@ -77,6 +109,36 @@ export default function ArtistList({ following, handleFollow, user }) {
                   className="bg-transparent dark:bg-dark3 dark:border-0 dark:text-gray-50 h-full lg:hover:shadow-[0_12px_40px_0px_rgba(0,0,0,0.18)] rounded-xl shadow-[0_12px_40px_0px_rgba(0,0,0,0.06)] text-gray-900 ng-star-inserted"
                 >
                   <td className="py-4 px-6">{follow.artist}</td>
+                  <td className="py-4 px-6 text-center">
+                    <BellIcon
+                      className={`inline h-5 w-5 align-middle cursor-pointer ${
+                        follow.notify_listing
+                          ? "text-green-600"
+                          : "text-gray-400"
+                      }`}
+                      onClick={(e) =>
+                        changeListingNotify(
+                          follow.artist,
+                          follow.notify_listing ? false : true
+                        )
+                      }
+                    />
+                  </td>
+                  <td className="py-4 px-6 text-center">
+                    <BellIcon
+                      className={`inline h-5 w-5 align-middle cursor-pointer ${
+                        follow.notify_edition
+                          ? "text-green-600"
+                          : "text-gray-400"
+                      }`}
+                      onClick={(e) =>
+                        changeEditionNotify(
+                          follow.artist,
+                          follow.notify_edition ? false : true
+                        )
+                      }
+                    />
+                  </td>
                   <td className="py-4 px-6 text-center">
                     <BellIcon
                       className={`inline h-5 w-5 align-middle cursor-pointer ${

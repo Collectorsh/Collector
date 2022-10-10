@@ -22,7 +22,10 @@ export function searchResultSet(ArtistData, searchNames) {
   } else {
     for (const sel of searchNames) {
       console.log(sel["label"]);
-      const items = ArtistData.filter((item) => item.artist === sel["label"]);
+      const items = ArtistData.filter(
+        (item) =>
+          (item.artist || item.artist_name || item.brand_name) === sel["label"]
+      );
       for (const item of items) {
         results.push(item);
       }

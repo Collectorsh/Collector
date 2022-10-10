@@ -15,7 +15,7 @@ async function getEstimatedValue(token) {
     console.log(err);
   }
 
-  var editionKey = tokenEditiondata ? tokenEditiondata.data.key : null;
+  token.edition = tokenEditiondata ? tokenEditiondata.data.key : null;
 
   const res = await apiClient.post(
     "/estimate/price",
@@ -23,7 +23,7 @@ async function getEstimatedValue(token) {
       mint: token.mint,
       creator: token.creator,
       artist_name: token.artist_name,
-      edition: editionKey,
+      edition: token.edition,
     },
     {
       "Content-Type": "application/json",

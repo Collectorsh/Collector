@@ -62,7 +62,7 @@ export default function MainNavigation() {
                 </p>
               )}
               <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                <Link href="/feed">Feed</Link>
+                <Link href="/feed">Discover</Link>
               </p>
               {user && (
                 <>
@@ -156,6 +156,14 @@ export default function MainNavigation() {
                             <span className="-ml-2">Toggle Dark Mode</span>
                           </div>
                           <div className="mt-6 dark:text-gray-200">
+                            {!user && (
+                              <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                <Link href="/faq">FAQ</Link>
+                              </p>
+                            )}
+                            <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                              <Link href="/feed">Discover</Link>
+                            </p>
                             {user && (
                               <>
                                 <div className="mt-6">
@@ -167,8 +175,8 @@ export default function MainNavigation() {
                                     <Link href="/">Home</Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href={`/${user.username}/activity`}>
-                                      Activity
+                                    <Link href={`/${user.username}/feed`}>
+                                      Discover
                                     </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
@@ -184,6 +192,27 @@ export default function MainNavigation() {
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href={`/${user.username}/gallery`}>
                                       Edit Gallery
+                                    </Link>
+                                  </p>
+                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                    <Link
+                                      href={`/${user.username}/activity?id=buynow`}
+                                    >
+                                      Buy Now
+                                    </Link>
+                                  </p>
+                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                    <Link
+                                      href={`/${user.username}/activity?id=following`}
+                                    >
+                                      Auctions
+                                    </Link>
+                                  </p>
+                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                    <Link
+                                      href={`/${user.username}/activity?id=bids`}
+                                    >
+                                      My Bids
                                     </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">

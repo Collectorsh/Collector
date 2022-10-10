@@ -62,7 +62,7 @@ export default function Hero() {
                 <Link href="https://collector.sh/mint">
                   <a>
                     <h1 className="text-2xl font-sans text-black font-extrabold">
-                      Collector Signature NFT Minting NOW!!
+                      Collector Signature Collection Minting NOW
                     </h1>
                     <h1 className="text-2xl font-sans text-black">
                       Art Project &#43; Premium Membership

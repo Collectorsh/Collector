@@ -54,6 +54,7 @@ async function getMetadata(publicKeys) {
       result.order_id = token.order_id;
       result.visible = token.visible;
       result.accept_offers = token.accept_offers;
+      result.estimate = token.estimate;
     } else {
       result.order_id = null;
       result.visible = res.data.default;

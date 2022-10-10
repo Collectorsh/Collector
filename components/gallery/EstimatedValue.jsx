@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { roundToTwo } from "/utils/roundToTwo";
-import getEstimatedValue from "/data/getEstimatedValue";
 import EstimatedValueContext from "/contexts/estimated_value";
 
 export default function EstimatedValue({ token }) {
@@ -15,12 +14,11 @@ export default function EstimatedValue({ token }) {
         setEstimate(est.estimate);
       } else {
         // Not found in context
-        const res = await getEstimatedValue(token);
-        if (res.estimate) {
-          setEstimate(res.estimate);
+        if (token.estimate) {
+          setEstimate(token.estimate);
           setTotalEstimate((prevState) => {
             let newState = [...prevState];
-            newState.push({ mint: token.mint, estimate: res.estimate });
+            newState.push({ mint: token.mint, estimate: token.estimate });
             return newState;
           });
         }

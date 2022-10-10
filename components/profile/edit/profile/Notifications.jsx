@@ -195,7 +195,7 @@ export default function Notifications() {
                         )}
                       </dd>
                     </div>
-                    {/* <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white dark:bg-dark2">
+                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white dark:bg-dark2">
                       <dt className="text-sm font-medium text-gray-500">
                         Email
                       </dt>
@@ -226,7 +226,7 @@ export default function Notifications() {
                           </div>
                         )}
                       </dd>
-                    </div> */}
+                    </div>
                   </dl>
                 </div>
               </div>

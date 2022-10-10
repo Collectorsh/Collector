@@ -58,7 +58,7 @@ export default function Following() {
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
-                for="flexRadioDefault2"
+                htmlFor="flexRadioDefault2"
               >
                 Artist &uarr;
               </label>
@@ -74,7 +74,7 @@ export default function Following() {
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
-                for="flexRadioDefault2"
+                htmlFor="flexRadioDefault2"
               >
                 Artist &darr;
               </label>
@@ -90,7 +90,7 @@ export default function Following() {
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
-                for="flexRadioDefault2"
+                htmlFor="flexRadioDefault2"
               >
                 Price &uarr;
               </label>
@@ -106,7 +106,7 @@ export default function Following() {
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
-                for="flexRadioDefault2"
+                htmlFor="flexRadioDefault2"
               >
                 Price &darr;
               </label>
@@ -123,7 +123,7 @@ export default function Following() {
                 />
                 <label
                   className="form-check-label inline-block text-gray-800 dark:text-whitish"
-                  for="flexRadioDefault1"
+                  htmlFor="flexRadioDefault1"
                 >
                   Best Deals
                 </label>

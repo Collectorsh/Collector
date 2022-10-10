@@ -4,6 +4,21 @@ export function sortListings(sortType, listings) {
       a.artist_name > b.artist_name ? 1 : b.artist_name > a.artist_name ? -1 : 0
     );
     return results;
+  } else if (sortType === "za") {
+    let results = listings.sort((a, b) =>
+      a.artist_name < b.artist_name ? 1 : b.artist_name < a.artist_name ? -1 : 0
+    );
+    return results;
+  } else if (sortType === "lh") {
+    let results = listings.sort((a, b) =>
+      a.amount > b.amount ? 1 : b.amount > a.amount ? -1 : 0
+    );
+    return results;
+  } else if (sortType === "hl") {
+    let results = listings.sort((a, b) =>
+      a.amount < b.amount ? 1 : b.amount < a.amount ? -1 : 0
+    );
+    return results;
   } else if (sortType === "deals") {
     for (const listing of listings) {
       if (

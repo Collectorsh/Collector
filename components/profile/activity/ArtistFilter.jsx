@@ -35,7 +35,7 @@ export default function ArtistFilter({ allResults, filteredResults }) {
         onChange={onNameSelectChange}
         isMulti
         placeholder="Filter by Artist"
-        className="text-black w-full sm:w-[350px] mb-2 float-right"
+        className="text-black w-full"
         classNamePrefix="react-select"
       />
     </>

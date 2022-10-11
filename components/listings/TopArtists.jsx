@@ -4,7 +4,6 @@ import Image from "/components/Image";
 import { roundToTwo } from "/utils/roundToTwo";
 
 export default function TopArtists({ listings }) {
-  console.log(listings);
   const settings = {
     dots: false,
     arrows: true,

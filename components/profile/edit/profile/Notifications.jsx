@@ -13,14 +13,14 @@ export default function Notifications() {
     const notify_new_artist = document.getElementById("notify_new_artist");
     const watchlist_to_dm = document.getElementById("watchlist_to_dm");
     const notify_twitter = document.getElementById("notify_twitter");
-    // const notify_email = document.getElementById("notify_email");
+    const notify_email = document.getElementById("notify_email");
     const res = await saveUser(user.api_key, {
       notify_trending: notify_trending ? notify_trending.checked : null,
       notify_outbid: notify_outbid ? notify_outbid.checked : null,
       notify_new_artist: notify_new_artist ? notify_new_artist.checked : null,
       watchlist_to_dm: watchlist_to_dm ? watchlist_to_dm.checked : null,
       notify_twitter: notify_twitter ? notify_twitter.checked : null,
-      // notify_email: notify_email ? notify_email.checked : null,
+      notify_email: notify_email ? notify_email.checked : null,
     });
     if (res.data) {
       if (res.data.status === "success") {

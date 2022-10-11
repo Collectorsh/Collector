@@ -4,6 +4,7 @@ import getFollowingBuynow from "/data/artists/getFollowingBuynow";
 import ArtistFilter from "/components/profile/activity/ArtistFilter";
 import UserContext from "/contexts/user";
 import { sortListings } from "./sortHelper";
+import { Oval } from "react-loader-spinner";
 
 export default function Following() {
   const [user] = useContext(UserContext);
@@ -11,6 +12,7 @@ export default function Following() {
   const [noListings, setNoListings] = useState(false);
   const [results, setResults] = useState([]);
   const [sortBy, setSortBy] = useState("az");
+  const [loaded, setLoaded] = useState(false);
 
   const filteredResults = (r) => {
     setResults(r);
@@ -22,6 +24,7 @@ export default function Following() {
       const response = sortListings("az", res.listings);
       setListings(response);
       setResults(response);
+      setLoaded(true);
     } else {
       setNoListings(true);
     }
@@ -139,7 +142,13 @@ export default function Following() {
             There&apos;s currently no listings by artists that you follow
           </p>
         )}
-        <BuynowListings listings={results} user={user} />
+        {loaded ? (
+          <BuynowListings listings={results} user={user} />
+        ) : (
+          <div className="mt-4 w-[50px] mx-auto h-64">
+            <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
+          </div>
+        )}
       </div>
     </div>
   );

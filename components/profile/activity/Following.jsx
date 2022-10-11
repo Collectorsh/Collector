@@ -3,12 +3,14 @@ import FollowingAuctions from "/components/profile/activity/FollowingAuctions";
 import getFollowingAuctions from "/data/artists/getFollowingAuctions";
 import ArtistFilter from "/components/profile/activity/ArtistFilter";
 import UserContext from "/contexts/user";
+import { Oval } from "react-loader-spinner";
 
 export default function Following() {
   const [user] = useContext(UserContext);
   const [auctions, setAuctions] = useState([]);
   const [noAuctions, setNoAuctions] = useState(false);
   const [results, setResults] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
   const filteredResults = (r) => {
     setResults(r);
@@ -16,6 +18,7 @@ export default function Following() {
 
   const initFollowingAuctions = useCallback(async (user) => {
     let res = await getFollowingAuctions(user.api_key);
+    setLoaded(true);
     if (res.status === "success" && res.auctions.length > 0) {
       setAuctions(res.auctions);
     } else {
@@ -40,7 +43,18 @@ export default function Following() {
                   There&apos;s currently no auctions by artists that you follow
                 </p>
               )}
-              <FollowingAuctions auctions={results} />
+              {loaded ? (
+                <FollowingAuctions auctions={results} />
+              ) : (
+                <div className="mt-4 w-[50px] mx-auto h-64">
+                  <Oval
+                    color="#fff"
+                    secondaryColor="#000"
+                    height={50}
+                    width={50}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

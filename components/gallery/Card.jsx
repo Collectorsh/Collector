@@ -39,9 +39,7 @@ function Card(props) {
           <ShowOffers token={token} />
           <AcceptOffers token={token} />
           <MetaContainer user={user} token={token} />
-          {user && user.estimated_value && user.token_holder && (
-            <EstimatedValue token={token} />
-          )}
+          {user && user.estimated_value && <EstimatedValue token={token} />}
         </>
       )}
     </div>

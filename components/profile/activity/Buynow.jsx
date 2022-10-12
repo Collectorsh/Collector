@@ -10,11 +10,11 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function Following() {
   const [user] = useContext(UserContext);
-  const [infiniteScrollItems, setInfiniteScrollItems] = useState();
+  const [infiniteScrollItems, setInfiniteScrollItems] = useState([]);
   const [listings, setListings] = useState([]);
   const [noListings, setNoListings] = useState(false);
   const [results, setResults] = useState([]);
-  const [sortBy, setSortBy] = useState();
+  const [sortBy, setSortBy] = useState("az");
   const [source, setSource] = useState("following");
   const [loaded, setLoaded] = useState(false);
 
@@ -253,7 +253,7 @@ export default function Following() {
             There&apos;s currently no listings by artists that you follow
           </p>
         )}
-        {loaded && infiniteScrollItems ? (
+        {loaded && infiniteScrollItems.length > 0 ? (
           <InfiniteScroll
             dataLength={infiniteScrollItems.length}
             next={fetchData}

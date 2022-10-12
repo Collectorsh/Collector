@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import BuynowListings from "/components/profile/activity/BuynowListings";
 import getFollowingBuynow from "/data/artists/getFollowingBuynow";
+import getSignatureListings from "/data/signature/getSignatureListings";
 import ArtistFilter from "/components/profile/activity/ArtistFilter";
 import UserContext from "/contexts/user";
 import { sortListings } from "/utils/sortHelper";
@@ -12,6 +13,7 @@ export default function Following() {
   const [noListings, setNoListings] = useState(false);
   const [results, setResults] = useState([]);
   const [sortBy, setSortBy] = useState("az");
+  const [source, setSource] = useState("following");
   const [loaded, setLoaded] = useState(false);
 
   const filteredResults = (r) => {
@@ -21,7 +23,19 @@ export default function Following() {
   const initFollowingBuynow = useCallback(async (user) => {
     let res = await getFollowingBuynow(user.api_key);
     if (res.status === "success" && res.listings.length > 0) {
-      const response = sortListings("az", res.listings);
+      const response = sortListings(sortBy, res.listings);
+      setListings(response);
+      setResults(response);
+      setLoaded(true);
+    } else {
+      setNoListings(true);
+    }
+  }, []);
+
+  const initSignatureListings = useCallback(async () => {
+    let res = await getSignatureListings();
+    if (res.status === "success" && res.listings.length > 0) {
+      const response = sortListings(sortBy, res.listings);
       setListings(response);
       setResults(response);
       setLoaded(true);
@@ -41,10 +55,56 @@ export default function Following() {
     setResults(response);
   };
 
+  const toggleSource = (s) => {
+    setSource(s);
+    setLoaded(false);
+    if (s === "following") {
+      initFollowingBuynow(user);
+    } else if (s === "holders") {
+      initSignatureListings();
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 pt-4 md:pt-8">
       <div className="md:col-span-3 md:pr-8">
         <ArtistFilter allResults={listings} filteredResults={filteredResults} />
+        <div className="my-6 w-full clear-both">
+          <div className="flex justify-left">
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                type="radio"
+                name="inlineRadioOptions"
+                id="inlineRadio1"
+                onClick={() => toggleSource("following")}
+                defaultChecked={source === "following"}
+              />
+              <label
+                className="form-check-label inline-block text-gray-800"
+                for="inlineRadio10"
+              >
+                Following
+              </label>
+            </div>
+            <div className="form-check form-check-inline ml-6">
+              <input
+                className="form-check-input form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                type="radio"
+                name="inlineRadioOptions"
+                id="inlineRadio2"
+                onClick={() => toggleSource("holders")}
+                defaultChecked={source === "holders"}
+              />
+              <label
+                className="form-check-label inline-block text-gray-800"
+                for="inlineRadio20"
+              >
+                Signature Holders
+              </label>
+            </div>
+          </div>
+        </div>
         <h1 className="font-sans border-t border-b border-gray-200 dark:border-dark3 py-2 mt-8">
           Sort By
         </h1>
@@ -57,7 +117,7 @@ export default function Following() {
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
                 onClick={() => toggleSort("az")}
-                checked={sortBy === "az"}
+                defaultChecked={sortBy === "az"}
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
@@ -73,7 +133,7 @@ export default function Following() {
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
                 onClick={() => toggleSort("za")}
-                checked={sortBy === "za"}
+                defaultChecked={sortBy === "za"}
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
@@ -89,7 +149,7 @@ export default function Following() {
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
                 onClick={() => toggleSort("lh")}
-                checked={sortBy === "lh"}
+                defaultChecked={sortBy === "lh"}
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
@@ -105,7 +165,7 @@ export default function Following() {
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
                 onClick={() => toggleSort("hl")}
-                checked={sortBy === "hl"}
+                defaultChecked={sortBy === "hl"}
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
@@ -122,7 +182,7 @@ export default function Following() {
                   name="flexRadioDefault"
                   id="flexRadioDefault1"
                   onClick={() => toggleSort("deals")}
-                  checked={sortBy === "deals"}
+                  defaultChecked={sortBy === "deals"}
                 />
                 <label
                   className="form-check-label inline-block text-gray-800 dark:text-whitish"

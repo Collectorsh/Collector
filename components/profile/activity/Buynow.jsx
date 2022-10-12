@@ -6,13 +6,15 @@ import ArtistFilter from "/components/profile/activity/ArtistFilter";
 import UserContext from "/contexts/user";
 import { sortListings } from "/utils/sortHelper";
 import { Oval } from "react-loader-spinner";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function Following() {
   const [user] = useContext(UserContext);
+  const [infiniteScrollItems, setInfiniteScrollItems] = useState();
   const [listings, setListings] = useState([]);
   const [noListings, setNoListings] = useState(false);
   const [results, setResults] = useState([]);
-  const [sortBy, setSortBy] = useState("az");
+  const [sortBy, setSortBy] = useState();
   const [source, setSource] = useState("following");
   const [loaded, setLoaded] = useState(false);
 
@@ -20,7 +22,7 @@ export default function Following() {
     setResults(r);
   };
 
-  const initFollowingBuynow = useCallback(async (user) => {
+  const initFollowingBuynow = useCallback(async (user, sortBy) => {
     let res = await getFollowingBuynow(user.api_key);
     if (res.status === "success" && res.listings.length > 0) {
       const response = sortListings(sortBy, res.listings);
@@ -32,7 +34,7 @@ export default function Following() {
     }
   }, []);
 
-  const initSignatureListings = useCallback(async () => {
+  const initSignatureListings = useCallback(async (sortBy) => {
     let res = await getSignatureListings();
     if (res.status === "success" && res.listings.length > 0) {
       const response = sortListings(sortBy, res.listings);
@@ -46,24 +48,35 @@ export default function Following() {
 
   useEffect(() => {
     if (!user) return;
-    initFollowingBuynow(user);
+    initFollowingBuynow(user, "az");
   }, [user]);
 
-  const toggleSort = (s) => {
+  useEffect(() => {
+    setInfiniteScrollItems(results.slice(0, 20));
+  }, [results]);
+
+  function toggleSort(s) {
     setSortBy(s);
     const response = sortListings(s, results);
+    setInfiniteScrollItems(response.slice(0, 20));
     setResults(response);
-  };
+  }
 
-  const toggleSource = (s) => {
+  function toggleSource(s) {
     setSource(s);
     setLoaded(false);
     if (s === "following") {
-      initFollowingBuynow(user);
+      initFollowingBuynow(user, sortBy);
     } else if (s === "holders") {
-      initSignatureListings();
+      initSignatureListings(sortBy);
     }
-  };
+  }
+
+  function fetchData() {
+    setInfiniteScrollItems((currentDisplayedItems) =>
+      results.slice(0, currentDisplayedItems.length + 20)
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 pt-4 md:pt-8">
@@ -81,7 +94,7 @@ export default function Following() {
                 defaultChecked={source === "following"}
               />
               <label
-                className="form-check-label inline-block text-gray-800"
+                className="form-check-label inline-block text-gray-800 dark:text-whitish"
                 htmlFor="inlineRadio10"
               >
                 Following
@@ -97,7 +110,7 @@ export default function Following() {
                 defaultChecked={source === "holders"}
               />
               <label
-                className="form-check-label inline-block text-gray-800"
+                className="form-check-label inline-block text-gray-800 dark:text-whitish"
                 htmlFor="inlineRadio20"
               >
                 Signature Holders
@@ -123,7 +136,8 @@ export default function Following() {
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
-                Artist &uarr;
+                Artist &uarr;{" "}
+                <span className="text-gray-300 dark:text-dark3">[a-z]</span>
               </label>
             </div>
             <div className="py-1">
@@ -139,7 +153,8 @@ export default function Following() {
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
-                Artist &darr;
+                Artist &darr;{" "}
+                <span className="text-gray-300 dark:text-dark3">[z-a]</span>
               </label>
             </div>
             <div className="py-1">
@@ -155,7 +170,8 @@ export default function Following() {
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
-                Price &uarr;
+                Price &uarr;{" "}
+                <span className="text-gray-300 dark:text-dark3">[lowest]</span>
               </label>
             </div>
             <div className="py-1">
@@ -171,7 +187,42 @@ export default function Following() {
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
-                Price &darr;
+                Price &darr;{" "}
+                <span className="text-gray-300 dark:text-dark3">[highest]</span>
+              </label>
+            </div>
+            <div className="py-1">
+              <input
+                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                type="radio"
+                name="flexRadioDefault"
+                id="flexRadioDefault2"
+                onClick={() => toggleSort("asc")}
+                defaultChecked={sortBy === "asc"}
+              />
+              <label
+                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                htmlFor="flexRadioDefault2"
+              >
+                Date &uarr;{" "}
+                <span className="text-gray-300 dark:text-dark3">[oldest]</span>
+              </label>
+            </div>
+            <div className="py-1">
+              <input
+                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                type="radio"
+                name="flexRadioDefault"
+                id="flexRadioDefault2"
+                onClick={() => toggleSort("desc")}
+                defaultChecked={sortBy === "desc"}
+              />
+              <label
+                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                htmlFor="flexRadioDefault2"
+              >
+                Date &darr;{" "}
+                <span className="text-gray-300 dark:text-dark3">[newest]</span>
               </label>
             </div>
             {user && user.token_holder && (
@@ -202,8 +253,14 @@ export default function Following() {
             There&apos;s currently no listings by artists that you follow
           </p>
         )}
-        {loaded ? (
-          <BuynowListings listings={results} user={user} />
+        {loaded && infiniteScrollItems ? (
+          <InfiniteScroll
+            dataLength={infiniteScrollItems.length}
+            next={fetchData}
+            hasMore={infiniteScrollItems.length !== results.length}
+          >
+            <BuynowListings listings={infiniteScrollItems} user={user} />
+          </InfiniteScroll>
         ) : (
           <div className="mt-4 w-[50px] mx-auto h-64">
             <Oval color="#fff" secondaryColor="#000" height={50} width={50} />

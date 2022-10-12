@@ -34,16 +34,6 @@ export default function Activity() {
         >
           <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none text-left">
             <Menu.Item>
-              <Link href={`/${user.username}/follow`}>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Follow Artists
-                </a>
-              </Link>
-            </Menu.Item>
-            <h1 className="block py-2 text-sm text-gray-700 font-bold font-sans dark:border-dark3 mx-4">
-              Following
-            </h1>
-            <Menu.Item>
               <Link href={`/${user.username}/activity?id=buynow`}>
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   Buy Now
@@ -64,13 +54,10 @@ export default function Activity() {
                 </a>
               </Link>
             </Menu.Item>
-            <h1 className="block py-2 text-sm text-gray-700 font-bold font-sans dark:border-dark3 mx-4">
-              Signature
-            </h1>
             <Menu.Item>
-              <Link href={`/listings`}>
+              <Link href={`/${user.username}/follow`}>
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Secondary Listings
+                  Follow Artists
                 </a>
               </Link>
             </Menu.Item>

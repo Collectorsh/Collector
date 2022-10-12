@@ -19,6 +19,16 @@ export function sortListings(sortType, listings) {
       a.amount < b.amount ? 1 : b.amount < a.amount ? -1 : 0
     );
     return results;
+  } else if (sortType === "asc") {
+    let results = listings.sort((a, b) =>
+      a.created_at > b.created_at ? 1 : b.created_at > a.created_at ? -1 : 0
+    );
+    return results;
+  } else if (sortType === "desc") {
+    let results = listings.sort((a, b) =>
+      a.created_at < b.created_at ? 1 : b.created_at < a.created_at ? -1 : 0
+    );
+    return results;
   } else if (sortType === "deals") {
     for (const listing of listings) {
       if (

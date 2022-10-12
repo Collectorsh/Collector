@@ -24,7 +24,7 @@ export default function BuynowListings({ listings, user }) {
           </div>
           <div>
             <div className="w-full">
-              <div className="h-12 my-1">
+              <div className="h-14 my-1">
                 <h3 className="text-md text-black dark:text-whitish font-medium">
                   {item.name || (item.attributes && item.attributes.name)}
                 </h3>
@@ -47,8 +47,21 @@ export default function BuynowListings({ listings, user }) {
               </div>
               <div className="bg-black rounded-b-2xl px-[10px] py-3 text-gray-50 -mx-[10px] h-16">
                 <div className="text-sm">
-                  <div className="font-black dark:text-whitish mt-1 float-left">
+                  <div className="font-black dark:text-whitish float-left">
                     ◎{roundToTwo(item.amount / 1000000000)}
+                    <div className="mt-1">
+                      {item.username_twitter && (
+                        <img
+                          src={item.username_twitter}
+                          className="w-4 h-4 mr-1 rounded-full float-left"
+                        />
+                      )}
+                      {item.username && (
+                        <p className="dark:text-whitish text-xs mb-2 font-normal float-right">
+                          {item.username}
+                        </p>
+                      )}
+                    </div>
                     {user && user.token_holder && item.estimate && (
                       <div className="absolute top-0 right-4">
                         <p className="text-sm clear-both text-dark3 dark:text-gray-300 bg-whitish dark:bg-dark3 w-fit px-2 py-1 rounded mt-4">
@@ -57,7 +70,7 @@ export default function BuynowListings({ listings, user }) {
                       </div>
                     )}
                   </div>
-                  <div className="float-right mt-1">
+                  <div className="float-right">
                     <MarketplaceLogo source={item.source} color="white" />
                   </div>
                 </div>

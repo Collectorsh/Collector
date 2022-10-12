@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import BuynowListings from "/components/profile/activity/BuynowListings";
-import getFollowingBuynow from "/data/artists/getFollowingBuynow";
+import getSignatureListings from "/data/signature/getSignatureListings";
 import ArtistFilter from "/components/profile/activity/ArtistFilter";
 import UserContext from "/contexts/user";
 import { sortListings } from "/utils/sortHelper";
 import { Oval } from "react-loader-spinner";
 
-export default function Following() {
+export default function Secondary() {
   const [user] = useContext(UserContext);
   const [listings, setListings] = useState([]);
   const [noListings, setNoListings] = useState(false);
@@ -18,8 +18,8 @@ export default function Following() {
     setResults(r);
   };
 
-  const initFollowingBuynow = useCallback(async (user) => {
-    let res = await getFollowingBuynow(user.api_key);
+  const initSignatureListings = useCallback(async () => {
+    let res = await getSignatureListings();
     if (res.status === "success" && res.listings.length > 0) {
       const response = sortListings("az", res.listings);
       setListings(response);
@@ -31,9 +31,8 @@ export default function Following() {
   }, []);
 
   useEffect(() => {
-    if (!user) return;
-    initFollowingBuynow(user);
-  }, [user]);
+    initSignatureListings();
+  }, []);
 
   const toggleSort = (s) => {
     setSortBy(s);
@@ -57,7 +56,7 @@ export default function Following() {
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
                 onClick={() => toggleSort("az")}
-                checked={sortBy === "az"}
+                defaultChecked={sortBy === "az"}
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
@@ -73,7 +72,7 @@ export default function Following() {
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
                 onClick={() => toggleSort("za")}
-                checked={sortBy === "za"}
+                defaultChecked={sortBy === "za"}
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
@@ -89,7 +88,7 @@ export default function Following() {
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
                 onClick={() => toggleSort("lh")}
-                checked={sortBy === "lh"}
+                defaultChecked={sortBy === "lh"}
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
@@ -105,7 +104,7 @@ export default function Following() {
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
                 onClick={() => toggleSort("hl")}
-                checked={sortBy === "hl"}
+                defaultChecked={sortBy === "hl"}
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
@@ -122,7 +121,7 @@ export default function Following() {
                   name="flexRadioDefault"
                   id="flexRadioDefault1"
                   onClick={() => toggleSort("deals")}
-                  checked={sortBy === "deals"}
+                  defaultChecked={sortBy === "deals"}
                 />
                 <label
                   className="form-check-label inline-block text-gray-800 dark:text-whitish"

@@ -82,7 +82,7 @@ export default function Following() {
               />
               <label
                 className="form-check-label inline-block text-gray-800"
-                for="inlineRadio10"
+                htmlFor="inlineRadio10"
               >
                 Following
               </label>
@@ -98,7 +98,7 @@ export default function Following() {
               />
               <label
                 className="form-check-label inline-block text-gray-800"
-                for="inlineRadio20"
+                htmlFor="inlineRadio20"
               >
                 Signature Holders
               </label>

@@ -12,6 +12,7 @@ import { ListingsProvider } from "/contexts/listings";
 import { ActivitiesProvider } from "/contexts/activities";
 import { SingleNftProvider } from "/contexts/single_nft";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import PlausibleProvider from "next-plausible";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
@@ -61,7 +62,9 @@ export default function MyApp({ Component, pageProps }) {
                   <SingleNftProvider>
                     <EstimatedValueProvider>
                       <ThemeProvider enableSystem={true} attribute="class">
-                        <Component {...pageProps} />
+                        <PlausibleProvider domain="collector.sh">
+                          <Component {...pageProps} />
+                        </PlausibleProvider>
                       </ThemeProvider>
                     </EstimatedValueProvider>
                   </SingleNftProvider>

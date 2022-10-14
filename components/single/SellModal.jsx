@@ -86,8 +86,13 @@ export default function SellModal({ open, token, closeModal, refetch }) {
                       List Now
                     </Dialog.Title>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">{token.name}</p>
-                      <p className="text-sm text-gray-500 mt-4">Amount:</p>
+                      <p className="text-sm text-gray-500 mb-2">{token.name}</p>
+                      {user && user.token_holder && (
+                        <p className="text-sm text-gray-500 bg-gray-100 rounded-sm px-1 w-fit">
+                          0% fee
+                        </p>
+                      )}
+                      <p className="text-sm text-gray-500 mt-2">Amount:</p>
                       <input
                         type="number"
                         step="1"

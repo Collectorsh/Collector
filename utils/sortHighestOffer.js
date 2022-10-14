@@ -1,3 +1,4 @@
+import { auctionHousesArray } from "/config/settings";
 import cloneDeep from "lodash/cloneDeep";
 
 export function sortHighestOffer(offers) {
@@ -5,7 +6,7 @@ export function sortHighestOffer(offers) {
   let results = clonedOffers.filter(
     (o) =>
       o.auctionHouse &&
-      o.auctionHouse.address === process.env.NEXT_PUBLIC_AUCTIONHOUSE
+      auctionHousesArray.map((a) => a.address).includes(o.auctionHouse.address)
   );
   let highest = results.sort((a, b) => b.price - a.price)[0];
   return highest;

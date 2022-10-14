@@ -4,6 +4,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import makeOfferTransaction from "/utils/auctionhouse/MakeOffer";
 import { Oval } from "react-loader-spinner";
+import checkOwner from "/data/nft/checkOwner";
 
 export default function MakeOfferModal({ open, token, closeModal, refetch }) {
   const { publicKey, signTransaction } = useWallet();
@@ -19,12 +20,14 @@ export default function MakeOfferModal({ open, token, closeModal, refetch }) {
     }
     const amount = document.getElementById("amount").value;
     setProcessing(true);
+    const tokenHolder = await checkOwner(token.owner);
     await makeOfferTransaction(
       amount,
       token,
       publicKey,
       signTransaction,
-      refetch
+      refetch,
+      tokenHolder
     );
     setProcessing(false);
     closeModal();

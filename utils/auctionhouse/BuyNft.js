@@ -2,6 +2,8 @@ import { toast } from "react-toastify";
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house";
 import { MetadataProgram } from "@metaplex-foundation/mpl-token-metadata";
 
+import { auctionHousesArray } from "/config/settings";
+
 import {
   PublicKey,
   SYSVAR_INSTRUCTIONS_PUBKEY,
@@ -33,23 +35,19 @@ export default async function buyNftTransaction(
     confirmTransactionInitialTimeout: 60000,
   });
 
-  const auctionHouse = new PublicKey(process.env.NEXT_PUBLIC_AUCTIONHOUSE);
-  const authority = new PublicKey(
-    process.env.NEXT_PUBLIC_AUCTIONHOUSE_AUTHORITY
-  );
-  const auctionHouseFeeAccount = new PublicKey(
-    process.env.NEXT_PUBLIC_AUCTIONHOUSE_FEE_ACCOUNT
-  );
-  const treasuryMint = new PublicKey(
-    process.env.NEXT_PUBLIC_AUCTIONHOUSE_TREASURY_MINT
-  );
+  const auctionHaus = auctionHousesArray.filter(
+    (a) => a.address === listing.auctionHouse.address
+  )[0];
+
+  const auctionHouse = new PublicKey(auctionHaus.address);
+  const authority = new PublicKey(auctionHaus.authority);
+  const auctionHouseFeeAccount = new PublicKey(auctionHaus.feeAccount);
+  const treasuryMint = new PublicKey(auctionHaus.treasuryMint);
 
   const seller = new PublicKey(listing.seller);
   const tokenMint = new PublicKey(nft.mint);
 
-  const auctionHouseTreasury = new PublicKey(
-    process.env.NEXT_PUBLIC_AUCTIONHOUSE_TREASURY
-  );
+  const auctionHouseTreasury = new PublicKey(auctionHaus.treasury);
 
   const [listingReceipt, _listingReceiptBump] =
     await AuctionHouseProgram.findListingReceiptAddress(

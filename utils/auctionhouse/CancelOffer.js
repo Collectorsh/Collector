@@ -1,6 +1,8 @@
 import { toast } from "react-toastify";
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house";
 
+import { auctionHousesArray } from "/config/settings";
+
 import {
   PublicKey,
   SYSVAR_INSTRUCTIONS_PUBKEY,
@@ -26,26 +28,24 @@ export default async function cancelOfferTransaction(
     return;
   }
 
+  const auctionHaus = auctionHousesArray.filter(
+    (a) => a.address === offer.auctionHouse.address
+  )[0];
+
   const connection = new web3.Connection(web3.clusterApiUrl("mainnet-beta"), {
     commitment: "confirmed",
     confirmTransactionInitialTimeout: 60000,
   });
 
-  const auctionHouse = new PublicKey(process.env.NEXT_PUBLIC_AUCTIONHOUSE);
-  const authority = new PublicKey(
-    process.env.NEXT_PUBLIC_AUCTIONHOUSE_AUTHORITY
-  );
-  const auctionHouseFeeAccount = new PublicKey(
-    process.env.NEXT_PUBLIC_AUCTIONHOUSE_FEE_ACCOUNT
-  );
+  const auctionHouse = new PublicKey(auctionHaus.address);
+  const authority = new PublicKey(auctionHaus.authority);
+  const auctionHouseFeeAccount = new PublicKey(auctionHaus.feeAccount);
   const tokenMint = new PublicKey(nft.mint);
 
   const buyerPrice = offer.price;
   const tradeState = new PublicKey(offer.tradeState);
 
-  const treasuryMint = new PublicKey(
-    process.env.NEXT_PUBLIC_AUCTIONHOUSE_TREASURY_MINT
-  );
+  const treasuryMint = new PublicKey(auctionHaus.treasuryMint);
   const tokenAccount = new PublicKey(nft.associatedTokenAccountAddress);
 
   const [bidReceipt, _bidReceiptBump] =

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useCallback, useState } from "react";
+import React, { useEffect, useContext, useCallback } from "react";
 import Head from "next/head";
 import MainNavigation from "/components/navigation/MainNavigation";
 import getMetadataFromMint from "/data/nft/getMetadataFromMint";
@@ -9,10 +9,12 @@ import { getNftQuery } from "/queries/single_nft";
 import { getActivitiesQuery } from "/queries/activities";
 import ActivitiesContext from "/contexts/activities";
 import SingleNftContext from "/contexts/single_nft";
+import { auctionHousesArray } from "/config/settings";
 
 function Nft({ image, token }) {
   const [activities, setActivities] = useContext(ActivitiesContext);
   const [, setSingleNft] = useContext(SingleNftContext);
+  const auctionHouses = auctionHousesArray.map((a) => a.address);
 
   /////////////////////////////////////////////////////////////////////////////////////
 
@@ -42,7 +44,7 @@ function Nft({ image, token }) {
 
   const fetchActivities = useCallback(async () => {
     const res = await getActivitiesQl({
-      variables: { auctionhouse: process.env.NEXT_PUBLIC_AUCTIONHOUSE },
+      variables: { auctionhouses: auctionHouses },
     });
     let activs = res.data.activities.filter(
       (a) => a.nft.mintAddress === token.mint

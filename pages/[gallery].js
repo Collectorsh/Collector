@@ -10,9 +10,11 @@ import { useLazyQuery } from "@apollo/client";
 import { getListingsQuery } from "/queries/listings";
 import { cdnImage } from "/utils/cdnImage";
 import { pluralize } from "/utils/pluralize";
+import { auctionHousesArray } from "/config/settings";
 
 function Gallery({ user, tokens }) {
   const [listings, setListings] = useContext(ListingsContext);
+  const auctionHouses = auctionHousesArray.map((a) => a.address);
 
   const [getListingsQl, { loading, error, data }] =
     useLazyQuery(getListingsQuery);
@@ -20,7 +22,7 @@ function Gallery({ user, tokens }) {
   const fetchListings = useCallback(async () => {
     const res = await getListingsQl({
       variables: {
-        auctionHouses: process.env.NEXT_PUBLIC_AUCTIONHOUSE,
+        auctionHouses: auctionHouses,
         owners: user ? user.public_keys : [],
       },
     });

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const getActivitiesQuery = gql`
-  query GetActivities($auctionhouse: PublicKey!) {
-    activities(auctionHouses: [$auctionhouse]) {
+  query GetActivities($auctionhouses: [PublicKey!]!) {
+    activities(auctionHouses: $auctionhouses) {
       id
       metadata
       auctionHouse {

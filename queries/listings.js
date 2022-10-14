@@ -1,9 +1,9 @@
 import { gql } from "@apollo/client";
 
 export const getListingsQuery = gql`
-  query GetNfts($auctionHouses: PublicKey!, $owners: [PublicKey!]) {
+  query GetNfts($auctionHouses: [PublicKey!]!, $owners: [PublicKey!]) {
     nfts(
-      auctionHouses: [$auctionHouses]
+      auctionHouses: $auctionHouses
       owners: $owners
       offset: 0
       limit: 10000

@@ -1,14 +1,16 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useContext } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import sellNftTransaction from "/utils/auctionhouse/SellNft";
 import { Oval } from "react-loader-spinner";
+import UserContext from "/contexts/user";
 
 export default function SellModal({ open, token, closeModal, refetch }) {
   const { publicKey, signTransaction } = useWallet();
   const [processing, setProcessing] = useState(false);
   const { setVisible } = useWalletModal();
+  const [user] = useContext(UserContext);
 
   function setOpen() {}
 
@@ -24,7 +26,8 @@ export default function SellModal({ open, token, closeModal, refetch }) {
       token,
       publicKey,
       signTransaction,
-      refetch
+      refetch,
+      user && user.token_holder
     );
     setProcessing(false);
     closeModal();

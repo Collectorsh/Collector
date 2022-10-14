@@ -2,6 +2,8 @@ import { toast } from "react-toastify";
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house";
 import { MetadataProgram } from "@metaplex-foundation/mpl-token-metadata";
 
+import { auctionHousesArray } from "/config/settings";
+
 import {
   PublicKey,
   SYSVAR_INSTRUCTIONS_PUBKEY,
@@ -22,10 +24,19 @@ export default async function makeOfferTransaction(
   nft,
   publicKey,
   signTransaction,
-  refetch
+  refetch,
+  tokenHolder
 ) {
   if (!publicKey || !signTransaction || !nft) {
     return;
+  }
+
+  var auctionHaus;
+
+  if (tokenHolder) {
+    auctionHaus = auctionHousesArray.filter((a) => a.name === "holder")[0];
+  } else {
+    auctionHaus = auctionHousesArray.filter((a) => a.name === "default")[0];
   }
 
   const connection = new web3.Connection(web3.clusterApiUrl("mainnet-beta"), {
@@ -34,16 +45,10 @@ export default async function makeOfferTransaction(
   });
 
   const buyerPrice = Number(amount) * LAMPORTS_PER_SOL;
-  const auctionHouse = new PublicKey(process.env.NEXT_PUBLIC_AUCTIONHOUSE);
-  const authority = new PublicKey(
-    process.env.NEXT_PUBLIC_AUCTIONHOUSE_AUTHORITY
-  );
-  const auctionHouseFeeAccount = new PublicKey(
-    process.env.NEXT_PUBLIC_AUCTIONHOUSE_FEE_ACCOUNT
-  );
-  const treasuryMint = new PublicKey(
-    process.env.NEXT_PUBLIC_AUCTIONHOUSE_TREASURY_MINT
-  );
+  const auctionHouse = new PublicKey(auctionHaus.address);
+  const authority = new PublicKey(auctionHaus.authority);
+  const auctionHouseFeeAccount = new PublicKey(auctionHaus.feeAccount);
+  const treasuryMint = new PublicKey(auctionHaus.treasuryMint);
   const tokenMint = new PublicKey(nft.mint);
   const tokenAccount = new PublicKey(nft.associatedTokenAccountAddress);
 

@@ -1,19 +1,17 @@
 import React, { useEffect, useState, useCallback } from "react";
 import getUserFromUsername from "/data/user/getUserFromUsername";
 import getFeed from "/data/home/getFeed";
-import getUserFollows from "/data/user/getUserFollows";
+import getFollowingById from "/data/artists/getFollowingById";
 import ProfilePage from "/components/profile/ProfilePage";
 import MainNavigation from "/components/navigation/MainNavigation";
 
 function Profile({ profileUser }) {
   const [activity, setActivity] = useState();
   const [image, setImage] = useState();
-  const [followers, setFollowers] = useState();
   const [following, setFollowing] = useState();
 
   const fetchUserFollows = useCallback(async (user_id) => {
-    const res = await getUserFollows(user_id);
-    setFollowers(res.followers);
+    const res = await getFollowingById(user_id);
     setFollowing(res.following);
   }, []);
 
@@ -53,7 +51,6 @@ function Profile({ profileUser }) {
             {profileUser ? (
               <ProfilePage
                 following={following}
-                followers={followers}
                 profileUser={profileUser}
                 activity={activity}
                 image={image}

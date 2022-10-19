@@ -94,11 +94,6 @@ export default function RightColumn() {
                   {item.wins} auctions won
                 </p>
               </div>
-
-              <div className="float-right mt-2">
-                <FollowButton follow={item.user} />
-              </div>
-
               <div className="clear-both"></div>
             </div>
           ))}

@@ -56,9 +56,9 @@ export default function FollowingModal({ open, following, closeModal }) {
                           )}
 
                           <div className="mt-2 float-left">
-                            {follow.username && (
+                            {follow.name && (
                               <p className="inline mr-2 dark:text-whitish text-lg">
-                                {follow.username}
+                                {follow.name}
                               </p>
                             )}
                           </div>

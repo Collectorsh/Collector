@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import getNewestGalleries from "/data/home/getNewestGalleries";
 import getPopularGalleries from "/data/home/getPopularGalleries";
 import getDaos from "/data/home/getDaos";
@@ -32,6 +33,11 @@ export default function GalleriesPage() {
 
   return (
     <>
+      <Link href="/galleries" title="View all Galleries">
+        <a className="mt-6 mr-4 mb-2 sm:mr-0 sm:mt-8 bg-greeny float-right w-fit px-3 py-3 rounded-lg align-middle cursor-pointer text-slate-900 font-semibold">
+          <span className="align-top">View all Galleries &gt;&gt;</span>
+        </a>
+      </Link>
       {daos && <GalleryContent name="Dao's &amp; Collectives" items={daos} />}
       {popular && <GalleryContent name="Popular Galleries" items={popular} />}
       {newest && <GalleryContent name="New Galleries" items={newest} />}

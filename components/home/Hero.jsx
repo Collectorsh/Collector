@@ -58,7 +58,7 @@ export default function Hero() {
                 </a>
               </div>
 
-              <div className="bg-greeny py-2 rounded-lg text-center">
+              <div className="bg-greeny py-2 rounded-lg text-center mb-6">
                 <Link href="https://collector.sh/mint">
                   <a>
                     <h1 className="text-2xl font-sans text-black font-extrabold">

@@ -157,7 +157,7 @@ export default function Details({ item }) {
       </div>
 
       <div className="float-right mt-2">
-        <FollowButton follow={item} />
+        {item.attributes.artist_name && <FollowButton follow={item} />}
       </div>
 
       <div className="clear-both"></div>

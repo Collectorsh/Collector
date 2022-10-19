@@ -16,7 +16,6 @@ import { HomeIcon, ShareIcon, UserCircleIcon } from "@heroicons/react/solid";
 import TwitterLogo from "/components/logos/TwitterLogo";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import unfollowFollowUser from "/data/user/unfollowFollowUser";
 
 export default function GalleryNavigation({ user }) {
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
@@ -37,12 +36,6 @@ export default function GalleryNavigation({ user }) {
       asyncGetUser(apiKey);
     }
   }, []);
-
-  const followUser = async (user_id, action) => {
-    const apiKey = localStorage.getItem("api_key");
-    let res = await unfollowFollowUser(apiKey, user_id, action);
-    setLoggedInUser(res.data.user);
-  };
 
   return (
     <div className="mx-auto px-4">
@@ -83,37 +76,6 @@ export default function GalleryNavigation({ user }) {
             )}
           </div>
           <div className="hidden md:flex text-right items-center col-span-3 md:col-span-4 justify-end">
-            {loggedInUser && loggedInUser.username !== user.username && (
-              <>
-                {loggedInUser.following &&
-                loggedInUser.following.find((f) => f.id === user.id) ? (
-                  <Tippy
-                    content={`Stop following ${user.username}`}
-                    className="bg-gray-300"
-                  >
-                    <button
-                      className="cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1 px-1 xl:py-1.5 xl:px-2.5 font-bold border border-4 bg-white text-black border-black hover:border-red-700 dark:hover:border-red-800 dark:bg-black dark:text-whitish dark:border-whitish"
-                      onClick={() => followUser(user.id, "unfollow")}
-                    >
-                      Following
-                    </button>
-                  </Tippy>
-                ) : (
-                  <Tippy
-                    content={`Follow ${user.username}`}
-                    className="bg-gray-300"
-                  >
-                    <button
-                      className="cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1 px-1 xl:py-1.5 xl:px-2.5 font-bold border border-4 bg-black text-white border-black dark:bg-whitish dark:text-black dark:border-whitish"
-                      onClick={() => followUser(user.id, "follow")}
-                    >
-                      Follow
-                    </button>
-                  </Tippy>
-                )}
-              </>
-            )}
-
             <Link
               href="/"
               title="Collector Home"

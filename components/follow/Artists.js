@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback, useContext } from "react";
 import getFollowing from "/data/artists/getFollowing";
 import UserContext from "/contexts/user";
 import { Toaster } from "react-hot-toast";
-import ArtistSearch from "/components/profile/edit/artists/ArtistSearch";
-import ArtistList from "/components/profile/edit/artists/ArtistList";
+import ArtistSearch from "/components/follow/ArtistSearch";
+import ArtistList from "/components/follow/ArtistList";
 
 export default function Artists() {
   const [user, setUser] = useContext(UserContext);

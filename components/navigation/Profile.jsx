@@ -66,7 +66,7 @@ export default function MainNavigation() {
               </Link>
             </Menu.Item>
             <Menu.Item>
-              <Link href={`/${user.username}/edit`}>
+              <Link href="/settings">
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   Settings
                 </a>

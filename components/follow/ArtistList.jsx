@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BellIcon, TrashIcon } from "@heroicons/react/solid";
 import updateFollowing from "/data/artists/updateFollowing";
 import unfollowArtist from "/data/artists/unfollowArtist";
-import FollowFilter from "/components/profile/edit/artists/ArtistFilter";
+import FollowFilter from "/components/follow/ArtistFilter";
 
 export default function ArtistList({ following, handleFollow, user }) {
   const [followedArtists, setFollowedArtists] = useState(following);

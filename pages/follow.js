@@ -1,12 +1,11 @@
-import getUserFromUsername from "/data/user/getUserFromUsername";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 import MainNavigation from "/components/navigation/MainNavigation";
-import Artists from "/components/profile/edit/artists/Artists";
+import Artists from "/components/follow/Artists";
 
-function Follow({ profileUser }) {
+function Follow() {
   return (
     <div className="dark:bg-black dark:text-whitish">
-      <CheckLoggedIn profileUser={profileUser} />
+      <CheckLoggedIn />
       <div className="max-w-7xl mx-auto relative">
         <MainNavigation />
         <div className="px-4 xl:px-0 mx-auto clear-both">
@@ -23,18 +22,6 @@ function Follow({ profileUser }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context) {
-  try {
-    let username = context.params.gallery;
-    let res = await getUserFromUsername(username);
-    let profileUser = res.user;
-    return { props: { profileUser } };
-  } catch (err) {
-    console.log(err);
-    return { props: {} };
-  }
 }
 
 export default Follow;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
-import FollowingAuctions from "/components/profile/activity/FollowingAuctions";
+import FollowingAuctions from "/components/activity/FollowingAuctions";
 import getFollowingAuctions from "/data/artists/getFollowingAuctions";
-import ArtistFilter from "/components/profile/activity/ArtistFilter";
+import ArtistFilter from "/components/activity/ArtistFilter";
 import UserContext from "/contexts/user";
 import { Oval } from "react-loader-spinner";
 

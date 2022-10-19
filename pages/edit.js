@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import Link from "next/link";
-import getUserFromUsername from "/data/user/getUserFromUsername";
 import CheckLoggedIn from "/components/CheckLoggedIn";
-import EditGallery from "/components/profile/edit/gallery/EditGallery";
+import EditGallery from "/components/edit/EditGallery";
 import MainNavigation from "/components/navigation/MainNavigation";
-import Settings from "/components/profile/edit/gallery/Settings";
-import { XIcon } from "@heroicons/react/outline";
+import Settings from "/components/settings/Settings";
 
-function Gallery({ profileUser }) {
+function Gallery() {
   const [selected, setSelected] = useState("gallery");
 
   const changeSelected = (sel) => {
@@ -16,7 +13,7 @@ function Gallery({ profileUser }) {
 
   return (
     <div className="dark:bg-black dark:text-whitish">
-      <CheckLoggedIn profileUser={profileUser} />
+      <CheckLoggedIn />
       <div className="max-w-7xl mx-auto relative">
         <MainNavigation />
         <div className="px-4 xl:px-0 mx-auto clear-both">
@@ -53,18 +50,6 @@ function Gallery({ profileUser }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context) {
-  try {
-    let username = context.params.gallery;
-    let res = await getUserFromUsername(username);
-    let profileUser = res.user;
-    return { props: { profileUser } };
-  } catch (err) {
-    console.log(err);
-    return { props: {} };
-  }
 }
 
 export default Gallery;

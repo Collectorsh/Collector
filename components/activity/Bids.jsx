@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import getUserBids from "/data/user/getUserBids";
-import CollectorBids from "/components/profile/activity/CollectorBids";
+import CollectorBids from "/components/activity/CollectorBids";
 import UserContext from "/contexts/user";
 
 function Bids() {

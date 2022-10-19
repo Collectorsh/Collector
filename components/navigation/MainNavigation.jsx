@@ -175,9 +175,7 @@ export default function MainNavigation() {
                                     <Link href="/">Home</Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href={`/${user.username}/feed`}>
-                                      Discover
-                                    </Link>
+                                    <Link href="/feed">Discover</Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href={`/${user.username}/profile`}>
@@ -185,40 +183,28 @@ export default function MainNavigation() {
                                     </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href={`/${user.username}/edit`}>
-                                      Edit Profile
-                                    </Link>
+                                    <Link href="/settings">Settings</Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href={`/${user.username}/gallery`}>
-                                      Edit Gallery
-                                    </Link>
+                                    <Link href="/edit">Edit Gallery</Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link
-                                      href={`/${user.username}/activity?id=buynow`}
-                                    >
+                                    <Link href="/activity?id=buynow">
                                       Buy Now
                                     </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link
-                                      href={`/${user.username}/activity?id=following`}
-                                    >
+                                    <Link href="/activity?id=following">
                                       Auctions
                                     </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link
-                                      href={`/${user.username}/activity?id=bids`}
-                                    >
+                                    <Link href="/activity?id=bids">
                                       My Bids
                                     </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href={`/${user.username}/follow`}>
-                                      Follow Artists
-                                    </Link>
+                                    <Link href="/follow">Follow Artists</Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <a onClick={signOut}>Sign Out</a>

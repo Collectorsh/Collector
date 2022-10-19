@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import getUserFromUsername from "/data/user/getUserFromUsername";
-import Buynow from "/components/profile/activity/Buynow";
-import Following from "/components/profile/activity/Following";
-import Bids from "/components/profile/activity/Bids";
+import Buynow from "/components/activity/Buynow";
+import Following from "/components/activity/Following";
+import Bids from "/components/activity/Bids";
 import MainNavigation from "/components/navigation/MainNavigation";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 
-function Activity({ profileUser }) {
+function Activity() {
   const router = useRouter();
   const { id } = router.query;
   const [selected, setSelected] = useState(id || "buynow");
@@ -22,7 +21,7 @@ function Activity({ profileUser }) {
 
   return (
     <div className="dark:bg-black dark:text-whitish">
-      <CheckLoggedIn profileUser={profileUser} />
+      <CheckLoggedIn />
       <div className="max-w-7xl mx-auto relative">
         <MainNavigation />
         <div className="px-4 xl:px-0 mx-auto clear-both">
@@ -69,18 +68,6 @@ function Activity({ profileUser }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context) {
-  try {
-    let username = context.params.gallery;
-    let res = await getUserFromUsername(username);
-    let profileUser = res.user;
-    return { props: { profileUser } };
-  } catch (err) {
-    console.log(err);
-    return { props: {} };
-  }
 }
 
 export default Activity;

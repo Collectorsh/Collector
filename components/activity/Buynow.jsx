@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
-import BuynowListings from "/components/profile/activity/BuynowListings";
+import BuynowListings from "/components/activity/BuynowListings";
 import getFollowingBuynow from "/data/artists/getFollowingBuynow";
 import getSignatureListings from "/data/signature/getSignatureListings";
-import ArtistFilter from "/components/profile/activity/ArtistFilter";
+import ArtistFilter from "/components/activity/ArtistFilter";
 import UserContext from "/contexts/user";
 import { sortListings } from "/utils/sortHelper";
 import { Oval } from "react-loader-spinner";

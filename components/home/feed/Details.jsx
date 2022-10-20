@@ -58,6 +58,9 @@ export default function Details({ item }) {
 
   return (
     <div className="relative border border-gray-100 dark:border-dark2 rounded p-4 shadow-lg">
+      <div className="absolute top-2 right-2">
+        {item.attributes.artist_name && <FollowButton follow={item} />}
+      </div>
       <div className="float-left w-12/12">
         <p className="text-xs text-gray-400 dark:text-dark4 clear-both mb-4">
           <Moment date={item.time} unix fromNow /> on {item.attributes.source}
@@ -176,19 +179,6 @@ export default function Details({ item }) {
           <Image token={item.attributes} size="medium" />
         </a>
       </Link>
-
-      <div className="my-4 p-2 border-t border-gray-100 dark:border-dark2 -mx-4">
-        <div className="float-left mt-1">
-          <ShareToTwitter
-            url={formatTweet(item)}
-            size="18"
-            text="Share to Twitter"
-          />
-        </div>
-        <div className="float-right">
-          {item.attributes.artist_name && <FollowButton follow={item} />}
-        </div>
-      </div>
     </div>
   );
 }

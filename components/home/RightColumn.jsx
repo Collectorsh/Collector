@@ -1,20 +1,14 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
-import Link from "next/link";
 import getMostWins from "/data/home/getMostWins";
 import getMarketplaceStats from "/data/home/getMarketplaceStats";
-import getMostFollowedArtists from "/data/home/getMostFollowedArtists";
 import CollectorUsername from "/components/CollectorUsername";
 import { roundToTwo } from "/utils/roundToTwo";
 import MarketplaceLogo from "/components/MarketplaceLogo";
-import FollowButton from "/components/FollowButton";
 import { numberWithCommas } from "/utils/numberWithCommas";
-import UserContext from "/contexts/user";
 
 export default function RightColumn() {
-  const [user] = useContext(UserContext);
   const [mostWins, setMostWins] = useState();
   const [marketplaceStats, setMarketplaceStats] = useState();
-  const [mostFollowedArtists, setMostFollowedArtists] = useState();
 
   const fetchMostWins = useCallback(async () => {
     let res = await getMostWins();
@@ -26,15 +20,9 @@ export default function RightColumn() {
     setMarketplaceStats(res.data);
   }, []);
 
-  const fetchMostFollowedArtists = useCallback(async () => {
-    let res = await getMostFollowedArtists();
-    setMostFollowedArtists(res.data);
-  }, []);
-
   useEffect(() => {
     fetchMostWins();
     fetchMarketplaceStats();
-    fetchMostFollowedArtists();
   }, []);
 
   function transactionName(type) {
@@ -92,53 +80,6 @@ export default function RightColumn() {
                 </div>
                 <p className="text-sm dark:text-whitish">
                   {item.wins} auctions won
-                </p>
-              </div>
-              <div className="clear-both"></div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {mostFollowedArtists && (
-        <div className="bg-offwhite dark:bg-dark1 rounded-lg px-3 py-2 mt-6">
-          <h2 className="font-extrabold mb-6 text-xl dark:text-whitish">
-            Most Followed Artists
-          </h2>
-          {mostFollowedArtists.map((item, index) => (
-            <div key={index} className="mt-4">
-              <div className="float-left w-11/12">
-                {item.artist.twitter_profile_image ? (
-                  <img
-                    src={item.artist.twitter_profile_image}
-                    className="w-12 h-12 mr-2 rounded-full float-left mb-4"
-                  />
-                ) : (
-                  <div className="w-12 h-12 mr-2 rounded-full float-left mb-4 bg-whitish dark:bg-dark3" />
-                )}
-
-                <div className="mb-0">
-                  {item.artist.name && (
-                    <p className="inline mr-2 dark:text-whitish">
-                      <Link
-                        href={
-                          user
-                            ? `/${user.username}/follow`
-                            : `https://twitter.com/${item.artist.twitter}`
-                        }
-                        title=""
-                      >
-                        <a className="font-bold hover:underline">
-                          <span className="px-0.5 dark:text-white">
-                            {item.artist.name}
-                          </span>
-                        </a>
-                      </Link>
-                    </p>
-                  )}
-                </div>
-                <p className="text-sm dark:text-whitish">
-                  {item.followers} followers
                 </p>
               </div>
               <div className="clear-both"></div>

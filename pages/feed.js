@@ -12,10 +12,13 @@ export default function FeedHome() {
         <MainNavigation />
         <div className="px-4 xl:px-0 mx-auto clear-both">
           <div className="mx-auto pt-3 md:px-0">
-            <h2 className="border-b border-gray-200 dark:border-dark3 pb-20 tracking-wide text-center mt-14 mb-10 text-4xl font-bold text-gray-800 w-full py-1 inline-block dark:text-whitish">
+            <h2 className="mt-8 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-whitish">
               Activity
             </h2>
-            <div className="w-full border-b border-gray-200 dark:border-dark3 pb-3">
+            <p className="mb-16 dark:text-whitish">
+              See what Collectors are bidding on, buying, and listing
+            </p>
+            <div className="w-full pb-3 border-t dark:border-dark3">
               <Feed />
             </div>
           </div>

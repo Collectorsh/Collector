@@ -86,14 +86,14 @@ export function sortAuctions(sortType, auctions) {
         : 0;
     });
     return results;
-  } else if (sortType === "asc") {
+  } else if (sortType === "endasc") {
     let results = clonedAuctions.sort((a, b) =>
-      a.created_at > b.created_at ? 1 : b.created_at > a.created_at ? -1 : 0
+      a.end_time > b.end_time ? 1 : b.end_time > a.end_time ? -1 : 0
     );
     return results;
-  } else if (sortType === "desc") {
+  } else if (sortType === "enddesc") {
     let results = clonedAuctions.sort((a, b) =>
-      a.created_at < b.created_at ? 1 : b.created_at < a.created_at ? -1 : 0
+      a.end_time < b.end_time ? 1 : b.end_time < a.end_time ? -1 : 0
     );
     return results;
   }

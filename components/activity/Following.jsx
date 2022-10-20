@@ -201,15 +201,15 @@ export default function Following() {
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
-                onClick={() => toggleSort("asc")}
-                defaultChecked={sortBy === "asc"}
+                onClick={() => toggleSort("endasc")}
+                defaultChecked={sortBy === "endasc"}
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
-                Date &uarr;{" "}
-                <span className="text-gray-300 dark:text-dark3">[oldest]</span>
+                Ending &uarr;{" "}
+                <span className="text-gray-300 dark:text-dark3">[soonest]</span>
               </label>
             </div>
             <div className="py-1">
@@ -218,15 +218,17 @@ export default function Following() {
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
-                onClick={() => toggleSort("desc")}
-                defaultChecked={sortBy === "desc"}
+                onClick={() => toggleSort("enddesc")}
+                defaultChecked={sortBy === "enddesc"}
               />
               <label
                 className="form-check-label inline-block text-gray-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
-                Date &darr;{" "}
-                <span className="text-gray-300 dark:text-dark3">[newest]</span>
+                Ending &darr;{" "}
+                <span className="text-gray-300 dark:text-dark3">
+                  [farthest]
+                </span>
               </label>
             </div>
           </div>

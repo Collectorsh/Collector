@@ -57,8 +57,12 @@ export default function Details({ item }) {
   };
 
   return (
-    <div className="mb-12">
-      <div className="float-left w-11/12">
+    <div className="relative border border-gray-100 dark:border-dark2 rounded p-4 shadow-lg">
+      <div className="float-left w-12/12">
+        <p className="text-xs text-gray-400 dark:text-dark4 clear-both mb-4">
+          <Moment date={item.time} unix fromNow /> on {item.attributes.source}
+        </p>
+
         {item.twitter_profile_image && (
           <img
             src={item.twitter_profile_image}
@@ -66,20 +70,22 @@ export default function Details({ item }) {
           />
         )}
 
+        {!item.twitter_profile_image && (
+          <div className="w-12 h-12 mr-2 rounded-full float-left mb-4 bg-gray-100" />
+        )}
+
         <div className="mb-0">
           {item.username && (
-            <p className="inline mr-2">
+            <p className="mr-2 mt-6">
               <CollectorUsername username={item.username} />
             </p>
           )}
-
-          <p className="text-xs inline text-gray-400 dark:text-whitish clear-both">
-            <Moment date={item.time} unix fromNow /> on {item.attributes.source}
-          </p>
         </div>
 
+        <div className="mt-8"></div>
+
         {item.type === "won" && (
-          <p className="text-sm dark:text-whitish overflow-hidden mb-3">
+          <p className="text-sm dark:text-whitish mb-3">
             Won{" "}
             <Link
               href={marketplaceLink(
@@ -97,7 +103,7 @@ export default function Details({ item }) {
         )}
 
         {item.type === "sale" && (
-          <p className="text-sm dark:text-whitish overflow-hidden mb-3">
+          <p className="text-sm dark:text-whitish mb-3">
             Purchased{" "}
             <Link
               href={marketplaceLink(
@@ -156,11 +162,7 @@ export default function Details({ item }) {
         )}
       </div>
 
-      <div className="float-right mt-2">
-        {item.attributes.artist_name && <FollowButton follow={item} />}
-      </div>
-
-      <div className="clear-both"></div>
+      <div className="clear-both border-b border-gray-100 dark:border-dark2 mb-4 -mx-4"></div>
 
       <Link
         href={marketplaceLink(
@@ -175,13 +177,18 @@ export default function Details({ item }) {
         </a>
       </Link>
 
-      <span className="-ml-2">
-        <ShareToTwitter
-          url={formatTweet(item)}
-          size="18"
-          text="Share to Twitter"
-        />
-      </span>
+      <div className="my-4 p-2 border-t border-gray-100 dark:border-dark2 -mx-4">
+        <div className="float-left mt-1">
+          <ShareToTwitter
+            url={formatTweet(item)}
+            size="18"
+            text="Share to Twitter"
+          />
+        </div>
+        <div className="float-right">
+          {item.attributes.artist_name && <FollowButton follow={item} />}
+        </div>
+      </div>
     </div>
   );
 }

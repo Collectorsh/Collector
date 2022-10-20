@@ -18,7 +18,7 @@ export default function FeedHome() {
             <p className="mb-16 dark:text-whitish">
               See what Collectors are bidding on, buying, and listing
             </p>
-            <div className="w-full pb-3 border-t dark:border-dark3">
+            <div className="w-full pb-3">
               <Feed />
             </div>
           </div>

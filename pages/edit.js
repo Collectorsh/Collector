@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 import EditGallery from "/components/edit/EditGallery";
 import MainNavigation from "/components/navigation/MainNavigation";
-import Settings from "/components/settings/Settings";
+import Settings from "/components/edit/Settings";
 
 function Gallery() {
   const [selected, setSelected] = useState("gallery");

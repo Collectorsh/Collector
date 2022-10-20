@@ -45,11 +45,11 @@ export default function Galleries() {
               <h2 className="font-bold underline mb-4 dark:text-whitish">
                 {letter}
               </h2>
-              <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {series(letter).map((item, index) => (
                   <div
                     key={index}
-                    className="mb-6 rounded py-2 px-4 cursor-pointer dark:text-whitish align-middle"
+                    className="mb-6 w-fit py-2 px-4 cursor-pointer dark:text-whitish align-middle"
                   >
                     <Link href={`/${item.username}`} title="">
                       <a>
@@ -69,7 +69,7 @@ export default function Galleries() {
                     </Link>
                   </div>
                 ))}
-              </>
+              </div>
             </div>
           ))}
         </>

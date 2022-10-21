@@ -9,6 +9,7 @@ export default function Activity() {
 
   const fetchFeed = useCallback(async () => {
     let res = await getFeed();
+    console.log(res.data);
     setActivity(res.data);
   }, []);
 

@@ -42,7 +42,7 @@ export default function FollowButton({ follow }) {
               className="bg-gray-300"
             >
               <MinusCircleIcon
-                className="h-8 w-8 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-red-600 dark:hover:text-red-600"
+                className="inline h-8 w-8 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-red-600 dark:hover:text-red-600"
                 aria-hidden="true"
                 onClick={() => doUnfollowArtist(follow.artist_name)}
               />
@@ -53,7 +53,7 @@ export default function FollowButton({ follow }) {
               className="bg-gray-300"
             >
               <PlusCircleIcon
-                className="h-8 w-8 cursor-pointer outline-none text-greeny hover:text-black dark:hover:text-white"
+                className="inline h-8 w-8 cursor-pointer outline-none text-greeny hover:text-black dark:hover:text-white"
                 aria-hidden="true"
                 onClick={() => doFollowArtist(follow.artist_name)}
               />

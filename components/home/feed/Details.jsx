@@ -14,10 +14,6 @@ export default function Details({ item }) {
   return (
     <div className="relative border border-gray-100 dark:border-dark2 rounded p-4 shadow-lg">
       <div className="float-left w-12/12">
-        <p className="text-xs text-gray-400 dark:text-dark4 absolute right-2 top-2">
-          <Moment date={item.time} unix fromNow /> on {item.attributes.source}
-        </p>
-
         {item.twitter_profile_image && (
           <img
             src={item.twitter_profile_image}
@@ -38,6 +34,10 @@ export default function Details({ item }) {
           )}
         </div>
 
+        <p className="text-xs text-gray-400 dark:text-dark4 mb-2">
+          <Moment date={item.time} unix fromNow /> on {item.attributes.source}
+        </p>
+
         {item.type === "won" && (
           <p className="text-sm dark:text-whitish mb-3">
             Won{" "}
@@ -51,7 +51,7 @@ export default function Details({ item }) {
             >
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>{" "}
-            by {item.attributes.brand_name} for ◎
+            by <strong>{item.attributes.brand_name}</strong> for ◎
             {roundToTwo(item.attributes.highest_bid / 1000000000)}
           </p>
         )}
@@ -69,7 +69,11 @@ export default function Details({ item }) {
             >
               <a className="hover:underline">{item.artist_name}</a>
             </Link>{" "}
-            {item.artist_name && <>by {item.artist_name} </>}
+            {item.artist_name && (
+              <>
+                by <strong>{item.artist_name}</strong>{" "}
+              </>
+            )}
             for ◎{roundToTwo(item.attributes.amount / 1000000000)}
           </p>
         )}
@@ -87,7 +91,12 @@ export default function Details({ item }) {
             >
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>
-            {item.artist_name && <> by {item.artist_name}</>}
+            {item.artist_name && (
+              <>
+                {" "}
+                by <strong>{item.artist_name}</strong>
+              </>
+            )}
             {item.attributes.amount && (
               <> for ◎{roundToTwo(item.attributes.amount / 1000000000)}</>
             )}
@@ -107,7 +116,7 @@ export default function Details({ item }) {
             >
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>{" "}
-            by {item.artist_name}
+            by <strong>{item.artist_name}</strong>
           </p>
         )}
       </div>

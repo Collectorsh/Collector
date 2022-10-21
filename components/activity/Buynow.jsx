@@ -56,9 +56,9 @@ export default function Following() {
   }, [results]);
 
   function toggleSort(s) {
+    setInfiniteScrollItems([]);
     setSortBy(s);
     const response = sortListings(s, results);
-    setInfiniteScrollItems(response.slice(0, 20));
     setResults(response);
   }
 

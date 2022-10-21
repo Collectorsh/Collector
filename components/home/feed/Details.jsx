@@ -136,11 +136,8 @@ export default function Details({ item }) {
         </a>
       </Link>
 
-      {user && (
+      {user && item.artist_name && (
         <div className="text-right border-t border-gray-100 dark:border-dark2 pt-4 pr-3 mt-4 -mx-4">
-          <p className="text-xs text-gray-400 dark:text-dark4 clear-both mb-4 inline">
-            follow this artist{" "}
-          </p>
           {item.artist_name && <FollowButton follow={item} />}
         </div>
       )}

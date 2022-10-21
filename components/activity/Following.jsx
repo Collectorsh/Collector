@@ -70,9 +70,9 @@ export default function Following() {
   }
 
   function toggleSort(s) {
+    setInfiniteScrollItems([]);
     setSortBy(s);
     const response = sortAuctions(s, results);
-    setInfiniteScrollItems(response.slice(0, 20));
     setResults(response);
   }
 

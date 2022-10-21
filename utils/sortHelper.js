@@ -96,5 +96,15 @@ export function sortAuctions(sortType, auctions) {
       a.end_time < b.end_time ? 1 : b.end_time < a.end_time ? -1 : 0
     );
     return results;
+  } else if (sortType === "bidsasc") {
+    let results = clonedAuctions.sort((a, b) =>
+      a.number_bids > b.number_bids ? 1 : b.number_bids > a.number_bids ? -1 : 0
+    );
+    return results;
+  } else if (sortType === "bidsdesc") {
+    let results = clonedAuctions.sort((a, b) =>
+      a.number_bids < b.number_bids ? 1 : b.number_bids < a.number_bids ? -1 : 0
+    );
+    return results;
   }
 }

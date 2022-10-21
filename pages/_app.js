@@ -11,6 +11,7 @@ import { ExchangeOffersProvider } from "/contexts/exchange_offers";
 import { ListingsProvider } from "/contexts/listings";
 import { ActivitiesProvider } from "/contexts/activities";
 import { SingleNftProvider } from "/contexts/single_nft";
+import { CartProvider } from "/contexts/cart";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import PlausibleProvider from "next-plausible";
 
@@ -63,7 +64,9 @@ export default function MyApp({ Component, pageProps }) {
                     <EstimatedValueProvider>
                       <ThemeProvider enableSystem={true} attribute="class">
                         <PlausibleProvider domain="collector.sh">
-                          <Component {...pageProps} />
+                          <CartProvider>
+                            <Component {...pageProps} />
+                          </CartProvider>
                         </PlausibleProvider>
                       </ThemeProvider>
                     </EstimatedValueProvider>

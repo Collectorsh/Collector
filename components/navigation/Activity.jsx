@@ -55,7 +55,7 @@ export default function Activity() {
               </Link>
             </Menu.Item>
             <Menu.Item>
-              <Link href="/follow">
+              <Link href="/activity?id=follow">
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   Follow Artists
                 </a>

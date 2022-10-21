@@ -204,7 +204,9 @@ export default function MainNavigation() {
                                     </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/follow">Follow Artists</Link>
+                                    <Link href="/activity?id=follow">
+                                      Follow Artists
+                                    </Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <a onClick={signOut}>Sign Out</a>

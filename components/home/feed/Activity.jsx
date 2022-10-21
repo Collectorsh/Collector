@@ -1,19 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import getFeed from "/data/home/getFeed";
 import Details from "/components/home/feed/Details";
+import Masonry from "react-masonry-css";
 import { Oval } from "react-loader-spinner";
-import { updateFeedsSelected } from "/utils/updateFeedsSelected";
 
 export default function Activity() {
-  const [infiniteScrollItems, setInfiniteScrollItems] = useState();
-  const [feedsSelected, setFeedsSelected] = useState([
-    "bid",
-    "sale",
-    "won",
-    "listing",
-  ]);
-  const [results, setResults] = useState();
   const [activity, setActivity] = useState();
 
   const fetchFeed = useCallback(async () => {
@@ -25,48 +16,31 @@ export default function Activity() {
     fetchFeed();
   }, []);
 
-  useEffect(() => {
-    if (!activity) return;
-
-    const items = activity.filter((a) => feedsSelected.includes(a.type));
-    setResults(items);
-    setInfiniteScrollItems(items.slice(0, 5));
-  }, [activity, feedsSelected]);
-
-  function fetchData() {
-    setInfiniteScrollItems((currentDisplayedItems) =>
-      results.slice(0, currentDisplayedItems.length + 5)
-    );
-  }
-
-  function updateSelected(type) {
-    const selected = updateFeedsSelected(type, feedsSelected);
-    setFeedsSelected(selected);
-  }
+  const breakpointColumnsObj = {
+    default: 3,
+    1100: 2,
+    700: 1,
+  };
 
   return (
     <div>
-      {!infiniteScrollItems && (
+      {!activity && (
         <div className="mt-4 w-[50px] h-64 mx-auto mt-20">
           <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
         </div>
       )}
-      {infiniteScrollItems && (
-        <>
-          <div>
-            <InfiniteScroll
-              dataLength={infiniteScrollItems.length}
-              next={fetchData}
-              hasMore={infiniteScrollItems.length !== results.length}
-            >
-              {infiniteScrollItems.map((item, index) => (
-                <div key={index}>
-                  <Details item={item} />
-                </div>
-              ))}
-            </InfiniteScroll>
-          </div>
-        </>
+      {activity && (
+        <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className="masonry-grid"
+          columnClassName="masonry-grid_column"
+        >
+          {activity.map((item, index) => (
+            <div key={index}>
+              <Details item={item} />
+            </div>
+          ))}
+        </Masonry>
       )}
     </div>
   );

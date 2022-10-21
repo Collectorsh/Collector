@@ -5,6 +5,7 @@ import Following from "/components/activity/Following";
 import Bids from "/components/activity/Bids";
 import MainNavigation from "/components/navigation/MainNavigation";
 import CheckLoggedIn from "/components/CheckLoggedIn";
+import Artists from "/components/follow/Artists";
 
 function Activity() {
   const router = useRouter();
@@ -26,7 +27,7 @@ function Activity() {
         <MainNavigation />
         <div className="px-4 xl:px-0 mx-auto clear-both">
           <div className="mx-auto pt-3 md:px-0">
-            <h2 className="tracking-wide text-center mt-14 mb-10 text-4xl font-bold text-gray-800 w-full py-1 inline-block dark:text-whitish">
+            <h2 className="mt-8 mb-12 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-whitish">
               Collect
             </h2>
             <div className="w-full border-b border-gray-200 dark:border-dark3 pb-3">
@@ -58,11 +59,21 @@ function Activity() {
                 >
                   My Bids
                 </li>
+                <li
+                  className={`cursor-pointer hover:text-greeny inline px-2 mx-3 pb-3.5 ${
+                    selected === "follow" &&
+                    "text-greeny font-extrabold border-b border-b-2 border-greeny"
+                  }`}
+                  onClick={() => changeSelected("follow")}
+                >
+                  Follow Artists
+                </li>
               </ul>
             </div>
             {selected === "buynow" && <Buynow />}
             {selected === "following" && <Following />}
             {selected === "bids" && <Bids />}
+            {selected === "follow" && <Artists />}
           </div>
         </div>
       </div>

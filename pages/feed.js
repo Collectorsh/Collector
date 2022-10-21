@@ -10,7 +10,19 @@ export default function FeedHome() {
     <div className="dark:bg-black">
       <div className="max-w-7xl mx-auto">
         <MainNavigation />
-        <Feed />
+        <div className="px-4 xl:px-0 mx-auto clear-both">
+          <div className="mx-auto pt-3 md:px-0">
+            <h2 className="mt-8 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-whitish">
+              Activity
+            </h2>
+            <p className="mb-16 dark:text-whitish">
+              See what Collectors are bidding on, buying, and listing
+            </p>
+            <div className="w-full pb-3">
+              <Feed />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

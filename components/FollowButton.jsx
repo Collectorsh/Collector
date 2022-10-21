@@ -36,46 +36,26 @@ export default function FollowButton({ follow }) {
       {user && (
         <>
           {following &&
-          following.find(
-            (f) =>
-              f.artist ===
-              (follow.attributes ? follow.attributes.artist_name : follow.name)
-          ) ? (
+          following.find((f) => f.artist === follow.artist_name) ? (
             <Tippy
-              content={`Stop following ${
-                follow.attributes ? follow.attributes.artist_name : follow.name
-              }`}
+              content={`Stop following ${follow.artist_name}`}
               className="bg-gray-300"
             >
               <MinusCircleIcon
                 className="h-8 w-8 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-red-600 dark:hover:text-red-600"
                 aria-hidden="true"
-                onClick={() =>
-                  doUnfollowArtist(
-                    follow.attributes
-                      ? follow.attributes.artist_name
-                      : follow.name
-                  )
-                }
+                onClick={() => doUnfollowArtist(follow.artist_name)}
               />
             </Tippy>
           ) : (
             <Tippy
-              content={`Follow ${
-                follow.attributes ? follow.attributes.artist_name : follow.name
-              }`}
+              content={`Follow ${follow.artist_name}`}
               className="bg-gray-300"
             >
               <PlusCircleIcon
                 className="h-8 w-8 cursor-pointer outline-none text-greeny hover:text-black dark:hover:text-white"
                 aria-hidden="true"
-                onClick={() =>
-                  doFollowArtist(
-                    follow.attributes
-                      ? follow.attributes.artist_name
-                      : follow.name
-                  )
-                }
+                onClick={() => doFollowArtist(follow.artist_name)}
               />
             </Tippy>
           )}

@@ -5,61 +5,12 @@ import CollectorUsername from "/components/CollectorUsername";
 import { roundToTwo } from "/utils/roundToTwo";
 import Moment from "react-moment";
 import FollowButton from "/components/FollowButton";
-import ShareToTwitter from "/components/ShareToTwitter";
 
 export default function Details({ item }) {
-  const formatTweet = (item) => {
-    let username = item.twitter_screen_name
-      ? `@${item.twitter_screen_name}`
-      : item.username;
-    let artistName = item.attributes.twitter
-      ? item.attributes.twitter
-      : item.attributes.artist_name || item.attributes.brand_name;
-    let name = item.attributes.name;
-
-    let tweet;
-
-    if (item.type === "won") {
-      let amount = `◎${roundToTwo(item.attributes.highest_bid / 1000000000)}`;
-
-      tweet = `${name} by ${artistName} was won by ${username} for ${amount}`;
-    } else if (item.type === "listing") {
-      let amount = `◎${roundToTwo(item.attributes.amount / 1000000000)}`;
-
-      tweet = `${name} by ${artistName} was listed by ${username}`;
-      if (amount) {
-        tweet += ` for ◎${roundToTwo(item.attributes.amount / 1000000000)}`;
-      }
-    } else if (item.type === "bid") {
-      let amount = `◎${roundToTwo(item.amount / 1000000000)}`;
-
-      tweet = `A bid for ${amount} was placed by ${username} on ${name} by ${artistName}`;
-    } else if (item.type === "sale") {
-      let amount = `◎${roundToTwo(item.attributes.amount / 1000000000)}`;
-
-      tweet = `${name} by ${artistName} was purchase by ${username} for ${amount}`;
-    }
-
-    tweet += "\n\n";
-
-    tweet += "Seen on the @collector_sh feed";
-
-    tweet += "\n\n";
-
-    tweet += `${marketplaceLink(
-      item.attributes.source,
-      item.attributes.mint,
-      item.attributes.brand_name,
-      item.attributes.highest_bidder_username
-    )}`;
-
-    return tweet;
-  };
-
   return (
     <div className="relative border border-gray-100 dark:border-dark2 rounded p-4 shadow-lg">
       <div className="absolute top-2 right-2">
-        {item.attributes.artist_name && <FollowButton follow={item} />}
+        {item.artist_name && <FollowButton follow={item} />}
       </div>
       <div className="float-left w-12/12">
         <p className="text-xs text-gray-400 dark:text-dark4 clear-both mb-4">
@@ -112,15 +63,13 @@ export default function Details({ item }) {
               href={marketplaceLink(
                 item.attributes.source,
                 item.attributes.mint,
-                item.attributes.artist_name,
+                item.artist_name,
                 item.attributes.highest_bidder_username
               )}
             >
-              <a className="hover:underline">{item.attributes.name}</a>
+              <a className="hover:underline">{item.artist_name}</a>
             </Link>{" "}
-            {item.attributes.artist_name && (
-              <>by {item.attributes.artist_name} </>
-            )}
+            {item.artist_name && <>by {item.artist_name} </>}
             for ◎{roundToTwo(item.attributes.amount / 1000000000)}
           </p>
         )}
@@ -132,15 +81,13 @@ export default function Details({ item }) {
               href={marketplaceLink(
                 item.attributes.source,
                 item.attributes.mint,
-                item.attributes.artist_name,
+                item.artist_name,
                 item.attributes.highest_bidder_username
               )}
             >
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>
-            {item.attributes.artist_name && (
-              <> by {item.attributes.artist_name}</>
-            )}
+            {item.artist_name && <> by {item.artist_name}</>}
             {item.attributes.amount && (
               <> for ◎{roundToTwo(item.attributes.amount / 1000000000)}</>
             )}
@@ -154,13 +101,13 @@ export default function Details({ item }) {
               href={marketplaceLink(
                 item.attributes.source,
                 item.attributes.mint,
-                item.attributes.brand_name,
+                item.artist_name,
                 item.attributes.highest_bidder_username
               )}
             >
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>{" "}
-            by {item.attributes.brand_name}
+            by {item.artist_name}
           </p>
         )}
       </div>
@@ -171,7 +118,7 @@ export default function Details({ item }) {
         href={marketplaceLink(
           item.attributes.source,
           item.attributes.mint,
-          item.attributes.brand_name,
+          item.artist_name,
           item.attributes.highest_bidder_username
         )}
       >

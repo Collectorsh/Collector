@@ -36,11 +36,11 @@ export default function GalleriesPage() {
       <h2 className="text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-whitish">
         Galleries
       </h2>
-      <Link href="/galleries" title="View all Galleries">
+      {/* <Link href="/galleries" title="View all Galleries">
         <a className="cursor-pointer text-black dark:text-white">
           <span className="underline">View all Galleries</span>
         </a>
-      </Link>
+      </Link> */}
       <div className="mt-6 sm:mt-12"></div>
       {daos && <GalleryContent name="Dao's &amp; Collectives" items={daos} />}
       {popular && <GalleryContent name="Popular Galleries" items={popular} />}

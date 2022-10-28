@@ -3,7 +3,6 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import {
   LedgerWalletAdapter,
   PhantomWalletAdapter,
@@ -48,7 +47,7 @@ export const WalletContextProvider = ({ children }) => {
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} onError={onError} autoConnect>
-        <WalletModalProvider>{children}</WalletModalProvider>
+        {children}
       </WalletProvider>
     </ConnectionProvider>
   );

@@ -3,6 +3,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import {
   WalletMultiButton,
   useWalletModal,
+  WalletModalProvider,
 } from "@solana/wallet-adapter-react-ui";
 import getApiKey from "/data/user/getApiKey";
 import UserContext from "/contexts/user";
@@ -51,8 +52,9 @@ export default function ConnectWallet() {
 
   return (
     <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-      {/* <span onClick={logIn}>Sign In</span> */}
-      <WalletMultiButton />
+      <WalletModalProvider>
+        <WalletMultiButton />
+      </WalletModalProvider>
     </div>
   );
 }

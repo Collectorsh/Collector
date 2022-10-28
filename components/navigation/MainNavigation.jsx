@@ -10,6 +10,7 @@ import ConnectWallet from "/components/wallet/ConnectWallet";
 import Profile from "/components/navigation/Profile";
 import Gallery from "/components/navigation/Gallery";
 import Activity from "/components/navigation/Activity";
+import DialectButton from "/components/navigation/DialectButton";
 import CreateUsernameModal from "/components/CreateUsernameModal";
 
 export default function MainNavigation() {
@@ -68,6 +69,7 @@ export default function MainNavigation() {
                 <>
                   <Gallery />
                   <Activity />
+                  <DialectButton />
                 </>
               )}
               {user ? <Profile /> : <ConnectWallet />}

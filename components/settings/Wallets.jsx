@@ -8,7 +8,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 export default function Wallets() {
-  const { disconnect, publicKey, signMessage } = useWallet();
+  const { disconnect, publicKey, signMessage, signTransaction } = useWallet();
   const { setVisible } = useWalletModal();
   const [user, setUser] = useContext(UserContext);
 
@@ -33,14 +33,16 @@ export default function Wallets() {
   useEffect(() => {
     if (!publicKey || !user) return;
     if (user.public_keys.includes(publicKey.toBase58())) return;
-    verifyAddress(publicKey, signMessage, user.api_key).then((res) => {
-      if (res.data.status === "success") {
-        success("Wallet added successfully");
-        setUser(res.data.user);
-      } else {
-        error(res.data.msg);
+    verifyAddress(publicKey, signMessage, user.api_key, signTransaction).then(
+      (res) => {
+        if (res.data.status === "success") {
+          success("Wallet added successfully");
+          setUser(res.data.user);
+        } else {
+          error(res.data.msg);
+        }
       }
-    });
+    );
   }, [publicKey]);
 
   async function addWallet() {

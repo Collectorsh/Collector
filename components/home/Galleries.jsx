@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import getNewestGalleries from "/data/home/getNewestGalleries";
 import getPopularGalleries from "/data/home/getPopularGalleries";
 import getDaos from "/data/home/getDaos";
@@ -12,7 +11,7 @@ export default function GalleriesPage() {
 
   const fetchNewestGalleries = useCallback(async () => {
     let res = await getNewestGalleries();
-    setNewest(res.data);
+    if (res) setNewest(res.data);
   }, []);
 
   const fetchPopularGalleries = useCallback(async () => {

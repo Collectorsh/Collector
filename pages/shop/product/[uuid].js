@@ -1,9 +1,10 @@
 import MainNavigation from "/components/navigation/MainNavigation";
 import CheckLoggedIn from "/components/CheckLoggedIn";
-import Shop from "/components/shop/Shop";
 import ShopTitle from "/components/shop/ShopTitle";
+import Product from "/components/shop/Product";
+import getProduct from "/data/shop/getProduct";
 
-export default function ShopHome() {
+function ProductHome({ product }) {
   return (
     <div className="dark:bg-black">
       <CheckLoggedIn />
@@ -12,10 +13,24 @@ export default function ShopHome() {
         <div className="relative">
           <ShopTitle />
           <div className="w-full pb-3">
-            <Shop />
+            <Product product={product} />
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+export async function getServerSideProps(context) {
+  try {
+    let uuid = context.params.uuid;
+    let res = await getProduct(uuid);
+    let product = res.product;
+    return { props: { product } };
+  } catch (err) {
+    console.log(err);
+    return { props: {} };
+  }
+}
+
+export default ProductHome;

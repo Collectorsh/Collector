@@ -1,18 +1,18 @@
 import MainNavigation from "/components/navigation/MainNavigation";
 import CheckLoggedIn from "/components/CheckLoggedIn";
-import Checkout from "/components/shop/Checkout";
+import Cart from "/components/shop/Cart";
 import ShopTitle from "/components/shop/ShopTitle";
 
-export default function CheckoutHome() {
+export default function CartHome() {
   return (
     <div className="dark:bg-black">
       <CheckLoggedIn />
+      <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <MainNavigation />
         <div className="relative">
           <ShopTitle />
           <div className="w-full pb-3">
-            <Checkout />
+            <Cart />
           </div>
         </div>
       </div>

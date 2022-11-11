@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import Link from "next/link";
 import UserContext from "/contexts/user";
 import CartContext from "/contexts/cart";
-import CartItems from "/components/shop/CartItems";
-import { ArrowLeftIcon } from "@heroicons/react/outline";
+import Shipping from "/components/shop/cart/Shipping";
+import Order from "/components/shop/cart/Order";
 
 export default function Checkout() {
   const [user] = useContext(UserContext);
@@ -21,15 +21,21 @@ export default function Checkout() {
         </Link>
       </div>
       <div className="mb-8"></div>
-      {user && user.token_holder ? (
+      {user && (
         <>
           {cart.length > 0 ? (
-            <CartItems />
+            <div className="grid grid-cols-12">
+            <div className="col-span-5">
+              <Shipping />
+            </div>
+            <div className="col-span-6 col-end-13">
+              <Order />
+            </div>
+          </div>
           ) : (
-            <p className="dark:text-whitish">Your cart is empty</p>)}
+            <p className="dark:text-whitish">Your cart is empty</p>
+          )}
         </>
-      ) : (
-        <p className="dark:text-whitish">You need to be a signature holder to shop</p>
       )}
     </>
   );

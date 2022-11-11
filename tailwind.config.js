@@ -10,6 +10,8 @@ module.exports = {
         burple: "#9946ff",
         burpledark: "#652db0",
         greeny: "#31f292",
+        greendarkbg: "#425A41",
+        greenlightbg: "#BCF3C9",
         exchange: "#AEEA00",
         navbg: "#F5F5F5",
         dark1: "#121212",

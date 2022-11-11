@@ -3,6 +3,7 @@ import Head from "next/head";
 import getUserFromUsername from "/data/user/getUserFromUsername";
 import getMetadata from "/data/nft/getMetadata";
 import GalleryContainer from "/components/gallery/GalleryContainer";
+import EstherGalleryContainer from "/components/gallery/esther/GalleryContainer";
 import GalleryNavigation from "/components/gallery/navigation/GalleryNavigation";
 import MainNavigation from "/components/navigation/MainNavigation";
 import ListingsContext from "/contexts/listings";
@@ -54,11 +55,18 @@ function Gallery({ user, tokens }) {
       {user ? <GalleryNavigation user={user} /> : <MainNavigation />}
       <div className="mx-auto px-4 clear-both">
         <div className="mx-auto pt-3">
-          {tokens && <GalleryContainer tokens={tokens} user={user} />}
+          {tokens && user && user.id === 2222 && (
+            <EstherGalleryContainer tokens={tokens} user={user} />
+          )}
+          {tokens && user && user.id !== 2222 && (
+            <GalleryContainer tokens={tokens} user={user} />
+          )}
           {!user && (
-            <p className="dark:text-gray-100">
-              We couldn&apos;t find a user with that name
-            </p>
+            <div className="max-w-7xl mx-auto">
+              <p className="dark:text-gray-100">
+                We couldn&apos;t find a user with that name
+              </p>
+            </div>
           )}
         </div>
       </div>
@@ -70,7 +78,8 @@ export async function getServerSideProps(context) {
   try {
     let username = context.params.gallery;
     let res = await getUserFromUsername(username);
-    let user = res.user;
+    let user = null;
+    if (res.status === "success") user = res.user;
     let tokens = {};
     try {
       tokens = await getMetadata(user.public_keys);

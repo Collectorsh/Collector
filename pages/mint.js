@@ -25,8 +25,8 @@ export default function MintHome() {
         theme="dark"
       />
       <div className="dark:bg-black">
+        <MainNavigation />
         <div className="max-w-7xl mx-auto bg-mint-bg bg-cover h-screen">
-          <MainNavigation />
           <ThemeProvider theme={theme}>
             <h1 className="w-fit mx-auto text-4xl font-extrabold text-white text-center mb-10 p-2 mt-4">
               Signature: art project &#43; premium membership

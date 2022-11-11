@@ -44,8 +44,8 @@ function Profile({ profileUser }) {
 
   return (
     <div className="dark:bg-black dark:text-whitish">
+      <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <MainNavigation />
         <div className="px-4 xl:px-0 mx-auto clear-both">
           <div className="mx-auto pt-3 md:px-0">
             {profileUser ? (

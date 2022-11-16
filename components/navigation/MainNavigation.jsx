@@ -68,6 +68,11 @@ export default function MainNavigation() {
                   <>
                     <Gallery />
                     <Activity />
+                    {user.token_holder && (
+                      <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                        <Link href="/tools">Mint Tools</Link>
+                      </p>
+                    )}
                   </>
                 )}
                 {user ? <Profile /> : <ConnectWallet />}

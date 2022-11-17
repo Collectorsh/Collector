@@ -130,7 +130,6 @@ export default function GalleryNavigation({ user }) {
             >
               <svg
                 className="w-6 h-6 text-gray-400 hover:text-gray-600"
-                x-show="!showMenu"
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"

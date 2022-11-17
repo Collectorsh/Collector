@@ -5,12 +5,12 @@ export function sortListings(sortType, listings) {
 
   if (sortType === "az") {
     let results = clonedListings.sort((a, b) =>
-      a.artist_name.localeCompare(b.artist_name)
+      a.artist.localeCompare(b.artist)
     );
     return results;
   } else if (sortType === "za") {
     let results = clonedListings.sort((b, a) =>
-      a.artist_name.localeCompare(b.artist_name)
+      a.artist.localeCompare(b.artist)
     );
     return results;
   } else if (sortType === "lh") {

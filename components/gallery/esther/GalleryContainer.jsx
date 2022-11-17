@@ -16,6 +16,20 @@ export default function GalleryContainer({ tokens, user }) {
     setRunningTotal(total);
   }, [totalEstimate]);
 
+  const sections = [
+    { title: "Esther and the Veiled Coast 1/1 Auction Prize Pool", items: 20 },
+    { title: "Veiled Coast: Map Edition Prize Pool", items: 8 },
+    { title: "Veiled Coast: Chapter 1 Edition Prize Pool", items: 8 },
+    { title: "Veiled Coast: Chapter 2 Edition Prize Pool", items: 8 },
+    { title: "Veiled Coast: Chapter 3 Edition Prize Pool", items: 8 },
+    { title: "Veiled Coast: Chapter 4 Edition Prize Pool", items: 8 },
+    { title: "Veiled Coast: Chapter 5 Edition Prize Pool", items: 8 },
+    { title: "Veiled Coast: Chapter 6 Edition Prize Pool", items: 8 },
+    { title: "Veiled Coast: Chapter 7 Edition Prize Pool", items: 8 },
+  ];
+
+  var position = 0;
+
   return (
     <div className="clear-both w-full mt-6">
       {user && user.estimated_value && (
@@ -26,54 +40,32 @@ export default function GalleryContainer({ tokens, user }) {
         </div>
       )}
       <div className="clear-both mb-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 justify-center sm:justify-start">
-          {Array.isArray(tokens) &&
-            tokens
-              .filter((t) => t.visible)
-              .slice(0, 6)
-              .map((token, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl"
-                  >
-                    <Card key={index} token={token} user={user} size={450} />
-                  </div>
-                );
-              })}
-        </div>
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-center sm:justify-start">
-          {Array.isArray(tokens) &&
-            tokens
-              .filter((t) => t.visible)
-              .slice(6, 14)
-              .map((token, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl"
-                  >
-                    <Card key={index} token={token} user={user} size={350} />
-                  </div>
-                );
-              })}
-        </div>
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8 justify-center sm:justify-start">
-          {Array.isArray(tokens) &&
-            tokens
-              .filter((t) => t.visible)
-              .slice(14)
-              .map((token, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl"
-                  >
-                    <Card key={index} token={token} user={user} size={250} />
-                  </div>
-                );
-              })}
-        </div>
+        {sections.map((section) => {
+          const html = tokens
+            .filter((t) => t.visible)
+            .slice(position, position + section.items)
+            .map((token, index) => {
+              return (
+                <div
+                  key={index}
+                  className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl"
+                >
+                  <Card key={index} token={token} user={user} size={350} />
+                </div>
+              );
+            });
+          position += section.items;
+          return (
+            <>
+              <h1 className="text-4xl font-extrabold text-black dark:text-white text-center mb-16 pt-4">
+                {section.title}
+              </h1>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-center sm:justify-start mb-16">
+                {html}
+              </div>
+            </>
+          );
+        })}
       </div>
     </div>
   );

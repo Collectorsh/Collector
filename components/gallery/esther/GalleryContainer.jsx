@@ -57,9 +57,58 @@ export default function GalleryContainer({ tokens, user }) {
           position += section.items;
           return (
             <>
-              <h1 className="text-4xl font-extrabold text-black dark:text-white text-center mb-16 pt-4">
+              <h1 className="text-4xl font-extrabold text-black dark:text-white text-center mb-8 pt-4">
                 {section.title}
               </h1>
+              {section.items === 20 ? (
+                <>
+                  <p className="text-black dark:text-white text-center my-4 text-sm max-w-6xl mx-auto">
+                    To show our gratitude for Esther's support, we have created
+                    a mammoth prize pool for{" "}
+                    <a
+                      href="https://www.esthersescape.xyz/esthers-fair-2"
+                      target="_blank"
+                      className="underline"
+                    >
+                      EF2
+                    </a>
+                    . With pieces graciously donated by up-and-coming artists,
+                    Esther's Seven and donations from the Duel of Doves
+                    collection.
+                  </p>
+                  <p className="text-black dark:text-white text-center my-4 text-sm">
+                    <strong>To qualify:</strong> Bid on any of our 1/1 auctions
+                    to gain a ticket into the 'Auction Prize Pool' (1 unique bid
+                    per auction = 1 ticket). The raffle will be drawn within the
+                    week of Esther Fair 2.
+                  </p>
+                  <p className="text-black dark:text-white text-center mt-4 mb-16 text-sm">
+                    <a
+                      href="https://formfunction.xyz/@esthersescape/series/ef2-esther-the-veiled-coast"
+                      className="underline"
+                    >
+                      See our 1/1 auctions
+                    </a>
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-black dark:text-white text-center my-4 text-sm">
+                    <strong>To qualify:</strong> Buy one 'Veiled Coast
+                    Soundtrack' edition and gain a ticket into the associated
+                    'Edition Prize Pool' (No entry limits). The raffle will be
+                    drawn within the week of Esther Fair 2.
+                  </p>
+                  <p className="text-black dark:text-white text-center mt-4 mb-16 text-sm">
+                    <a
+                      href="https://formfunction.xyz/@esthersescape/series/ef2-veiled-coast-soundtrack"
+                      className="underline"
+                    >
+                      See our editions
+                    </a>
+                  </p>
+                </>
+              )}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-center sm:justify-start mb-16">
                 {html}
               </div>

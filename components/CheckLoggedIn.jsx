@@ -3,7 +3,7 @@ import { useContext, useCallback, useEffect } from "react";
 import UserContext from "/contexts/user";
 import getUserFromApiKey from "/data/user/getUserFromApiKey";
 
-export default function CheckLoggedIn() {
+export default function CheckLoggedIn({ holder = false }) {
   const [user, setUser] = useContext(UserContext);
   const router = useRouter();
 
@@ -20,6 +20,10 @@ export default function CheckLoggedIn() {
       const apiKey = localStorage.getItem("api_key");
       if (!apiKey) router.push("/");
       asyncGetUser(apiKey);
+    } else {
+      if (holder) {
+        if (!user.token_holder) router.push("/");
+      }
     }
   }, [user]);
 

@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 import MainNavigation from "/components/navigation/MainNavigation";
 import Settings from "/components/settings/Settings";
 import Wallets from "/components/settings/Wallets";
 import Notifications from "/components/settings/Notifications";
+import UserContext from "/contexts/user";
 
 function SettingsPage() {
+  const [user] = useContext(UserContext);
   const [selected, setSelected] = useState("settings");
 
   const changeSelected = (sel) => {
@@ -33,15 +35,17 @@ function SettingsPage() {
                 >
                   Settings
                 </li>
-                <li
-                  className={`cursor-pointer hover:text-greeny inline px-2 mx-3 pb-3.5 ${
-                    selected === "notifications" &&
-                    "text-greeny font-extrabold border-b border-b-2 border-greeny"
-                  }`}
-                  onClick={() => changeSelected("notifications")}
-                >
-                  Notifications
-                </li>
+                {user && user.token_holder && (
+                  <li
+                    className={`cursor-pointer hover:text-greeny inline px-2 mx-3 pb-3.5 ${
+                      selected === "notifications" &&
+                      "text-greeny font-extrabold border-b border-b-2 border-greeny"
+                    }`}
+                    onClick={() => changeSelected("notifications")}
+                  >
+                    Notifications
+                  </li>
+                )}
                 <li
                   className={`cursor-pointer hover:text-greeny inline px-2 mx-3 pb-3.5 ${
                     selected === "wallets" &&
@@ -54,7 +58,9 @@ function SettingsPage() {
               </ul>
             </div>
             {selected === "settings" && <Settings />}
-            {selected === "notifications" && <Notifications />}
+            {selected === "notifications" && user && user.token_holder && (
+              <Notifications />
+            )}
             {selected === "wallets" && <Wallets />}
           </div>
         </div>

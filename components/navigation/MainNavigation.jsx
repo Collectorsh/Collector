@@ -67,7 +67,7 @@ export default function MainNavigation() {
                 {user && (
                   <>
                     <Gallery />
-                    <Activity />
+                    {user.token_holder && <Activity />}
                   </>
                 )}
                 {user ? <Profile /> : <ConnectWallet />}
@@ -187,26 +187,30 @@ export default function MainNavigation() {
                                     <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                       <Link href="/edit">Edit Gallery</Link>
                                     </p>
-                                    <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                      <Link href="/activity?id=buynow">
-                                        Buy Now
-                                      </Link>
-                                    </p>
-                                    <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                      <Link href="/activity?id=following">
-                                        Auctions
-                                      </Link>
-                                    </p>
-                                    <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                      <Link href="/activity?id=bids">
-                                        My Bids
-                                      </Link>
-                                    </p>
-                                    <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                      <Link href="/activity?id=follow">
-                                        Follow Artists
-                                      </Link>
-                                    </p>
+                                    {user.token_holder && (
+                                      <>
+                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                          <Link href="/activity?id=buynow">
+                                            Buy Now
+                                          </Link>
+                                        </p>
+                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                          <Link href="/activity?id=following">
+                                            Auctions
+                                          </Link>
+                                        </p>
+                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                          <Link href="/activity?id=bids">
+                                            My Bids
+                                          </Link>
+                                        </p>
+                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                          <Link href="/activity?id=follow">
+                                            Follow Artists
+                                          </Link>
+                                        </p>
+                                      </>
+                                    )}
                                     <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                       <a onClick={signOut}>Sign Out</a>
                                     </p>

@@ -1,12 +1,17 @@
-import { useContext, useCallback, useEffect } from "react";
+import { useContext, useCallback, useEffect, useState } from "react";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { Connection, clusterApiUrl } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
+import {
+  useWalletModal,
+} from "@solana/wallet-adapter-react-ui";
 
 export default function DropHome() {
-  const wallet = useWallet();
+  const { wallet, publicKey } = useWallet();
+  const { setVisible } = useWalletModal();
+  const [holder, setHoler] = useState(false);
 
   const mintNow = async () => {
     const collectionUpdateAuthority = new PublicKey(
@@ -37,7 +42,35 @@ export default function DropHome() {
       <div className="dark:bg-black">
         <MainNavigation />
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 md:gap-10 mt-10">
+          <div className="max-w-4xl mx-auto mt-12 p-4 shadow-lg bg-white">
+            <img src="/images/gacha.jpg" className="inline w-16 h-16 align-middle" />
+            <h2 className="align-middle inline my-5 text-4xl font-bold text-gray-800 w-full py-1 inline-block">
+              Collector Gacha
+            </h2>
+
+            <p className="mt-4">Multiple artists, multiple editions, which one will you mint?</p>
+
+            <p className="mt-4">The Collector Gacha is a fun way to mint art from artists that you know and some that you don&apos;t.  All artists share equally in the sales and collectors can try their luck to see what they will get.</p>
+
+            <p className="mt-6 bg-gray-100 p-2 w-ft font-bold">Remaining:  30/30</p>
+
+            <p className="mt-4 bg-gray-100 p-2 w-ft font-bold">Price:  2 SOL</p>
+
+            {!publicKey &&
+              <button
+                className="mt-12 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer"
+                onClick={(e) => setVisible(true)}
+              >
+                Connect Wallet
+              </button>
+            }
+
+            {publicKey && !holder &&
+              <p className="mt-12 text-red-500">You need to be a Collector Signature holder in order to participate.  You can mint yours <a href="/mint" target="_blank" className="font-bold underline">here</a></p>
+            }
+
+          </div>
+          {/* <div className="grid md:grid-cols-2 md:gap-10 mt-10">
             <div className="grid md:grid-cols-2 md:gap-2 dark:bg-dark3 bg-gray-50 p-2 rounded-lg">
               <div>
                 <img
@@ -77,7 +110,7 @@ export default function DropHome() {
               </button>
               <p className="text-left text-lg font-bold mb-3">Description</p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

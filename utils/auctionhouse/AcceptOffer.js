@@ -41,7 +41,9 @@ export default async function acceptOfferTransaction(
     (a) => a.address === offer.auctionHouse.address
   )[0];
 
-  const connection = new web3.Connection(web3.clusterApiUrl("mainnet-beta"), {
+  const solNetwork = process.env.NEXT_PUBLIC_SOLANA_NETWORK;
+
+  const connection = new web3.Connection(web3.clusterApiUrl(solNetwork), {
     commitment: "confirmed",
     confirmTransactionInitialTimeout: 60000,
   });

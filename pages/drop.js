@@ -10,14 +10,14 @@ export default function DropHome() {
 
   const mintNow = async () => {
     const collectionUpdateAuthority = new PublicKey(
-      "GQbrgxZsRGm3XrrcD9RrwaYHNaLDgvLm4Q16sH7Ybo7r"
+      process.env.NEXT_PUBLIC_UPDATE_AUTHORITY
     );
-    const connection = new Connection(clusterApiUrl("devnet"));
+    const connection = new Connection(clusterApiUrl(process.env.NEXT_PUBLIC_SOLANA_NETWORK));
     const metaplex = new Metaplex(connection).use(
       walletAdapterIdentity(wallet)
     );
     const candyMachine = await metaplex.candyMachines().findByAddress({
-      address: new PublicKey("GmzvwXhonNJX1KeVQAHsicQVLE3bZquzxW4JBHEWZFps"),
+      address: new PublicKey(process.env.NEXT_PUBLIC_DROP_CANDYMACHINE),
     });
     console.log(candyMachine);
     const { nft } = await metaplex.candyMachines().mint({

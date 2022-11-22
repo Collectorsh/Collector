@@ -9,7 +9,7 @@ import UserContext from "/contexts/user";
 import getUserFromApiKey from "/data/user/getUserFromApiKey";
 
 export default function ConnectWallet() {
-  const { publicKey, signMessage } = useWallet();
+  const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [user, setUser] = useContext(UserContext);
 
@@ -27,7 +27,7 @@ export default function ConnectWallet() {
     }
   }, []);
 
-  const asyncGetUser = useCallback(async (apiKey) => {
+  const asyncGetUser = useCallback(async (apiKey, publicKey, signMessage) => {
     let res = await getUserFromApiKey(apiKey);
     if (res.data.status === "success") {
       setUser(res.data.user);
@@ -39,15 +39,15 @@ export default function ConnectWallet() {
   }, []);
 
   useEffect(() => {
-    if (!publicKey) return;
+    if (!wallet || wallet.connected === false) return;
     // Check for an API key first
     const apiKey = localStorage.getItem("api_key");
     if (apiKey) {
-      asyncGetUser(apiKey);
+      asyncGetUser(apiKey, wallet.publicKey, wallet.signMessage);
     } else {
-      asyncGetApiKey(publicKey, signMessage);
+      asyncGetApiKey(wallet.publicKey, wallet.signMessage);
     }
-  }, [publicKey]);
+  }, [wallet]);
 
   return (
     <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">

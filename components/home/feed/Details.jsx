@@ -67,7 +67,7 @@ export default function Details({ item }) {
                 item.attributes.highest_bidder_username
               )}
             >
-              <a className="hover:underline">{item.artist_name}</a>
+              <a className="hover:underline">{item.attributes.name}</a>
             </Link>{" "}
             {item.artist && (
               <>

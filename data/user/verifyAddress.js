@@ -12,11 +12,17 @@ const MEMO_PROGRAM_ID = new PublicKey(
   "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
 );
 
-async function verifyAddress(publicKey, signMessage, apiKey, signTransaction) {
+async function verifyAddress(
+  publicKey,
+  signMessage,
+  apiKey,
+  signTransaction,
+  ledger
+) {
   let nonce = await requestNonce(apiKey);
   if (typeof nonce === "string") {
     var signature;
-    if (signMessage) {
+    if (!ledger) {
       signature = await sign(signMessage, nonce);
       signature = Buffer.from(signature);
       let res = await addWallet(publicKey.toBase58(), signature, nonce, apiKey);

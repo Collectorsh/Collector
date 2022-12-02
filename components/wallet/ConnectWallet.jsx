@@ -1,21 +1,13 @@
 import React, { useEffect, useContext, useCallback } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import {
-  WalletMultiButton,
-  useWalletModal,
-} from "@solana/wallet-adapter-react-ui";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import getApiKey from "/data/user/getApiKey";
 import UserContext from "/contexts/user";
 import getUserFromApiKey from "/data/user/getUserFromApiKey";
 
 export default function ConnectWallet() {
   const wallet = useWallet();
-  const { setVisible } = useWalletModal();
   const [user, setUser] = useContext(UserContext);
-
-  const logIn = () => {
-    setVisible(true);
-  };
 
   const asyncGetApiKey = useCallback(async (publicKey, signMessage) => {
     if (!publicKey || !signMessage) return;
@@ -51,7 +43,6 @@ export default function ConnectWallet() {
 
   return (
     <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-      {/* <span onClick={logIn}>Sign In</span> */}
       <WalletMultiButton />
     </div>
   );

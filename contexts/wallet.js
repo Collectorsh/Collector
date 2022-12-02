@@ -3,7 +3,7 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { WalletModalProvider } from "/components/wallet/WalletModalProvider";
 import {
   LedgerWalletAdapter,
   PhantomWalletAdapter,

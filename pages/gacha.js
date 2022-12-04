@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { Connection, clusterApiUrl } from "@solana/web3.js";
@@ -7,8 +9,9 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import Typography from "@material-ui/core/Typography";
+import { Oval } from "react-loader-spinner";
 
-export default function DropHome() {
+export default function Gacha() {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [holder, setHolder] = useState();
@@ -17,6 +20,7 @@ export default function DropHome() {
   const [collectionMint, setCollectionMint] = useState();
   const [cndyMachine, setCndyMachine] = useState();
   const [mintLive, setMintLive] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
 
   const connection = new Connection(
     clusterApiUrl(process.env.NEXT_PUBLIC_SOLANA_NETWORK)
@@ -31,7 +35,15 @@ export default function DropHome() {
     setTotal(cndy.itemsLoaded);
     setRemaining(cndy.itemsRemaining.toNumber());
     setCndyMachine(cndy);
-    if (Date.now() > cndy.candyGuard.guards.startDate.date.toNumber())
+    if (
+      (cndy.candyGuard.guards.startDate &&
+        !cndy.candyGuard.guards.endDate &&
+        Date.now() > cndy.candyGuard.guards.startDate.date.toNumber() * 1000) ||
+      (cndy.candyGuard.guards.startDate &&
+        cndy.candyGuard.guards.endDate &&
+        Date.now() > cndy.candyGuard.guards.startDate.date.toNumber() * 1000 &&
+        Date.now() < cndy.candyGuard.guards.endDate.date.toNumber() * 1000)
+    )
       setMintLive(true);
     if (onceOnly === false) setTimeout(asyncGetCandymachine, 5000);
   }, []);
@@ -62,20 +74,30 @@ export default function DropHome() {
   }, [wallet]);
 
   const mintNow = async () => {
+    if (isMinting) return;
+    setIsMinting(true);
+    toast("Approve the transaction in your wallet");
     const candyMachine = await metaplex.candyMachines().findByAddress({
       address: new PublicKey(process.env.NEXT_PUBLIC_DROP_CANDYMACHINE),
     });
     const collectionUpdateAuthority = candyMachine.authorityAddress;
-    const { nft } = await metaplex.candyMachines().mint({
-      candyMachine,
-      collectionUpdateAuthority,
-      guards: {
-        nftGate: {
-          mint: collectionMint.mintAddress,
+    try {
+      const { nft } = await metaplex.candyMachines().mint({
+        candyMachine,
+        collectionUpdateAuthority,
+        guards: {
+          nftGate: {
+            mint: collectionMint.mintAddress,
+          },
         },
-      },
-    });
-    console.log(nft);
+      });
+      toast.success("Your mint was successful!");
+      console.log(nft);
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong");
+    }
+    setIsMinting(false);
     asyncGetCandymachine(wallet, true);
   };
 
@@ -85,32 +107,87 @@ export default function DropHome() {
 
   return (
     <>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <div className="dark:bg-black">
         <MainNavigation />
         <div className="max-w-7xl mx-auto">
           <div className="max-w-4xl mx-auto my-12 p-4 shadow-lg bg-white">
-            {cndyMachine && (
-              <div className="float-right">
-                <MintCountdown
-                  key="endSettings"
-                  date={cndyMachine.candyGuard.guards.startDate.date}
-                  style={{ justifyContent: "flex-end" }}
-                  status="LIVE"
-                  onComplete={toggleMintButton}
-                />
-                {Date.now() <
-                  cndyMachine.candyGuard.guards.startDate.date.toNumber() && (
-                  <Typography
-                    variant="caption"
-                    align="center"
-                    display="block"
-                    style={{ fontWeight: "bold" }}
-                  >
-                    TO START OF MINT
-                  </Typography>
-                )}
-              </div>
-            )}
+            {cndyMachine &&
+              cndyMachine.candyGuard.guards.startDate &&
+              Date.now() <
+                cndyMachine.candyGuard.guards.startDate.date.toNumber() *
+                  1000 && (
+                <div className="float-right">
+                  <MintCountdown
+                    key="endSettings"
+                    date={
+                      cndyMachine.candyGuard.guards.startDate.date.toNumber() *
+                      1000
+                    }
+                    style={{ justifyContent: "flex-end" }}
+                    status="LIVE"
+                    onComplete={toggleMintButton}
+                  />
+                  {Date.now() <
+                    cndyMachine.candyGuard.guards.startDate.date.toNumber() *
+                      1000 && (
+                    <Typography
+                      variant="caption"
+                      align="center"
+                      display="block"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      TO START OF MINT
+                    </Typography>
+                  )}
+                </div>
+              )}
+
+            {cndyMachine &&
+              cndyMachine.candyGuard.guards.startDate &&
+              cndyMachine.candyGuard.guards.endDate &&
+              Date.now() >
+                cndyMachine.candyGuard.guards.startDate.date.toNumber() *
+                  1000 &&
+              Date.now() <
+                cndyMachine.candyGuard.guards.endDate.date.toNumber() *
+                  1000 && (
+                <div className="float-right">
+                  <MintCountdown
+                    key="endSettings"
+                    date={
+                      cndyMachine.candyGuard.guards.endDate.date.toNumber() *
+                      1000
+                    }
+                    style={{ justifyContent: "flex-end" }}
+                    status="ENDED"
+                    onComplete={toggleMintButton}
+                  />
+                  {Date.now() <
+                    cndyMachine.candyGuard.guards.endDate.date.toNumber() *
+                      1000 && (
+                    <Typography
+                      variant="caption"
+                      align="center"
+                      display="block"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      TO END OF MINT
+                    </Typography>
+                  )}
+                </div>
+              )}
 
             <img
               src="/images/gacha.jpg"
@@ -131,30 +208,30 @@ export default function DropHome() {
               get.
             </p>
 
-            <div class="flex gap-2 mt-6">
-              <div class="flex-1 h-64 text-center overflow-hidden">
+            <div className="flex gap-2 mt-6">
+              <div className="flex-1 h-64 text-center overflow-hidden">
                 <img src="/images/gacha1.jpeg" />
               </div>
-              <div class="flex-1 h-64 text-center overflow-hidden">
+              <div className="flex-1 h-64 text-center overflow-hidden">
                 <img src="/images/gacha2.jpeg" />
               </div>
-              <div class="flex-1 h-64 text-center overflow-hidden">
+              <div className="flex-1 h-64 text-center overflow-hidden">
                 <img src="/images/gacha3.jpeg" />
               </div>
             </div>
 
-            <div class="flex gap-2 mt-0">
-              <div class="flex-1 text-center overflow-hidden">
+            <div className="flex gap-2 mt-0">
+              <div className="flex-1 text-center overflow-hidden">
                 <h2 className="font-semibold bg-greeny mb-1 uppercase text-sm py-1">
                   Crypto Vulture
                 </h2>
               </div>
-              <div class="flex-1 text-center overflow-hidden">
+              <div className="flex-1 text-center overflow-hidden">
                 <h2 className="font-semibold bg-greeny mb-1 uppercase text-sm py-1">
                   Jooski
                 </h2>
               </div>
-              <div class="flex-1 text-center overflow-hidden">
+              <div className="flex-1 text-center overflow-hidden">
                 <h2 className="font-semibold bg-greeny mb-1 uppercase text-sm py-1">
                   Rupture
                 </h2>
@@ -193,12 +270,28 @@ export default function DropHome() {
               holder === "yes" &&
               remaining > 0 &&
               mintLive && (
-                <button
-                  className="mt-8 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer"
-                  onClick={(e) => mintNow()}
-                >
-                  Mint
-                </button>
+                <>
+                  {isMinting ? (
+                    <>
+                      <br />
+                      <Oval
+                        color="#fff"
+                        secondaryColor="#000"
+                        height={30}
+                        width={30}
+                        className="p-0 m-0"
+                      />
+                    </>
+                  ) : (
+                    <button
+                      className="mt-8 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
+                      onClick={() => mintNow()}
+                      disabled={isMinting}
+                    >
+                      Mint
+                    </button>
+                  )}
+                </>
               )}
 
             {wallet &&

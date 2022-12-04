@@ -46,7 +46,20 @@ export default function About() {
             Please DM us on Twitter if we can help in any way. We also love to
             hear feedback so please don&apos;t be shy.
           </p>
-          <p className="mt-4 font-semibold">- Richard & Nate</p>
+          <p className="mt-4 font-semibold">
+            -{" "}
+            <Link href="https://twitter.com/richjard" title="Twitter">
+              <a className="text-[#1E9BF0]" target="_blank">
+                Richard
+              </a>
+            </Link>{" "}
+            &{" "}
+            <Link href="https://twitter.com/n8solomon" title="Twitter">
+              <a className="text-[#1E9BF0]" target="_blank">
+                Nate
+              </a>
+            </Link>
+          </p>
         </div>
       </div>
     </div>

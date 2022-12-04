@@ -10,6 +10,7 @@ import ConnectWallet from "/components/wallet/ConnectWallet";
 import Profile from "/components/navigation/Profile";
 import Gallery from "/components/navigation/Gallery";
 import Activity from "/components/navigation/Activity";
+import Premium from "/components/navigation/Premium";
 import CreateUsernameModal from "/components/CreateUsernameModal";
 
 export default function MainNavigation() {
@@ -56,18 +57,18 @@ export default function MainNavigation() {
                 </div>
               </div>
               <div className="hidden md:flex text-right items-center col-span-1 justify-end w-full">
-                {!user && (
-                  <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                    <Link href="/faq">FAQ</Link>
-                  </p>
-                )}
+                <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                  <Link href="/about">About</Link>
+                </p>
                 <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                   <Link href="/feed">Discover</Link>
                 </p>
+                {!user && <Premium />}
                 {user && (
                   <>
                     <Gallery />
                     {user.token_holder && <Activity />}
+                    {!user.token_holder && <Premium />}
                   </>
                 )}
                 {user ? <Profile /> : <ConnectWallet />}

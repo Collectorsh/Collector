@@ -17,8 +17,8 @@ export default function About() {
           </p>
           <p className="mt-4">
             Beautiful artwork deserves to be shared. Our 2D gallery is the most
-            popular way to display art collections on Solana. We're proud to
-            offer this product completely free and open source.
+            popular way to display art collections on Solana. We&apos;re proud
+            to offer this product completely free and open source.
           </p>
           <p className="mt-4">
             We believe that every artwork should get the visibility it deserves.

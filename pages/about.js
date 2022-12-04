@@ -32,7 +32,7 @@ export default function About() {
               what every Collector user is buying, bidding on, or listing.
               Additionally, we offer premium tools for serious collectors. Learn
               more{" "}
-              <Link href="/mint" title="Collector Premium">
+              <Link href="/premium" title="Collector Premium">
                 <a className="underline">here</a>
               </Link>
               .

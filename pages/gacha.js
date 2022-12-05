@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import MainNavigation from "/components/navigation/MainNavigation";
@@ -308,9 +309,11 @@ export default function Gacha() {
               <p className="mt-12 text-red-500">
                 You need to be a Collector Signature holder in order to
                 participate. You can mint yours{" "}
-                <a href="/mint" target="_blank" className="font-bold underline">
-                  here
-                </a>
+                <Link href="/mint">
+                  <a target="_blank" className="font-bold underline">
+                    here
+                  </a>
+                </Link>
               </p>
             )}
           </div>

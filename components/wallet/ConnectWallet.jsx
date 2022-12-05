@@ -7,10 +7,6 @@ import getUserFromApiKey from "/data/user/getUserFromApiKey";
 
 export default function ConnectWallet() {
   const wallet = useWallet();
-<<<<<<< HEAD
-  const { setVisible } = useWalletModal();
-=======
->>>>>>> main
   const [user, setUser] = useContext(UserContext);
 
   const asyncGetApiKey = useCallback(async (publicKey, signMessage) => {
@@ -35,11 +31,7 @@ export default function ConnectWallet() {
   }, []);
 
   useEffect(() => {
-<<<<<<< HEAD
-    if (!wallet || wallet.connected === false) return;
-=======
     if (!wallet || !wallet.connected) return;
->>>>>>> main
     // Check for an API key first
     const apiKey = localStorage.getItem("api_key");
     if (apiKey) {

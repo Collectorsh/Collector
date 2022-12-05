@@ -95,8 +95,14 @@ export default function Gacha() {
       toast.success("Your mint was successful!");
       console.log(nft);
     } catch (e) {
-      console.log(e);
-      toast.error(e.message);
+      try {
+        let cause = e.message.split("Caused By: ")[1];
+        let msg = cause.split(/\r?\n/)[0];
+        toast.error(msg);
+      } catch (e) {
+        console.log(e);
+        toast.error("Something went wrong");
+      }
     }
     setIsMinting(false);
     asyncGetCandymachine(wallet, true);

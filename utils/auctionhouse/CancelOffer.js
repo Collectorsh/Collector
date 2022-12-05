@@ -1,3 +1,4 @@
+import { rpcHost } from "/config/settings";
 import { toast } from "react-toastify";
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house";
 
@@ -32,9 +33,7 @@ export default async function cancelOfferTransaction(
     (a) => a.address === offer.auctionHouse.address
   )[0];
 
-  const solNetwork = process.env.NEXT_PUBLIC_SOLANA_NETWORK;
-
-  const connection = new web3.Connection(web3.clusterApiUrl(solNetwork), {
+  const connection = new web3.Connection(rpcHost, {
     commitment: "confirmed",
     confirmTransactionInitialTimeout: 60000,
   });

@@ -1,3 +1,4 @@
+import { rpcHost } from "/config/settings";
 import { toast } from "react-toastify";
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house";
 import { MetadataProgram } from "@metaplex-foundation/mpl-token-metadata";
@@ -30,9 +31,7 @@ export default async function buyNftTransaction(
   signTransaction,
   refetch
 ) {
-  const solNetwork = process.env.NEXT_PUBLIC_SOLANA_NETWORK;
-
-  const connection = new web3.Connection(web3.clusterApiUrl(solNetwork), {
+  const connection = new web3.Connection(rpcHost, {
     commitment: "confirmed",
     confirmTransactionInitialTimeout: 60000,
   });

@@ -1,21 +1,17 @@
 import React, { useEffect, useContext, useCallback } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import {
-  WalletMultiButton,
-  useWalletModal,
-} from "@solana/wallet-adapter-react-ui";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import getApiKey from "/data/user/getApiKey";
 import UserContext from "/contexts/user";
 import getUserFromApiKey from "/data/user/getUserFromApiKey";
 
 export default function ConnectWallet() {
   const wallet = useWallet();
+<<<<<<< HEAD
   const { setVisible } = useWalletModal();
+=======
+>>>>>>> main
   const [user, setUser] = useContext(UserContext);
-
-  const logIn = () => {
-    setVisible(true);
-  };
 
   const asyncGetApiKey = useCallback(async (publicKey, signMessage) => {
     if (!publicKey || !signMessage) return;
@@ -39,7 +35,11 @@ export default function ConnectWallet() {
   }, []);
 
   useEffect(() => {
+<<<<<<< HEAD
     if (!wallet || wallet.connected === false) return;
+=======
+    if (!wallet || !wallet.connected) return;
+>>>>>>> main
     // Check for an API key first
     const apiKey = localStorage.getItem("api_key");
     if (apiKey) {

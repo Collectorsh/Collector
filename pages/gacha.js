@@ -97,7 +97,7 @@ export default function Gacha() {
     } catch (e) {
       console.log(e);
       try {
-        let cause = e.message.split("Caused By: ")[1];
+        let cause = e.message.split("Caused By: ")[1].split(":")[1];
         let msg = cause.split(/\r?\n/)[0];
         toast.error(msg);
       } catch (e) {

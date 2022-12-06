@@ -23,9 +23,7 @@ export default function Gacha() {
   const [mintLive, setMintLive] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
 
-  const connection = new Connection(
-    clusterApiUrl(process.env.NEXT_PUBLIC_SOLANA_NETWORK)
-  );
+  const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC);
 
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
 

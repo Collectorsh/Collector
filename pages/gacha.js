@@ -95,6 +95,7 @@ export default function Gacha() {
       toast.success("Your mint was successful!");
       console.log(nft);
     } catch (e) {
+      console.log(e);
       try {
         let cause = e.message.split("Caused By: ")[1];
         let msg = cause.split(/\r?\n/)[0];

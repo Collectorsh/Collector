@@ -83,7 +83,7 @@ export default function Gacha() {
     });
     const collectionUpdateAuthority = candyMachine.authorityAddress;
     try {
-      await metaplex.candyMachines().mint({
+      const { nft } = await metaplex.candyMachines().mint({
         candyMachine,
         collectionUpdateAuthority,
         guards: {
@@ -92,7 +92,8 @@ export default function Gacha() {
           },
         },
       });
-      toast.success("Your mint was successful!");
+      console.log(nft);
+      toast.success(`🎉 Congratulations you minted ${nft.name}`);
     } catch (e) {
       console.log(e);
       try {

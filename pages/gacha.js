@@ -250,7 +250,7 @@ export default function Gacha() {
               </p>
             )}
 
-            <p className="mt-4 bg-gray-100 p-2 w-ft font-bold">Price: 1 SOL</p>
+            <p className="mt-4 bg-gray-100 p-2 w-ft font-bold">Price: FREE</p>
 
             {!wallet ||
               (!wallet.publicKey && (

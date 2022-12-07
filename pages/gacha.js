@@ -97,7 +97,13 @@ export default function Gacha() {
       try {
         let cause = e.message.split("Caused By: ")[1];
         let msg = cause.split(/\r?\n/)[0];
-        toast.error(msg);
+        // This isn't ideal but there's a race condition where the nft isn't indexed by the rpc node
+        // the mint transaction is already successful at this point though so we return a successful message
+        if (msg.includes("Account Not Found")) {
+          toast.success(`🎉 Congratulations mint successful!`);
+        } else {
+          toast.error(msg);
+        }
       } catch (e) {
         console.log(e);
         toast.error("Something went wrong");
@@ -128,7 +134,7 @@ export default function Gacha() {
       <div className="dark:bg-black">
         <MainNavigation />
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-4xl mx-auto my-12 p-4 shadow-lg bg-white">
+          <div className="max-w-4xl mx-auto sm:my-12 p-4 shadow-lg bg-white">
             {cndyMachine &&
               cndyMachine.candyGuard.guards.startDate &&
               Date.now() <
@@ -196,10 +202,10 @@ export default function Gacha() {
               )}
 
             <img
-              src="/images/gacha.jpg"
-              className="inline w-16 h-16 align-middle"
+              src="/images/gacha.png"
+              className="inline w-16 h-16 align-middle rounded-full"
             />
-            <h2 className="align-middle inline my-5 text-4xl font-bold text-gray-800 w-full py-1 inline-block">
+            <h2 className="sm:ml-4 align-middle sm:inline my-5 text-4xl font-bold text-gray-800 w-full py-1 inline-block">
               Collector Gacha
             </h2>
 
@@ -214,33 +220,15 @@ export default function Gacha() {
               get.
             </p>
 
-            <div className="flex gap-2 mt-6">
-              <div className="flex-1 h-64 text-center overflow-hidden">
+            <div className="flex sm:gap-2 mt-6">
+              <div className="flex-1 h-32 sm:h-44 md:h-52 lg:h-64 text-center overflow-hidden">
                 <img src="/images/gacha1.jpeg" />
               </div>
-              <div className="flex-1 h-64 text-center overflow-hidden">
+              <div className="flex-1 h-32 sm:h-44 md:h-52 lg:h-64 text-center overflow-hidden">
                 <img src="/images/gacha2.jpeg" />
               </div>
-              <div className="flex-1 h-64 text-center overflow-hidden">
+              <div className="flex-1 h-32 sm:h-44 md:h-52 lg:h-64 text-center overflow-hidden">
                 <img src="/images/gacha3.jpeg" />
-              </div>
-            </div>
-
-            <div className="flex gap-2 mt-0">
-              <div className="flex-1 text-center overflow-hidden">
-                <h2 className="font-semibold bg-greeny mb-1 uppercase text-sm py-1">
-                  Crypto Vulture
-                </h2>
-              </div>
-              <div className="flex-1 text-center overflow-hidden">
-                <h2 className="font-semibold bg-greeny mb-1 uppercase text-sm py-1">
-                  Jooski
-                </h2>
-              </div>
-              <div className="flex-1 text-center overflow-hidden">
-                <h2 className="font-semibold bg-greeny mb-1 uppercase text-sm py-1">
-                  Rupture
-                </h2>
               </div>
             </div>
 

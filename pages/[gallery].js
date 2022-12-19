@@ -3,7 +3,6 @@ import Head from "next/head";
 import getUserFromUsername from "/data/user/getUserFromUsername";
 import getMetadata from "/data/nft/getMetadata";
 import GalleryContainer from "/components/gallery/GalleryContainer";
-import EstherGalleryContainer from "/components/gallery/esther/GalleryContainer";
 import GalleryNavigation from "/components/gallery/navigation/GalleryNavigation";
 import MainNavigation from "/components/navigation/MainNavigation";
 import ListingsContext from "/contexts/listings";
@@ -55,12 +54,7 @@ function Gallery({ user, tokens }) {
       {user ? <GalleryNavigation user={user} /> : <MainNavigation />}
       <div className="mx-auto px-4 clear-both">
         <div className="mx-auto pt-3">
-          {tokens && user && user.id === 2222 && (
-            <EstherGalleryContainer tokens={tokens} user={user} />
-          )}
-          {tokens && user && user.id !== 2222 && (
-            <GalleryContainer tokens={tokens} user={user} />
-          )}
+          {tokens && user && <GalleryContainer tokens={tokens} user={user} />}
           {!user && (
             <div className="max-w-7xl mx-auto">
               <p className="dark:text-gray-100">

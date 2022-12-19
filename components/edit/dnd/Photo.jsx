@@ -1,11 +1,9 @@
-import React, { forwardRef, useState, useEffect } from "react";
+import React, { forwardRef } from "react";
 import { cdnImage } from "/utils/cdnImage";
 import axios from "axios";
 
 export const Photo = forwardRef(
   ({ mint, uri, index, faded, style, ...props }, ref) => {
-    const [url, setUrl] = useState();
-
     const urlFromMint = async (mint, uri) => {
       var image = cdnImage(mint);
       try {
@@ -23,25 +21,31 @@ export const Photo = forwardRef(
       }
     };
 
-    useEffect(() => {
-      urlFromMint(mint, uri).then((res) => {
-        setUrl(res);
-      });
-    }, []);
-
     const inlineStyles = {
       opacity: faded ? "0.2" : "1",
       transformOrigin: "0 0",
       height: 200,
       gridRowStart: index === 0 ? "span 1" : null,
       gridColumnStart: index === 0 ? "span 1" : null,
-      backgroundImage: `url("${url}")`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
       backgroundColor: "grey",
       ...style,
     };
 
-    return <div ref={ref} style={inlineStyles} {...props} />;
+    const addDefaultSource = (e, mint, uri) => {
+      urlFromMint(mint, uri).then((res) => {
+        if (res) e.target.src = res;
+      });
+    };
+
+    return (
+      <img
+        className="w-full opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm"
+        ref={ref}
+        style={inlineStyles}
+        {...props}
+        src={cdnImage(mint)}
+        onError={(e) => addDefaultSource(e, mint, uri)}
+      />
+    );
   }
 );

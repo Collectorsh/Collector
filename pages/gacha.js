@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { roundToTwo } from "/utils/roundToTwo";
 import { ToastContainer } from "react-toastify";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
-import { Connection, clusterApiUrl } from "@solana/web3.js";
+import { Connection } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import { MintCountdown } from "/utils/mint/MintCountdown";
-import Typography from "@material-ui/core/Typography";
 import { Oval } from "react-loader-spinner";
+import Moment from "react-moment";
 
 export default function Gacha() {
   const wallet = useWallet();
@@ -19,9 +19,11 @@ export default function Gacha() {
   const [total, setTotal] = useState(0);
   const [remaining, setRemaining] = useState();
   const [collectionMint, setCollectionMint] = useState();
-  const [cndyMachine, setCndyMachine] = useState();
-  const [mintLive, setMintLive] = useState(false);
+  const [mintState, setMintState] = useState();
   const [isMinting, setIsMinting] = useState(false);
+  const [holderStartDate, setHolderStartDate] = useState();
+  const [publicStartDate, setPublicStartDate] = useState();
+  const [cost, setCost] = useState();
 
   const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC);
 
@@ -33,17 +35,30 @@ export default function Gacha() {
     });
     setTotal(cndy.itemsLoaded);
     setRemaining(cndy.itemsRemaining.toNumber());
-    setCndyMachine(cndy);
-    if (
-      (cndy.candyGuard.guards.startDate &&
-        !cndy.candyGuard.guards.endDate &&
-        Date.now() > cndy.candyGuard.guards.startDate.date.toNumber() * 1000) ||
-      (cndy.candyGuard.guards.startDate &&
-        cndy.candyGuard.guards.endDate &&
-        Date.now() > cndy.candyGuard.guards.startDate.date.toNumber() * 1000 &&
-        Date.now() < cndy.candyGuard.guards.endDate.date.toNumber() * 1000)
-    )
-      setMintLive(true);
+    const h = cndy.candyGuard.groups.filter((g) => g.label === "holder")[0]
+      .guards;
+    const p = cndy.candyGuard.groups.filter((g) => g.label === "public")[0]
+      .guards;
+    setHolderStartDate(h.startDate.date);
+    setPublicStartDate(p.startDate.date);
+    setCost(h.solPayment.lamports.toNumber());
+    if (cndy.itemsRemaining.toNumber() === 0) {
+      setMintState("sold");
+    } else if (Date.now() < h.startDate.date.toNumber() * 1000) {
+      setMintState("pre");
+    } else if (
+      Date.now() > h.startDate.date.toNumber() * 1000 &&
+      Date.now() < h.endDate.date.toNumber() * 1000
+    ) {
+      setMintState("holder");
+    } else if (
+      Date.now() > p.startDate.date.toNumber() * 1000 &&
+      Date.now() < p.endDate.date.toNumber() * 1000
+    ) {
+      setMintState("public");
+    } else if (Date.now() > p.endDate.date.toNumber() * 1000) {
+      setMintState("ended");
+    }
     if (onceOnly === false) setTimeout(asyncGetCandymachine, 5000);
   }, []);
 
@@ -59,7 +74,7 @@ export default function Gacha() {
           process.env.NEXT_PUBLIC_SIGNATURE_COLLECTION_ADDRESS
       ) {
         setCollectionMint(nft);
-        setHolder("yes");
+        setHolder("no");
         holder = true;
       }
     }
@@ -72,7 +87,7 @@ export default function Gacha() {
     asyncCheckIfHolder(wallet);
   }, [wallet]);
 
-  const mintNow = async () => {
+  const mintNow = async (group) => {
     if (isMinting) return;
     setIsMinting(true);
     toast("Approve the transaction in your wallet");
@@ -81,15 +96,24 @@ export default function Gacha() {
     });
     const collectionUpdateAuthority = candyMachine.authorityAddress;
     try {
-      const { nft } = await metaplex.candyMachines().mint({
-        candyMachine,
-        collectionUpdateAuthority,
-        guards: {
-          nftGate: {
-            mint: collectionMint.mintAddress,
+      if (group === "holder") {
+        const { nft } = await metaplex.candyMachines().mint({
+          candyMachine,
+          collectionUpdateAuthority,
+          group: "holder",
+          guards: {
+            nftGate: {
+              mint: collectionMint.mintAddress,
+            },
           },
-        },
-      });
+        });
+      } else {
+        const { nft } = await metaplex.candyMachines().mint({
+          candyMachine,
+          collectionUpdateAuthority,
+          group: "public",
+        });
+      }
       console.log(nft);
       toast.success(`🎉 Congratulations you minted ${nft.name}`);
     } catch (e) {
@@ -135,78 +159,12 @@ export default function Gacha() {
         <MainNavigation />
         <div className="max-w-7xl mx-auto">
           <div className="max-w-4xl mx-auto sm:my-12 p-4 shadow-lg bg-white">
-            {cndyMachine &&
-              cndyMachine.candyGuard.guards.startDate &&
-              Date.now() <
-                cndyMachine.candyGuard.guards.startDate.date.toNumber() *
-                  1000 && (
-                <div className="float-right">
-                  <MintCountdown
-                    key="endSettings"
-                    date={
-                      cndyMachine.candyGuard.guards.startDate.date.toNumber() *
-                      1000
-                    }
-                    style={{ justifyContent: "flex-end" }}
-                    status="LIVE"
-                    onComplete={toggleMintButton}
-                  />
-                  {Date.now() <
-                    cndyMachine.candyGuard.guards.startDate.date.toNumber() *
-                      1000 && (
-                    <Typography
-                      variant="caption"
-                      align="center"
-                      display="block"
-                      style={{ fontWeight: "bold" }}
-                    >
-                      TO START OF MINT
-                    </Typography>
-                  )}
-                </div>
-              )}
-
-            {cndyMachine &&
-              cndyMachine.candyGuard.guards.startDate &&
-              cndyMachine.candyGuard.guards.endDate &&
-              Date.now() >
-                cndyMachine.candyGuard.guards.startDate.date.toNumber() *
-                  1000 &&
-              Date.now() <
-                cndyMachine.candyGuard.guards.endDate.date.toNumber() *
-                  1000 && (
-                <div className="float-right">
-                  <MintCountdown
-                    key="endSettings"
-                    date={
-                      cndyMachine.candyGuard.guards.endDate.date.toNumber() *
-                      1000
-                    }
-                    style={{ justifyContent: "flex-end" }}
-                    status="ENDED"
-                    onComplete={toggleMintButton}
-                  />
-                  {Date.now() <
-                    cndyMachine.candyGuard.guards.endDate.date.toNumber() *
-                      1000 && (
-                    <Typography
-                      variant="caption"
-                      align="center"
-                      display="block"
-                      style={{ fontWeight: "bold" }}
-                    >
-                      TO END OF MINT
-                    </Typography>
-                  )}
-                </div>
-              )}
-
             <img
               src="/images/gacha.png"
               className="inline w-16 h-16 align-middle rounded-full"
             />
             <h2 className="sm:ml-4 align-middle sm:inline my-5 text-4xl font-bold text-gray-800 w-full py-1 inline-block">
-              Collector Gacha
+              Collector Studios
             </h2>
 
             <p className="mt-4">
@@ -214,7 +172,7 @@ export default function Gacha() {
             </p>
 
             <p className="mt-4">
-              The Collector Gacha is a fun way to mint art from artists that you
+              Collector Studios is a fun way to mint art from artists that you
               know and some that you don&apos;t. All artists share equally in
               the sales and collectors can try their luck to see what they will
               get.
@@ -238,76 +196,116 @@ export default function Gacha() {
               </p>
             )}
 
-            <p className="mt-4 bg-gray-100 p-2 w-ft font-bold">Price: FREE</p>
+            <p className="mt-4 bg-gray-100 p-2 w-ft font-bold">
+              Price: {cost && <>◎{roundToTwo(cost / 1000000000)}</>}
+            </p>
 
-            {!wallet ||
-              (!wallet.publicKey && (
+            {wallet && wallet.publicKey ? (
+              <>
+                {mintState && mintState === "sold" && (
+                  <button className="mt-12 bg-red-400 px-3 py-2 font-semibold text-black text-xl">
+                    Sold Out
+                  </button>
+                )}
+                {mintState && mintState === "pre" && (
+                  <>
+                    {holderStartDate && (
+                      <p className="mt-4 text-gray-500">
+                        Signature holder mint starts in{" "}
+                        <Moment date={holderStartDate} unix fromNow />
+                      </p>
+                    )}
+                    {publicStartDate && (
+                      <p className="mt-4 text-gray-500">
+                        Public mint starts in{" "}
+                        <Moment date={publicStartDate} unix fromNow />
+                      </p>
+                    )}
+                  </>
+                )}
+                {mintState && mintState === "holder" && (
+                  <>
+                    {holder === "yes" ? (
+                      <>
+                        {isMinting ? (
+                          <>
+                            <br />
+                            <Oval
+                              color="#fff"
+                              secondaryColor="#000"
+                              height={30}
+                              width={30}
+                              className="p-0 m-0"
+                            />
+                          </>
+                        ) : (
+                          <button
+                            className="mt-8 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
+                            onClick={() => mintNow("holder")}
+                            disabled={isMinting}
+                          >
+                            Mint
+                          </button>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <p className="mt-4 text-red-500">
+                          You need to be a Collector Signature holder in order
+                          to mint now. You can mint your Signature{" "}
+                          <Link href="/mint">
+                            <a target="_blank" className="font-bold underline">
+                              here
+                            </a>
+                          </Link>
+                        </p>
+                        {publicStartDate && (
+                          <p className="mt-4 text-gray-500">
+                            Public mint starts in{" "}
+                            <Moment date={publicStartDate} unix fromNow />
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+                {mintState && mintState === "public" && (
+                  <>
+                    {isMinting ? (
+                      <>
+                        <br />
+                        <Oval
+                          color="#fff"
+                          secondaryColor="#000"
+                          height={30}
+                          width={30}
+                          className="p-0 m-0"
+                        />
+                      </>
+                    ) : (
+                      <button
+                        className="mt-8 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
+                        onClick={() => mintNow("public")}
+                        disabled={isMinting}
+                      >
+                        Mint
+                      </button>
+                    )}
+                  </>
+                )}
+                {mintState && mintState === "ended" && (
+                  <p className="mt-12 text-red-500">The mint has ended</p>
+                )}
+              </>
+            ) : (
+              <>
                 <button
                   className="mt-12 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer"
                   onClick={(e) => setVisible(true)}
                 >
                   Connect Wallet
                 </button>
-              ))}
-
-            {wallet &&
-              wallet.publicKey &&
-              holder === "yes" &&
-              remaining === 0 && (
-                <button className="mt-12 bg-red-400 px-3 py-2 font-semibold text-black text-xl">
-                  Sold Out
-                </button>
-              )}
-
-            {wallet &&
-              wallet.publicKey &&
-              holder === "yes" &&
-              remaining > 0 &&
-              mintLive && (
-                <>
-                  {isMinting ? (
-                    <>
-                      <br />
-                      <Oval
-                        color="#fff"
-                        secondaryColor="#000"
-                        height={30}
-                        width={30}
-                        className="p-0 m-0"
-                      />
-                    </>
-                  ) : (
-                    <button
-                      className="mt-8 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
-                      onClick={() => mintNow()}
-                      disabled={isMinting}
-                    >
-                      Mint
-                    </button>
-                  )}
-                </>
-              )}
-
-            {wallet &&
-              wallet.publicKey &&
-              holder === "yes" &&
-              remaining > 0 &&
-              !mintLive && (
-                <button className="mt-8 bg-gray-300 text-gray-400 px-3 py-2 font-semibold text-black text-xl cursor-not-allowed">
-                  Mint
-                </button>
-              )}
-
-            {wallet && wallet.publicKey && holder === "no" && (
-              <p className="mt-12 text-red-500">
-                You need to be a Collector Signature holder in order to
-                participate. You can mint yours{" "}
-                <Link href="/mint">
-                  <a target="_blank" className="font-bold underline">
-                    here
-                  </a>
-                </Link>
-              </p>
+              </>
             )}
           </div>
         </div>

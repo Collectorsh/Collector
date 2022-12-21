@@ -35,30 +35,7 @@ export default function Gacha() {
     });
     setTotal(cndy.itemsLoaded);
     setRemaining(cndy.itemsRemaining.toNumber());
-    const h = cndy.candyGuard.groups.filter((g) => g.label === "holder")[0]
-      .guards;
-    const p = cndy.candyGuard.groups.filter((g) => g.label === "public")[0]
-      .guards;
-    setHolderStartDate(h.startDate.date);
-    setPublicStartDate(p.startDate.date);
-    setCost(h.solPayment.lamports.toNumber());
-    if (cndy.itemsRemaining.toNumber() === 0) {
-      setMintState("sold");
-    } else if (Date.now() < h.startDate.date.toNumber() * 1000) {
-      setMintState("pre");
-    } else if (
-      Date.now() > h.startDate.date.toNumber() * 1000 &&
-      Date.now() < h.endDate.date.toNumber() * 1000
-    ) {
-      setMintState("holder");
-    } else if (
-      Date.now() > p.startDate.date.toNumber() * 1000 &&
-      Date.now() < p.endDate.date.toNumber() * 1000
-    ) {
-      setMintState("public");
-    } else if (Date.now() > p.endDate.date.toNumber() * 1000) {
-      setMintState("ended");
-    }
+    doSetState(cndy);
     if (onceOnly === false) setTimeout(asyncGetCandymachine, 5000);
   }, []);
 
@@ -74,7 +51,7 @@ export default function Gacha() {
           process.env.NEXT_PUBLIC_SIGNATURE_COLLECTION_ADDRESS
       ) {
         setCollectionMint(nft);
-        setHolder("no");
+        setHolder("yes");
         holder = true;
       }
     }
@@ -97,7 +74,7 @@ export default function Gacha() {
     const collectionUpdateAuthority = candyMachine.authorityAddress;
     try {
       if (group === "holder") {
-        const { nft } = await metaplex.candyMachines().mint({
+        var { nft } = await metaplex.candyMachines().mint({
           candyMachine,
           collectionUpdateAuthority,
           group: "holder",
@@ -108,7 +85,7 @@ export default function Gacha() {
           },
         });
       } else {
-        const { nft } = await metaplex.candyMachines().mint({
+        var { nft } = await metaplex.candyMachines().mint({
           candyMachine,
           collectionUpdateAuthority,
           group: "public",
@@ -137,8 +114,31 @@ export default function Gacha() {
     asyncGetCandymachine(wallet, true);
   };
 
-  const toggleMintButton = () => {
-    setMintLive(!mintLive);
+  const doSetState = (cndy) => {
+    const h = cndy.candyGuard.groups.filter((g) => g.label === "holder")[0]
+      .guards;
+    const p = cndy.candyGuard.groups.filter((g) => g.label === "public")[0]
+      .guards;
+    setHolderStartDate(h.startDate.date);
+    setPublicStartDate(p.startDate.date);
+    setCost(h.solPayment.lamports.toNumber());
+    if (cndy.itemsRemaining.toNumber() === 0) {
+      setMintState("sold");
+    } else if (Date.now() < h.startDate.date.toNumber() * 1000) {
+      setMintState("pre");
+    } else if (
+      Date.now() > h.startDate.date.toNumber() * 1000 &&
+      Date.now() < h.endDate.date.toNumber() * 1000
+    ) {
+      setMintState("holder");
+    } else if (
+      Date.now() > p.startDate.date.toNumber() * 1000 &&
+      Date.now() < p.endDate.date.toNumber() * 1000
+    ) {
+      setMintState("public");
+    } else if (Date.now() > p.endDate.date.toNumber() * 1000) {
+      setMintState("ended");
+    }
   };
 
   return (
@@ -164,7 +164,7 @@ export default function Gacha() {
               className="inline w-16 h-16 align-middle rounded-full"
             />
             <h2 className="sm:ml-4 align-middle sm:inline my-5 text-4xl font-bold text-gray-800 w-full py-1 inline-block">
-              Collector Studios
+              Collector Gacha
             </h2>
 
             <p className="mt-4">
@@ -172,7 +172,7 @@ export default function Gacha() {
             </p>
 
             <p className="mt-4">
-              Collector Studios is a fun way to mint art from artists that you
+              Collector Gacha is a fun way to mint art from artists that you
               know and some that you don&apos;t. All artists share equally in
               the sales and collectors can try their luck to see what they will
               get.
@@ -217,7 +217,7 @@ export default function Gacha() {
                     )}
                     {publicStartDate && (
                       <p className="mt-4 text-gray-500">
-                        Public mint starts in{" "}
+                        Public mint starts{" "}
                         <Moment date={publicStartDate} unix fromNow />
                       </p>
                     )}
@@ -261,7 +261,7 @@ export default function Gacha() {
                         </p>
                         {publicStartDate && (
                           <p className="mt-4 text-gray-500">
-                            Public mint starts in{" "}
+                            Public mint starts{" "}
                             <Moment date={publicStartDate} unix fromNow />
                           </p>
                         )}

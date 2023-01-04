@@ -29,30 +29,33 @@ export default function Drops() {
             Upcoming
           </h2>
 
-          <div className="grid grid-cols-3 sm:gap-2 mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
             <div className="text-center">
               <p className="font-bold mb-1">Hana Knight</p>
               <Link href="/drops/hanaknight" title="Hana Knight">
                 <a>
-                  <div className="h-32 sm:h-44 md:h-52 lg:h-64 overflow-hidden">
-                    <img src="/images/hanaknight.jpeg" />
-                  </div>
+                  <img
+                    src="/images/hanaknight.jpeg"
+                    className="w-full h-96 lg:h-64 object-center object-cover"
+                  />
                 </a>
               </Link>
               <p className="text-sm mt-2">January 18th</p>
             </div>
             <div className="text-center">
               <p className="font-bold mb-1">Neverland</p>
-              <div className="h-32 sm:h-44 md:h-52 lg:h-64 overflow-hidden">
-                <img src="/images/neverland.jpeg" className="opacity-50" />
-              </div>
+              <img
+                src="/images/neverland.jpeg"
+                className="opacity-50 w-full h-96 lg:h-64 object-center object-cover"
+              />
               <p className="text-sm mt-2">January 25th</p>
             </div>
             <div className="text-center">
               <p className="font-bold mb-1">Rupture</p>
-              <div className="h-32 sm:h-44 md:h-52 lg:h-64 overflow-hidden">
-                <img src="/images/rupture.jpeg" className="opacity-50" />
-              </div>
+              <img
+                src="/images/rupture.jpeg"
+                className="opacity-50 w-full h-96 lg:h-64 object-center object-cover"
+              />
               <p className="text-sm mt-2">February 1st</p>
             </div>
           </div>

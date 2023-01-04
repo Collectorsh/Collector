@@ -34,15 +34,33 @@ export default function HanaKnight() {
 
             <p className="mt-4">Description...</p>
 
-            <div className="flex sm:gap-2 mt-6">
-              <div className="flex-1 h-32 sm:h-44 md:h-52 lg:h-64 text-center overflow-hidden">
-                <img src="/images/gacha1.jpeg" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
+              <div className="text-center">
+                <img
+                  src="/images/hanaknight1.png"
+                  className="w-full h-96 lg:h-64 object-center object-cover"
+                />
+                <p className="font-bold">Hana Knight</p>
+                <p className="underline">01: Healer, Reaper</p>
+                <p className="text-sm mt-2">Editions: 50</p>
               </div>
-              <div className="flex-1 h-32 sm:h-44 md:h-52 lg:h-64 text-center overflow-hidden">
-                <img src="/images/gacha2.jpeg" />
+              <div className="text-center">
+                <img
+                  src="/images/hanaknight1.png"
+                  className="w-full h-96 lg:h-64 object-center object-cover"
+                />
+                <p className="font-bold">Hana Knight</p>
+                <p className="underline">01: Healer, Reaper</p>
+                <p className="text-sm mt-2">Editions: 50</p>
               </div>
-              <div className="flex-1 h-32 sm:h-44 md:h-52 lg:h-64 text-center overflow-hidden">
-                <img src="/images/gacha3.jpeg" />
+              <div className="text-center">
+                <img
+                  src="/images/hanaknight1.png"
+                  className="w-full h-96 lg:h-64 object-center object-cover"
+                />
+                <p className="font-bold">Hana Knight</p>
+                <p className="underline">01: Healer, Reaper</p>
+                <p className="text-sm mt-2">Editions: 50</p>
               </div>
             </div>
 

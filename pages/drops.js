@@ -9,7 +9,7 @@ export default function Drops() {
         <div className="max-w-4xl mx-auto sm:my-12 p-4 shadow-lg bg-white dark:bg-black dark:text-white">
           <img src="/images/drop.png" className="inline h-10 align-middle" />
           <h2 className="sm:ml-3 align-middle inline my-5 text-4xl font-bold w-full py-1 inline-block">
-            Collector Drops
+            Drops by Collector
           </h2>
 
           <p className="mt-4">Solo and group drops from top artists.</p>

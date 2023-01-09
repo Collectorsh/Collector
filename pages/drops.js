@@ -6,57 +6,70 @@ export default function Drops() {
     <div className="dark:bg-black">
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <div className="max-w-4xl mx-auto sm:my-12 p-4 shadow-lg bg-white">
-          <img
-            src="/images/gacha.png"
-            className="inline w-16 h-16 align-middle rounded-full"
-          />
-          <h2 className="sm:ml-4 align-middle sm:inline my-5 text-4xl font-bold text-gray-800 w-full py-1 inline-block">
+        <div className="max-w-4xl mx-auto sm:my-12 p-4 shadow-lg bg-white dark:bg-black dark:text-white">
+          <img src="/images/drop.png" className="inline h-10 align-middle" />
+          <h2 className="sm:ml-3 align-middle inline my-5 text-4xl font-bold w-full py-1 inline-block">
             Collector Drops
           </h2>
 
-          <p className="mt-4">
-            Multiple artists, multiple editions, which one will you mint?
-          </p>
+          <p className="mt-4">Solo and group drops from top artists.</p>
 
           <p className="mt-4">
-            Collector Drops is a fun way to mint art from artists that you know
-            and some that you don&apos;t. All artists share equally in the sales
-            and collectors can try their luck to see what they will get.
+            Each drop is shaped by the artists and can include any number of
+            1/1s and editions. Collectors randomly receive any piece from the
+            drop when they mint.
           </p>
 
-          <h2 className="mt-8 pb-4 underline text-2xl font-bold text-gray-800">
-            Upcoming
-          </h2>
+          <h2 className="mt-8 pb-4 underline text-2xl font-bold">Upcoming</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
-            <div className="text-center">
+            <div className="text-center mb-6">
               <p className="font-bold mb-1">Hana Knight</p>
-              <Link href="/drops/hanaknight" title="Hana Knight">
-                <a>
-                  <img
-                    src="/images/hanaknight.jpeg"
-                    className="w-full h-96 lg:h-64 object-center object-cover"
-                  />
-                </a>
-              </Link>
+              <img
+                src="/images/hanaknight.jpeg"
+                className="w-full h-96 lg:h-64 object-center object-cover"
+              />
               <p className="text-sm mt-2">January 18th</p>
             </div>
-            <div className="text-center">
+            <div className="text-center mb-6">
               <p className="font-bold mb-1">Neverland</p>
               <img
                 src="/images/neverland.jpeg"
-                className="opacity-50 w-full h-96 lg:h-64 object-center object-cover"
+                className="w-full h-96 lg:h-64 object-center object-cover"
               />
               <p className="text-sm mt-2">January 25th</p>
             </div>
-            <div className="text-center">
+            <div className="text-center mb-6">
               <p className="font-bold mb-1">Rupture</p>
               <img
                 src="/images/rupture.jpeg"
-                className="opacity-50 w-full h-96 lg:h-64 object-center object-cover"
+                className="w-full h-96 lg:h-64 object-center object-cover"
               />
-              <p className="text-sm mt-2">February 1st</p>
+              <p className="text-sm mt-2">February 6th</p>
+            </div>
+            <div className="text-center mb-6">
+              <p className="font-bold mb-1">Bonk</p>
+              <img
+                src="/images/bonk.jpeg"
+                className="w-full h-96 lg:h-64 object-center object-cover"
+              />
+              <p className="text-sm mt-2">February 8th</p>
+            </div>
+            <div className="text-center mb-6">
+              <p className="font-bold mb-1">21dao</p>
+              <img
+                src="/images/21.jpeg"
+                className="w-full h-96 lg:h-64 object-center object-cover"
+              />
+              <p className="text-sm mt-2">February 22nd</p>
+            </div>
+            <div className="text-center mb-6">
+              <p className="font-bold mb-1">Rick Bakas</p>
+              <img
+                src="/images/rickbakas.jpeg"
+                className="w-full h-96 lg:h-64 object-center object-cover"
+              />
+              <p className="text-sm mt-2">March 1st</p>
             </div>
           </div>
         </div>

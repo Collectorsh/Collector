@@ -49,12 +49,18 @@ const useStyles = makeStyles((theme) =>
 export const MintCountdown = ({ date, status, style, onComplete }) => {
   const classes = useStyles();
   const renderCountdown = ({ days, hours, minutes, seconds, completed }) => {
-    hours += days * 24;
     if (completed) {
       return status ? <span className={classes.done}>{status}</span> : null;
     } else {
       return (
         <div className={classes.root} style={style}>
+          {days > 0 && (
+            <Paper elevation={0}>
+              <span className={classes.item}>{days}</span>
+              {days > 1 && <span>days</span>}
+              {days === 1 && <span>day</span>}
+            </Paper>
+          )}
           <Paper elevation={0}>
             <span className={classes.item}>
               {hours < 10 ? `0${hours}` : hours}
@@ -67,12 +73,14 @@ export const MintCountdown = ({ date, status, style, onComplete }) => {
             </span>
             <span>mins</span>
           </Paper>
-          <Paper elevation={0}>
-            <span className={classes.item}>
-              {seconds < 10 ? `0${seconds}` : seconds}
-            </span>
-            <span>secs</span>
-          </Paper>
+          {days === 0 && (
+            <Paper elevation={0}>
+              <span className={classes.item}>
+                {seconds < 10 ? `0${seconds}` : seconds}
+              </span>
+              <span>secs</span>
+            </Paper>
+          )}
         </div>
       );
     }

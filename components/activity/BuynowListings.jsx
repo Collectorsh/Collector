@@ -6,6 +6,7 @@ import Image from "/components/Image";
 import ShowOffers from "/components/gallery/ShowOffers";
 
 export default function BuynowListings({ listings, user }) {
+  console.log(listings);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center sm:justify-start">
       {listings.map((item, index) => (
@@ -28,9 +29,6 @@ export default function BuynowListings({ listings, user }) {
                 <h3 className="text-md text-black dark:text-whitish font-medium">
                   {item.name || (item.attributes && item.attributes.name)}
                 </h3>
-                {item.brand_name && (
-                  <p className="dark:text-whitish text-xs">{item.brand_name}</p>
-                )}
                 <div className="clear-both mt-0.5">
                   {item.twitter_profile_image && (
                     <img
@@ -38,9 +36,9 @@ export default function BuynowListings({ listings, user }) {
                       className="w-4 h-4 mr-1 rounded-full float-left"
                     />
                   )}
-                  {item.artist_name && (
+                  {item.artist && (
                     <p className="dark:text-whitish text-xs mb-2">
-                      @{item.artist_name}
+                      @{item.artist}
                     </p>
                   )}
                 </div>

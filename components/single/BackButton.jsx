@@ -6,7 +6,6 @@ export default function BackButton() {
   return (
     <>
       <a
-        scroll={false}
         className="font-bold hover:text-gray-700 cursor-pointer dark:text-gray-100"
         onClick={() => router.back({ scroll: false })}
       >

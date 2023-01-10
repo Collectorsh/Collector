@@ -57,20 +57,6 @@ export default function Hero() {
                   />
                 </a>
               </div>
-
-              <div className="bg-greeny py-2 rounded-lg text-center mb-6">
-                <Link href="https://collector.sh/mint">
-                  <a>
-                    <h1 className="text-2xl font-sans text-black font-extrabold">
-                      Signature Sale is Open
-                    </h1>
-                    <h1 className="text-2xl font-sans text-black">
-                      Art Project &#43; Premium Membership
-                    </h1>
-                    <p className="text-black">collector.sh/mint</p>
-                  </a>
-                </Link>
-              </div>
             </div>
             <div className="lg:gap-y-8 col-end-8 col-span-3 relative">
               {auctions && (

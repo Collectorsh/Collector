@@ -1,4 +1,3 @@
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
   WalletProvider,
@@ -19,7 +18,7 @@ import { useCallback, useMemo } from "react";
 
 export const WalletContextProvider = ({ children }) => {
   // Can be set to 'devnet', 'testnet', or 'mainnet-beta'
-  const network = WalletAdapterNetwork.MainnetBeta;
+  const network = process.env.NEXT_PUBLIC_SOLANA_NETWORK;
 
   // You can also provide a custom RPC endpoint
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);

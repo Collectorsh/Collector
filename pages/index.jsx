@@ -9,8 +9,8 @@ export default function Home() {
 
   return (
     <div className="dark:bg-black">
+      <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <MainNavigation />
         <Hero />
         <Galleries />
       </div>

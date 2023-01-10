@@ -4,8 +4,8 @@ import MainNavigation from "/components/navigation/MainNavigation";
 export default function Faq() {
   return (
     <div className="dark:bg-black dark:text-whitish">
+      <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <MainNavigation />
         <div className="px-4 xl:px-0">
           <h2 className="text-2xl w-full pt-8 font-extrabold mb-8 text-black inline-block dark:text-whitish">
             Frequenty Asked Questions

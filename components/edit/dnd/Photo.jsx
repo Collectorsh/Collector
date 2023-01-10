@@ -49,3 +49,5 @@ export const Photo = forwardRef(
     );
   }
 );
+
+Photo.displayName = "Photo";

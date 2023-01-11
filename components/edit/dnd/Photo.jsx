@@ -4,6 +4,7 @@ import axios from "axios";
 
 export const Photo = forwardRef(
   ({ mint, uri, index, faded, style, ...props }, ref) => {
+    const height = props.height ? props.height : 200;
     const urlFromMint = async (mint, uri) => {
       var image = cdnImage(mint);
       try {
@@ -24,12 +25,17 @@ export const Photo = forwardRef(
     const inlineStyles = {
       opacity: faded ? "0.2" : "1",
       transformOrigin: "0 0",
-      height: 200,
+      height: height,
+      width: "100%",
       gridRowStart: index === 0 ? "span 1" : null,
       gridColumnStart: index === 0 ? "span 1" : null,
       backgroundColor: "grey",
       ...style,
     };
+
+    if (props.width) {
+      inlineStyles.width = height;
+    }
 
     const addDefaultSource = (e, mint, uri) => {
       urlFromMint(mint, uri).then((res) => {

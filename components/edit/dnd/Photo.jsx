@@ -30,6 +30,8 @@ export const Photo = forwardRef(
       gridRowStart: index === 0 ? "span 1" : null,
       gridColumnStart: index === 0 ? "span 1" : null,
       backgroundColor: "grey",
+      backgroundSize: "cover",
+      backgroundImage: `url("${cdnImage(mint)}")`,
       ...style,
     };
 
@@ -39,7 +41,7 @@ export const Photo = forwardRef(
 
     const addDefaultSource = (e, mint, uri) => {
       urlFromMint(mint, uri).then((res) => {
-        if (res) e.target.src = res;
+        if (res) e.target.style.backgroundImage = `url('${res}')`;
       });
     };
 
@@ -50,7 +52,7 @@ export const Photo = forwardRef(
         style={inlineStyles}
         {...props}
         // src={cdnImage(mint)}
-        // onError={(e) => addDefaultSource(e, mint, uri)}
+        onError={(e) => addDefaultSource(e, mint, uri)}
       />
     );
   }

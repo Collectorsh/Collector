@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   DndContext,
-  closestCenter,
   MouseSensor,
   TouchSensor,
   DragOverlay,
@@ -12,19 +11,16 @@ import {
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { arrayMove, insertAtIndex, removeAtIndex } from "./utils/array";
 import { Grid } from "./Grid";
-import { Photo } from "./Photo";
 import { SortablePhoto } from "./SortablePhoto";
+import Settings from "./Settings";
 
 import { Toaster } from "react-hot-toast";
-import { success, error } from "/utils/toastMessages";
-import saveLayout from "/data/dashboard/saveLayout";
-import { Oval } from "react-loader-spinner";
 import { cdnImage } from "/utils/cdnImage";
+import cloneDeep from "lodash/cloneDeep";
 
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
   const [items, setItems] = useState();
-  const [saving, setSaving] = useState(false);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
@@ -35,23 +31,22 @@ export default function Gallery({ tokens, user }) {
     setItems(itemz);
   }, []);
 
-  const doSaveLayout = async () => {
-    const updatedItems = [];
-    for (const [index, i] of items.visible.entries()) {
-      i.order_id = index + 1;
-      i.visible = true;
-      updatedItems.push(i);
+  const hideAll = () => {
+    const clonedItems = cloneDeep(items);
+    for (const [index, i] of clonedItems.visible.entries()) {
+      clonedItems.hidden.push(i);
     }
-    for (const [index, i] of items.hidden.entries()) {
-      i.order_id = index + 1;
-      i.visible = false;
-      updatedItems.push(i);
+    clonedItems.visible = [];
+    setItems(clonedItems);
+  };
+
+  const showAll = () => {
+    const clonedItems = cloneDeep(items);
+    for (const [index, i] of clonedItems.hidden.entries()) {
+      clonedItems.visible.push(i);
     }
-    setSaving(true);
-    const res = await saveLayout(user.api_key, updatedItems);
-    if (res.data.status === "success") success("Layout saved");
-    else error(res.msg);
-    setSaving(false);
+    clonedItems.hidden = [];
+    setItems(clonedItems);
   };
 
   const handleDragOver = ({ over, active }) => {
@@ -181,26 +176,12 @@ export default function Gallery({ tokens, user }) {
         {items && (
           <div className="grid grid-cols-12">
             <div className="col-span-3 h-full">
-              <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-4">
-                Settings
-              </h2>
-              <button
-                className="w-full py-2.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold"
-                onClick={() => doSaveLayout()}
-              >
-                {saving ? (
-                  <span className="w-fit mx-auto">
-                    <Oval
-                      color="#333"
-                      secondaryColor="#666"
-                      height={20}
-                      width={20}
-                    />
-                  </span>
-                ) : (
-                  <span>Save Layout</span>
-                )}
-              </button>
+              <Settings
+                items={items}
+                user={user}
+                hideAll={hideAll}
+                showAll={showAll}
+              />
               <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-6 mb-2">
                 Hidden
               </h2>
@@ -209,6 +190,9 @@ export default function Gallery({ tokens, user }) {
             <div className="col-span-8 col-end-13">
               <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2">
                 Visible
+                <span className="float-right rounded-2xl bg-gray-300 dark:bg-black text-white px-4 py-1 -mt-1 align-middle">
+                  {items.visible.length}
+                </span>
               </h2>
               <SortableContext
                 id="visible"

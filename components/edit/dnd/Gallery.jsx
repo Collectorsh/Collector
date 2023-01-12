@@ -20,6 +20,7 @@ import cloneDeep from "lodash/cloneDeep";
 
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
+  const [columns, setColumns] = useState(user.columns);
   const [items, setItems] = useState();
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
@@ -179,6 +180,7 @@ export default function Gallery({ tokens, user }) {
               <Settings
                 items={items}
                 user={user}
+                columns={columns}
                 hideAll={hideAll}
                 showAll={showAll}
               />
@@ -189,24 +191,60 @@ export default function Gallery({ tokens, user }) {
             </div>
             <div className="col-span-8 col-end-13">
               <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2">
-                Visible
-                <span className="float-right rounded-2xl bg-gray-300 dark:bg-black text-white px-4 py-1 -mt-1 align-middle">
-                  {items.visible.length}
-                </span>
+                <div className="grid grid-cols-3">
+                  <div className="col-span-1 text-left">
+                    <span
+                      className={`rounded-2xl text-white px-4 py-1 -mt-1 align-middle ${
+                        columns === 3
+                          ? "bg-black dark:bg-white dark:text-black"
+                          : "bg-gray-300 dark:bg-black cursor-pointer"
+                      }`}
+                      onClick={() => setColumns(3)}
+                    >
+                      3
+                    </span>
+                    <span
+                      className={`ml-1 rounded-2xl text-white px-4 py-1 -mt-1 align-middle ${
+                        columns === 4
+                          ? "bg-black dark:bg-white dark:text-black"
+                          : "bg-gray-300 dark:bg-black cursor-pointer"
+                      }`}
+                      onClick={() => setColumns(4)}
+                    >
+                      4
+                    </span>
+                    <span
+                      className={`ml-1 rounded-2xl text-white px-4 py-1 -mt-1 align-middle ${
+                        columns === 5
+                          ? "bg-black dark:bg-white dark:text-black"
+                          : "bg-gray-300 dark:bg-black cursor-pointer"
+                      }`}
+                      onClick={() => setColumns(5)}
+                    >
+                      5
+                    </span>
+                  </div>
+                  <div className="col-span-1 text-center">Visible</div>
+                  <div className="col-span-1 text-right">
+                    <span className="rounded-2xl bg-gray-300 dark:bg-black text-white px-4 py-1 -mt-1 align-middle">
+                      {items.visible.length}
+                    </span>
+                  </div>
+                </div>
               </h2>
               <SortableContext
                 id="visible"
                 items={items.visible.map((i) => i.mint)}
                 strategy={rectSortingStrategy}
               >
-                <Grid columns={3}>
+                <Grid columns={columns}>
                   {items.visible.map((token, index) => (
                     <SortablePhoto
                       key={token.mint}
                       mint={token.mint}
                       uri={token.uri}
                       index={index}
-                      height={250}
+                      height={columns === 3 ? 250 : columns === 4 ? 200 : 150}
                     />
                   ))}
                 </Grid>

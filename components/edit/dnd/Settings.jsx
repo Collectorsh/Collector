@@ -3,7 +3,7 @@ import { Oval } from "react-loader-spinner";
 import { success, error } from "/utils/toastMessages";
 import saveLayout from "/data/dashboard/saveLayout";
 
-export default function Settings({ items, user, hideAll, showAll }) {
+export default function Settings({ items, user, columns, hideAll, showAll }) {
   const [saving, setSaving] = useState(false);
 
   const doSaveLayout = async () => {
@@ -19,7 +19,7 @@ export default function Settings({ items, user, hideAll, showAll }) {
       updatedItems.push(i);
     }
     setSaving(true);
-    const res = await saveLayout(user.api_key, updatedItems);
+    const res = await saveLayout(user.api_key, updatedItems, columns);
     if (res.data.status === "success") success("Layout saved");
     else error(res.msg);
     setSaving(false);
@@ -48,7 +48,7 @@ export default function Settings({ items, user, hideAll, showAll }) {
       >
         {saving ? (
           <span className="w-fit mx-auto">
-            <Oval color="#333" secondaryColor="#666" height={20} width={20} />
+            <Oval color="#FFF" secondaryColor="#666" height={20} width={20} />
           </span>
         ) : (
           <span>Save Layout</span>

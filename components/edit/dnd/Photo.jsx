@@ -49,8 +49,8 @@ export const Photo = forwardRef(
         ref={ref}
         style={inlineStyles}
         {...props}
-        src={cdnImage(mint)}
-        onError={(e) => addDefaultSource(e, mint, uri)}
+        // src={cdnImage(mint)}
+        // onError={(e) => addDefaultSource(e, mint, uri)}
       />
     );
   }

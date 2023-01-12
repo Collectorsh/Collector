@@ -290,7 +290,7 @@ const OverlayImage = ({ mint }) => {
   return (
     <img
       className="w-[150px] h-[150px] w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
-      src={cdnImage(mint)}
+      // src={cdnImage(mint)}
     />
   );
 };

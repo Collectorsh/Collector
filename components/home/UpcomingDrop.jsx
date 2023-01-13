@@ -34,70 +34,117 @@ export default function UpcomingDrop() {
         <h2 className="mt-12 mb-6 text-4xl font-bold">Artists</h2>
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
           <div className="text-center">
-            <img
-              src="/images/drops/artists/balada.png"
-              className="w-full h-36 w-full object-center object-cover"
-            />
+            <Link href="https://twitter.com/@vegarifi" title="Balada Perupa">
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/balada.png"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
           </div>
           <div className="text-center">
-            <img
-              src="/images/drops/artists/mek.png"
-              className="w-full h-36 w-full object-center object-cover"
-            />
+            <Link href="https://twitter.com/@michaelmicasso" title="MEK.txt">
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/mek.png"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
           </div>
           <div className="text-center">
-            <img
-              src="/images/drops/artists/arissu.jpg"
-              className="w-full h-36 w-full object-center object-cover"
-            />
+            <Link href="https://twitter.com/@arissamaa" title="Arissu">
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/arissu.jpg"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
           </div>
           <div className="text-center">
-            <img
-              src="/images/drops/artists/monkseal.jpg"
-              className="w-full h-36 w-full object-center object-cover"
-            />
+            <Link href="https://twitter.com/@monksealpng" title="Monkseal">
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/monkseal.jpg"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
           </div>
           <div className="text-center">
-            <img
-              src="/images/drops/artists/ficklesight.jpeg"
-              className="w-full h-36 w-full object-center object-cover"
-            />
+            <Link href="https://twitter.com/@ficklesight" title="Fickle Sight">
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/ficklesight.jpeg"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
           </div>
           <div className="text-center">
-            <img
-              src="/images/drops/artists/lapan.jpg"
-              className="w-full h-36 w-full object-center object-cover"
-            />
+            <Link
+              href="https://twitter.com/@lapantigatiga"
+              title="Lapantigatiga"
+            >
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/lapan.jpg"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
           </div>
           <div className="text-center">
-            <img
-              src="/images/drops/artists/hana.png"
-              className="w-full h-36 w-full object-center object-cover"
-            />
+            <Link href="https://twitter.com/_hanaknight17" title="Hana Knight">
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/hana.png"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
           </div>
           <div className="text-center">
-            <img
-              src="/images/drops/artists/adam.png"
-              className="w-full h-36 w-full object-center object-cover"
-            />
+            <Link href="https://twitter.com/@xxalfsyr" title="Adam Alfisyar">
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/adam.png"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
           </div>
           <div className="text-center">
-            <img
-              src="/images/drops/artists/ordinary.jpeg"
-              className="w-full h-36 w-full object-center object-cover"
-            />
+            <Link href="https://twitter.com/@ordinary_sol" title="Ordinary">
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/ordinary.jpeg"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
           </div>
           <div className="text-center">
-            <img
-              src="/images/drops/artists/duck.gif"
-              className="w-full h-36 w-full object-center object-cover"
-            />
+            <Link href="https://twitter.com/duckzzyog" title="Duckzzy">
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/duck.gif"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
           </div>
           <div className="text-center">
-            <img
-              src="/images/drops/artists/cufives.png"
-              className="w-full h-36 w-full object-center object-cover"
-            />
+            <Link href="https://twitter.com/@cufives" title="Cufives">
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/cufives.png"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -167,6 +167,15 @@ export default function HanaKnight() {
                 <p className="underline">Bloom</p>
                 <p className="text-sm mt-2">Editions: 5</p>
               </div>
+              <div className="text-center">
+                <img
+                  src="/images/drops/hanaknight/kqwounmx26n6d1xkqwoup3orkfrz73e7.jpg"
+                  className="w-full h-96 lg:h-64 object-center object-cover"
+                />
+                <p className="font-bold">SDNT</p>
+                <p className="underline">Sow and Reap</p>
+                <p className="text-sm mt-2">Editions: 5</p>
+              </div>
             </div>
           </div>
         </div>

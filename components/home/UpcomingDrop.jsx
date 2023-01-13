@@ -9,17 +9,17 @@ export default function UpcomingDrop() {
           <div className="text-center">
             <img
               src="/images/drops/hanaknight/k9lvii971i33ooy59c6xk9lviwbscdq6.png"
-              className="w-full h-96 object-center object-cover"
+              className="h-96 object-center object-cover"
             />
           </div>
         </div>
-        <div className="sm:col-span-5 sm:col-end-13">
+        <div className="sm:col-span-6 sm:col-end-13">
           <p>January 18th</p>
           <h2 className="align-middle sm:inline sm:my-5 text-4xl font-bold w-full py-1 inline-block">
             Hana Knight
           </h2>
           <p className="mt-4">
-            Curated by Hana Knight this drop features artwork from 11 artists.
+            Curated by Hana Knight this drop features artwork from 12 artists.
           </p>
           <div className="mt-8">
             <Link href="/drops/hanaknight" title="Hana Knight Drop">
@@ -141,6 +141,16 @@ export default function UpcomingDrop() {
               <a target="_blank">
                 <img
                   src="/images/drops/artists/cufives.png"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link href="https://twitter.com/@septadenata" title="SDNT">
+              <a target="_blank">
+                <img
+                  src="/images/drops/hanaknight/kqwounmx26n6d1xkqwoup3orkfrz73e7.png"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>

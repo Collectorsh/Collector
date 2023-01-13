@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import MainNavigation from "/components/navigation/MainNavigation";
-import Hero from "/components/home/Hero";
+// import Hero from "/components/home/Hero";
+import UpcomingDrop from "/components/home/UpcomingDrop";
 import Galleries from "/components/home/Galleries";
 import UserContext from "/contexts/user";
 
@@ -11,7 +12,8 @@ export default function Home() {
     <div className="dark:bg-black">
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <Hero />
+        {/* <Hero /> */}
+        <UpcomingDrop />
         <Galleries />
       </div>
     </div>

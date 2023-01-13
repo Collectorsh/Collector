@@ -25,10 +25,14 @@ export default function Drops() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
             <div className="text-center mb-6">
               <p className="font-bold mb-1">Hana Knight</p>
-              <img
-                src="/images/hanaknight.jpeg"
-                className="w-full h-96 lg:h-64 object-center object-cover"
-              />
+              <Link href="/drops/hanaknight" title="Hana Knight Drop">
+                <a>
+                  <img
+                    src="/images/hanaknight.jpeg"
+                    className="w-full h-96 lg:h-64 object-center object-cover"
+                  />
+                </a>
+              </Link>
               <p className="text-sm mt-2">January 18th</p>
             </div>
             <div className="text-center mb-6">

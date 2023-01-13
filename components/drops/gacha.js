@@ -151,20 +151,20 @@ export default function Gacha({ address }) {
       {wallet && wallet.publicKey ? (
         <div className="mt-4">
           {mintState && mintState === "sold" && (
-            <button className="bg-red-400 px-3 py-2 font-semibold text-black text-xl">
+            <button className="bg-red-400 px-4 py-3 font-semibold text-black text-lg rounded-xl">
               Sold Out
             </button>
           )}
           {mintState && mintState === "pre" && (
             <>
               {holderStartDate && (
-                <p className="text-gray-500">
+                <p>
                   Signature holder mint starts in{" "}
                   <Moment date={holderStartDate} unix fromNow />
                 </p>
               )}
               {publicStartDate && (
-                <p className="text-gray-500">
+                <p>
                   Public mint starts{" "}
                   <Moment date={publicStartDate} unix fromNow />
                 </p>
@@ -232,7 +232,7 @@ export default function Gacha({ address }) {
                 </>
               ) : (
                 <button
-                  className="bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
+                  className="bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
                   onClick={() => mintNow("public")}
                   disabled={isMinting}
                 >
@@ -248,7 +248,7 @@ export default function Gacha({ address }) {
       ) : (
         <>
           <button
-            className="mt-4 float-right bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer"
+            className="mt-4 float-right bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl"
             onClick={(e) => setVisible(true)}
           >
             Connect Wallet

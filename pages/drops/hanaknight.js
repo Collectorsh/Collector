@@ -33,7 +33,7 @@ export default function HanaKnight() {
                 <h2 className="sm:ml-4 align-middle sm:inline my-5 text-4xl font-bold w-full py-1 inline-block">
                   Hana Knight
                 </h2>
-                <p>Description...</p>
+                <p></p>
               </div>
               <div className="col-span-5 col-end-13">
                 <Gacha address={address} />

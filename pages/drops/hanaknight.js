@@ -169,7 +169,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/kqwounmx26n6d1xkqwoup3orkfrz73e7.jpg"
+                  src="/images/drops/hanaknight/kqwounmx26n6d1xkqwoup3orkfrz73e7.png"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">SDNT</p>

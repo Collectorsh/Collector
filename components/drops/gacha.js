@@ -188,7 +188,7 @@ export default function Gacha({ address }) {
                     </>
                   ) : (
                     <button
-                      className="bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
+                      className="bg-greeny px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer disabled:bg-gray-300"
                       onClick={() => mintNow("holder")}
                       disabled={isMinting}
                     >
@@ -198,7 +198,7 @@ export default function Gacha({ address }) {
                 </>
               ) : (
                 <>
-                  <p className="text-red-500">
+                  <p>
                     You need to be a Collector Signature holder in order to mint
                     now. You can mint your Signature{" "}
                     <Link href="/mint">
@@ -208,7 +208,7 @@ export default function Gacha({ address }) {
                     </Link>
                   </p>
                   {publicStartDate && (
-                    <p className="mt-4 text-gray-500">
+                    <p className="mt-4">
                       Public mint starts{" "}
                       <Moment date={publicStartDate} unix fromNow />
                     </p>
@@ -232,7 +232,7 @@ export default function Gacha({ address }) {
                 </>
               ) : (
                 <button
-                  className="bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
+                  className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
                   onClick={() => mintNow("public")}
                   disabled={isMinting}
                 >

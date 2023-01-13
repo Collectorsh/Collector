@@ -140,32 +140,34 @@ export default function Gacha({ address }) {
   return (
     <>
       {remaining && total && (
-        <p className="mt-6 bg-gray-100 p-2 w-ft font-bold">
+        <p className="bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
           Remaining: {remaining}/{total}
         </p>
       )}
 
-      <p className="mt-4 bg-gray-100 p-2 w-ft font-bold">
-        Price: {cost && <>◎{roundToTwo(cost / 1000000000)}</>}
-      </p>
+      {cost && (
+        <p className="mt-4 bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
+          Price: {cost && <>◎{roundToTwo(cost / 1000000000)}</>}
+        </p>
+      )}
 
       {wallet && wallet.publicKey ? (
-        <>
+        <div className="mt-4">
           {mintState && mintState === "sold" && (
-            <button className="mt-12 bg-red-400 px-3 py-2 font-semibold text-black text-xl">
+            <button className="bg-red-400 px-3 py-2 font-semibold text-black text-xl">
               Sold Out
             </button>
           )}
           {mintState && mintState === "pre" && (
             <>
               {holderStartDate && (
-                <p className="mt-4 text-gray-500">
+                <p className="text-gray-500">
                   Signature holder mint starts in{" "}
                   <Moment date={holderStartDate} unix fromNow />
                 </p>
               )}
               {publicStartDate && (
-                <p className="mt-4 text-gray-500">
+                <p className="text-gray-500">
                   Public mint starts{" "}
                   <Moment date={publicStartDate} unix fromNow />
                 </p>
@@ -189,7 +191,7 @@ export default function Gacha({ address }) {
                     </>
                   ) : (
                     <button
-                      className="mt-8 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
+                      className="bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
                       onClick={() => mintNow("holder")}
                       disabled={isMinting}
                     >
@@ -199,7 +201,7 @@ export default function Gacha({ address }) {
                 </>
               ) : (
                 <>
-                  <p className="mt-4 text-red-500">
+                  <p className="text-red-500">
                     You need to be a Collector Signature holder in order to mint
                     now. You can mint your Signature{" "}
                     <Link href="/mint">
@@ -233,7 +235,7 @@ export default function Gacha({ address }) {
                 </>
               ) : (
                 <button
-                  className="mt-8 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
+                  className="bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
                   onClick={() => mintNow("public")}
                   disabled={isMinting}
                 >
@@ -243,13 +245,13 @@ export default function Gacha({ address }) {
             </>
           )}
           {mintState && mintState === "ended" && (
-            <p className="mt-12 text-red-500">The mint has ended</p>
+            <p className="text-red-500">The mint has ended</p>
           )}
-        </>
+        </div>
       ) : (
         <>
           <button
-            className="mt-12 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer"
+            className="mt-4 float-right bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer"
             onClick={(e) => setVisible(true)}
           >
             Connect Wallet

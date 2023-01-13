@@ -1,15 +1,26 @@
-import React, { forwardRef, useEffect } from "react";
-import { urlFromMint } from "/utils/urlFromMint";
+import React, { forwardRef, useEffect, useCallback } from "react";
+import { useLazyQuery } from "@apollo/client";
+import { nftByMintAddress } from "/queries/nft_by_mint";
 
 export const Photo = forwardRef(
   ({ mint, uri, index, faded, style, ...props }, ref) => {
     const height = props.height ? props.height : 200;
 
-    useEffect(() => {
-      if (!mint || !uri) return;
-      urlFromMint(mint, uri).then((res) => {
-        document.getElementById(mint).src = res;
+    const [nftByMintAddressQl] = useLazyQuery(nftByMintAddress, {
+      fetchPolicy: "network-only",
+    });
+
+    const fetchNft = useCallback(async (mint) => {
+      const res = await nftByMintAddressQl({
+        variables: { address: mint },
       });
+      document.getElementById(`grid-${mint}`).src =
+        res.data.nftByMintAddress.image;
+    }, []);
+
+    useEffect(() => {
+      if (!mint) return;
+      fetchNft(mint);
     }, []);
 
     const inlineStyles = {
@@ -29,7 +40,7 @@ export const Photo = forwardRef(
 
     return (
       <img
-        id={mint}
+        id={`grid-${mint}`}
         className="w-full opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm"
         ref={ref}
         style={inlineStyles}

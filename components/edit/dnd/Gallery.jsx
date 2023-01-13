@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   DndContext,
   MouseSensor,
@@ -17,7 +17,8 @@ import Settings from "./Settings";
 import { Toaster } from "react-hot-toast";
 import { cdnImage } from "/utils/cdnImage";
 import cloneDeep from "lodash/cloneDeep";
-import { urlFromMint } from "/utils/urlFromMint";
+import { useLazyQuery } from "@apollo/client";
+import { nftByMintAddress } from "/queries/nft_by_mint";
 
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
@@ -288,13 +289,26 @@ const Hidden = ({ items }) => {
 };
 
 const OverlayImage = ({ mint }) => {
+  const [nftByMintAddressQl] = useLazyQuery(nftByMintAddress, {
+    fetchPolicy: "network-only",
+  });
+
+  const fetchNft = useCallback(async (mint) => {
+    const res = await nftByMintAddressQl({
+      variables: { address: mint },
+    });
+    document.getElementById(`overlay-${mint}`).src =
+      res.data.nftByMintAddress.image;
+  }, []);
+
+  useEffect(() => {
+    fetchNft(mint);
+  }, []);
+
   return (
     <img
+      id={`overlay-${mint}`}
       className="w-[150px] h-[150px] w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
-      style={{
-        backgroundImage: `url("${cdnImage(mint)}")`,
-        backgroundSize: "cover",
-      }}
     />
   );
 };

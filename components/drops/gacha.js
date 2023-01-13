@@ -127,13 +127,10 @@ export default function Gacha({ address }) {
       Date.now() < h.endDate.date.toNumber() * 1000
     ) {
       setMintState("holder");
-    } else if (
-      Date.now() > p.startDate.date.toNumber() * 1000 &&
-      Date.now() < p.endDate.date.toNumber() * 1000
-    ) {
-      setMintState("public");
-    } else if (Date.now() > p.endDate.date.toNumber() * 1000) {
+    } else if (p.endDate && Date.now() > p.endDate.date.toNumber() * 1000) {
       setMintState("ended");
+    } else if (Date.now() > p.startDate.date.toNumber() * 1000) {
+      setMintState("public");
     }
   };
 

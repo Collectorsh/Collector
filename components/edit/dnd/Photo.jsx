@@ -1,26 +1,16 @@
-import React, { forwardRef } from "react";
-import { cdnImage } from "/utils/cdnImage";
-import axios from "axios";
+import React, { forwardRef, useEffect } from "react";
+import { urlFromMint } from "/utils/urlFromMint";
 
 export const Photo = forwardRef(
   ({ mint, uri, index, faded, style, ...props }, ref) => {
     const height = props.height ? props.height : 200;
-    const urlFromMint = async (mint, uri) => {
-      var image = cdnImage(mint);
-      try {
-        let res = await fetch(image, { method: "HEAD" });
-        if (res.ok) {
-          return image;
-        }
-      } catch (err) {
-        try {
-          let res = await axios.get(uri);
-          return res.data.image;
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    };
+
+    useEffect(() => {
+      if (!mint || !uri) return;
+      urlFromMint(mint, uri).then((res) => {
+        document.getElementById(mint).src = res;
+      });
+    }, []);
 
     const inlineStyles = {
       opacity: faded ? "0.2" : "1",
@@ -30,8 +20,6 @@ export const Photo = forwardRef(
       gridRowStart: index === 0 ? "span 1" : null,
       gridColumnStart: index === 0 ? "span 1" : null,
       backgroundColor: "grey",
-      backgroundSize: "cover",
-      backgroundImage: `url("${cdnImage(mint)}")`,
       ...style,
     };
 
@@ -39,20 +27,13 @@ export const Photo = forwardRef(
       inlineStyles.width = height;
     }
 
-    const addDefaultSource = (e, mint, uri) => {
-      urlFromMint(mint, uri).then((res) => {
-        if (res) e.target.style.backgroundImage = `url('${res}')`;
-      });
-    };
-
     return (
       <img
+        id={mint}
         className="w-full opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm"
         ref={ref}
         style={inlineStyles}
         {...props}
-        // src={cdnImage(mint)}
-        onError={(e) => addDefaultSource(e, mint, uri)}
       />
     );
   }

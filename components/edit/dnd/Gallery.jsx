@@ -17,6 +17,7 @@ import Settings from "./Settings";
 import { Toaster } from "react-hot-toast";
 import { cdnImage } from "/utils/cdnImage";
 import cloneDeep from "lodash/cloneDeep";
+import { urlFromMint } from "/utils/urlFromMint";
 
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
@@ -294,7 +295,6 @@ const OverlayImage = ({ mint }) => {
         backgroundImage: `url("${cdnImage(mint)}")`,
         backgroundSize: "cover",
       }}
-      // src={cdnImage(mint)}
     />
   );
 };

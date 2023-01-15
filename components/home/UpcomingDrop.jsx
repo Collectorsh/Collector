@@ -14,12 +14,20 @@ export default function UpcomingDrop() {
           </div>
         </div>
         <div className="sm:col-span-6 sm:col-end-13">
-          <p>January 18th</p>
+          <p>January 18th, 4pm EST</p>
           <h2 className="align-middle sm:inline sm:my-5 text-4xl font-bold w-full py-1 inline-block">
-            Hana Knight
+            Nusantara Blooming
           </h2>
+          <p>
+            Curated by{" "}
+            <Link href="https://twitter.com/_hanaknight17" title="Hana Knight">
+              <a target="_blank">Hana Knight</a>
+            </Link>
+          </p>
           <p className="mt-4">
-            Curated by Hana Knight this drop features artwork from 12 artists.
+            A collection of varied interpretations surrounding the theme of
+            nature and humanity. Brought to you by artists across genres from
+            Indonesia.
           </p>
           <div className="mt-8">
             <Link href="/drops/hanaknight" title="Hana Knight Drop">
@@ -151,6 +159,29 @@ export default function UpcomingDrop() {
               <a target="_blank">
                 <img
                   src="/images/drops/hanaknight/kqwounmx26n6d1xkqwoup3orkfrz73e7.png"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link
+              href="https://twitter.com/@aninditowisnu"
+              title="Anindito Wisnu"
+            >
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/anindito"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link href="https://twitter.com/@destroyxstairs" title="SDNT">
+              <a target="_blank">
+                <img
+                  src="/images/drops/artists/destroyxstairs.png"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>

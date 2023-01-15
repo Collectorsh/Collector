@@ -176,6 +176,33 @@ export default function HanaKnight() {
                 <p className="underline">Sow and Reap</p>
                 <p className="text-sm mt-2">Editions: 5</p>
               </div>
+              <div className="text-center">
+                <img
+                  src="/images/drops/hanaknight/83wmmyzkgejswixeg83wmmyxab3qr9xv.jpeg"
+                  className="w-full h-96 lg:h-64 object-center object-cover"
+                />
+                <p className="font-bold">Anindito Wisnu</p>
+                <p className="underline">Florette</p>
+                <p className="text-sm mt-2">Editions: 5</p>
+              </div>
+              <div className="text-center">
+                <img
+                  src="/images/drops/hanaknight/gjx81nbt7mh416vxtigjx81axisvtpsu.png"
+                  className="w-full h-96 lg:h-64 object-center object-cover"
+                />
+                <p className="font-bold">hanaknight</p>
+                <p className="underline">CandyWrapperDAO</p>
+                <p className="text-sm mt-2">Editions: 10</p>
+              </div>
+              <div className="text-center">
+                <img
+                  src="/images/drops/hanaknight/r824fp52r56r820vyoz4f7f2gsrro0vy.png"
+                  className="w-full h-96 lg:h-64 object-center object-cover"
+                />
+                <p className="font-bold">destroyxstairs</p>
+                <p className="underline">1984</p>
+                <p className="text-sm mt-2">Editions: 5</p>
+              </div>
             </div>
           </div>
         </div>

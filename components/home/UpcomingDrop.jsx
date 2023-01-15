@@ -171,7 +171,7 @@ export default function UpcomingDrop() {
             >
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/anindito"
+                  src="/images/drops/artists/anindito.jpeg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -181,7 +181,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@destroyxstairs" title="SDNT">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/destroyxstairs.png"
+                  src="/images/drops/artists/destroystairs.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>

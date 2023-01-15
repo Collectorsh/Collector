@@ -196,7 +196,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/r824fp52r56r820vyoz4f7f2gsrro0vy.png"
+                  src="/images/drops/hanaknight/r824fp52r56r820vyoz4f7f2gsrro0vy.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">destroyxstairs</p>

@@ -24,21 +24,27 @@ export default function HanaKnight() {
         <MainNavigation />
         <div className="max-w-7xl mx-auto">
           <div className="max-w-4xl mx-auto sm:my-12 p-4 shadow-lg bg-white dark:bg-black dark:text-white">
-            <div className="grid grid-cols-12">
-              <div className="col-span-5">
+            <div className="grid grid-cols-1 sm:grid-cols-12">
+              <div className="col-span-1 sm:col-span-7">
                 <img
                   src="/images/hanaknight.jpeg"
                   className="inline w-16 h-16 align-middle rounded-full"
                 />
-                <h2 className="sm:ml-4 align-middle sm:inline my-5 text-4xl font-bold w-full py-1 inline-block">
+                <h2 className="ml-4 align-middle inline my-5 text-4xl font-bold w-full py-1 inline-block">
                   Hana Knight
                 </h2>
-                <p></p>
               </div>
-              <div className="col-span-5 col-end-13">
+              <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
                 <Gacha address={address} />
               </div>
             </div>
+
+            <p className="text-xl font-bold mt-6 sm:mt-0">Nusantara Blooming</p>
+            <p className="mt-4">
+              A collection of varied interpretations surrounding the theme of
+              nature and humanity. Brought to you by artists across genres from
+              Indonesia.
+            </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
               <div className="text-center">

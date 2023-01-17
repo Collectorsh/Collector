@@ -15,6 +15,8 @@ export default function Gacha({ address }) {
   const [holder, setHolder] = useState();
   const [total, setTotal] = useState(0);
   const [remaining, setRemaining] = useState();
+  const [minted, setMinted] = useState();
+  const [holderMax, setHolderMax] = useState();
   const [collectionMint, setCollectionMint] = useState();
   const [mintState, setMintState] = useState();
   const [isMinting, setIsMinting] = useState(false);
@@ -30,6 +32,7 @@ export default function Gacha({ address }) {
       address: address,
     });
     setTotal(cndy.itemsLoaded);
+    setMinted(cndy.itemsMinted.toNumber());
     setRemaining(cndy.itemsRemaining.toNumber());
     doSetState(cndy);
     if (onceOnly === false) setTimeout(asyncGetCandymachine, 5000);
@@ -118,6 +121,9 @@ export default function Gacha({ address }) {
     setHolderStartDate(h.startDate.date);
     setPublicStartDate(p.startDate.date);
     setCost(h.solPayment.lamports.toNumber());
+    if (h.redeemedAmount) {
+      setHolderMax(h.redeemedAmount.maximum.toNumber());
+    }
     if (cndy.itemsRemaining.toNumber() === 0) {
       setMintState("sold");
     } else if (Date.now() < h.startDate.date.toNumber() * 1000) {
@@ -173,6 +179,12 @@ export default function Gacha({ address }) {
           )}
           {mintState && mintState === "holder" && (
             <>
+              {holderMax && (
+                <p className="mb-4">
+                  Signature holder allocation is {holderMax}. Minted {minted}/
+                  {holderMax}
+                </p>
+              )}
               {holder === "yes" ? (
                 <>
                   {isMinting ? (
@@ -188,9 +200,15 @@ export default function Gacha({ address }) {
                     </>
                   ) : (
                     <button
-                      className="bg-greeny px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer disabled:bg-gray-300"
+                      className="bg-greeny px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer disabled:cursor-default disabled:bg-gray-300"
                       onClick={() => mintNow("holder")}
-                      disabled={isMinting}
+                      disabled={
+                        isMinting
+                          ? true
+                          : holderMax
+                          ? minted === holderMax
+                          : false
+                      }
                     >
                       Mint
                     </button>

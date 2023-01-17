@@ -178,7 +178,7 @@ export default function Gacha({ address }) {
           {mintState && mintState === "holder" && (
             <>
               {holderMax && (
-                <p className="mb-4">
+                <p className="mb-4 text-sm">
                   Signature holder allocation is {holderMax}. Minted {minted}/
                   {holderMax}
                 </p>
@@ -214,7 +214,7 @@ export default function Gacha({ address }) {
                 </>
               ) : (
                 <>
-                  <p>
+                  <p className="text-sm">
                     You need to be a Collector Signature holder in order to mint
                     now. You can mint your Signature{" "}
                     <Link href="/mint">
@@ -224,7 +224,7 @@ export default function Gacha({ address }) {
                     </Link>
                   </p>
                   {publicStartDate && (
-                    <p className="mt-4">
+                    <p className="mt-4 text-sm">
                       Public mint starts{" "}
                       <Moment date={publicStartDate} unix fromNow />
                     </p>
@@ -258,7 +258,7 @@ export default function Gacha({ address }) {
             </>
           )}
           {mintState && mintState === "ended" && (
-            <p className="text-red-500">The mint has ended</p>
+            <p className="text-red-500 text-sm">The mint has ended</p>
           )}
         </div>
       ) : (

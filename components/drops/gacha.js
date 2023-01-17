@@ -8,6 +8,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Oval } from "react-loader-spinner";
 import Moment from "react-moment";
+import { MintCountdown } from "/utils/mint/MintCountdown";
+import { toDate } from "/utils/mint/utils";
 
 export default function Gacha({ address }) {
   const wallet = useWallet();
@@ -164,14 +166,16 @@ export default function Gacha({ address }) {
           {mintState && mintState === "pre" && (
             <>
               {holderStartDate && (
-                <p className="text-sm">
-                  Mint starts <Moment date={holderStartDate} unix fromNow />
-                </p>
+                <MintCountdown
+                  date={toDate(holderStartDate)}
+                  style={{ justifyContent: "flex-end" }}
+                />
               )}
               {!holderStartDate && publicStartDate && (
-                <p className="text-sm">
-                  Mint starts <Moment date={publicStartDate} unix fromNow />
-                </p>
+                <MintCountdown
+                  date={toDate(publicStartDate)}
+                  style={{ justifyContent: "flex-end" }}
+                />
               )}
             </>
           )}

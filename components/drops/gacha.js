@@ -164,15 +164,13 @@ export default function Gacha({ address }) {
           {mintState && mintState === "pre" && (
             <>
               {holderStartDate && (
-                <p>
-                  Signature holder mint starts in{" "}
-                  <Moment date={holderStartDate} unix fromNow />
+                <p className="text-sm">
+                  Mint starts <Moment date={holderStartDate} unix fromNow />
                 </p>
               )}
-              {publicStartDate && (
-                <p>
-                  Public mint starts{" "}
-                  <Moment date={publicStartDate} unix fromNow />
+              {!holderStartDate && publicStartDate && (
+                <p className="text-sm">
+                  Mint starts <Moment date={publicStartDate} unix fromNow />
                 </p>
               )}
             </>

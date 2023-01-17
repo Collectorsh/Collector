@@ -33,18 +33,17 @@ export default function HanaKnight() {
                 <h2 className="ml-4 align-middle inline my-5 text-4xl font-bold w-full py-1 inline-block">
                   Hana&apos;s Gacha
                 </h2>
+                <p className="text-xl font-bold mt-6">Nusantara Blooming</p>
+                <p className="mt-4">
+                  A collection of varied interpretations surrounding the theme
+                  of nature and humanity. Brought to you by artists across
+                  genres from Indonesia.
+                </p>
               </div>
               <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
                 <Gacha address={address} />
               </div>
             </div>
-
-            <p className="text-xl font-bold mt-6">Nusantara Blooming</p>
-            <p className="mt-4">
-              A collection of varied interpretations surrounding the theme of
-              nature and humanity. Brought to you by artists across genres from
-              Indonesia.
-            </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
               <div className="text-center">

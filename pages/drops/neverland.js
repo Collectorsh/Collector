@@ -4,7 +4,7 @@ import { PublicKey } from "@solana/web3.js";
 import Gacha from "/components/drops/gacha";
 
 export default function HanaKnight() {
-  const address = new PublicKey("CZVTD9ZBvN1ZFjrb2c3sY3pbKcqonybPbXKDfq3rPXcn");
+  const address = new PublicKey("9zACFMk2YGMKcRZoCf5miDgVidE8sCmy3QUDwvgbqS8n");
 
   return (
     <>

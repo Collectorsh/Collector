@@ -48,7 +48,7 @@ export default function HanaKnight() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/k9lvii971i33ooy59c6xk9lviwbscdq6.png"
+                  src="https://cdn.collector.sh/drops/hanaknight/k9lvii971i33ooy59c6xk9lviwbscdq6.png"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">hanaknight</p>
@@ -57,7 +57,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/dvlyfxegc84g6524wundvlimqmpm855o.png"
+                  src="https://cdn.collector.sh/drops/hanaknight/dvlyfxegc84g6524wundvlimqmpm855o.png"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">hanaknight</p>
@@ -66,7 +66,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/urpcoob9iehl1urpcjma6azucq7lxuet.jpg"
+                  src="https://cdn.collector.sh/drops/hanaknight/urpcoob9iehl1urpcjma6azucq7lxuet.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">hanaknight</p>
@@ -75,7 +75,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/nm60u1dgr31nfnm6ui7i8vjzmozu3ui7.png"
+                  src="https://cdn.collector.sh/drops/hanaknight/nm60u1dgr31nfnm6ui7i8vjzmozu3ui7.png"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Balada Perupa</p>
@@ -84,7 +84,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/saihw59ydsisa3k91watgku6187otc9g.png"
+                  src="https://cdn.collector.sh/drops/hanaknight/saihw59ydsisa3k91watgku6187otc9g.png"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">hanaknight</p>
@@ -93,7 +93,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/6aapygo2er8yl8q3h6aapwcjmis8jv4f.png"
+                  src="https://cdn.collector.sh/drops/hanaknight/6aapygo2er8yl8q3h6aapwcjmis8jv4f.png"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">MEK.txt</p>
@@ -102,7 +102,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/ibffqpfcfsv3xonyudmibffq32c8ikuj.jpg"
+                  src="https://cdn.collector.sh/drops/hanaknight/ibffqpfcfsv3xonyudmibffq32c8ikuj.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Arissu</p>
@@ -111,7 +111,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/waqsgkfx0bi9h1j1waqsgzbe30m3vw79.jpg"
+                  src="https://cdn.collector.sh/drops/hanaknight/waqsgkfx0bi9h1j1waqsgzbe30m3vw79.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Monkseal</p>
@@ -120,7 +120,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/q3jgxzf3ozbs0pzuxleiq3jgxzfhp5qv.jpg"
+                  src="https://cdn.collector.sh/drops/hanaknight/q3jgxzf3ozbs0pzuxleiq3jgxzfhp5qv.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Fickle Sight</p>
@@ -129,7 +129,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/oleat3n6t2csnbs9oxhqoleat35048ze.jpg"
+                  src="https://cdn.collector.sh/drops/hanaknight/oleat3n6t2csnbs9oxhqoleat35048ze.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Lapantigatiga</p>
@@ -138,7 +138,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/t2oroj8s5on1zjxgeftt2orojvwlfag4.png"
+                  src="https://cdn.collector.sh/drops/hanaknight/t2oroj8s5on1zjxgeftt2orojvwlfag4.png"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Adam Alfisyar</p>
@@ -147,7 +147,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/83fsu3p3kmp01883fsz78a6ls5h5dmm6.jpg"
+                  src="https://cdn.collector.sh/drops/hanaknight/83fsu3p3kmp01883fsz78a6ls5h5dmm6.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Ordinary</p>
@@ -156,7 +156,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/4va7jvcmxgp58gtznzd94va7jvcu5cd7.gif"
+                  src="https://cdn.collector.sh/drops/hanaknight/4va7jvcmxgp58gtznzd94va7jvcu5cd7.gif"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Duckzzy</p>
@@ -165,7 +165,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/im9cdihbg7l86xr83roxyim9cdihcjx0.jpg"
+                  src="https://cdn.collector.sh/drops/hanaknight/im9cdihbg7l86xr83roxyim9cdihcjx0.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Cufives</p>
@@ -174,7 +174,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/kqwounmx26n6d1xkqwoup3orkfrz73e7.png"
+                  src="https://cdn.collector.sh/drops/hanaknight/kqwounmx26n6d1xkqwoup3orkfrz73e7.png"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">SDNT</p>
@@ -183,7 +183,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/83wmmyzkgejswixeg83wmmyxab3qr9xv.jpeg"
+                  src="https://cdn.collector.sh/drops/hanaknight/83wmmyzkgejswixeg83wmmyxab3qr9xv.jpeg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Anindito Wisnu</p>
@@ -192,7 +192,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/gjx81nbt7mh416vxtigjx81axisvtpsu.png"
+                  src="https://cdn.collector.sh/drops/hanaknight/gjx81nbt7mh416vxtigjx81axisvtpsu.png"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">hanaknight</p>
@@ -201,7 +201,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/hanaknight/r824fp52r56r820vyoz4f7f2gsrro0vy.jpg"
+                  src="https://cdn.collector.sh/drops/hanaknight/r824fp52r56r820vyoz4f7f2gsrro0vy.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">destroyxstairs</p>

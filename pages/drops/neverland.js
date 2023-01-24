@@ -27,7 +27,7 @@ export default function HanaKnight() {
             <div className="grid grid-cols-1 sm:grid-cols-12">
               <div className="col-span-1 sm:col-span-7">
                 <img
-                  src="/images/drops/neverland/re43f9ejbhxegwf9re4385fq2h5rltsb.png"
+                  src="https://cdn.collector.sh/drops/neverland/re43f9ejbhxegwf9re4385fq2h5rltsb.png"
                   className="inline w-16 h-16 align-middle rounded-full"
                 />
                 <h2 className="ml-4 align-middle inline my-5 text-4xl font-bold w-full py-1 inline-block">
@@ -46,7 +46,7 @@ export default function HanaKnight() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/765ceaf6f02fac0bf66025d3.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/765ceaf6f02fac0bf66025d3.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Nev</p>
@@ -55,7 +55,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/910kg5eat73oe03lj7y910kg5enqt6a1.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/910kg5eat73oe03lj7y910kg5enqt6a1.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">George Figueroa</p>
@@ -64,7 +64,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/a1oemy4hf3jx26zl3w3a1oglgqm6kwk2.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/a1oemy4hf3jx26zl3w3a1oglgqm6kwk2.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">H A N</p>
@@ -73,7 +73,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/i1vsarb9ktx4xwhampi1vsarb4x72sdp.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/i1vsarb9ktx4xwhampi1vsarb4x72sdp.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Hacs</p>
@@ -82,7 +82,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/0o1ybvhb8vt95n5po50dc9r0o1yb14jq.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/0o1ybvhb8vt95n5po50dc9r0o1yb14jq.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Huxsterized</p>
@@ -91,7 +91,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/infkwshe4rw74tcpjlqninfkwts2rtc5.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/infkwshe4rw74tcpjlqninfkwts2rtc5.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Jakob Lilja-Ruiz</p>
@@ -100,7 +100,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/xrqvkq1ae7ni11b5gf7dxrqvkqts0dsx.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/xrqvkq1ae7ni11b5gf7dxrqvkqts0dsx.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Jairinho</p>
@@ -109,7 +109,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/h4oazkg1k558y4h4oazkvg0gg38w6ult.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/h4oazkg1k558y4h4oazkvg0gg38w6ult.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Jay Toor</p>
@@ -118,7 +118,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/6bgmz4zt59su1ekgy2sui16bgmz81dxo.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/6bgmz4zt59su1ekgy2sui16bgmz81dxo.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">JOM</p>
@@ -127,7 +127,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/twvq5l8hiyhpicrpsf7jqtwvq5n278c6.png"
+                  src="https://cdn.collector.sh/drops/neverland/twvq5l8hiyhpicrpsf7jqtwvq5n278c6.png"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">layers</p>
@@ -136,7 +136,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/cytqygast1zgbrbscytqygidybo8dycb.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/cytqygast1zgbrbscytqygidybo8dycb.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Logan Jamess</p>
@@ -145,7 +145,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/5xg2inpi7al29f0kln5xg2in3erlxks9.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/5xg2inpi7al29f0kln5xg2in3erlxks9.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Naj Shukor</p>
@@ -154,7 +154,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/3p1i0vafp9o7w12tw3p1is2h48yhzdn2.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/3p1i0vafp9o7w12tw3p1is2h48yhzdn2.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">Rich Herrmann</p>
@@ -163,7 +163,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/i38t3ngsi512ll318i38t37rbmlp3gkr.jpg"
+                  src="https://cdn.collector.sh/drops/neverland/i38t3ngsi512ll318i38t37rbmlp3gkr.jpg"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">TaintedPhotog</p>
@@ -172,7 +172,7 @@ export default function HanaKnight() {
               </div>
               <div className="text-center">
                 <img
-                  src="/images/drops/neverland/re43f9ejbhxegwf9re4385fq2h5rltsb.png"
+                  src="https://cdn.collector.sh/drops/neverland/re43f9ejbhxegwf9re4385fq2h5rltsb.png"
                   className="w-full h-96 lg:h-64 object-center object-cover"
                 />
                 <p className="font-bold">PAUSE Poster</p>

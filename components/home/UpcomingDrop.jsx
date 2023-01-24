@@ -8,7 +8,7 @@ export default function UpcomingDrop() {
         <div className="sm:col-span-6">
           <div className="text-center">
             <img
-              src="/images/drops/neverland/re43f9ejbhxegwf9re4385fq2h5rltsb.png"
+              src="https://cdn.collector.sh/drops/neverland/re43f9ejbhxegwf9re4385fq2h5rltsb.png"
               className="h-96 object-center object-cover"
             />
           </div>
@@ -57,7 +57,7 @@ export default function UpcomingDrop() {
             >
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/georgef.jpg"
+                  src="https://cdn.collector.sh/drops/artists/georgef.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -67,7 +67,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@farhannsrdn" title="H A N">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/han.jpg"
+                  src="https://cdn.collector.sh/drops/artists/han.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -77,7 +77,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@hacss" title="Hacs">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/hacs.jpg"
+                  src="https://cdn.collector.sh/drops/artists/hacs.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -87,7 +87,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@huxsterized" title="Huxsterized">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/hux.jpg"
+                  src="https://cdn.collector.sh/drops/artists/hux.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -97,7 +97,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@jakob_lr" title="Jakob Lilja-Ruiz">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/jakob.jpg"
+                  src="https://cdn.collector.sh/drops/artists/jakob.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -107,7 +107,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@jairo_ema25" title="Jairinho">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/jairinho.jpg"
+                  src="https://cdn.collector.sh/drops/artists/jairinho.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -117,7 +117,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@drjaytoor" title="Jay Toor">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/jaytoor.jpg"
+                  src="https://cdn.collector.sh/drops/artists/jaytoor.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -127,7 +127,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@thejomshoots" title="JOM">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/jom.jpg"
+                  src="https://cdn.collector.sh/drops/artists/jom.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -137,7 +137,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@layers_jpg" title="layers">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/layers.png"
+                  src="https://cdn.collector.sh/drops/artists/layers.png"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -147,7 +147,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@okayflix" title="Logan Jamess">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/loganj.jpg"
+                  src="https://cdn.collector.sh/drops/artists/loganj.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -157,7 +157,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@najshukor" title="Naj Shukor">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/najs.jpg"
+                  src="https://cdn.collector.sh/drops/artists/najs.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -167,7 +167,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@rich_herrmann" title="Rich Herman">
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/richh.jpg"
+                  src="https://cdn.collector.sh/drops/artists/richh.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -180,7 +180,7 @@ export default function UpcomingDrop() {
             >
               <a target="_blank">
                 <img
-                  src="/images/drops/artists/taintedphotog.jpg"
+                  src="https://cdn.collector.sh/drops/artists/taintedphotog.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>

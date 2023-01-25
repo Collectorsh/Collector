@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   DndContext,
   MouseSensor,
@@ -14,11 +15,9 @@ import { Grid } from "./Grid";
 import { SortablePhoto } from "./SortablePhoto";
 import Settings from "./Settings";
 
+import cloneDeep from "lodash/cloneDeep";
 import { Toaster } from "react-hot-toast";
 import { cdnImage } from "/utils/cdnImage";
-import cloneDeep from "lodash/cloneDeep";
-import { useLazyQuery } from "@apollo/client";
-import { nftByMintAddress } from "/queries/nft_by_mint";
 
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
@@ -91,12 +90,19 @@ export default function Gallery({ tokens, user }) {
 
     if (active.id !== over.id) {
       if (over.id === "hide") {
-        console.log(active);
         if (active.data.current.sortable.containerId === "hidden") return;
         setItems((items) => {
           const activeIndex = active.data.current.sortable.index;
           let newItems;
           newItems = moveToHidden(items, active.id, activeIndex);
+          return newItems;
+        });
+      } else if (over.id === "show") {
+        if (active.data.current.sortable.containerId === "visible") return;
+        setItems((items) => {
+          const activeIndex = active.data.current.sortable.index;
+          let newItems;
+          newItems = moveToVisible(items, active.id, activeIndex);
           return newItems;
         });
       } else {
@@ -163,6 +169,15 @@ export default function Gallery({ tokens, user }) {
       ...items,
       visible: removeAtIndex(items.visible, activeIndex),
       hidden: insertAtIndex(items.hidden, items.hidden.length, itm),
+    };
+  };
+
+  const moveToVisible = (items, item, activeIndex) => {
+    const itm = items.hidden.filter((t) => t.mint === item)[0];
+    return {
+      ...items,
+      hidden: removeAtIndex(items.hidden, activeIndex),
+      visible: insertAtIndex(items.visible, items.visible.length, itm),
     };
   };
 
@@ -234,33 +249,43 @@ export default function Gallery({ tokens, user }) {
                   </div>
                 </div>
               </h2>
-              <SortableContext
-                id="visible"
-                items={items.visible.map((i) => i.mint)}
-                strategy={rectSortingStrategy}
-              >
-                <Grid columns={columns}>
-                  {items.visible.map((token, index) => (
-                    <SortablePhoto
-                      key={token.mint}
-                      mint={token.mint}
-                      uri={token.uri}
-                      index={index}
-                      height={columns === 3 ? 250 : columns === 4 ? 200 : 150}
-                    />
-                  ))}
-                </Grid>
-              </SortableContext>
+              <Visible items={items} columns={columns} />
             </div>
           </div>
         )}
         <DragOverlay adjustScale={false}>
-          {activeId ? <OverlayImage mint={activeId} /> : null}
+          {activeId ? <OverlayImage mint={activeId} tokens={tokens} /> : null}
         </DragOverlay>
       </DndContext>
     </>
   );
 }
+
+const Visible = ({ items, columns }) => {
+  const { setNodeRef } = useDroppable({ id: "show" });
+
+  return (
+    <div ref={setNodeRef} className="h-full bg-gray-100 dark:bg-dark2">
+      <SortableContext
+        id="visible"
+        items={items.visible.map((i) => i.mint)}
+        strategy={rectSortingStrategy}
+      >
+        <Grid columns={columns}>
+          {items.visible.map((token, index) => (
+            <SortablePhoto
+              key={token.mint}
+              mint={token.mint}
+              uri={token.uri}
+              index={index}
+              height={columns === 3 ? 250 : columns === 4 ? 200 : 150}
+            />
+          ))}
+        </Grid>
+      </SortableContext>
+    </div>
+  );
+};
 
 const Hidden = ({ items }) => {
   const { setNodeRef } = useDroppable({ id: "hide" });
@@ -288,27 +313,19 @@ const Hidden = ({ items }) => {
   );
 };
 
-const OverlayImage = ({ mint }) => {
-  const [nftByMintAddressQl] = useLazyQuery(nftByMintAddress, {
-    fetchPolicy: "network-only",
-  });
-
-  const fetchNft = useCallback(async (mint) => {
-    const res = await nftByMintAddressQl({
-      variables: { address: mint },
-    });
-    document.getElementById(`overlay-${mint}`).src =
-      res.data.nftByMintAddress.image;
-  }, []);
-
-  useEffect(() => {
-    fetchNft(mint);
-  }, []);
+const OverlayImage = ({ mint, tokens }) => {
+  const addDefaultImage = async (e, mint, tokens) => {
+    e.target.style.background = "grey";
+    const token = tokens.find((t) => t.mint === mint);
+    let res = await axios.get(token.uri);
+    e.target.src = res.data.image;
+  };
 
   return (
     <img
-      id={`overlay-${mint}`}
+      src={cdnImage(mint)}
       className="w-[150px] h-[150px] w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
+      onError={(e) => addDefaultImage(e, mint, tokens)}
     />
   );
 };

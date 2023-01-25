@@ -63,6 +63,9 @@ export default function MainNavigation() {
                 <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                   <Link href="/feed">Discover</Link>
                 </p>
+                <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                  <Link href="/drops">Drops</Link>
+                </p>
                 {!user && <Premium />}
                 {user && (
                   <>

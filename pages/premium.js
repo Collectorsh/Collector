@@ -95,12 +95,12 @@ export default function Premium() {
                     className="h-6 w-6 inline cursor-pointer text-green-500 mr-2"
                     aria-hidden="true"
                   />
-                  More soon
+                  Early access to Drops
                 </li>
               </ul>
               <br />
               <Link href="/mint">
-                <a className="px-4 py-3 text-xl text-center rounded-lg font-bold bg-greeny text-black mx-auto w-full">
+                <a className="px-4 py-3 text-lg text-center rounded-lg font-bold bg-greeny text-black mx-auto w-full">
                   Get Premium
                 </a>
               </Link>

@@ -8,6 +8,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Oval } from "react-loader-spinner";
 import Moment from "react-moment";
+import { MintCountdown } from "/utils/mint/MintCountdown";
+import { toDate } from "/utils/mint/utils";
 
 export default function Gacha({ address }) {
   const wallet = useWallet();
@@ -15,6 +17,8 @@ export default function Gacha({ address }) {
   const [holder, setHolder] = useState();
   const [total, setTotal] = useState(0);
   const [remaining, setRemaining] = useState();
+  const [minted, setMinted] = useState();
+  const [holderMax, setHolderMax] = useState();
   const [collectionMint, setCollectionMint] = useState();
   const [mintState, setMintState] = useState();
   const [isMinting, setIsMinting] = useState(false);
@@ -30,6 +34,7 @@ export default function Gacha({ address }) {
       address: address,
     });
     setTotal(cndy.itemsLoaded);
+    setMinted(cndy.itemsMinted.toNumber());
     setRemaining(cndy.itemsRemaining.toNumber());
     doSetState(cndy);
     if (onceOnly === false) setTimeout(asyncGetCandymachine, 5000);
@@ -118,6 +123,9 @@ export default function Gacha({ address }) {
     setHolderStartDate(h.startDate.date);
     setPublicStartDate(p.startDate.date);
     setCost(h.solPayment.lamports.toNumber());
+    if (h.redeemedAmount) {
+      setHolderMax(h.redeemedAmount.maximum.toNumber());
+    }
     if (cndy.itemsRemaining.toNumber() === 0) {
       setMintState("sold");
     } else if (Date.now() < h.startDate.date.toNumber() * 1000) {
@@ -127,53 +135,58 @@ export default function Gacha({ address }) {
       Date.now() < h.endDate.date.toNumber() * 1000
     ) {
       setMintState("holder");
-    } else if (
-      Date.now() > p.startDate.date.toNumber() * 1000 &&
-      Date.now() < p.endDate.date.toNumber() * 1000
-    ) {
-      setMintState("public");
-    } else if (Date.now() > p.endDate.date.toNumber() * 1000) {
+    } else if (p.endDate && Date.now() > p.endDate.date.toNumber() * 1000) {
       setMintState("ended");
+    } else if (Date.now() > p.startDate.date.toNumber() * 1000) {
+      setMintState("public");
     }
   };
 
   return (
     <>
       {remaining && total && (
-        <p className="mt-6 bg-gray-100 p-2 w-ft font-bold">
+        <p className="bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
           Remaining: {remaining}/{total}
         </p>
       )}
 
-      <p className="mt-4 bg-gray-100 p-2 w-ft font-bold">
-        Price: {cost && <>◎{roundToTwo(cost / 1000000000)}</>}
-      </p>
+      {cost && (
+        <p className="mt-4 bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
+          Price: {cost && <>◎{roundToTwo(cost / 1000000000)}</>}
+        </p>
+      )}
 
       {wallet && wallet.publicKey ? (
-        <>
+        <div className="mt-4">
           {mintState && mintState === "sold" && (
-            <button className="mt-12 bg-red-400 px-3 py-2 font-semibold text-black text-xl">
+            <button className="bg-red-400 px-4 py-3 font-semibold text-black text-lg rounded-xl">
               Sold Out
             </button>
           )}
           {mintState && mintState === "pre" && (
             <>
               {holderStartDate && (
-                <p className="mt-4 text-gray-500">
-                  Signature holder mint starts in{" "}
-                  <Moment date={holderStartDate} unix fromNow />
-                </p>
+                <MintCountdown
+                  date={toDate(holderStartDate)}
+                  style={{ justifyContent: "flex-end" }}
+                />
               )}
-              {publicStartDate && (
-                <p className="mt-4 text-gray-500">
-                  Public mint starts{" "}
-                  <Moment date={publicStartDate} unix fromNow />
-                </p>
+              {!holderStartDate && publicStartDate && (
+                <MintCountdown
+                  date={toDate(publicStartDate)}
+                  style={{ justifyContent: "flex-end" }}
+                />
               )}
             </>
           )}
           {mintState && mintState === "holder" && (
             <>
+              {holderMax && (
+                <p className="mb-4 text-sm">
+                  Signature holder allocation is {holderMax}. Minted {minted}/
+                  {holderMax}
+                </p>
+              )}
               {holder === "yes" ? (
                 <>
                   {isMinting ? (
@@ -189,9 +202,15 @@ export default function Gacha({ address }) {
                     </>
                   ) : (
                     <button
-                      className="mt-8 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
+                      className="bg-greeny px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer disabled:cursor-default disabled:bg-gray-300"
                       onClick={() => mintNow("holder")}
-                      disabled={isMinting}
+                      disabled={
+                        isMinting
+                          ? true
+                          : holderMax
+                          ? minted === holderMax
+                          : false
+                      }
                     >
                       Mint
                     </button>
@@ -199,7 +218,7 @@ export default function Gacha({ address }) {
                 </>
               ) : (
                 <>
-                  <p className="mt-4 text-red-500">
+                  <p className="text-sm">
                     You need to be a Collector Signature holder in order to mint
                     now. You can mint your Signature{" "}
                     <Link href="/mint">
@@ -209,7 +228,7 @@ export default function Gacha({ address }) {
                     </Link>
                   </p>
                   {publicStartDate && (
-                    <p className="mt-4 text-gray-500">
+                    <p className="mt-4 text-sm">
                       Public mint starts{" "}
                       <Moment date={publicStartDate} unix fromNow />
                     </p>
@@ -233,7 +252,7 @@ export default function Gacha({ address }) {
                 </>
               ) : (
                 <button
-                  className="mt-8 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer disabled:bg-gray-300"
+                  className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
                   onClick={() => mintNow("public")}
                   disabled={isMinting}
                 >
@@ -243,13 +262,13 @@ export default function Gacha({ address }) {
             </>
           )}
           {mintState && mintState === "ended" && (
-            <p className="mt-12 text-red-500">The mint has ended</p>
+            <p className="text-red-500 text-sm">The mint has ended</p>
           )}
-        </>
+        </div>
       ) : (
         <>
           <button
-            className="mt-12 bg-greeny px-3 py-2 font-semibold text-black text-xl cursor-pointer"
+            className="mt-4 float-right bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl"
             onClick={(e) => setVisible(true)}
           >
             Connect Wallet

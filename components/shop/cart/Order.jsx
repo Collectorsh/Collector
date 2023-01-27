@@ -15,10 +15,11 @@ import {
 } from "@solana/web3.js";
 import { toPublicKey } from "/config/settings";
 import verifyPurchase from "/data/shop/verifyPurchase";
+import { TrashIcon } from "@heroicons/react/outline";
 
 export default function Order() {
   const [user] = useContext(UserContext);
-  const [cart] = useContext(CartContext);
+  const [cart, setCart] = useContext(CartContext);
   const connection = new Connection(process.env.NEXT_PUBLIC_STORE_RPC);
   const { publicKey, sendTransaction } = useWallet();
   const { setVisible } = useWalletModal();
@@ -144,6 +145,13 @@ export default function Order() {
       error("Transaction failed");
       return;
     }
+  };
+
+  const removeFromCart = async (id) => {
+    const newCart = cart.filter(function (c) {
+      return c.id !== id;
+    });
+    setCart(newCart);
   };
 
   return (
@@ -334,20 +342,27 @@ export default function Order() {
                 <h2 className="text-4xl font-extrabold mb-4 w-full">
                   Your Order
                 </h2>
-                <div className="grid grid-cols-6 gap-6">
-                  {cart.map((item, index) => (
-                    <div
-                      key={index}
-                      className="col-span-6 sm:col-span-3 my-3 border-t border-b border-gray-100 dark:border-dark3 py-2"
-                    >
-                      <p className="mb-2 font-bold">{item.product.name}</p>
-                      <div className="dark:text-white inline">
-                        <label>qty: </label>
-                        <span className="">{item.qty}</span>
-                      </div>
+                {cart.map((item, index) => (
+                  <div
+                    key={index}
+                    className="my-3 border-t border-b border-gray-100 dark:border-dark3 py-2"
+                  >
+                    <TrashIcon
+                      className="h-4 w-4 inline cursor-pointer text-red-400 float-right"
+                      aria-hidden="true"
+                      onClick={() => removeFromCart(item.id)}
+                    />
+                    <p className="mb-2 font-bold">{item.product.name}</p>
+                    <div className="mb-2 dark:text-white">
+                      <label>size: </label>
+                      <span className="">{item.size}</span>
                     </div>
-                  ))}
-                </div>
+                    <div className="dark:text-white">
+                      <label>qty: </label>
+                      <span className="">{item.qty}</span>
+                    </div>
+                  </div>
+                ))}
                 {total && (
                   <>
                     <h2 className="py-2 text-2xl font-extrabold my-5 w-full border-t border-b border-gray-100 dark:border-dark3">

@@ -1,49 +1,32 @@
 import React, { useEffect, useContext, useState } from "react";
 import Link from "next/link";
-import UserContext from "/contexts/user";
 import CartContext from "/contexts/cart";
 import CartIcon from "/components/shop/CartIcon";
 import { roundToTwo } from "/utils/roundToTwo";
-import { QuantityPicker } from "react-qty-picker";
-import cloneDeep from "lodash/cloneDeep";
 
 export default function Product({ product }) {
-  const [user] = useContext(UserContext);
   const [productAvailable, setProductAvailable] = useState();
   const [quantity, setQuantity] = useState(1);
-  const [inCart, setInCart] = useState(false);
+  const [size, setSize] = useState(eval(product.sizes)[0]);
   const [cart, setCart] = useContext(CartContext);
 
   useEffect(() => {
     setProductAvailable(true);
   }, [product]);
 
-  useEffect(() => {
-    let res = cart.filter((c) => c.product.name === product.name);
-    if (res.length === 0) {
-      setInCart(false);
-    } else {
-      let prod = res[0];
-      setQuantity(prod.qty);
-      setInCart(true);
-    }
-  }, [cart]);
-
   const addToCart = (product) => {
-    const clonedCart = cloneDeep(cart);
-    let res = clonedCart.filter((c) => c.product.name === product.name);
-    if (res.length > 0) {
-      for (const [index, prod] of clonedCart.entries()) {
-        if (prod.product.name === product.name) {
-          prod.qty = quantity;
-          var foundIndex = index;
-        }
-      }
-      if (quantity === 0) clonedCart.splice(foundIndex);
-      setCart(clonedCart);
-    } else {
-      setCart([...cart, ...[{ qty: quantity, product: product }]]);
-    }
+    const newCart = [
+      ...cart,
+      ...[
+        {
+          qty: Number(quantity),
+          size: size,
+          product: product,
+          id: Math.random().toString(36).slice(2, 7),
+        },
+      ],
+    ];
+    setCart(newCart);
   };
 
   return (
@@ -80,22 +63,42 @@ export default function Product({ product }) {
                 <p className="mt-4 text-lg">
                   ◎{roundToTwo(product.lamports / 1000000000)}{" "}
                 </p>
-                <div className="my-4">
-                  <QuantityPicker
-                    min={0}
-                    value={quantity}
-                    onChange={(value) => {
-                      setQuantity(value);
-                    }}
-                    smooth
-                    width="7rem"
-                  />
+                <div className="mt-4 grid grid-cols-2">
+                  <div>
+                    <span className="text-lg">Quantity: </span>
+                  </div>
+                  <div>
+                    <input
+                      type="number"
+                      min="0"
+                      value={quantity}
+                      id="qty"
+                      name="qty"
+                      className="p-2 inline w-fit rounded-md border border-gray-300 dark:border-dark3 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                      onChange={(e) => setQuantity(e.target.value)}
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <span className="text-lg">Size: </span>
+                  </div>
+                  <div className="mt-4">
+                    <select
+                      id="size"
+                      name="size"
+                      className="p-2 inline w-fit rounded-md border border-gray-300 dark:border-dark3 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                      onChange={(e) => setSize(e.target.value)}
+                    >
+                      {eval(product.sizes).map((size, index) => (
+                        <option key={index}>{size}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 <button
                   className="mt-4 bg-greeny rounded-3xl px-3 py-2 font-bold w-fit cursor-pointer text-black"
                   onClick={() => addToCart(product)}
                 >
-                  {inCart ? <span>update cart</span> : <span>add to cart</span>}
+                  <span>add to cart</span>
                 </button>
               </div>
             </div>

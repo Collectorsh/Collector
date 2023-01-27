@@ -15,18 +15,8 @@ export default function Product({ product }) {
   const [cart, setCart] = useContext(CartContext);
 
   useEffect(() => {
-    if (!user) return;
-    if (product.gated) {
-      var holder = false;
-      for (const key of user.public_keys) {
-        if (product.mints.includes(key)) holder = true;
-      }
-      if (holder === true) setProductAvailable(true);
-      else setProductAvailable(false);
-    } else {
-      setProductAvailable(true);
-    }
-  }, [user, product]);
+    setProductAvailable(true);
+  }, [product]);
 
   useEffect(() => {
     let res = cart.filter((c) => c.product.name === product.name);
@@ -62,7 +52,7 @@ export default function Product({ product }) {
         <CartIcon />
         <Link href="/shop" title="">
           <a>
-            <div className="bg-greeny rounded-3xl px-3 py-2 text-black font-bold w-fit cursor-pointer inline ml-4">
+            <div className="bg-greeny rounded-3xl px-3 py-3 font-bold w-fit cursor-pointer inline">
               &lt;&lt; Back
             </div>
           </a>
@@ -73,23 +63,22 @@ export default function Product({ product }) {
         <>
           {productAvailable === true ? (
             <div className="grid sm:grid-cols-6 mx-4 xl:mx-0">
-              <div className="sm:col-span-2">
+              <div className="sm:col-span-2 bg-black">
                 <img
                   src={product.image}
                   alt={product.name}
                   className="h-full w-full object-cover object-center lg:h-full lg:w-full rounded-md"
                 />
               </div>
-              <div className="sm:col-span-3 sm:col-end-7">
-                <h1 className="text-4xl font-extrabold text-black w-full">
+              <div className="sm:col-span-3 sm:col-end-7 text-black dark:text-white">
+                <h1 className="text-4xl font-extrabold w-full">
                   {product.name}
                 </h1>
                 <h2 className="mt-2 text-lg font-normal w-full">
                   {product.description}
                 </h2>
-                <p className="mt-4">
+                <p className="mt-4 text-lg">
                   ◎{roundToTwo(product.lamports / 1000000000)}{" "}
-                  <span className="">(${product.price_usd_cents / 100})</span>
                 </p>
                 <div className="my-4">
                   <QuantityPicker
@@ -98,10 +87,12 @@ export default function Product({ product }) {
                     onChange={(value) => {
                       setQuantity(value);
                     }}
+                    smooth
+                    width="7rem"
                   />
                 </div>
                 <button
-                  className="mt-4 bg-greeny rounded-3xl px-3 py-2 text-black font-bold w-fit cursor-pointer"
+                  className="mt-4 bg-greeny rounded-3xl px-3 py-2 font-bold w-fit cursor-pointer text-black"
                   onClick={() => addToCart(product)}
                 >
                   {inCart ? <span>update cart</span> : <span>add to cart</span>}

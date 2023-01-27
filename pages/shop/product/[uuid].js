@@ -1,5 +1,4 @@
 import MainNavigation from "/components/navigation/MainNavigation";
-import CheckLoggedIn from "/components/CheckLoggedIn";
 import ShopTitle from "/components/shop/ShopTitle";
 import Product from "/components/shop/Product";
 import getProduct from "/data/shop/getProduct";
@@ -7,7 +6,6 @@ import getProduct from "/data/shop/getProduct";
 function ProductHome({ product }) {
   return (
     <div className="dark:bg-black">
-      <CheckLoggedIn />
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
         <div className="relative">

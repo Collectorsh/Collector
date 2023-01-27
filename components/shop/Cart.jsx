@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useContext } from "react";
 import Link from "next/link";
-import UserContext from "/contexts/user";
 import CartContext from "/contexts/cart";
 import Shipping from "/components/shop/cart/Shipping";
 import Order from "/components/shop/cart/Order";
 
 export default function Checkout() {
-  const [user] = useContext(UserContext);
-  const [cart, setCart] = useContext(CartContext);
+  const [cart] = useContext(CartContext);
 
   return (
     <>
@@ -21,21 +19,17 @@ export default function Checkout() {
         </Link>
       </div>
       <div className="mb-8"></div>
-      {user && (
-        <>
-          {cart.length > 0 ? (
-            <div className="grid grid-cols-12">
-            <div className="col-span-5">
-              <Shipping />
-            </div>
-            <div className="col-span-6 col-end-13">
-              <Order />
-            </div>
+      {cart.length > 0 ? (
+        <div className="grid grid-cols-12">
+          <div className="col-span-5">
+            <Shipping />
           </div>
-          ) : (
-            <p className="dark:text-whitish">Your cart is empty</p>
-          )}
-        </>
+          <div className="col-span-6 col-end-13">
+            <Order />
+          </div>
+        </div>
+      ) : (
+        <p className="dark:text-whitish">Your cart is empty</p>
       )}
     </>
   );

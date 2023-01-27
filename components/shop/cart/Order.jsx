@@ -19,13 +19,15 @@ import verifyPurchase from "/data/shop/verifyPurchase";
 export default function Order() {
   const [user] = useContext(UserContext);
   const [cart] = useContext(CartContext);
-  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
+  const connection = new Connection(process.env.NEXT_PUBLIC_STORE_RPC);
   const { publicKey, sendTransaction } = useWallet();
   const { setVisible } = useWalletModal();
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState();
   const [transactionComplete, setTransactionComplete] = useState();
   const [orderNumber, setOrderNumber] = useState();
+  const [error, setError] = useState();
+  const [address, setAddress] = useState();
 
   useEffect(() => {
     const ttl = 0;
@@ -35,7 +37,65 @@ export default function Order() {
     setTotal(ttl);
   }, [cart]);
 
+  const validateForm = async () => {
+    setError();
+
+    const firstname = document.getElementById("first-name").value;
+    if (firstname === undefined || firstname === null || firstname === "") {
+      setError("first-name");
+      return true;
+    }
+    const lastname = document.getElementById("last-name").value;
+    if (lastname === undefined || lastname === null || lastname === "") {
+      setError("last-name");
+      return true;
+    }
+    const email = document.getElementById("email-address").value;
+    if (email === undefined || email === null || email === "") {
+      setError("email-address");
+      return true;
+    }
+    const country = document.getElementById("country").value;
+    if (country === undefined || country === null || country === "") {
+      setError("country");
+      return true;
+    }
+    const street = document.getElementById("street-address").value;
+    if (street === undefined || street === null || street === "") {
+      setError("street-address");
+      return true;
+    }
+    const city = document.getElementById("city").value;
+    if (city === undefined || city === null || city === "") {
+      setError("city");
+      return true;
+    }
+    const region = document.getElementById("region").value;
+    if (region === undefined || region === null || region === "") {
+      setError("region");
+      return true;
+    }
+    const post = document.getElementById("postal-code").value;
+    if (post === undefined || post === null || post === "") {
+      setError("postal-code");
+      return true;
+    }
+    setAddress({
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      country: country,
+      street: street,
+      city: city,
+      region: region,
+      postcode: post,
+    });
+  };
+
   const payNow = async () => {
+    const isError = await validateForm();
+    if (isError) return;
+
     if (!publicKey) {
       try {
         setVisible(true);
@@ -65,7 +125,8 @@ export default function Order() {
         total,
         signature,
         publicKey,
-        cart
+        cart,
+        address
       );
 
       setLoading(false);
@@ -97,38 +158,214 @@ export default function Order() {
             </p>
           </div>
         ) : (
-          <div className="dark:bg-dark1 dark:text-white px-4 py-5 sm:p-6">
-            <h2 className="text-4xl font-extrabold mb-4 w-full">Your Order</h2>
-            <div className="grid grid-cols-6 gap-6">
-              {cart.map((item, index) => (
-                <div
-                  key={index}
-                  className="col-span-6 sm:col-span-3 my-3 border-t border-b border-gray-100 dark:border-dark3 py-2"
-                >
-                  <p className="mb-2 font-bold">{item.product.name}</p>
-                  <div className="dark:text-white inline">
-                    <label>qty: </label>
-                    <span className="">{item.qty}</span>
+          <div className="grid grid-cols-12">
+            <div className="col-span-5">
+              <div className="mt-14 sm:mt-0">
+                <div className="overflow-hidden shadow sm:rounded-md">
+                  <div className="dark:bg-dark1 dark:text-white px-4 py-5 sm:p-6">
+                    <div className="grid grid-cols-6 gap-6">
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="first-name"
+                          className="block text-sm font-medium"
+                        >
+                          First name
+                        </label>
+                        <input
+                          type="text"
+                          name="first-name"
+                          id="first-name"
+                          autoComplete="given-name"
+                          className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                            error &&
+                            error === "first-name" &&
+                            "border border-red-500"
+                          }`}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="last-name"
+                          className="block text-sm font-medium"
+                        >
+                          Last name
+                        </label>
+                        <input
+                          type="text"
+                          name="last-name"
+                          id="last-name"
+                          autoComplete="family-name"
+                          className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                            error &&
+                            error === "last-name" &&
+                            "border border-red-500"
+                          }`}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-4">
+                        <label
+                          htmlFor="email-address"
+                          className="block text-sm font-medium"
+                        >
+                          Email address
+                        </label>
+                        <input
+                          type="text"
+                          name="email-address"
+                          id="email-address"
+                          autoComplete="email"
+                          className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                            error &&
+                            error === "email-address" &&
+                            "border border-red-500"
+                          }`}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="country"
+                          className="block text-sm font-medium"
+                        >
+                          Country
+                        </label>
+                        <select
+                          id="country"
+                          name="country"
+                          autoComplete="country-name"
+                          className={`mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-dark3 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm ${
+                            error &&
+                            error === "country" &&
+                            "border border-red-500"
+                          }`}
+                        >
+                          <option>United States</option>
+                          <option>Canada</option>
+                          <option>Mexico</option>
+                        </select>
+                      </div>
+
+                      <div className="col-span-6">
+                        <label
+                          htmlFor="street-address"
+                          className="block text-sm font-medium"
+                        >
+                          Street address
+                        </label>
+                        <input
+                          type="text"
+                          name="street-address"
+                          id="street-address"
+                          autoComplete="street-address"
+                          className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                            error &&
+                            error === "street-address" &&
+                            "border border-red-500"
+                          }`}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+                        <label
+                          htmlFor="city"
+                          className="block text-sm font-medium"
+                        >
+                          City
+                        </label>
+                        <input
+                          type="text"
+                          name="city"
+                          id="city"
+                          autoComplete="address-level2"
+                          className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                            error && error === "city" && "border border-red-500"
+                          }`}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+                        <label
+                          htmlFor="region"
+                          className="block text-sm font-medium"
+                        >
+                          State / Province
+                        </label>
+                        <input
+                          type="text"
+                          name="region"
+                          id="region"
+                          autoComplete="address-level1"
+                          className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                            error &&
+                            error === "region" &&
+                            "border border-red-500"
+                          }`}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+                        <label
+                          htmlFor="postal-code"
+                          className="block text-sm font-medium"
+                        >
+                          ZIP / Postal code
+                        </label>
+                        <input
+                          type="text"
+                          name="postal-code"
+                          id="postal-code"
+                          autoComplete="postal-code"
+                          className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                            error &&
+                            error === "postal-code" &&
+                            "border border-red-500"
+                          }`}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
-            {total && (
-              <>
-                <h2 className="py-2 text-2xl font-extrabold my-5 w-full border-t border-b border-gray-100 dark:border-dark3">
-                  TOTAL
-                  <span className="float-right text-2xl">
-                    ◎{roundToTwo(total / 1000000000)}
-                  </span>
+            <div className="col-span-6 col-end-13">
+              <div className="dark:bg-dark1 dark:text-white px-4 py-5 sm:p-6">
+                <h2 className="text-4xl font-extrabold mb-4 w-full">
+                  Your Order
                 </h2>
-                <button
-                  onClick={payNow}
-                  className="uppercase text-center text-sm mt-5 xl:px-24 px-12 sm:px-16 py-2 rounded-md font-bold bg-greeny text-black mx-auto w-full"
-                >
-                  PAY NOW
-                </button>
-              </>
-            )}
+                <div className="grid grid-cols-6 gap-6">
+                  {cart.map((item, index) => (
+                    <div
+                      key={index}
+                      className="col-span-6 sm:col-span-3 my-3 border-t border-b border-gray-100 dark:border-dark3 py-2"
+                    >
+                      <p className="mb-2 font-bold">{item.product.name}</p>
+                      <div className="dark:text-white inline">
+                        <label>qty: </label>
+                        <span className="">{item.qty}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {total && (
+                  <>
+                    <h2 className="py-2 text-2xl font-extrabold my-5 w-full border-t border-b border-gray-100 dark:border-dark3">
+                      TOTAL
+                      <span className="float-right text-2xl">
+                        ◎{roundToTwo(total / 1000000000)}
+                      </span>
+                    </h2>
+                    <button
+                      onClick={payNow}
+                      className="uppercase text-center text-sm mt-5 xl:px-24 px-12 sm:px-16 py-2 rounded-md font-bold bg-greeny text-black mx-auto w-full"
+                    >
+                      PAY NOW
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>

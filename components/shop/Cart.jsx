@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import Link from "next/link";
 import CartContext from "/contexts/cart";
-import Shipping from "/components/shop/cart/Shipping";
 import Order from "/components/shop/cart/Order";
 
 export default function Checkout() {
@@ -20,14 +19,7 @@ export default function Checkout() {
       </div>
       <div className="mb-8"></div>
       {cart.length > 0 ? (
-        <div className="grid grid-cols-12">
-          <div className="col-span-5">
-            <Shipping />
-          </div>
-          <div className="col-span-6 col-end-13">
-            <Order />
-          </div>
-        </div>
+        <Order />
       ) : (
         <p className="dark:text-whitish">Your cart is empty</p>
       )}

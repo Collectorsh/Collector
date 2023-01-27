@@ -1,6 +1,13 @@
 import apiClient from "/data/client/apiClient";
 
-async function verifyPurchase(api_key, amount, signature, publicKey, order) {
+async function verifyPurchase(
+  api_key,
+  amount,
+  signature,
+  publicKey,
+  order,
+  address
+) {
   const res = await apiClient.post(
     "/purchase/verify",
     {
@@ -9,6 +16,7 @@ async function verifyPurchase(api_key, amount, signature, publicKey, order) {
       signature: signature,
       public_key: publicKey,
       order: order,
+      address: address,
     },
     {
       "Content-Type": "application/json",

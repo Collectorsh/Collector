@@ -27,8 +27,7 @@ export default function Order() {
   const [total, setTotal] = useState();
   const [transactionComplete, setTransactionComplete] = useState();
   const [orderNumber, setOrderNumber] = useState();
-  const [error, setError] = useState();
-  const [address, setAddress] = useState();
+  const [isError, setIsError] = useState();
 
   useEffect(() => {
     const ttl = 0;
@@ -39,49 +38,49 @@ export default function Order() {
   }, [cart]);
 
   const validateForm = async () => {
-    setError();
+    setIsError();
 
     const firstname = document.getElementById("first-name").value;
     if (firstname === undefined || firstname === null || firstname === "") {
-      setError("first-name");
-      return true;
+      setIsError("first-name");
+      return { error: true };
     }
     const lastname = document.getElementById("last-name").value;
     if (lastname === undefined || lastname === null || lastname === "") {
-      setError("last-name");
-      return true;
+      setIsError("last-name");
+      return { error: true };
     }
     const email = document.getElementById("email-address").value;
     if (email === undefined || email === null || email === "") {
-      setError("email-address");
-      return true;
+      setIsError("email-address");
+      return { error: true };
     }
     const country = document.getElementById("country").value;
     if (country === undefined || country === null || country === "") {
-      setError("country");
-      return true;
+      setIsError("country");
+      return { error: true };
     }
     const street = document.getElementById("street-address").value;
     if (street === undefined || street === null || street === "") {
-      setError("street-address");
-      return true;
+      setIsError("street-address");
+      return { error: true };
     }
     const city = document.getElementById("city").value;
     if (city === undefined || city === null || city === "") {
-      setError("city");
-      return true;
+      setIsError("city");
+      return { error: true };
     }
     const region = document.getElementById("region").value;
     if (region === undefined || region === null || region === "") {
-      setError("region");
-      return true;
+      setIsError("region");
+      return { error: true };
     }
     const post = document.getElementById("postal-code").value;
     if (post === undefined || post === null || post === "") {
-      setError("postal-code");
-      return true;
+      setIsError("postal-code");
+      return { error: true };
     }
-    setAddress({
+    const address = {
       firstname: firstname,
       lastname: lastname,
       email: email,
@@ -90,12 +89,13 @@ export default function Order() {
       city: city,
       region: region,
       postcode: post,
-    });
+    };
+    return { error: false, address: address };
   };
 
   const payNow = async () => {
-    const isError = await validateForm();
-    if (isError) return;
+    const form = await validateForm();
+    if (form.error) return;
 
     if (!publicKey) {
       try {
@@ -127,7 +127,7 @@ export default function Order() {
         signature,
         publicKey,
         cart,
-        address
+        form.address
       );
 
       setLoading(false);
@@ -185,8 +185,8 @@ export default function Order() {
                           id="first-name"
                           autoComplete="given-name"
                           className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            error &&
-                            error === "first-name" &&
+                            isError &&
+                            isError === "first-name" &&
                             "border border-red-500"
                           }`}
                         />
@@ -205,8 +205,8 @@ export default function Order() {
                           id="last-name"
                           autoComplete="family-name"
                           className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            error &&
-                            error === "last-name" &&
+                            isError &&
+                            isError === "last-name" &&
                             "border border-red-500"
                           }`}
                         />
@@ -225,8 +225,8 @@ export default function Order() {
                           id="email-address"
                           autoComplete="email"
                           className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            error &&
-                            error === "email-address" &&
+                            isError &&
+                            isError === "email-address" &&
                             "border border-red-500"
                           }`}
                         />
@@ -244,8 +244,8 @@ export default function Order() {
                           name="country"
                           autoComplete="country-name"
                           className={`mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-dark3 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm ${
-                            error &&
-                            error === "country" &&
+                            isError &&
+                            isError === "country" &&
                             "border border-red-500"
                           }`}
                         >
@@ -268,8 +268,8 @@ export default function Order() {
                           id="street-address"
                           autoComplete="street-address"
                           className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            error &&
-                            error === "street-address" &&
+                            isError &&
+                            isError === "street-address" &&
                             "border border-red-500"
                           }`}
                         />
@@ -288,7 +288,9 @@ export default function Order() {
                           id="city"
                           autoComplete="address-level2"
                           className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            error && error === "city" && "border border-red-500"
+                            isError &&
+                            isError === "city" &&
+                            "border border-red-500"
                           }`}
                         />
                       </div>
@@ -306,8 +308,8 @@ export default function Order() {
                           id="region"
                           autoComplete="address-level1"
                           className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            error &&
-                            error === "region" &&
+                            isError &&
+                            isError === "region" &&
                             "border border-red-500"
                           }`}
                         />
@@ -326,8 +328,8 @@ export default function Order() {
                           id="postal-code"
                           autoComplete="postal-code"
                           className={`mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            error &&
-                            error === "postal-code" &&
+                            isError &&
+                            isError === "postal-code" &&
                             "border border-red-500"
                           }`}
                         />

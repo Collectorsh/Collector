@@ -119,14 +119,18 @@ export default function Order() {
 
       setLoading(true);
 
-      // await connection.confirmTransaction(signature, "confirmed");
+      const items = [];
+
+      for (const c of cart) {
+        items.push({ id: c.product.id, qty: c.qty, size: c.size });
+      }
 
       const res = await verifyPurchase(
         user.api_key,
         total,
         signature,
         publicKey,
-        cart,
+        items,
         form.address
       );
 

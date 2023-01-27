@@ -1,10 +1,10 @@
 import { ToastContainer } from "react-toastify";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { PublicKey } from "@solana/web3.js";
-import Gacha from "/components/drops/gacha";
+import Burn from "/components/drops/burn";
 
-export default function HanaKnight() {
-  const address = new PublicKey("9zACFMk2YGMKcRZoCf5miDgVidE8sCmy3QUDwvgbqS8n");
+export default function Neverland() {
+  const address = new PublicKey("J8oTTSPkqdFJ4ABajMA7DDHD3ecHYDXQxvSRy2n4xqJF");
 
   return (
     <>
@@ -39,7 +39,7 @@ export default function HanaKnight() {
                 </p>
               </div>
               <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
-                <Gacha address={address} />
+                <Burn address={address} />
               </div>
             </div>
 

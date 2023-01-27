@@ -39,7 +39,10 @@ export default function Neverland() {
                 </p>
               </div>
               <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
-                <Burn address={address} />
+                {/* <Burn address={address} /> */}
+                <span className="text-red-500 font-bold text-2xl">
+                  SOLD OUT
+                </span>
               </div>
             </div>
 

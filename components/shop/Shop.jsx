@@ -27,7 +27,7 @@ export default function Shop() {
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
           {products &&
             products.map((product, index) => (
-              <Link href={`/shop/product/${product.uuid}`} title="">
+              <Link href={`/shop/product/${product.uuid}`} title="" key={index}>
                 <a>
                   <div
                     key={index}

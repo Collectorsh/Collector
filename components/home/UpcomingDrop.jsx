@@ -8,28 +8,29 @@ export default function UpcomingDrop() {
         <div className="sm:col-span-6">
           <div className="text-center">
             <img
-              src="https://cdn.collector.sh/drops/neverland/re43f9ejbhxegwf9re4385fq2h5rltsb.png"
+              src="https://cdn.collector.sh/drops/hanaknight/k9lvii971i33ooy59c6xk9lviwbscdq6.png"
               className="h-96 object-center object-cover"
             />
           </div>
         </div>
         <div className="sm:col-span-6 sm:col-end-13">
-          <p>January 26th, 10am EST</p>
+          <p>January 18th, 4pm EST</p>
           <h2 className="align-middle sm:inline sm:my-5 text-4xl font-bold w-full py-1 inline-block">
-            PAUSE
+            Nusantara Blooming
           </h2>
           <p>
             Curated by{" "}
-            <Link href="https://twitter.com/XO12XX" title="Neverland">
-              <a target="_blank">Neverland</a>
+            <Link href="https://twitter.com/_hanaknight17" title="Hana Knight">
+              <a target="_blank">Hana Knight</a>
             </Link>
           </p>
           <p className="mt-4">
-            A collective of photographers from all around the world pressing the
-            pause button on life.
+            A collection of varied interpretations surrounding the theme of
+            nature and humanity. Brought to you by artists across genres from
+            Indonesia.
           </p>
           <div className="mt-8">
-            <Link href="/drops/neverland" title="Neverland Drop">
+            <Link href="/drops/hanaknight" title="Hana Knight Drop">
               <a className="bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl">
                 See the Drop
               </a>
@@ -41,10 +42,50 @@ export default function UpcomingDrop() {
         <h2 className="mt-12 mb-6 text-4xl font-bold">Artists</h2>
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
           <div className="text-center">
-            <Link href="https://twitter.com/@XO12XX" title="Nev">
+            <Link href="https://twitter.com/@vegarifi" title="Balada Perupa">
               <a target="_blank">
                 <img
-                  src="/images/neverland.jpeg"
+                  src="https://cdn.collector.sh/drops/artists/balada.png"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link href="https://twitter.com/@michaelmicasso" title="MEK.txt">
+              <a target="_blank">
+                <img
+                  src="https://cdn.collector.sh/drops/artists/mek.png"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link href="https://twitter.com/@arissamaa" title="Arissu">
+              <a target="_blank">
+                <img
+                  src="https://cdn.collector.sh/drops/artists/arissu.jpg"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link href="https://twitter.com/@monksealpng" title="Monkseal">
+              <a target="_blank">
+                <img
+                  src="https://cdn.collector.sh/drops/artists/monkseal.jpg"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link href="https://twitter.com/@ficklesight" title="Fickle Sight">
+              <a target="_blank">
+                <img
+                  src="https://cdn.collector.sh/drops/artists/ficklesight.jpeg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -52,122 +93,72 @@ export default function UpcomingDrop() {
           </div>
           <div className="text-center">
             <Link
-              href="https://twitter.com/@visualiterature"
-              title="George Figueroa"
+              href="https://twitter.com/@lapantigatiga"
+              title="Lapantigatiga"
             >
               <a target="_blank">
                 <img
-                  src="https://cdn.collector.sh/drops/artists/georgef.jpg"
+                  src="https://cdn.collector.sh/drops/artists/lapan.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
             </Link>
           </div>
           <div className="text-center">
-            <Link href="https://twitter.com/@farhannsrdn" title="H A N">
+            <Link href="https://twitter.com/_hanaknight17" title="Hana Knight">
               <a target="_blank">
                 <img
-                  src="https://cdn.collector.sh/drops/artists/han.jpg"
+                  src="https://cdn.collector.sh/drops/artists/hana.png"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
             </Link>
           </div>
           <div className="text-center">
-            <Link href="https://twitter.com/@hacss" title="Hacs">
+            <Link href="https://twitter.com/@xxalfsyr" title="Adam Alfisyar">
               <a target="_blank">
                 <img
-                  src="https://cdn.collector.sh/drops/artists/hacs.jpg"
+                  src="https://cdn.collector.sh/drops/artists/adam.png"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
             </Link>
           </div>
           <div className="text-center">
-            <Link href="https://twitter.com/@huxsterized" title="Huxsterized">
+            <Link href="https://twitter.com/@ordinary_sol" title="Ordinary">
               <a target="_blank">
                 <img
-                  src="https://cdn.collector.sh/drops/artists/hux.jpg"
+                  src="https://cdn.collector.sh/drops/artists/ordinary.jpeg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
             </Link>
           </div>
           <div className="text-center">
-            <Link href="https://twitter.com/@jakob_lr" title="Jakob Lilja-Ruiz">
+            <Link href="https://twitter.com/duckzzyog" title="Duckzzy">
               <a target="_blank">
                 <img
-                  src="https://cdn.collector.sh/drops/artists/jakob.jpg"
+                  src="https://cdn.collector.sh/drops/artists/duck.gif"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
             </Link>
           </div>
           <div className="text-center">
-            <Link href="https://twitter.com/@jairo_ema25" title="Jairinho">
+            <Link href="https://twitter.com/@cufives" title="Cufives">
               <a target="_blank">
                 <img
-                  src="https://cdn.collector.sh/drops/artists/jairinho.jpg"
+                  src="https://cdn.collector.sh/drops/artists/cufives.png"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
             </Link>
           </div>
           <div className="text-center">
-            <Link href="https://twitter.com/@drjaytoor" title="Jay Toor">
+            <Link href="https://twitter.com/@septadenata" title="SDNT">
               <a target="_blank">
                 <img
-                  src="https://cdn.collector.sh/drops/artists/jaytoor.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@thejomshoots" title="JOM">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/jom.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@layers_jpg" title="layers">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/layers.png"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@okayflix" title="Logan Jamess">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/loganj.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@najshukor" title="Naj Shukor">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/najs.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@rich_herrmann" title="Rich Herman">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/richh.jpg"
+                  src="https://cdn.collector.sh/drops/hanaknight/kqwounmx26n6d1xkqwoup3orkfrz73e7.png"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>
@@ -175,12 +166,22 @@ export default function UpcomingDrop() {
           </div>
           <div className="text-center">
             <Link
-              href="https://twitter.com/@taintedphotog"
-              title="TaintedPhotog"
+              href="https://twitter.com/@aninditowisnu"
+              title="Anindito Wisnu"
             >
               <a target="_blank">
                 <img
-                  src="https://cdn.collector.sh/drops/artists/taintedphotog.jpg"
+                  src="https://cdn.collector.sh/drops/artists/anindito.jpeg"
+                  className="w-full h-36 w-full object-center object-cover"
+                />
+              </a>
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link href="https://twitter.com/@destroyxstairs" title="SDNT">
+              <a target="_blank">
+                <img
+                  src="https://cdn.collector.sh/drops/artists/destroystairs.jpg"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>

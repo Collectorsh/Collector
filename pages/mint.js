@@ -29,15 +29,19 @@ export default function MintHome() {
         <div className="max-w-7xl mx-auto bg-mint-bg bg-cover h-screen">
           <ThemeProvider theme={theme}>
             <h1 className="w-fit mx-auto text-4xl font-extrabold text-white text-center mb-10 p-2 mt-4">
-              Signature: art project &#43; premium membership
+              Mint a &apos;Signature&apos; piece and unlock Collector Premium!
             </h1>
             <p className="w-fit text-white p-2 max-w-5xl mx-auto text-center">
-              Each NFT is a unique algorithmic artwork that combines Nate&apos;s
-              photos and Richard&apos;s code into a single digital signature.
+              &apos;Signature&apos; is an art project from the co-founders of
+              Collector, Richard and Nate.
             </p>
-            <p className="w-fit text-white p-2 max-w-3xl mt-12 mx-auto text-center">
-              In addition to the art, holders gain access to{" "}
-              <strong>premium features on collector.sh</strong>
+            <p className="w-fit text-white p-2 max-w-3xl mt-2 mx-auto text-center">
+              Each piece is a unique artwork that combines 30 of Nate&apos;s
+              photos and Richard&apos;s custome glitch program.
+            </p>
+            <p className="w-fit text-white p-2 max-w-3xl mt-2 mx-auto text-center">
+              We hope that you enjoy the art and all of the premium features
+              that it unlocks.
             </p>
             <Mint />
           </ThemeProvider>

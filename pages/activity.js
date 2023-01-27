@@ -22,7 +22,7 @@ function Activity() {
 
   return (
     <div className="dark:bg-black dark:text-whitish">
-      <CheckLoggedIn />
+      <CheckLoggedIn holder={true} />
       <MainNavigation />
       <div className="max-w-7xl mx-auto relative">
         <div className="px-4 xl:px-0 mx-auto clear-both">

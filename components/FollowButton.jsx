@@ -35,20 +35,19 @@ export default function FollowButton({ follow }) {
     <>
       {user && (
         <>
-          {following &&
-          following.find((f) => f.artist === follow.artist_name) ? (
+          {following && following.find((f) => f.artist === follow.artist) ? (
             <>
               <p className="text-xs text-gray-400 dark:text-dark4 clear-both mb-4 inline">
                 unfollow this artist{" "}
               </p>
               <Tippy
-                content={`Stop following ${follow.artist_name}`}
+                content={`Stop following ${follow.artist}`}
                 className="bg-gray-300"
               >
                 <MinusCircleIcon
                   className="inline h-8 w-8 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-red-600 dark:hover:text-red-600"
                   aria-hidden="true"
-                  onClick={() => doUnfollowArtist(follow.artist_name)}
+                  onClick={() => doUnfollowArtist(follow.artist)}
                 />
               </Tippy>
             </>
@@ -58,13 +57,13 @@ export default function FollowButton({ follow }) {
                 follow this artist{" "}
               </p>
               <Tippy
-                content={`Follow ${follow.artist_name}`}
+                content={`Follow ${follow.artist}`}
                 className="bg-gray-300"
               >
                 <PlusCircleIcon
                   className="inline h-8 w-8 cursor-pointer outline-none text-greeny hover:text-black dark:hover:text-white"
                   aria-hidden="true"
-                  onClick={() => doFollowArtist(follow.artist_name)}
+                  onClick={() => doFollowArtist(follow.artist)}
                 />
               </Tippy>
             </>

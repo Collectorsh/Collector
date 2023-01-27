@@ -10,6 +10,7 @@ import ConnectWallet from "/components/wallet/ConnectWallet";
 import Profile from "/components/navigation/Profile";
 import Gallery from "/components/navigation/Gallery";
 import Activity from "/components/navigation/Activity";
+import Premium from "/components/navigation/Premium";
 import CreateUsernameModal from "/components/CreateUsernameModal";
 
 export default function MainNavigation() {
@@ -56,18 +57,21 @@ export default function MainNavigation() {
                 </div>
               </div>
               <div className="hidden md:flex text-right items-center col-span-1 justify-end w-full">
-                {!user && (
-                  <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                    <Link href="/faq">FAQ</Link>
-                  </p>
-                )}
+                <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                  <Link href="/about">About</Link>
+                </p>
                 <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                   <Link href="/feed">Discover</Link>
                 </p>
+                <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                  <Link href="/drops">Drops</Link>
+                </p>
+                {!user && <Premium />}
                 {user && (
                   <>
                     <Gallery />
-                    <Activity />
+                    {user.token_holder && <Activity />}
+                    {!user.token_holder && <Premium />}
                   </>
                 )}
                 {user ? <Profile /> : <ConnectWallet />}
@@ -82,7 +86,6 @@ export default function MainNavigation() {
                 >
                   <svg
                     className="w-6 h-6 text-gray-400 hover:text-gray-600"
-                    x-show="!showMenu"
                     fill="none"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -188,26 +191,30 @@ export default function MainNavigation() {
                                     <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                       <Link href="/edit">Edit Gallery</Link>
                                     </p>
-                                    <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                      <Link href="/activity?id=buynow">
-                                        Buy Now
-                                      </Link>
-                                    </p>
-                                    <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                      <Link href="/activity?id=following">
-                                        Auctions
-                                      </Link>
-                                    </p>
-                                    <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                      <Link href="/activity?id=bids">
-                                        My Bids
-                                      </Link>
-                                    </p>
-                                    <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                      <Link href="/activity?id=follow">
-                                        Follow Artists
-                                      </Link>
-                                    </p>
+                                    {user.token_holder && (
+                                      <>
+                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                          <Link href="/activity?id=buynow">
+                                            Buy Now
+                                          </Link>
+                                        </p>
+                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                          <Link href="/activity?id=following">
+                                            Auctions
+                                          </Link>
+                                        </p>
+                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                          <Link href="/activity?id=bids">
+                                            My Bids
+                                          </Link>
+                                        </p>
+                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                          <Link href="/activity?id=follow">
+                                            Follow Artists
+                                          </Link>
+                                        </p>
+                                      </>
+                                    )}
                                     <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                       <a onClick={signOut}>Sign Out</a>
                                     </p>

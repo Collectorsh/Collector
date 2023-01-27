@@ -1,3 +1,4 @@
+import { rpcHost } from "/config/settings";
 import { toast } from "react-toastify";
 
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house";
@@ -30,7 +31,7 @@ export default async function cancelListingTransaction(
     (a) => a.address === listing.auctionHouse.address
   )[0];
 
-  const connection = new web3.Connection(web3.clusterApiUrl("mainnet-beta"), {
+  const connection = new web3.Connection(rpcHost, {
     commitment: "confirmed",
     confirmTransactionInitialTimeout: 60000,
   });

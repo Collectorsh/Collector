@@ -15,7 +15,7 @@ export default function Gallery() {
           <Menu.Button className="flex text-sm rounded-full focus:outline-none">
             <span className="sr-only">Open user menu</span>
             <p className="menu text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-              Share
+              My Gallery
               <ChevronDownIcon
                 className="h-4 w-4 ml-1 inline"
                 aria-hidden="true"

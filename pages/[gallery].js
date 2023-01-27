@@ -54,11 +54,13 @@ function Gallery({ user, tokens }) {
       {user ? <GalleryNavigation user={user} /> : <MainNavigation />}
       <div className="mx-auto px-4 clear-both">
         <div className="mx-auto pt-3">
-          {tokens && <GalleryContainer tokens={tokens} user={user} />}
+          {tokens && user && <GalleryContainer tokens={tokens} user={user} />}
           {!user && (
-            <p className="dark:text-gray-100">
-              We couldn&apos;t find a user with that name
-            </p>
+            <div className="max-w-7xl mx-auto">
+              <p className="dark:text-gray-100">
+                We couldn&apos;t find a user with that name
+              </p>
+            </div>
           )}
         </div>
       </div>
@@ -70,7 +72,8 @@ export async function getServerSideProps(context) {
   try {
     let username = context.params.gallery;
     let res = await getUserFromUsername(username);
-    let user = res.user;
+    let user = null;
+    if (res.status === "success") user = res.user;
     let tokens = {};
     try {
       tokens = await getMetadata(user.public_keys);

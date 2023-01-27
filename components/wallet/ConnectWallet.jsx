@@ -1,21 +1,13 @@
 import React, { useEffect, useContext, useCallback } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import {
-  WalletMultiButton,
-  useWalletModal,
-} from "@solana/wallet-adapter-react-ui";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import getApiKey from "/data/user/getApiKey";
 import UserContext from "/contexts/user";
 import getUserFromApiKey from "/data/user/getUserFromApiKey";
 
 export default function ConnectWallet() {
-  const { publicKey, signMessage } = useWallet();
-  const { setVisible } = useWalletModal();
+  const wallet = useWallet();
   const [user, setUser] = useContext(UserContext);
-
-  const logIn = () => {
-    setVisible(true);
-  };
 
   const asyncGetApiKey = useCallback(async (publicKey, signMessage) => {
     if (!publicKey || !signMessage) return;
@@ -27,7 +19,7 @@ export default function ConnectWallet() {
     }
   }, []);
 
-  const asyncGetUser = useCallback(async (apiKey) => {
+  const asyncGetUser = useCallback(async (apiKey, publicKey, signMessage) => {
     let res = await getUserFromApiKey(apiKey);
     if (res.data.status === "success") {
       setUser(res.data.user);
@@ -39,15 +31,15 @@ export default function ConnectWallet() {
   }, []);
 
   useEffect(() => {
-    if (!publicKey) return;
+    if (!wallet || !wallet.connected) return;
     // Check for an API key first
     const apiKey = localStorage.getItem("api_key");
     if (apiKey) {
-      asyncGetUser(apiKey);
+      asyncGetUser(apiKey, wallet.publicKey, wallet.signMessage);
     } else {
-      asyncGetApiKey(publicKey, signMessage);
+      asyncGetApiKey(wallet.publicKey, wallet.signMessage);
     }
-  }, [publicKey]);
+  }, [wallet]);
 
   return (
     <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">

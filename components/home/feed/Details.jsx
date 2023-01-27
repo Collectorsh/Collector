@@ -63,15 +63,15 @@ export default function Details({ item }) {
               href={marketplaceLink(
                 item.attributes.source,
                 item.attributes.mint,
-                item.artist_name,
+                item.artist,
                 item.attributes.highest_bidder_username
               )}
             >
-              <a className="hover:underline">{item.artist_name}</a>
+              <a className="hover:underline">{item.attributes.name}</a>
             </Link>{" "}
-            {item.artist_name && (
+            {item.artist && (
               <>
-                by <strong>{item.artist_name}</strong>{" "}
+                by <strong>{item.artist}</strong>{" "}
               </>
             )}
             for ◎{roundToTwo(item.attributes.amount / 1000000000)}
@@ -85,16 +85,16 @@ export default function Details({ item }) {
               href={marketplaceLink(
                 item.attributes.source,
                 item.attributes.mint,
-                item.artist_name,
+                item.artist,
                 item.attributes.highest_bidder_username
               )}
             >
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>
-            {item.artist_name && (
+            {item.artist && (
               <>
                 {" "}
-                by <strong>{item.artist_name}</strong>
+                by <strong>{item.artist}</strong>
               </>
             )}
             {item.attributes.amount && (
@@ -110,13 +110,13 @@ export default function Details({ item }) {
               href={marketplaceLink(
                 item.attributes.source,
                 item.attributes.mint,
-                item.artist_name,
+                item.artist,
                 item.attributes.highest_bidder_username
               )}
             >
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>{" "}
-            by <strong>{item.artist_name}</strong>
+            by <strong>{item.artist}</strong>
           </p>
         )}
       </div>
@@ -127,7 +127,7 @@ export default function Details({ item }) {
         href={marketplaceLink(
           item.attributes.source,
           item.attributes.mint,
-          item.artist_name,
+          item.artist,
           item.attributes.highest_bidder_username
         )}
       >
@@ -136,9 +136,9 @@ export default function Details({ item }) {
         </a>
       </Link>
 
-      {user && item.artist_name && (
+      {user && item.artist && (
         <div className="text-right border-t border-gray-100 dark:border-dark2 pt-4 pr-3 mt-4 -mx-4">
-          {item.artist_name && <FollowButton follow={item} />}
+          {item.artist && <FollowButton follow={item} />}
         </div>
       )}
     </div>

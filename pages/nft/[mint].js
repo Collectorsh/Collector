@@ -27,7 +27,7 @@ function Nft({ image, token }) {
     const res = await getNftQl({
       variables: { address: token.address },
     });
-    setSingleNft(res.data.nft);
+    setSingleNft(res.data.nft || {});
   }, []);
 
   // Run once on page load

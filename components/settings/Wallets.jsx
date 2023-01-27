@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import UserContext from "/contexts/user";
 import { Toaster } from "react-hot-toast";
 import { success, error } from "/utils/toastMessages";
@@ -8,9 +8,11 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 export default function Wallets() {
-  const { disconnect, publicKey, signMessage } = useWallet();
+  const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [user, setUser] = useContext(UserContext);
+  const [addingWallet, setAddingWallet] = useState(false);
+  const [usingLedger, setUsingLedger] = useState(false);
 
   function deleteWallet(event) {
     let pubKey = event.target.getAttribute("id");
@@ -31,20 +33,30 @@ export default function Wallets() {
 
   // Detect publicKey change and add wallet
   useEffect(() => {
-    if (!publicKey || !user) return;
-    if (user.public_keys.includes(publicKey.toBase58())) return;
-    verifyAddress(publicKey, signMessage, user.api_key).then((res) => {
-      if (res.data.status === "success") {
-        success("Wallet added successfully");
-        setUser(res.data.user);
-      } else {
-        error(res.data.msg);
-      }
+    if (!wallet || !wallet.publicKey || !user || !addingWallet) return;
+    wallet.connect().then(() => {
+      setAddingWallet(false);
+      if (user.public_keys.includes(wallet.publicKey.toBase58())) return;
+      verifyAddress(
+        wallet.publicKey,
+        wallet.signMessage,
+        user.api_key,
+        wallet.signTransaction,
+        usingLedger
+      ).then((res) => {
+        if (res.data.status === "success") {
+          success("Wallet added successfully");
+          setUser(res.data.user);
+        } else {
+          error(res.data.msg);
+        }
+      });
     });
-  }, [publicKey]);
+  }, [wallet]);
 
   async function addWallet() {
-    disconnect().then(() => {
+    wallet.disconnect().then(() => {
+      setAddingWallet(true);
       setVisible(true);
     });
   }
@@ -99,6 +111,14 @@ export default function Wallets() {
                 >
                   Add Wallet
                 </button>
+                <div className="inline">
+                  <input
+                    type="checkbox"
+                    className="inline ml-6"
+                    onClick={() => setUsingLedger(!usingLedger)}
+                  />
+                  <p className="inline ml-2">I&apos;m using a ledger</p>
+                </div>
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
             </div>

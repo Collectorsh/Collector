@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import { toast } from "react-toastify";
 import { roundToTwo } from "/utils/roundToTwo";
 import {
@@ -11,27 +10,28 @@ import { Connection } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Oval } from "react-loader-spinner";
-import Moment from "react-moment";
 import { MintCountdown } from "/utils/mint/MintCountdown";
-import { toDate } from "/utils/mint/utils";
-import allowList from "../../zmb_allow.json";
+import whiteList from "../../zmb_allow.json";
 
 export default function Zmb({ address }) {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
-  const [holder, setHolder] = useState();
+  const [collectionMint, setCollectionMint] = useState();
+  const [signatureHolder, setSignatureHolder] = useState();
+  const [allowList, setAllowList] = useState();
   const [total, setTotal] = useState(0);
   const [remaining, setRemaining] = useState();
   const [minted, setMinted] = useState();
-  const [holderMax, setHolderMax] = useState();
+  const [mintMax, setMintMax] = useState();
   const [mintState, setMintState] = useState();
   const [isMinting, setIsMinting] = useState(false);
-  const [holderStartDate, setHolderStartDate] = useState();
-  const [publicStartDate, setPublicStartDate] = useState();
   const [cost, setCost] = useState();
 
   const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC);
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
+
+  const holderStartDate = Date.parse("30 Jan 2023 15:00:00 GMT");
+  const publicStartDate = Date.parse("30 Feb 2023 15:00:00 GMT");
 
   const asyncGetCandymachine = useCallback(async (wallet, onceOnly = false) => {
     const cndy = await metaplex.candyMachines().findByAddress({
@@ -45,8 +45,38 @@ export default function Zmb({ address }) {
   }, []);
 
   const asyncCheckIfHolder = useCallback(async (wallet) => {
-    const holding = allowList.find((a) => a === wallet.publicKey.toBase58());
-    holding ? setHolder("yes") : setHolder("no");
+    const allow = whiteList.find(
+      (a) => a.holder === wallet.publicKey.toBase58()
+    );
+    if (allow) {
+      console.log("on allow list");
+      console.log(`mint max: ${allow.max}`);
+      setAllowList("yes");
+      setSignatureHolder("no");
+      setMintMax(allow.max);
+    } else {
+      console.log("not on allow list");
+      setAllowList("no");
+      const nfts = await metaplex.nfts().findAllByOwner({
+        owner: wallet.publicKey,
+      });
+      var holder = false;
+      for (const nft of nfts) {
+        if (
+          nft.collection &&
+          nft.collection.address.toBase58() ===
+            process.env.NEXT_PUBLIC_SIGNATURE_COLLECTION_ADDRESS
+        ) {
+          console.log("signature nft holder");
+          console.log("mint max: 1");
+          setCollectionMint(nft);
+          setSignatureHolder("yes");
+          holder = true;
+          setMintMax(1);
+        }
+      }
+      if (holder === false) setSignatureHolder("no");
+    }
   }, []);
 
   useEffect(() => {
@@ -55,7 +85,7 @@ export default function Zmb({ address }) {
     asyncCheckIfHolder(wallet);
   }, [wallet]);
 
-  const mintNow = async (group) => {
+  const mintNow = async () => {
     if (isMinting) return;
     setIsMinting(true);
     toast("Approve the transaction in your wallet");
@@ -64,22 +94,40 @@ export default function Zmb({ address }) {
     });
     const collectionUpdateAuthority = candyMachine.authorityAddress;
     try {
-      if (group === "holder") {
+      if (allowList === "yes") {
+        const groupName = `unp_${mintMax.toString()}`;
+        console.log(`minting from group: ${groupName}`);
         await metaplex.candyMachines().callGuardRoute({
           candyMachine,
-          group: "holder",
+          group: groupName,
           guard: "allowList",
           settings: {
             path: "proof",
-            merkleProof: getMerkleProof(allowList, wallet.publicKey.toBase58()),
+            merkleProof: getMerkleProof(
+              whiteList.filter((w) => w.max === mintMax).map((w) => w.holder),
+              wallet.publicKey.toBase58()
+            ),
           },
         });
         var { nft } = await metaplex.candyMachines().mint({
           candyMachine,
           collectionUpdateAuthority,
+          group: groupName,
+        });
+      } else if (signatureHolder === "yes") {
+        console.log(`minting from group: holder`);
+        var { nft } = await metaplex.candyMachines().mint({
+          candyMachine,
+          collectionUpdateAuthority,
           group: "holder",
+          guards: {
+            nftGate: {
+              mint: collectionMint.mintAddress,
+            },
+          },
         });
       } else {
+        console.log("minting from group: public");
         var { nft } = await metaplex.candyMachines().mint({
           candyMachine,
           collectionUpdateAuthority,
@@ -110,28 +158,14 @@ export default function Zmb({ address }) {
   };
 
   const doSetState = (cndy) => {
-    const h = cndy.candyGuard.groups.filter((g) => g.label === "holder")[0]
-      .guards;
-    const p = cndy.candyGuard.groups.filter((g) => g.label === "public")[0]
-      .guards;
-    setHolderStartDate(h.startDate.date);
-    setPublicStartDate(p.startDate.date);
-    setCost(h.solPayment.lamports.toNumber());
-    if (h.redeemedAmount) {
-      setHolderMax(h.redeemedAmount.maximum.toNumber());
-    }
+    setCost(cndy.candyGuard.guards.solPayment.lamports.toNumber());
     if (cndy.itemsRemaining.toNumber() === 0) {
       setMintState("sold");
-    } else if (Date.now() < h.startDate.date.toNumber() * 1000) {
+    } else if (Date.now() < holderStartDate) {
       setMintState("pre");
-    } else if (
-      Date.now() > h.startDate.date.toNumber() * 1000 &&
-      Date.now() < h.endDate.date.toNumber() * 1000
-    ) {
+    } else if (Date.now() > holderStartDate && Date.now() < publicStartDate) {
       setMintState("holder");
-    } else if (p.endDate && Date.now() > p.endDate.date.toNumber() * 1000) {
-      setMintState("ended");
-    } else if (Date.now() > p.startDate.date.toNumber() * 1000) {
+    } else if (Date.now() > publicStartDate) {
       setMintState("public");
     }
   };
@@ -161,13 +195,7 @@ export default function Zmb({ address }) {
             <>
               {holderStartDate && (
                 <MintCountdown
-                  date={toDate(holderStartDate)}
-                  style={{ justifyContent: "flex-end" }}
-                />
-              )}
-              {!holderStartDate && publicStartDate && (
-                <MintCountdown
-                  date={toDate(publicStartDate)}
+                  date={new Date(holderStartDate)}
                   style={{ justifyContent: "flex-end" }}
                 />
               )}
@@ -175,13 +203,7 @@ export default function Zmb({ address }) {
           )}
           {mintState && mintState === "holder" && (
             <>
-              {holderMax && (
-                <p className="mb-4 text-sm">
-                  Signature holder allocation is {holderMax}. Minted {minted}/
-                  {holderMax}
-                </p>
-              )}
-              {holder === "yes" ? (
+              {allowList === "yes" || signatureHolder === "yes" ? (
                 <>
                   {isMinting ? (
                     <>
@@ -195,31 +217,27 @@ export default function Zmb({ address }) {
                       />
                     </>
                   ) : (
-                    <button
-                      className="bg-greeny px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer disabled:cursor-default disabled:bg-gray-300"
-                      onClick={() => mintNow("holder")}
-                      disabled={
-                        isMinting
-                          ? true
-                          : holderMax
-                          ? minted === holderMax
-                          : false
-                      }
-                    >
-                      Mint
-                    </button>
+                    <>
+                      <p className="text-sm mb-2">
+                        You're eligible to mint {mintMax} during presale
+                      </p>
+                      <button
+                        className="bg-greeny px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer disabled:cursor-default disabled:bg-gray-300"
+                        onClick={() => mintNow()}
+                        disabled={isMinting ? true : false}
+                      >
+                        Mint
+                      </button>
+                    </>
                   )}
                 </>
               ) : (
                 <>
-                  <p className="text-sm">
-                    You need to be a Unprofessional edition holder to mint now.
-                  </p>
                   {publicStartDate && (
-                    <p className="mt-4 text-sm">
-                      Public mint starts{" "}
-                      <Moment date={publicStartDate} unix fromNow />
-                    </p>
+                    <MintCountdown
+                      date={new Date(publicStartDate)}
+                      style={{ justifyContent: "flex-end" }}
+                    />
                   )}
                 </>
               )}
@@ -241,16 +259,13 @@ export default function Zmb({ address }) {
               ) : (
                 <button
                   className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
-                  onClick={() => mintNow("public")}
+                  onClick={() => mintNow()}
                   disabled={isMinting}
                 >
                   Mint
                 </button>
               )}
             </>
-          )}
-          {mintState && mintState === "ended" && (
-            <p className="text-red-500 text-sm">The mint has ended</p>
           )}
         </div>
       ) : (

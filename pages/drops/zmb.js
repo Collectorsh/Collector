@@ -5,7 +5,7 @@ import { PublicKey } from "@solana/web3.js";
 import Zmb from "/components/drops/zmb";
 
 export default function HanaKnight() {
-  const address = new PublicKey("EwKd7ECeymoBDdRJGCfHZz3Etf895fawod89usU2yitv");
+  const address = new PublicKey("BPUCcDzrTDgPzjxhY1cjMGWjQj3pFZeBEJdk37EUN91V");
 
   return (
     <>
@@ -50,12 +50,21 @@ export default function HanaKnight() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
-              <img src="/images/zmb1.jpeg" />
-              <img src="/images/zmb2.jpeg" />
-              <img src="/images/zmb3.jpeg" />
-              <img src="/images/zmb4.jpeg" />
-              <img src="/images/zmb5.jpeg" />
-              <img src="/images/zmb6.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image0.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image1.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image2.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image3.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image4.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image5.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image6.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image8.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image9.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image10.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image11.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image12.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image13.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image14.jpeg" />
+              <img src="https://cdn.collector.sh/drops/zmb/image15.jpeg" />
             </div>
           </div>
         </div>

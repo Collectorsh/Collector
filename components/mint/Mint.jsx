@@ -403,8 +403,11 @@ export default function Mint() {
   }, [refreshCandyMachineState]);
 
   return (
-    <Container className="mt-12">
-      <Container maxWidth="xs" style={{ position: "relative" }}>
+    <Container style={{ paddingRight: 0, paddingLeft: 0 }}>
+      <Container
+        maxWidth="xs"
+        style={{ position: "relative", paddingRight: 0, paddingLeft: 0 }}
+      >
         <Paper
           style={{
             padding: 24,

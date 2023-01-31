@@ -60,14 +60,6 @@ export default function Drops() {
               <p className="text-sm mt-2">Febraury 3rd</p>
             </div>
             <div className="text-center mb-6">
-              <p className="font-bold mb-1">Rupture</p>
-              <img
-                src="/images/rupture.jpeg"
-                className="w-full h-96 lg:h-64 object-center object-cover"
-              />
-              <p className="text-sm mt-2">February 6th</p>
-            </div>
-            <div className="text-center mb-6">
               <p className="font-bold mb-1">Bonk</p>
               <img
                 src="/images/bonk.jpeg"
@@ -90,6 +82,14 @@ export default function Drops() {
                 className="w-full h-96 lg:h-64 object-center object-cover"
               />
               <p className="text-sm mt-2">March 1st</p>
+            </div>
+            <div className="text-center mb-6">
+              <p className="font-bold mb-1">Rupture</p>
+              <img
+                src="/images/rupture.jpeg"
+                className="w-full h-96 lg:h-64 object-center object-cover"
+              />
+              <p className="text-sm mt-2"></p>
             </div>
           </div>
         </div>

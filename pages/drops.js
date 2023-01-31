@@ -20,7 +20,7 @@ export default function Drops() {
             drop when they mint.
           </p>
 
-          <h2 className="mt-8 pb-4 underline text-2xl font-bold">Upcoming</h2>
+          <h2 className="mt-8 pb-4 underline text-2xl font-bold"></h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
             <div className="text-center mb-6">

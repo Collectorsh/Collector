@@ -60,7 +60,7 @@ export default function HanaKnight() {
                 <p className="mt-4">Wave 1: 1,069 pfp monkes</p>
               </div>
               <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
-                <Zmb address={address} />
+                {/* <Zmb address={address} /> */}
               </div>
             </div>
 

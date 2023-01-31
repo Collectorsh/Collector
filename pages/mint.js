@@ -28,8 +28,8 @@ export default function MintHome() {
         <MainNavigation />
         <div className="max-w-7xl mx-auto">
           <div className="max-w-4xl mx-auto sm:my-12 p-4 shadow-lg bg-white dark:bg-black dark:text-white">
-            <div className="grid grid-cols-5 gap-8">
-              <div className="col-span-3">
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-8">
+              <div className="col-span-1 sm:col-span-3">
                 <h2 className="text-2xl font-bold w-fit">Signature Pass</h2>
                 <p className="mt-4">
                   Get access to curated drops from top artists, advanced
@@ -38,7 +38,7 @@ export default function MintHome() {
                   world.
                 </p>
               </div>
-              <div className="col-span-2">
+              <div className="col-span-1 sm:col-span-2">
                 <ThemeProvider theme={theme}>
                   <Mint />
                 </ThemeProvider>

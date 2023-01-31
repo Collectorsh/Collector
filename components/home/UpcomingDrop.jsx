@@ -14,7 +14,7 @@ export default function UpcomingDrop() {
           </div>
         </div>
         <div className="sm:col-span-5 sm:col-end-13">
-          <p>Febrausry 3rd, 10am EST</p>
+          <p>Febrausry 3rd</p>
           <h2 className="align-middle sm:inline sm:my-5 text-4xl font-bold w-full py-1 inline-block">
             ZMB
           </h2>

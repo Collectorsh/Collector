@@ -61,7 +61,7 @@ export default function MainNavigation() {
                   <Link href="/about">About</Link>
                 </p>
                 <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                  <Link href="/feed">Discover</Link>
+                  <Link href="/feed">Feed</Link>
                 </p>
                 <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                   <Link href="/drops">Drops</Link>
@@ -160,13 +160,16 @@ export default function MainNavigation() {
                             </div>
                             <div className="mt-6 dark:text-gray-200">
                               {!user && (
-                                <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                  <Link href="/faq">FAQ</Link>
-                                </p>
+                                <>
+                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                    <Link href="/about">About</Link>
+                                  </p>
+                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                    <Link href="/feed">Feed</Link>
+                                  </p>
+                                </>
                               )}
-                              <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                <Link href="/feed">Discover</Link>
-                              </p>
+
                               {user && (
                                 <>
                                   <div className="mt-6">
@@ -178,7 +181,7 @@ export default function MainNavigation() {
                                       <Link href="/">Home</Link>
                                     </p>
                                     <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                      <Link href="/feed">Discover</Link>
+                                      <Link href="/feed">Feed</Link>
                                     </p>
                                     <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                       <Link href={`/${user.username}/profile`}>

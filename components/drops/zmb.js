@@ -16,8 +16,6 @@ import whiteList from "../../zmb_allow.json";
 export default function Zmb({ address }) {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
-  const [collectionMint, setCollectionMint] = useState();
-  const [signatureHolder, setSignatureHolder] = useState();
   const [allowList, setAllowList] = useState();
   const [total, setTotal] = useState(0);
   const [remaining, setRemaining] = useState();
@@ -26,12 +24,10 @@ export default function Zmb({ address }) {
   const [mintState, setMintState] = useState();
   const [isMinting, setIsMinting] = useState(false);
   const [cost, setCost] = useState();
+  const [publicStartDate, setPublicStartDate] = useState();
 
   const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC);
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
-
-  const holderStartDate = Date.parse("30 Jan 2023 15:00:00 GMT");
-  const publicStartDate = Date.parse("30 Feb 2023 15:00:00 GMT");
 
   const asyncGetCandymachine = useCallback(async (wallet, onceOnly = false) => {
     const cndy = await metaplex.candyMachines().findByAddress({
@@ -52,30 +48,10 @@ export default function Zmb({ address }) {
       console.log("on allow list");
       console.log(`mint max: ${allow.max}`);
       setAllowList("yes");
-      setSignatureHolder("no");
       setMintMax(allow.max);
     } else {
       console.log("not on allow list");
       setAllowList("no");
-      const nfts = await metaplex.nfts().findAllByOwner({
-        owner: wallet.publicKey,
-      });
-      var holder = false;
-      for (const nft of nfts) {
-        if (
-          nft.collection &&
-          nft.collection.address.toBase58() ===
-            process.env.NEXT_PUBLIC_SIGNATURE_COLLECTION_ADDRESS
-        ) {
-          console.log("signature nft holder");
-          console.log("mint max: 1");
-          setCollectionMint(nft);
-          setSignatureHolder("yes");
-          holder = true;
-          setMintMax(1);
-        }
-      }
-      if (holder === false) setSignatureHolder("no");
     }
   }, []);
 
@@ -93,8 +69,9 @@ export default function Zmb({ address }) {
       address: address,
     });
     const collectionUpdateAuthority = candyMachine.authorityAddress;
+    console.log(mintState);
     try {
-      if (allowList === "yes") {
+      if (allowList === "yes" && mintState === "holder") {
         const groupName = `unp_${mintMax.toString()}`;
         console.log(`minting from group: ${groupName}`);
         await metaplex.candyMachines().callGuardRoute({
@@ -113,18 +90,6 @@ export default function Zmb({ address }) {
           candyMachine,
           collectionUpdateAuthority,
           group: groupName,
-        });
-      } else if (signatureHolder === "yes") {
-        console.log(`minting from group: holder`);
-        var { nft } = await metaplex.candyMachines().mint({
-          candyMachine,
-          collectionUpdateAuthority,
-          group: "holder",
-          guards: {
-            nftGate: {
-              mint: collectionMint.mintAddress,
-            },
-          },
         });
       } else {
         console.log("minting from group: public");
@@ -158,14 +123,23 @@ export default function Zmb({ address }) {
   };
 
   const doSetState = (cndy) => {
+    const holderStart =
+      cndy.candyGuard.groups
+        .filter((g) => g.label === "unp_1")[0]
+        .guards.startDate.date.toNumber() * 1000;
+    const publicStart =
+      cndy.candyGuard.groups
+        .filter((g) => g.label === "public")[0]
+        .guards.startDate.date.toNumber() * 1000;
+    setPublicStartDate(publicStart);
     setCost(cndy.candyGuard.guards.solPayment.lamports.toNumber());
     if (cndy.itemsRemaining.toNumber() === 0) {
       setMintState("sold");
-    } else if (Date.now() < holderStartDate) {
+    } else if (Date.now() < holderStart) {
       setMintState("pre");
-    } else if (Date.now() > holderStartDate && Date.now() < publicStartDate) {
+    } else if (Date.now() > holderStart && Date.now() < publicStart) {
       setMintState("holder");
-    } else if (Date.now() > publicStartDate) {
+    } else if (Date.now() > publicStart) {
       setMintState("public");
     }
   };
@@ -203,7 +177,7 @@ export default function Zmb({ address }) {
           )}
           {mintState && mintState === "holder" && (
             <>
-              {allowList === "yes" || signatureHolder === "yes" ? (
+              {allowList === "yes" ? (
                 <>
                   {isMinting ? (
                     <>

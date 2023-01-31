@@ -5,7 +5,7 @@ import { PublicKey } from "@solana/web3.js";
 import Zmb from "/components/drops/zmb";
 
 export default function HanaKnight() {
-  const address = new PublicKey("BPUCcDzrTDgPzjxhY1cjMGWjQj3pFZeBEJdk37EUN91V");
+  const address = new PublicKey("EFekaX4J7H4nPb8vbn3mQpyFnsybd2WZXLKzdCMeiMJT");
 
   return (
     <>

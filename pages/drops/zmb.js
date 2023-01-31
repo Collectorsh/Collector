@@ -7,6 +7,21 @@ import Zmb from "/components/drops/zmb";
 export default function HanaKnight() {
   const address = new PublicKey("EFekaX4J7H4nPb8vbn3mQpyFnsybd2WZXLKzdCMeiMJT");
 
+  const zmbImages = () => {
+    const rows = [];
+    for (let i = 1; i < 421; i++) {
+      rows.push(
+        <img
+          src={`https://cdn.collector.sh/drops/zmb/ZMB-W1--${i
+            .toString()
+            .padStart(4, "0")}.jpg`}
+        />
+      );
+    }
+    console.log(rows);
+    return rows;
+  };
+
   return (
     <>
       <ToastContainer
@@ -49,22 +64,8 @@ export default function HanaKnight() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
-              <img src="https://cdn.collector.sh/drops/zmb/image0.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image1.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image2.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image3.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image4.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image5.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image6.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image8.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image9.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image10.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image11.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image12.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image13.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image14.jpeg" />
-              <img src="https://cdn.collector.sh/drops/zmb/image15.jpeg" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-10 gap-2 mt-6">
+              {zmbImages()}
             </div>
           </div>
         </div>

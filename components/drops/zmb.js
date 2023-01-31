@@ -193,7 +193,7 @@ export default function Zmb({ address }) {
                   ) : (
                     <>
                       <p className="text-sm mb-2">
-                        You're eligible to mint {mintMax} during presale
+                        You&apos;re eligible to mint {mintMax} during presale
                       </p>
                       <button
                         className="bg-greeny px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer disabled:cursor-default disabled:bg-gray-300"

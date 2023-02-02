@@ -25,6 +25,7 @@ export default function Zmb({ address }) {
   const [isMinting, setIsMinting] = useState(false);
   const [cost, setCost] = useState();
   const [publicStartDate, setPublicStartDate] = useState();
+  const [holderStartDate, setHolderStartDate] = useState();
 
   const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC);
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
@@ -132,6 +133,7 @@ export default function Zmb({ address }) {
         .filter((g) => g.label === "public")[0]
         .guards.startDate.date.toNumber() * 1000;
     setPublicStartDate(publicStart);
+    setHolderStartDate(holderStart);
     setCost(cndy.candyGuard.guards.solPayment.lamports.toNumber());
     if (cndy.itemsRemaining.toNumber() === 0) {
       setMintState("sold");

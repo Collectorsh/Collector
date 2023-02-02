@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   console.log(req);
   try {
     const roots = [];
-    for (let i = 1; i < 10; i++) {
+    for (let i = 1; i < 15; i++) {
       const allowList = whiteList
         .filter((w) => w.max === i)
         .map((w) => w.holder);

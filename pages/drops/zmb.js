@@ -5,13 +5,14 @@ import { PublicKey } from "@solana/web3.js";
 import Zmb from "/components/drops/zmb";
 
 export default function HanaKnight() {
-  const address = new PublicKey("EFekaX4J7H4nPb8vbn3mQpyFnsybd2WZXLKzdCMeiMJT");
+  const address = new PublicKey("7eMjvX9UvxaxM6Be847ovfh7aNfyZgzhVLMF5idR3duG");
 
   const zmbImages = () => {
     const rows = [];
     for (let i = 1; i < 421; i++) {
       rows.push(
         <img
+          key={i}
           src={`https://cdn.collector.sh/drops/zmb/ZMB-W1--${i
             .toString()
             .padStart(4, "0")}.jpg`}
@@ -60,7 +61,7 @@ export default function HanaKnight() {
                 <p className="mt-4">Wave 1: 1,069 pfp monkes</p>
               </div>
               <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
-                {/* <Zmb address={address} /> */}
+                <Zmb address={address} />
               </div>
             </div>
 

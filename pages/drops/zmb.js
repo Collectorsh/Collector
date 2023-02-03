@@ -2,9 +2,9 @@ import Link from "next/link";
 import { ToastContainer } from "react-toastify";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { PublicKey } from "@solana/web3.js";
-import Zmb from "/components/drops/zmb";
+import ZmbMint from "/components/drops/zmb";
 
-export default function HanaKnight() {
+export default function Zmb() {
   const address = new PublicKey("7eMjvX9UvxaxM6Be847ovfh7aNfyZgzhVLMF5idR3duG");
 
   const zmbImages = () => {
@@ -19,7 +19,6 @@ export default function HanaKnight() {
         />
       );
     }
-    console.log(rows);
     return rows;
   };
 
@@ -61,7 +60,7 @@ export default function HanaKnight() {
                 <p className="mt-4">Wave 1: 1,069 pfp monkes</p>
               </div>
               <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
-                <Zmb address={address} />
+                <ZmbMint address={address} />
               </div>
             </div>
 

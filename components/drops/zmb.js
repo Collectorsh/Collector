@@ -13,7 +13,7 @@ import { Oval } from "react-loader-spinner";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import whiteList from "../../zmb_allow.json";
 
-export default function Zmb({ address }) {
+export default function ZmbMint({ address }) {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [allowList, setAllowList] = useState();
@@ -27,7 +27,9 @@ export default function Zmb({ address }) {
   const [publicStartDate, setPublicStartDate] = useState();
   const [holderStartDate, setHolderStartDate] = useState();
 
-  const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC);
+  const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC, {
+    commitment: "confirmed",
+  });
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
 
   const asyncGetCandymachine = useCallback(async (wallet, onceOnly = false) => {

@@ -39,7 +39,7 @@ export default function UpcomingDrop() {
       image: "rtoDoDPnULqmJJYavfEjr2SGowWShr5cDBs8TPeLnQc",
       artist: "ADHD (Space Case)",
     },
-  ].sort(() => 0.5 - Math.random());
+  ];
 
   return (
     <div className="max-w-4xl mx-auto sm:my-12 p-4 shadow-lg bg-white dark:bg-black dark:text-white">

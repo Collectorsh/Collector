@@ -112,7 +112,7 @@ export default function UpcomingDrop() {
             <Link href="https://twitter.com/@ohareyoufat" title="Tony Tafuro">
               <a target="_blank">
                 <img
-                  src="https://cdn.collector.sh/drops/artists/tonyt.png"
+                  src="/images/tonyt.png"
                   className="w-full h-36 w-full object-center object-cover"
                 />
               </a>

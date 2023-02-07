@@ -4,7 +4,7 @@ import { PublicKey } from "@solana/web3.js";
 import BonkMint from "/components/drops/bonk";
 
 export default function Bonk() {
-  const address = new PublicKey("7WPjaYziymbzXBUJcUWuEnAWij5sCKLTm6TfqVctg8ZD");
+  const address = new PublicKey("DGp59LKAGV9NtMXNGq7aZwxCALwqGJyGXFBjyQHoreW8");
 
   const bonkImages = () => {
     const rows = [];
@@ -54,7 +54,7 @@ export default function Bonk() {
                 </p>
               </div>
               <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
-                {/* <BonkMint address={address} /> */}
+                <BonkMint address={address} />
               </div>
             </div>
 

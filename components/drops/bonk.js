@@ -105,7 +105,7 @@ export default function BonkMint({ address }) {
 
       {cost && (
         <p className="mt-4 bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
-          Price: {cost && <>{numberWithCommas(cost / 1000000000)} bonk</>}
+          Price: 4M bonk
         </p>
       )}
 

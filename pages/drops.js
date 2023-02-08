@@ -20,9 +20,7 @@ export default function Drops() {
             drop when they mint.
           </p>
 
-          <h2 className="mt-8 pb-4 underline text-2xl font-bold">Live</h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-8">
             <div className="text-center mb-6">
               <p className="font-bold mb-1">Hana Knight</p>
               <Link href="/drops/hanaknight" title="Hana Knight Drop">
@@ -35,11 +33,30 @@ export default function Drops() {
               </Link>
               <p className="text-sm mt-2">January 18th</p>
             </div>
-          </div>
-
-          <h2 className="mt-8 pb-4 underline text-2xl font-bold">Upcoming</h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
+            <div className="text-center mb-6">
+              <p className="font-bold mb-1">Neverland</p>
+              <Link href="/drops/neverland" title="PAUSE">
+                <a>
+                  <img
+                    src="/images/neverland.jpeg"
+                    className="w-full h-96 lg:h-64 object-center object-cover"
+                  />
+                </a>
+              </Link>
+              <p className="text-sm mt-2">January 26th</p>
+            </div>
+            <div className="text-center mb-6">
+              <p className="font-bold mb-1">Zero Monke Biz</p>
+              <Link href="/drops/zmb" title="Zero Monke Biz">
+                <a>
+                  <img
+                    src="/images/zmb1.jpeg"
+                    className="w-full h-96 lg:h-64 object-center object-cover"
+                  />
+                </a>
+              </Link>
+              <p className="text-sm mt-2">Febraury 3rd</p>
+            </div>
             <div className="text-center mb-6">
               <p className="font-bold mb-1">Rupture</p>
               <Link href="/drops/rupture" title="Monochromatic Dreams">
@@ -75,35 +92,6 @@ export default function Drops() {
                 className="w-full h-96 lg:h-64 object-center object-cover"
               />
               <p className="text-sm mt-2">March 1st</p>
-            </div>
-          </div>
-
-          <h2 className="mt-8 pb-4 underline text-2xl font-bold">Sold Out</h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
-            <div className="text-center mb-6">
-              <p className="font-bold mb-1">Zero Monke Biz</p>
-              <Link href="/drops/zmb" title="Zero Monke Biz">
-                <a>
-                  <img
-                    src="/images/zmb1.jpeg"
-                    className="w-full h-96 lg:h-64 object-center object-cover"
-                  />
-                </a>
-              </Link>
-              <p className="text-sm mt-2">Febraury 3rd</p>
-            </div>
-            <div className="text-center mb-6">
-              <p className="font-bold mb-1">Neverland</p>
-              <Link href="/drops/neverland" title="PAUSE">
-                <a>
-                  <img
-                    src="/images/neverland.jpeg"
-                    className="w-full h-96 lg:h-64 object-center object-cover"
-                  />
-                </a>
-              </Link>
-              <p className="text-sm mt-2">January 26th</p>
             </div>
           </div>
         </div>

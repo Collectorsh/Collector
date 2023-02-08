@@ -81,22 +81,6 @@ export default function Drops() {
               </Link>
               <p className="text-sm mt-2">February 8th</p>
             </div>
-            <div className="text-center mb-6">
-              <p className="font-bold mb-1">21dao</p>
-              <img
-                src="/images/21.jpeg"
-                className="w-full h-96 lg:h-64 object-center object-cover"
-              />
-              <p className="text-sm mt-2">February 22nd</p>
-            </div>
-            <div className="text-center mb-6">
-              <p className="font-bold mb-1">Rick Bakas</p>
-              <img
-                src="/images/rickbakas.jpeg"
-                className="w-full h-96 lg:h-64 object-center object-cover"
-              />
-              <p className="text-sm mt-2">March 1st</p>
-            </div>
           </div>
         </div>
       </div>

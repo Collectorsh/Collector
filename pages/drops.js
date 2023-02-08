@@ -71,10 +71,14 @@ export default function Drops() {
             </div>
             <div className="text-center mb-6">
               <p className="font-bold mb-1">Bonk</p>
-              <img
-                src="/images/bonk.jpeg"
-                className="w-full h-96 lg:h-64 object-center object-cover"
-              />
+              <Link href="/drops/bonk" title="Bonk">
+                <a>
+                  <img
+                    src="/images/bonk.jpeg"
+                    className="w-full h-96 lg:h-64 object-center object-cover"
+                  />
+                </a>
+              </Link>
               <p className="text-sm mt-2">February 8th</p>
             </div>
             <div className="text-center mb-6">

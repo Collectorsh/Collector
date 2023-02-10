@@ -7,11 +7,13 @@ function Market({ name, drop }) {
     <div className="dark:bg-black dark:text-whitish">
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        {drop ? (
-          <Secondary drop={drop} />
-        ) : (
-          <p className="mt-8">No drop found with the name {name}</p>
-        )}
+        <div className="px-4 xl:px-0">
+          {drop ? (
+            <Secondary drop={drop} />
+          ) : (
+            <p className="mt-8">No drop found with the name {name}</p>
+          )}
+        </div>
       </div>
     </div>
   );

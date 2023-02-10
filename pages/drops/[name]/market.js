@@ -9,7 +9,13 @@ function Market({ name, drop }) {
       <div className="max-w-7xl mx-auto">
         <div className="px-4 xl:px-0">
           {drop ? (
-            <Secondary drop={drop} />
+            <>
+              {drop.market === true ? (
+                <Secondary drop={drop} />
+              ) : (
+                <p className="mt-8">No market found with the name {name}</p>
+              )}
+            </>
           ) : (
             <p className="mt-8">No drop found with the name {name}</p>
           )}

@@ -15,8 +15,10 @@ export default function Nft({ mint }) {
   }, []);
 
   useEffect(() => {
+    if (!mint) return;
+
     fetchNft(mint.mint);
-  }, []);
+  }, [mint]);
 
   const link =
     mint && mint.listed

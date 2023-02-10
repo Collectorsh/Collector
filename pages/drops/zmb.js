@@ -60,7 +60,12 @@ export default function Zmb() {
                 <p className="mt-4">Wave 1: 1,069 pfp monkes</p>
               </div>
               <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
-                <ZmbMint address={address} />
+                {/* <ZmbMint address={address} /> */}
+                <Link href="/drops/zmb/market">
+                  <a className="float-right bg-greeny px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer">
+                    Go to Market
+                  </a>
+                </Link>
               </div>
             </div>
 

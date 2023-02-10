@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ToastContainer } from "react-toastify";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { PublicKey } from "@solana/web3.js";
@@ -41,6 +42,11 @@ export default function HanaKnight() {
                 </p>
               </div>
               <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
+                {/* <Link href="/drops/hanaknight/market">
+                  <a className="float-right bg-greeny px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer">
+                    Go to Market
+                  </a>
+                </Link> */}
                 <Gacha address={address} />
               </div>
             </div>

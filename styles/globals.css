@@ -30,7 +30,8 @@
   color: #eee;
 }
 
-h1 {
+h1,
+.collector {
   font-family: "DM Serif Text", serif;
 }
 

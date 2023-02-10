@@ -48,7 +48,7 @@ export default function Nft({ mint }) {
                 )}
                 {mint.listed && (
                   <div className="float-right mb-2">
-                    <MarketplaceLogo source={mint.source} color="white" /> ◎
+                    <MarketplaceLogo source={mint.source} /> ◎
                     {roundToTwo(mint.amount / 1000000000)}
                   </div>
                 )}

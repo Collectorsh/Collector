@@ -18,9 +18,10 @@ export default function Nft({ mint }) {
     fetchNft(mint.mint);
   }, []);
 
-  const link = mint.listed
-    ? marketplaceLink(mint.source, mint.mint)
-    : `/nft/${mint.mint}`;
+  const link =
+    mint && mint.listed
+      ? marketplaceLink(mint.source, mint.mint)
+      : `/nft/${mint.mint}`;
 
   return (
     <>

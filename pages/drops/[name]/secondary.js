@@ -37,22 +37,26 @@ export default function Secondary({ drop }) {
 
   return (
     <>
-      <h2 className="mt-12 text-4xl font-bold w-full inline-block">
-        {drop.name}
-      </h2>
-      <p className="mt-4 mb-12">{drop.description}</p>
-      {mints && infiniteScrollItems.length > 0 ? (
-        <InfiniteScroll
-          dataLength={infiniteScrollItems.length}
-          next={fetchData}
-          hasMore={infiniteScrollItems.length !== mints.length}
-        >
-          <Items items={infiniteScrollItems} />
-        </InfiniteScroll>
-      ) : (
-        <div className="mt-4 w-[50px] mx-auto h-64">
-          <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
-        </div>
+      {drop && (
+        <>
+          <h2 className="mt-12 text-4xl font-bold w-full inline-block">
+            {drop.name}
+          </h2>
+          <p className="mt-4 mb-12">{drop.description}</p>
+          {mints && infiniteScrollItems.length > 0 ? (
+            <InfiniteScroll
+              dataLength={infiniteScrollItems.length}
+              next={fetchData}
+              hasMore={infiniteScrollItems.length !== mints.length}
+            >
+              <Items items={infiniteScrollItems} />
+            </InfiniteScroll>
+          ) : (
+            <div className="mt-4 w-[50px] mx-auto h-64">
+              <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
+            </div>
+          )}
+        </>
       )}
     </>
   );

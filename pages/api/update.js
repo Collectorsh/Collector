@@ -7,8 +7,8 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import editions from "../../editions.json";
 
 const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC);
-let key = process.env.NEXT_PUBLIC_PRIVATE_KEY;
-let wallet = Keypair.fromSecretKey(Buffer.from(key));
+let seed = Uint8Array.from([]);
+let wallet = Keypair.fromSecretKey(seed);
 const metaplex = Metaplex.make(connection).use(keypairIdentity(wallet));
 metaplex.use(bundlrStorage());
 
@@ -22,6 +22,8 @@ export default async function handler(req, res) {
           value: `${edition.edition}/${edition.supply}`,
         },
       ];
+      console.log(edition.mint);
+      console.log(attributes);
       const mintAddress = new PublicKey(edition.mint);
       const nft = await metaplex.nfts().findByMint({ mintAddress });
 

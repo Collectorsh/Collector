@@ -3,7 +3,6 @@ import getAllDrops from "/data/drops/getAllDrops";
 import MainNavigation from "/components/navigation/MainNavigation";
 
 export default function Drops({ drops }) {
-  console.log(drops);
   return (
     <div className="dark:bg-black">
       <MainNavigation />

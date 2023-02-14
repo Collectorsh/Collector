@@ -56,7 +56,7 @@ export default function Nft({ mint }) {
                   {token.name}
                 </h3>
                 {twitter ? (
-                  <p className="dark:text-whitish text-sm mb-2">
+                  <p className="dark:text-whitish text-sm">
                     {twitter && (
                       <Link href={`https://twitter.com/${twitter}`}>
                         <a>
@@ -76,11 +76,20 @@ export default function Nft({ mint }) {
                   <p className="dark:text-whitish text-sm">{artist}</p>
                 )}
                 {mint.listed && (
-                  <div className="float-right mb-2">
+                  <div className="float-left my-2">
                     <MarketplaceLogo source={mint.source} />{" "}
                     <span className="font-bold text-sm">
                       ◎{roundToTwo(mint.amount / 1000000000)}
                     </span>
+                  </div>
+                )}
+                {mint.owned && (
+                  <div className="float-right my-2">
+                    <Link href={`/nft/${mint.mint}`}>
+                      <a className="bg-dark1 px-3 py-1 rounded text-white text-sm">
+                        List
+                      </a>
+                    </Link>
                   </div>
                 )}
               </div>

@@ -27,7 +27,7 @@ export default function ZmbMint({ address }) {
   const [publicStartDate, setPublicStartDate] = useState();
   const [holderStartDate, setHolderStartDate] = useState();
 
-  const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC, {
+  const connection = new Connection(process.env.NEXT_PUBLIC_RPC, {
     commitment: "confirmed",
   });
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));

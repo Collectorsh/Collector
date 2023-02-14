@@ -13,7 +13,7 @@ export default function Secondary({ drop }) {
   const [mints, setMints] = useState();
   const [infiniteScrollItems, setInfiniteScrollItems] = useState([]);
 
-  const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC);
+  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
 
   // Get owned NFT's

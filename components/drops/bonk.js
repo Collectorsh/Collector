@@ -23,7 +23,7 @@ export default function BonkMint({ address }) {
   const [cost, setCost] = useState();
   const [publicStartDate, setPublicStartDate] = useState();
 
-  const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC);
+  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
 
   const asyncGetCandymachine = useCallback(async (wallet, onceOnly = false) => {

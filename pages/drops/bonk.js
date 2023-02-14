@@ -8,7 +8,7 @@ export default function Bonk() {
 
   const bonkImages = () => {
     const rows = [];
-    for (let i = 1; i < 102; i++) {
+    for (let i = 1; i < 7; i++) {
       rows.push(
         <img
           key={i}
@@ -17,7 +17,7 @@ export default function Bonk() {
         />
       );
     }
-    return rows.sort(() => 0.5 - Math.random()).slice(0, 6);
+    return rows;
   };
 
   return (

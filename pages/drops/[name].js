@@ -103,7 +103,7 @@ export default function ArtistDrop({ name, drop }) {
             </div>
           ) : (
             <p className="text-black dark:text-white mt-12">
-              We couldn't find a drop named {name}
+              We couldn&apos;t find a drop named {name}
             </p>
           )}
         </div>

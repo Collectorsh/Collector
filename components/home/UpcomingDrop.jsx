@@ -15,11 +15,10 @@ export default function UpcomingDrop() {
 
   const bonkImages = () => {
     const rows = [];
-    for (let i = 1; i < 102; i++) {
+    for (let i = 1; i < 7; i++) {
       rows.push(i);
     }
-    const rand = rows.sort(() => 0.5 - Math.random()).slice(0, 6);
-    return rand;
+    return rows;
   };
 
   return (

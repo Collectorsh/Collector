@@ -37,8 +37,8 @@ export default function Mint() {
   const { setVisible } = useWalletModal();
 
   const wallet = useWallet();
-  const rpcUrl = process.env.NEXT_PUBLIC_CANDYMACHINE_RPC;
-  const cluster = process.env.NEXT_PUBLIC_CANDYMACHINE_NETWORK;
+  const rpcUrl = process.env.NEXT_PUBLIC_RPC;
+  const cluster = process.env.NEXT_PUBLIC_SOLANA_NETWORK;
   const candyMachineId = process.env.NEXT_PUBLIC_CANDYMACHINE_ID;
 
   const connection = new anchor.web3.Connection(rpcUrl);

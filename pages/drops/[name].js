@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { PublicKey } from "@solana/web3.js";
 import Gacha from "/components/drops/gacha";
+import Bonk from "/components/drops/bonk";
 import getDropFromName from "/data/drops/getDropFromName";
 
 import { S3Client, ListObjectsCommand } from "@aws-sdk/client-s3";
@@ -68,7 +69,11 @@ export default function ArtistDrop({ name, drop }) {
                 </div>
                 {drop.closed === false && (
                   <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
-                    <Gacha address={address} />
+                    {drop.name === "Bonk" ? (
+                      <Bonk address={address} />
+                    ) : (
+                      <Gacha address={address} />
+                    )}
                   </div>
                 )}
               </div>

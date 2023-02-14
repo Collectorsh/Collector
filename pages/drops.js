@@ -1,7 +1,9 @@
 import Link from "next/link";
+import getAllDrops from "/data/drops/getAllDrops";
 import MainNavigation from "/components/navigation/MainNavigation";
 
-export default function Drops() {
+export default function Drops({ drops }) {
+  console.log(drops);
   return (
     <div className="dark:bg-black">
       <MainNavigation />
@@ -21,69 +23,34 @@ export default function Drops() {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-8">
-            <div className="text-center mb-6">
-              <p className="font-bold mb-1">Hana Knight</p>
-              <Link href="/drops/hanaknight" title="Hana Knight Drop">
-                <a>
-                  <img
-                    src="/images/hanaknight.jpeg"
-                    className="w-full h-96 lg:h-64 object-center object-cover"
-                  />
-                </a>
-              </Link>
-              <p className="text-sm mt-2">January 18th</p>
-            </div>
-            <div className="text-center mb-6">
-              <p className="font-bold mb-1">Neverland</p>
-              <Link href="/drops/neverland" title="PAUSE">
-                <a>
-                  <img
-                    src="/images/neverland.jpeg"
-                    className="w-full h-96 lg:h-64 object-center object-cover"
-                  />
-                </a>
-              </Link>
-              <p className="text-sm mt-2">January 26th</p>
-            </div>
-            <div className="text-center mb-6">
-              <p className="font-bold mb-1">Zero Monke Biz</p>
-              <Link href="/drops/zmb" title="Zero Monke Biz">
-                <a>
-                  <img
-                    src="/images/zmb1.jpeg"
-                    className="w-full h-96 lg:h-64 object-center object-cover"
-                  />
-                </a>
-              </Link>
-              <p className="text-sm mt-2">Febraury 3rd</p>
-            </div>
-            <div className="text-center mb-6">
-              <p className="font-bold mb-1">Rupture</p>
-              <Link href="/drops/rupture" title="Monochromatic Dreams">
-                <a>
-                  <img
-                    src="/images/rupture.jpeg"
-                    className="w-full h-96 lg:h-64 object-center object-cover"
-                  />
-                </a>
-              </Link>
-              <p className="text-sm mt-2">February 6th</p>
-            </div>
-            <div className="text-center mb-6">
-              <p className="font-bold mb-1">Bonk</p>
-              <Link href="/drops/bonk" title="Bonk">
-                <a>
-                  <img
-                    src="/images/bonk.jpeg"
-                    className="w-full h-96 lg:h-64 object-center object-cover"
-                  />
-                </a>
-              </Link>
-              <p className="text-sm mt-2">February 8th</p>
-            </div>
+            {drops.map((drop, index) => (
+              <div className="text-center mb-6" key={index}>
+                <p className="font-bold mb-1">{drop.name}</p>
+                <Link href={`/drops/${drop.slug}`} title={drop.name}>
+                  <a>
+                    <img
+                      src={drop.image}
+                      className="w-full h-96 lg:h-64 object-center object-cover"
+                    />
+                  </a>
+                </Link>
+                <p className="text-sm mt-2">{drop.date}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  try {
+    let drops = await getAllDrops();
+    return { props: { drops } };
+  } catch (err) {
+    console.log(err);
+    let drops = [];
+    return { props: { drops } };
+  }
 }

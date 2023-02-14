@@ -1,18 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { roundToTwo } from "/utils/roundToTwo";
-import {
-  Metaplex,
-  walletAdapterIdentity,
-  getMerkleProof,
-} from "@metaplex-foundation/js";
+import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { Connection } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Oval } from "react-loader-spinner";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 
-export default function BonkMint({ address }) {
+export default function Bonk({ address }) {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [total, setTotal] = useState(0);
@@ -90,10 +85,6 @@ export default function BonkMint({ address }) {
       setMintState("public");
     }
   };
-
-  function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
 
   return (
     <>

@@ -38,19 +38,19 @@ export default function Settings({
   return (
     <div className="mt-2">
       <button
-        className="w-[49%] py-2.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold"
+        className="w-[49%] py-2.5 px-4 rounded-3xl bg-gray-200 text-black dark:bg-dark3 dark:text-white cursor-pointer hover:bg-gray-100 hover:dark:bg-dark1 font-bold"
         onClick={() => hideAll()}
       >
         <span>Hide All</span>
       </button>
       <button
-        className="w-[49%] float-right py-2.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold"
+        className="w-[49%] float-right py-2.5 px-4 rounded-3xl bg-gray-200 text-black dark:bg-dark3 dark:text-white cursor-pointer hover:bg-gray-100 hover:dark:bg-dark1 font-bold"
         onClick={() => showAll()}
       >
         <span>Show All</span>
       </button>
       <button
-        className="w-full mt-4 py-2.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold"
+        className="w-full mt-4 py-2.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-dark3 hover:dark:bg-gray-200 font-bold"
         onClick={() => doSaveLayout()}
       >
         {saving ? (

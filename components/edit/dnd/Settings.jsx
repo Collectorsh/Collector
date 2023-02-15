@@ -62,7 +62,7 @@ export default function Settings({
         )}
       </button>
       <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-4">
-        Settings
+        Layout
       </h2>
       <div className="text-center font-bold mt-2">
         Gallery Columns

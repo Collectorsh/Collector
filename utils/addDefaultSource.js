@@ -13,8 +13,6 @@ export function addDefaultSource(e, mint, url) {
       } catch (err) {
         console.log(err);
       }
-    } else {
-      e.target.src = null;
     }
   });
 }

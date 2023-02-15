@@ -1,6 +1,8 @@
-import React, { forwardRef, useEffect, useCallback } from "react";
+import React, { forwardRef } from "react";
 import { cdnImage } from "/utils/cdnImage";
-import { addDefaultSource } from "/utils/addDefaultSource";
+import imageExists from "image-exists";
+import axios from "axios";
+import apiClient from "/data/client/apiClient";
 
 export const Photo = forwardRef(
   ({ mint, uri, index, faded, style, ...props }, ref) => {
@@ -20,6 +22,25 @@ export const Photo = forwardRef(
     if (props.width) {
       inlineStyles.width = height;
     }
+
+    const addDefaultSource = async (e, mint, url) => {
+      const res = await axios.get(url);
+      const image = res.data.image;
+      imageExists(image, function (exists) {
+        if (exists) {
+          console.log(image);
+          e.target.src = image;
+          try {
+            let images = [{ uri: image, mint: mint }];
+            apiClient.post("/images/upload", {
+              images: images,
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      });
+    };
 
     return (
       <img

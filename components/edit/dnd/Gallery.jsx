@@ -19,9 +19,12 @@ import cloneDeep from "lodash/cloneDeep";
 import { Toaster } from "react-hot-toast";
 import { cdnImage } from "/utils/cdnImage";
 
+import { ViewGridIcon } from "@heroicons/react/solid";
+
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
-  const [columns, setColumns] = useState(user.columns);
+  const [columns, setColumns] = useState(3);
+  const [galleryColumns, setGalleryColumns] = useState(user.columns);
   const [items, setItems] = useState();
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
@@ -193,11 +196,12 @@ export default function Gallery({ tokens, user }) {
       >
         {items && (
           <div className="grid grid-cols-12">
-            <div className="col-span-3 h-full">
+            <div className="col-span-3">
               <Settings
                 items={items}
                 user={user}
-                columns={columns}
+                galleryColumns={galleryColumns}
+                setGalleryColumns={setGalleryColumns}
                 hideAll={hideAll}
                 showAll={showAll}
               />
@@ -210,36 +214,27 @@ export default function Gallery({ tokens, user }) {
               <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2">
                 <div className="grid grid-cols-3">
                   <div className="col-span-1 text-left">
-                    <span
-                      className={`rounded-2xl text-white px-4 py-1 -mt-1 align-middle ${
-                        columns === 3
-                          ? "bg-black dark:bg-white dark:text-black"
-                          : "bg-gray-300 dark:bg-black cursor-pointer"
+                    <ViewGridIcon
+                      className={`ml-2 inline h-7 w-7 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-greeny dark:hover:text-greeny ${
+                        columns === 3 && "fill-greeny"
                       }`}
+                      aria-hidden="true"
                       onClick={() => setColumns(3)}
-                    >
-                      3
-                    </span>
-                    <span
-                      className={`ml-1 rounded-2xl text-white px-4 py-1 -mt-1 align-middle ${
-                        columns === 4
-                          ? "bg-black dark:bg-white dark:text-black"
-                          : "bg-gray-300 dark:bg-black cursor-pointer"
+                    />
+                    <ViewGridIcon
+                      className={`ml-2 inline h-6 w-6 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-greeny dark:hover:text-greeny ${
+                        columns === 4 && "fill-greeny"
                       }`}
+                      aria-hidden="true"
                       onClick={() => setColumns(4)}
-                    >
-                      4
-                    </span>
-                    <span
-                      className={`ml-1 rounded-2xl text-white px-4 py-1 -mt-1 align-middle ${
-                        columns === 5
-                          ? "bg-black dark:bg-white dark:text-black"
-                          : "bg-gray-300 dark:bg-black cursor-pointer"
+                    />
+                    <ViewGridIcon
+                      className={`ml-2 inline h-5 w-5 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-greeny dark:hover:text-greeny ${
+                        columns === 5 && "fill-greeny"
                       }`}
+                      aria-hidden="true"
                       onClick={() => setColumns(5)}
-                    >
-                      5
-                    </span>
+                    />
                   </div>
                   <div className="col-span-1 text-center">Visible</div>
                   <div className="col-span-1 text-right">
@@ -265,7 +260,10 @@ const Visible = ({ items, columns }) => {
   const { setNodeRef } = useDroppable({ id: "show" });
 
   return (
-    <div ref={setNodeRef} className="h-full bg-gray-100 dark:bg-dark2">
+    <div
+      ref={setNodeRef}
+      className="bg-gray-100 dark:bg-dark2 overflow-x-scroll h-[86vh]"
+    >
       <SortableContext
         id="visible"
         items={items.visible.map((i) => i.mint)}
@@ -291,7 +289,10 @@ const Hidden = ({ items }) => {
   const { setNodeRef } = useDroppable({ id: "hide" });
 
   return (
-    <div ref={setNodeRef} className="h-full bg-gray-100 dark:bg-dark2">
+    <div
+      ref={setNodeRef}
+      className="bg-gray-100 dark:bg-dark2 overflow-x-scroll h-[50vh]"
+    >
       <SortableContext
         id="hidden"
         items={items.hidden.map((i) => i.mint)}

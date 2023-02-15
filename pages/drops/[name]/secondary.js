@@ -32,14 +32,18 @@ export default function Secondary({ drop }) {
 
   // Get active ME listings
   const getActiveListings = async () => {
-    const url = `https://api.helius.xyz/v1/active-listings?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`;
-    const { data } = await axios.post(url, {
-      query: {
-        marketplaces: ["MAGIC_EDEN"],
-        firstVerifiedCreators: [drop.creator],
-      },
-    });
-    return data.result;
+    try {
+      const url = `https://api.helius.xyz/v1/active-listings?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`;
+      const { data } = await axios.post(url, {
+        query: {
+          marketplaces: ["MAGIC_EDEN"],
+          firstVerifiedCreators: [drop.creator],
+        },
+      });
+      return data.result;
+    } catch (err) {
+      return [];
+    }
   };
 
   // Get the drop mints

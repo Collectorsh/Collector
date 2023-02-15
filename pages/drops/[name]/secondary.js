@@ -8,8 +8,6 @@ import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { Connection } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-const axios = require("axios");
-
 export default function Secondary({ drop }) {
   const wallet = useWallet();
   const [mints, setMints] = useState();
@@ -30,34 +28,9 @@ export default function Secondary({ drop }) {
     }
   }, []);
 
-  // Get active ME listings
-  const getActiveListings = async () => {
-    try {
-      const url = `https://api.helius.xyz/v1/active-listings?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`;
-      const { data } = await axios.post(url, {
-        query: {
-          marketplaces: ["MAGIC_EDEN"],
-          firstVerifiedCreators: [drop.creator],
-        },
-      });
-      return data.result;
-    } catch (err) {
-      return [];
-    }
-  };
-
   // Get the drop mints
   const asyncGetDropMints = useCallback(async (id) => {
     let res = await getDropMints(id);
-    // Add ME listing details
-    let meListings = await getActiveListings();
-    for (const meListing of meListings) {
-      const r = res.filter((r) => r.mint === meListing.mint)[0];
-      if (!r || r.listed === true || !meListing.activeListings[0]) continue;
-      r.listed = true;
-      r.amount = meListing.activeListings[0].amount;
-      r.source = "magiceden";
-    }
     // Add if owned
     let owned = await getOwnedNfts();
     for (const r of res) {

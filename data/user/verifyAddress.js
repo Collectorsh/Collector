@@ -32,7 +32,7 @@ async function verifyAddress(
       let tx = await buildAuthTx(message);
       tx.feePayer = publicKey;
       const connection = new anchor.web3.Connection(
-        process.env.NEXT_PUBLIC_CANDYMACHINE_RPC
+        process.env.NEXT_PUBLIC_RPC
       );
       tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
       let signedTx = await signTransaction(tx);

@@ -37,8 +37,8 @@ export default function Mint() {
   const { setVisible } = useWalletModal();
 
   const wallet = useWallet();
-  const rpcUrl = process.env.NEXT_PUBLIC_CANDYMACHINE_RPC;
-  const cluster = process.env.NEXT_PUBLIC_CANDYMACHINE_NETWORK;
+  const rpcUrl = process.env.NEXT_PUBLIC_RPC;
+  const cluster = process.env.NEXT_PUBLIC_SOLANA_NETWORK;
   const candyMachineId = process.env.NEXT_PUBLIC_CANDYMACHINE_ID;
 
   const connection = new anchor.web3.Connection(rpcUrl);
@@ -403,8 +403,11 @@ export default function Mint() {
   }, [refreshCandyMachineState]);
 
   return (
-    <Container className="mt-12">
-      <Container maxWidth="xs" style={{ position: "relative" }}>
+    <Container style={{ paddingRight: 0, paddingLeft: 0 }}>
+      <Container
+        maxWidth="xs"
+        style={{ position: "relative", paddingRight: 0, paddingLeft: 0 }}
+      >
         <Paper
           style={{
             padding: 24,

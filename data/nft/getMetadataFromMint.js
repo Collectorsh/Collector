@@ -50,7 +50,7 @@ async function getMetadataFromMint(mint) {
 
   single.uri = tokenMetadata.data.data.uri || null;
   single.mint = tokenMetadata.data.mint || null;
-  single.name = tokenMetadata.data.data.name || null;
+  // single.name = tokenMetadata.data.data.name || null;
   single.sellerFeeBasisPoints =
     tokenMetadata.data.data.sellerFeeBasisPoints || null;
 
@@ -61,6 +61,7 @@ async function getMetadataFromMint(mint) {
   single.description = uridata.data.description || null;
   single.properties = uridata.data.properties || null;
   single.symbol = uridata.data.symbol || null;
+  single.name = uridata.data.name || null;
 
   if (single.properties && single.properties.creators) {
     // Get creator details

@@ -32,24 +32,24 @@ export default function Secondary({ drop }) {
   const asyncGetDropMints = useCallback(async (id) => {
     let res = await getDropMints(id);
     // Add if owned
-    let owned = await getOwnedNfts();
+    let allOwned = await getOwnedNfts();
     for (const r of res) {
-      if (owned.filter((o) => o === r.mint)[0]) {
+      if (allOwned.filter((o) => o === r.mint)[0]) {
         r.owned = true;
       } else {
         r.owned = false;
       }
     }
     // Sort and order
-    var listed = res.filter((r) => r.listed === true);
-    var notlisted = res.filter((r) => r.listed === undefined);
+    var owned = res.filter((r) => r.owned === true);
+    var listed = res.filter((r) => r.listed === true && r.owned === false);
+    var notlisted = res.filter(
+      (r) => r.listed === undefined && r.owned === false
+    );
     listed = listed.sort((a, b) =>
       a.amount > b.amount ? 1 : b.amount > a.amount ? -1 : 0
     );
-    notlisted = notlisted.sort((a, b) =>
-      a.owned === b.owned ? 0 : a.owned === true ? -1 : 1
-    );
-    setMints(listed.concat(notlisted));
+    setMints(owned.concat(listed).concat(notlisted));
   }, []);
 
   useEffect(() => {

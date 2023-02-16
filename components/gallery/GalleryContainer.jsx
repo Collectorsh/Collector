@@ -1,28 +1,10 @@
-import React, { useEffect, useContext, useCallback, useState } from "react";
+import React, { useEffect } from "react";
 import Card from "/components/gallery/Card";
-import getExchangeOffers from "/data/getExchangeOffers";
 import Masonry from "react-masonry-css";
-import { roundToTwo } from "/utils/roundToTwo";
-import ExchangeOffersContext from "/contexts/exchange_offers";
-import EstimatedValueContext from "/contexts/estimated_value";
 
 export default function GalleryContainer({ tokens, user }) {
-  const [exchangeOffers, setExchangeOffers] = useContext(ExchangeOffersContext);
-  const [runningTotal, setRunningTotal] = useState(0);
-  const [totalEstimate, setTotalEstimate] = useContext(EstimatedValueContext);
-
-  const fetchExchangeOffers = useCallback(async () => {
-    try {
-      const res = await getExchangeOffers(user.public_keys);
-      setExchangeOffers([...exchangeOffers, ...res]);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
   useEffect(() => {
     if (!user) return;
-    // fetchExchangeOffers();
   }, [user]);
 
   useEffect(() => {
@@ -38,13 +20,6 @@ export default function GalleryContainer({ tokens, user }) {
 
   return (
     <div className="clear-both w-full mt-6">
-      {user && user.estimated_value && (
-        <div className="pb-8">
-          <h2 className="text-base text-lg font-semibold leading-4 text-black dark:text-white inline">
-            Estimated: ◎{roundToTwo(runningTotal / 1000000000)}
-          </h2>
-        </div>
-      )}
       <div className="clear-both">
         <Masonry
           breakpointCols={breakpointColumnsObj}

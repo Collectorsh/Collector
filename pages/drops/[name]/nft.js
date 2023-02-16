@@ -18,7 +18,7 @@ export default function Nft({ mint }) {
 
   useEffect(() => {
     fetchNft(mint.mint);
-  }, []);
+  }, [mint]);
 
   useEffect(() => {
     if (!token) return;

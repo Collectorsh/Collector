@@ -4,7 +4,7 @@ import Items from "./items";
 import { Oval } from "react-loader-spinner";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
+import { Metaplex } from "@metaplex-foundation/js";
 import { Connection } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
@@ -14,13 +14,13 @@ export default function Secondary({ drop }) {
   const [infiniteScrollItems, setInfiniteScrollItems] = useState([]);
 
   const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
-  const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
+  const metaplex = new Metaplex(connection);
 
   // Get owned NFT's
-  const getOwnedNfts = useCallback(async () => {
+  const getOwnedNfts = useCallback(async (wallet) => {
     try {
       const nfts = await metaplex.nfts().findAllByOwner({
-        owner: metaplex.identity().publicKey,
+        owner: wallet.publicKey.toBase58(),
       });
       return nfts.map((n) => n.mintAddress.toBase58());
     } catch (err) {
@@ -29,10 +29,10 @@ export default function Secondary({ drop }) {
   }, []);
 
   // Get the drop mints
-  const asyncGetDropMints = useCallback(async (id) => {
+  const asyncGetDropMints = useCallback(async (id, wallet) => {
     let res = await getDropMints(id);
     // Add if owned
-    let allOwned = await getOwnedNfts();
+    let allOwned = await getOwnedNfts(wallet);
     for (const r of res) {
       if (allOwned.filter((o) => o === r.mint)[0]) {
         r.owned = true;
@@ -53,8 +53,8 @@ export default function Secondary({ drop }) {
   }, []);
 
   useEffect(() => {
-    asyncGetDropMints(drop.id);
-  }, []);
+    asyncGetDropMints(drop.id, wallet);
+  }, [wallet]);
 
   useEffect(() => {
     if (!mints) return;

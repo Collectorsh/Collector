@@ -7,7 +7,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { addDefaultSource } from "/utils/addDefaultSource";
 
 export const Photo = forwardRef(
-  ({ mint, uri, index, faded, style, ...props }, ref) => {
+  ({ mint, uri, index, faded, style, section, bulkEdit, ...props }, ref) => {
     const height = props.height ? props.height : 200;
 
     const inlineStyles = {
@@ -45,6 +45,16 @@ export const Photo = forwardRef(
 
     return (
       <div className="relative hidden">
+        {section === "visible" && bulkEdit === true && (
+          <input
+            id={`select-${mint}`}
+            type="checkbox"
+            name="bulk"
+            className="absolute left-1 top-1 w-6 h-6 cursor-pointer"
+            style={{ accentColor: "#31f292" }}
+            defaultChecked
+          />
+        )}
         <img
           className="w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
           src={cdnImage(mint)}

@@ -19,12 +19,11 @@ import cloneDeep from "lodash/cloneDeep";
 import { Toaster } from "react-hot-toast";
 import { cdnImage } from "/utils/cdnImage";
 
-import { ViewGridIcon } from "@heroicons/react/solid";
-
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
   const [columns, setColumns] = useState(user.columns);
   const [items, setItems] = useState();
+  const [bulkEdit, setBulkEdit] = useState(false);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
@@ -34,6 +33,21 @@ export default function Gallery({ tokens, user }) {
     const itemz = { visible: vis, hidden: hid };
     setItems(itemz);
   }, []);
+
+  const hideSelected = () => {
+    const clonedItems = cloneDeep(items);
+    const newItems = { visible: [], hidden: clonedItems.hidden };
+    for (const [index, i] of clonedItems.visible.entries()) {
+      const id = `select-${i.mint}`;
+      const checked = document.getElementById(id).checked;
+      if (checked === true) {
+        newItems.hidden.push(i);
+      } else {
+        newItems.visible.push(i);
+      }
+    }
+    setItems(newItems);
+  };
 
   const hideAll = () => {
     const clonedItems = cloneDeep(items);
@@ -212,7 +226,23 @@ export default function Gallery({ tokens, user }) {
             <div className="col-span-8 col-end-13">
               <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2">
                 <div className="grid grid-cols-3">
-                  <div className="col-span-1 text-left"></div>
+                  <div className="col-span-1 text-left">
+                    <input
+                      type="checkbox"
+                      name="bulkedit"
+                      className="w-6 h-6 border-gray-200 cursor-pointer m-0 align-middle -mt-0.5"
+                      style={{ accentColor: "#31f292" }}
+                      onClick={() => setBulkEdit(!bulkEdit)}
+                    />
+                    {bulkEdit && (
+                      <button
+                        className="ml-2 rounded-2xl bg-gray-300 hover:bg-gray-200 dark:bg-dark1 hover:dark:bg-black text-black dark:text-white px-4 py-1.5 -mt-0.5 align-middle text-sm font-bold"
+                        onClick={() => hideSelected()}
+                      >
+                        <span>Hide Selected</span>
+                      </button>
+                    )}
+                  </div>
                   <div className="col-span-1 text-center">Visible</div>
                   <div className="col-span-1 text-right">
                     <span className="rounded-2xl bg-gray-300 dark:bg-black text-white px-4 py-1 -mt-1 align-middle">
@@ -221,7 +251,7 @@ export default function Gallery({ tokens, user }) {
                   </div>
                 </div>
               </h2>
-              <Visible items={items} columns={columns} />
+              <Visible items={items} columns={columns} bulkEdit={bulkEdit} />
             </div>
           </div>
         )}
@@ -233,7 +263,7 @@ export default function Gallery({ tokens, user }) {
   );
 }
 
-const Visible = ({ items, columns }) => {
+const Visible = ({ items, columns, bulkEdit }) => {
   const { setNodeRef } = useDroppable({ id: "show" });
 
   return (
@@ -254,6 +284,8 @@ const Visible = ({ items, columns }) => {
               uri={token.uri}
               index={index}
               height={columns === 3 ? 250 : columns === 4 ? 200 : 150}
+              section="visible"
+              bulkEdit={bulkEdit}
             />
           ))}
         </Grid>
@@ -283,6 +315,7 @@ const Hidden = ({ items }) => {
               uri={token.uri}
               index={index}
               height={150}
+              section="hidden"
             />
           ))}
         </Grid>

@@ -24,6 +24,8 @@ export const SortablePhoto = (props) => {
     <Photo
       ref={setNodeRef}
       style={style}
+      section={props.section}
+      bulkEdit={props.bulkEdit}
       {...props}
       {...attributes}
       {...listeners}

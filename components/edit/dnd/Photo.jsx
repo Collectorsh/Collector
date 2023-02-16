@@ -1,11 +1,11 @@
 import React, { forwardRef } from "react";
 import { cdnImage } from "/utils/cdnImage";
-import imageExists from "image-exists";
 import axios from "axios";
 import apiClient from "/data/client/apiClient";
 import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import { addDefaultSource } from "/utils/addDefaultSource";
 
 export const Photo = forwardRef(
   ({ mint, uri, index, faded, style, ...props }, ref) => {
@@ -26,23 +26,14 @@ export const Photo = forwardRef(
       inlineStyles.width = height;
     }
 
-    const addDefaultSource = async (e, mint, url) => {
-      const res = await axios.get(url);
-      const image = res.data.image;
-      imageExists(image, function (exists) {
-        if (exists) {
-          console.log(image);
-          e.target.src = image;
-          try {
-            let images = [{ uri: image, mint: mint }];
-            apiClient.post("/images/upload", {
-              images: images,
-            });
-          } catch (err) {
-            console.log(err);
-          }
-        }
-      });
+    const defaultSource = async (e, mint, url) => {
+      try {
+        const res = await axios.get(url);
+        const image = res.data.image;
+        addDefaultSource(e, mint, image);
+      } catch (err) {
+        console.log(err);
+      }
     };
 
     function classNames(...classes) {
@@ -54,7 +45,7 @@ export const Photo = forwardRef(
         <img
           className="w-full opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm"
           src={cdnImage(mint)}
-          onError={(e) => addDefaultSource(e, mint, uri)}
+          onError={(e) => defaultSource(e, mint, uri)}
           ref={ref}
           style={inlineStyles}
           {...props}
@@ -77,7 +68,7 @@ export const Photo = forwardRef(
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="origin-top-right absolute right-1 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-1">
                 <Menu.Item>
                   {({ active }) => (
@@ -90,7 +81,7 @@ export const Photo = forwardRef(
                         "block px-4 py-2 text-sm cursor-pointer"
                       )}
                     >
-                      Go to Listing
+                      Go to Artwork
                     </a>
                   )}
                 </Menu.Item>

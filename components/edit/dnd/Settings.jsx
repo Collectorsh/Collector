@@ -9,8 +9,8 @@ import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
 export default function Settings({
   items,
   user,
-  galleryColumns,
-  setGalleryColumns,
+  columns,
+  setColumns,
   hideAll,
   showAll,
 }) {
@@ -29,7 +29,7 @@ export default function Settings({
       updatedItems.push(i);
     }
     setSaving(true);
-    const res = await saveLayout(user.api_key, updatedItems, galleryColumns);
+    const res = await saveLayout(user.api_key, updatedItems, columns);
     if (res.data.status === "success") success("Layout saved");
     else error(res.msg);
     setSaving(false);
@@ -50,7 +50,7 @@ export default function Settings({
         <span>Show All</span>
       </button>
       <button
-        className="w-full mt-4 py-2.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-dark3 hover:dark:bg-gray-200 font-bold"
+        className="w-full mt-4 py-2.5 px-4 rounded-3xl bg-[#444] text-white dark:bg-whitish dark:text-black cursor-pointer hover:bg-black hover:dark:bg-gray-300 font-bold"
         onClick={() => doSaveLayout()}
       >
         {saving ? (
@@ -62,7 +62,7 @@ export default function Settings({
         )}
       </button>
       <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-4">
-        Layout
+        Customise
       </h2>
       <div className="text-center font-bold mt-2">
         Gallery Columns
@@ -83,8 +83,8 @@ export default function Settings({
             name="option"
             id="3"
             className="peer hidden"
-            onClick={() => setGalleryColumns(3)}
-            defaultChecked={galleryColumns === 3}
+            onClick={() => setColumns(3)}
+            defaultChecked={columns === 3}
           />
           <label
             htmlFor="3"
@@ -100,8 +100,8 @@ export default function Settings({
             name="option"
             id="4"
             className="peer hidden"
-            onClick={() => setGalleryColumns(4)}
-            defaultChecked={galleryColumns === 4}
+            onClick={() => setColumns(4)}
+            defaultChecked={columns === 4}
           />
           <label
             htmlFor="4"
@@ -117,8 +117,8 @@ export default function Settings({
             name="option"
             id="5"
             className="peer hidden"
-            onClick={() => setGalleryColumns(5)}
-            defaultChecked={galleryColumns === 5}
+            onClick={() => setColumns(5)}
+            defaultChecked={columns === 5}
           />
           <label
             htmlFor="5"

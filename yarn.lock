@@ -7500,11 +7500,6 @@ ignore@^5.1.4:
   resolved "https://registry.npmjs.org/ignore/-/ignore-5.1.9.tgz"
   integrity sha512-2zeMQpbKz5dhZ9IwL0gbxSW5w0NK/MSAMtNuhgIHEPmaU3vPdKPL0UdvUCXs5SS4JAwsBxysK5sFMW8ocFiVjQ==
 
-image-exists@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/image-exists/-/image-exists-1.1.0.tgz#ba49cccbaddca8cbbf10f89cafd4d1c8ecfd38d0"
-  integrity sha512-0b0pZuFxvTkEBGcJa2XhNhrHNW2gr/U6ZcVrOPXMa0OYV9o/WNLO8ZMn0f6fcLB3E/Bj0OLY8WYgpglFl7JJjg==
-
 image-size@1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/image-size/-/image-size-1.0.0.tgz"

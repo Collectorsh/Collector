@@ -23,8 +23,7 @@ import { ViewGridIcon } from "@heroicons/react/solid";
 
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
-  const [columns, setColumns] = useState(3);
-  const [galleryColumns, setGalleryColumns] = useState(user.columns);
+  const [columns, setColumns] = useState(user.columns);
   const [items, setItems] = useState();
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
@@ -200,8 +199,8 @@ export default function Gallery({ tokens, user }) {
               <Settings
                 items={items}
                 user={user}
-                galleryColumns={galleryColumns}
-                setGalleryColumns={setGalleryColumns}
+                columns={columns}
+                setColumns={setColumns}
                 hideAll={hideAll}
                 showAll={showAll}
               />
@@ -213,29 +212,7 @@ export default function Gallery({ tokens, user }) {
             <div className="col-span-8 col-end-13">
               <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2">
                 <div className="grid grid-cols-3">
-                  <div className="col-span-1 text-left">
-                    <ViewGridIcon
-                      className={`ml-2 inline h-7 w-7 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-greeny dark:hover:text-greeny ${
-                        columns === 3 && "fill-greeny"
-                      }`}
-                      aria-hidden="true"
-                      onClick={() => setColumns(3)}
-                    />
-                    <ViewGridIcon
-                      className={`ml-2 inline h-6 w-6 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-greeny dark:hover:text-greeny ${
-                        columns === 4 && "fill-greeny"
-                      }`}
-                      aria-hidden="true"
-                      onClick={() => setColumns(4)}
-                    />
-                    <ViewGridIcon
-                      className={`ml-2 inline h-5 w-5 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-greeny dark:hover:text-greeny ${
-                        columns === 5 && "fill-greeny"
-                      }`}
-                      aria-hidden="true"
-                      onClick={() => setColumns(5)}
-                    />
-                  </div>
+                  <div className="col-span-1 text-left"></div>
                   <div className="col-span-1 text-center">Visible</div>
                   <div className="col-span-1 text-right">
                     <span className="rounded-2xl bg-gray-300 dark:bg-black text-white px-4 py-1 -mt-1 align-middle">

@@ -7,11 +7,6 @@ export default function GalleryContainer({ tokens, user }) {
     if (!user) return;
   }, [user]);
 
-  useEffect(() => {
-    let total = totalEstimate.reduce((a, b) => a + (b["estimate"] || 0), 0);
-    setRunningTotal(total);
-  }, [totalEstimate]);
-
   const breakpointColumnsObj = {
     default: user.columns,
     1100: user.columns - 1,

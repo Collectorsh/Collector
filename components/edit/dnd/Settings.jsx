@@ -61,21 +61,18 @@ export default function Settings({
           <span>Save Layout</span>
         )}
       </button>
-      <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-4">
-        Customise
-      </h2>
-      <div className="text-center font-bold mt-2">
-        Gallery Columns
+      <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-4 mb-1">
+        <span className="align-middle">Columns</span>
         <Tippy
           content={`The number of columns to display when viewing your gallery`}
-          className="bg-gray-300"
+          className="bg-gray-300 align-middle"
         >
           <QuestionMarkCircleIcon
             className="ml-2 inline h-6 w-6 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-greeny dark:hover:text-greeny"
             aria-hidden="true"
           />
         </Tippy>
-      </div>
+      </h2>
       <div className="grid w-full grid-cols-3 space-x-2 rounded-xl p-2">
         <div>
           <input

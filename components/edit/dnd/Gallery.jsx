@@ -218,7 +218,7 @@ export default function Gallery({ tokens, user }) {
                 hideAll={hideAll}
                 showAll={showAll}
               />
-              <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-6 mb-2">
+              <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-2 mb-2">
                 Hidden
               </h2>
               <Hidden items={items} />

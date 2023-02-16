@@ -234,13 +234,17 @@ export default function Gallery({ tokens, user }) {
                       style={{ accentColor: "#31f292" }}
                       onClick={() => setBulkEdit(!bulkEdit)}
                     />
-                    {bulkEdit && (
+                    {bulkEdit ? (
                       <button
                         className="ml-2 rounded-2xl bg-gray-300 hover:bg-gray-200 dark:bg-dark1 hover:dark:bg-black text-black dark:text-white px-4 py-1.5 -mt-0.5 align-middle text-sm font-bold"
                         onClick={() => hideSelected()}
                       >
                         <span>Hide Selected</span>
                       </button>
+                    ) : (
+                      <span className="ml-2 align middle text-xs">
+                        Select All
+                      </span>
                     )}
                   </div>
                   <div className="col-span-1 text-center">Visible</div>

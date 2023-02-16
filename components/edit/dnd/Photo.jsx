@@ -1,7 +1,6 @@
 import React, { forwardRef } from "react";
 import { cdnImage } from "/utils/cdnImage";
 import axios from "axios";
-import apiClient from "/data/client/apiClient";
 import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
@@ -40,12 +39,17 @@ export const Photo = forwardRef(
       return classes.filter(Boolean).join(" ");
     }
 
+    const onImageLoad = (event) => {
+      event.target.parentNode.style.display = "block";
+    };
+
     return (
-      <div className="relative">
+      <div className="relative hidden">
         <img
-          className="w-full opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm"
+          className="w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
           src={cdnImage(mint)}
           onError={(e) => defaultSource(e, mint, uri)}
+          onLoad={onImageLoad}
           ref={ref}
           style={inlineStyles}
           {...props}

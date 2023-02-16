@@ -50,7 +50,7 @@ export default function Settings({
         <span>Show All</span>
       </button>
       <button
-        className="w-full mt-4 py-2.5 px-4 rounded-3xl bg-[#444] text-white dark:bg-whitish dark:text-black cursor-pointer hover:bg-black hover:dark:bg-gray-300 font-bold"
+        className="w-full mt-4 py-2.5 px-4 rounded-3xl bg-[#444] text-white dark:bg-whitish dark:text-black cursor-pointer hover:bg-black hover:dark:bg-white font-bold"
         onClick={() => doSaveLayout()}
       >
         {saving ? (

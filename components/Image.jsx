@@ -8,11 +8,16 @@ export default function Image({ token, size = "small" }) {
 
   useEffect(() => {
     if (!token.image) return;
-    if (token.image.split(".").pop().includes("mp4")) {
+    if (
+      token.animation_url &&
+      token.animation_url.split(".").pop().includes("mp4")
+    ) {
+      setVideoUrl(token.animation_url);
+    } else if (token.image.split(".").pop().includes("mp4")) {
       setVideoUrl(token.image);
     }
     try {
-      if (token.properties) {
+      if (!token.animation_url && token.properties) {
         let file = token.properties.files[0];
         if (file && file.type === "video/mp4") {
           setVideoUrl(file.uri);

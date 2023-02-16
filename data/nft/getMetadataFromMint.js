@@ -10,6 +10,8 @@ async function getMetadataFromMint(mint) {
 
   // Find the owners associated token address
   let res = await axios.post(rpcHost, accountData(mint));
+  if (!res.data.result.value[0]) return;
+
   single.associatedTokenAccountAddress = res.data.result.value[0].address;
 
   const connection = new Connection(rpcHost);
@@ -62,6 +64,7 @@ async function getMetadataFromMint(mint) {
   single.properties = uridata.data.properties || null;
   single.symbol = uridata.data.symbol || null;
   single.name = uridata.data.name || null;
+  single.animation_url = uridata.data.animation_url || null;
 
   if (single.properties && single.properties.creators) {
     // Get creator details

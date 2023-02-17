@@ -208,8 +208,8 @@ export default function Gallery({ tokens, user }) {
         onDragCancel={handleDragCancel}
       >
         {items && (
-          <div className="grid grid-cols-12">
-            <div className="col-span-3">
+          <div className="grid grid-cols-1 sm:grid-cols-12">
+            <div className="col-span-1 sm:col-span-3">
               <Settings
                 items={items}
                 user={user}
@@ -218,12 +218,14 @@ export default function Gallery({ tokens, user }) {
                 hideAll={hideAll}
                 showAll={showAll}
               />
-              <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-2 mb-2">
-                Hidden
-              </h2>
-              <Hidden items={items} />
+              <div className="hidden sm:block">
+                <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-2 mb-2">
+                  Hidden
+                </h2>
+                <Hidden items={items} />
+              </div>
             </div>
-            <div className="col-span-8 col-end-13">
+            <div className="col-span-1 sm:col-span-8 sm:col-end-13">
               <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2">
                 <div className="grid grid-cols-3">
                   <div className="col-span-1 text-left">
@@ -273,7 +275,7 @@ const Visible = ({ items, columns, bulkEdit }) => {
   return (
     <div
       ref={setNodeRef}
-      className="bg-gray-100 dark:bg-dark2 overflow-x-scroll h-[86vh]"
+      className="bg-gray-100 dark:bg-dark2 sm:overflow-x-scroll h-full sm:h-[86vh]"
     >
       <SortableContext
         id="visible"

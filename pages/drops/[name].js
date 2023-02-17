@@ -61,7 +61,7 @@ export default function ArtistDrop({ name, drop }) {
               </div>
 
               {drop.market === true && (
-                <div className="grid grid-cols-1">
+                <div className="mt-6 sm:mt-0 grid grid-cols-1">
                   <div className="col-span-1">
                     <Link href={`/drops/${name}/market`}>
                       <a className="w-fit float-right bg-dark3 px-4 py-3 rounded-xl font-semibold text-white text-lg cursor-pointer">

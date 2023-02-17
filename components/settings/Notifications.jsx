@@ -137,40 +137,6 @@ export default function Notifications() {
                     </div>
                     <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white dark:bg-dark2">
                       <dt className="text-sm font-medium text-gray-500">
-                        Twitter
-                      </dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        <div className="flex items-center w-full mb-2">
-                          <label
-                            htmlFor="notify_twitter"
-                            className="flex items-center cursor-pointer relative mb-4"
-                          >
-                            <input
-                              type="checkbox"
-                              id="notify_twitter"
-                              className="sr-only"
-                              defaultChecked={
-                                user.twitter_user_id
-                                  ? user.notify_twitter
-                                  : false
-                              }
-                              disabled={!user.twitter_user_id}
-                            />
-                            <div className="toggle-bg bg-gray-200 border-2 border-gray-200 h-6 w-11 rounded-full"></div>
-                          </label>
-                        </div>
-                        <div className="text-gray-500">
-                          Receive notifications via Twitter DM
-                        </div>
-                        {!user.twitter_user_id && (
-                          <div className="text-red-300 dark:text-red-800 mt-2">
-                            You haven&apos;t connected your Twitter account
-                          </div>
-                        )}
-                      </dd>
-                    </div>
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
-                      <dt className="text-sm font-medium text-gray-500">
                         Email
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">

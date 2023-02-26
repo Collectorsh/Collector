@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { PublicKey } from "@solana/web3.js";
 import Gacha from "/components/drops/gacha";
-import Bonk from "/components/drops/bonk";
+import PublicMint from "/components/drops/public";
 import getDropFromName from "/data/drops/getDropFromName";
 import { fetchImages } from "/hooks/fetchImages";
 
@@ -14,7 +14,11 @@ export default function ArtistDrop({ name, drop }) {
 
   useEffect(() => {
     fetchImages(name).then((imgs) => {
-      setImages(imgs);
+      const imgArray = [];
+      for (const i of imgs) {
+        if (i.Size > 100) imgArray.push(i.Key);
+      }
+      setImages(imgArray);
     });
   }, []);
 
@@ -40,7 +44,7 @@ export default function ArtistDrop({ name, drop }) {
               <div className="grid grid-cols-1 sm:grid-cols-12">
                 <div className="col-span-1 sm:col-span-7">
                   <img
-                    src="/images/monochromatic.png"
+                    src={drop.image}
                     className="inline w-16 h-16 align-middle rounded-full"
                   />
                   <h2 className="ml-4 align-middle inline my-5 text-4xl font-bold w-full py-1 inline-block">
@@ -51,10 +55,10 @@ export default function ArtistDrop({ name, drop }) {
                 </div>
                 {drop.closed === false && (
                   <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
-                    {drop.name === "Bonk" ? (
-                      <Bonk address={address} />
-                    ) : (
+                    {drop.slug === "hanaknight" ? (
                       <Gacha address={address} />
+                    ) : (
+                      <PublicMint address={address} />
                     )}
                   </div>
                 )}
@@ -76,7 +80,7 @@ export default function ArtistDrop({ name, drop }) {
                 {images.map((image, i) => (
                   <div className="text-center" key={i}>
                     <img
-                      src={`https://cdn.collector.sh/${image.Key}`}
+                      src={`https://cdn.collector.sh/${image}`}
                       className="w-full h-96 lg:h-64 object-center object-cover"
                     />
                   </div>

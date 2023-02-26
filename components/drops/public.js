@@ -8,20 +8,17 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Oval } from "react-loader-spinner";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 
-export default function RuptureMint({ address }) {
+export default function PublicMint({ address }) {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [total, setTotal] = useState(0);
   const [remaining, setRemaining] = useState();
-  const [minted, setMinted] = useState();
   const [mintState, setMintState] = useState();
   const [isMinting, setIsMinting] = useState(false);
   const [cost, setCost] = useState();
   const [publicStartDate, setPublicStartDate] = useState();
 
-  const connection = new Connection(process.env.NEXT_PUBLIC_RPC, {
-    commitment: "confirmed",
-  });
+  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
 
   const asyncGetCandymachine = useCallback(async (wallet, onceOnly = false) => {
@@ -29,7 +26,6 @@ export default function RuptureMint({ address }) {
       address: address,
     });
     setTotal(cndy.itemsLoaded);
-    setMinted(cndy.itemsMinted.toNumber());
     setRemaining(cndy.itemsRemaining.toNumber());
     doSetState(cndy);
     if (onceOnly === false) setTimeout(asyncGetCandymachine, 5000);

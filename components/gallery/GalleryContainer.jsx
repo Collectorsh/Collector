@@ -7,10 +7,12 @@ export default function GalleryContainer({ tokens, user }) {
     if (!user) return;
   }, [user]);
 
+  const columns = user && user.columns ? user.columns : 3;
+
   const breakpointColumnsObj = {
-    default: user.columns,
-    1100: user.columns - 1,
-    700: user.columns - 2,
+    default: columns,
+    1100: columns - 1,
+    700: columns - 2,
   };
 
   return (
@@ -18,12 +20,12 @@ export default function GalleryContainer({ tokens, user }) {
       <div className="clear-both">
         <Masonry
           breakpointCols={breakpointColumnsObj}
-          className={`masonry-grid ${user.columns === 3 && "-ml-16"} ${
-            user.columns === 4 && "-ml-10"
-          } ${user.columns === 5 && "-ml-8"}`}
+          className={`masonry-grid ${columns === 3 && "-ml-16"} ${
+            columns === 4 && "-ml-10"
+          } ${columns === 5 && "-ml-8"}`}
           columnClassName={`masonry-grid_column ${
-            user.columns === 3 && "pl-16"
-          } ${user.columns === 4 && "pl-10"} ${user.columns === 5 && "pl-8"}`}
+            columns === 3 && "pl-16"
+          } ${columns === 4 && "pl-10"} ${columns === 5 && "pl-8"}`}
         >
           {Array.isArray(tokens) &&
             tokens.map((token, index) => {

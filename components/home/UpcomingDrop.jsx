@@ -18,12 +18,19 @@ export default function UpcomingDrop() {
     asyncGetDrop();
   }, []);
 
+  const asyncGetImages = useCallback(async (drop) => {
+    const imgs = await fetchImages(drop.slug);
+    if (!imgs) return;
+    const imgArray = [];
+    for (const i of imgs) {
+      if (i.Size > 100) imgArray.push(i.Key);
+    }
+    setImages(imgArray);
+  }, []);
+
   useEffect(() => {
     if (!drop) return;
-    console.log(drop);
-    fetchImages(drop.slug).then((imgs) => {
-      setImages(imgs);
-    });
+    asyncGetImages(drop);
   }, [drop]);
 
   const settings = {
@@ -51,7 +58,7 @@ export default function UpcomingDrop() {
                       className="overflow-hidden col-span-2 relative -mt-2"
                     >
                       <img
-                        src={`https://cdn.collector.sh/${image.Key}`}
+                        src={`https://cdn.collector.sh/${image}`}
                         alt=""
                         className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover rounded-lg"
                       />

@@ -76,7 +76,7 @@ export default function Secondary({ drop }) {
             {drop.name}
           </h2>
           <p className="mt-4 mb-12">{drop.description}</p>
-          {mints && infiniteScrollItems.length > 0 ? (
+          {mints ? (
             <InfiniteScroll
               dataLength={infiniteScrollItems.length}
               next={fetchData}

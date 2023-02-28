@@ -10,9 +10,15 @@ export default function Nft({ user, token }) {
   useEffect(() => {
     if (!token) return;
     try {
-      for (let file of token.properties.files) {
-        if (file.type && file.type === "video/mp4") {
-          setVideoUrl(file.uri);
+      if (token.animation_url) {
+        if (token.animation_url.split(".").pop().includes("mp4")) {
+          setVideoUrl(token.animation_url);
+        }
+      } else {
+        for (let file of token.properties.files) {
+          if (file.type && file.type === "video/mp4") {
+            setVideoUrl(file.uri);
+          }
         }
       }
     } catch (err) {

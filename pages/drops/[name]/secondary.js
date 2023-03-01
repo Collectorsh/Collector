@@ -35,9 +35,11 @@ export default function Secondary({ drop }) {
   const asyncGetDropMints = useCallback(async (id, wallet) => {
     let res = await getDropMints(id);
     setStats(res.stats);
-    setBackgroundImage(
-      res.mints[Math.floor(Math.random() * res.mints.length)].mint
-    );
+    if (!backgroundImage) {
+      setBackgroundImage(
+        res.mints[Math.floor(Math.random() * res.mints.length)].mint
+      );
+    }
     // Add if owned
     let allOwned = await getOwnedNfts(wallet);
     for (const r of res.mints) {

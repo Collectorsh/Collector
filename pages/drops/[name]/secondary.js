@@ -12,6 +12,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 export default function Secondary({ drop }) {
   const wallet = useWallet();
   const [mints, setMints] = useState();
+  const [randomMintIndex, setRandomMintIndex] = useState();
   const [stats, setStats] = useState();
   const [infiniteScrollItems, setInfiniteScrollItems] = useState([]);
 
@@ -64,6 +65,7 @@ export default function Secondary({ drop }) {
   useEffect(() => {
     if (!mints) return;
 
+    setRandomMintIndex(Math.floor(Math.random() * mints.length));
     setInfiniteScrollItems(mints.slice(0, 20));
   }, [mints]);
 
@@ -80,7 +82,7 @@ export default function Secondary({ drop }) {
           <div
             style={{
               backgroundImage: `url('https://cdn.collector.sh/${
-                mints && mints[0].mint
+                mints && randomMintIndex && mints[randomMintIndex].mint
               }')`,
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -91,7 +93,9 @@ export default function Secondary({ drop }) {
               <div className="px-4 h-96 lg:h-80 relative">
                 {mints && (
                   <img
-                    src={`https://cdn.collector.sh/${mints && mints[0].mint}`}
+                    src={`https://cdn.collector.sh/${
+                      mints && randomMintIndex && mints[randomMintIndex].mint
+                    }`}
                     className="w-44 h-44 object-center object-cover bg-white p-2 absolute top-12 rounded-xl"
                   />
                 )}

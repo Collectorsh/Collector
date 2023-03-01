@@ -55,7 +55,9 @@ export default function Secondary({ drop }) {
     listed = listed.sort((a, b) =>
       a.amount > b.amount ? 1 : b.amount > a.amount ? -1 : 0
     );
-    setMints(owned.concat(listed).concat(notlisted));
+    const tmpMints = owned.concat(listed).concat(notlisted);
+    setRandomMintIndex(Math.floor(Math.random() * tmpMints.length));
+    setMints(tmpMints);
   }, []);
 
   useEffect(() => {
@@ -65,7 +67,6 @@ export default function Secondary({ drop }) {
   useEffect(() => {
     if (!mints) return;
 
-    setRandomMintIndex(Math.floor(Math.random() * mints.length));
     setInfiniteScrollItems(mints.slice(0, 20));
   }, [mints]);
 

@@ -13,6 +13,7 @@ export default function Secondary({ drop }) {
   const wallet = useWallet();
   const [mints, setMints] = useState();
   const [stats, setStats] = useState();
+  const [backgroundImage, setBackgroundImage] = useState();
   const [infiniteScrollItems, setInfiniteScrollItems] = useState([]);
 
   const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
@@ -34,6 +35,9 @@ export default function Secondary({ drop }) {
   const asyncGetDropMints = useCallback(async (id, wallet) => {
     let res = await getDropMints(id);
     setStats(res.stats);
+    setBackgroundImage(
+      res.mints[Math.floor(Math.random() * res.mints.length)].mint
+    );
     // Add if owned
     let allOwned = await getOwnedNfts(wallet);
     for (const r of res.mints) {
@@ -80,7 +84,7 @@ export default function Secondary({ drop }) {
           <div
             style={{
               backgroundImage: `url('https://cdn.collector.sh/${
-                mints && mints[0].mint
+                backgroundImage && backgroundImage
               }')`,
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -91,7 +95,9 @@ export default function Secondary({ drop }) {
               <div className="px-4 h-96 lg:h-80 relative">
                 {mints && (
                   <img
-                    src={`https://cdn.collector.sh/${mints && mints[0].mint}`}
+                    src={`https://cdn.collector.sh/${
+                      backgroundImage && backgroundImage
+                    }`}
                     className="w-44 h-44 object-center object-cover bg-white p-2 absolute top-12 rounded-xl"
                   />
                 )}

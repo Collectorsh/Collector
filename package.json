@@ -15,7 +15,7 @@
     "@dnd-kit/core": "^6.0.5",
     "@dnd-kit/sortable": "^7.0.1",
     "@dnd-kit/utilities": "^3.2.0",
-    "@headlessui/react": "^1.4.3",
+    "@headlessui/react": "^1.7.12",
     "@heroicons/react": "^1.0.5",
     "@identity.com/solana-gateway-ts": "^0.9.0",
     "@material-tailwind/react": "^1.0.4",

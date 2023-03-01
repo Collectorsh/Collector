@@ -45,7 +45,7 @@ export default function UpcomingDrop() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto sm:my-12 p-4 shadow-lg bg-white dark:bg-black dark:text-white">
+    <div className="max-w-4xl mx-auto sm:my-12 p-4 bg-white dark:bg-black dark:text-white">
       <div className="grid grid-cols-1 sm:grid-cols-12">
         <div className="sm:col-span-6">
           {images && (

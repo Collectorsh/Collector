@@ -111,7 +111,7 @@ export default function PublicMint({ address }) {
               {publicStartDate && (
                 <MintCountdown
                   date={new Date(publicStartDate)}
-                  style={{ justifyContent: "flex-end" }}
+                  style={{ justifyContent: "flex-end", marginBottom: "1rem" }}
                 />
               )}
             </>

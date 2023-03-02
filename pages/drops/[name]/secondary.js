@@ -83,9 +83,9 @@ export default function Secondary({ drop }) {
     <>
       {drop && (
         <>
-          <div className="relative bg-black">
+          <div className="relative bg-black overflow-hidden">
             <div
-              className="absolute top-0 left-0 bottom-0 right-0 opacity-40 object-center object-cover"
+              className="absolute -top-40 -left-20 -bottom-40 -right-20 opacity-40 object-center object-cover rotate-12"
               style={{
                 backgroundImage: `url('https://cdn.collector.sh/${
                   backgroundImage && backgroundImage
@@ -99,9 +99,7 @@ export default function Secondary({ drop }) {
               <div className="px-4 h-96 lg:h-80 relative">
                 {mints && (
                   <img
-                    src={`https://cdn.collector.sh/${
-                      backgroundImage && backgroundImage
-                    }`}
+                    src={drop.image}
                     className="w-24 h-24 sm:w-44 sm:h-44 object-center object-cover bg-white p-2 absolute top-4 sm:top-12 rounded-xl"
                   />
                 )}

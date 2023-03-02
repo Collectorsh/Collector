@@ -36,7 +36,7 @@ export default function Secondary({ drop }) {
   const asyncGetDropMints = useCallback(async (id, wallet) => {
     let res = await getDropMints(id);
     setStats(res.stats);
-    if (!backgroundImage) {
+    if (!backgroundImage && res.mints.length > 0) {
       setBackgroundImage(
         res.mints[Math.floor(Math.random() * res.mints.length)].mint
       );

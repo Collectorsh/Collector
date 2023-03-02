@@ -100,11 +100,11 @@ export default function Secondary({ drop }) {
                     src={`https://cdn.collector.sh/${
                       backgroundImage && backgroundImage
                     }`}
-                    className="w-44 h-44 object-center object-cover bg-white p-2 absolute top-12 rounded-xl"
+                    className="w-24 h-24 sm:w-44 sm:h-44 object-center object-cover bg-white p-2 absolute top-4 sm:top-12 rounded-xl"
                   />
                 )}
-                <div className="float-left mt-12 w-full">
-                  <div className="ml-48">
+                <div className="float-left mt-4 sm:mt-12 w-full">
+                  <div className="ml-28 sm:ml-48">
                     <h1 className="text-3xl font-bold inline-block tracking-wide text-white">
                       {drop.name}
                     </h1>
@@ -113,7 +113,7 @@ export default function Secondary({ drop }) {
                     </p>
                   </div>
                   {stats && (
-                    <div className="float-right w-fit my-4 text-black text-bold bg-white bg-opacity-40 rounded-lg">
+                    <div className="ml-28 sm:ml-0 sm:float-right w-fit my-4 text-black text-bold bg-white bg-opacity-40 rounded-lg">
                       <div className="grid grid-cols-3 py-1">
                         <div
                           className="px-6 border-r"

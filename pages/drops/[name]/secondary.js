@@ -83,16 +83,18 @@ export default function Secondary({ drop }) {
     <>
       {drop && (
         <>
-          <div
-            style={{
-              backgroundImage: `url('https://cdn.collector.sh/${
-                backgroundImage && backgroundImage
-              }')`,
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            }}
-          >
+          <div className="relative bg-black">
+            <div
+              className="absolute top-0 left-0 bottom-0 right-0 opacity-40 object-center object-cover"
+              style={{
+                backgroundImage: `url('https://cdn.collector.sh/${
+                  backgroundImage && backgroundImage
+                }')`,
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+              }}
+            ></div>
             <div className="max-w-7xl mx-auto">
               <div className="px-4 h-96 lg:h-80 relative">
                 {mints && (
@@ -108,12 +110,12 @@ export default function Secondary({ drop }) {
                     <h1 className="text-3xl font-bold inline-block tracking-wide text-white">
                       {drop.name}
                     </h1>
-                    <p className="mt-4 bg-dark1 text-white p-2 rounded bg-opacity-20 xl:w-1/2">
+                    <p className="mt-4 text-white rounded xl:w-1/2">
                       {drop.description}
                     </p>
                   </div>
                   {stats && (
-                    <div className="ml-28 sm:ml-0 sm:float-right w-fit my-4 text-black text-bold bg-white bg-opacity-40 rounded-lg">
+                    <div className="absolute bottom-0 w-fit my-4 text-black text-bold bg-white bg-opacity-60 rounded-lg">
                       <div className="grid grid-cols-3 py-1">
                         <div
                           className="px-6 border-r"

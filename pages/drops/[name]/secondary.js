@@ -104,11 +104,13 @@ export default function Secondary({ drop }) {
                     className="w-24 h-24 sm:w-44 sm:h-44 object-center object-cover bg-white p-2 rounded-xl absolute top-4 sm:top-12"
                   />
                 )}
-                <Link href={`/drops/${drop.slug}`}>
-                  <a className="absolute right-0 top-2 right-2 xl:right-0 w-fit bg-dark3 hover:bg-dark1 px-4 py-3 rounded-xl font-semibold text-white text-lg cursor-pointer">
-                    Back to Drop
-                  </a>
-                </Link>
+                <div className="hidden sm:block">
+                  <Link href={`/drops/${drop.slug}`}>
+                    <a className="absolute right-0 top-2 right-2 xl:right-0 w-fit bg-dark3 hover:bg-dark1 px-4 py-3 rounded-xl font-semibold text-white text-lg cursor-pointer">
+                      Back to Drop
+                    </a>
+                  </Link>
+                </div>
 
                 <div className="float-left mt-4 sm:mt-12 w-full">
                   <div className="ml-28 sm:ml-48">

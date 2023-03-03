@@ -32,9 +32,8 @@ export default function PublicMint({ address }) {
   }, []);
 
   useEffect(() => {
-    if (!wallet || !wallet.publicKey) return;
     asyncGetCandymachine(wallet);
-  }, [wallet]);
+  }, []);
 
   const mintNow = async () => {
     if (isMinting) return;
@@ -58,7 +57,10 @@ export default function PublicMint({ address }) {
         let msg = cause.split(/\r?\n/)[0];
         // This isn't ideal but there's a race condition where the nft isn't indexed by the rpc node
         // the mint transaction is already successful at this point though so we return a successful message
-        if (msg.includes("Account Not Found")) {
+        if (
+          msg.includes("Account Not Found") ||
+          msg.includes("AccountNotFoundError")
+        ) {
           toast.success(`🎉 Congratulations mint successful!`);
         } else {
           toast.error(msg);
@@ -74,6 +76,9 @@ export default function PublicMint({ address }) {
 
   const doSetState = (cndy) => {
     const publicStart = cndy.candyGuard.guards.startDate.date.toNumber() * 1000;
+    if (cndy.candyGuard.guards.endDate) {
+      var publicEnd = cndy.candyGuard.guards.endDate.date.toNumber() * 1000;
+    }
     setPublicStartDate(publicStart);
     setCost(cndy.candyGuard.guards.solPayment.lamports.toNumber());
     if (cndy.itemsRemaining.toNumber() === 0) {
@@ -81,7 +86,11 @@ export default function PublicMint({ address }) {
     } else if (Date.now() < publicStart) {
       setMintState("pre");
     } else if (Date.now() > publicStart) {
-      setMintState("public");
+      if (publicEnd && Date.now() > publicEnd) {
+        setMintState("ended");
+      } else {
+        setMintState("public");
+      }
     }
   };
 
@@ -99,58 +108,67 @@ export default function PublicMint({ address }) {
         </p>
       )}
 
-      {wallet && wallet.publicKey ? (
-        <div className="mt-4">
-          {mintState && mintState === "sold" && (
-            <button className="bg-red-400 px-4 py-3 font-semibold text-black text-lg rounded-xl">
-              Sold Out
-            </button>
-          )}
-          {mintState && mintState === "pre" && (
-            <>
-              {publicStartDate && (
-                <MintCountdown
-                  date={new Date(publicStartDate)}
-                  style={{ justifyContent: "flex-end", marginBottom: "1rem" }}
-                />
-              )}
-            </>
-          )}
-          {mintState && mintState === "public" && (
-            <>
-              {isMinting ? (
-                <>
-                  <br />
-                  <Oval
-                    color="#fff"
-                    secondaryColor="#000"
-                    height={30}
-                    width={30}
-                    className="p-0 m-0"
-                  />
-                </>
-              ) : (
-                <button
-                  className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
-                  onClick={() => mintNow()}
-                  disabled={isMinting}
-                >
-                  Mint
-                </button>
-              )}
-            </>
-          )}
-        </div>
-      ) : (
-        <>
-          <button
-            className="mt-4 float-right bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl"
-            onClick={(e) => setVisible(true)}
-          >
-            Connect Wallet
+      <div className="mt-4">
+        {mintState && mintState === "sold" && (
+          <button className="bg-red-400 px-4 py-3 font-semibold text-black text-lg rounded-xl">
+            Sold Out
           </button>
-        </>
-      )}
+        )}
+        {mintState && mintState === "pre" && (
+          <>
+            {publicStartDate && (
+              <MintCountdown
+                date={new Date(publicStartDate)}
+                style={{ justifyContent: "flex-end", marginBottom: "1rem" }}
+              />
+            )}
+          </>
+        )}
+        {mintState && mintState === "public" && (
+          <>
+            {wallet && wallet.publicKey ? (
+              <>
+                {isMinting ? (
+                  <>
+                    <br />
+                    <Oval
+                      color="#fff"
+                      secondaryColor="#000"
+                      height={30}
+                      width={30}
+                      className="p-0 m-0"
+                    />
+                  </>
+                ) : (
+                  <button
+                    className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
+                    onClick={() => mintNow()}
+                    disabled={isMinting}
+                  >
+                    Mint
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <button
+                  className="mt-4 float-right bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl"
+                  onClick={(e) => setVisible(true)}
+                >
+                  Connect Wallet
+                </button>
+              </>
+            )}
+          </>
+        )}
+        {mintState && mintState === "ended" && (
+          <>
+            <button className="bg-dark3 px-4 py-2 text-lg font-semibold text-white rounded-xl cursor-default">
+              Ended
+            </button>
+          </>
+        )}
+      </div>
     </>
   );
 }

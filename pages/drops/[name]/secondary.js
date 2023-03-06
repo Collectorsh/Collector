@@ -122,10 +122,24 @@ export default function Secondary({ drop }) {
                     </p>
                   </div>
                   {stats && (
-                    <div className="absolute bottom-0 w-fit my-4 text-black text-bold bg-white bg-opacity-60 rounded-lg">
-                      <div className="grid grid-cols-3 py-1">
+                    <div className="absolute bottom-0 left-4 right-4 sm:w-fit sm:left-auto sm:right-auto my-4 text-black text-bold bg-white bg-opacity-60 rounded-lg">
+                      <div className="grid grid-cols-4 py-1">
                         <div
-                          className="px-6 border-r"
+                          className="px-4 border-r"
+                          style={{ borderColor: "rgba(255, 255, 255, .2)" }}
+                        >
+                          <div className="text-sm mb-1">Items</div>
+                          <div className="text-lg">{mints && mints.length}</div>
+                        </div>
+                        <div
+                          className="px-4 border-r"
+                          style={{ borderColor: "rgba(255, 255, 255, .2)" }}
+                        >
+                          <div className="text-sm mb-1">Sales</div>
+                          <div className="text-lg">{stats.sales}</div>
+                        </div>
+                        <div
+                          className="px-4 border-r"
                           style={{ borderColor: "rgba(255, 255, 255, .2)" }}
                         >
                           <div className="text-sm mb-1">Volume</div>
@@ -134,17 +148,11 @@ export default function Secondary({ drop }) {
                           </div>
                         </div>
                         <div
-                          className="px-6 border-r"
+                          className="px-4 border-r"
                           style={{ borderColor: "rgba(255, 255, 255, .2)" }}
                         >
                           <div className="text-sm mb-1">Listed</div>
                           <div className="text-lg">{stats.listed}</div>
-                        </div>
-                        <div className="px-6">
-                          <div className="text-sm mb-1">Floor</div>
-                          <div className="text-lg">
-                            ◎{roundToTwo(stats.floor / 1000000000)}
-                          </div>
                         </div>
                       </div>
                     </div>

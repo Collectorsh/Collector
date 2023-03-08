@@ -9,9 +9,9 @@ export default function Listings({ token }) {
   const [listing, setListing] = useState();
 
   useEffect(() => {
-    let item = listings.filter((l) => l.mintAddress === token.mint)[0];
-    if (!item) return;
-    let highest = sortHighestListing(token, item.listings);
+    let lstngs = listings.filter((l) => l.address === token.address);
+    if (!lstngs) return;
+    let highest = sortHighestListing(token, lstngs);
     setListing(highest);
   }, [listings]);
 

@@ -6,27 +6,37 @@ import GalleryContainer from "/components/gallery/GalleryContainer";
 import GalleryNavigation from "/components/gallery/navigation/GalleryNavigation";
 import MainNavigation from "/components/navigation/MainNavigation";
 import ListingsContext from "/contexts/listings";
-import { useLazyQuery } from "@apollo/client";
-import { getListingsQuery } from "/queries/listings";
 import { cdnImage } from "/utils/cdnImage";
 import { pluralize } from "/utils/pluralize";
 import { auctionHousesArray } from "/config/settings";
+import { Connection } from "@solana/web3.js";
+import { Metaplex } from "@metaplex-foundation/js";
 
 function Gallery({ user, tokens }) {
   const [listings, setListings] = useContext(ListingsContext);
   const auctionHouses = auctionHousesArray.map((a) => a.address);
 
-  const [getListingsQl, { loading, error, data }] =
-    useLazyQuery(getListingsQuery);
+  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
+  const metaplex = new Metaplex(connection);
 
   const fetchListings = useCallback(async () => {
-    const res = await getListingsQl({
-      variables: {
-        auctionHouses: auctionHouses,
-        owners: user ? user.public_keys : [],
-      },
-    });
-    setListings([...listings, ...res.data.nfts]);
+    const newListings = [];
+    for (const auctionHouse of auctionHouses) {
+      const lstngs = await metaplex.auctionHouse().findListings({
+        auctionHouse: { address: auctionHouse, isNative: true },
+      });
+      for (const list of lstngs) {
+        newListings.push({
+          address: list.metadataAddress.toBase58(),
+          price: list.price.basisPoints.toNumber(),
+          seller: list.sellerAddress.toBase58(),
+          auctionHouse: list.auctionHouse,
+          tradeState: list.tradeStateAddress._bn,
+          tradeStateBump: list.tradeStateAddress.bump,
+        });
+      }
+    }
+    setListings(newListings);
   }, []);
 
   useEffect(() => {

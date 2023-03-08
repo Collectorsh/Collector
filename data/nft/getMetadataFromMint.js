@@ -30,6 +30,10 @@ async function getMetadataFromMint(mint) {
   const metadataPDA = await Metadata.getPDA(new PublicKey(mint));
   single.address = metadataPDA.toBase58();
   const tokenMetadata = await Metadata.load(connection, metadataPDA);
+  single.creators = [];
+  for (const c of tokenMetadata.data.data.creators) {
+    single.creators.push({ address: c.address });
+  }
 
   // Get verified collection data
   if (

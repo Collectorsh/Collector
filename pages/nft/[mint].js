@@ -1,33 +1,66 @@
-import React, { useEffect, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import Head from "next/head";
 import MainNavigation from "/components/navigation/MainNavigation";
 import getMetadataFromMint from "/data/nft/getMetadataFromMint";
 import Single from "/components/single/Single";
 import { cdnImage } from "/utils/cdnImage";
-import { useLazyQuery } from "@apollo/client";
-import { getNftQuery } from "/queries/single_nft";
-import { getActivitiesQuery } from "/queries/activities";
-import ActivitiesContext from "/contexts/activities";
 import SingleNftContext from "/contexts/single_nft";
 import { auctionHousesArray } from "/config/settings";
+import { Connection, PublicKey } from "@solana/web3.js";
+import { Metaplex } from "@metaplex-foundation/js";
 
 function Nft({ image, token }) {
-  const [activities, setActivities] = useContext(ActivitiesContext);
   const [, setSingleNft] = useContext(SingleNftContext);
   const auctionHouses = auctionHousesArray.map((a) => a.address);
+  const [offers, setOffers] = useState([]);
+  const [listings, setListings] = useState([]);
+
+  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
+  const metaplex = new Metaplex(connection);
 
   /////////////////////////////////////////////////////////////////////////////////////
 
-  // Query to get single NFT
-  const [getNftQl] = useLazyQuery(getNftQuery, {
-    fetchPolicy: "network-only",
-  });
+  // Fetch Offers and Listings
 
   const fetchNft = useCallback(async (token) => {
-    const res = await getNftQl({
-      variables: { address: token.address },
-    });
-    setSingleNft(res.data.nft || {});
+    const mintPubKey = new PublicKey(token.mint);
+    for (const auctionHouse of auctionHouses) {
+      const bids = await metaplex.auctionHouse().findBids({
+        auctionHouse: { address: auctionHouse, isNative: true },
+        mint: mintPubKey,
+      });
+      for (const bid of bids) {
+        if (bid.canceledAt) continue;
+        setOffers([
+          ...offers,
+          {
+            price: bid.price.basisPoints.toNumber(),
+            buyer: bid.buyerAddress.toBase58(),
+            auctionHouse: bid.auctionHouse,
+            tradeState: bid.tradeStateAddress._bn,
+            tradeStateBump: bid.tradeStateAddress.bump,
+          },
+        ]);
+      }
+
+      const lstngs = await metaplex.auctionHouse().findListings({
+        auctionHouse: { address: auctionHouse, isNative: true },
+        mint: mintPubKey,
+      });
+      for (const list of lstngs) {
+        if (list.canceledAt) continue;
+        setListings([
+          ...listings,
+          {
+            price: list.price.basisPoints.toNumber(),
+            seller: list.sellerAddress.toBase58(),
+            auctionHouse: list.auctionHouse,
+            tradeState: list.tradeStateAddress._bn,
+            tradeStateBump: list.tradeStateAddress.bump,
+          },
+        ]);
+      }
+    }
   }, []);
 
   // Run once on page load
@@ -35,34 +68,23 @@ function Nft({ image, token }) {
     fetchNft(token);
   }, [token, fetchNft]);
 
-  /////////////////////////////////////////////////////////////////////////////////////
-
-  // Query to get activities by auctionhouse
-  const [getActivitiesQl] = useLazyQuery(getActivitiesQuery, {
-    fetchPolicy: "network-only",
-  });
-
-  const fetchActivities = useCallback(async () => {
-    const res = await getActivitiesQl({
-      variables: { auctionhouses: auctionHouses },
-    });
-    let activs = res.data.activities.filter(
-      (a) => a.nft.mintAddress === token.mint
-    );
-    setActivities([...activities, ...activs]);
-  }, []);
-
-  // Run once on page load
   useEffect(() => {
-    fetchActivities();
-  }, []);
+    setSingleNft({
+      creators: token.creators,
+      offers: offers,
+      listings: listings,
+    });
+  }, [offers, listings, token]);
 
-  /////////////////////////////////////////////////////////////////////////////////////
+  const sleep = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
 
   // Refetch function to update NFT and Activities
-  const refetch = async () => {
-    fetchNft();
-    fetchActivities();
+  const refetch = async (token) => {
+    await sleep(10000);
+    console.log("refetching");
+    fetchNft(token);
   };
 
   /////////////////////////////////////////////////////////////////////////////////////

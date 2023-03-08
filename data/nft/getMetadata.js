@@ -62,6 +62,9 @@ async function getMetadata(publicKeys) {
     // Also find the associatedTokenAccountAddress
     let ta = tokenAccounts.find((a) => a.mint === result.mint);
     result.associatedTokenAccountAddress = ta.associatedTokenAccountAddress;
+    // Add metadata address
+    const metadataPDA = await Metadata.getPDA(new PublicKey(result.mint));
+    result.address = metadataPDA.toBase58();
   }
   // Get creator details
   const resp = await apiClient.post("/creator/details", {

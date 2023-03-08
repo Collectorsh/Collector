@@ -31,6 +31,11 @@ async function getMetadataFromMint(mint) {
   single.address = metadataPDA.toBase58();
   const tokenMetadata = await Metadata.load(connection, metadataPDA);
 
+  single.creators = [];
+  for (const c of tokenMetadata.data.data.creators) {
+    single.creators.push({ address: c.address });
+  }
+
   // Get verified collection data
   if (
     tokenMetadata.data.collection &&
@@ -66,10 +71,13 @@ async function getMetadataFromMint(mint) {
   single.name = uridata.data.name || null;
   single.animation_url = uridata.data.animation_url || null;
 
-  if (single.properties && single.properties.creators) {
+  if (single.creators && single.creators.length > 0) {
+    const addresses = single.creators.map((c) => ({
+      creator: c.address,
+    }));
     // Get creator details
     const resp = await apiClient.post("/creator/details", {
-      tokens: [{ creator: single.properties.creators[0].address }],
+      tokens: addresses,
     });
     if (resp.data[0]) {
       single.artist_name = resp.data[0].name;

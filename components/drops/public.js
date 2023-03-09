@@ -7,33 +7,48 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Oval } from "react-loader-spinner";
 import { MintCountdown } from "/utils/mint/MintCountdown";
+import MintedModal from "/components/MintedModal";
 
 export default function PublicMint({ address }) {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [total, setTotal] = useState(0);
   const [remaining, setRemaining] = useState();
+  const [itemsMinted, setItemsMinted] = useState();
   const [mintState, setMintState] = useState();
   const [isMinting, setIsMinting] = useState(false);
   const [cost, setCost] = useState();
   const [publicStartDate, setPublicStartDate] = useState();
+  const [holder, setHolder] = useState();
+  const [collectionMint, setCollectionMint] = useState();
+  const [minted, setMinted] = useState(false);
+  const [mintedNft, setMintedNft] = useState();
 
   const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
 
-  const asyncGetCandymachine = useCallback(async (wallet, onceOnly = false) => {
+  function updateOpen(state) {
+    setMinted(state);
+  }
+
+  const asyncGetCandymachine = useCallback(async (onceOnly = false) => {
     const cndy = await metaplex.candyMachines().findByAddress({
       address: address,
     });
     setTotal(cndy.itemsLoaded);
     setRemaining(cndy.itemsRemaining.toNumber());
+    setItemsMinted(cndy.itemsMinted.toNumber());
     doSetState(cndy);
     if (onceOnly === false) setTimeout(asyncGetCandymachine, 5000);
   }, []);
 
   useEffect(() => {
-    asyncGetCandymachine(wallet);
+    asyncGetCandymachine();
   }, []);
+
+  useEffect(() => {
+    if (mintState === "signature") checkIfHolder();
+  }, [mintState, wallet]);
 
   const mintNow = async () => {
     if (isMinting) return;
@@ -42,39 +57,66 @@ export default function PublicMint({ address }) {
     const candyMachine = await metaplex.candyMachines().findByAddress({
       address: address,
     });
-    try {
-      const collectionUpdateAuthority = candyMachine.authorityAddress;
-      var { nft } = await metaplex.candyMachines().mint({
+    const collectionUpdateAuthority = candyMachine.authorityAddress;
+    if (mintState === "signature" && holder === "yes" && collectionMint) {
+      var args = {
         candyMachine,
         collectionUpdateAuthority,
-      });
-      console.log(nft);
-      toast.success(`🎉 Congratulations you minted ${nft.name}`);
-    } catch (e) {
-      console.log(e);
+        guards: {
+          nftGate: {
+            mint: collectionMint.mintAddress,
+          },
+        },
+      };
+    } else if (mintState === "public") {
+      var args = {
+        candyMachine,
+        collectionUpdateAuthority,
+      };
+    }
+    const transactionBuilder = await metaplex
+      .candyMachines()
+      .builders()
+      .mint(args);
+    const { tokenAddress } = transactionBuilder.getContext();
+    await metaplex.rpc().sendAndConfirmTransaction(transactionBuilder);
+    var nft;
+    while (!nft) {
       try {
-        let cause = e.message.split("Caused By: ")[1];
-        let msg = cause.split(/\r?\n/)[0];
-        // This isn't ideal but there's a race condition where the nft isn't indexed by the rpc node
-        // the mint transaction is already successful at this point though so we return a successful message
-        if (
-          msg.includes("Account Not Found") ||
-          msg.includes("AccountNotFoundError")
-        ) {
-          toast.success(`🎉 Congratulations mint successful!`);
-        } else {
-          toast.error(msg);
-        }
-      } catch (e) {
-        console.log(e);
-        toast.error("Something went wrong");
+        nft = await metaplex.nfts().findByToken({ token: tokenAddress });
+        setMinted(true);
+        setMintedNft(nft);
+      } catch (err) {
+        console.log("failed: sleeping before trying again");
+        await sleep(2000);
       }
     }
     setIsMinting(false);
     asyncGetCandymachine(wallet, true);
   };
 
+  const checkIfHolder = async () => {
+    if (!wallet || !wallet.publicKey) return;
+    const nfts = await metaplex.nfts().findAllByOwner({
+      owner: wallet.publicKey,
+    });
+    var holder = false;
+    for (const nft of nfts) {
+      if (
+        nft.collection &&
+        nft.collection.address.toBase58() ===
+          process.env.NEXT_PUBLIC_SIGNATURE_COLLECTION_ADDRESS
+      ) {
+        setCollectionMint(nft);
+        setHolder("yes");
+        holder = true;
+      }
+    }
+    if (holder === false) setHolder("no");
+  };
+
   const doSetState = (cndy) => {
+    const isGated = cndy.candyGuard.guards.nftGate;
     const publicStart = cndy.candyGuard.guards.startDate.date.toNumber() * 1000;
     if (cndy.candyGuard.guards.endDate) {
       var publicEnd = cndy.candyGuard.guards.endDate.date.toNumber() * 1000;
@@ -89,16 +131,20 @@ export default function PublicMint({ address }) {
       if (publicEnd && Date.now() > publicEnd) {
         setMintState("ended");
       } else {
-        setMintState("public");
+        if (isGated) {
+          setMintState("signature");
+        } else {
+          setMintState("public");
+        }
       }
     }
   };
 
   return (
     <>
-      {remaining && total && (
+      {itemsMinted && total && (
         <p className="bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
-          Remaining: {remaining}/{total}
+          Minted: {itemsMinted}/{total}
         </p>
       )}
 
@@ -161,6 +207,50 @@ export default function PublicMint({ address }) {
             )}
           </>
         )}
+        {mintState && mintState === "signature" && (
+          <>
+            {wallet && wallet.publicKey ? (
+              <>
+                {isMinting ? (
+                  <>
+                    <br />
+                    <Oval
+                      color="#fff"
+                      secondaryColor="#000"
+                      height={30}
+                      width={30}
+                      className="p-0 m-0"
+                    />
+                  </>
+                ) : (
+                  <>
+                    {holder === "yes" && (
+                      <button
+                        className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
+                        onClick={() => mintNow()}
+                        disabled={isMinting}
+                      >
+                        Mint
+                      </button>
+                    )}
+                    {holder === "no" && (
+                      <p>You need to be a signature holder to participate</p>
+                    )}
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <button
+                  className="mt-4 float-right bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl"
+                  onClick={(e) => setVisible(true)}
+                >
+                  Connect Wallet
+                </button>
+              </>
+            )}
+          </>
+        )}
         {mintState && mintState === "ended" && (
           <>
             <button className="bg-dark3 px-4 py-2 text-lg font-semibold text-white rounded-xl cursor-default">
@@ -169,6 +259,11 @@ export default function PublicMint({ address }) {
           </>
         )}
       </div>
+      <MintedModal open={minted} nft={mintedNft} updateOpen={updateOpen} />
     </>
   );
 }
+
+const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};

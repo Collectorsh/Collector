@@ -20,7 +20,7 @@ import { TrashIcon } from "@heroicons/react/outline";
 export default function Order() {
   const [user] = useContext(UserContext);
   const [cart, setCart] = useContext(CartContext);
-  const connection = new Connection(process.env.NEXT_PUBLIC_STORE_RPC);
+  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const { publicKey, sendTransaction } = useWallet();
   const { setVisible } = useWalletModal();
   const [loading, setLoading] = useState(false);

@@ -59,7 +59,9 @@ export default function MyApp({ Component, pageProps }) {
                 <SingleNftProvider>
                   <ThemeProvider enableSystem={true} attribute="class">
                     <PlausibleProvider domain="collector.sh">
-                      <Component {...pageProps} />
+                      <CartProvider>
+                        <Component {...pageProps} />
+                      </CartProvider>
                     </PlausibleProvider>
                   </ThemeProvider>
                 </SingleNftProvider>

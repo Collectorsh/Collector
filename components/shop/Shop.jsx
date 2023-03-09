@@ -33,7 +33,7 @@ export default function Shop() {
                     key={index}
                     className="hover:cursor-pointer border-2 p-2 hover:bg-greenlightbg hover:dark:bg-greendarkbg hover:border-greeny hover:dark:border-greeny border-white dark:border-black text-gray-700 dark:text-white hover:dark:text-white"
                   >
-                    <div className="min-h-80 aspect-w-1 aspect-h-1 w-full bg-black lg:h-96">
+                    <div className="min-h-80 aspect-w-1 aspect-h-1 w-full bg-white dark:bg-black lg:h-96">
                       <img
                         src={product.image}
                         alt={product.name}

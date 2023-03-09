@@ -46,7 +46,7 @@ export default function Product({ product }) {
         <>
           {productAvailable === true ? (
             <div className="grid sm:grid-cols-6 mx-4 xl:mx-0">
-              <div className="sm:col-span-2 bg-black">
+              <div className="sm:col-span-2 bg-white dark:bg-black">
                 <img
                   src={product.image}
                   alt={product.name}

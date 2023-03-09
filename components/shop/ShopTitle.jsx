@@ -6,7 +6,7 @@ export default function ShopTitle() {
           Gift Shop
         </h2>
         <p className="pb-2 dark:text-whitish border-b border-gray-100 dark:border-dark3">
-          Collect exclusive merch from top artists
+          Collect exclusive Collector and artist merch
         </p>
       </div>
     </div>

@@ -6,8 +6,6 @@ import Head from "next/head";
 import { WalletContextProvider } from "/contexts/wallet";
 import { ThemeProvider } from "next-themes";
 import { UserProvider } from "/contexts/user";
-import { EstimatedValueProvider } from "/contexts/estimated_value";
-import { ExchangeOffersProvider } from "/contexts/exchange_offers";
 import { ListingsProvider } from "/contexts/listings";
 import { ActivitiesProvider } from "/contexts/activities";
 import { SingleNftProvider } from "/contexts/single_nft";
@@ -56,23 +54,17 @@ export default function MyApp({ Component, pageProps }) {
       <ApolloProvider client={client}>
         <WalletContextProvider>
           <UserProvider>
-            <ExchangeOffersProvider>
-              <ListingsProvider>
-                <ActivitiesProvider>
-                  <SingleNftProvider>
-                    <EstimatedValueProvider>
-                      <ThemeProvider enableSystem={true} attribute="class">
-                        <PlausibleProvider domain="collector.sh">
-                          <CartProvider>
-                            <Component {...pageProps} />
-                          </CartProvider>
-                        </PlausibleProvider>
-                      </ThemeProvider>
-                    </EstimatedValueProvider>
-                  </SingleNftProvider>
-                </ActivitiesProvider>
-              </ListingsProvider>
-            </ExchangeOffersProvider>
+            <ListingsProvider>
+              <ActivitiesProvider>
+                <SingleNftProvider>
+                  <ThemeProvider enableSystem={true} attribute="class">
+                    <PlausibleProvider domain="collector.sh">
+                      <Component {...pageProps} />
+                    </PlausibleProvider>
+                  </ThemeProvider>
+                </SingleNftProvider>
+              </ActivitiesProvider>
+            </ListingsProvider>
           </UserProvider>
         </WalletContextProvider>
       </ApolloProvider>

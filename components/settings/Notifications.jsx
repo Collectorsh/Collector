@@ -11,14 +11,12 @@ export default function Notifications() {
     const notify_trending = document.getElementById("notify_trending");
     const notify_outbid = document.getElementById("notify_outbid");
     const notify_new_artist = document.getElementById("notify_new_artist");
-    const watchlist_to_dm = document.getElementById("watchlist_to_dm");
     const notify_twitter = document.getElementById("notify_twitter");
     const notify_email = document.getElementById("notify_email");
     const res = await saveUser(user.api_key, {
       notify_trending: notify_trending ? notify_trending.checked : null,
       notify_outbid: notify_outbid ? notify_outbid.checked : null,
       notify_new_artist: notify_new_artist ? notify_new_artist.checked : null,
-      watchlist_to_dm: watchlist_to_dm ? watchlist_to_dm.checked : null,
       notify_twitter: notify_twitter ? notify_twitter.checked : null,
       notify_email: notify_email ? notify_email.checked : null,
     });
@@ -109,30 +107,6 @@ export default function Notifications() {
                     </div>
                     <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white dark:bg-dark2">
                       <dt className="text-sm font-medium text-gray-500">
-                        Watchlist Bids
-                      </dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        <div className="flex items-center w-full mb-2">
-                          <label
-                            htmlFor="watchlist_to_dm"
-                            className="flex items-center cursor-pointer relative mb-4"
-                          >
-                            <input
-                              type="checkbox"
-                              id="watchlist_to_dm"
-                              className="sr-only"
-                              defaultChecked={user.watchlist_to_dm}
-                            />
-                            <div className="toggle-bg bg-gray-200 border-2 border-gray-200 h-6 w-11 rounded-full"></div>
-                          </label>
-                        </div>
-                        <div className="text-gray-500">
-                          Receive watchlist bids via notification
-                        </div>
-                      </dd>
-                    </div>
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
-                      <dt className="text-sm font-medium text-gray-500">
                         New Artist Auction
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
@@ -156,44 +130,10 @@ export default function Notifications() {
                         </div>
                       </dd>
                     </div>
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white dark:bg-dark2">
+                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
                       <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 inline align-middle">
                         Delivery Settings
                       </h3>
-                    </div>
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
-                      <dt className="text-sm font-medium text-gray-500">
-                        Twitter
-                      </dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        <div className="flex items-center w-full mb-2">
-                          <label
-                            htmlFor="notify_twitter"
-                            className="flex items-center cursor-pointer relative mb-4"
-                          >
-                            <input
-                              type="checkbox"
-                              id="notify_twitter"
-                              className="sr-only"
-                              defaultChecked={
-                                user.twitter_user_id
-                                  ? user.notify_twitter
-                                  : false
-                              }
-                              disabled={!user.twitter_user_id}
-                            />
-                            <div className="toggle-bg bg-gray-200 border-2 border-gray-200 h-6 w-11 rounded-full"></div>
-                          </label>
-                        </div>
-                        <div className="text-gray-500">
-                          Receive notifications via Twitter DM
-                        </div>
-                        {!user.twitter_user_id && (
-                          <div className="text-red-300 dark:text-red-800 mt-2">
-                            You haven&apos;t connected your Twitter account
-                          </div>
-                        )}
-                      </dd>
                     </div>
                     <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white dark:bg-dark2">
                       <dt className="text-sm font-medium text-gray-500">

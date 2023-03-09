@@ -10,16 +10,21 @@ export default function Image({ token, size = "small" }) {
     if (!token.image) return;
     if (token.image.split(".").pop().includes("mp4")) {
       setVideoUrl(token.image);
-    }
-    try {
-      if (token.properties) {
-        let file = token.properties.files[0];
-        if (file && file.type === "video/mp4") {
-          setVideoUrl(file.uri);
-        }
+    } else if (token.animation_url) {
+      if (token.animation_url.split(".").pop().includes("mp4")) {
+        setVideoUrl(token.animation_url);
       }
-    } catch (err) {
-      console.log(err);
+    } else {
+      try {
+        if (token.properties) {
+          let file = token.properties.files[0];
+          if (file && file.type === "video/mp4") {
+            setVideoUrl(file.uri);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
   }, [token.image]);
 

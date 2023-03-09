@@ -6,6 +6,8 @@ async function getMetadataFromUri(token) {
     token.description = response.data.description || null;
     token.properties = response.data.properties || null;
     token.symbol = response.data.symbol || null;
+    token.name = response.data.name || null;
+    token.animation_url = response.data.animation_url || null;
     return token;
   });
 }

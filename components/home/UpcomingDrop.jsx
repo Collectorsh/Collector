@@ -1,192 +1,90 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Slider from "react-slick";
+import { fetchImages } from "/hooks/fetchImages";
+import getAllDrops from "/data/drops/getAllDrops";
 
 export default function UpcomingDrop() {
+  const [images, setImages] = useState([]);
+  const [drop, setDrop] = useState([]);
+
+  const asyncGetDrop = useCallback(async () => {
+    let drops = await getAllDrops();
+    let d = drops.filter((d) => d.highlight === true)[0];
+    setDrop(d);
+  }, []);
+
+  useEffect(() => {
+    asyncGetDrop();
+  }, []);
+
+  const asyncGetImages = useCallback(async (drop) => {
+    const imgs = await fetchImages(drop.slug);
+    if (!imgs) return;
+    const imgArray = [];
+    for (const i of imgs) {
+      if (i.Size > 100) imgArray.push(i.Key);
+    }
+    setImages(imgArray);
+  }, []);
+
+  useEffect(() => {
+    if (!drop) return;
+    asyncGetImages(drop);
+  }, [drop]);
+
+  const settings = {
+    dots: false,
+    arrows: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2500,
+  };
+
   return (
-    <div className="max-w-4xl mx-auto sm:my-12 p-4 shadow-lg bg-white dark:bg-black dark:text-white">
+    <div className="max-w-4xl mx-auto sm:my-12 p-4 bg-white dark:bg-black dark:text-white">
       <div className="grid grid-cols-1 sm:grid-cols-12">
         <div className="sm:col-span-6">
-          <div className="text-center">
-            <img
-              src="https://cdn.collector.sh/drops/neverland/re43f9ejbhxegwf9re4385fq2h5rltsb.png"
-              className="h-96 object-center object-cover"
-            />
-          </div>
+          {images && (
+            <div className="text-center">
+              <Slider {...settings}>
+                {images.map((image, index) => (
+                  <>
+                    <div
+                      key={index}
+                      className="overflow-hidden col-span-2 relative -mt-2"
+                    >
+                      <img
+                        src={`https://cdn.collector.sh/${image}`}
+                        alt=""
+                        className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover rounded-lg"
+                      />
+                    </div>
+                  </>
+                ))}
+              </Slider>
+            </div>
+          )}
         </div>
-        <div className="sm:col-span-6 sm:col-end-13">
-          <p>January 26th, 10am EST</p>
-          <h2 className="align-middle sm:inline sm:my-5 text-4xl font-bold w-full py-1 inline-block">
-            PAUSE
-          </h2>
-          <p>
-            Curated by{" "}
-            <Link href="https://twitter.com/XO12XX" title="Neverland">
-              <a target="_blank">Neverland</a>
-            </Link>
-          </p>
-          <p className="mt-4">
-            A collective of photographers from all around the world pressing the
-            pause button on life.
-          </p>
-          <div className="mt-8">
-            <Link href="/drops/neverland" title="Neverland Drop">
-              <a className="bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl">
-                See the Drop
-              </a>
-            </Link>
+        {drop && (
+          <div className="sm:col-span-5 sm:col-end-13">
+            <p>{drop.date}</p>
+            <h2 className="align-middle sm:inline sm:my-5 text-4xl font-bold w-full py-1 inline-block">
+              {drop.name}
+            </h2>
+            <p className="mt-4">{drop.description}</p>
+            <div className="mt-8">
+              <Link href={`/drops/${drop.slug}`} title="Bonk">
+                <a className="bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl">
+                  See the Drop
+                </a>
+              </Link>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="text-center">
-        <h2 className="mt-12 mb-6 text-4xl font-bold">Artists</h2>
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
-          <div className="text-center">
-            <Link href="https://twitter.com/@XO12XX" title="Nev">
-              <a target="_blank">
-                <img
-                  src="/images/neverland.jpeg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link
-              href="https://twitter.com/@visualiterature"
-              title="George Figueroa"
-            >
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/georgef.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@farhannsrdn" title="H A N">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/han.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@hacss" title="Hacs">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/hacs.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@huxsterized" title="Huxsterized">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/hux.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@jakob_lr" title="Jakob Lilja-Ruiz">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/jakob.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@jairo_ema25" title="Jairinho">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/jairinho.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@drjaytoor" title="Jay Toor">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/jaytoor.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@thejomshoots" title="JOM">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/jom.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@layers_jpg" title="layers">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/layers.png"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@okayflix" title="Logan Jamess">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/loganj.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@najshukor" title="Naj Shukor">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/najs.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link href="https://twitter.com/@rich_herrmann" title="Rich Herman">
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/richh.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link
-              href="https://twitter.com/@taintedphotog"
-              title="TaintedPhotog"
-            >
-              <a target="_blank">
-                <img
-                  src="https://cdn.collector.sh/drops/artists/taintedphotog.jpg"
-                  className="w-full h-36 w-full object-center object-cover"
-                />
-              </a>
-            </Link>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

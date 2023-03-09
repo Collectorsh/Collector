@@ -10,6 +10,8 @@ async function getMetadataFromMint(mint) {
 
   // Find the owners associated token address
   let res = await axios.post(rpcHost, accountData(mint));
+  if (!res.data.result.value[0]) return;
+
   single.associatedTokenAccountAddress = res.data.result.value[0].address;
 
   const connection = new Connection(rpcHost);
@@ -28,6 +30,11 @@ async function getMetadataFromMint(mint) {
   const metadataPDA = await Metadata.getPDA(new PublicKey(mint));
   single.address = metadataPDA.toBase58();
   const tokenMetadata = await Metadata.load(connection, metadataPDA);
+
+  single.creators = [];
+  for (const c of tokenMetadata.data.data.creators) {
+    single.creators.push({ address: c.address });
+  }
 
   // Get verified collection data
   if (
@@ -50,7 +57,7 @@ async function getMetadataFromMint(mint) {
 
   single.uri = tokenMetadata.data.data.uri || null;
   single.mint = tokenMetadata.data.mint || null;
-  single.name = tokenMetadata.data.data.name || null;
+  // single.name = tokenMetadata.data.data.name || null;
   single.sellerFeeBasisPoints =
     tokenMetadata.data.data.sellerFeeBasisPoints || null;
 
@@ -61,11 +68,16 @@ async function getMetadataFromMint(mint) {
   single.description = uridata.data.description || null;
   single.properties = uridata.data.properties || null;
   single.symbol = uridata.data.symbol || null;
+  single.name = uridata.data.name || null;
+  single.animation_url = uridata.data.animation_url || null;
 
-  if (single.properties && single.properties.creators) {
+  if (single.creators && single.creators.length > 0) {
+    const addresses = single.creators.map((c) => ({
+      creator: c.address,
+    }));
     // Get creator details
     const resp = await apiClient.post("/creator/details", {
-      tokens: [{ creator: single.properties.creators[0].address }],
+      tokens: addresses,
     });
     if (resp.data[0]) {
       single.artist_name = resp.data[0].name;

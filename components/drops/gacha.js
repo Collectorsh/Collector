@@ -26,7 +26,7 @@ export default function Gacha({ address }) {
   const [publicStartDate, setPublicStartDate] = useState();
   const [cost, setCost] = useState();
 
-  const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_GACHA_RPC);
+  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
 
   const asyncGetCandymachine = useCallback(async (wallet, onceOnly = false) => {

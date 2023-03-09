@@ -139,7 +139,7 @@ export default async function sellNftTransaction(
 
     await web3.sendAndConfirmRawTransaction(connection, signed.serialize());
 
-    refetch();
+    refetch(nft);
 
     toast.success("The transaction was confirmed.");
   } catch (e) {

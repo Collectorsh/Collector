@@ -8,7 +8,6 @@ export default function Settings() {
   const [user, setUser] = useContext(UserContext);
 
   const saveAll = async () => {
-    const estimated_value = document.getElementById("estimated_value");
     const border = document.getElementById("border").checked;
     const shadow = document.getElementById("shadow").checked;
     const rounded = document.getElementById("rounded").checked;
@@ -25,7 +24,6 @@ export default function Settings() {
       names: names,
       default_visibility: default_visibility,
       show_artist_name: show_artist_name ? show_artist_name.checked : null,
-      estimated_value: estimated_value ? estimated_value.checked : null,
     });
     if (res.data) {
       if (res.data.status === "success") {
@@ -63,30 +61,6 @@ export default function Settings() {
                 </div>
                 <div className="border-t border-gray-200 dark:border-dark3">
                   <dl>
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
-                      <dt className="text-sm font-medium text-gray-500">
-                        Estimated Value
-                      </dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        <div className="flex items-center w-full mb-2">
-                          <label
-                            htmlFor="estimated_value"
-                            className="flex items-center cursor-pointer relative mb-4"
-                          >
-                            <input
-                              type="checkbox"
-                              id="estimated_value"
-                              className="sr-only"
-                              defaultChecked={user.estimated_value}
-                            />
-                            <div className="toggle-bg bg-gray-200 border-2 border-gray-200 h-6 w-11 rounded-full"></div>
-                          </label>
-                        </div>
-                        <div className="text-gray-500">
-                          Show estimated value in Gallery view
-                        </div>
-                      </dd>
-                    </div>
                     <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
                       <dt className="text-sm font-medium text-gray-500">
                         Image Borders

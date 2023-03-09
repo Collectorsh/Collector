@@ -3,6 +3,7 @@ import Link from "next/link";
 import CartContext from "/contexts/cart";
 import CartIcon from "/components/shop/CartIcon";
 import { roundToTwo } from "/utils/roundToTwo";
+import Slider from "react-slick";
 
 export default function Product({ product }) {
   const [productAvailable, setProductAvailable] = useState();
@@ -29,6 +30,17 @@ export default function Product({ product }) {
     setCart(newCart);
   };
 
+  const settings = {
+    dots: true,
+    arrows: false,
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+  };
+
   return (
     <>
       <div className="absolute right-4 xl:right-0 top-20">
@@ -45,22 +57,35 @@ export default function Product({ product }) {
       {productAvailable && (
         <>
           {productAvailable === true ? (
-            <div className="grid sm:grid-cols-6 mx-4 xl:mx-0">
-              <div className="sm:col-span-2 bg-white dark:bg-black">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="h-full w-full object-cover object-center lg:h-full lg:w-full rounded-md"
-                />
+            <div className="grid grid-cols-1 sm:grid-cols-6 mx-4 xl:mx-0">
+              <div className="col-span-1 sm:col-span-2 bg-white dark:bg-black">
+                <div className="text-center">
+                  <Slider {...settings}>
+                    {eval(product.images).map((image, index) => (
+                      <>
+                        <div
+                          key={index}
+                          className="overflow-hidden col-span-2 relative -mt-2"
+                        >
+                          <img
+                            src={`https://cdn.collector.sh/${image}`}
+                            alt=""
+                            className="h-full w-full object-cover object-center lg:h-full lg:w-full rounded-md"
+                          />
+                        </div>
+                      </>
+                    ))}
+                  </Slider>
+                </div>
               </div>
-              <div className="sm:col-span-3 sm:col-end-7 text-black dark:text-white">
+              <div className="col-span-1 sm:col-span-3 sm:col-end-7 text-black dark:text-white">
                 <h1 className="text-4xl font-extrabold w-full">
                   {product.name}
                 </h1>
-                <h2 className="mt-2 text-lg font-normal w-full">
+                <h2 className="mt-2 text-lg font-normal w-full whitespace-pre-line pb-6 border-b border-gray-100 dark:border-dark3">
                   {product.description}
                 </h2>
-                <p className="mt-4 text-lg">
+                <p className="mt-10 text-lg">
                   ◎{roundToTwo(product.lamports / 1000000000)}{" "}
                 </p>
                 <div className="mt-4 grid grid-cols-2">

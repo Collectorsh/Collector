@@ -24,7 +24,7 @@ export default function Shop() {
         <div className="absolute right-4 xl:right-0 top-20">
           <CartIcon />
         </div>
-        <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+        <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
           {products &&
             products.map((product, index) => (
               <Link href={`/shop/product/${product.uuid}`} title="" key={index}>
@@ -35,7 +35,7 @@ export default function Shop() {
                   >
                     <div className="min-h-80 aspect-w-1 aspect-h-1 w-full bg-white dark:bg-black lg:h-96">
                       <img
-                        src={product.image}
+                        src={eval(product.images)[0]}
                         alt={product.name}
                         className="h-full w-full object-cover object-center lg:h-full lg:w-full rounded-md"
                       />

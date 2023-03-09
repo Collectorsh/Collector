@@ -5,7 +5,7 @@ export default function ShopTitle() {
         <h2 className="mt-8 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-whitish">
           Gift Shop
         </h2>
-        <p className="pb-2 dark:text-whitish border-b border-gray-300 dark:border-gray-700">
+        <p className="pb-2 dark:text-whitish border-b border-gray-100 dark:border-dark3">
           Collect exclusive merch from top artists
         </p>
       </div>

@@ -118,8 +118,8 @@ export default function Secondary({ drop }) {
                       {drop.name}
                     </h1>
                     <p className="mt-4 text-white rounded xl:w-1/2">
-                      {drop.description.length > 350
-                        ? `${drop.description.slice(0, 344)}...`
+                      {drop.description.length > 250
+                        ? `${drop.description.slice(0, 250)}...`
                         : drop.description}
                     </p>
                   </div>

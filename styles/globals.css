@@ -273,6 +273,23 @@ input:checked + .toggle-bg {
 
 .react-select__input {
   color: #999 !important;
+  @apply dark:text-white;
+}
+
+.react-select__menu {
+  @apply dark:bg-dark3;
+}
+
+.react-select__single-value {
+  @apply dark:text-white;
+}
+
+.react-select__option {
+  @apply dark:hover:bg-dark1;
+}
+
+.react-select__option--is-focused {
+  @apply dark:bg-gray-700;
 }
 
 .slick-prev {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import UserContext from "/contexts/user";
 import CartContext from "/contexts/cart";
 import { roundToTwo } from "/utils/roundToTwo";
@@ -16,6 +16,8 @@ import {
 import { toPublicKey } from "/config/settings";
 import verifyPurchase from "/data/shop/verifyPurchase";
 import { TrashIcon } from "@heroicons/react/outline";
+import Select from "react-select";
+import countryList from "react-select-country-list";
 
 export default function Order() {
   const [user] = useContext(UserContext);
@@ -28,6 +30,8 @@ export default function Order() {
   const [transactionComplete, setTransactionComplete] = useState();
   const [orderNumber, setOrderNumber] = useState();
   const [isError, setIsError] = useState();
+  const [country, setCountry] = useState();
+  const countryOptions = useMemo(() => countryList().getData(), []);
 
   useEffect(() => {
     const ttl = 0;
@@ -55,8 +59,7 @@ export default function Order() {
       setIsError("email-address");
       return { error: true };
     }
-    const country = document.getElementById("country").value;
-    if (country === undefined || country === null || country === "") {
+    if (!country) {
       setIsError("country");
       return { error: true };
     }
@@ -84,7 +87,7 @@ export default function Order() {
       firstname: firstname,
       lastname: lastname,
       email: email,
-      country: country,
+      country: country.label,
       street: street,
       city: city,
       region: region,
@@ -157,6 +160,10 @@ export default function Order() {
     });
     setCart(newCart);
   };
+
+  function changeCountry(c) {
+    setCountry(c);
+  }
 
   return (
     <div className="mt-14 sm:mt-0">
@@ -243,20 +250,17 @@ export default function Order() {
                         >
                           Country
                         </label>
-                        <select
-                          id="country"
-                          name="country"
-                          autoComplete="country-name"
-                          className={`mt-1 p-2 block w-full rounded-md border border-gray-300 dark:border-dark3 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm ${
+                        <Select
+                          options={countryOptions}
+                          value={country}
+                          onChange={changeCountry}
+                          className={`mt-1 block w-full rounded-md shadow-sm sm:text-sm focus:border-indigo-500 focus:ring-indigo-500 ${
                             isError &&
                             isError === "country" &&
                             "border border-red-500"
                           }`}
-                        >
-                          <option>United States</option>
-                          <option>Canada</option>
-                          <option>Mexico</option>
-                        </select>
+                          classNamePrefix="react-select"
+                        />
                       </div>
 
                       <div className="col-span-6">

@@ -66,6 +66,9 @@ export default function MainNavigation() {
                 <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                   <Link href="/drops">Drops</Link>
                 </p>
+                <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                  <Link href="/shop">Shop</Link>
+                </p>
                 {!user && <Premium />}
                 {user && (
                   <>
@@ -167,6 +170,15 @@ export default function MainNavigation() {
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href="/feed">Feed</Link>
                                   </p>
+                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                    <Link href="/drops">Drops</Link>
+                                  </p>
+                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                    <Link href="/shop">Shop</Link>
+                                  </p>
+                                  <div className="mt-4">
+                                    <Premium />
+                                  </div>
                                 </>
                               )}
 
@@ -182,6 +194,12 @@ export default function MainNavigation() {
                                     </p>
                                     <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                       <Link href="/feed">Feed</Link>
+                                    </p>
+                                    <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                      <Link href="/drops">Drops</Link>
+                                    </p>
+                                    <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                      <Link href="/shop">Shop</Link>
                                     </p>
                                     <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                       <Link href={`/${user.username}/profile`}>

@@ -11,7 +11,7 @@ export default function Checkout() {
       <div className="absolute right-0 top-20">
         <Link href="/shop" title="">
           <a>
-            <div className="bg-greeny rounded-3xl px-3 py-2 text-black font-bold w-fit cursor-pointer">
+            <div className="bg-greeny rounded-3xl px-3 py-2 text-black font-bold w-fit cursor-pointer mr-4 xl:mr-0">
               &lt;&lt; Back
             </div>
           </a>

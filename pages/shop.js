@@ -9,7 +9,7 @@ export default function ShopHome() {
       <div className="max-w-7xl mx-auto">
         <div className="relative">
           <ShopTitle />
-          <div className="w-full pb-3">
+          <div className="w-full pb-12">
             <Shop />
           </div>
         </div>

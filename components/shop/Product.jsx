@@ -57,7 +57,7 @@ export default function Product({ product }) {
       {productAvailable && (
         <>
           {productAvailable === true ? (
-            <div className="grid grid-cols-1 sm:grid-cols-6 mx-4 xl:mx-0">
+            <div className="grid grid-cols-1 sm:grid-cols-6 mx-4 xl:mx-0 mb-12">
               <div className="col-span-1 sm:col-span-2 bg-white dark:bg-black">
                 <div className="text-center">
                   <Slider {...settings}>

@@ -166,9 +166,9 @@ export default function Order() {
   }
 
   return (
-    <div className="mt-14 sm:mt-0">
+    <div>
       <Toaster />
-      <div className="overflow-hidden shadow sm:rounded-md">
+      <div className="overflow-hidden shadow sm:rounded-md mb-12">
         {transactionComplete ? (
           <div className="dark:bg-dark1 dark:text-white px-4 py-5 sm:p-6">
             <h2 className="text-3xl font-extrabold mb-4 w-full">Thank You!</h2>
@@ -177,177 +177,175 @@ export default function Order() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-12">
-            <div className="col-span-5">
-              <div className="mt-14 sm:mt-0">
-                <div className="overflow-hidden shadow sm:rounded-md">
-                  <div className="dark:bg-dark1 dark:text-white px-4 py-5 sm:p-6">
-                    <div className="grid grid-cols-6 gap-6">
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="first-name"
-                          className="block text-sm font-medium"
-                        >
-                          First name
-                        </label>
-                        <input
-                          type="text"
-                          name="first-name"
-                          id="first-name"
-                          autoComplete="given-name"
-                          className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            isError &&
-                            isError === "first-name" &&
-                            "border border-red-500"
-                          }`}
-                        />
-                      </div>
+          <div className="grid grid-cols-1 sm:grid-cols-12 px-4 xl:px-0">
+            <div className="col-span-1 sm:col-span-5">
+              <div className="overflow-hidden shadow sm:rounded-md">
+                <div className="dark:bg-dark1 dark:text-white px-4 py-5 sm:p-6">
+                  <div className="grid grid-cols-0 sm:grid-cols-6 gap-6">
+                    <div className="col-span-1 sm:col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="first-name"
+                        className="block text-sm font-medium"
+                      >
+                        First name
+                      </label>
+                      <input
+                        type="text"
+                        name="first-name"
+                        id="first-name"
+                        autoComplete="given-name"
+                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                          isError &&
+                          isError === "first-name" &&
+                          "border border-red-500"
+                        }`}
+                      />
+                    </div>
 
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="last-name"
-                          className="block text-sm font-medium"
-                        >
-                          Last name
-                        </label>
-                        <input
-                          type="text"
-                          name="last-name"
-                          id="last-name"
-                          autoComplete="family-name"
-                          className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            isError &&
-                            isError === "last-name" &&
-                            "border border-red-500"
-                          }`}
-                        />
-                      </div>
+                    <div className="col-span-1 sm:col-span-6">
+                      <label
+                        htmlFor="last-name"
+                        className="block text-sm font-medium"
+                      >
+                        Last name
+                      </label>
+                      <input
+                        type="text"
+                        name="last-name"
+                        id="last-name"
+                        autoComplete="family-name"
+                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                          isError &&
+                          isError === "last-name" &&
+                          "border border-red-500"
+                        }`}
+                      />
+                    </div>
 
-                      <div className="col-span-6 sm:col-span-4">
-                        <label
-                          htmlFor="email-address"
-                          className="block text-sm font-medium"
-                        >
-                          Email address
-                        </label>
-                        <input
-                          type="text"
-                          name="email-address"
-                          id="email-address"
-                          autoComplete="email"
-                          className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            isError &&
-                            isError === "email-address" &&
-                            "border border-red-500"
-                          }`}
-                        />
-                      </div>
+                    <div className="col-span-6 sm:col-span-4">
+                      <label
+                        htmlFor="email-address"
+                        className="block text-sm font-medium"
+                      >
+                        Email address
+                      </label>
+                      <input
+                        type="text"
+                        name="email-address"
+                        id="email-address"
+                        autoComplete="email"
+                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                          isError &&
+                          isError === "email-address" &&
+                          "border border-red-500"
+                        }`}
+                      />
+                    </div>
 
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="country"
-                          className="block text-sm font-medium"
-                        >
-                          Country
-                        </label>
-                        <Select
-                          options={countryOptions}
-                          value={country}
-                          onChange={changeCountry}
-                          className={`bg-gray-100 dark:bg-dark3  mt-1 block w-full rounded-md shadow-sm sm:text-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-                            isError &&
-                            isError === "country" &&
-                            "border border-red-500"
-                          }`}
-                          classNamePrefix="react-select"
-                        />
-                      </div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="country"
+                        className="block text-sm font-medium"
+                      >
+                        Country
+                      </label>
+                      <Select
+                        options={countryOptions}
+                        value={country}
+                        onChange={changeCountry}
+                        className={`bg-gray-100 dark:bg-dark3  mt-1 block w-full rounded-md shadow-sm sm:text-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+                          isError &&
+                          isError === "country" &&
+                          "border border-red-500"
+                        }`}
+                        classNamePrefix="react-select"
+                      />
+                    </div>
 
-                      <div className="col-span-6">
-                        <label
-                          htmlFor="street-address"
-                          className="block text-sm font-medium"
-                        >
-                          Street address
-                        </label>
-                        <input
-                          type="text"
-                          name="street-address"
-                          id="street-address"
-                          autoComplete="street-address"
-                          className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            isError &&
-                            isError === "street-address" &&
-                            "border border-red-500"
-                          }`}
-                        />
-                      </div>
+                    <div className="col-span-6">
+                      <label
+                        htmlFor="street-address"
+                        className="block text-sm font-medium"
+                      >
+                        Street address
+                      </label>
+                      <input
+                        type="text"
+                        name="street-address"
+                        id="street-address"
+                        autoComplete="street-address"
+                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                          isError &&
+                          isError === "street-address" &&
+                          "border border-red-500"
+                        }`}
+                      />
+                    </div>
 
-                      <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                        <label
-                          htmlFor="city"
-                          className="block text-sm font-medium"
-                        >
-                          City
-                        </label>
-                        <input
-                          type="text"
-                          name="city"
-                          id="city"
-                          autoComplete="address-level2"
-                          className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            isError &&
-                            isError === "city" &&
-                            "border border-red-500"
-                          }`}
-                        />
-                      </div>
+                    <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+                      <label
+                        htmlFor="city"
+                        className="block text-sm font-medium"
+                      >
+                        City
+                      </label>
+                      <input
+                        type="text"
+                        name="city"
+                        id="city"
+                        autoComplete="address-level2"
+                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                          isError &&
+                          isError === "city" &&
+                          "border border-red-500"
+                        }`}
+                      />
+                    </div>
 
-                      <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                        <label
-                          htmlFor="region"
-                          className="block text-sm font-medium"
-                        >
-                          State / Province
-                        </label>
-                        <input
-                          type="text"
-                          name="region"
-                          id="region"
-                          autoComplete="address-level1"
-                          className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            isError &&
-                            isError === "region" &&
-                            "border border-red-500"
-                          }`}
-                        />
-                      </div>
+                    <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+                      <label
+                        htmlFor="region"
+                        className="block text-sm font-medium"
+                      >
+                        State / Province
+                      </label>
+                      <input
+                        type="text"
+                        name="region"
+                        id="region"
+                        autoComplete="address-level1"
+                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                          isError &&
+                          isError === "region" &&
+                          "border border-red-500"
+                        }`}
+                      />
+                    </div>
 
-                      <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                        <label
-                          htmlFor="postal-code"
-                          className="block text-sm font-medium"
-                        >
-                          ZIP / Postal code
-                        </label>
-                        <input
-                          type="text"
-                          name="postal-code"
-                          id="postal-code"
-                          autoComplete="postal-code"
-                          className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                            isError &&
-                            isError === "postal-code" &&
-                            "border border-red-500"
-                          }`}
-                        />
-                      </div>
+                    <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+                      <label
+                        htmlFor="postal-code"
+                        className="block text-sm font-medium"
+                      >
+                        ZIP / Postal code
+                      </label>
+                      <input
+                        type="text"
+                        name="postal-code"
+                        id="postal-code"
+                        autoComplete="postal-code"
+                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                          isError &&
+                          isError === "postal-code" &&
+                          "border border-red-500"
+                        }`}
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="col-span-6 col-end-13">
+            <div className="col-span-1 mt-6 sm:mt-0 sm:col-span-6 col-end-1 sm:col-end-13">
               <div className="dark:bg-dark1 dark:text-white px-4 py-5 sm:p-6">
                 <h2 className="text-4xl font-extrabold mb-4 w-full">
                   Your Order

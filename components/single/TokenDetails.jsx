@@ -144,7 +144,7 @@ export default function TokenDetails({ token }) {
           {token.attributes &&
             Array.isArray(token.attributes) &&
             token.attributes.length > 0 && (
-              <Accordion open={open === 1} onClick={() => handleOpen(1)}>
+              <Accordion open={open === 3} onClick={() => handleOpen(3)}>
                 <AccordionHeader className="">Attributes</AccordionHeader>
                 <AccordionBody className="text-md ">
                   <table className="min-w-full">

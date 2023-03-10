@@ -44,16 +44,16 @@ export default function MintedModal({ open, nft, updateOpen }) {
           >
             <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <XCircleIcon
-                className="float-right h-7 w-7 cursor-pointer text-gray-500 hover:text-black dark:text-gray-500 dark:hover:text-white mt-2 mr-2"
+                className="absolute h-7 w-7 cursor-pointer text-gray-500 hover:text-black dark:text-gray-500 dark:hover:text-white top-2 right-2"
                 onClick={() => updateOpen(false)}
               />
               <div className="bg-white dark:bg-dark3 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="text-center">
                   <p className="text-3xl font-bold text-black dark:text-white">
-                    Congratulations 🥳
+                    You Minted 🥳
                   </p>
                   <p className="mt-6 text-black dark:text-white text-xl">
-                    You just minted {nft && nft.json.name}
+                    {nft && nft.json.name}
                   </p>
                   <img
                     src={nft && nft.json.image}

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { toast } from "react-toastify";
 import { roundToTwo } from "/utils/roundToTwo";
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
@@ -8,8 +9,9 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Oval } from "react-loader-spinner";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import MintedModal from "/components/MintedModal";
+import { ArrowRightIcon } from "@heroicons/react/outline";
 
-export default function PublicMint({ address }) {
+export default function PublicMint({ address, drop }) {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [total, setTotal] = useState(0);
@@ -32,14 +34,19 @@ export default function PublicMint({ address }) {
   }
 
   const asyncGetCandymachine = useCallback(async (onceOnly = false) => {
-    const cndy = await metaplex.candyMachines().findByAddress({
-      address: address,
-    });
-    setTotal(cndy.itemsLoaded);
-    setRemaining(cndy.itemsRemaining.toNumber());
-    setItemsMinted(cndy.itemsMinted.toNumber());
-    doSetState(cndy);
-    if (onceOnly === false) setTimeout(asyncGetCandymachine, 5000);
+    try {
+      const cndy = await metaplex.candyMachines().findByAddress({
+        address: address,
+      });
+      setTotal(cndy.itemsLoaded);
+      setRemaining(cndy.itemsRemaining.toNumber());
+      setItemsMinted(cndy.itemsMinted.toNumber());
+      doSetState(cndy);
+      if (onceOnly === false) setTimeout(asyncGetCandymachine, 5000);
+    } catch (err) {
+      setMintState("ended");
+      console.log(err);
+    }
   }, []);
 
   useEffect(() => {
@@ -53,46 +60,49 @@ export default function PublicMint({ address }) {
   const mintNow = async () => {
     if (isMinting) return;
     setIsMinting(true);
-    toast("Approve the transaction in your wallet");
-    const candyMachine = await metaplex.candyMachines().findByAddress({
-      address: address,
-    });
-    const collectionUpdateAuthority = candyMachine.authorityAddress;
-    if (mintState === "signature" && holder === "yes" && collectionMint) {
-      var args = {
-        candyMachine,
-        collectionUpdateAuthority,
-        guards: {
-          nftGate: {
-            mint: collectionMint.mintAddress,
+    try {
+      toast("Approve the transaction in your wallet");
+      const candyMachine = await metaplex.candyMachines().findByAddress({
+        address: address,
+      });
+      const collectionUpdateAuthority = candyMachine.authorityAddress;
+      if (mintState === "signature" && holder === "yes" && collectionMint) {
+        var args = {
+          candyMachine,
+          collectionUpdateAuthority,
+          guards: {
+            nftGate: {
+              mint: collectionMint.mintAddress,
+            },
           },
-        },
-      };
-    } else if (mintState === "public") {
-      var args = {
-        candyMachine,
-        collectionUpdateAuthority,
-      };
-    }
-    const transactionBuilder = await metaplex
-      .candyMachines()
-      .builders()
-      .mint(args);
-    const { tokenAddress } = transactionBuilder.getContext();
-    await metaplex.rpc().sendAndConfirmTransaction(transactionBuilder);
-    var nft;
-    while (!nft) {
-      try {
-        nft = await metaplex.nfts().findByToken({ token: tokenAddress });
-        setMinted(true);
-        setMintedNft(nft);
-      } catch (err) {
-        console.log("failed: sleeping before trying again");
-        await sleep(2000);
+        };
+      } else if (mintState === "public") {
+        var args = {
+          candyMachine,
+          collectionUpdateAuthority,
+        };
       }
+      const transactionBuilder = await metaplex
+        .candyMachines()
+        .builders()
+        .mint(args);
+      const { tokenAddress } = transactionBuilder.getContext();
+      await metaplex.rpc().sendAndConfirmTransaction(transactionBuilder);
+      var nft;
+      while (!nft) {
+        try {
+          nft = await metaplex.nfts().findByToken({ token: tokenAddress });
+          setMinted(true);
+          setMintedNft(nft);
+        } catch (err) {
+          await sleep(2000);
+        }
+      }
+      setIsMinting(false);
+      asyncGetCandymachine(wallet, true);
+    } catch (err) {
+      setIsMinting(false);
     }
-    setIsMinting(false);
-    asyncGetCandymachine(wallet, true);
   };
 
   const checkIfHolder = async () => {
@@ -116,6 +126,10 @@ export default function PublicMint({ address }) {
   };
 
   const doSetState = (cndy) => {
+    if (drop.closed) {
+      setMintState("ended");
+      return;
+    }
     const isGated = cndy.candyGuard.guards.nftGate;
     const publicStart = cndy.candyGuard.guards.startDate.date.toNumber() * 1000;
     if (cndy.candyGuard.guards.endDate) {
@@ -142,124 +156,120 @@ export default function PublicMint({ address }) {
 
   return (
     <>
-      {itemsMinted && total && (
-        <p className="bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
-          Minted: {itemsMinted}/{total}
-        </p>
-      )}
-
-      {cost && (
-        <p className="mt-4 bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
-          Price: {cost && <>◎{roundToTwo(cost / 1000000000)}</>}
-        </p>
-      )}
-
-      <div className="mt-4">
-        {mintState && mintState === "sold" && (
-          <button className="bg-red-400 px-4 py-3 font-semibold text-black text-lg rounded-xl">
-            Sold Out
-          </button>
-        )}
-        {mintState && mintState === "pre" && (
-          <>
-            {publicStartDate && (
+      {mintState && (
+        <div className="rounded-xl p-4 border-2 border-greeny dark:border-dark3">
+          {(mintState === "public" || mintState === "signature") && (
+            <p className="font-bold text-xl text-greeny">MINT LIVE</p>
+          )}
+          {mintState === "ended" && (
+            <p className="font-bold text-xl text-greeny">MINT FINISHED</p>
+          )}
+          {mintState === "sold" && (
+            <p className="font-bold text-xl text-orange-400">SOLD OUT</p>
+          )}
+          {mintState === "pre" && (
+            <>
+              <div className="inline">Starts in </div>
               <MintCountdown
-                date={new Date(publicStartDate)}
-                style={{ justifyContent: "flex-end", marginBottom: "1rem" }}
+                date={new Date(1678550128000)}
+                style={{
+                  justifyContent: "flex-start",
+                  marginBottom: "1rem",
+                  display: "inline-flex",
+                }}
               />
+            </>
+          )}
+          {itemsMinted && total && (
+            <>
+              <p className="my-2 font-semibold">
+                {Math.round((itemsMinted / total) * 100)}% minted{" "}
+                <span className="font-normal">
+                  ({itemsMinted}/{total})
+                </span>
+              </p>
+              <div className="h-1 bg-gray-100 w-full">
+                <div
+                  className="h-1 bg-greeny"
+                  style={{
+                    width: `${Math.round((itemsMinted / total) * 100)}%`,
+                  }}
+                ></div>
+              </div>
+            </>
+          )}
+
+          {cost && mintState !== "ended" && (
+            <p className="mt-2 text-xl font-semibold">
+              {cost && <>◎{roundToTwo(cost / 1000000000)}</>}
+            </p>
+          )}
+        </div>
+      )}
+      <div className="mt-4">
+        {mintState && (
+          <div>
+            {mintState !== "pre" && (
+              <p className="mt-3 float-right text-normal text-greeny hover:text-green-600">
+                <Link href={`/drops/${drop.slug}/market`}>
+                  <a>Go to Market</a>
+                </Link>
+                <ArrowRightIcon
+                  className="h-4 w-4 ml-1 inline cursor-pointer"
+                  aria-hidden="true"
+                />
+              </p>
             )}
-          </>
-        )}
-        {mintState && mintState === "public" && (
-          <>
-            {wallet && wallet.publicKey ? (
+            {(mintState === "public" || mintState === "signature") && (
               <>
-                {isMinting ? (
+                {wallet && wallet.publicKey ? (
                   <>
-                    <br />
-                    <Oval
-                      color="#fff"
-                      secondaryColor="#000"
-                      height={30}
-                      width={30}
-                      className="p-0 m-0"
-                    />
+                    {isMinting ? (
+                      <>
+                        <Oval
+                          color="#fff"
+                          secondaryColor="#000"
+                          height={30}
+                          width={30}
+                          className="p-0 m-0"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        {(mintState === "public" ||
+                          (mintState === "signature" && holder === "yes")) && (
+                          <button
+                            className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
+                            onClick={() => mintNow()}
+                            disabled={isMinting}
+                          >
+                            Mint
+                          </button>
+                        )}
+                        {mintState === "signature" && holder === "no" && (
+                          <p>
+                            You need to be a signature holder to participate
+                          </p>
+                        )}
+                      </>
+                    )}
                   </>
                 ) : (
-                  <button
-                    className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
-                    onClick={() => mintNow()}
-                    disabled={isMinting}
-                  >
-                    Mint
-                  </button>
-                )}
-              </>
-            ) : (
-              <>
-                <button
-                  className="mt-4 float-right bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl"
-                  onClick={(e) => setVisible(true)}
-                >
-                  Connect Wallet
-                </button>
-              </>
-            )}
-          </>
-        )}
-        {mintState && mintState === "signature" && (
-          <>
-            {wallet && wallet.publicKey ? (
-              <>
-                {isMinting ? (
                   <>
-                    <br />
-                    <Oval
-                      color="#fff"
-                      secondaryColor="#000"
-                      height={30}
-                      width={30}
-                      className="p-0 m-0"
-                    />
-                  </>
-                ) : (
-                  <>
-                    {holder === "yes" && (
-                      <button
-                        className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
-                        onClick={() => mintNow()}
-                        disabled={isMinting}
-                      >
-                        Mint
-                      </button>
-                    )}
-                    {holder === "no" && (
-                      <p>You need to be a signature holder to participate</p>
-                    )}
+                    <button
+                      className="bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl"
+                      onClick={(e) => setVisible(true)}
+                    >
+                      Connect Wallet
+                    </button>
                   </>
                 )}
               </>
-            ) : (
-              <>
-                <button
-                  className="mt-4 float-right bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl"
-                  onClick={(e) => setVisible(true)}
-                >
-                  Connect Wallet
-                </button>
-              </>
             )}
-          </>
+          </div>
         )}
-        {mintState && mintState === "ended" && (
-          <>
-            <button className="bg-dark3 px-4 py-2 text-lg font-semibold text-white rounded-xl cursor-default">
-              Ended
-            </button>
-          </>
-        )}
+        <MintedModal open={minted} nft={mintedNft} updateOpen={updateOpen} />
       </div>
-      <MintedModal open={minted} nft={mintedNft} updateOpen={updateOpen} />
     </>
   );
 }

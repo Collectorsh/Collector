@@ -53,28 +53,14 @@ export default function ArtistDrop({ name, drop }) {
                   <p className="mt-4">{drop.curator}</p>
                   <p className="mt-4">{drop.description}</p>
                 </div>
-                {drop.closed === false && (
-                  <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
-                    {drop.slug === "hanaknight" ? (
-                      <Gacha address={address} />
-                    ) : (
-                      <PublicMint address={address} />
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {drop.market === true && (
-                <div className="mt-6 sm:mt-0 grid grid-cols-1">
-                  <div className="col-span-1">
-                    <Link href={`/drops/${name}/market`}>
-                      <a className="w-fit float-right bg-dark3 hover:bg-dark1 px-4 py-3 rounded-xl font-semibold text-white text-lg cursor-pointer">
-                        Go to Market
-                      </a>
-                    </Link>
-                  </div>
+                <div className="col-span-1 mt-4 sm:mt-0 sm:col-span-4 sm:col-end-13">
+                  {drop.slug === "hanaknight" ? (
+                    <Gacha address={address} />
+                  ) : (
+                    <PublicMint address={address} drop={drop} />
+                  )}
                 </div>
-              )}
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-6">
                 {images.map((image, i) => (

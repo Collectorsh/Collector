@@ -404,3 +404,8 @@ input:checked + .toggle-bg {
   position: absolute;
   right: 0;
 }
+
+.MuiPaper-root {
+  background-color: transparent !important;
+  @apply text-black dark:text-white mr-2 text-sm;
+}

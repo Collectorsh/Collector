@@ -8,11 +8,7 @@ function Market({ name, drop }) {
       <MainNavigation />
       {drop ? (
         <>
-          {drop.market === true ? (
-            <Secondary drop={drop} />
-          ) : (
-            <p className="mt-8">No market found with the name {name}</p>
-          )}
+          <Secondary drop={drop} />
         </>
       ) : (
         <p className="mt-8">No drop found with the name {name}</p>

@@ -11,8 +11,7 @@ export default function Home() {
   return (
     <div className="dark:bg-black">
       <MainNavigation />
-      <div className="max-w-7xl mx-auto">
-        {/* <Hero /> */}
+      <div className="w-full">
         <UpcomingDrop />
         <Galleries />
       </div>

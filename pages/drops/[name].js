@@ -40,7 +40,7 @@ export default function ArtistDrop({ name, drop }) {
         <MainNavigation />
         <div className="max-w-7xl mx-auto">
           {drop ? (
-            <div className="mx-auto sm:my-12 p-4 bg-white dark:bg-black dark:text-white">
+            <div className="mx-auto sm:my-12 py-4 px-4 xl:px-0 bg-white dark:bg-black dark:text-white">
               <div className="grid grid-cols-1 lg:grid-cols-12">
                 <div className="col-span-1 lg:col-span-7">
                   <img
@@ -55,7 +55,7 @@ export default function ArtistDrop({ name, drop }) {
                 </div>
                 <div className="col-span-1 mt-4 lg:mt-0 lg:col-span-4 lg:col-end-13">
                   {drop.slug === "hanaknight" ? (
-                    <Gacha address={address} />
+                    <Gacha address={address} drop={drop} />
                   ) : (
                     <PublicMint address={address} drop={drop} />
                   )}

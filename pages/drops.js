@@ -7,7 +7,7 @@ export default function Drops({ drops }) {
     <div className="dark:bg-black">
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <div className="mx-auto sm:my-12 p-4 bg-white dark:bg-black dark:text-white">
+        <div className="mx-auto sm:my-12 py-4 px-4 xl:px-0 bg-white dark:bg-black dark:text-white">
           {/* <img src="/images/drop.png" className="inline h-10 align-middle" /> */}
           <h2 className="align-middle inline my-5 text-3xl sm:text-4xl font-semibold w-full py-1 inline-block text-neutral-900 dark:text-neutral-100">
             Drops by Collector

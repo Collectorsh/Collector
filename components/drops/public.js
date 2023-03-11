@@ -10,6 +10,7 @@ import { Oval } from "react-loader-spinner";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import MintedModal from "/components/MintedModal";
 import { ArrowRightIcon } from "@heroicons/react/outline";
+import { toDate } from "/utils/mint/utils";
 
 export default function PublicMint({ address, drop }) {
   const wallet = useWallet();
@@ -177,7 +178,7 @@ export default function PublicMint({ address, drop }) {
             <>
               <div className="inline">Starts in </div>
               <MintCountdown
-                date={new Date(1678550128000)}
+                date={toDate(publicStartDate)}
                 style={{
                   justifyContent: "flex-start",
                   marginBottom: "1rem",

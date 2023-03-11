@@ -97,7 +97,7 @@ export default function Secondary({ drop }) {
               }}
             ></div>
             <div className="max-w-7xl mx-auto">
-              <div className="px-4 h-96 lg:h-80 relative">
+              <div className="px-4 xl:px-0 h-96 lg:h-80 relative">
                 {mints && (
                   <img
                     src={drop.image}

@@ -45,9 +45,14 @@ export default function UpcomingDrop() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto sm:my-12 p-4 bg-white dark:bg-black dark:text-white">
-      <div className="grid grid-cols-1 sm:grid-cols-12">
-        <div className="sm:col-span-6">
+    <div className="mx-auto px-4 xl:px-0 sm:mb-12 mt-0 sm:mt-4 bg-white dark:bg-black dark:text-white">
+      {/* <h2 className="text-7xl leading-normal w-full mb-12 tracking-wide text-neutral-800 dark:text-white">
+        <span className="collector font-bold border-b-8 border-gray-50 dark:border-dark1">
+          Drops by Collector
+        </span>
+      </h2> */}
+      <div className="mt-4 sm:mt-16 grid grid-cols-1 lg:grid-cols-12">
+        <div className="lg:col-span-6">
           {images && (
             <div className="text-center">
               <Slider {...settings}>
@@ -70,7 +75,7 @@ export default function UpcomingDrop() {
           )}
         </div>
         {drop && (
-          <div className="sm:col-span-5 sm:col-end-13">
+          <div className="mt-6 lg:mt-0 lg:col-span-5 lg:col-end-13">
             <p>{drop.date}</p>
             <h2 className="align-middle sm:inline sm:my-5 text-4xl font-bold w-full py-1 inline-block">
               {drop.name}

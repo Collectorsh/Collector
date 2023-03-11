@@ -1,25 +1,15 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useContext } from "react";
 import UserContext from "/contexts/user";
+import FollowingContext from "/contexts/following";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import getFollowing from "/data/artists/getFollowing";
 import followArtist from "/data/artists/followArtist";
 import unfollowArtist from "/data/artists/unfollowArtist";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/solid";
 
 export default function FollowButton({ follow }) {
-  const [user, setUser] = useContext(UserContext);
-  const [following, setFollowing] = useState();
-
-  const initGetFollowing = useCallback(async (apiKey) => {
-    let res = await getFollowing(apiKey);
-    if (res.status === "success") setFollowing(res.following);
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-    initGetFollowing(user.api_key);
-  }, [initGetFollowing, user]);
+  const [user] = useContext(UserContext);
+  const [following, setFollowing] = useContext(FollowingContext);
 
   const doUnfollowArtist = async (artist) => {
     const res = await unfollowArtist(user.api_key, artist);

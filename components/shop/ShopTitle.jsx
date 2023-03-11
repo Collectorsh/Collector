@@ -1,6 +1,6 @@
 export default function ShopTitle() {
   return (
-    <div className="px-4 xl:px-0 mx-auto clear-both">
+    <div className="px-4 xl:px-0 mx-auto clear-both pt-8 sm:pt-0">
       <div className="mx-auto pt-3 md:px-0">
         <h2 className="mt-8 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-whitish">
           Gift Shop

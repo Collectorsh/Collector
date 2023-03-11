@@ -7,9 +7,9 @@ export default function Drops({ drops }) {
     <div className="dark:bg-black">
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <div className="max-w-4xl mx-auto sm:my-12 p-4 shadow-lg bg-white dark:bg-black dark:text-white">
-          <img src="/images/drop.png" className="inline h-10 align-middle" />
-          <h2 className="ml-3 align-middle inline my-5 text-3xl sm:text-4xl font-bold w-full py-1 inline-block">
+        <div className="mx-auto sm:my-12 p-4 bg-white dark:bg-black dark:text-white">
+          {/* <img src="/images/drop.png" className="inline h-10 align-middle" /> */}
+          <h2 className="align-middle inline my-5 text-3xl sm:text-4xl font-semibold w-full py-1 inline-block text-neutral-900 dark:text-neutral-100">
             Drops by Collector
           </h2>
 
@@ -21,7 +21,7 @@ export default function Drops({ drops }) {
             drop when they mint.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-12">
             {drops.map((drop, index) => (
               <div className="text-center mb-6" key={index}>
                 <p className="font-bold mb-1">{drop.name}</p>
@@ -29,7 +29,7 @@ export default function Drops({ drops }) {
                   <a>
                     <img
                       src={drop.image}
-                      className="w-full h-96 lg:h-64 object-center object-cover"
+                      className="w-full h-96 lg:h-72 object-center object-cover"
                     />
                   </a>
                 </Link>

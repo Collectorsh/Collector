@@ -21,7 +21,7 @@ export default function Shop() {
   return (
     <div className="mb-12">
       <>
-        <div className="absolute right-4 xl:right-0 top-20">
+        <div className="absolute right-2 sm:right-4 xl:right-0 top-3 sm:top-20">
           <CartIcon />
         </div>
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:gap-x-12 sm:grid-cols-2 lg:grid-cols-3">

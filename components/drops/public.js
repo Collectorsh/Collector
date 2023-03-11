@@ -157,15 +157,21 @@ export default function PublicMint({ address, drop }) {
   return (
     <>
       {mintState && (
-        <div className="rounded-xl p-4 border-2 border-greeny dark:border-dark3">
+        <div className="rounded-xl p-4 border-2 border-neutral-100 dark:border-dark3">
           {(mintState === "public" || mintState === "signature") && (
-            <p className="font-bold text-xl text-greeny">MINT LIVE</p>
+            <p className="font-bold text-xl text-neutral-800 dark:text-neutral-100">
+              MINT LIVE
+            </p>
           )}
           {mintState === "ended" && (
-            <p className="font-bold text-xl text-greeny">MINT FINISHED</p>
+            <p className="font-bold text-xl text-neutral-800 dark:text-neutral-100">
+              MINT FINISHED
+            </p>
           )}
           {mintState === "sold" && (
-            <p className="font-bold text-xl text-orange-400">SOLD OUT</p>
+            <p className="font-bold text-xl text-neutral-800 dark:text-neutral-100">
+              SOLD OUT
+            </p>
           )}
           {mintState === "pre" && (
             <>
@@ -182,7 +188,7 @@ export default function PublicMint({ address, drop }) {
           )}
           {itemsMinted && total && (
             <>
-              <p className="my-2 font-semibold">
+              <p className="my-2 font-semibold text-neutral-700 dark:text-neutral-200">
                 {Math.round((itemsMinted / total) * 100)}% minted{" "}
                 <span className="font-normal">
                   ({itemsMinted}/{total})
@@ -210,7 +216,7 @@ export default function PublicMint({ address, drop }) {
         {mintState && (
           <div>
             {mintState !== "pre" && (
-              <p className="mt-3 float-right text-normal text-greeny hover:text-green-600">
+              <p className="mt-3 float-right text-normal tracking-wide font-semibold text-neutral-800 dark:text-neutral-100 hover:underline">
                 <Link href={`/drops/${drop.slug}/market`}>
                   <a>Go to Market</a>
                 </Link>

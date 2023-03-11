@@ -7,6 +7,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        lellow: "#FDD513",
+        blu: "#27CFF1",
         burple: "#9946ff",
         burpledark: "#652db0",
         greeny: "#31f292",

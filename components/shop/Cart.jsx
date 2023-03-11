@@ -8,7 +8,7 @@ export default function Checkout() {
 
   return (
     <>
-      <div className="absolute right-0 top-20">
+      <div className="absolute right-2 sm:right-4 xl:right-0 top-3 sm:top-20">
         <Link href="/shop" title="">
           <a>
             <div className="bg-greeny rounded-3xl px-3 py-2 text-black font-bold w-fit cursor-pointer mr-4 xl:mr-0">

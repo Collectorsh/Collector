@@ -43,7 +43,7 @@ export default function Product({ product }) {
 
   return (
     <>
-      <div className="absolute right-4 xl:right-0 top-20">
+      <div className="absolute right-2 sm:right-4 xl:right-0 top-3 sm:top-20">
         <CartIcon />
         <Link href="/shop" title="">
           <a>
@@ -57,7 +57,7 @@ export default function Product({ product }) {
       {productAvailable && (
         <>
           {productAvailable === true ? (
-            <div className="grid grid-cols-1 sm:grid-cols-6 mx-4 xl:mx-0 mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-6 mx-4 xl:mx-0 mb-6">
               <div className="col-span-1 sm:col-span-2 bg-white dark:bg-black">
                 <div className="text-center">
                   <Slider {...settings}>
@@ -79,7 +79,7 @@ export default function Product({ product }) {
                 </div>
               </div>
               <div className="col-span-1 sm:col-span-3 sm:col-end-7 text-black dark:text-white">
-                <h1 className="text-4xl font-extrabold w-full">
+                <h1 className="mt-8 sm:mt-0 text-4xl font-extrabold w-full">
                   {product.name}
                 </h1>
                 <h2 className="mt-2 text-lg font-normal w-full whitespace-pre-line pb-6 border-b border-gray-100 dark:border-dark3">
@@ -99,7 +99,7 @@ export default function Product({ product }) {
                       value={quantity}
                       id="qty"
                       name="qty"
-                      className="p-2 inline w-fit rounded-md border border-gray-300 dark:border-dark3 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                      className="p-2 inline w-[100px] rounded-md border border-gray-300 dark:border-dark3 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       onChange={(e) => setQuantity(e.target.value)}
                     />
                   </div>

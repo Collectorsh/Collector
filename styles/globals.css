@@ -280,6 +280,10 @@ input:checked + .toggle-bg {
   @apply dark:bg-dark3;
 }
 
+.react-select__menu-list {
+  @apply dark:text-white;
+}
+
 .react-select__single-value {
   @apply dark:text-white;
 }

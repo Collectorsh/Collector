@@ -253,7 +253,7 @@ export default function Order() {
                         options={countryOptions}
                         value={country}
                         onChange={changeCountry}
-                        className={`bg-gray-100 dark:bg-dark3  mt-1 block w-full rounded-md shadow-sm sm:text-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+                        className={`bg-gray-100 dark:bg-dark3 mt-1 block w-full rounded-md shadow-sm sm:text-sm focus:border-indigo-500 focus:ring-indigo-500 ${
                           isError &&
                           isError === "country" &&
                           "border border-red-500"

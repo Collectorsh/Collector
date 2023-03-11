@@ -58,9 +58,6 @@ export default function MainNavigation() {
               </div>
               <div className="hidden md:flex text-right items-center col-span-1 justify-end w-full">
                 <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                  <Link href="/about">About</Link>
-                </p>
-                <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                   <Link href="/feed">Feed</Link>
                 </p>
                 <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
@@ -164,9 +161,6 @@ export default function MainNavigation() {
                             <div className="mt-6 dark:text-gray-200">
                               {!user && (
                                 <>
-                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/about">About</Link>
-                                  </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href="/feed">Feed</Link>
                                   </p>

@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { BellIcon, TrashIcon } from "@heroicons/react/solid";
 import updateFollowing from "/data/artists/updateFollowing";
 import unfollowArtist from "/data/artists/unfollowArtist";
 import FollowFilter from "/components/follow/ArtistFilter";
+import UserContext from "/contexts/user";
+import FollowingContext from "/contexts/following";
 
-export default function ArtistList({ following, handleFollow, user }) {
+export default function ArtistList() {
+  const [user] = useContext(UserContext);
+  const [following, setFollowing] = useContext(FollowingContext);
   const [followedArtists, setFollowedArtists] = useState(following);
 
   const changeStartNotify = async (artist, state) => {
@@ -14,7 +18,7 @@ export default function ArtistList({ following, handleFollow, user }) {
       state,
       "notify_start"
     );
-    handleFollow(res.following);
+    setFollowing(res.following);
   };
 
   const changeListingNotify = async (artist, state) => {
@@ -24,7 +28,7 @@ export default function ArtistList({ following, handleFollow, user }) {
       state,
       "notify_listing"
     );
-    handleFollow(res.following);
+    setFollowing(res.following);
   };
 
   const changeEditionNotify = async (artist, state) => {
@@ -34,7 +38,7 @@ export default function ArtistList({ following, handleFollow, user }) {
       state,
       "notify_edition"
     );
-    handleFollow(res.following);
+    setFollowing(res.following);
   };
 
   const changeEndNotify = async (artist, state) => {
@@ -44,12 +48,12 @@ export default function ArtistList({ following, handleFollow, user }) {
       state,
       "notify_end"
     );
-    handleFollow(res.following);
+    setFollowing(res.following);
   };
 
   const changeUnfollow = async (artist) => {
     const res = await unfollowArtist(user.api_key, artist);
-    handleFollow(res.following);
+    setFollowing(res.following);
   };
 
   function filteredResults(results) {

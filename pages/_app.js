@@ -13,6 +13,7 @@ import { SingleNftProvider } from "/contexts/single_nft";
 import { CartProvider } from "/contexts/cart";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import PlausibleProvider from "next-plausible";
+import Footer from "/components/Footer";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
@@ -62,7 +63,10 @@ export default function MyApp({ Component, pageProps }) {
                     <ThemeProvider enableSystem={true} attribute="class">
                       <PlausibleProvider domain="collector.sh">
                         <CartProvider>
-                          <Component {...pageProps} />
+                          <div className="min-h-[100vh]">
+                            <Component {...pageProps} />
+                          </div>
+                          <Footer />
                         </CartProvider>
                       </PlausibleProvider>
                     </ThemeProvider>

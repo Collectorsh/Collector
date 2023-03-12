@@ -60,13 +60,6 @@ export default function BuynowListings({ listings, user }) {
                         </p>
                       )}
                     </div>
-                    {user && user.token_holder && item.estimate && (
-                      <div className="absolute top-0 right-4">
-                        <p className="text-sm clear-both text-dark3 dark:text-gray-300 bg-whitish dark:bg-dark3 w-fit px-2 py-1 rounded mt-4">
-                          Estimate: ◎{roundToTwo(item.estimate / 1000000000)}
-                        </p>
-                      </div>
-                    )}
                   </div>
                   <div className="float-right">
                     <MarketplaceLogo source={item.source} color="white" />

@@ -33,21 +33,6 @@ export function sortListings(sortType, listings) {
       a.created_at < b.created_at ? 1 : b.created_at < a.created_at ? -1 : 0
     );
     return results;
-  } else if (sortType === "deals") {
-    for (const listing of clonedListings) {
-      if (
-        listing.estimate === null ||
-        typeof listing.estimate === "undefined"
-      ) {
-        listing.ratio = +Infinity;
-      } else {
-        listing.ratio = listing.amount / listing.estimate;
-      }
-    }
-    let results = clonedListings.sort((a, b) =>
-      a.ratio > b.ratio ? 1 : b.ratio > a.ratio ? -1 : 0
-    );
-    return results;
   }
 }
 

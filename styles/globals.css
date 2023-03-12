@@ -317,6 +317,17 @@ input:checked + .toggle-bg {
 .slick-next:before,
 .slick-prev:before {
   font-size: 30px;
+  @apply text-black dark:text-white;
+}
+
+.slick-prev {
+  top: 40%;
+  @apply -left-4;
+}
+
+.slick-next {
+  top: 40%;
+  @apply -right-4;
 }
 
 .slick-dots {

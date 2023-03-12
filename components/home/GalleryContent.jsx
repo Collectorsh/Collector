@@ -10,7 +10,7 @@ export default function GalleryContent({ name, items }) {
   return (
     <div
       id="feed"
-      className="mb-12 xl:mb-24 bg-gray-50 dark:bg-dark1 rounded-lg"
+      className="bg-gray-50 dark:bg-dark1 rounded-lg"
       style={{
         backgroundImage: `url(${
           items &&

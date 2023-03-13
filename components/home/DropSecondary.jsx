@@ -72,14 +72,14 @@ export default function DropSecondary() {
               {listings.map((l, index) => (
                 <div
                   key={index}
-                  className="overflow-hidden col-span-2 relative sm:h-[315px] px-4"
+                  className="overflow-hidden col-span-2 relative h-[375px] sm:h-[315px] px-4"
                 >
                   <Link href={marketplaceLink(l.source, l.mint)}>
                     <a>
                       <img
                         src={l.image}
                         alt=""
-                        className="object-center object-cover w-full mb-4 sm:h-[250px] border border-neutral-300 dark:border-neutral-800 rounded-xl"
+                        className="object-center object-cover w-full mb-4 h-[325px] sm:h-[250px] border border-neutral-300 dark:border-neutral-800 rounded-xl"
                       />
                     </a>
                   </Link>

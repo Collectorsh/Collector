@@ -12,14 +12,16 @@ export default function Home() {
   return (
     <div className="dark:bg-black">
       <MainNavigation />
-      <div className="w-full">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-8">
         <UpcomingDrop />
-        <div className="bg-gray-50 dark:bg-dark1">
+      </div>
+      <div className="bg-gray-50 dark:bg-dark1">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
           <DropSecondary />
         </div>
-        <div className="">
-          <Galleries />
-        </div>
+      </div>
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
+        <Galleries />
       </div>
     </div>
   );

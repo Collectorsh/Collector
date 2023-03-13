@@ -11,7 +11,9 @@ function Market({ name, drop }) {
           <Secondary drop={drop} />
         </>
       ) : (
-        <p className="mt-8">No drop found with the name {name}</p>
+        <p className="mt-8 max-w-screen-2xl mx-auto px-4 sm:px-8">
+          No drop found with the name {name}
+        </p>
       )}
     </div>
   );

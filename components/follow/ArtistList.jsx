@@ -61,7 +61,7 @@ export default function ArtistList() {
   }
 
   return (
-    <div className="dark:text-gray-200 leading-6 mb-6">
+    <div className="dark:text-gray-200 leading-6 pb-6">
       <FollowFilter following={following} filteredResults={filteredResults} />
       {following && following.length > 0 ? (
         <>

@@ -9,10 +9,10 @@ import FollowButton from "/components/FollowButton";
 import UserContext from "/contexts/user";
 
 export default function Details({ item }) {
-  const [user, setUser] = useContext(UserContext);
+  const [user] = useContext(UserContext);
 
   return (
-    <div className="relative border border-gray-100 dark:border-dark2 rounded p-4 shadow-lg lg:m-2 xl:m-4">
+    <div className="relative border border-gray-100 dark:border-dark2 rounded p-4 shadow-lg">
       <div className="float-left w-12/12">
         {item.twitter_profile_image && (
           <img

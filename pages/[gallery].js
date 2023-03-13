@@ -52,12 +52,12 @@ function Gallery({ user, tokens }) {
         )}
       </Head>
       {user ? <GalleryNavigation user={user} /> : <MainNavigation />}
-      <div className="mx-auto px-4 clear-both">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 clear-both">
         <div className="mx-auto pt-3">
           {tokens && user && <GalleryContainer tokens={tokens} user={user} />}
           {!user && (
             <div className="max-w-7xl mx-auto">
-              <p className="dark:text-gray-100">
+              <p className="dark:text-gray-100 pt-8">
                 We couldn&apos;t find a user with that name
               </p>
             </div>

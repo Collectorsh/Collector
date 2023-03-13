@@ -63,7 +63,7 @@ export default function MyApp({ Component, pageProps }) {
                     <ThemeProvider enableSystem={true} attribute="class">
                       <PlausibleProvider domain="collector.sh">
                         <CartProvider>
-                          <div className="min-h-[100vh]">
+                          <div className="min-h-[100vh] dark:bg-black dark:text-white">
                             <Component {...pageProps} />
                           </div>
                           <Footer />

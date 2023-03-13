@@ -48,8 +48,8 @@ export default function Activity() {
       {activity && (
         <Masonry
           breakpointCols={breakpointColumnsObj}
-          className="masonry-grid"
-          columnClassName="masonry-grid_column"
+          className="masonry-grid -ml-16"
+          columnClassName="masonry-grid_column pl-16"
         >
           {activity.map((item, index) => (
             <div key={index}>

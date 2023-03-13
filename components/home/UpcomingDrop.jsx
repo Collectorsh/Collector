@@ -48,8 +48,8 @@ export default function UpcomingDrop() {
   };
 
   return (
-    <div className="py-6 sm:py-12 mx-auto px-4 xl:px-0 dark:text-white">
-      <div className="max-w-7xl mx-auto min-h-[100vw] lg:min-h-[520px] xl:min-h-[550px]">
+    <div className="py-6 sm:py-12 mx-auto dark:text-white">
+      <div className="min-h-[100vw] lg:min-h-[520px] xl:min-h-[550px]">
         <div className="grid grid-cols-1 lg:grid-cols-12">
           <div className="lg:col-span-6">
             {images ? (

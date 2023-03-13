@@ -96,96 +96,90 @@ export default function Secondary({ drop }) {
                 backgroundSize: "cover",
               }}
             ></div>
-            <div className="max-w-7xl mx-auto">
-              <div className="px-4 xl:px-0 h-96 lg:h-80 relative">
-                {mints && (
-                  <img
-                    src={drop.image}
-                    className="w-24 h-24 sm:w-44 sm:h-44 object-center object-cover bg-white p-2 rounded-xl absolute top-4 sm:top-12"
-                  />
-                )}
-                <div className="hidden sm:block">
-                  <Link href={`/drops/${drop.slug}`}>
-                    <a className="absolute right-0 top-2 right-2 xl:right-0 w-fit bg-dark3 hover:bg-dark1 px-4 py-3 rounded-xl font-semibold text-white text-lg cursor-pointer">
-                      Back to Drop
-                    </a>
-                  </Link>
-                </div>
+            <div className="h-96 lg:h-80 relative max-w-screen-2xl mx-auto px-4 sm:px-8">
+              {mints && (
+                <img
+                  src={drop.image}
+                  className="w-24 h-24 sm:w-44 sm:h-44 object-center object-cover bg-white p-2 rounded-xl absolute top-4 sm:top-12"
+                />
+              )}
+              <div className="hidden sm:block">
+                <Link href={`/drops/${drop.slug}`}>
+                  <a className="absolute top-3 right-4 md:right-8 w-fit bg-dark3 hover:bg-dark1 px-4 py-3 rounded-xl font-semibold text-white text-lg cursor-pointer">
+                    Back to Drop
+                  </a>
+                </Link>
+              </div>
 
-                <div className="float-left mt-4 sm:mt-12 w-full">
-                  <div className="ml-28 sm:ml-48">
-                    <h1 className="text-3xl font-bold inline-block tracking-wide text-white">
-                      {drop.name}
-                    </h1>
-                    <p className="mt-4 text-white rounded xl:w-1/2">
-                      {drop.description.length > 250
-                        ? `${drop.description.slice(0, 250)}...`
-                        : drop.description}
-                    </p>
-                  </div>
-                  {stats && (
-                    <div className="absolute bottom-0 left-4 right-4 sm:w-fit sm:left-auto sm:right-auto my-4 text-black text-bold bg-white bg-opacity-60 rounded-lg">
-                      <div className="grid grid-cols-4 py-1">
-                        <div
-                          className="px-4 border-r"
-                          style={{ borderColor: "rgba(255, 255, 255, .2)" }}
-                        >
-                          <div className="text-sm mb-1">Items</div>
-                          <div className="text-lg">{mints && mints.length}</div>
-                        </div>
-                        <div
-                          className="px-4 border-r"
-                          style={{ borderColor: "rgba(255, 255, 255, .2)" }}
-                        >
-                          <div className="text-sm mb-1">Sales</div>
-                          <div className="text-lg">{stats.sales}</div>
-                        </div>
-                        <div
-                          className="px-4 border-r"
-                          style={{ borderColor: "rgba(255, 255, 255, .2)" }}
-                        >
-                          <div className="text-sm mb-1">Volume</div>
-                          <div className="text-lg">
-                            ◎{roundToTwo(stats.volume / 1000000000)}
-                          </div>
-                        </div>
-                        <div
-                          className="px-4 border-r"
-                          style={{ borderColor: "rgba(255, 255, 255, .2)" }}
-                        >
-                          <div className="text-sm mb-1">Listed</div>
-                          <div className="text-lg">{stats.listed}</div>
+              <div className="float-left mt-4 sm:mt-12 w-full">
+                <div className="ml-28 sm:ml-48">
+                  <h1 className="text-3xl font-bold inline-block tracking-wide text-white">
+                    {drop.name}
+                  </h1>
+                  <p className="mt-4 text-white rounded xl:w-1/2">
+                    {drop.description.length > 250
+                      ? `${drop.description.slice(0, 250)}...`
+                      : drop.description}
+                  </p>
+                </div>
+                {stats && (
+                  <div className="absolute bottom-0 left-4 right-4 sm:w-fit sm:left-auto sm:right-auto my-4 text-black text-bold bg-white bg-opacity-60 rounded-lg">
+                    <div className="grid grid-cols-4 py-1">
+                      <div
+                        className="px-4 border-r"
+                        style={{ borderColor: "rgba(255, 255, 255, .2)" }}
+                      >
+                        <div className="text-sm mb-1">Items</div>
+                        <div className="text-lg">{mints && mints.length}</div>
+                      </div>
+                      <div
+                        className="px-4 border-r"
+                        style={{ borderColor: "rgba(255, 255, 255, .2)" }}
+                      >
+                        <div className="text-sm mb-1">Sales</div>
+                        <div className="text-lg">{stats.sales}</div>
+                      </div>
+                      <div
+                        className="px-4 border-r"
+                        style={{ borderColor: "rgba(255, 255, 255, .2)" }}
+                      >
+                        <div className="text-sm mb-1">Volume</div>
+                        <div className="text-lg">
+                          ◎{roundToTwo(stats.volume / 1000000000)}
                         </div>
                       </div>
+                      <div
+                        className="px-4 border-r"
+                        style={{ borderColor: "rgba(255, 255, 255, .2)" }}
+                      >
+                        <div className="text-sm mb-1">Listed</div>
+                        <div className="text-lg">{stats.listed}</div>
+                      </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-          <div className="max-w-7xl mx-auto">
-            <div className="px-4 xl:px-0">
-              <div className="clear-both mt-12">
-                {mints ? (
-                  <InfiniteScroll
-                    dataLength={infiniteScrollItems.length}
-                    next={fetchData}
-                    hasMore={infiniteScrollItems.length !== mints.length}
-                  >
-                    <Items items={infiniteScrollItems} />
-                  </InfiniteScroll>
-                ) : (
-                  <div className="mt-4 w-[50px] mx-auto h-64">
-                    <Oval
-                      color="#fff"
-                      secondaryColor="#000"
-                      height={50}
-                      width={50}
-                    />
-                  </div>
-                )}
+          <div className="clear-both mt-12 max-w-screen-2xl mx-auto px-4 sm:px-8">
+            {mints ? (
+              <InfiniteScroll
+                dataLength={infiniteScrollItems.length}
+                next={fetchData}
+                hasMore={infiniteScrollItems.length !== mints.length}
+              >
+                <Items items={infiniteScrollItems} />
+              </InfiniteScroll>
+            ) : (
+              <div className="mt-4 w-[50px] mx-auto h-64">
+                <Oval
+                  color="#fff"
+                  secondaryColor="#000"
+                  height={50}
+                  width={50}
+                />
               </div>
-            </div>
+            )}
           </div>
         </>
       )}

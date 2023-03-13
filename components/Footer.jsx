@@ -3,13 +3,13 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <div className="bg-neutral-800 text-white dark:bg-[#080808] border-t border-neutral-800">
-      <div className="max-w-7xl mx-auto pt-16 px-4 xl:px-0">
+      <div className="pt-16 max-w-screen-2xl mx-auto px-4 sm:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 pb-4">
           <div>
             <h1 className="col-span-2 sm:col-span-1 text-2xl">Collector</h1>
-            <p>Collect, Discover &amp; Share Art on Solana</p>
+            <p className="mt-2">Collect, Discover &amp; Share Art on Solana</p>
           </div>
-          <div className="mt-4 sm:mt-0 col-span-2 sm:col-span-1 align-right">
+          <div className="mt-8 sm:mt-0 col-span-2 sm:col-span-1 align-right">
             <div className="float-left sm:float-right">
               <Link href="/about">
                 <a className="inline mr-6">About</a>

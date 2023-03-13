@@ -24,8 +24,8 @@ export default function Artists() {
     <>
       <Toaster />
       <div>
-        <div className="mt=8 lg:mt-16">
-          <div className="mb-6">
+        <div className="mt-8 lg:mt-16">
+          <div className="pb-6">
             <ArtistSearch user={user} />
           </div>
           {following && <ArtistList />}

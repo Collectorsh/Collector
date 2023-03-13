@@ -289,7 +289,15 @@ const Visible = ({ items, columns, bulkEdit }) => {
               mint={token.mint}
               uri={token.uri}
               index={index}
-              height={columns === 3 ? 250 : columns === 4 ? 200 : 150}
+              height={
+                columns === 2
+                  ? 350
+                  : columns === 3
+                  ? 250
+                  : columns === 4
+                  ? 200
+                  : 150
+              }
               section="visible"
               bulkEdit={bulkEdit}
             />

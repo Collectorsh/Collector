@@ -90,9 +90,9 @@ export default function DropSecondary() {
                         <div className="inline middle">
                           ◎{roundToTwo(l.amount / 1000000000)}
                         </div>
-                        <div className="inline ml-1 middle">
+                        {/* <div className="inline ml-1 middle">
                           <MarketplaceLogo source={l.source} />
-                        </div>
+                        </div> */}
                       </a>
                     </Link>
                   </div>

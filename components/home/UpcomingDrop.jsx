@@ -25,7 +25,7 @@ export default function UpcomingDrop() {
     for (const i of imgs) {
       if (i.Size > 100) imgArray.push(i.Key);
     }
-    setImages(imgArray);
+    setImages(imgArray.slice(0, 5));
   }, []);
 
   useEffect(() => {

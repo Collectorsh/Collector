@@ -49,7 +49,7 @@ export default function Nft({ user, token }) {
                   loop
                   playsInline
                   id="video"
-                  className="w-100 h-100 cursor-pointer object-center object-cover"
+                  className="mx-auto w-100 h-100 cursor-pointer object-center object-cover"
                   onLoadedData={onImageLoad}
                 >
                   <source src={videoUrl} type="video/mp4" />
@@ -66,7 +66,7 @@ export default function Nft({ user, token }) {
               <img
                 src={cdnImage(token.mint)}
                 onLoad={onImageLoad}
-                className="cursor-pointer object-center object-cover"
+                className="mx-auto cursor-pointer object-center object-cover"
                 onError={(e) => addDefaultSource(e, token.mint, token.image)}
               />
             )}

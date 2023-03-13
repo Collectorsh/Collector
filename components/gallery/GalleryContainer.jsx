@@ -20,10 +20,10 @@ export default function GalleryContainer({ tokens, user }) {
       <div className="clear-both">
         <Masonry
           breakpointCols={breakpointColumnsObj}
-          className={`masonry-grid ${columns === 2 && "-ml-20"} ${
+          className={`masonry-grid ${columns === 2 && "-ml-24"} ${
             columns === 3 && "-ml-16"
           } ${columns === 4 && "-ml-10"} ${columns === 5 && "-ml-8"}`}
-          columnClassName={`masonry-grid_column ${columns === 2 && "pl-20"} ${
+          columnClassName={`masonry-grid_column ${columns === 2 && "pl-24"} ${
             columns === 3 && "pl-16"
           } ${columns === 4 && "pl-10"} ${columns === 5 && "pl-8"}`}
         >

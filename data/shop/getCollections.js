@@ -1,15 +1,15 @@
 import apiClient from "/data/client/apiClient";
 
-async function getProducts(uuid) {
+async function getCollections() {
   const res = await apiClient.post(
-    "/products/products",
-    { uuid: uuid },
+    "/products/collections",
+    {},
     {
       "Content-Type": "application/json",
       Accept: "application/json",
     }
   );
-  return res.data.products;
+  return res.data.collections;
 }
 
-export default getProducts;
+export default getCollections;

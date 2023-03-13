@@ -1,5 +1,5 @@
 import MainNavigation from "/components/navigation/MainNavigation";
-import Shop from "/components/shop/Shop";
+import Collections from "/components/shop/Collections";
 import ShopTitle from "/components/shop/ShopTitle";
 
 export default function ShopHome() {
@@ -9,7 +9,7 @@ export default function ShopHome() {
       <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-8">
         <ShopTitle />
         <div className="w-full pb-12">
-          <Shop />
+          <Collections />
         </div>
       </div>
     </div>

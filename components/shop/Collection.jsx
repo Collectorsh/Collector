@@ -5,25 +5,23 @@ import UserContext from "/contexts/user";
 import CartIcon from "/components/shop/CartIcon";
 import getProducts from "/data/shop/getProducts";
 
-export default function Shop() {
+export default function Collection({ collection }) {
   const [user] = useContext(UserContext);
   const [products, setProducts] = useState();
 
-  const initGetProducts = useCallback(async () => {
-    let res = await getProducts();
+  const initGetProducts = useCallback(async (collection) => {
+    let res = await getProducts(collection.uuid);
     setProducts(res);
   }, []);
 
   useEffect(() => {
-    initGetProducts();
+    initGetProducts(collection);
   }, []);
 
   return (
     <div className="mb-12">
       <>
-        <div className="absolute right-2 sm:right-4 xl:right-0 top-3 sm:top-20">
-          <CartIcon />
-        </div>
+        <CartIcon showBack={true} showCart={true} />
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
           {products &&
             products.map((product, index) => (

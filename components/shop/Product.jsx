@@ -1,5 +1,4 @@
 import React, { useEffect, useContext, useState } from "react";
-import Link from "next/link";
 import CartContext from "/contexts/cart";
 import CartIcon from "/components/shop/CartIcon";
 import { roundToTwo } from "/utils/roundToTwo";
@@ -43,16 +42,7 @@ export default function Product({ product }) {
 
   return (
     <>
-      <div className="absolute right-2 sm:right-4 xl:right-0 top-3 sm:top-20">
-        <CartIcon />
-        <Link href="/shop" title="">
-          <a>
-            <div className="bg-greeny rounded-3xl px-3 py-3 font-bold w-fit cursor-pointer inline">
-              &lt;&lt; Back
-            </div>
-          </a>
-        </Link>
-      </div>
+      <CartIcon showBack={true} showCart={true} />
       <div className="mb-8"></div>
       {productAvailable && (
         <>

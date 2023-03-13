@@ -57,7 +57,7 @@ export default function DropSecondary() {
             {listings.map((l, index) => (
               <div
                 key={index}
-                className="overflow-hidden relative h-[375px] sm:h-[315px] w-[375px] sm:w-[315px] px-4"
+                className="overflow-hidden relative h-[385px] sm:h-[315px] w-[375px] sm:w-[315px] px-4"
               >
                 <Link href={marketplaceLink(l.source, l.mint)}>
                   <a>

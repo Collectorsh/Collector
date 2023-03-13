@@ -59,7 +59,7 @@ export default function GalleryContent({ name, items }) {
               {items.map((item, index) => (
                 <div
                   key={index}
-                  className="overflow-hidden relative h-[375px] sm:h-[315px] w-[375px] sm:w-[315px] px-4"
+                  className="overflow-hidden relative h-[385px] sm:h-[315px] w-[375px] sm:w-[315px] px-4"
                 >
                   <div className="rounded-lg overflow-hidden">
                     <Link href={`/${item.username}`}>

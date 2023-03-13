@@ -7,8 +7,7 @@ export default function GalleryContainer({ tokens, user }) {
     if (!user) return;
   }, [user]);
 
-  // const columns = user && user.columns ? user.columns : 3;
-  const columns = 2;
+  const columns = user && user.columns ? user.columns : 3;
 
   const breakpointColumnsObj = {
     default: columns,

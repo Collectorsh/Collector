@@ -49,10 +49,13 @@ export default function MintedModal({ open, nft, updateOpen }) {
               />
               <div className="bg-white dark:bg-dark3 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-black dark:text-white">
-                    You Minted 🥳
+                  <p className="text-3xl text-black dark:text-white">
+                    Congratulations 🥳
                   </p>
-                  <p className="mt-6 text-black dark:text-white text-xl">
+                  <p className="mt-2 text-black dark:text-white text-lg">
+                    You minted
+                  </p>
+                  <p className="mt-1 text-black dark:text-white text-xl font-bold">
                     {nft && nft.json.name}
                   </p>
                   <img

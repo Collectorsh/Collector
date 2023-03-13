@@ -10,14 +10,13 @@ import { Oval } from "react-loader-spinner";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import MintedModal from "/components/MintedModal";
 import { ArrowRightIcon } from "@heroicons/react/outline";
-import { toDate } from "/utils/mint/utils";
 
 export default function PublicMint({ address, drop }) {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [total, setTotal] = useState(0);
   const [remaining, setRemaining] = useState();
-  const [itemsMinted, setItemsMinted] = useState();
+  const [itemsMinted, setItemsMinted] = useState(0);
   const [mintState, setMintState] = useState();
   const [isMinting, setIsMinting] = useState(false);
   const [cost, setCost] = useState();
@@ -175,19 +174,19 @@ export default function PublicMint({ address, drop }) {
             </p>
           )}
           {mintState === "pre" && (
-            <>
+            <div>
               <div className="inline">Starts in </div>
               <MintCountdown
-                date={toDate(publicStartDate)}
+                date={new Date(publicStartDate)}
                 style={{
                   justifyContent: "flex-start",
                   marginBottom: "1rem",
                   display: "inline-flex",
                 }}
               />
-            </>
+            </div>
           )}
-          {itemsMinted && total && (
+          {total && (
             <>
               <p className="my-2 font-semibold text-neutral-700 dark:text-neutral-200">
                 {Math.round((itemsMinted / total) * 100)}% minted{" "}

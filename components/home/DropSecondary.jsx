@@ -1,54 +1,41 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import getDropSecondary from "/data/home/getDropSecondary";
-import Slider from "react-slick";
 import { marketplaceLink } from "/utils/marketplaceHelpers";
-import MarketplaceLogo from "/components/MarketplaceLogo";
 import { roundToTwo } from "/utils/roundToTwo";
 import { ArrowRightIcon } from "@heroicons/react/outline";
+import ContentLoader from "react-content-loader";
 
 export default function DropSecondary() {
   const [listings, setListings] = useState();
 
-  const settings = {
-    dots: false,
-    arrows: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3500,
-    responsive: [
-      {
-        breakpoint: 1200,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 800,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
-
   const fetchDropSecondary = useCallback(async () => {
     let res = await getDropSecondary();
-    setListings(res.data.sort(() => 0.5 - Math.random()).slice(0, 20));
+    if (res) setListings(res.data.sort(() => 0.5 - Math.random()).slice(0, 20));
   }, []);
 
   useEffect(() => {
     fetchDropSecondary();
   }, []);
+
+  const loadingImages = () => {
+    var rows = [];
+    for (var i = 0; i < 10; i++) {
+      rows.push(
+        <div className="overflow-hidden relative h-[375px] sm:h-[315px] w-[375px] sm:w-[315px] px-4">
+          <ContentLoader
+            speed={2}
+            className="w-full mb-4 h-[325px] sm:h-[250px] border border-neutral-300 dark:border-neutral-800 rounded-xl"
+            backgroundColor="#bbbbbb"
+            foregroundColor="#aaaaaa"
+          >
+            <rect className="w-full mb-4 h-[325px] sm:h-[250px] border border-neutral-300 dark:border-neutral-800 rounded-xl" />
+          </ContentLoader>
+        </div>
+      );
+    }
+    return rows;
+  };
 
   return (
     <div className="clear-both mx-4 xl:mx-0 py-6">
@@ -65,14 +52,13 @@ export default function DropSecondary() {
             aria-hidden="true"
           />
         </p>
-        <div className="mt-6"></div>
-        {listings && (
-          <>
-            <Slider {...settings}>
+        <div className="grid grid-flow-col grid-cols-card auto-cols-card py-4 gap-6 overflow-x-auto items-start mt-6">
+          {listings ? (
+            <>
               {listings.map((l, index) => (
                 <div
                   key={index}
-                  className="overflow-hidden col-span-2 relative h-[375px] sm:h-[315px] px-4"
+                  className="overflow-hidden relative h-[375px] sm:h-[315px] w-[375px] sm:w-[315px] px-4"
                 >
                   <Link href={marketplaceLink(l.source, l.mint)}>
                     <a>
@@ -90,17 +76,16 @@ export default function DropSecondary() {
                         <div className="inline middle">
                           ◎{roundToTwo(l.amount / 1000000000)}
                         </div>
-                        {/* <div className="inline ml-1 middle">
-                          <MarketplaceLogo source={l.source} />
-                        </div> */}
                       </a>
                     </Link>
                   </div>
                 </div>
               ))}
-            </Slider>
-          </>
-        )}
+            </>
+          ) : (
+            <>{loadingImages()}</>
+          )}
+        </div>
       </div>
     </div>
   );

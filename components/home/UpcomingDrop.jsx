@@ -3,15 +3,18 @@ import Link from "next/link";
 import Slider from "react-slick";
 import { fetchImages } from "/hooks/fetchImages";
 import getAllDrops from "/data/drops/getAllDrops";
+import ContentLoader from "react-content-loader";
 
 export default function UpcomingDrop() {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState();
   const [drop, setDrop] = useState();
 
   const asyncGetDrop = useCallback(async () => {
     let drops = await getAllDrops();
-    let d = drops.filter((d) => d.highlight === true)[0];
-    setDrop(d);
+    if (drops) {
+      let d = drops.filter((d) => d.highlight === true)[0];
+      setDrop(d);
+    }
   }, []);
 
   useEffect(() => {
@@ -49,7 +52,7 @@ export default function UpcomingDrop() {
       <div className="max-w-7xl mx-auto min-h-[100vw] lg:min-h-[520px] xl:min-h-[550px]">
         <div className="grid grid-cols-1 lg:grid-cols-12">
           <div className="lg:col-span-6">
-            {images && (
+            {images ? (
               <div className="text-center">
                 <Slider {...settings}>
                   {images.map((image, index) => (
@@ -68,6 +71,15 @@ export default function UpcomingDrop() {
                   ))}
                 </Slider>
               </div>
+            ) : (
+              <ContentLoader
+                speed={2}
+                className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] rounded-xl"
+                backgroundColor="#bbbbbb"
+                foregroundColor="#aaaaaa"
+              >
+                <rect className="w-full h-[100vw] lg:h-[520px] xl:h-[550px]" />
+              </ContentLoader>
             )}
           </div>
           {drop && (

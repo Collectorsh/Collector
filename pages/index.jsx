@@ -14,11 +14,11 @@ export default function Home() {
       <MainNavigation />
       <div className="w-full">
         <UpcomingDrop />
-        <div className="bg-neutral-100 dark:bg-dark1 border-t border-b border-neutral-300 dark:border-neutral-800">
-          <Galleries />
+        <div className="bg-gray-50 dark:bg-dark1">
+          <DropSecondary />
         </div>
         <div className="">
-          <DropSecondary />
+          <Galleries />
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        gallery_background: "#17132E",
         lellow: "#FDD513",
         blu: "#27CFF1",
         burple: "#9946ff",

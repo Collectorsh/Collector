@@ -16,10 +16,12 @@ export default function Tools() {
       </div>
       <div className="col-span-2">
         <div className="bg-gallery_background dark:bg-dark1 rounded-3xl p-6">
-          <h2 className="text-white text-xl">
-            <PhotographIcon className="h-6 w-6 inline mr-1" />
-            <span className="align-middle">Gallery</span>
-          </h2>
+          <div className="align-middle">
+            <PhotographIcon className="h-6 w-6 inline mr-1 align-middle text-white" />
+            <h2 className="text-white text-xl font-semibold inline align-middle">
+              Gallery
+            </h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
             <div className="mt-8">
               <p className="text-white text-sm font-bold">
@@ -41,13 +43,15 @@ export default function Tools() {
         </div>
 
         <div className="mt-8 bg-gray-200 dark:bg-dark2 rounded-3xl px-6 pt-6">
-          <h2 className="text-black dark:text-white text-xl">
-            <CollectionIcon className="h-6 w-6 inline mr-1" />
-            <span className="align-middle">Feed</span>
-          </h2>
+          <div className="align-middle">
+            <CollectionIcon className="h-6 w-6 inline mr-1 align-middle" />
+            <h2 className="text-black dark:text-white text-xl font-semibold inline align-middle">
+              Feed
+            </h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 pb-0">
             <div className="mt-8 col-span-1">
-              <p className="text-black dark:text-white">
+              <div className="text-black dark:text-white">
                 <div className="font-semibold">
                   See what other Collectors are
                 </div>
@@ -59,7 +63,7 @@ export default function Tools() {
                 <div className="text-2xl mt-1 inline md:block ml-1 md:ml-0">
                   Bidding on
                 </div>
-              </p>
+              </div>
               <div className="mt-8 block">
                 <Link href="/feed">
                   <a className="py-3.5 px-4 text-lg rounded-3xl bg-black text-white dark:bg-whitish dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold">

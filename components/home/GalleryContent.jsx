@@ -12,7 +12,10 @@ export default function GalleryContent({ name, items }) {
     var rows = [];
     for (var i = 0; i < 8; i++) {
       rows.push(
-        <div className="overflow-hidden relative h-[375px] sm:h-[315px] w-[375px] sm:w-[315px] px-4">
+        <div
+          key={i}
+          className="overflow-hidden relative h-[375px] sm:h-[315px] w-[375px] sm:w-[315px] px-4"
+        >
           <ContentLoader
             speed={2}
             className="w-full mb-4 h-[325px] sm:h-[250px] border border-neutral-300 dark:border-neutral-800 rounded-xl"

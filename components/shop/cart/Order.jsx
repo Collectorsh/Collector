@@ -170,14 +170,14 @@ export default function Order() {
       <Toaster />
       <div className="overflow-hidden shadow sm:rounded-md mb-12">
         {transactionComplete ? (
-          <div className="dark:bg-dark1 dark:text-white px-4 py-5 sm:p-6">
+          <div className="dark:bg-dark1 dark:text-white py-5 sm:p-6">
             <h2 className="text-3xl font-extrabold mb-4 w-full">Thank You!</h2>
             <p className="text-2xl mt-6">
               Order Number: {orderNumber && orderNumber}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-12 px-4 xl:px-0">
+          <div className="grid grid-cols-1 sm:grid-cols-12">
             <div className="col-span-1 sm:col-span-5">
               <div className="overflow-hidden shadow sm:rounded-md">
                 <div className="dark:bg-dark1 dark:text-white px-4 py-5 sm:p-6">

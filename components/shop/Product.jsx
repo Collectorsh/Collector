@@ -47,20 +47,20 @@ export default function Product({ product }) {
       {productAvailable && (
         <>
           {productAvailable === true ? (
-            <div className="grid grid-cols-1 sm:grid-cols-6 mx-4 xl:mx-0 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-6 pb-6">
               <div className="col-span-1 sm:col-span-2 bg-white dark:bg-black">
-                <div className="text-center">
+                <div className="w-full">
                   <Slider {...settings}>
                     {eval(product.images).map((image, index) => (
                       <>
                         <div
                           key={index}
-                          className="overflow-hidden col-span-2 relative -mt-2"
+                          className="w-full col-span-2 relative -mt-2"
                         >
                           <img
                             src={`https://cdn.collector.sh/${image}`}
                             alt=""
-                            className="h-full w-full object-cover object-center lg:h-full lg:w-full rounded-md"
+                            className="w-full object-cover object-center rounded-md"
                           />
                         </div>
                       </>

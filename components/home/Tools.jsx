@@ -60,7 +60,7 @@ export default function Tools() {
                   Bidding on
                 </div>
               </p>
-              <div className="mt-8 md:mt-12 block">
+              <div className="mt-8 block">
                 <Link href="/feed">
                   <a className="py-3.5 px-4 text-lg rounded-3xl bg-black text-white dark:bg-whitish dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold">
                     See More
@@ -68,7 +68,7 @@ export default function Tools() {
                 </Link>
               </div>
             </div>
-            <div className="-mt-12 col-span-2">
+            <div className="mt-4 md:-mt-12 col-span-1 md:col-span-2">
               <img src="/images/feed.png" />
             </div>
           </div>

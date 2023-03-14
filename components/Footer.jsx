@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 pb-4">
           <div>
             <h1 className="col-span-2 sm:col-span-1 text-2xl">Collector</h1>
-            <p className="mt-2">Collect, Discover &amp; Share Art on Solana</p>
+            <p className="mt-2">Discover, Collect, &amp; Share Art on Solana</p>
           </div>
           <div className="mt-8 sm:mt-0 col-span-2 sm:col-span-1 align-right">
             <div className="float-left sm:float-right">

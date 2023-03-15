@@ -4,19 +4,19 @@ async function verifyPurchase(
   api_key,
   amount,
   signature,
-  publicKey,
   order,
-  address
+  address,
+  publicKey
 ) {
   const res = await apiClient.post(
     "/purchase/verify",
     {
       api_key: api_key,
-      amount: amount,
+      amount,
       signature: signature,
-      public_key: publicKey,
       order: order,
       address: address,
+      public_key: publicKey,
     },
     {
       "Content-Type": "application/json",

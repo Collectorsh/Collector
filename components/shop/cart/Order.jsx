@@ -13,7 +13,6 @@ import {
   PublicKey,
   Connection,
 } from "@solana/web3.js";
-import { toPublicKey } from "/config/settings";
 import verifyPurchase from "/data/shop/verifyPurchase";
 import { TrashIcon } from "@heroicons/react/outline";
 import Select from "react-select";
@@ -27,6 +26,7 @@ export default function Order() {
   const { setVisible } = useWalletModal();
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState();
+  const [toPay, setToPay] = useState();
   const [transactionComplete, setTransactionComplete] = useState();
   const [orderNumber, setOrderNumber] = useState();
   const [isError, setIsError] = useState();
@@ -34,11 +34,20 @@ export default function Order() {
   const countryOptions = useMemo(() => countryList().getData(), []);
 
   useEffect(() => {
-    const ttl = 0;
-    for (const i of cart) {
-      ttl += i.product.lamports * i.qty;
+    const cItems = [];
+    const grandTotal = 0;
+    const wallets = [...new Set(cart.map((c) => c.wallet))];
+    for (const w of wallets) {
+      const items = cart.filter((c) => c.wallet === w);
+      const ttl = 0;
+      for (const i of items) {
+        ttl += i.product.lamports * i.qty;
+      }
+      grandTotal += ttl;
+      cItems.push({ wallet: w, total: ttl });
     }
-    setTotal(ttl);
+    setToPay(cItems);
+    setTotal(grandTotal);
   }, [cart]);
 
   const validateForm = async () => {
@@ -110,13 +119,17 @@ export default function Order() {
     }
 
     try {
-      const transaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: publicKey,
-          toPubkey: new PublicKey(toPublicKey),
-          lamports: total,
-        })
-      );
+      const transaction = new Transaction();
+
+      for (const pay of toPay) {
+        transaction.add(
+          SystemProgram.transfer({
+            fromPubkey: publicKey,
+            toPubkey: new PublicKey(pay.wallet),
+            lamports: pay.total,
+          })
+        );
+      }
 
       const signature = await sendTransaction(transaction, connection);
 
@@ -125,16 +138,22 @@ export default function Order() {
       const items = [];
 
       for (const c of cart) {
-        items.push({ id: c.product.id, qty: c.qty, size: c.size });
+        items.push({
+          id: c.product.id,
+          qty: c.qty,
+          size: c.size,
+          collection: c.collection,
+          wallet: c.wallet,
+        });
       }
 
       const res = await verifyPurchase(
         user.api_key,
         total,
         signature,
-        publicKey,
         items,
-        form.address
+        form.address,
+        publicKey.toBase58()
       );
 
       setLoading(false);

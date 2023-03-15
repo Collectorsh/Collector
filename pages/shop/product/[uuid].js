@@ -3,14 +3,14 @@ import ShopTitle from "/components/shop/ShopTitle";
 import Product from "/components/shop/Product";
 import getProduct from "/data/shop/getProduct";
 
-function ProductHome({ product }) {
+function ProductHome({ product, collection, wallet }) {
   return (
     <div className="dark:bg-black">
       <MainNavigation />
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 relative">
         <ShopTitle />
         <div className="w-full pb-3">
-          <Product product={product} />
+          <Product product={product} collection={collection} wallet={wallet} />
         </div>
       </div>
     </div>
@@ -22,7 +22,9 @@ export async function getServerSideProps(context) {
     let uuid = context.params.uuid;
     let res = await getProduct(uuid);
     let product = res.product;
-    return { props: { product } };
+    let collection = res.collection;
+    let wallet = res.wallet;
+    return { props: { product, collection, wallet } };
   } catch (err) {
     console.log(err);
     return { props: {} };

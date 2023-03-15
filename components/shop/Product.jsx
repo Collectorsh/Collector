@@ -4,7 +4,7 @@ import CartIcon from "/components/shop/CartIcon";
 import { roundToTwo } from "/utils/roundToTwo";
 import Slider from "react-slick";
 
-export default function Product({ product }) {
+export default function Product({ product, collection, wallet }) {
   const [productAvailable, setProductAvailable] = useState();
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState(eval(product.sizes)[0]);
@@ -14,7 +14,7 @@ export default function Product({ product }) {
     setProductAvailable(true);
   }, [product]);
 
-  const addToCart = (product) => {
+  const addToCart = (product, collection) => {
     const newCart = [
       ...cart,
       ...[
@@ -22,6 +22,8 @@ export default function Product({ product }) {
           qty: Number(quantity),
           size: size,
           product: product,
+          collection: collection,
+          wallet: wallet,
           id: Math.random().toString(36).slice(2, 7),
         },
       ],
@@ -111,7 +113,7 @@ export default function Product({ product }) {
                 </div>
                 <button
                   className="mt-4 bg-greeny rounded-3xl px-3 py-2 font-bold w-fit cursor-pointer text-black"
-                  onClick={() => addToCart(product)}
+                  onClick={() => addToCart(product, collection)}
                 >
                   <span>add to cart</span>
                 </button>

@@ -29,7 +29,7 @@ export default function Collection({ collection }) {
                 key={index}
                 className="mx-auto hover:cursor-pointer border-2 p-2 hover:bg-greenlightbg hover:dark:bg-greendarkbg hover:border-greeny hover:dark:border-greeny border-white dark:border-black text-gray-700 dark:text-white hover:dark:text-white"
               >
-                <div className="w-full sm:w-[300px] h-full sm:h-[350px] bg-white dark:bg-black">
+                <div className="w-full sm:w-[300px] h-full sm:h-[350px]">
                   <Link
                     href={`/shop/product/${product.uuid}`}
                     title=""
@@ -44,13 +44,11 @@ export default function Collection({ collection }) {
                     </a>
                   </Link>
                 </div>
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-lg">
-                      <span aria-hidden="true" className="" />
-                      {product.name}
-                    </h3>
-                  </div>
+                <div className="mt-4">
+                  <h3 className="">
+                    <span aria-hidden="true" className="" />
+                    {product.name}
+                  </h3>
                   <p className="text-lg font-medium ">
                     ◎{roundToTwo(product.lamports / 1000000000)}{" "}
                   </p>

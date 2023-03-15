@@ -4,7 +4,6 @@ import Collection from "/components/shop/Collection";
 import getCollection from "/data/shop/getCollection";
 
 function CollectionHome({ collection }) {
-  console.log(collection);
   return (
     <div className="dark:bg-black">
       <MainNavigation />

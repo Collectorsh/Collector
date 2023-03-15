@@ -111,12 +111,16 @@ export default function Product({ product, collection, wallet }) {
                     </select>
                   </div>
                 </div>
-                <button
-                  className="mt-4 bg-greeny rounded-3xl px-3 py-2 font-bold w-fit cursor-pointer text-black"
-                  onClick={() => addToCart(product, collection)}
-                >
-                  <span>add to cart</span>
-                </button>
+                {product.supply === 0 ? (
+                  <p className="mt-4 font-bold">SOLD OUT</p>
+                ) : (
+                  <button
+                    className="mt-4 bg-greeny rounded-3xl px-3 py-2 font-bold w-fit cursor-pointer text-black"
+                    onClick={() => addToCart(product, collection)}
+                  >
+                    <span>add to cart</span>
+                  </button>
+                )}
               </div>
             </div>
           ) : (

@@ -27,23 +27,36 @@ export default function Collection({ collection }) {
             products.map((product, index) => (
               <div
                 key={index}
-                className="mx-auto hover:cursor-pointer border-2 p-2 hover:bg-greenlightbg hover:dark:bg-greendarkbg hover:border-greeny hover:dark:border-greeny border-white dark:border-black text-gray-700 dark:text-white hover:dark:text-white"
+                className="mx-auto border-2 p-2 hover:bg-greenlightbg hover:dark:bg-greendarkbg hover:border-greeny hover:dark:border-greeny border-white dark:border-black text-gray-700 dark:text-white hover:dark:text-white"
               >
-                <div className="w-full sm:w-[300px] h-full sm:h-[350px]">
-                  <Link
-                    href={`/shop/product/${product.uuid}`}
-                    title=""
-                    key={index}
-                  >
-                    <a>
-                      <img
-                        src={eval(product.images)[0]}
-                        alt={product.name}
-                        className="object-cover object-center rounded-md w-full h-full"
-                      />
-                    </a>
-                  </Link>
-                </div>
+                {product.supply === 0 ? (
+                  <div className="w-full sm:w-[300px] h-full sm:h-[350px] relative">
+                    <img
+                      src={eval(product.images)[0]}
+                      alt={product.name}
+                      className="object-cover object-center rounded-md w-full h-full"
+                    />
+                    <div className="absolute left-0 right-0 bottom-0 bg-yellow-100 text-orange-600 font-bold text-2xl">
+                      <div className="w-fit mx-auto">SOLD OUT</div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-full sm:w-[300px] h-full sm:h-[350px] cursor-pointer">
+                    <Link
+                      href={`/shop/product/${product.uuid}`}
+                      title=""
+                      key={index}
+                    >
+                      <a>
+                        <img
+                          src={eval(product.images)[0]}
+                          alt={product.name}
+                          className="object-cover object-center rounded-md w-full h-full"
+                        />
+                      </a>
+                    </Link>
+                  </div>
+                )}
                 <div className="mt-4">
                   <h3 className="">
                     <span aria-hidden="true" className="" />

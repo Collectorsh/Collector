@@ -82,6 +82,7 @@ async function getMetadataFromMint(mint) {
     if (resp.data[0]) {
       single.artist_name = resp.data[0].name;
       single.artist_twitter = resp.data[0].twitter;
+      single.artist_twitter_image = resp.data[0].twitter_profile_image;
     }
   }
 

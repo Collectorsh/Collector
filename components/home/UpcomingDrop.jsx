@@ -4,16 +4,22 @@ import Slider from "react-slick";
 import { fetchImages } from "/hooks/fetchImages";
 import getAllDrops from "/data/drops/getAllDrops";
 import ContentLoader from "react-content-loader";
+import GalleryImages from "/components/home/GalleryImages";
 
 export default function UpcomingDrop() {
   const [images, setImages] = useState();
   const [drop, setDrop] = useState();
+  const [showGalleries, setShowGalleries] = useState(false);
 
   const asyncGetDrop = useCallback(async () => {
     let drops = await getAllDrops();
     if (drops) {
       let d = drops.filter((d) => d.highlight === true)[0];
-      setDrop(d);
+      if (d) {
+        setDrop(d);
+      } else {
+        setShowGalleries(true);
+      }
     }
   }, []);
 
@@ -50,55 +56,59 @@ export default function UpcomingDrop() {
   return (
     <div className="py-6 sm:py-12 mx-auto dark:text-white">
       <div className="min-h-[100vw] lg:min-h-[520px] xl:min-h-[550px]">
-        <div className="grid grid-cols-1 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            {images ? (
-              <div className="text-center">
-                <Slider {...settings}>
-                  {images.map((image, index) => (
-                    <>
-                      <div
-                        key={index}
-                        className="overflow-hidden col-span-2 relative -mt-2"
-                      >
-                        <img
-                          src={`https://cdn.collector.sh/${image}`}
-                          alt=""
-                          className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover rounded-lg"
-                        />
-                      </div>
-                    </>
-                  ))}
-                </Slider>
+        {showGalleries ? (
+          <GalleryImages />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-12">
+            <div className="lg:col-span-6">
+              {images ? (
+                <div className="text-center">
+                  <Slider {...settings}>
+                    {images.map((image, index) => (
+                      <>
+                        <div
+                          key={index}
+                          className="overflow-hidden col-span-2 relative -mt-2"
+                        >
+                          <img
+                            src={`https://cdn.collector.sh/${image}`}
+                            alt=""
+                            className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover rounded-lg"
+                          />
+                        </div>
+                      </>
+                    ))}
+                  </Slider>
+                </div>
+              ) : (
+                <ContentLoader
+                  speed={2}
+                  className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] rounded-xl"
+                  backgroundColor="#bbbbbb"
+                  foregroundColor="#aaaaaa"
+                >
+                  <rect className="w-full h-[100vw] lg:h-[520px] xl:h-[550px]" />
+                </ContentLoader>
+              )}
+            </div>
+            {drop && (
+              <div className="mt-6 lg:mt-0 lg:col-span-5 lg:col-end-13">
+                <p>{drop.date}</p>
+                <h2 className="align-middle sm:inline sm:my-5 text-4xl font-bold w-full py-1 inline-block">
+                  {drop.name}
+                </h2>
+                <p className="mt-4">{drop.description}</p>
+                <div className="mt-8">
+                  <Link href={`/drops/${drop.slug}`} title="Bonk">
+                    <a className="bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl">
+                      See the Drop
+                    </a>
+                  </Link>
+                </div>
               </div>
-            ) : (
-              <ContentLoader
-                speed={2}
-                className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] rounded-xl"
-                backgroundColor="#bbbbbb"
-                foregroundColor="#aaaaaa"
-              >
-                <rect className="w-full h-[100vw] lg:h-[520px] xl:h-[550px]" />
-              </ContentLoader>
             )}
           </div>
-          {drop && (
-            <div className="mt-6 lg:mt-0 lg:col-span-5 lg:col-end-13">
-              <p>{drop.date}</p>
-              <h2 className="align-middle sm:inline sm:my-5 text-4xl font-bold w-full py-1 inline-block">
-                {drop.name}
-              </h2>
-              <p className="mt-4">{drop.description}</p>
-              <div className="mt-8">
-                <Link href={`/drops/${drop.slug}`} title="Bonk">
-                  <a className="bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl">
-                    See the Drop
-                  </a>
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );

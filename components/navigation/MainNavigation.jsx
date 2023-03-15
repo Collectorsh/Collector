@@ -40,7 +40,7 @@ export default function MainNavigation() {
   }, [user]);
 
   return (
-    <div className="bg-gray-50 dark:bg-dark1">
+    <div>
       {showModal && <CreateUsernameModal />}
       <nav className="mx-auto py-4 md:py-2 fixed w-full z-20 top-0 h-[76px] relative max-w-screen-2xl mx-auto px-4 sm:px-8">
         <div>

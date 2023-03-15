@@ -55,12 +55,10 @@ export default function Tools() {
                 <div className="font-semibold">
                   See what other Collectors are
                 </div>
-                <div className="text-2xl mt-4 inline md:block mr-1">Buying</div>
-                <div className="text-2xl mt-1 inline md:block mr-1">
-                  Selling
-                </div>
+                <div className="mt-4 inline md:block mr-1">Buying</div>
+                <div className="mt-1 inline md:block mr-1">Selling</div>
                 &amp;
-                <div className="text-2xl mt-1 inline md:block ml-1 md:ml-0">
+                <div className="mt-1 inline md:block ml-1 md:ml-0">
                   Bidding on
                 </div>
               </div>

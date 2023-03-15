@@ -15,12 +15,12 @@ export default function Home() {
       <div className="max-w-screen-xl mx-auto px-4 sm:px-8">
         <UpcomingDrop />
       </div>
-      <div className="bg-gray-50 dark:bg-dark1">
+      <div className="border-t border-neutral-100 dark:border-neutral-800">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
           <DropSecondary />
         </div>
       </div>
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 border-t border-neutral-100 dark:border-neutral-800">
         <Galleries />
       </div>
       <div className="border-t border-neutral-100 dark:border-neutral-800">

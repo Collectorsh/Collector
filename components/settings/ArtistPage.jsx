@@ -7,6 +7,7 @@ import saveUser from "/data/user/saveUser";
 import { Toaster } from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 import { success, error } from "/utils/toastMessages";
+import Link from "next/link";
 
 export default function ArtistPage() {
   const [user, setUser] = useContext(UserContext);
@@ -142,7 +143,7 @@ export default function ArtistPage() {
                                   value={key}
                                   defaultChecked={key == user.public_key}
                                 />
-                                <p className="inline ml-2 align-middle">
+                                <p className="inline ml-2 align-middle dark:text-whitish">
                                   {key}
                                 </p>
                               </div>
@@ -188,6 +189,17 @@ export default function ArtistPage() {
                             Last run {user.mint_refresh || "Never"}
                           </div>
                         )}
+                      </dd>
+                    </div>
+                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white dark:bg-dark2">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-200"></dt>
+                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <div className="flex items-center w-full mb-2 text-gray-500">
+                          Your Artist page will be at
+                          <Link href={`/${user.username}/artist`}>
+                            <a className="ml-1 underline text-blue-500">{`collector.sh/${user.username}/artist`}</a>
+                          </Link>
+                        </div>
                       </dd>
                     </div>
                   </dl>

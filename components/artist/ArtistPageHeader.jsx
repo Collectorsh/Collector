@@ -30,7 +30,10 @@ export default function ArtistPageHeader({ user, tokens, stats }) {
         <div className="float-left mt-4 sm:mt-12 w-full">
           <div className="ml-28 sm:ml-48">
             <h1 className="text-3xl font-bold inline-block tracking-wider text-white">
-              {user.username.charAt(0).toUpperCase() + user.username.slice(1)}
+              {user.name
+                ? user.name
+                : user.username.charAt(0).toUpperCase() +
+                  user.username.slice(1)}
             </h1>
             <p className="text-white">{user.bio}</p>
           </div>

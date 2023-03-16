@@ -4,6 +4,7 @@ import MainNavigation from "/components/navigation/MainNavigation";
 import Settings from "/components/settings/Settings";
 import Wallets from "/components/settings/Wallets";
 import Notifications from "/components/settings/Notifications";
+import ArtistPage from "/components/settings/ArtistPage";
 import UserContext from "/contexts/user";
 
 function SettingsPage() {
@@ -55,6 +56,15 @@ function SettingsPage() {
                 >
                   Wallets
                 </li>
+                <li
+                  className={`cursor-pointer hover:text-greeny inline px-2 mx-3 pb-3.5 ${
+                    selected === "artist_page" &&
+                    "text-greeny font-extrabold border-b border-b-2 border-greeny"
+                  }`}
+                  onClick={() => changeSelected("artist_page")}
+                >
+                  Artist Page
+                </li>
               </ul>
             </div>
             {selected === "settings" && <Settings />}
@@ -62,6 +72,7 @@ function SettingsPage() {
               <Notifications />
             )}
             {selected === "wallets" && <Wallets />}
+            {selected === "artist_page" && <ArtistPage />}
           </div>
         </div>
       </div>

@@ -51,14 +51,17 @@ export default function Settings() {
         return;
       }
     }
+    const name = document.getElementById("name").value;
+    const bio = document.getElementById("bio").value;
     const res = await saveUser(user.api_key, {
       username: username,
       email: email,
+      name: name,
+      bio: bio,
     });
     if (res.data) {
       if (res.data.status === "success") {
         success("Updated successfully");
-        router.push(`/${username}/edit`);
       } else {
         error(res.data.msg);
       }
@@ -72,7 +75,7 @@ export default function Settings() {
       <Toaster />
 
       <div>
-        <div className="mt-8 lg:mt-16">
+        <div className="mt-8 lg:mt-16 pb-12">
           {user && (
             <div className="clear-both mt-10">
               <div className="bg-white shadow overflow-hidden sm:rounded-lg dark:border-dark2 dark:bg-dark2">
@@ -93,7 +96,7 @@ export default function Settings() {
                   <dl>
                     <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
                       <dt className="text-sm font-medium text-gray-500 dark:text-gray-200">
-                        Name
+                        Username
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                         <div className="col-span-3 sm:col-span-2">
@@ -111,7 +114,50 @@ export default function Settings() {
                           </div>
                         </div>
                         <div className="text-gray-500">
-                          Your name is used to create your unique gallery URL
+                          Your username is used to create your unique gallery
+                          URL
+                        </div>
+                      </dd>
+                    </div>
+                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white dark:bg-dark2">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-200">
+                        Name
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <div className="col-span-3 sm:col-span-2">
+                          <div className="mt-1 flex rounded-md shadow-sm mb-2">
+                            <input
+                              id="name"
+                              type="text"
+                              placeholder="Name"
+                              defaultValue={user.name}
+                              className="p-2 flex-1 block w-full rounded-none rounded-r-md sm:text-lg border-gray-300 text-gray-900 dark:text-gray-100 dark:bg-dark2 leading-tight focus:outline-none focus:shadow-outline"
+                            />
+                          </div>
+                        </div>
+                        <div className="text-gray-500">
+                          Used for display purposes
+                        </div>
+                      </dd>
+                    </div>
+                    <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-200">
+                        Bio
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <div className="col-span-3 sm:col-span-2">
+                          <div className="mt-1 flex rounded-md shadow-sm mb-2">
+                            <textarea
+                              id="bio"
+                              type="text"
+                              placeholder="Bio"
+                              defaultValue={user.bio}
+                              className="p-2 flex-1 block w-full rounded-none rounded-r-md sm:text-lg border-gray-300 text-gray-900 dark:text-gray-100 dark:bg-dark2 leading-tight focus:outline-none focus:shadow-outline"
+                            />
+                          </div>
+                        </div>
+                        <div className="text-gray-500">
+                          A little bit about you
                         </div>
                       </dd>
                     </div>

@@ -47,7 +47,7 @@ function ArtistPage({ profileUser, mints }) {
                   m.collection === null &&
                   !tokens.collections.map((m) => m.address).includes(m.address)
               )
-              .map((item) => <Nft token={item} />)}
+              .map((item, index) => <Nft key={index} token={item} />)}
         </div>
         {tokens &&
           tokens.collections.map((collection, index) => (
@@ -59,8 +59,8 @@ function ArtistPage({ profileUser, mints }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-center sm:justify-start">
                 {tokens.mints
                   .filter((m) => m.collection === collection.address)
-                  .map((item) => (
-                    <Nft token={item} />
+                  .map((item, index) => (
+                    <Nft key={index} token={item} />
                   ))}
               </div>
             </div>

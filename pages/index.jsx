@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import MainNavigation from "/components/navigation/MainNavigation";
-import UpcomingDrop from "/components/home/UpcomingDrop";
+import Hero from "/components/home/Hero";
 import Galleries from "/components/home/Galleries";
 import DropSecondary from "/components/home/DropSecondary";
 import Tools from "/components/home/Tools";
@@ -13,7 +13,7 @@ export default function Home() {
     <div className="dark:bg-black">
       <MainNavigation />
       <div className="max-w-screen-xl mx-auto px-4 sm:px-8">
-        <UpcomingDrop />
+        <Hero />
       </div>
       <div className="border-t border-neutral-100 dark:border-neutral-800">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">

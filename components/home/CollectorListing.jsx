@@ -37,12 +37,12 @@ export default function CollectorListing() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12">
+    <div className="grid grid-cols-1 lg:grid-cols-12 mb-6">
       {metadata ? (
         <>
           <div className="lg:col-span-6">
             <div className="text-center">
-              <div className="overflow-hidden col-span-2 relative -mt-2 h-[100vw] lg:h-[520px] xl:h-[550px]">
+              <div className="overflow-hidden col-span-2 relative -mt-2 max-h-[100vw] lg:max-h-[520px] xl:max-h-[550px] rounded-xl">
                 <Image token={metadata} size="large" />
               </div>
             </div>
@@ -106,7 +106,7 @@ export default function CollectorListing() {
         <div className="lg:col-span-6">
           <ContentLoader
             speed={2}
-            className="w-full h-[100vw] lg:h-[520px] xl:h-[550px]"
+            className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] rounded-xl"
             backgroundColor="#bbbbbb"
             foregroundColor="#aaaaaa"
           >

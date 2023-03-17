@@ -5,11 +5,13 @@ import { fetchImages } from "/hooks/fetchImages";
 import getAllDrops from "/data/drops/getAllDrops";
 import ContentLoader from "react-content-loader";
 import GalleryImages from "/components/home/GalleryImages";
+import CollectorListing from "/components/home/CollectorListing";
 
 export default function UpcomingDrop() {
   const [images, setImages] = useState();
   const [drop, setDrop] = useState();
   const [showGalleries, setShowGalleries] = useState(false);
+  const [showListing, setShowListing] = useState(false);
 
   const asyncGetDrop = useCallback(async () => {
     let drops = await getAllDrops();
@@ -18,7 +20,11 @@ export default function UpcomingDrop() {
       if (d) {
         setDrop(d);
       } else {
-        setShowGalleries(true);
+        if (Math.round(Math.random() * 2) === 1) {
+          setShowGalleries(true);
+        } else {
+          setShowListing(true);
+        }
       }
     }
   }, []);
@@ -56,8 +62,11 @@ export default function UpcomingDrop() {
   return (
     <div className="py-6 sm:py-12 mx-auto dark:text-white">
       <div className="min-h-[100vw] lg:min-h-[520px] xl:min-h-[550px]">
-        {showGalleries ? (
-          <GalleryImages />
+        {showGalleries || showListing ? (
+          <>
+            {showGalleries && <GalleryImages />}
+            {showListing && <CollectorListing />}
+          </>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12">
             <div className="lg:col-span-6">
@@ -73,7 +82,7 @@ export default function UpcomingDrop() {
                           <img
                             src={`https://cdn.collector.sh/${image}`}
                             alt=""
-                            className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover rounded-lg"
+                            className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] object-center object-cover"
                           />
                         </div>
                       </>
@@ -83,7 +92,7 @@ export default function UpcomingDrop() {
               ) : (
                 <ContentLoader
                   speed={2}
-                  className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] rounded-xl"
+                  className="w-full h-[100vw] lg:h-[520px] xl:h-[550px]"
                   backgroundColor="#bbbbbb"
                   foregroundColor="#aaaaaa"
                 >

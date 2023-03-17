@@ -1,21 +1,25 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import getGalleryImages from "/data/home/getGalleryImages";
+import getCollectorListing from "/data/home/getCollectorListing";
 import getMetadataFromMint from "/data/nft/getMetadataFromMint";
 import Image from "/components/Image";
 import ContentLoader from "react-content-loader";
+import { roundToTwo } from "/utils/roundToTwo";
 
-export default function GalleryImages() {
+export default function CollectorListing() {
   const [metadata, setMetadata] = useState();
 
-  const asyncGetGalleryImages = useCallback(async () => {
+  const asyncGetCollectorListing = useCallback(async () => {
     let done = false;
     while (done === false) {
       try {
-        let res = await getGalleryImages();
+        let res = await getCollectorListing();
         let data = await getMetadataFromMint(res.mint);
-        data.username = res.username;
-        data.twitter = res.twitter;
+        data.amount = res.amount;
+        data.seller = res.seller;
+        data.seller_twitter = res.seller_twitter;
+        data.artist = res.artist;
+        data.artist_twitter = res.artist_twitter;
         setMetadata(data);
         done = true;
       } catch (err) {
@@ -25,7 +29,7 @@ export default function GalleryImages() {
   }, []);
 
   useEffect(() => {
-    asyncGetGalleryImages();
+    asyncGetCollectorListing();
   }, []);
 
   const removeElement = (e) => {
@@ -56,40 +60,43 @@ export default function GalleryImages() {
                   Artist
                 </div>
                 <div className="mt-2 font-bold text-black dark:text-white">
-                  {metadata.artist_twitter_image && (
+                  {metadata.artist_twitter && (
                     <div>
                       <img
-                        src={metadata.artist_twitter_image}
+                        src={metadata.artist_twitter}
                         className="w-8 h-8 mr-1.5 rounded-full float-left"
                         onError={(e) => removeElement(e)}
                       />
                     </div>
                   )}
-                  {metadata.artist_name ? metadata.artist_name : "???"}
+                  {metadata.artist ? metadata.artist : "???"}
                 </div>
               </div>
               <div className="col-span-1">
                 <div className="font-semibold text-neutral-700 dark:text-neutral-200">
-                  Collector
+                  Seller
                 </div>
                 <div className="mt-2 font-bold text-black dark:text-white">
-                  {metadata.twitter && (
+                  {metadata.seller_twitter && (
                     <div>
                       <img
-                        src={metadata.twitter}
+                        src={metadata.seller_twitter}
                         className="w-8 h-8 mr-1.5 rounded-full float-left"
                         onError={(e) => removeElement(e)}
                       />
                     </div>
                   )}
-                  {metadata.username}
+                  {metadata.seller ? metadata.seller : "???"}
                 </div>
               </div>
+            </div>
+            <div className="mt-8 text-2xl">
+              ◎{roundToTwo(metadata.amount / 1000000000)}
             </div>
             <div className="mt-16">
               <Link href={`/${metadata.username}`}>
                 <a className="py-3.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold">
-                  View Galley
+                  Buy Now
                 </a>
               </Link>
             </div>

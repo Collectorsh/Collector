@@ -18,11 +18,12 @@ export default function Hero() {
       if (d) {
         setDrop(d);
       } else {
-        if (Math.round(Math.random() * 2) === 1) {
-          setShowGalleries(true);
-        } else {
-          setShowListing(true);
-        }
+        setShowGalleries(true);
+        // if (Math.round(Math.random() * 2) === 1) {
+        //   setShowGalleries(true);
+        // } else {
+        //   setShowListing(true);
+        // }
       }
       setLoading(false);
     }

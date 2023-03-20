@@ -69,7 +69,7 @@ export default function Single({ token, refetch }) {
         pauseOnHover
         theme="dark"
       />
-      <div className="pb-12 grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-16 mt-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-16 mt-12">
         <div className="col-span-1">
           <Image token={token} size="max" />
         </div>
@@ -83,7 +83,7 @@ export default function Single({ token, refetch }) {
               {token.description}
             </p>
           )}
-          <div>
+          <div className="mt-8">
             <ShowListing
               token={token}
               refetch={refetch}
@@ -107,7 +107,13 @@ export default function Single({ token, refetch }) {
             />
           </div>
           <Meta token={token} collector={collector} />
+        </div>
+      </div>
+      <div className="pb-12 grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-48">
+        <div className="col-span-1">
           <TokenDetails token={token} />
+        </div>
+        <div className="col-span-1">
           <ShowActivities token={token} />
         </div>
       </div>

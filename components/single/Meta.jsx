@@ -33,7 +33,7 @@ export default function Meta({ token, collector }) {
                     title={token.artist_twitter}
                   >
                     <a>
-                      <p className="text-black dark:text-white font-semibold inline">
+                      <p className="text-black dark:text-white font-semibold inline align-middle">
                         {token.artist_twitter}
                       </p>
                     </a>
@@ -61,7 +61,7 @@ export default function Meta({ token, collector }) {
                   title={collector.twitter_screen_name}
                 >
                   <a>
-                    <p className="text-black dark:text-white font-semibold inline">
+                    <p className="text-black dark:text-white font-semibold inline align-middle">
                       {collector.twitter_screen_name}
                     </p>
                   </a>

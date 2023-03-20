@@ -41,50 +41,16 @@ export default function ShowActivities() {
 
   return (
     <>
-      <h4 className="text-lg text-black dark:text-white uppercase mt-10 lg:mt-12">
+      <h2 className="text-2xl text-black dark:text-white mt-10 lg:mt-12 pb-2 border-b border-neutral-100 dark:border-neutral-900">
         Activities
-      </h4>
+      </h2>
       <div className="flex flex-col">
-        <div className="sm:-mx-6 lg:-mx-8">
-          <div className="inline-block py-2 min-w-full sm:mx-6 lg:mx-8 max-h-96 overflow-auto">
+        <div className="">
+          <div className="">
             <table className="min-w-full overflow-auto">
-              <thead className="top-[9rem]">
-                <tr>
-                  <th
-                    scope="col"
-                    className="text-left text-button-lg font-semibold py-4 text-gray-600 dark:text-gray-400"
-                  >
-                    Type
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-left text-button-lg font-semibold py-4 text-gray-600 dark:text-gray-400"
-                  >
-                    Amount
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-left text-button-lg font-semibold py-4 text-gray-600 dark:text-gray-400"
-                  >
-                    Seller
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-left text-button-lg font-semibold py-4 text-gray-600 dark:text-gray-400"
-                  >
-                    Buyer
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-left text-button-lg font-semibold py-4 text-gray-600 dark:text-gray-400"
-                  >
-                    Date
-                  </th>
-                </tr>
-              </thead>
               <tbody>
                 {activities.map((a, index) => (
-                  <tr className="border-b dark:border-dark3" key={index}>
+                  <tr className="" key={index}>
                     <td className="py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-300">
                       {a.activityType}
                     </td>

@@ -26,8 +26,8 @@ function Activity() {
       <MainNavigation />
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 clear-bot">
         <div className="mx-auto pt-3 md:px-0">
-          <h2 className="mt-8 mb-12 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-whitish">
-            Collect
+          <h2 className="mt-8 mb-12 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-white">
+            Premium
           </h2>
           <div className="w-full border-b border-gray-200 dark:border-dark3 pb-3">
             <ul className="font-bold">

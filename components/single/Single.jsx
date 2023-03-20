@@ -24,7 +24,7 @@ export default function Single({ token, refetch }) {
   // Find the owners name
   const asyncGetUser = useCallback(async (address) => {
     let res = await getOwnerCollectorName(address);
-    if (res.status === "success") setCollector(res.username);
+    if (res.status === "success") setCollector(res);
   }, []);
 
   useEffect(() => {
@@ -69,11 +69,11 @@ export default function Single({ token, refetch }) {
         pauseOnHover
         theme="dark"
       />
-      <div className="mb-8 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:mb-0 mt-24 md:mt-32 overflow-hidden">
-        <div className="overflow-hidden lg:block col-span-1 mb-8 lg:mr-8 relative">
-          <Image token={token} size="large" />
+      <div className="pb-12 grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-16 mt-12">
+        <div className="col-span-1">
+          <Image token={token} size="max" />
         </div>
-        <div className="col-span-1 mb-8">
+        <div className="col-span-1">
           <h1 className="text-4xl mb-2 dark:text-white tracking-wide">
             {token.name}
           </h1>
@@ -83,8 +83,7 @@ export default function Single({ token, refetch }) {
               {token.description}
             </p>
           )}
-
-          <div className="mt-8">
+          <div>
             <ShowListing
               token={token}
               refetch={refetch}

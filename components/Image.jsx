@@ -41,6 +41,8 @@ export default function Image({ token, size = "small" }) {
       styles = "md:w-[550px]";
     } else if (size === "large") {
       styles = "object-center object-cover";
+    } else if (size === "max") {
+      styles = "max-h-full max-w-full mx-auto object-center object-cover";
     }
     return styles;
   }

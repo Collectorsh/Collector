@@ -88,6 +88,12 @@ h4 {
   }
 }
 
+@media (min-width: 800px) {
+  .vh-header {
+    height: calc(100vh - 120px);
+  }
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .top-collectors::-webkit-scrollbar {
   display: none;

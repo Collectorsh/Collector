@@ -1,64 +1,88 @@
 import Link from "next/link";
-import ShareToTwitter from "/components/ShareToTwitter";
-import { host } from "/config/settings";
 
 export default function Meta({ token, collector }) {
+  const removeElement = (e) => {
+    e.target.parentNode.remove();
+  };
+
   return (
-    <div className="mt-8 rounded-lg bg-gray-50 dark:bg-dark1 border border-gray-200 dark:border-dark3 p-2">
+    <div className="mt-8">
       {(token.artist_name || token.artist_twitter) && (
-        <div className="mb-4">
-          <p className="text-black dark:text-white text-semibold inline mr-2 text-sm bg-gray-200 dark:bg-dark3 px-2 py-1 rounded">
-            artist
-          </p>
-          {token.artist_name && (
-            <p className="text-black dark:text-white text-semibold inline">
-              <span className="font-semibold text-sm">{token.artist_name}</span>
-            </p>
-          )}
-          {token.artist_name && token.artist_twitter && (
-            <p className="text-black dark:text-white text-semibold inline mx-2 text-sm">
-              {"//"}
-            </p>
-          )}
-          {token.artist_twitter && (
-            <>
-              <Link
-                href={`https://twitter.com/${token.artist_twitter}`}
-                title={token.artist_twitter}
-              >
-                <a>
-                  <p className="text-black dark:text-white text-semibold inline text-sm">
-                    {token.artist_twitter}
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <p className="text-black dark:text-white text-xl mb-3">Artist</p>
+            <div className="mb-4">
+              {token.artist_name && !token.artist_twitter && (
+                <p className="text-black dark:text-white font-semibold inline">
+                  <span className="font-semibold">{token.artist_name}</span>
+                </p>
+              )}
+              {token.artist_twitter && (
+                <>
+                  {token.artist_twitter_image && (
+                    <div>
+                      <img
+                        src={token.artist_twitter_image}
+                        className="w-8 h-8 mr-1.5 rounded-full float-left"
+                        onError={(e) => removeElement(e)}
+                      />
+                    </div>
+                  )}
+                  <Link
+                    href={`https://twitter.com/${token.artist_twitter}`}
+                    title={token.artist_twitter}
+                  >
+                    <a>
+                      <p className="text-black dark:text-white font-semibold inline">
+                        {token.artist_twitter}
+                      </p>
+                    </a>
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+          <div>
+            <p className="text-black dark:text-white text-xl mb-3">Collector</p>
+            {collector &&
+            collector.twitter_screen_name &&
+            collector.twitter_profile_image ? (
+              <>
+                <div>
+                  <img
+                    src={collector.twitter_profile_image}
+                    className="w-8 h-8 mr-1.5 rounded-full float-left"
+                    onError={(e) => removeElement(e)}
+                  />
+                </div>
+
+                <Link
+                  href={`https://twitter.com/${collector.twitter_screen_name}`}
+                  title={collector.twitter_screen_name}
+                >
+                  <a>
+                    <p className="text-black dark:text-white font-semibold inline">
+                      {collector.twitter_screen_name}
+                    </p>
+                  </a>
+                </Link>
+              </>
+            ) : (
+              <>
+                {collector && collector.username ? (
+                  <p className="font-bold dark:text-white">
+                    <Link href={`/${collector.username}/profile`}>
+                      <a>@{collector.username}</a>
+                    </Link>
                   </p>
-                </a>
-              </Link>
-            </>
-          )}
+                ) : (
+                  <p className="inline font-bold dark:text-white">???</p>
+                )}
+              </>
+            )}
+          </div>
         </div>
       )}
-
-      {collector && (
-        <div className="mb-3">
-          <p className="w-fit inline mt-4 dark:bg-dark3 text-black dark:text-white text-semibold bg-gray-200 mr-2 text-sm px-2 py-1 rounded">
-            owner
-          </p>
-          <p className="inline text-sm dark:text-white">
-            <Link href={`/${collector}/profile`}>
-              <a>@{collector}</a>
-            </Link>
-          </p>
-        </div>
-      )}
-
-      <p>
-        <ShareToTwitter
-          url={`${token.name} ${
-            token.artist_twitter ? `by ${token.artist_twitter}` : ""
-          }\n\n${host}/nft/${token.mint}`}
-          size="18"
-          text="Tweet It"
-        />
-      </p>
     </div>
   );
 }

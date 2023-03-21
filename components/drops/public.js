@@ -54,7 +54,7 @@ export default function PublicMint({ address, drop }) {
   }, []);
 
   useEffect(() => {
-    if (mintState === "signature") checkIfHolder();
+    if (mintState === "signature" || mintState === "burn") checkIfHolder();
   }, [mintState, wallet]);
 
   const mintNow = async () => {
@@ -72,6 +72,16 @@ export default function PublicMint({ address, drop }) {
           collectionUpdateAuthority,
           guards: {
             nftGate: {
+              mint: collectionMint.mintAddress,
+            },
+          },
+        };
+      } else if (mintState === "burn") {
+        var args = {
+          candyMachine,
+          collectionUpdateAuthority,
+          guards: {
+            nftBurn: {
               mint: collectionMint.mintAddress,
             },
           },
@@ -106,7 +116,7 @@ export default function PublicMint({ address, drop }) {
   };
 
   const checkIfHolder = async () => {
-    if (!wallet || !wallet.publicKey) return;
+    if (!wallet || !wallet.publicKey || !drop.required_collection) return;
     const nfts = await metaplex.nfts().findAllByOwner({
       owner: wallet.publicKey,
     });
@@ -115,7 +125,7 @@ export default function PublicMint({ address, drop }) {
       if (
         nft.collection &&
         nft.collection.address.toBase58() ===
-          process.env.NEXT_PUBLIC_SIGNATURE_COLLECTION_ADDRESS
+          drop.required_collection
       ) {
         setCollectionMint(nft);
         setHolder("yes");
@@ -131,12 +141,14 @@ export default function PublicMint({ address, drop }) {
       return;
     }
     const isGated = cndy.candyGuard.guards.nftGate;
+    const isBurnToMint = cndy.candyGuard.guards.nftBurn;
     const publicStart = cndy.candyGuard.guards.startDate.date.toNumber() * 1000;
+    const sol = cndy.candyGuard.guards.solPayment;
     if (cndy.candyGuard.guards.endDate) {
       var publicEnd = cndy.candyGuard.guards.endDate.date.toNumber() * 1000;
     }
     setPublicStartDate(publicStart);
-    setCost(cndy.candyGuard.guards.solPayment.lamports.toNumber());
+    if (sol) setCost(sol.lamports.toNumber());
     if (cndy.itemsRemaining.toNumber() === 0) {
       setMintState("sold");
     } else if (Date.now() < publicStart) {
@@ -147,6 +159,8 @@ export default function PublicMint({ address, drop }) {
       } else {
         if (isGated) {
           setMintState("signature");
+        } else if (isBurnToMint) {
+          setMintState("burn");
         } else {
           setMintState("public");
         }
@@ -158,7 +172,7 @@ export default function PublicMint({ address, drop }) {
     <>
       {mintState && (
         <div className="rounded-xl p-4 border-2 border-neutral-100 dark:border-dark3">
-          {(mintState === "public" || mintState === "signature") && (
+          {(mintState === "public" || mintState === "signature" || mintState === "burn") && (
             <p className="font-bold text-xl text-neutral-800 dark:text-neutral-100">
               MINT LIVE
             </p>
@@ -226,7 +240,7 @@ export default function PublicMint({ address, drop }) {
                 />
               </p>
             )}
-            {(mintState === "public" || mintState === "signature") && (
+            {(mintState === "public" || mintState === "signature" || mintState === "burn") && (
               <>
                 {wallet && wallet.publicKey ? (
                   <>
@@ -243,9 +257,9 @@ export default function PublicMint({ address, drop }) {
                     ) : (
                       <>
                         {(mintState === "public" ||
-                          (mintState === "signature" && holder === "yes")) && (
+                          (mintState === "signature" && holder === "yes") || (mintState === "burn" && holder === "yes")) && (
                           <button
-                            className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
+                            className="px-4 py-2 text-lg font-semibold cursor-pointer rounded-xl disabled:bg-gray-300 bg-greeny text-black"
                             onClick={() => mintNow()}
                             disabled={isMinting}
                           >
@@ -255,6 +269,11 @@ export default function PublicMint({ address, drop }) {
                         {mintState === "signature" && holder === "no" && (
                           <p>
                             You need to be a signature holder to participate
+                          </p>
+                        )}
+                        {mintState === "burn" && holder === "no" && (
+                          <p>
+                            You don&apos;t have the required NFT to burn
                           </p>
                         )}
                       </>

@@ -50,7 +50,7 @@ export default function ArtistDrop({ name, drop }) {
                   {drop.name}
                 </h2>
                 <p className="mt-4">{drop.curator}</p>
-                <p className="mt-4">{drop.description}</p>
+                <p className="mt-4 whitespace-pre-line">{drop.description}</p>
               </div>
               <div className="col-span-1 mt-4 lg:mt-0 lg:col-span-4 lg:col-end-13">
                 {drop.slug === "hanaknight" ? (

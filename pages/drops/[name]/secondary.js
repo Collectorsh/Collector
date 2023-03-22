@@ -137,7 +137,9 @@ export default function Secondary({ drop }) {
                         style={{ borderColor: "rgba(255, 255, 255, .2)" }}
                       >
                         <div className="text-sm mb-1">Sales</div>
-                        <div className="text-lg">{stats.sales}</div>
+                        <div className="text-lg">
+                          {mints ? mints.length + stats.sales : stats.sales}
+                        </div>
                       </div>
                       <div
                         className="px-4 border-r"
@@ -145,7 +147,13 @@ export default function Secondary({ drop }) {
                       >
                         <div className="text-sm mb-1">Volume</div>
                         <div className="text-lg">
-                          ◎{roundToTwo(stats.volume / 1000000000)}
+                          ◎
+                          {roundToTwo(
+                            (drop.lamports
+                              ? drop.lamports * (mints ? mints.length : 0) +
+                                stats.volume
+                              : stats.volume) / 1000000000
+                          )}
                         </div>
                       </div>
                       <div

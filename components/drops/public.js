@@ -230,18 +230,18 @@ export default function PublicMint({ address, drop }) {
       <div className="mt-4">
         {mintState && (
           <div>
-            {mintState !== "pre" ||
-              (mintState === "pre" && drop && drop.market === true && (
-                <p className="mt-3 float-right text-normal tracking-wide font-semibold text-neutral-800 dark:text-neutral-100 hover:underline">
-                  <Link href={`/drops/${drop.slug}/market`}>
-                    <a>Go to Market</a>
-                  </Link>
-                  <ArrowRightIcon
-                    className="h-4 w-4 ml-1 inline cursor-pointer"
-                    aria-hidden="true"
-                  />
-                </p>
-              ))}
+            {(mintState !== "pre" ||
+              (mintState === "pre" && drop && drop.market === true)) && (
+              <p className="mt-3 float-right text-normal tracking-wide font-semibold text-neutral-800 dark:text-neutral-100 hover:underline">
+                <Link href={`/drops/${drop.slug}/market`}>
+                  <a>Go to Market</a>
+                </Link>
+                <ArrowRightIcon
+                  className="h-4 w-4 ml-1 inline cursor-pointer"
+                  aria-hidden="true"
+                />
+              </p>
+            )}
             {(mintState === "public" ||
               mintState === "signature" ||
               mintState === "burn") && (

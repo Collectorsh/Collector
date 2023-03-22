@@ -49,7 +49,7 @@ function Nft({ image, token }) {
     let activs = res.data.activities.filter(
       (a) => a.nft.mintAddress === token.mint
     );
-    setActivities([...activities, ...activs]);
+    setActivities(activs);
   }, []);
 
   // Run once on page load

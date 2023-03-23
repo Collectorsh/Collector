@@ -1,8 +1,8 @@
 import apiClient from "/data/client/apiClient";
 
-async function fetchCurator(apiKey) {
+async function fetchAllUsers(apiKey) {
   try {
-    const res = await apiClient.post("/hub/fetch_config", {
+    const res = await apiClient.post("/hub/fetch_users", {
       api_key: apiKey,
     });
     return res.data;
@@ -11,4 +11,4 @@ async function fetchCurator(apiKey) {
   }
 }
 
-export default fetchCurator;
+export default fetchAllUsers;

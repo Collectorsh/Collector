@@ -1,9 +1,10 @@
 import apiClient from "/data/client/apiClient";
 
-async function fetchCurator(apiKey) {
+async function saveConfig(apiKey, args) {
   try {
-    const res = await apiClient.post("/hub/fetch_config", {
+    const res = await apiClient.post("/hub/save_config", {
       api_key: apiKey,
+      args: args,
     });
     return res.data;
   } catch (err) {
@@ -11,4 +12,4 @@ async function fetchCurator(apiKey) {
   }
 }
 
-export default fetchCurator;
+export default saveConfig;

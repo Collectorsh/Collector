@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 import MainNavigation from "/components/navigation/MainNavigation";
 import UserContext from "/contexts/user";
+import Curate from "/components/hubs/Curate";
 import Artists from "/components/hubs/Artists";
 import Settings from "/components/hubs/Settings";
 import fetchCurator from "/data/hubs/fetchCurator";
@@ -10,16 +11,35 @@ import fetchCurator from "/data/hubs/fetchCurator";
 export default function CuratorHub() {
   const router = useRouter();
   const [user] = useContext(UserContext);
-  const [curator, setCurator] = useState({});
-  const [selected, setSelected] = useState("artists");
+  const [hub, setHub] = useState({});
+  const [artists, setArtists] = useState([]);
+  const [selected, setSelected] = useState("curate");
 
   const changeSelected = (sel) => {
+    if (Object.keys(hub).length === 0) return;
     setSelected(sel);
   };
 
+  const updateConfig = (config) => {
+    setHub(config);
+  };
+
+  const updateArtists = (arts) => {
+    setArtists(arts);
+  };
+
+  // Fetch curator config for user //
   const asyncFetchCurator = useCallback(async (apiKey) => {
-    // const res = await fetchCurator(apiKey);
-    // if (res.status === "success") setCurator(res.curator);
+    const res = await fetchCurator(apiKey);
+    if (res.status === "missing") {
+      setSelected("settings");
+      return;
+    } else if (res.status === "success") {
+      setHub(res.hub);
+      if (res.artists && res.artists.length > 0) {
+        setArtists(res.artists);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -27,6 +47,7 @@ export default function CuratorHub() {
     if (!user.curator) router.push("/");
     asyncFetchCurator(user.api_key);
   }, [user]);
+  ///////////////////////////////////
 
   return (
     <div>
@@ -42,21 +63,21 @@ export default function CuratorHub() {
               <ul className="font-bold">
                 <li
                   className={`cursor-pointer hover:text-greeny inline px-2 mr-3 pb-3.5 ${
+                    selected === "curate" &&
+                    "text-greeny font-extrabold border-b border-b-2 border-greeny"
+                  }`}
+                  onClick={() => changeSelected("curate")}
+                >
+                  Curate
+                </li>
+                <li
+                  className={`cursor-pointer hover:text-greeny inline px-2 mr-3 pb-3.5 ${
                     selected === "artists" &&
                     "text-greeny font-extrabold border-b border-b-2 border-greeny"
                   }`}
                   onClick={() => changeSelected("artists")}
                 >
                   Artists
-                </li>
-                <li
-                  className={`cursor-pointer hover:text-greeny inline px-2 mr-3 pb-3.5 ${
-                    selected === "layout" &&
-                    "text-greeny font-extrabold border-b border-b-2 border-greeny"
-                  }`}
-                  onClick={() => changeSelected("art")}
-                >
-                  Art
                 </li>
                 <li
                   className={`cursor-pointer hover:text-greeny inline px-2 mr-3 pb-3.5 ${
@@ -69,8 +90,13 @@ export default function CuratorHub() {
                 </li>
               </ul>
             </div>
-            {selected === "artists" && <Artists />}
-            {selected === "settings" && <Settings curator={curator} />}
+            {selected === "curate" && <Curate />}
+            {selected === "artists" && (
+              <Artists artists={artists} updateArtists={updateArtists} />
+            )}
+            {selected === "settings" && (
+              <Settings hub={hub} updateConfig={updateConfig} />
+            )}
           </div>
         </div>
       </div>

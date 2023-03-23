@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Fragment, useContext } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -7,7 +6,6 @@ import UserContext from "/contexts/user";
 import { UserCircleIcon } from "@heroicons/react/solid";
 
 export default function MainNavigation() {
-  const router = useRouter();
   const wallet = useWallet();
   const [user, setUser] = useContext(UserContext);
   const { publicKey } = useWallet();
@@ -71,13 +69,15 @@ export default function MainNavigation() {
                 </a>
               </Link>
             </Menu.Item>
-            <Menu.Item>
-              <Link href="/curator">
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Curator Hub
-                </a>
-              </Link>
-            </Menu.Item>
+            {user && user.curator && (
+              <Menu.Item>
+                <Link href="/curator">
+                  <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Curator Hub
+                  </a>
+                </Link>
+              </Menu.Item>
+            )}
             <Menu.Item>
               <Link href="#">
                 <a

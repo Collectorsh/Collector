@@ -69,6 +69,15 @@ export default function MainNavigation() {
                 </a>
               </Link>
             </Menu.Item>
+            {user && user.can_mint && (
+              <Menu.Item>
+                <Link href="/create">
+                  <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Create
+                  </a>
+                </Link>
+              </Menu.Item>
+            )}
             {user && user.curator && (
               <Menu.Item>
                 <Link href="/curator">

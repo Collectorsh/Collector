@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { ArrowRightIcon } from "@heroicons/react/outline";
 
-export default function Meta({ token, collector }) {
+export default function Meta({ token, collector, market }) {
   const removeElement = (e) => {
     e.target.parentNode.remove();
   };
@@ -82,6 +83,17 @@ export default function Meta({ token, collector }) {
             )}
           </div>
         </div>
+      )}
+      {market && (
+        <p className="mt-3 text-normal tracking-wide font-semibold text-neutral-800 dark:text-neutral-100 hover:underline">
+          <Link href={`/drops/${market}/market`}>
+            <a>Go to Drop</a>
+          </Link>
+          <ArrowRightIcon
+            className="h-4 w-4 ml-1 inline cursor-pointer"
+            aria-hidden="true"
+          />
+        </p>
       )}
     </div>
   );

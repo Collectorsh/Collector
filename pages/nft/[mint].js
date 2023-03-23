@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useCallback } from "react";
+import React, { useEffect, useContext, useCallback, useState } from "react";
 import Head from "next/head";
 import MainNavigation from "/components/navigation/MainNavigation";
 import getMetadataFromMint from "/data/nft/getMetadataFromMint";
@@ -10,11 +10,13 @@ import { getActivitiesQuery } from "/queries/activities";
 import ActivitiesContext from "/contexts/activities";
 import SingleNftContext from "/contexts/single_nft";
 import { auctionHousesArray } from "/config/settings";
+import findMarket from "/data/drops/findMarket";
 
 function Nft({ image, token }) {
   const [activities, setActivities] = useContext(ActivitiesContext);
   const [, setSingleNft] = useContext(SingleNftContext);
   const auctionHouses = auctionHousesArray.map((a) => a.address);
+  const [market, setMarket] = useState();
 
   /////////////////////////////////////////////////////////////////////////////////////
 
@@ -49,7 +51,9 @@ function Nft({ image, token }) {
     let activs = res.data.activities.filter(
       (a) => a.nft.mintAddress === token.mint
     );
-    setActivities(activs);
+    setActivities(
+      activs.filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i)
+    );
   }, []);
 
   // Run once on page load
@@ -64,6 +68,19 @@ function Nft({ image, token }) {
     fetchNft(token);
     fetchActivities();
   };
+
+  /////////////////////////////////////////////////////////////////////////////////////
+
+  // Find if mint belongs to a drop and has a marketplace
+  const fetchMarketplace = useCallback(async () => {
+    const res = await findMarket(token.mint);
+    if (res.status === "success") setMarket(res.market);
+  }, []);
+
+  // Run once on page load
+  useEffect(() => {
+    fetchMarketplace();
+  }, []);
 
   /////////////////////////////////////////////////////////////////////////////////////
 
@@ -86,7 +103,7 @@ function Nft({ image, token }) {
       <MainNavigation />
 
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
-        <Single token={token} refetch={refetch} />
+        <Single token={token} market={market} refetch={refetch} />
       </div>
     </div>
   );

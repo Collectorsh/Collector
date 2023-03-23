@@ -13,7 +13,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import getOwnerCollectorName from "/data/getOwnerCollectorName";
 import Meta from "/components/single/Meta";
 
-export default function Single({ token, refetch }) {
+export default function Single({ token, market, refetch }) {
   const { publicKey } = useWallet();
   const [singleNft] = useContext(SingleNftContext);
   const [listing, setListing] = useState();
@@ -106,7 +106,7 @@ export default function Single({ token, refetch }) {
               userOffer={userOffer}
             />
           </div>
-          <Meta token={token} collector={collector} />
+          <Meta token={token} collector={collector} market={market} />
         </div>
       </div>
       <div className="pb-12 grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-48">

@@ -124,8 +124,7 @@ export default function PublicMint({ address, drop }) {
     for (const nft of nfts) {
       if (
         nft.collection &&
-        nft.collection.address.toBase58() ===
-          drop.required_collection
+        nft.collection.address.toBase58() === drop.required_collection
       ) {
         setCollectionMint(nft);
         setHolder("yes");
@@ -172,7 +171,9 @@ export default function PublicMint({ address, drop }) {
     <>
       {mintState && (
         <div className="rounded-xl p-4 border-2 border-neutral-100 dark:border-dark3">
-          {(mintState === "public" || mintState === "signature" || mintState === "burn") && (
+          {(mintState === "public" ||
+            mintState === "signature" ||
+            mintState === "burn") && (
             <p className="font-bold text-xl text-neutral-800 dark:text-neutral-100">
               MINT LIVE
             </p>
@@ -229,7 +230,8 @@ export default function PublicMint({ address, drop }) {
       <div className="mt-4">
         {mintState && (
           <div>
-            {mintState !== "pre" && (
+            {(mintState !== "pre" ||
+              (mintState === "pre" && drop && drop.market === true)) && (
               <p className="mt-3 float-right text-normal tracking-wide font-semibold text-neutral-800 dark:text-neutral-100 hover:underline">
                 <Link href={`/drops/${drop.slug}/market`}>
                   <a>Go to Market</a>
@@ -240,7 +242,9 @@ export default function PublicMint({ address, drop }) {
                 />
               </p>
             )}
-            {(mintState === "public" || mintState === "signature" || mintState === "burn") && (
+            {(mintState === "public" ||
+              mintState === "signature" ||
+              mintState === "burn") && (
               <>
                 {wallet && wallet.publicKey ? (
                   <>
@@ -257,7 +261,8 @@ export default function PublicMint({ address, drop }) {
                     ) : (
                       <>
                         {(mintState === "public" ||
-                          (mintState === "signature" && holder === "yes") || (mintState === "burn" && holder === "yes")) && (
+                          (mintState === "signature" && holder === "yes") ||
+                          (mintState === "burn" && holder === "yes")) && (
                           <button
                             className="px-4 py-2 text-lg font-semibold cursor-pointer rounded-xl disabled:bg-gray-300 bg-greeny text-black"
                             onClick={() => mintNow()}
@@ -272,9 +277,7 @@ export default function PublicMint({ address, drop }) {
                           </p>
                         )}
                         {mintState === "burn" && holder === "no" && (
-                          <p>
-                            You don&apos;t have the required NFT to burn
-                          </p>
+                          <p>You don&apos;t have the required NFT to burn</p>
                         )}
                       </>
                     )}

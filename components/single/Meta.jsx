@@ -87,7 +87,7 @@ export default function Meta({ token, collector, market }) {
       {market && (
         <p className="mt-3 text-normal tracking-wide font-semibold text-neutral-800 dark:text-neutral-100 hover:underline">
           <Link href={`/drops/${market}/market`}>
-            <a>Go to Drop</a>
+            <a>Go to original drop</a>
           </Link>
           <ArrowRightIcon
             className="h-4 w-4 ml-1 inline cursor-pointer"

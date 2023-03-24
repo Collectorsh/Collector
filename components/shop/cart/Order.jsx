@@ -35,11 +35,11 @@ export default function Order() {
 
   useEffect(() => {
     const cItems = [];
-    const grandTotal = 0;
+    var grandTotal = 0;
     const wallets = [...new Set(cart.map((c) => c.wallet))];
     for (const w of wallets) {
       const items = cart.filter((c) => c.wallet === w);
-      const ttl = 0;
+      var ttl = 0;
       for (const i of items) {
         ttl += i.product.lamports * i.qty;
       }

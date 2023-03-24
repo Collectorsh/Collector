@@ -157,7 +157,7 @@ export default function Secondary({ drop }) {
                         </div>
                       </div>
                       <div
-                        className="px-4 border-r"
+                        className="px-4"
                         style={{ borderColor: "rgba(255, 255, 255, .2)" }}
                       >
                         <div className="text-sm mb-1">Listed</div>

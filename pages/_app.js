@@ -7,6 +7,7 @@ import { WalletContextProvider } from "/contexts/wallet";
 import { ThemeProvider } from "next-themes";
 import { UserProvider } from "/contexts/user";
 import { ListingsProvider } from "/contexts/listings";
+import { OffersProvider } from "/contexts/offers";
 import { ActivitiesProvider } from "/contexts/activities";
 import { SingleNftProvider } from "/contexts/single_nft";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
@@ -54,15 +55,17 @@ export default function MyApp({ Component, pageProps }) {
         <WalletContextProvider>
           <UserProvider>
             <ListingsProvider>
-              <ActivitiesProvider>
-                <SingleNftProvider>
-                  <ThemeProvider enableSystem={true} attribute="class">
-                    <PlausibleProvider domain="collector.sh">
-                      <Component {...pageProps} />
-                    </PlausibleProvider>
-                  </ThemeProvider>
-                </SingleNftProvider>
-              </ActivitiesProvider>
+              <OffersProvider>
+                <ActivitiesProvider>
+                  <SingleNftProvider>
+                    <ThemeProvider enableSystem={true} attribute="class">
+                      <PlausibleProvider domain="collector.sh">
+                        <Component {...pageProps} />
+                      </PlausibleProvider>
+                    </ThemeProvider>
+                  </SingleNftProvider>
+                </ActivitiesProvider>
+              </OffersProvider>
             </ListingsProvider>
           </UserProvider>
         </WalletContextProvider>

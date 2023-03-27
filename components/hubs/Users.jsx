@@ -3,20 +3,20 @@ import { Toaster } from "react-hot-toast";
 import { error } from "/utils/toastMessages";
 import UserContext from "/contexts/user";
 import fetchAllUsers from "/data/hubs/fetchAllUsers";
-import addArtist from "/data/hubs/addArtist";
-import removeArtist from "/data/hubs/removeArtist";
+import addUser from "/data/hubs/addUser";
+import removeUser from "/data/hubs/removeUser";
 import { TrashIcon } from "@heroicons/react/solid";
 
-export default function Artists({ artists, updateArtists }) {
-  console.log(artists);
-  const [user, setUser] = useContext(UserContext);
+export default function Users({ users, updateUsers }) {
+  console.log(users);
+  const [user] = useContext(UserContext);
   const [allUsers, setAllUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState();
 
   const asyncFetchAllUsers = useCallback(async () => {
     const res = await fetchAllUsers(user.api_key);
-    setAllUsers(res.users);
+    setAllUsers(res.all_users);
   }, []);
 
   useEffect(() => {
@@ -36,20 +36,20 @@ export default function Artists({ artists, updateArtists }) {
     setResults(res);
   };
 
-  const doAddArtist = async (id) => {
+  const doAddUser = async (id) => {
     setSearchTerm("");
-    const res = await addArtist(user.api_key, id);
+    const res = await addUser(user.api_key, id);
     if (res.status === "success") {
-      updateArtists(res.artists);
-      setAllUsers(res.users);
+      updateUsers(res.allowed_users);
+      setAllUsers(res.all_users);
     } else if (res.status === "error") error(res.msg);
   };
 
-  const doRemoveArtist = async (id) => {
-    const res = await removeArtist(user.api_key, id);
+  const doRemoveUser = async (id) => {
+    const res = await removeUser(user.api_key, id);
     if (res.status === "success") {
-      updateArtists(res.artists);
-      setAllUsers(res.users);
+      updateUsers(res.allowed_users);
+      setAllUsers(res.all_users);
     } else if (res.status === "error") error(res.msg);
   };
 
@@ -88,7 +88,7 @@ export default function Artists({ artists, updateArtists }) {
             type="text"
             id="query"
             name="query"
-            placeholder="Add artists to your hub"
+            placeholder="Add users to your hub"
             className="pl-10 md:w-[400px] lg:w-[500px] pr-4 py-3 block border border-neutral-100 dark:border-neutral-800 w-full outline-none text-gray-800 dark:text-gray-300 placeholder-gray-400"
             onChange={(e) => setSearchTerm(e.target.value)}
             value={searchTerm}
@@ -103,7 +103,7 @@ export default function Artists({ artists, updateArtists }) {
                     <li
                       key={index}
                       className="group cursor-pointer hover:text-black dark:hover:text-white hover:font-bold"
-                      onClick={() => doAddArtist(result.id)}
+                      onClick={() => doAddUser(result.id)}
                     >
                       {result.twitter_profile_image && (
                         <img
@@ -129,7 +129,7 @@ export default function Artists({ artists, updateArtists }) {
             </ul>
           </div>
         )}
-        {artists.length > 0 && (
+        {users.length > 0 && (
           <table className="mt-10 relative h-full min-w-full rounded-lg border-gray-100 dark:border-gray-900 border-0 border-separate [border-spacing:0_0.5rem]">
             <thead className="top-[9rem] bg-white dark:bg-dark2">
               <tr>
@@ -137,7 +137,7 @@ export default function Artists({ artists, updateArtists }) {
                   scope="col"
                   className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-left text-button-lg font-semibold py-4 px-6 text-gray-600 dark:text-gray-400 ng-star-inserted"
                 >
-                  Artist
+                  User
                 </th>
                 <th
                   scope="col"
@@ -148,16 +148,16 @@ export default function Artists({ artists, updateArtists }) {
               </tr>
             </thead>
             <tbody>
-              {artists.map((artist, index) => (
+              {users.map((user, index) => (
                 <tr
                   key={index}
                   className="bg-transparent dark:bg-dark3 dark:border-0 dark:text-gray-50 h-full lg:hover:shadow-[0_12px_40px_0px_rgba(0,0,0,0.18)] rounded-xl shadow-[0_12px_40px_0px_rgba(0,0,0,0.06)] text-gray-900 ng-star-inserted"
                 >
-                  <td className="py-4 px-6">{artist.username}</td>
+                  <td className="py-4 px-6">{user.username}</td>
                   <td className="py-4 px-6 text-center">
                     <TrashIcon
                       className="inline h-5 w-5 align-middle cursor-pointer text-red-700"
-                      onClick={() => doRemoveArtist(artist.id)}
+                      onClick={() => doRemoveUser(user.id)}
                     />
                   </td>
                 </tr>

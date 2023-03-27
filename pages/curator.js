@@ -4,7 +4,7 @@ import CheckLoggedIn from "/components/CheckLoggedIn";
 import MainNavigation from "/components/navigation/MainNavigation";
 import UserContext from "/contexts/user";
 import Curate from "/components/hubs/Curate";
-import Artists from "/components/hubs/Artists";
+import Users from "/components/hubs/Users";
 import Settings from "/components/hubs/Settings";
 import fetchCurator from "/data/hubs/fetchCurator";
 
@@ -12,7 +12,7 @@ export default function CuratorHub() {
   const router = useRouter();
   const [user] = useContext(UserContext);
   const [hub, setHub] = useState({});
-  const [artists, setArtists] = useState([]);
+  const [users, setUsers] = useState([]);
   const [selected, setSelected] = useState("curate");
 
   const changeSelected = (sel) => {
@@ -24,8 +24,8 @@ export default function CuratorHub() {
     setHub(config);
   };
 
-  const updateArtists = (arts) => {
-    setArtists(arts);
+  const updateUsers = (usrs) => {
+    setUsers(usrs);
   };
 
   // Fetch curator config for user //
@@ -36,8 +36,8 @@ export default function CuratorHub() {
       return;
     } else if (res.status === "success") {
       setHub(res.hub);
-      if (res.artists && res.artists.length > 0) {
-        setArtists(res.artists);
+      if (res.allowed_users && res.allowed_users.length > 0) {
+        setUsers(res.allowed_users);
       }
     }
   }, []);
@@ -72,12 +72,12 @@ export default function CuratorHub() {
                 </li>
                 <li
                   className={`cursor-pointer hover:text-greeny inline px-2 mr-3 pb-3.5 ${
-                    selected === "artists" &&
+                    selected === "users" &&
                     "text-greeny font-extrabold border-b border-b-2 border-greeny"
                   }`}
-                  onClick={() => changeSelected("artists")}
+                  onClick={() => changeSelected("users")}
                 >
-                  Artists
+                  Users
                 </li>
                 <li
                   className={`cursor-pointer hover:text-greeny inline px-2 mr-3 pb-3.5 ${
@@ -91,8 +91,8 @@ export default function CuratorHub() {
               </ul>
             </div>
             {selected === "curate" && <Curate />}
-            {selected === "artists" && (
-              <Artists artists={artists} updateArtists={updateArtists} />
+            {selected === "users" && (
+              <Users users={users} updateUsers={updateUsers} />
             )}
             {selected === "settings" && (
               <Settings hub={hub} updateConfig={updateConfig} />

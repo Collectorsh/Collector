@@ -1,8 +1,8 @@
 import apiClient from "/data/client/apiClient";
 
-async function removeArtist(apiKey, id) {
+async function removeUser(apiKey, id) {
   try {
-    const res = await apiClient.post("/hub/remove_artist", {
+    const res = await apiClient.post("/hub/remove_user", {
       api_key: apiKey,
       id: id,
     });
@@ -12,4 +12,4 @@ async function removeArtist(apiKey, id) {
   }
 }
 
-export default removeArtist;
+export default removeUser;

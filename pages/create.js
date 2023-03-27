@@ -1,16 +1,13 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
-import { useRouter } from "next/router";
+import React, { useContext, useEffect } from "react";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 import MainNavigation from "/components/navigation/MainNavigation";
 import UserContext from "/contexts/user";
 
 export default function CuratorHub() {
-  const router = useRouter();
   const [user] = useContext(UserContext);
 
   useEffect(() => {
     if (!user) return;
-    if (!user.can_mint) router.push("/");
   }, [user]);
 
   return (

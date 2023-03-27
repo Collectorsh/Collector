@@ -1,8 +1,8 @@
 import apiClient from "/data/client/apiClient";
 
-async function addArtist(apiKey, id) {
+async function addUser(apiKey, id) {
   try {
-    const res = await apiClient.post("/hub/add_artist", {
+    const res = await apiClient.post("/hub/add_user", {
       api_key: apiKey,
       id: id,
     });
@@ -12,4 +12,4 @@ async function addArtist(apiKey, id) {
   }
 }
 
-export default addArtist;
+export default addUser;

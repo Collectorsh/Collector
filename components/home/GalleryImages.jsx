@@ -89,7 +89,7 @@ export default function GalleryImages() {
             <div className="mt-16">
               <Link href={`/${metadata.username}`}>
                 <a className="py-3.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold">
-                  View Galley
+                  View Gallery
                 </a>
               </Link>
             </div>

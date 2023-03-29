@@ -118,7 +118,7 @@ export default function Secondary({ drop }) {
                     {drop.name}
                   </h1>
                   {stats && (
-                    <div className="mt-8 grid grid-cols-3 py-1 w-fit mx-auto sm:mx-0 gap-6">
+                    <div className="text-white mt-8 grid grid-cols-3 py-1 w-fit mx-auto sm:mx-0 gap-6">
                       <div className="text-center">
                         <h1 className="text-xl">{stats.sales}</h1>
                         <h1 className="text-lg">Sales</h1>

@@ -23,6 +23,7 @@ export const getActivitiesQuery = gql`
         name
         address
         mintAddress
+        image
       }
     }
   }

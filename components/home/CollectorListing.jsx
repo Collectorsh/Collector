@@ -10,22 +10,14 @@ export default function CollectorListing() {
   const [metadata, setMetadata] = useState();
 
   const asyncGetCollectorListing = useCallback(async () => {
-    let done = false;
-    while (done === false) {
-      try {
-        let res = await getCollectorListing();
-        let data = await getMetadataFromMint(res.mint);
-        data.amount = res.amount;
-        data.seller = res.seller;
-        data.seller_twitter = res.seller_twitter;
-        data.artist = res.artist;
-        data.artist_twitter = res.artist_twitter;
-        setMetadata(data);
-        done = true;
-      } catch (err) {
-        console.log(err);
-      }
-    }
+    let res = await getCollectorListing();
+    let data = await getMetadataFromMint(res.mint);
+    data.amount = res.amount;
+    data.seller = res.seller;
+    data.seller_twitter = res.seller_twitter;
+    data.artist = res.artist;
+    data.artist_twitter = res.artist_twitter;
+    setMetadata(data);
   }, []);
 
   useEffect(() => {
@@ -90,11 +82,11 @@ export default function CollectorListing() {
                 </div>
               </div>
             </div>
-            <div className="mt-8 text-2xl">
+            <div className="mt-8 text-2xl font-bold">
               ◎{roundToTwo(metadata.amount / 1000000000)}
             </div>
             <div className="mt-16">
-              <Link href={`/${metadata.username}`}>
+              <Link href={`/nft/${metadata.mint}`}>
                 <a className="py-3.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold">
                   Buy Now
                 </a>

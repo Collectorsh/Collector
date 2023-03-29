@@ -1,16 +1,18 @@
-import { rpcHost } from "/config/settings";
 import { toast } from "react-toastify";
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house";
 import { MetadataProgram } from "@metaplex-foundation/mpl-token-metadata";
 
-import { auctionHousesArray } from "/config/settings";
-
 import {
+  Connection,
   PublicKey,
   SYSVAR_INSTRUCTIONS_PUBKEY,
   Transaction,
   LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
+
+import { Metaplex } from "@metaplex-foundation/js";
+const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
+const metaplex = new Metaplex(connection);
 
 const web3 = require("@solana/web3.js");
 
@@ -26,30 +28,24 @@ export default async function makeOfferTransaction(
   publicKey,
   signTransaction,
   refetch,
-  tokenHolder
+  auctionHouseAddress
 ) {
   if (!publicKey || !signTransaction || !nft) {
     return;
   }
 
-  var auctionHaus;
+  console.log(auctionHouseAddress);
 
-  if (tokenHolder) {
-    auctionHaus = auctionHousesArray.filter((a) => a.name === "holder")[0];
-  } else {
-    auctionHaus = auctionHousesArray.filter((a) => a.name === "default")[0];
-  }
-
-  const connection = new web3.Connection(rpcHost, {
-    commitment: "confirmed",
-    confirmTransactionInitialTimeout: 60000,
+  const ah = await metaplex.auctionHouse().findByAddress({
+    address: new PublicKey(auctionHouseAddress),
   });
 
+  const auctionHouse = ah.address;
+  const authority = ah.authorityAddress;
+  const auctionHouseFeeAccount = ah.feeAccountAddress;
+  const treasuryMint = ah.treasuryMint.address;
+
   const buyerPrice = Number(amount) * LAMPORTS_PER_SOL;
-  const auctionHouse = new PublicKey(auctionHaus.address);
-  const authority = new PublicKey(auctionHaus.authority);
-  const auctionHouseFeeAccount = new PublicKey(auctionHaus.feeAccount);
-  const treasuryMint = new PublicKey(auctionHaus.treasuryMint);
   const tokenMint = new PublicKey(nft.mint);
   const tokenAccount = new PublicKey(nft.associatedTokenAccountAddress);
 

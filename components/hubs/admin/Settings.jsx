@@ -36,22 +36,22 @@ export default function Settings({ hub, updateConfig }) {
 
   const getAuctionHouse = async () => {
     if (auctionHouse) return auctionHouse;
-    var ah = await metaplex.auctionHouse().findByCreatorAndMint({
-      creator: wallet.publicKey,
-      treasuryMint: new PublicKey(
-        "So11111111111111111111111111111111111111112"
-      ),
-    });
-    if (ah) {
+    try {
+      let ah = await metaplex.auctionHouse().findByCreatorAndMint({
+        creator: wallet.publicKey,
+        treasuryMint: new PublicKey(
+          "So11111111111111111111111111111111111111112"
+        ),
+      });
       setAuctionHouse(ah);
       return ah;
+    } catch (err) {
+      let ah = await metaplex
+        .auctionHouse()
+        .create({ sellerFeeBasisPoints: basisPoints });
+      setAuctionHouse(ah.auctionHouse);
+      return ah.auctionHouse;
     }
-    var ah = await metaplex
-      .auctionHouse()
-      .create({ sellerFeeBasisPoints: basisPoints });
-    ah = ah.auctionHouse;
-    setAuctionHouse(ah);
-    return ah;
   };
 
   const updateAuctionHouse = async (ahouse) => {

@@ -64,6 +64,7 @@ export default function ShowMakeOffer({ token, refetch, listing, userOffer }) {
       <MakeOfferModal
         open={offerModal}
         token={token}
+        listing={listing}
         closeModal={handleCloseModal}
         refetch={refetch}
       />

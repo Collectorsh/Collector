@@ -1,14 +1,16 @@
-import { rpcHost } from "/config/settings";
 import { toast } from "react-toastify";
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house";
 
-import { auctionHousesArray } from "/config/settings";
-
 import {
+  Connection,
   PublicKey,
   SYSVAR_INSTRUCTIONS_PUBKEY,
   Transaction,
 } from "@solana/web3.js";
+
+import { Metaplex } from "@metaplex-foundation/js";
+const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
+const metaplex = new Metaplex(connection);
 
 const web3 = require("@solana/web3.js");
 
@@ -29,24 +31,18 @@ export default async function cancelOfferTransaction(
     return;
   }
 
-  const auctionHaus = auctionHousesArray.filter(
-    (a) => a.address === offer.auctionHouse.address
-  )[0];
-
-  const connection = new web3.Connection(rpcHost, {
-    commitment: "confirmed",
-    confirmTransactionInitialTimeout: 60000,
+  const ah = await metaplex.auctionHouse().findByAddress({
+    address: new PublicKey(offer.auctionHouse.address),
   });
 
-  const auctionHouse = new PublicKey(auctionHaus.address);
-  const authority = new PublicKey(auctionHaus.authority);
-  const auctionHouseFeeAccount = new PublicKey(auctionHaus.feeAccount);
-  const tokenMint = new PublicKey(nft.mint);
+  const auctionHouse = ah.address;
+  const authority = ah.authorityAddress;
+  const auctionHouseFeeAccount = ah.feeAccountAddress;
+  const treasuryMint = ah.treasuryMint.address;
 
+  const tokenMint = new PublicKey(nft.mint);
   const buyerPrice = offer.price;
   const tradeState = new PublicKey(offer.tradeState);
-
-  const treasuryMint = new PublicKey(auctionHaus.treasuryMint);
   const tokenAccount = new PublicKey(nft.associatedTokenAccountAddress);
 
   const [bidReceipt, _bidReceiptBump] =

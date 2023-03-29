@@ -1,18 +1,59 @@
-import { Fragment, useState, useContext } from "react";
+import { Fragment, useState, useContext, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import sellNftTransaction from "/utils/auctionhouse/SellNft";
 import { Oval } from "react-loader-spinner";
 import UserContext from "/contexts/user";
+import { auctionHousesArray } from "/config/settings";
+import { Connection, PublicKey } from "@solana/web3.js";
+import { Metaplex } from "@metaplex-foundation/js";
 
-export default function SellModal({ open, token, closeModal, refetch }) {
+export default function SellModal({
+  open,
+  token,
+  closeModal,
+  refetch,
+  auctionHouseAddress,
+}) {
   const { publicKey, signTransaction } = useWallet();
   const [processing, setProcessing] = useState(false);
   const { setVisible } = useWalletModal();
   const [user] = useContext(UserContext);
+  const [basisPoints, setBasisPoints] = useState();
+  const [ahAddress, setAhAddress] = useState();
+
+  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
+  const metaplex = new Metaplex(connection);
 
   function setOpen() {}
+
+  useEffect(() => {
+    if (auctionHouseAddress) {
+      var ah = auctionHouseAddress;
+    } else {
+      if (user && user.token_holder) {
+        var ah = auctionHousesArray.filter((a) => a.name === "holder")[0]
+          .address;
+      } else {
+        var ah = auctionHousesArray.filter((a) => a.name === "default")[0]
+          .address;
+      }
+    }
+    setAhAddress(ah);
+    metaplex
+      .auctionHouse()
+      .findByAddress({
+        address: new PublicKey(ah),
+      })
+      .then((auctionHouse) => {
+        setBasisPoints(
+          auctionHouse.sellerFeeBasisPoints === 0
+            ? "0"
+            : (auctionHouse.sellerFeeBasisPoints / 100).toString()
+        );
+      });
+  }, [user]);
 
   const listNow = async () => {
     if (!publicKey) {
@@ -27,7 +68,7 @@ export default function SellModal({ open, token, closeModal, refetch }) {
       publicKey,
       signTransaction,
       refetch,
-      user && user.token_holder
+      ahAddress
     );
     setProcessing(false);
     closeModal();
@@ -87,9 +128,9 @@ export default function SellModal({ open, token, closeModal, refetch }) {
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500 mb-2">{token.name}</p>
-                      {user && user.token_holder && (
+                      {basisPoints && (
                         <p className="text-sm text-gray-500 bg-gray-100 rounded-sm px-1 w-fit">
-                          0% fee
+                          {basisPoints}% fee
                         </p>
                       )}
                       <p className="text-sm text-gray-500 mt-2">Amount:</p>

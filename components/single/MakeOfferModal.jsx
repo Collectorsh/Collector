@@ -1,17 +1,38 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useContext } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import makeOfferTransaction from "/utils/auctionhouse/MakeOffer";
 import { Oval } from "react-loader-spinner";
+import UserContext from "/contexts/user";
+import { auctionHousesArray } from "/config/settings";
 import checkOwner from "/data/nft/checkOwner";
 
-export default function MakeOfferModal({ open, token, closeModal, refetch }) {
+export default function MakeOfferModal({
+  open,
+  token,
+  listing,
+  closeModal,
+  refetch,
+}) {
   const { publicKey, signTransaction } = useWallet();
   const [processing, setProcessing] = useState(false);
   const { setVisible } = useWalletModal();
+  const [user] = useContext(UserContext);
 
   function setOpen() {}
+
+  const getAuctionHouseAddress = async () => {
+    if (listing) return listing.auctionHouse.address;
+    const tokenHolder = await checkOwner(token.owner);
+    var ah;
+    if (tokenHolder) {
+      ah = auctionHousesArray.filter((a) => a.name === "holder")[0];
+    } else {
+      ah = auctionHousesArray.filter((a) => a.name === "default")[0];
+    }
+    return ah.address;
+  };
 
   const offerNow = async () => {
     if (!publicKey) {
@@ -20,14 +41,13 @@ export default function MakeOfferModal({ open, token, closeModal, refetch }) {
     }
     const amount = document.getElementById("amount").value;
     setProcessing(true);
-    const tokenHolder = await checkOwner(token.owner);
     await makeOfferTransaction(
       amount,
       token,
       publicKey,
       signTransaction,
       refetch,
-      tokenHolder
+      await getAuctionHouseAddress()
     );
     setProcessing(false);
     closeModal();

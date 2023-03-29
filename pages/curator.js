@@ -3,9 +3,9 @@ import { useRouter } from "next/router";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 import MainNavigation from "/components/navigation/MainNavigation";
 import UserContext from "/contexts/user";
-import Curate from "/components/hubs/Curate";
-import Users from "/components/hubs/Users";
-import Settings from "/components/hubs/Settings";
+import Curate from "/components/hubs/admin/Curate";
+import Users from "/components/hubs/admin/Users";
+import Settings from "/components/hubs/admin/Settings";
 import fetchCurator from "/data/hubs/fetchCurator";
 
 export default function CuratorHub() {

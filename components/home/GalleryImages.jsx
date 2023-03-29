@@ -67,6 +67,13 @@ export default function GalleryImages() {
                   )}
                   {metadata.artist_name ? metadata.artist_name : "???"}
                 </div>
+                <div className="mt-16">
+                  <Link href={`/nft/${metadata.mint}`}>
+                    <a className="py-3.5 px-4 rounded-3xl border-2 border-black dark:border-white text-black dark:text-white cursor-pointer hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-bold">
+                      View Artwork
+                    </a>
+                  </Link>
+                </div>
               </div>
               <div className="col-span-1">
                 <div className="font-semibold text-neutral-700 dark:text-neutral-200">
@@ -84,14 +91,14 @@ export default function GalleryImages() {
                   )}
                   {metadata.username}
                 </div>
+                <div className="mt-16">
+                  <Link href={`/${metadata.username}`}>
+                    <a className="py-3.5 px-4 rounded-3xl border-2 border-black dark:border-white text-black dark:text-white cursor-pointer hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-bold">
+                      View Gallery
+                    </a>
+                  </Link>
+                </div>
               </div>
-            </div>
-            <div className="mt-16">
-              <Link href={`/${metadata.username}`}>
-                <a className="py-3.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold">
-                  View Galley
-                </a>
-              </Link>
             </div>
           </div>
         </>

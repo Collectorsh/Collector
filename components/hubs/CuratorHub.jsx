@@ -6,10 +6,16 @@ import { Connection, PublicKey } from "@solana/web3.js";
 export default function CuratorHub({ hub, allowed_users }) {
   const [user] = useContext(UserContext);
   const [backgroundImage, setBackgroundImage] = useState();
+  const [canList, setCanList] = useState(false);
 
   useEffect(() => {
     // Get listings
   }, [hub]);
+
+  useEffect(() => {
+    if (!user) return;
+    setCanList(allowed_users.includes(user.id));
+  }, [allowed_users, user]);
 
   return (
     <div className="relative bg-black overflow-hidden">

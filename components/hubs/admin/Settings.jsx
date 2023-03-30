@@ -46,18 +46,21 @@ export default function Settings({ hub, updateConfig }) {
       setAuctionHouse(ah);
       return ah;
     } catch (err) {
-      let ah = await metaplex
-        .auctionHouse()
-        .create({ sellerFeeBasisPoints: basisPoints });
+      let ah = await metaplex.auctionHouse().create({
+        sellerFeeBasisPoints: basisPoints,
+        requiresSignOff: false,
+        canChangeSalePrice: false,
+      });
       setAuctionHouse(ah.auctionHouse);
       return ah.auctionHouse;
     }
   };
 
   const updateAuctionHouse = async (ahouse) => {
-    let ah = await metaplex
-      .auctionHouse()
-      .update({ auctionHouse: ahouse, sellerFeeBasisPoints: basisPoints });
+    let ah = await metaplex.auctionHouse().update({
+      auctionHouse: ahouse,
+      sellerFeeBasisPoints: basisPoints,
+    });
     setAuctionHouse(ah.auctionHouse);
   };
 

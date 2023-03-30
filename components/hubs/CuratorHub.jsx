@@ -53,7 +53,6 @@ export default function CuratorHub({ hub, allowed_users }) {
     let lstns = activities.filter(
       (a) => a.activityType === "listing" && !a.cancelledAt
     );
-    console.log(lstns);
     setListings(lstns);
     // Fetch visible listings and order from api
     // fetchHubListings(lstns, hub.id)
@@ -63,7 +62,6 @@ export default function CuratorHub({ hub, allowed_users }) {
   useEffect(() => {
     if (!user) return;
     setCanList(allowed_users.includes(user.id));
-    setCanList(true);
   }, [allowed_users, user]);
 
   function classNames(...classes) {

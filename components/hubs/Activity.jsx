@@ -7,7 +7,7 @@ export default function Activity() {
   console.log(activities);
 
   return (
-    <div className="clear-both mt-6 max-w-screen-2xl mx-auto px-4 sm:px-8">
+    <div className="clear-both mt-6 max-w-screen-2xl mx-auto px-4 sm:px-8 pb-12">
       <table className="relative h-full min-w-full rounded-lg border-gray-100 dark:border-gray-900 border-0 border-separate [border-spacing:0_0.5rem] shadow-sm">
         <thead className="top-[9rem] bg-white dark:bg-dark2">
           <tr>

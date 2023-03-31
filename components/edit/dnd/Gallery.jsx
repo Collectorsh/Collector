@@ -21,7 +21,7 @@ import { cdnImage } from "/utils/cdnImage";
 
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
-  const [columns, setColumns] = useState(user.columns);
+  const [columns, setColumns] = useState(user ? user.columns : 3);
   const [items, setItems] = useState();
   const [bulkEdit, setBulkEdit] = useState(false);
 

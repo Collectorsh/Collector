@@ -38,7 +38,7 @@ export default function List({ hub, refetch }) {
         pauseOnHover
         theme="dark"
       />
-      <div className="clear-both mt-6 max-w-screen-2xl mx-auto px-4 sm:px-8">
+      <div className="clear-both mt-6 max-w-screen-2xl mx-auto px-4 sm:px-8 pb-12">
         {!wallet ||
           (!wallet.publicKey && (
             <button
@@ -48,6 +48,9 @@ export default function List({ hub, refetch }) {
               Connect Wallet
             </button>
           ))}
+        <h1 className="mb-6 text-3xl w-fit mx-auto">
+          Choose the Artwork that you&apos;d like to list
+        </h1>
         {loading && (
           <div className="w-fit mx-auto mt-6">
             <Oval
@@ -59,10 +62,7 @@ export default function List({ hub, refetch }) {
             />
           </div>
         )}
-        <h1 className="mb-6 text-3xl w-fit mx-auto">
-          Choose the Artwork that you&apos;d like to list
-        </h1>
-        <div className="mb-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-center sm:justify-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-center sm:justify-start">
           {inWallet &&
             inWallet.map((token, index) => (
               <Item token={token} key={index} hub={hub} refetch={refetch} />

@@ -58,17 +58,24 @@ export default function MyApp({ Component, pageProps }) {
         <WalletContextProvider>
           <UserProvider>
             <ListingsProvider>
-              <OffersProvider>
-                <ActivitiesProvider>
-                  <SingleNftProvider>
-                    <ThemeProvider enableSystem={true} attribute="class">
-                      <PlausibleProvider domain="collector.sh">
-                        <Component {...pageProps} />
-                      </PlausibleProvider>
-                    </ThemeProvider>
-                  </SingleNftProvider>
-                </ActivitiesProvider>
-              </OffersProvider>
+              <ActivitiesProvider>
+                <FollowingProvider>
+                  <OffersProvider>
+                    <SingleNftProvider>
+                      <ThemeProvider enableSystem={true} attribute="class">
+                        <PlausibleProvider domain="collector.sh">
+                          <CartProvider>
+                            <div className="min-h-[100vh] dark:bg-black dark:text-white">
+                              <Component {...pageProps} />
+                            </div>
+                            <Footer />
+                          </CartProvider>
+                        </PlausibleProvider>
+                      </ThemeProvider>
+                    </SingleNftProvider>
+                  </OffersProvider>
+                </FollowingProvider>
+              </ActivitiesProvider>
             </ListingsProvider>
           </UserProvider>
         </WalletContextProvider>

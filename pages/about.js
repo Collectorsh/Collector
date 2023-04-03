@@ -5,8 +5,8 @@ export default function About() {
   return (
     <div className="dark:bg-black dark:text-whitish">
       <MainNavigation />
-      <div className="max-w-3xl mx-auto">
-        <div className="px-4 xl:px-0">
+      <div className="max-w-3xl mx-auto pb-12">
+        <div className="px-4">
           <h2 className="text-2xl w-full pt-8 font-extrabold mb-8 text-black inline-block dark:text-whitish">
             About Collector
           </h2>

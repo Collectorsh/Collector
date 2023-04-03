@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useContext, useCallback, useState } from "react";
 import Head from "next/head";
 import MainNavigation from "/components/navigation/MainNavigation";
 import getMetadataFromMint from "/data/nft/getMetadataFromMint";
@@ -8,6 +8,7 @@ import SingleNftContext from "/contexts/single_nft";
 import { auctionHousesArray } from "/config/settings";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { Metaplex } from "@metaplex-foundation/js";
+import findMarket from "/data/drops/findMarket";
 
 function Nft({ image, token }) {
   const [, setSingleNft] = useContext(SingleNftContext);
@@ -17,6 +18,7 @@ function Nft({ image, token }) {
 
   const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const metaplex = new Metaplex(connection);
+  const [market, setMarket] = useState();
 
   /////////////////////////////////////////////////////////////////////////////////////
 
@@ -89,6 +91,19 @@ function Nft({ image, token }) {
 
   /////////////////////////////////////////////////////////////////////////////////////
 
+  // Find if mint belongs to a drop and has a marketplace
+  const fetchMarketplace = useCallback(async () => {
+    const res = await findMarket(token.mint);
+    if (res.status === "success") setMarket(res.market);
+  }, []);
+
+  // Run once on page load
+  useEffect(() => {
+    fetchMarketplace();
+  }, []);
+
+  /////////////////////////////////////////////////////////////////////////////////////
+
   return (
     <div className="dark:bg-black">
       <Head>
@@ -107,12 +122,8 @@ function Nft({ image, token }) {
 
       <MainNavigation />
 
-      <div className="max-w-7xl mx-auto">
-        <div>
-          <div className="mx-auto pb-4 px-4 xl:px-0 -mt-20">
-            <Single token={token} refetch={refetch} />
-          </div>
-        </div>
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
+        <Single token={token} market={market} refetch={refetch} />
       </div>
     </div>
   );

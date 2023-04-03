@@ -15,11 +15,11 @@ function SettingsPage() {
   };
 
   return (
-    <div className="dark:bg-black dark:text-whitish">
+    <div>
       <CheckLoggedIn />
       <MainNavigation />
-      <div className="max-w-7xl mx-auto relative">
-        <div className="px-4 xl:px-0 mx-auto clear-both">
+      <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-8">
+        <div className="mx-auto clear-both">
           <div className="mx-auto pt-3 md:px-0">
             <h2 className="mt-8 mb-12 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-whitish">
               Edit Profile

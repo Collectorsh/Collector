@@ -9,9 +9,12 @@ import { UserProvider } from "/contexts/user";
 import { ListingsProvider } from "/contexts/listings";
 import { OffersProvider } from "/contexts/offers";
 import { ActivitiesProvider } from "/contexts/activities";
+import { FollowingProvider } from "/contexts/following";
 import { SingleNftProvider } from "/contexts/single_nft";
+import { CartProvider } from "/contexts/cart";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import PlausibleProvider from "next-plausible";
+import Footer from "/components/Footer";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,

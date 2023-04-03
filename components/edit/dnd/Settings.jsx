@@ -73,7 +73,24 @@ export default function Settings({
           />
         </Tippy>
       </h2>
-      <div className="grid w-full grid-cols-3 space-x-2 rounded-xl p-2">
+      <div className="grid w-full grid-cols-4 space-x-2 rounded-xl p-2">
+        <div>
+          <input
+            type="radio"
+            name="option"
+            id="2"
+            className="peer hidden"
+            onClick={() => setColumns(2)}
+            defaultChecked={columns === 2}
+          />
+          <label
+            htmlFor="2"
+            className="block cursor-pointer select-none rounded-xl p-2 text-center peer-checked:bg-greeny peer-checked:font-bold peer-checked:text-white"
+          >
+            2
+          </label>
+        </div>
+
         <div>
           <input
             type="radio"

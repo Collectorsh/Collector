@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useEffect, useCallback, useContext } from "react";
 import getFollowing from "/data/artists/getFollowing";
 import UserContext from "/contexts/user";
+import FollowingContext from "/contexts/following";
 import { Toaster } from "react-hot-toast";
 import ArtistSearch from "/components/follow/ArtistSearch";
 import ArtistList from "/components/follow/ArtistList";
 
 export default function Artists() {
-  const [user, setUser] = useContext(UserContext);
-  const [following, setFollowing] = useState();
+  const [user] = useContext(UserContext);
+  const [following, setFollowing] = useContext(FollowingContext);
 
   const initGetFollowing = useCallback(async (apiKey) => {
     let res = await getFollowing(apiKey);
@@ -19,25 +20,15 @@ export default function Artists() {
     initGetFollowing(user.api_key);
   }, [initGetFollowing, user]);
 
-  const updateFollowing = (follow) => {
-    setFollowing(follow);
-  };
-
   return (
     <>
       <Toaster />
       <div>
-        <div className="mt=8 lg:mt-16">
-          <div className="mb-6">
-            <ArtistSearch user={user} handleFollow={updateFollowing} />
+        <div className="mt-8 lg:mt-16">
+          <div className="pb-6">
+            <ArtistSearch user={user} />
           </div>
-          {following && (
-            <ArtistList
-              following={following}
-              handleFollow={updateFollowing}
-              user={user}
-            />
-          )}
+          {following && <ArtistList />}
         </div>
       </div>
     </>

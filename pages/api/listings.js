@@ -13,14 +13,23 @@ export default async function handler(req, res) {
         auctionHouse: { address: auctionHouse, isNative: true },
       });
       for (const list of lstngs.filter((l) => l.canceledAt === null)) {
-        listings.push({
-          address: list.metadataAddress.toBase58(),
-          price: list.price.basisPoints.toNumber(),
-          seller: list.sellerAddress.toBase58(),
-          auctionHouse: list.auctionHouse,
-          tradeState: list.tradeStateAddress._bn,
-          tradeStateBump: list.tradeStateAddress.bump,
-        });
+        try {
+          const nft = await metaplex.nfts().findByMetadata({
+            metadata: list.metadataAddress,
+          });
+          listings.push({
+            address: list.metadataAddress.toBase58(),
+            mint: nft.mint.address.toBase58(),
+            price: list.price.basisPoints.toNumber(),
+            seller: list.sellerAddress.toBase58(),
+            auctionHouse: list.auctionHouse,
+            tradeState: list.tradeStateAddress._bn,
+            tradeStateBump: list.tradeStateAddress.bump,
+            created: list.createdAt.toNumber(),
+          });
+        } catch (err) {
+          console.log(err);
+        }
       }
     }
     return res.status(200).json({ listings: listings });

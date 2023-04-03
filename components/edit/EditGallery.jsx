@@ -19,7 +19,7 @@ export default function EditGallery() {
   }, [user]);
 
   return (
-    <div className="dark:bg-black mt-2 mb-2">
+    <div className="dark:bg-black mt-2 pb-12">
       {tokens ? (
         <Gallery tokens={tokens} user={user} />
       ) : (

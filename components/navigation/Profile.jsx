@@ -16,7 +16,6 @@ export default function MainNavigation() {
     wallet.disconnect().then(() => {
       localStorage.removeItem("api_key");
       setUser(null);
-      router.push("/");
     });
   }
 

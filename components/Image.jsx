@@ -36,11 +36,13 @@ export default function Image({ token, size = "small" }) {
     let styles;
     if (size === "small") {
       styles =
-        "w-[600px] h-[400px] md:w-[500px] md:h-[300px] opacity-0 cursor-pointer hover:origin-center object-center object-cover shadow-sm";
+        "w-[600px] h-[400px] md:w-[500px] md:h-[300px] opacity-0 cursor-pointer hover:origin-center object-center object-cover";
     } else if (size === "medium") {
       styles = "md:w-[550px]";
     } else if (size === "large") {
-      styles = "shadow-lg object-center object-cover";
+      styles = "object-center object-cover";
+    } else if (size === "max") {
+      styles = "max-h-full max-w-full mx-auto object-center object-cover";
     }
     return styles;
   }

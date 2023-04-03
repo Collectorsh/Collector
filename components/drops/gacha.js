@@ -10,14 +10,16 @@ import { Oval } from "react-loader-spinner";
 import Moment from "react-moment";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import { toDate } from "/utils/mint/utils";
+import { ArrowRightIcon } from "@heroicons/react/outline";
+import MintedModal from "/components/MintedModal";
 
-export default function Gacha({ address }) {
+export default function Gacha({ address, drop }) {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [holder, setHolder] = useState();
   const [total, setTotal] = useState(0);
   const [remaining, setRemaining] = useState();
-  const [minted, setMinted] = useState();
+  const [itemsMinted, setItemsMinted] = useState();
   const [holderMax, setHolderMax] = useState();
   const [collectionMint, setCollectionMint] = useState();
   const [mintState, setMintState] = useState();
@@ -25,6 +27,8 @@ export default function Gacha({ address }) {
   const [holderStartDate, setHolderStartDate] = useState();
   const [publicStartDate, setPublicStartDate] = useState();
   const [cost, setCost] = useState();
+  const [minted, setMinted] = useState(false);
+  const [mintedNft, setMintedNft] = useState();
 
   const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
@@ -36,6 +40,7 @@ export default function Gacha({ address }) {
     setTotal(cndy.itemsLoaded);
     setMinted(cndy.itemsMinted.toNumber());
     setRemaining(cndy.itemsRemaining.toNumber());
+    setItemsMinted(cndy.itemsMinted.toNumber());
     doSetState(cndy);
     if (onceOnly === false) setTimeout(asyncGetCandymachine, 5000);
   }, []);
@@ -60,10 +65,12 @@ export default function Gacha({ address }) {
   }, []);
 
   useEffect(() => {
-    if (!wallet || !wallet.publicKey) return;
-    asyncGetCandymachine(wallet);
-    asyncCheckIfHolder(wallet);
-  }, [wallet]);
+    asyncGetCandymachine();
+  }, []);
+
+  useEffect(() => {
+    if (mintState === "holder") checkIfHolder();
+  }, [mintState, wallet]);
 
   const mintNow = async (group) => {
     if (isMinting) return;
@@ -75,7 +82,7 @@ export default function Gacha({ address }) {
     const collectionUpdateAuthority = candyMachine.authorityAddress;
     try {
       if (group === "holder") {
-        var { nft } = await metaplex.candyMachines().mint({
+        var args = {
           candyMachine,
           collectionUpdateAuthority,
           group: "holder",
@@ -84,35 +91,35 @@ export default function Gacha({ address }) {
               mint: collectionMint.mintAddress,
             },
           },
-        });
+        };
       } else {
-        var { nft } = await metaplex.candyMachines().mint({
+        var args = {
           candyMachine,
           collectionUpdateAuthority,
           group: "public",
-        });
+        };
       }
-      console.log(nft);
-      toast.success(`🎉 Congratulations you minted ${nft.name}`);
-    } catch (e) {
-      console.log(e);
-      try {
-        let cause = e.message.split("Caused By: ")[1];
-        let msg = cause.split(/\r?\n/)[0];
-        // This isn't ideal but there's a race condition where the nft isn't indexed by the rpc node
-        // the mint transaction is already successful at this point though so we return a successful message
-        if (msg.includes("Account Not Found")) {
-          toast.success(`🎉 Congratulations mint successful!`);
-        } else {
-          toast.error(msg);
+      const transactionBuilder = await metaplex
+        .candyMachines()
+        .builders()
+        .mint(args);
+      const { tokenAddress } = transactionBuilder.getContext();
+      await metaplex.rpc().sendAndConfirmTransaction(transactionBuilder);
+      var nft;
+      while (!nft) {
+        try {
+          nft = await metaplex.nfts().findByToken({ token: tokenAddress });
+          setMinted(true);
+          setMintedNft(nft);
+        } catch (err) {
+          await sleep(2000);
         }
-      } catch (e) {
-        console.log(e);
-        toast.error("Something went wrong");
       }
+      setIsMinting(false);
+      asyncGetCandymachine(wallet, true);
+    } catch (e) {
+      setIsMinting(false);
     }
-    setIsMinting(false);
-    asyncGetCandymachine(wallet, true);
   };
 
   const doSetState = (cndy) => {
@@ -144,27 +151,26 @@ export default function Gacha({ address }) {
 
   return (
     <>
-      {remaining && total && (
-        <p className="bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
-          Remaining: {remaining}/{total}
-        </p>
-      )}
-
-      {cost && (
-        <p className="mt-4 bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
-          Price: {cost && <>◎{roundToTwo(cost / 1000000000)}</>}
-        </p>
-      )}
-
-      {wallet && wallet.publicKey ? (
-        <div className="mt-4">
-          {mintState && mintState === "sold" && (
-            <button className="bg-red-400 px-4 py-3 font-semibold text-black text-lg rounded-xl">
-              Sold Out
-            </button>
+      {mintState && (
+        <div className="rounded-xl p-4 border-2 border-neutral-100 dark:border-dark3">
+          {(mintState === "public" || mintState === "signature") && (
+            <p className="font-bold text-xl text-neutral-800 dark:text-neutral-100">
+              MINT LIVE
+            </p>
           )}
-          {mintState && mintState === "pre" && (
+          {mintState === "ended" && (
+            <p className="font-bold text-xl text-neutral-800 dark:text-neutral-100">
+              MINT FINISHED
+            </p>
+          )}
+          {mintState === "sold" && (
+            <p className="font-bold text-xl text-neutral-800 dark:text-neutral-100">
+              SOLD OUT
+            </p>
+          )}
+          {mintState === "pre" && (
             <>
+              <div className="inline">Starts in </div>
               {holderStartDate && (
                 <MintCountdown
                   date={toDate(holderStartDate)}
@@ -179,6 +185,47 @@ export default function Gacha({ address }) {
               )}
             </>
           )}
+          {itemsMinted && total && (
+            <>
+              <p className="my-2 font-semibold text-neutral-700 dark:text-neutral-200">
+                {Math.round((itemsMinted / total) * 100)}% minted{" "}
+                <span className="font-normal">
+                  ({itemsMinted}/{total})
+                </span>
+              </p>
+              <div className="h-1 bg-gray-100 w-full">
+                <div
+                  className="h-1 bg-greeny"
+                  style={{
+                    width: `${Math.round((itemsMinted / total) * 100)}%`,
+                  }}
+                ></div>
+              </div>
+            </>
+          )}
+
+          {cost && mintState !== "ended" && (
+            <p className="mt-2 text-xl font-semibold">
+              {cost && <>◎{roundToTwo(cost / 1000000000)}</>}
+            </p>
+          )}
+        </div>
+      )}
+
+      {mintState !== "pre" && (
+        <p className="mt-6 float-right text-normal tracking-wide font-semibold text-neutral-800 dark:text-neutral-100 hover:underline">
+          <Link href={`/drops/${drop.slug}/market`}>
+            <a>Go to Market</a>
+          </Link>
+          <ArrowRightIcon
+            className="h-4 w-4 ml-1 inline cursor-pointer"
+            aria-hidden="true"
+          />
+        </p>
+      )}
+
+      {wallet && wallet.publicKey ? (
+        <div className="mt-4">
           {mintState && mintState === "holder" && (
             <>
               {holderMax && (
@@ -191,7 +238,6 @@ export default function Gacha({ address }) {
                 <>
                   {isMinting ? (
                     <>
-                      <br />
                       <Oval
                         color="#fff"
                         secondaryColor="#000"
@@ -241,7 +287,6 @@ export default function Gacha({ address }) {
             <>
               {isMinting ? (
                 <>
-                  <br />
                   <Oval
                     color="#fff"
                     secondaryColor="#000"
@@ -268,7 +313,7 @@ export default function Gacha({ address }) {
       ) : (
         <>
           <button
-            className="mt-4 float-right bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl"
+            className="mt-4 bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl"
             onClick={(e) => setVisible(true)}
           >
             Connect Wallet
@@ -278,3 +323,7 @@ export default function Gacha({ address }) {
     </>
   );
 }
+
+const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};

@@ -10,7 +10,7 @@ export default function Galleries() {
 
   const fetchGalleries = useCallback(async () => {
     let res = await getGalleries();
-    setGalleries(res.data);
+    setGalleries(res.data.filter((u) => u.twitter_profile_image));
   }, []);
 
   useEffect(() => {
@@ -29,6 +29,25 @@ export default function Galleries() {
       );
     }
     return results;
+  };
+
+  const removeElement = (e) => {
+    const newDiv = document.createElement("div");
+    newDiv.classList.add(
+      "bg-gray-100",
+      "dark:bg-dark3",
+      "w-12",
+      "h-12",
+      "rounded-full",
+      "overflow-hidden",
+      "mx-auto",
+      "float-left",
+      "align-middle"
+    );
+    e.target.parentNode.parentNode.replaceChild(
+      newDiv,
+      e.target.parentNode.parentNode.children[0]
+    );
   };
 
   return (
@@ -53,15 +72,18 @@ export default function Galleries() {
                   >
                     <Link href={`/${item.username}`} title="">
                       <a>
-                        {item.twitter_profile_image && (
-                          <img
-                            src={item.twitter_profile_image}
-                            className="w-12 h-12 rounded-full mx-auto float-left align-middle"
-                          />
-                        )}
-                        {!item.twitter_profile_image && (
-                          <div className="w-12 h-12 rounded-full mx-auto float-left align-middle bg-gray-100 dark:bg-dark3" />
-                        )}
+                        <div className="w-12 h-12 rounded-full overflow-hidden mx-auto float-left align-middle">
+                          {item.twitter_profile_image && (
+                            <img
+                              src={item.twitter_profile_image}
+                              className="object-center object-cover"
+                              onError={(e) => removeElement(e)}
+                            />
+                          )}
+                          {!item.twitter_profile_image && (
+                            <div className="bg-gray-100 dark:bg-dark3" />
+                          )}
+                        </div>
                         <div className="font-bold hover:underline ml-16 pt-3 align-middle">
                           {item.username}
                         </div>

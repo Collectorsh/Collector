@@ -29,28 +29,19 @@ export default function Search() {
   return (
     <div className="dark:bg-black">
       <MainNavigation publicKey={address} />
-      <div className="max-w-7xl mx-auto">
-        <div className="dark:bg-black">
-          <div className="mx-auto px-4">
-            <div className="mx-auto px-2 md:px-0">
-              {tokens && <GalleryContainer tokens={tokens} />}
-              {!tokens && notFound && (
-                <p className="dark:text-gray-100">
-                  We tried but we couldn&apos;t find any NFTs at this address.
-                </p>
-              )}
-              {!tokens && !notFound && (
-                <div className="mt-4 w-[50px] mx-auto h-64">
-                  <Oval
-                    color="#fff"
-                    secondaryColor="#000"
-                    height={50}
-                    width={50}
-                  />
-                </div>
-              )}
+      <div className="dark:bg-black">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
+          {tokens && <GalleryContainer tokens={tokens} />}
+          {!tokens && notFound && (
+            <p className="dark:text-gray-100">
+              We tried but we couldn&apos;t find any NFTs at this address.
+            </p>
+          )}
+          {!tokens && !notFound && (
+            <div className="mt-4 w-[50px] mx-auto h-64">
+              <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

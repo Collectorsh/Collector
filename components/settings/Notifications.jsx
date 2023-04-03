@@ -37,7 +37,7 @@ export default function Notifications() {
       <Toaster />
 
       <div>
-        <div className="mt=8 lg:mt-16 mb-12">
+        <div className="mt-8 lg:mt-16 pb-12">
           {user && (
             <div className="clear-both mt-10">
               <div className="bg-white shadow overflow-hidden sm:rounded-lg dark:border-dark2 dark:bg-dark2">

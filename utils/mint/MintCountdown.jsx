@@ -6,42 +6,31 @@ import React from "react";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      display: "flex",
+      display: "inline-flex",
       padding: theme.spacing(0),
       "& > *": {
-        margin: theme.spacing(0.4),
-        width: theme.spacing(6),
-        height: theme.spacing(6),
         display: "flex",
-        flexDirection: "column",
-        alignContent: "center",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#222",
-        color: "white",
+        flexDirection: "row",
+        alignContent: "flex-start",
+        alignItems: "flex-start",
+        justifyContent: "flex-start",
         borderRadius: 5,
-        fontSize: 10,
+        fontSize: 14,
       },
     },
     done: {
-      display: "flex",
+      display: "inline-flex",
       margin: 0,
-      marginBottom: theme.spacing(0.5),
-      height: theme.spacing(3.5),
-      padding: theme.spacing(1),
-      flexDirection: "column",
-      alignContent: "center",
-      alignItems: "center",
-      justifyContent: "center",
-      background: "#222",
-      color: "white",
-      borderRadius: 5,
-      fontWeight: "bold",
-      fontSize: 18,
+      flexDirection: "row",
+      alignContent: "flex-start",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
+      fontWeight: "normal",
+      fontSize: 14,
     },
     item: {
-      fontWeight: "bold",
-      fontSize: 18,
+      fontWeight: "normal",
+      fontSize: 14,
     },
   })
 );
@@ -54,33 +43,35 @@ export const MintCountdown = ({ date, status, style, onComplete }) => {
     } else {
       return (
         <div className={classes.root} style={style}>
-          {days > 0 && (
-            <Paper elevation={0}>
-              <span className={classes.item}>{days}</span>
-              {days > 1 && <span>days</span>}
-              {days === 1 && <span>day</span>}
-            </Paper>
-          )}
-          <Paper elevation={0}>
-            <span className={classes.item}>
-              {hours < 10 ? `0${hours}` : hours}
-            </span>
-            <span>hrs</span>
-          </Paper>
-          <Paper elevation={0}>
-            <span className={classes.item}>
-              {minutes < 10 ? `0${minutes}` : minutes}
-            </span>
-            <span>mins</span>
-          </Paper>
-          {days === 0 && (
+          <div className="text-black dark:text-white">
+            {days > 0 && (
+              <Paper elevation={0} style={{ background: "none" }}>
+                <span className={classes.item}>{days}</span>
+                {days > 1 && <span>days</span>}
+                {days === 1 && <span>day</span>}
+              </Paper>
+            )}
             <Paper elevation={0}>
               <span className={classes.item}>
-                {seconds < 10 ? `0${seconds}` : seconds}
+                {hours < 10 ? `0${hours}` : hours}
               </span>
-              <span>secs</span>
+              <span>hrs</span>
             </Paper>
-          )}
+            <Paper elevation={0}>
+              <span className={classes.item}>
+                {minutes < 10 ? `0${minutes}` : minutes}
+              </span>
+              <span>mins</span>
+            </Paper>
+            {days === 0 && (
+              <Paper elevation={0}>
+                <span className={classes.item}>
+                  {seconds < 10 ? `0${seconds}` : seconds}
+                </span>
+                <span>secs</span>
+              </Paper>
+            )}
+          </div>
         </div>
       );
     }

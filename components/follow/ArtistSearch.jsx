@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import artistFollowSearch from "/data/artists/artistFollowSearch";
 import followArtist from "/data/artists/followArtist";
 import { Oval } from "react-loader-spinner";
 import { success } from "/utils/toast";
+import UserContext from "/contexts/user";
+import FollowingContext from "/contexts/following";
 
-function ArtistSearch({ user, handleFollow }) {
+function ArtistSearch() {
+  const [user] = useContext(UserContext);
+  const [, setFollowing] = useContext(FollowingContext);
   const [results, setResults] = useState();
   const [searching, setSearching] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,7 +35,7 @@ function ArtistSearch({ user, handleFollow }) {
     setSearchTerm("");
     const res = await followArtist(user.api_key, artist);
     if (res.status === "success") {
-      handleFollow(res.following);
+      setFollowing(res.following);
       success("You followed " + artist);
     }
   };
@@ -76,7 +80,7 @@ function ArtistSearch({ user, handleFollow }) {
         />
       </form>
       {(searching || results) && (
-        <div className="min-h-[100px] w-[500px] bg-gray-100 dark:bg-white absolute z-10 text-left p-4 rounded-b-lg">
+        <div className="min-h-[100px] w-[500px] bg-gray-100 dark:bg-dark3 absolute z-10 text-left p-4 rounded-b-lg">
           {searching ? (
             <div className="w-[40px] ml-[175px] mt-[15px]">
               <Oval color="#000" secondaryColor="#fff" height={30} width={30} />
@@ -88,7 +92,7 @@ function ArtistSearch({ user, handleFollow }) {
                   {results.map((result, index) => (
                     <li
                       key={index}
-                      className="group cursor-pointer hover:text-black hover:font-bold"
+                      className="group cursor-pointer hover:text-black dark:hover:text-white hover:font-bold"
                       onClick={(e) => doFollow(result.name)}
                     >
                       {result.name}

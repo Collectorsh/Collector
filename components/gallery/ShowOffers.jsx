@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { roundToTwo } from "/utils/roundToTwo";
 import React, { useState, useEffect, useContext } from "react";
-import ListingsContext from "/contexts/listings";
+import OffersContext from "/contexts/offers";
 import { sortHighestOffer } from "/utils/sortHighestOffer";
 
 export default function Offers({ token }) {
-  const [listings] = useContext(ListingsContext);
+  const [offers] = useContext(OffersContext);
   const [offer, setOffer] = useState();
 
   const getMint = (token) => {
@@ -19,11 +19,11 @@ export default function Offers({ token }) {
   };
 
   useEffect(() => {
-    let item = listings.filter((l) => l.mintAddress === getMint(token))[0];
-    if (!item) return;
-    let highest = sortHighestOffer(item.offers);
+    let offs = offers.filter((l) => l.address === token.address);
+    if (!offs) return;
+    let highest = sortHighestOffer(offs);
     setOffer(highest);
-  }, [listings]);
+  }, [offers]);
 
   return (
     <div>

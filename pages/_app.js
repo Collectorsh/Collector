@@ -7,6 +7,7 @@ import { WalletContextProvider } from "/contexts/wallet";
 import { ThemeProvider } from "next-themes";
 import { UserProvider } from "/contexts/user";
 import { ListingsProvider } from "/contexts/listings";
+import { OffersProvider } from "/contexts/offers";
 import { ActivitiesProvider } from "/contexts/activities";
 import { FollowingProvider } from "/contexts/following";
 import { SingleNftProvider } from "/contexts/single_nft";
@@ -59,18 +60,20 @@ export default function MyApp({ Component, pageProps }) {
             <ListingsProvider>
               <ActivitiesProvider>
                 <FollowingProvider>
-                  <SingleNftProvider>
-                    <ThemeProvider enableSystem={true} attribute="class">
-                      <PlausibleProvider domain="collector.sh">
-                        <CartProvider>
-                          <div className="min-h-[100vh] dark:bg-black dark:text-white">
-                            <Component {...pageProps} />
-                          </div>
-                          <Footer />
-                        </CartProvider>
-                      </PlausibleProvider>
-                    </ThemeProvider>
-                  </SingleNftProvider>
+                  <OffersProvider>
+                    <SingleNftProvider>
+                      <ThemeProvider enableSystem={true} attribute="class">
+                        <PlausibleProvider domain="collector.sh">
+                          <CartProvider>
+                            <div className="min-h-[100vh] dark:bg-black dark:text-white">
+                              <Component {...pageProps} />
+                            </div>
+                            <Footer />
+                          </CartProvider>
+                        </PlausibleProvider>
+                      </ThemeProvider>
+                    </SingleNftProvider>
+                  </OffersProvider>
                 </FollowingProvider>
               </ActivitiesProvider>
             </ListingsProvider>

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import getMetadataFromUri from "/data/nft/getMetadataFromUri";
 import Listings from "/components/gallery/Listings";
 import ShowOffers from "/components/gallery/ShowOffers";
-import AcceptOffers from "/components/gallery/AcceptOffers";
 import Nft from "/components/gallery/Nft";
 import MetaContainer from "/components/gallery/MetaContainer";
 
@@ -34,7 +33,6 @@ function Card(props) {
           <Nft user={user} token={token} />
           <Listings token={token} />
           <ShowOffers token={token} />
-          <AcceptOffers token={token} />
           <MetaContainer user={user} token={token} />
         </>
       )}

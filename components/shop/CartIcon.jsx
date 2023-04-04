@@ -12,7 +12,7 @@ export default function CartIcon({ showCart, showBack }) {
   useEffect(() => {
     let count = 0;
     for (const c of cart) {
-      count += c.qty;
+      count += c.qty || 0;
     }
     setItems(count);
   }, [cart]);

@@ -50,7 +50,7 @@ function Nft({ image, token }) {
         mint: mintPubKey,
       });
       for (const list of lstngs) {
-        if (list.canceledAt) continue;
+        if (list.canceledAt || list.purchaseReceiptAddress) continue;
         setListings([
           ...listings,
           {

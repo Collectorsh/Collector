@@ -34,7 +34,7 @@ export async function fetchNft(token) {
       mint: mintPubKey,
     });
     for (const list of lstngs) {
-      if (list.canceledAt) continue;
+      if (list.canceledAt || list.purchaseReceiptAddress) continue;
       listings = [
         ...listings,
         {

@@ -1,10 +1,9 @@
-import React, { useEffect, useContext, useState, useCallback } from "react";
+import React, { useContext } from "react";
 import ActivitiesContext from "/contexts/activities";
 import { roundToTwo } from "/utils/roundToTwo";
 
 export default function Activity() {
   const [activities] = useContext(ActivitiesContext);
-  console.log(activities);
 
   return (
     <div className="clear-both mt-6 max-w-screen-2xl mx-auto px-4 sm:px-8 pb-12">

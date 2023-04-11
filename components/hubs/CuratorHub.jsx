@@ -1,63 +1,85 @@
 import React, { useEffect, useContext, useState, useCallback } from "react";
 import UserContext from "/contexts/user";
+import ActivitiesContext from "/contexts/activities";
+import ListingsContext from "/contexts/listings";
 import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import Listings from "/components/hubs/Listings";
 import Activity from "/components/hubs/Activity";
 import List from "/components/hubs/List";
-import { useLazyQuery } from "@apollo/client";
-import { getActivitiesQuery } from "/queries/activities";
-import ActivitiesContext from "/contexts/activities";
 import { Oval } from "react-loader-spinner";
+import { Connection, PublicKey } from "@solana/web3.js";
+import { Metaplex } from "@metaplex-foundation/js";
 
 export default function CuratorHub({ hub, allowed_users }) {
   const [activities, setActivities] = useContext(ActivitiesContext);
-  const [listings, setListings] = useState();
+  const [listings, setListings] = useContext(ListingsContext);
   const [user] = useContext(UserContext);
   const [backgroundImage, setBackgroundImage] = useState();
   const [canList, setCanList] = useState(false);
   const [selected, setSelected] = useState("listings");
   const [loading, setLoading] = useState(false);
 
-  // Query to get activities by auctionhouse
-  const [getActivitiesQl] = useLazyQuery(getActivitiesQuery, {
-    fetchPolicy: "network-only",
-  });
+  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
+  const metaplex = new Metaplex(connection);
 
-  const fetchActivities = useCallback(async (hub) => {
+  const fetchListings = useCallback(async (hub) => {
     setLoading(true);
-    const res = await getActivitiesQl({
-      variables: {
-        auctionhouses: [hub.auction_house],
+    const lstngs = await metaplex.auctionHouse().findListings({
+      auctionHouse: {
+        address: new PublicKey(hub.auction_house),
+        isNative: true,
       },
     });
-    var activs = res.data.activities.filter(
-      (v, i, a) => a.findIndex((v2) => v2.id === v.id) === i
-    );
-    activs = activs.sort((a, b) =>
-      a.createdAt < b.createdAt ? 1 : b.createdAt < a.createdAt ? -1 : 0
-    );
-    setActivities(activs);
+    for (const list of lstngs) {
+      if (list.canceledAt) continue;
+      const nft = await metaplex.nfts().findByMetadata({
+        metadata: list.metadataAddress,
+      });
+      setListings([
+        ...listings,
+        {
+          name: nft.json.name,
+          description: nft.json.description,
+          image: nft.json.image,
+          animation_url: nft.json.animation_url,
+          price: list.price.basisPoints.toNumber(),
+          seller: list.sellerAddress.toBase58(),
+          auctionHouse: list.auctionHouse,
+          tradeState: list.tradeStateAddress._bn,
+          tradeStateBump: list.tradeStateAddress.bump,
+          address: list.metadataAddress.toBase58(),
+          mint: nft.mint.address.toBase58(),
+          created: list.createdAt.toNumber(),
+        },
+      ]);
+    }
     setLoading(false);
+  }, []);
+
+  const fetchActivities = useCallback(async (hub) => {
+    const sales = await metaplex.auctionHouse().findPurchases({
+      auctionHouse: { address: hub.auction_house, isNative: true },
+    });
+    for (const sale of sales) {
+      setActivities([
+        ...activities,
+        {
+          price: sale.price.basisPoints.toNumber(),
+          buyer: sale.buyerAddress.toBase58(),
+          auctionHouse: sale.auctionHouse,
+          tradeState: sale.tradeStateAddress._bn,
+          tradeStateBump: sale.tradeStateAddress.bump,
+        },
+      ]);
+    }
   }, []);
 
   useEffect(() => {
     fetchActivities(hub);
+    fetchListings(hub);
   }, [hub]);
-  /////////////////////////////////////////////////////////////////////////////////////////
-
-  // Filter activities for the active listings
-  useEffect(() => {
-    if (!activities) return;
-    let lstns = activities.filter(
-      (a) => a.activityType === "listing" && !a.cancelledAt
-    );
-    setListings(lstns);
-    // Fetch visible listings and order from api
-    // fetchHubListings(lstns, hub.id)
-  }, [activities, hub]);
-  /////////////////////////////////////////////////////////////////////////////////////////
 
   useEffect(() => {
     if (!user) return;
@@ -68,9 +90,8 @@ export default function CuratorHub({ hub, allowed_users }) {
     return classes.filter(Boolean).join(" ");
   }
 
-  const refetch = (token) => {
-    console.log("here for refetch");
-    // fetchActivities(hub);
+  const refetch = () => {
+    fetchActivities(hub);
   };
 
   return (
@@ -207,7 +228,7 @@ export default function CuratorHub({ hub, allowed_users }) {
         </div>
       ) : (
         <>
-          {selected === "listings" && <Listings listings={listings} />}
+          {selected === "listings" && <Listings />}
           {selected === "activity" && <Activity />}
           {selected === "list" && <List hub={hub} refetch={refetch} />}
         </>

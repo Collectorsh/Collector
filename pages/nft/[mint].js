@@ -32,7 +32,7 @@ function Nft({ image, token }) {
         mint: mintPubKey,
       });
       for (const bid of bids) {
-        if (bid.canceledAt) continue;
+        if (bid.canceledAt || bid.purchaseReceiptAddress) continue;
         setOffers([
           ...offers,
           {

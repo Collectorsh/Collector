@@ -1,22 +1,30 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useContext } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import getMetadata from "/data/nft/getMetadata";
 import { Oval } from "react-loader-spinner";
 import Item from "/components/hubs/Item";
 import { ToastContainer } from "react-toastify";
+import ListingsContext from "/contexts/listings";
 
 export default function List({ hub, refetch }) {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
+  const [listings] = useContext(ListingsContext);
   const [inWallet, setInWallet] = useState();
+  const [listed, setListed] = useState();
   const [loading, setLoading] = useState(false);
 
   const asyncGetNfts = useCallback(async (wallet) => {
     if (!wallet || !wallet.publicKey) return;
     setLoading(true);
     const nfts = await getMetadata([wallet.publicKey]);
-    setInWallet(nfts);
+    setListed(
+      nfts.filter((nft) => listings.map((l) => l.mint).includes(nft.mint))
+    );
+    setInWallet(
+      nfts.filter((nft) => !listings.map((l) => l.mint).includes(nft.mint))
+    );
     setLoading(false);
   }, []);
 
@@ -63,9 +71,25 @@ export default function List({ hub, refetch }) {
           </div>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-center sm:justify-start">
+          {listed &&
+            listed.map((token, index) => (
+              <Item
+                token={token}
+                key={index}
+                hub={hub}
+                refetch={refetch}
+                listed={true}
+              />
+            ))}
           {inWallet &&
             inWallet.map((token, index) => (
-              <Item token={token} key={index} hub={hub} refetch={refetch} />
+              <Item
+                token={token}
+                key={index}
+                hub={hub}
+                refetch={refetch}
+                listed={false}
+              />
             ))}
         </div>
       </div>

@@ -3,11 +3,18 @@ import { cdnImage } from "/utils/cdnImage";
 import SellModal from "/components/single/SellModal";
 import getMetadataFromUri from "/data/nft/getMetadataFromUri";
 import ActivitiesContext from "/contexts/activities";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import cancelListingTransaction from "/utils/auctionhouse/CancelListing";
+import ListingsContext from "/contexts/listings";
 
-export default function Item({ hub, token, refetch }) {
+export default function Item({ hub, token, refetch, listed }) {
+  const { publicKey, signTransaction } = useWallet();
+  const { setVisible } = useWalletModal();
   const [sellModal, setSellModal] = useState(false);
   const [activities] = useContext(ActivitiesContext);
   const [tkn, setTkn] = useState();
+  const [listings] = useContext(ListingsContext);
 
   const addDefaultSource = async (e, token) => {
     e.target.src = token.image;
@@ -34,13 +41,32 @@ export default function Item({ hub, token, refetch }) {
     });
   }, []);
 
+  const cancelNftListing = async () => {
+    if (!publicKey) {
+      setVisible(true);
+      return;
+    }
+    const listing = listings.filter((l) => l.mint === token.mint)[0];
+    await cancelListingTransaction(
+      token,
+      listing,
+      publicKey,
+      signTransaction,
+      refetch
+    );
+  };
+
   return (
     <>
       {tkn && (
         <>
           <div
-            onClick={(e) => setSellModal(!sellModal)}
-            className="cursor-pointer relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
+            onClick={() => {
+              !listed && setSellModal(!sellModal);
+            }}
+            className={`relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3 ${
+              !listed && "cursor-pointer"
+            }`}
           >
             <div className="rounded-lg overflow-hidden">
               <img
@@ -53,7 +79,15 @@ export default function Item({ hub, token, refetch }) {
               <div className="w-full">
                 <div className="h-fit my-1">
                   <h3 className="text-md text-black dark:text-whitish font-medium">
-                    {tkn.name}
+                    {tkn.name}{" "}
+                    {listed && (
+                      <span
+                        onClick={cancelNftListing}
+                        className="float-right rounded-lg bg-greeny text-neutral-800 px-2 py-0.5 text-sm cursor-pointer hover:bg-greenlightbg hover:text-black"
+                      >
+                        delist
+                      </span>
+                    )}
                   </h3>
                 </div>
               </div>

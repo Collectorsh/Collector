@@ -430,3 +430,12 @@ input:checked + .toggle-bg {
   background-color: transparent !important;
   @apply text-black dark:text-white mr-2 text-sm;
 }
+
+.MuiTypography-colorTextPrimary,
+.makeStyles-done-2 {
+  @apply text-black dark:text-white !important;
+}
+
+.MuiTypography-colorTextSecondary {
+  @apply text-neutral-800 dark:text-neutral-200 !important;
+}

@@ -28,7 +28,9 @@ function Gallery({ user, tokens }) {
       const lstngs = await metaplex.auctionHouse().findListings({
         auctionHouse: { address: auctionHouse, isNative: true },
       });
-      for (const list of lstngs.filter((l) => l.canceledAt === null)) {
+      for (const list of lstngs.filter(
+        (l) => l.canceledAt === null && l.purchaseReceiptAddress === null
+      )) {
         newListings.push({
           address: list.metadataAddress.toBase58(),
           price: list.price.basisPoints.toNumber(),

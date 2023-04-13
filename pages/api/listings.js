@@ -15,7 +15,6 @@ export default async function handler(req, res) {
       for (const list of lstngs.filter(
         (l) => l.canceledAt === null && l.purchaseReceiptAddress === null
       )) {
-        console.log(list);
         try {
           const nft = await metaplex.nfts().findByMetadata({
             metadata: list.metadataAddress,

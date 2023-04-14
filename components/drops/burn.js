@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
-import { Connection } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Oval } from "react-loader-spinner";
 import posters from "../../posters.json";
+import { connection } from "/config/settings";
 
 export default function Burn({ address }) {
   const wallet = useWallet();
@@ -16,8 +16,6 @@ export default function Burn({ address }) {
   const [minted, setMinted] = useState();
   const [collectionMint, setCollectionMint] = useState();
   const [isMinting, setIsMinting] = useState(false);
-
-  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
 
   const asyncGetCandymachine = useCallback(async (wallet, onceOnly = false) => {

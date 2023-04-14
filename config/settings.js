@@ -1,3 +1,5 @@
+import { Connection } from "@solana/web3.js";
+
 const dev = {
   apiHost: "http://localhost:3001",
   host: "http://localhost:3000",
@@ -54,3 +56,8 @@ export const loginMessage = "Please sign this message to log-in. ";
 export const toPublicKey = "RyvoTTxHVn48GaAA26d8TfBqZcrkVHN4Fyo2LsucTtV";
 export const monthlyCharge = 1000000000;
 export const yearlyCharge = 8000000000;
+export const connection = new Connection(process.env.NEXT_PUBLIC_RPC, {
+  httpHeaders: {
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_HELLOMOON_API_KEY}`,
+  },
+});

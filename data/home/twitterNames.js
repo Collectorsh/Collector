@@ -1,10 +1,8 @@
 import { getHandleAndRegistryKey } from "@bonfida/spl-name-service";
 import { PublicKey } from "@solana/web3.js";
-import { rpcHost } from "/config/settings";
-import { Connection } from "@metaplex/js";
+import { connection } from "/config/settings";
 
 async function twitterNames(collectors) {
-  const connection = new Connection(rpcHost);
   for (const collector of collectors) {
     try {
       const pubkey = new PublicKey(collector.highest_bidder);

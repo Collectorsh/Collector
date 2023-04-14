@@ -1,10 +1,9 @@
 import { auctionHousesArray } from "/config/settings";
-import { Connection } from "@solana/web3.js";
 import { Metaplex } from "@metaplex-foundation/js";
+import { connection } from "/config/settings";
 
 export default async function handler(req, res) {
   try {
-    const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
     const metaplex = new Metaplex(connection);
     const listings = [];
     const auctionHouses = auctionHousesArray.map((a) => a.address);

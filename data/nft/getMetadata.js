@@ -1,9 +1,9 @@
 import axios from "axios";
 import apiClient from "/data/client/apiClient";
 import { rpcHost } from "/config/settings";
-import { Connection } from "@metaplex/js";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
+import { connection } from "/config/settings";
 
 function coalesce(val, def) {
   if (val === null || typeof val === "undefined") return def;
@@ -13,7 +13,6 @@ function coalesce(val, def) {
 async function getMetadata(publicKeys) {
   var results = [];
   var tokenAccounts = [];
-  const connection = new Connection(rpcHost);
   for (const publicKey of publicKeys) {
     const tokenMetadata = await Metadata.findDataByOwner(
       connection,

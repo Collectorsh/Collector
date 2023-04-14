@@ -1,9 +1,9 @@
 import axios from "axios";
 import { rpcHost } from "/config/settings";
-import { Connection } from "@metaplex/js";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
 import apiClient from "/data/client/apiClient";
+import { connection } from "/config/settings";
 
 async function getMetadataFromMint(mint) {
   var single = {};
@@ -13,8 +13,6 @@ async function getMetadataFromMint(mint) {
   if (!res.data.result.value[0]) return;
 
   single.associatedTokenAccountAddress = res.data.result.value[0].address;
-
-  const connection = new Connection(rpcHost);
 
   // Get the owner
   const largestAccounts = await connection.getTokenLargestAccounts(

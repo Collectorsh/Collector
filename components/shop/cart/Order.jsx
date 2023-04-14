@@ -7,21 +7,16 @@ import { success, error } from "/utils/toastMessages";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import LoadingModal from "/components/LoadingModal";
-import {
-  SystemProgram,
-  Transaction,
-  PublicKey,
-  Connection,
-} from "@solana/web3.js";
+import { SystemProgram, Transaction, PublicKey } from "@solana/web3.js";
 import verifyPurchase from "/data/shop/verifyPurchase";
 import { TrashIcon } from "@heroicons/react/outline";
 import Select from "react-select";
 import countryList from "react-select-country-list";
+import { connection } from "/config/settings";
 
 export default function Order() {
   const [user] = useContext(UserContext);
   const [cart, setCart] = useContext(CartContext);
-  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const { publicKey, sendTransaction } = useWallet();
   const { setVisible } = useWalletModal();
   const [loading, setLoading] = useState(false);

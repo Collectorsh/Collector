@@ -1,8 +1,8 @@
 import { auctionHousesArray } from "/config/settings";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { Metaplex } from "@metaplex-foundation/js";
+import { connection } from "/config/settings";
 
-const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
 const metaplex = new Metaplex(connection);
 const auctionHouses = auctionHousesArray.map((a) => a.address);
 

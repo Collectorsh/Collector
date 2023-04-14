@@ -10,15 +10,13 @@ import OffersContext from "/contexts/offers";
 import { cdnImage } from "/utils/cdnImage";
 import { pluralize } from "/utils/pluralize";
 import { auctionHousesArray } from "/config/settings";
-import { Connection } from "@solana/web3.js";
 import { Metaplex } from "@metaplex-foundation/js";
+import { connection } from "/config/settings";
 
 function Gallery({ user, tokens }) {
   const [, setListings] = useContext(ListingsContext);
   const [, setOffers] = useContext(OffersContext);
   const auctionHouses = auctionHousesArray.map((a) => a.address);
-
-  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const metaplex = new Metaplex(connection);
 
   const fetchListings = useCallback(async () => {

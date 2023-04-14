@@ -3,7 +3,6 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { roundToTwo } from "/utils/roundToTwo";
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
-import { Connection } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Oval } from "react-loader-spinner";
@@ -11,7 +10,7 @@ import Moment from "react-moment";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import { toDate } from "/utils/mint/utils";
 import { ArrowRightIcon } from "@heroicons/react/outline";
-import MintedModal from "/components/MintedModal";
+import { connection } from "/config/settings";
 
 export default function Gacha({ address, drop }) {
   const wallet = useWallet();
@@ -29,8 +28,6 @@ export default function Gacha({ address, drop }) {
   const [cost, setCost] = useState();
   const [minted, setMinted] = useState(false);
   const [mintedNft, setMintedNft] = useState();
-
-  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
 
   const asyncGetCandymachine = useCallback(async (wallet, onceOnly = false) => {

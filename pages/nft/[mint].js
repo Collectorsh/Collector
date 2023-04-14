@@ -6,19 +6,18 @@ import Single from "/components/single/Single";
 import { cdnImage } from "/utils/cdnImage";
 import SingleNftContext from "/contexts/single_nft";
 import { auctionHousesArray } from "/config/settings";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { Metaplex } from "@metaplex-foundation/js";
 import findMarket from "/data/drops/findMarket";
+import { connection } from "/config/settings";
 
 function Nft({ image, token }) {
   const [, setSingleNft] = useContext(SingleNftContext);
   const auctionHouses = auctionHousesArray.map((a) => a.address);
   const [offers, setOffers] = useState([]);
   const [listings, setListings] = useState([]);
-
-  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
-  const metaplex = new Metaplex(connection);
   const [market, setMarket] = useState();
+  const metaplex = new Metaplex(connection);
 
   /////////////////////////////////////////////////////////////////////////////////////
 

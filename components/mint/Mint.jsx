@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import * as anchor from "@project-serum/anchor";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Container } from "@material-ui/core";
@@ -20,6 +20,7 @@ import { MintButton } from "/utils/mint/MintButton";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { GatewayProvider } from "@civic/solana-gateway-react";
+import { connection } from "/config/settings";
 
 export default function Mint() {
   const txTimeout = DEFAULT_TIMEOUT;
@@ -40,8 +41,6 @@ export default function Mint() {
   const rpcUrl = process.env.NEXT_PUBLIC_RPC;
   const cluster = process.env.NEXT_PUBLIC_SOLANA_NETWORK;
   const candyMachineId = process.env.NEXT_PUBLIC_CANDYMACHINE_ID;
-
-  const connection = new anchor.web3.Connection(rpcUrl);
 
   const anchorWallet = useMemo(() => {
     if (

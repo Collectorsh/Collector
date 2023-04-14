@@ -6,12 +6,12 @@ import {
   walletAdapterIdentity,
   getMerkleProof,
 } from "@metaplex-foundation/js";
-import { Connection } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Oval } from "react-loader-spinner";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import whiteList from "../../zmb_allow.json";
+import { connection } from "/config/settings";
 
 export default function ZmbMint({ address }) {
   const wallet = useWallet();
@@ -26,10 +26,6 @@ export default function ZmbMint({ address }) {
   const [cost, setCost] = useState();
   const [publicStartDate, setPublicStartDate] = useState();
   const [holderStartDate, setHolderStartDate] = useState();
-
-  const connection = new Connection(process.env.NEXT_PUBLIC_RPC, {
-    commitment: "confirmed",
-  });
   const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
 
   const asyncGetCandymachine = useCallback(async (wallet, onceOnly = false) => {

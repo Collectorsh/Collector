@@ -1,10 +1,7 @@
 import axios from "axios";
 import { dao21 } from "/config/settings";
-import { rpcHost } from "/config/settings";
-import { Connection } from "@metaplex/js";
 
 async function topCollectors() {
-  const connection = new Connection(rpcHost);
   try {
     const response = await axios.post(dao21 + "/auctions/buyers", {
       marketplace: ["exchange", "holaplex", "formfunction"],

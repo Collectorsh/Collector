@@ -7,7 +7,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { roundToTwo } from "/utils/roundToTwo";
 
 import { Metaplex } from "@metaplex-foundation/js";
-import { Connection } from "@solana/web3.js";
+import { connection } from "/config/settings";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function Secondary({ drop }) {
@@ -16,8 +16,6 @@ export default function Secondary({ drop }) {
   const [stats, setStats] = useState();
   const [backgroundImage, setBackgroundImage] = useState();
   const [infiniteScrollItems, setInfiniteScrollItems] = useState([]);
-
-  const connection = new Connection(process.env.NEXT_PUBLIC_RPC);
   const metaplex = new Metaplex(connection);
 
   // Get owned NFT's

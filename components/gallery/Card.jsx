@@ -7,13 +7,14 @@ import MetaContainer from "/components/gallery/MetaContainer";
 import { useImageSize } from "react-image-size";
 
 function Card(props) {
-  const image = props.token.image;
   const user = props.user;
   const isMounted = useRef(true);
   const [token, setToken] = useState();
   const [span, setSpan] = useState(1);
 
-  const [dimensions, { loading, error }] = useImageSize(image);
+  const [dimensions, { loading, error }] = useImageSize(
+    `https://cdn.collector.sh/${props.token.mint}`
+  );
 
   const initGetData = useCallback(async (tok) => {
     try {

@@ -40,7 +40,9 @@ function Card(props) {
   }, [dimensions]);
 
   return (
-    <div className={`col-span-${span} relative text-center h-fit`}>
+    <div
+      className={`col-span-1 sm:col-span-${span} relative text-center h-fit`}
+    >
       {token && (
         <>
           <Nft user={user} token={token} />

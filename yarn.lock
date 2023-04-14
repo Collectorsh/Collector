@@ -9861,6 +9861,11 @@ react-hot-toast@^2.2.0:
   dependencies:
     goober "^2.1.1"
 
+react-image-size@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-image-size/-/react-image-size-2.0.2.tgz#5f90e4b2659269eefebd139aa1882aef4f48250e"
+  integrity sha512-j2ZhFsY5n8HAU43ZrhvDOkGBhAY0IJX2DjajmwF+TdXuZ/lGHuhmqj5/88o1M+yL8Un5oNSLjBRH5XikWiiHlA==
+
 react-infinite-scroll-component@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/react-infinite-scroll-component/-/react-infinite-scroll-component-6.1.0.tgz#7e511e7aa0f728ac3e51f64a38a6079ac522407f"

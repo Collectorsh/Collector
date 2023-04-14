@@ -12,7 +12,7 @@ export default function ShowActivities({ token }) {
 
   const fetchActivities = useCallback(async () => {
     const res = await getActivities(token.mint);
-    setActivities(res.data);
+    setActivities(res);
   }, []);
 
   useEffect(() => {
@@ -77,11 +77,11 @@ export default function ShowActivities({ token }) {
                 {activities.map((a, index) => (
                   <tr className="" key={index}>
                     <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
-                      ◎ {roundToTwo(a.price)}
+                      ◎ {roundToTwo(a.amount / 1000000000)}
                     </td>
                     <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
                       <a
-                        href={`https://solscan.io/account/${a.nftMint}`}
+                        href={`https://solscan.io/account/${token.mint}`}
                         target="_blank"
                         rel="noreferrer"
                         title=""
@@ -95,8 +95,7 @@ export default function ShowActivities({ token }) {
                         : a.marketplace}
                     </td>
                     <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
-                      {moment.unix(a.blockTime).format("MMMM Do YYYY H:mm")}
-                      {/* <Moment unix={a.blockTime} format="MMMM Do YYYY H:mm" /> */}
+                      {moment.unix(a.time).format("MMMM Do YYYY H:mm")}
                     </td>
                   </tr>
                 ))}

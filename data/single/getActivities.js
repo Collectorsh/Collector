@@ -1,20 +1,12 @@
 import axios from "axios";
+import apiClient from "/data/client/apiClient";
 import getOwnerCollectorName from "/data/getOwnerCollectorName";
 
 async function getActivities(mint) {
-  let res = await axios.post(
-    "https://rest-api.hellomoon.io/v0/nft/sales/secondary",
-    { nftMint: mint },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_HELLOMOON_API_KEY}`,
-      },
-    }
-  );
-  if (res.data && res.data.data && res.data.data.length > 0) {
-    for (const r of res.data.data) {
+  let res = await apiClient.post("/sales/by_mint", { mint: mint });
+
+  if (res.data && res.data.length > 0) {
+    for (const r of res.data) {
       let resp = await getOwnerCollectorName(r.buyer);
       let buyer = r.buyer;
       r.buyer = {};

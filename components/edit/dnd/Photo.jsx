@@ -28,7 +28,6 @@ export const Photo = forwardRef(
     const inlineStyles = {
       opacity: faded ? "0.2" : "1",
       transformOrigin: "0 0",
-      height: height,
       width: "100%",
       gridRowStart: index === 0 ? "span 1" : null,
       gridColumnStart: index === 0 ? "span 1" : null,
@@ -81,7 +80,7 @@ export const Photo = forwardRef(
           />
         )}
         <img
-          className="w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
+          className="mx-auto cursor-pointer object-center object-cover"
           src={cdnImage(mint)}
           onError={(e) => defaultSource(e, mint, uri)}
           onLoad={onImageLoad}

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { ToastContainer } from "react-toastify";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { PublicKey } from "@solana/web3.js";
 import Gacha from "/components/drops/gacha";
+import ZmbMint from "/components/drops/zmb";
 import PublicMint from "/components/drops/public";
 import getDropFromName from "/data/drops/getDropFromName";
 import { fetchImages } from "/hooks/fetchImages";
@@ -14,6 +14,7 @@ export default function ArtistDrop({ name, drop }) {
 
   useEffect(() => {
     fetchImages(name).then((imgs) => {
+      if (!imgs) return;
       const imgArray = [];
       for (const i of imgs) {
         if (i.Size > 100) imgArray.push(i.Key);
@@ -53,9 +54,13 @@ export default function ArtistDrop({ name, drop }) {
                 <p className="mt-4 whitespace-pre-line">{drop.description}</p>
               </div>
               <div className="col-span-1 mt-4 lg:mt-0 lg:col-span-4 lg:col-end-13">
-                {drop.slug === "hanaknight" ? (
+                {drop.slug === "hanaknight" && (
                   <Gacha address={address} drop={drop} />
-                ) : (
+                )}
+                {drop.slug === "zmb" && (
+                  <ZmbMint address={address} drop={drop} />
+                )}
+                {drop.slug !== "hanaknight" && drop.slug !== "zmb" && (
                   <PublicMint address={address} drop={drop} />
                 )}
               </div>

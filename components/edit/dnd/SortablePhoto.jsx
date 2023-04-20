@@ -26,6 +26,8 @@ export const SortablePhoto = (props) => {
       style={style}
       section={props.section}
       bulkEdit={props.bulkEdit}
+      span={props.span}
+      handleUpdateSpan={props.handleUpdateSpan}
       {...props}
       {...attributes}
       {...listeners}

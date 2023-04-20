@@ -1,27 +1,29 @@
 import React, { forwardRef, useState, useEffect } from "react";
 import { cdnImage } from "/utils/cdnImage";
 import axios from "axios";
-import { DotsVerticalIcon } from "@heroicons/react/outline";
+import { DotsVerticalIcon, ArrowsExpandIcon } from "@heroicons/react/outline";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { addDefaultSource } from "/utils/addDefaultSource";
-import { useImageSize } from "react-image-size";
 
 export const Photo = forwardRef(
-  ({ mint, uri, index, faded, style, section, bulkEdit, ...props }, ref) => {
+  (
+    {
+      mint,
+      uri,
+      index,
+      faded,
+      style,
+      section,
+      bulkEdit,
+      span,
+      handleUpdateSpan,
+      ...props
+    },
+    ref
+  ) => {
     const height = props.height ? props.height : 200;
-    const [span, setSpan] = useState(1);
-
-    const [dimensions, { loading, error }] = useImageSize(
-      `https://cdn.collector.sh/${mint}`
-    );
-
-    useEffect(() => {
-      if (!dimensions) return;
-      if (dimensions.width / dimensions.height > 1.25) {
-        setSpan(2);
-      }
-    }, [dimensions]);
+    const [currentSpan, setCurrentSpan] = useState(span);
 
     const inlineStyles = {
       opacity: faded ? "0.2" : "1",
@@ -56,9 +58,17 @@ export const Photo = forwardRef(
       event.target.parentNode.style.display = "block";
     };
 
+    const updateSpan = (span) => {
+      setCurrentSpan(span);
+    };
+
+    useEffect(() => {
+      handleUpdateSpan(currentSpan, mint);
+    }, [currentSpan]);
+
     return (
       <div
-        className={`col-span-1 sm:col-span-${span} relative text-center h-fit`}
+        className={`col-span-1 sm:col-span-${currentSpan} relative text-center h-fit`}
       >
         {section === "visible" && bulkEdit === true && (
           <input
@@ -118,6 +128,11 @@ export const Photo = forwardRef(
             </Menu.Items>
           </Transition>
         </Menu>
+        <ArrowsExpandIcon
+          className="h-6 w-6 inline cursor-pointer text-white absolute bottom-1 right-1"
+          aria-hidden="true"
+          onClick={() => updateSpan(currentSpan === 1 ? 2 : 1)}
+        />
       </div>
     );
   }

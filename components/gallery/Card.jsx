@@ -4,17 +4,12 @@ import Listings from "/components/gallery/Listings";
 import ShowOffers from "/components/gallery/ShowOffers";
 import Nft from "/components/gallery/Nft";
 import MetaContainer from "/components/gallery/MetaContainer";
-import { useImageSize } from "react-image-size";
 
 function Card(props) {
   const user = props.user;
   const isMounted = useRef(true);
   const [token, setToken] = useState();
   const [span, setSpan] = useState(1);
-
-  const [dimensions, { loading, error }] = useImageSize(
-    `https://cdn.collector.sh/${props.token.mint}`
-  );
 
   const initGetData = useCallback(async (tok) => {
     try {
@@ -32,16 +27,9 @@ function Card(props) {
     };
   }, [props.token, initGetData]);
 
-  useEffect(() => {
-    if (!dimensions) return;
-    if (dimensions.width / dimensions.height > 1.25) {
-      setSpan(2);
-    }
-  }, [dimensions]);
-
   return (
     <div
-      className={`col-span-1 sm:col-span-${span} relative text-center h-fit`}
+      className={`col-span-1 sm:col-span-${props.token.span} relative text-center h-fit opacity-0`}
     >
       {token && (
         <>

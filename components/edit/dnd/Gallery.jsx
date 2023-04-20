@@ -274,6 +274,11 @@ export default function Gallery({ tokens, user }) {
 const Visible = ({ items, columns, bulkEdit }) => {
   const { setNodeRef } = useDroppable({ id: "show" });
 
+  const handleUpdateSpan = (span, mint) => {
+    const itm = items.visible.filter((t) => t.mint === mint)[0];
+    itm.span = span;
+  };
+
   return (
     <div
       ref={setNodeRef}
@@ -302,6 +307,8 @@ const Visible = ({ items, columns, bulkEdit }) => {
               }
               section="visible"
               bulkEdit={bulkEdit}
+              span={token.span}
+              handleUpdateSpan={handleUpdateSpan}
             />
           ))}
         </Grid>
@@ -312,6 +319,11 @@ const Visible = ({ items, columns, bulkEdit }) => {
 
 const Hidden = ({ items }) => {
   const { setNodeRef } = useDroppable({ id: "hide" });
+
+  const handleUpdateSpan = (span, mint) => {
+    const itm = items.hidden.filter((t) => t.mint === mint)[0];
+    itm.span = span;
+  };
 
   return (
     <div
@@ -332,6 +344,8 @@ const Hidden = ({ items }) => {
               index={index}
               height={150}
               section="hidden"
+              span={token.span}
+              handleUpdateSpan={handleUpdateSpan}
             />
           ))}
         </Grid>

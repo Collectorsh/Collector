@@ -54,9 +54,11 @@ async function getMetadata(publicKeys) {
       result.visible = token.visible;
       result.accept_offers = token.accept_offers;
       result.estimate = token.estimate;
+      result.span = token.span;
     } else {
       result.order_id = null;
       result.visible = res.data.default;
+      result.span = 1;
     }
     // Also find the associatedTokenAccountAddress
     let ta = tokenAccounts.find((a) => a.mint === result.mint);

@@ -29,7 +29,7 @@ function Card(props) {
 
   return (
     <div
-      className={`col-span-1 sm:col-span-${props.token.span} relative text-center h-fit opacity-0`}
+      className={`col-span-1 mb-8 sm:mb-0 sm:col-span-${props.token.span} relative text-center h-fit opacity-0`}
     >
       {token && (
         <>

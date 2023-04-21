@@ -67,7 +67,7 @@ export const Photo = forwardRef(
 
     return (
       <div
-        className={`col-span-1 sm:col-span-${currentSpan} relative text-center h-fit`}
+        className={`col-span-1 mb-8 sm:mb-8 sm:col-span-${currentSpan} relative text-center h-fit`}
       >
         {section === "visible" && bulkEdit === true && (
           <input

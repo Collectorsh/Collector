@@ -48,7 +48,6 @@ export default function Bonk({ address }) {
         candyMachine,
         collectionUpdateAuthority,
       });
-      console.log(nft);
       toast.success(`🎉 Congratulations you minted ${nft.name}`);
     } catch (e) {
       console.log(e);

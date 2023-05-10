@@ -14,7 +14,6 @@ import { Metaplex } from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
 
 function Gallery({ user, tokens }) {
-  console.log(user);
   const [, setListings] = useContext(ListingsContext);
   const [, setOffers] = useContext(OffersContext);
   const auctionHouses = auctionHousesArray.map((a) => a.address);

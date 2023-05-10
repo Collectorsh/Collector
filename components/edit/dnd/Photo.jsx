@@ -1,33 +1,19 @@
-import React, { forwardRef, useState, useEffect } from "react";
+import React, { forwardRef } from "react";
 import { cdnImage } from "/utils/cdnImage";
 import axios from "axios";
-import { DotsVerticalIcon, ArrowsExpandIcon } from "@heroicons/react/outline";
+import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { addDefaultSource } from "/utils/addDefaultSource";
 
 export const Photo = forwardRef(
-  (
-    {
-      mint,
-      uri,
-      index,
-      faded,
-      style,
-      section,
-      bulkEdit,
-      span,
-      handleUpdateSpan,
-      ...props
-    },
-    ref
-  ) => {
+  ({ mint, uri, index, faded, style, section, bulkEdit, ...props }, ref) => {
     const height = props.height ? props.height : 200;
-    const [currentSpan, setCurrentSpan] = useState(span);
 
     const inlineStyles = {
       opacity: faded ? "0.2" : "1",
       transformOrigin: "0 0",
+      height: height,
       width: "100%",
       gridRowStart: index === 0 ? "span 1" : null,
       gridColumnStart: index === 0 ? "span 1" : null,
@@ -57,18 +43,8 @@ export const Photo = forwardRef(
       event.target.parentNode.style.display = "block";
     };
 
-    const updateSpan = (span) => {
-      setCurrentSpan(span);
-    };
-
-    useEffect(() => {
-      handleUpdateSpan(currentSpan, mint);
-    }, [currentSpan]);
-
     return (
-      <div
-        className={`col-span-1 mb-8 sm:mb-8 sm:col-span-${currentSpan} relative text-center h-fit`}
-      >
+      <div className="relative hidden">
         {section === "visible" && bulkEdit === true && (
           <input
             id={`select-${mint}`}
@@ -80,7 +56,7 @@ export const Photo = forwardRef(
           />
         )}
         <img
-          className="mx-auto cursor-pointer object-center object-cover"
+          className="w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
           src={cdnImage(mint)}
           onError={(e) => defaultSource(e, mint, uri)}
           onLoad={onImageLoad}
@@ -127,11 +103,6 @@ export const Photo = forwardRef(
             </Menu.Items>
           </Transition>
         </Menu>
-        <ArrowsExpandIcon
-          className="h-6 w-6 inline cursor-pointer text-white absolute bottom-1 right-1"
-          aria-hidden="true"
-          onClick={() => updateSpan(currentSpan === 1 ? 2 : 1)}
-        />
       </div>
     );
   }

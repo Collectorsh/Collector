@@ -84,7 +84,6 @@ function Nft({ image, token }) {
   // Refetch function to update NFT and Activities
   const refetch = async (token) => {
     await sleep(10000);
-    console.log("refetching");
     fetchNft(token);
   };
 

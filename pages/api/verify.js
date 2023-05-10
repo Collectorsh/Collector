@@ -10,7 +10,6 @@ export default async function handler(req, res) {
   try {
     var tx = req.body.tx.data;
     tx = Transaction.from(Buffer.from(tx));
-    console.log(tx);
 
     const inx = tx.instructions[0];
     if (!inx.programId.toBase58() === MEMO_PROGRAM_ID)

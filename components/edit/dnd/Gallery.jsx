@@ -19,8 +19,6 @@ import cloneDeep from "lodash/cloneDeep";
 import { Toaster } from "react-hot-toast";
 import { cdnImage } from "/utils/cdnImage";
 
-import { useImageSize } from "react-image-size";
-
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
   const [columns, setColumns] = useState(user.columns);
@@ -274,11 +272,6 @@ export default function Gallery({ tokens, user }) {
 const Visible = ({ items, columns, bulkEdit }) => {
   const { setNodeRef } = useDroppable({ id: "show" });
 
-  const handleUpdateSpan = (span, mint) => {
-    const itm = items.visible.filter((t) => t.mint === mint)[0];
-    itm.span = span;
-  };
-
   return (
     <div
       ref={setNodeRef}
@@ -307,8 +300,6 @@ const Visible = ({ items, columns, bulkEdit }) => {
               }
               section="visible"
               bulkEdit={bulkEdit}
-              span={token.span}
-              handleUpdateSpan={handleUpdateSpan}
             />
           ))}
         </Grid>
@@ -319,11 +310,6 @@ const Visible = ({ items, columns, bulkEdit }) => {
 
 const Hidden = ({ items }) => {
   const { setNodeRef } = useDroppable({ id: "hide" });
-
-  const handleUpdateSpan = (span, mint) => {
-    const itm = items.hidden.filter((t) => t.mint === mint)[0];
-    itm.span = span;
-  };
 
   return (
     <div
@@ -344,8 +330,6 @@ const Hidden = ({ items }) => {
               index={index}
               height={150}
               section="hidden"
-              span={token.span}
-              handleUpdateSpan={handleUpdateSpan}
             />
           ))}
         </Grid>
@@ -355,7 +339,6 @@ const Hidden = ({ items }) => {
 };
 
 const OverlayImage = ({ mint, tokens }) => {
-  const [span, setSpan] = useState(1);
   const addDefaultImage = async (e, mint, tokens) => {
     e.target.style.background = "grey";
     const token = tokens.find((t) => t.mint === mint);
@@ -363,22 +346,10 @@ const OverlayImage = ({ mint, tokens }) => {
     e.target.src = res.data.image;
   };
 
-  const [dimensions, { loading, error }] = useImageSize(
-    `https://cdn.collector.sh/${mint}`
-  );
-
-  useEffect(() => {
-    if (!dimensions) return;
-    if (dimensions.width / dimensions.height > 1.25) {
-      setSpan(2);
-      console.log("here");
-    }
-  }, [dimensions]);
-
   return (
     <img
       src={cdnImage(mint)}
-      className={`col-span-1 sm:col-span-${span} h-full w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm`}
+      className="w-[150px] h-[150px] w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
       onError={(e) => addDefaultImage(e, mint, tokens)}
     />
   );

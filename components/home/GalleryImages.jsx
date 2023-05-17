@@ -9,19 +9,11 @@ export default function GalleryImages() {
   const [metadata, setMetadata] = useState();
 
   const asyncGetGalleryImages = useCallback(async () => {
-    let done = false;
-    while (done === false) {
-      try {
-        let res = await getGalleryImages();
-        let data = await getMetadataFromMint(res.mint);
-        data.username = res.username;
-        data.twitter = res.twitter;
-        setMetadata(data);
-        done = true;
-      } catch (err) {
-        console.log(err);
-      }
-    }
+    let res = await getGalleryImages();
+    let data = await getMetadataFromMint(res.mint);
+    data.username = res.username;
+    data.twitter = res.twitter;
+    setMetadata(data);
   }, []);
 
   useEffect(() => {

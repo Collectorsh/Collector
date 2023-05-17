@@ -1,7 +1,7 @@
 import { Connection } from "@solana/web3.js";
 
 const dev = {
-  apiHost: "https://api.collector.sh",
+  apiHost: "http://localhost:3001",
   host: "http://localhost:3000",
   dao21: "https://api.21dao.xyz",
 };

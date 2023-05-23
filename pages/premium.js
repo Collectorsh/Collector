@@ -6,7 +6,7 @@ export default function Premium() {
   return (
     <div className="dark:bg-black dark:text-whitish">
       <MainNavigation />
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
+      {/* <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
         <div className="px-4 xl:px-0">
           <h2 className="text-4xl text-center w-full pt-8 font-extrabold mb-8 text-black inline-block dark:text-whitish">
             Collector Premium
@@ -107,7 +107,7 @@ export default function Premium() {
             </article>
           </section>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

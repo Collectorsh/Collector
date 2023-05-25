@@ -18,6 +18,7 @@ import Settings from "./Settings";
 import cloneDeep from "lodash/cloneDeep";
 import { Toaster } from "react-hot-toast";
 import { cdnImage } from "/utils/cdnImage";
+import LazyLoader from "../../LazyLoader";
 
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
@@ -271,7 +272,11 @@ export default function Gallery({ tokens, user }) {
 
 const Visible = ({ items, columns, bulkEdit }) => {
   const { setNodeRef } = useDroppable({ id: "show" });
-
+  const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
+  const renderedItems = items.visible.slice(0, lazyLoadIndex)
+  const handleLazyLoad = () => {
+    setLazyLoadIndex(prev => prev + 9);
+  }
   return (
     <div
       ref={setNodeRef}
@@ -279,11 +284,11 @@ const Visible = ({ items, columns, bulkEdit }) => {
     >
       <SortableContext
         id="visible"
-        items={items.visible.map((i) => i.mint)}
+        items={renderedItems.map((i) => i.mint)}
         strategy={rectSortingStrategy}
       >
         <Grid columns={columns}>
-          {items.visible.map((token, index) => (
+          {renderedItems.map((token, index) => (
             <SortablePhoto
               key={token.mint}
               mint={token.mint}
@@ -304,12 +309,18 @@ const Visible = ({ items, columns, bulkEdit }) => {
           ))}
         </Grid>
       </SortableContext>
+      {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null}
     </div>
   );
 };
 
 const Hidden = ({ items }) => {
   const { setNodeRef } = useDroppable({ id: "hide" });
+  const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
+  const renderedItems = items.hidden.slice(0, lazyLoadIndex)
+  const handleLazyLoad = () => {
+    setLazyLoadIndex(prev => prev + 9);
+  }
 
   return (
     <div
@@ -318,11 +329,11 @@ const Hidden = ({ items }) => {
     >
       <SortableContext
         id="hidden"
-        items={items.hidden.map((i) => i.mint)}
+        items={renderedItems.map((i) => i.mint)}
         strategy={rectSortingStrategy}
       >
         <Grid columns={2}>
-          {items.hidden.map((token, index) => (
+          {renderedItems.map((token, index) => (
             <SortablePhoto
               key={token.mint}
               mint={token.mint}
@@ -334,6 +345,7 @@ const Hidden = ({ items }) => {
           ))}
         </Grid>
       </SortableContext>
+      {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null}
     </div>
   );
 };

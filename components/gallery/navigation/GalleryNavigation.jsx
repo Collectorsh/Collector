@@ -16,6 +16,7 @@ import { HomeIcon, ShareIcon, UserCircleIcon } from "@heroicons/react/solid";
 import TwitterLogo from "/components/logos/TwitterLogo";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
+import Image from "next/image";
 
 export default function GalleryNavigation({ user }) {
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
@@ -43,9 +44,11 @@ export default function GalleryNavigation({ user }) {
         <div className="grid grid-cols-6">
           <div className="flex items-center col-span-3 md:col-span-2">
             {user.twitter_user_id && (
-              <img
+              <Image
+                height="32"
+                width="32"
                 src={user.twitter_profile_image}
-                alt="default img"
+                alt="default pfp"
                 className="h-8 w-8 rounded-full inline mr-2 float-left"
               />
             )}

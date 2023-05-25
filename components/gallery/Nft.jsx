@@ -1,10 +1,12 @@
 import Link from "next/link";
 import Script from "next/script";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { cdnImage } from "/utils/cdnImage";
 import { addDefaultSource } from "/utils/addDefaultSource";
+import useElementObserver from "../../hooks/useElementObserver";
+import Image from "next/image";
 
-export default function Nft({ user, token }) {
+export default function Nft({ user, token, onLoad }) {
   const [videoUrl, setVideoUrl] = useState();
 
   useEffect(() => {
@@ -27,7 +29,8 @@ export default function Nft({ user, token }) {
   }, [token]);
 
   const onImageLoad = (event) => {
-    event.target.parentNode.parentNode.parentNode.classList.add("loaded");
+    // event.target.parentNode.parentNode.parentNode.classList.add("loaded");
+    onLoad()
   };
 
   return (
@@ -37,9 +40,10 @@ export default function Nft({ user, token }) {
           user && user.shadow && "shadow-lg"
         } ${user && user.border && "border-8"} ${
           user && user.rounded && "rounded-2xl"
-        }`}
+          }`}
       >
-        <Link href={`/nft/${token.mint}`} title="">
+
+        <Link href={`/nft/${ token.mint }`} title="">
           <a>
             {videoUrl ? (
               <>
@@ -63,15 +67,16 @@ export default function Nft({ user, token }) {
                 />
               </>
             ) : (
-              <img
-                src={cdnImage(token.mint)}
-                onLoad={onImageLoad}
-                className="mx-auto cursor-pointer object-center object-cover"
-                onError={(e) => addDefaultSource(e, token.mint, token.image)}
+                <img
+                  alt=""
+                  src={cdnImage(token.mint)}
+                  onLoad={onImageLoad}
+                  className="mx-auto cursor-pointer object-center object-cover"
+                  onError={(e) => addDefaultSource(e, token.mint, token.image)}
               />
             )}
           </a>
-        </Link>
+        </Link>        
       </div>
     </>
   );

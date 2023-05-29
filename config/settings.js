@@ -12,13 +12,20 @@ const prod = {
   dao21: "https://api.21dao.xyz",
 };
 
+// const prod = {
+//   apiHost: "https://collector-eqs5u.ondigitalocean.app/collector-api",
+//   host: "https://collector.sh",
+//   dao21: "https://api.21dao.xyz",
+// }
+
 const beta = {
   apiHost: "https://api.collector.sh",
   host: "https://dev.collector.sh",
   dao21: "https://api.21dao.xyz",
 };
 
-const config = (function (environment) {
+const config = (function(environment) {
+  console.log("🚀 ~ file: settings.js:28 ~ config ~ environment:", environment)
   switch (environment) {
     case "production":
       return prod;

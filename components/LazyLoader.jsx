@@ -3,7 +3,7 @@ import useElementObserver from "../hooks/useElementObserver";
 
 const LazyLoader = ({cb}) => {
   const ref = useRef(null)
-  const isVisible = useElementObserver(ref, "0px")
+  const isVisible = useElementObserver(ref, "10px")
   useEffect(() => {
     if (isVisible) {
       cb()

@@ -17,8 +17,6 @@ import Image from "next/image";
 
 //{ user, tokens }
 function Gallery({user}) {
-console.log("🚀 ~ file: [gallery].js:20 ~ Gallery ~ user:", user)
-
   const router = useRouter();
   // const [user, setUser] = useState(null);
   const [tokens, setTokens] = useState([]);

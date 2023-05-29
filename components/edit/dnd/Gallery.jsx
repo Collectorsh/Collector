@@ -273,7 +273,7 @@ export default function Gallery({ tokens, user }) {
 const Visible = ({ items, columns, bulkEdit }) => {
   const { setNodeRef } = useDroppable({ id: "show" });
   const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
-  const renderedItems = items.visible.slice(0, lazyLoadIndex)
+  const renderedItems = items.visible//.slice(0, lazyLoadIndex)
   const handleLazyLoad = () => {
     setLazyLoadIndex(prev => prev + 9);
   }
@@ -309,7 +309,7 @@ const Visible = ({ items, columns, bulkEdit }) => {
           ))}
         </Grid>
       </SortableContext>
-      {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null}
+      {/* {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null} */}
     </div>
   );
 };
@@ -317,7 +317,7 @@ const Visible = ({ items, columns, bulkEdit }) => {
 const Hidden = ({ items }) => {
   const { setNodeRef } = useDroppable({ id: "hide" });
   const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
-  const renderedItems = items.hidden.slice(0, lazyLoadIndex)
+  const renderedItems = items.hidden//.slice(0, lazyLoadIndex)
   const handleLazyLoad = () => {
     setLazyLoadIndex(prev => prev + 9);
   }
@@ -345,7 +345,7 @@ const Hidden = ({ items }) => {
           ))}
         </Grid>
       </SortableContext>
-      {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null}
+      {/* {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null} */}
     </div>
   );
 };

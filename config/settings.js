@@ -7,16 +7,10 @@ const dev = {
 };
 
 const prod = {
-  apiHost: "https://api.collector.sh",
+  apiHost: process.env.NEXT_PUBLIC_ALT_API || "https://api.collector.sh",
   host: "https://collector.sh",
   dao21: "https://api.21dao.xyz",
 };
-
-// const prod = {
-//   apiHost: "https://collector-eqs5u.ondigitalocean.app/collector-api",
-//   host: "https://collector.sh",
-//   dao21: "https://api.21dao.xyz",
-// }
 
 const beta = {
   apiHost: "https://api.collector.sh",
@@ -25,7 +19,6 @@ const beta = {
 };
 
 const config = (function(environment) {
-  console.log("🚀 ~ file: settings.js:28 ~ config ~ environment:", environment)
   switch (environment) {
     case "production":
       return prod;

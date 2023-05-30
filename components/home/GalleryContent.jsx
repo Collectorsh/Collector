@@ -33,27 +33,28 @@ export default function GalleryContent({ name, items }) {
   return (
     <div
       id="feed"
-      className="bg-gray-50 dark:bg-dark1 rounded-lg mt-6"
-      style={{
-        backgroundImage: `url(${
-          items &&
-          items.length > 0 &&
-          items[Math.floor(Math.random() * (items.length - 1))].image
-        })`,
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backdropFilter: "blur(8px)",
-      }}
+      className="rounded-xl mt-6 bg-gray-500/20"
+      // className="bg-gray-50 dark:bg-dark1 rounded-lg mt-6"
+      // style={{
+      //   backgroundImage: `url(${
+      //     items &&
+      //     items.length > 0 &&
+      //     items[Math.floor(Math.random() * (items.length - 1))].image
+      //   })`,
+      //   backgroundPosition: "center",
+      //   backgroundRepeat: "no-repeat",
+      //   backgroundSize: "cover",
+      //   backdropFilter: "blur(8px)",
+      // }}
     >
       <div
         className="p-4 rounded-lg overflow-hidden"
-        style={{
-          background: "rgba(0, 0, 0, 0.6)",
-          backdropFilter: "blur(8px)",
-        }}
+        // style={{
+        //   background: "rgba(0, 0, 0, 0.6)",
+        //   backdropFilter: "blur(8px)",
+        // }}
       >
-        <h2 className="py-3 px-4 rounded-3xl bg-whitish text-black font-semibold cursor-pointer mb-3 ml-2 w-fit">
+        <h2 className="font-semibold mb-3 ml-2 w-fit">
           {name}
         </h2>
         <div className="grid grid-flow-col grid-cols-card auto-cols-card py-4 gap-6 overflow-x-auto items-start">
@@ -87,7 +88,7 @@ export default function GalleryContent({ name, items }) {
 
                         <div className="mt-2">
                           {item.username && (
-                            <p className="inline font-bold leading-7 text-white">
+                            <p className="inline font-bold leading-7">
                               @{item.username}
                             </p>
                           )}

@@ -42,7 +42,7 @@ export default function Tools() {
           </div>
         </div>
 
-        <div className="mt-8 bg-gray-200 dark:bg-dark2 rounded-3xl px-6 pt-6">
+        {/* <div className="mt-8 bg-gray-200 dark:bg-dark2 rounded-3xl px-6 pt-6">
           <div className="align-middle">
             <CollectionIcon className="h-6 w-6 inline mr-1 align-middle" />
             <h2 className="text-black dark:text-white text-xl font-semibold inline align-middle">
@@ -74,7 +74,7 @@ export default function Tools() {
               <img src="/images/feed.png" />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

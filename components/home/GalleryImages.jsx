@@ -4,21 +4,40 @@ import getGalleryImages from "/data/home/getGalleryImages";
 import getMetadataFromMint from "/data/nft/getMetadataFromMint";
 import Image from "/components/Image";
 import ContentLoader from "react-content-loader";
+import { set } from "nprogress";
 
 export default function GalleryImages() {
   const [metadata, setMetadata] = useState();
+  const [error, setError] = useState(0);
 
   const asyncGetGalleryImages = useCallback(async () => {
-    let res = await getGalleryImages();
-    let data = await getMetadataFromMint(res.mint);
-    data.username = res.username;
-    data.twitter = res.twitter;
-    setMetadata(data);
+    try {
+      let res = await getGalleryImages();
+      let data = await getMetadataFromMint(res.mint);
+
+      if (data && res) {
+        data.username = res.username;
+        data.twitter = res.twitter;
+        setMetadata(data);
+        setError(0)
+      } else {
+        setError(prev => prev+1);
+      }
+    } catch (e) {
+      setError(prev => prev+1);
+    }
   }, []);
 
   useEffect(() => {
     asyncGetGalleryImages();
-  }, []);
+  }, [asyncGetGalleryImages]);
+
+  useEffect(() => {
+    //if error try again
+    if (error !== 0 && error < 9) {
+      asyncGetGalleryImages();
+    }
+  },[error, asyncGetGalleryImages])
 
   const removeElement = (e) => {
     e.target.parentNode.remove();
@@ -95,16 +114,39 @@ export default function GalleryImages() {
           </div>
         </>
       ) : (
+      <>
         <div className="lg:col-span-6">
           <ContentLoader
             speed={2}
             className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] rounded-xl"
-            backgroundColor="#bbbbbb"
-            foregroundColor="#aaaaaa"
+            backgroundColor="rgba(120,120,120,0.2)"
+            foregroundColor="rgba(120,120,120,0.1)"
           >
             <rect className="w-full h-[100vw] lg:h-[520px] xl:h-[550px]" />
           </ContentLoader>
         </div>
+        <div className="hidden lg:block lg:col-span-5 lg:col-end-13 min-h-[50%]">
+          <ContentLoader
+            speed={2}
+            className="w-full lg:h-[520px] xl:h-[550px]"
+            backgroundColor="rgba(120,120,120,0.2)"
+            foregroundColor="rgba(120,120,120,0.1)"
+          >
+            <rect y="3%" className="w-full h-10" rx="7" />
+            <rect y="15%" className="w-full h-4" rx="5" />
+            <rect y="20%" className="w-full h-4" rx="5" />
+            <rect y="25%" className="w-full h-4" rx="5" />
+
+                <rect y="35%" className="w-[45%] h-4" rx="5" />
+                <rect y="35%" x="50%" className="w-[45%] h-4" rx="5" />
+                <rect y="40%" className="w-[45%] h-4" rx="5" />
+                <rect y="40%" x="50%" className="w-[45%] h-4" rx="5" />
+
+            <rect y="50%" className="w-1/3 h-10" rx="5" />
+            <rect y="50%" x="50%" className="w-1/3 h-10" rx="5" />
+          </ContentLoader>
+        </div>
+      </>
       )}
     </div>
   );

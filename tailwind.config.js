@@ -29,6 +29,15 @@ module.exports = {
       backgroundImage: {
         "mint-bg": "url('/images/mintbg.png')",
       },
+      keyframes: {
+        enter: {
+          '0%': { opacity: 0, transform: "translateY(2rem)" },
+          '100%': { opacity: 1, transform: "translateY(0rem)" },
+        }
+      },
+      animation: {
+        enter: 'enter 1s ease-out',
+      }
     },
   },
   plugins: [],

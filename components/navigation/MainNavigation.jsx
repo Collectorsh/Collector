@@ -40,36 +40,41 @@ export default function MainNavigation() {
   }, [user]);
 
   return (
-    <div>
+    <div className="pb-[76px]">
       {showModal && <CreateUsernameModal />}
-      <nav className="mx-auto py-4 md:py-2 fixed w-full z-20 top-0 h-[76px] relative max-w-screen-2xl mx-auto px-4 sm:px-8">
+      <nav className="bg-white dark:bg-black shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed max-w-screen-2xl mx-auto px-4 sm:px-8">
         <div>
           <div className="flex">
             <div className="flex items-center col-span-1 w-[200px] lg:w-1/2">
               <div className="cursor-pointer md:my-3 w-[200px]">
                 {/* <!-- Website Logo --> */}
                 <Link href="/">
-                  <h1 className="text-2xl text-black dark:text-white font-bold">
-                    <span className="align-middle">Collector</span>
-                  </h1>
+                  <a className="collector text-2xl font-bold">
+                  collect<span className="w-[0.82rem] h-[0.8rem] rounded-[0.38rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r
+                  </a>
                 </Link>
               </div>
             </div>
-            <div className="hidden md:flex text-right items-center col-span-1 justify-end w-full">
-              <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+            <div className="hidden md:flex items-center justify-end w-full">
+              {/* <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                 <Link href="/feed">Feed</Link>
               </p>
               <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                 <Link href="/drops">Drops</Link>
-              </p>
+              </p> */}
               {/* <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                 <Link href="/shop">Shop</Link>
               </p> */}
               {/* {!user && <Premium />} */}
+              <Link href="/about">
+                <a className="mr-8 font-bold">
+                  About
+                </a>
+              </Link>
               {user && (
                 <>
                   <Gallery />
-                  {user.token_holder && <Activity />}
+                  {/* {user.token_holder && <Activity />} */}
                   {/* {!user.token_holder && <Premium />} */}
                 </>
               )}
@@ -158,7 +163,13 @@ export default function MainNavigation() {
                             <span className="-ml-2">Toggle Dark Mode</span>
                           </div>
                           <div className="mt-6 dark:text-gray-200">
-                            {!user && (
+                            <p
+                            className={`text-xl cursor-pointer border-b-2 py-2 border-gray-100 dark:border-dark3 ${ path === "/" ? "font-bold" : ""
+                              }`}
+                          >
+                            <Link href="/">Home</Link>
+                          </p>
+                            {/* {!user && (
                               <>
                                 <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                   <Link href="/feed">Feed</Link>
@@ -166,46 +177,40 @@ export default function MainNavigation() {
                                 <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                   <Link href="/drops">Drops</Link>
                                 </p>
-                                {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                   <Link href="/shop">Shop</Link>
-                                </p> */}
-                                {/* <div className="mt-4">
+                                </p>
+                                <div className="mt-4">
                                   <Premium />
-                                </div> */}
+                                </div>
                               </>
-                            )}
+                            )} */}
 
                             {user && (
                               <>
-                                <div className="mt-6">
-                                  <p
-                                    className={`text-xl cursor-pointer border-b-2 py-2 border-gray-100 dark:border-dark3 ${
-                                      path === "/" ? "font-bold" : ""
-                                    }`}
-                                  >
-                                    <Link href="/">Home</Link>
-                                  </p>
-                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                <div className="">
+                                  
+                                  {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href="/feed">Feed</Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href="/drops">Drops</Link>
-                                  </p>
+                                  </p> */}
                                   {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href="/shop">Shop</Link>
                                   </p> */}
-                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                  {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href={`/${user.username}/profile`}>
                                       Profile
                                     </Link>
-                                  </p>
+                                  </p> */}
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href="/settings">Settings</Link>
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href="/edit">Edit Gallery</Link>
                                   </p>
-                                  {user.token_holder && (
+                                  {/* {user.token_holder && (
                                     <>
                                       <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                         <Link href="/activity?id=buynow">
@@ -228,7 +233,7 @@ export default function MainNavigation() {
                                         </Link>
                                       </p>
                                     </>
-                                  )}
+                                  )} */}
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <a onClick={signOut}>Sign Out</a>
                                   </p>

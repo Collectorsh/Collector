@@ -49,7 +49,7 @@ export default function MainNavigation() {
           <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none text-left">
             <Menu.Item>
               {publicKey ? (
-                <p className="bg-gray-50 rounded-xl shadow-lg mx-2 my-1 block px-4 py-2 text-sm text-gray-700">
+                <p className="bg-gray-500/10 rounded-xl mx-2 my-1 block px-4 py-2 text-sm text-gray-700">
                   {publicKey.toBase58().substr(0, 4)}...
                   {publicKey.toBase58().slice(-4)}
                 </p>
@@ -57,13 +57,13 @@ export default function MainNavigation() {
                 <p>Connect</p>
               )}
             </Menu.Item>
-            <Menu.Item>
+            {/* <Menu.Item>
               <Link href={`/${user.username}/profile`}>
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   Profile
                 </a>
               </Link>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item>
               <Link href="/settings">
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">

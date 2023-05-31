@@ -1,17 +1,33 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import getAllDrops from "/data/drops/getAllDrops";
 import UpcomingDrop from "/components/home/UpcomingDrop";
 import GalleryImages from "/components/home/GalleryImages";
 import CollectorListing from "/components/home/CollectorListing";
 import ContentLoader from "react-content-loader";
+import UserContext from "../../contexts/user";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { useRouter } from "next/router";
 
 export default function Hero() {
-  const [loading, setLoading] = useState(true);
-  const [drop, setDrop] = useState();
-  const [showGalleries, setShowGalleries] = useState(false);
-  const [showListing, setShowListing] = useState(false);
+  const [user, setUser] = useContext(UserContext);
+  const { setVisible } = useWalletModal()
+  const router = useRouter();
 
-  const signedIn = true;
+
+  // const [loading, setLoading] = useState(true);
+  // const [drop, setDrop] = useState();
+  // const [showGalleries, setShowGalleries] = useState(false);
+  // const [showListing, setShowListing] = useState(false);
+
+  // const signedIn = true;
+
+  const handleCurate = () => { 
+    if(!user) {
+      setVisible(true)
+    } else {
+      router.push("/edit")
+    }
+  }
 
   // const asyncGetDrop = useCallback(async () => {
   //   let drops = await getAllDrops();
@@ -37,43 +53,37 @@ export default function Hero() {
 
   return (
     <div className="py-6 sm:py-12 mx-auto dark:text-white">
-      {/* <div className="grid lg:grid-cols-2 items-center mb-10">
+      <div className="grid lg:grid-cols-2 gap-10 items-center mb-10 ">
         <div className="text-center" >
-          <h1 className="animate-enter text-5xl lg:text-8xl font-bold">Collect<span className="w-7 h-7 lg:w-14 lg:h-14 rounded-full bg-greeny inline-block -mt-0.5"></span>r</h1>
-          <p className="text-lg mt-2 collector">Discover and share beautiful art</p>
+          <p className="text-4xl mt-2 collector">Discover & Share <br/>Beautiful Art on Solana</p>
           <button
-            className="bg-greeny text-black mt-10 py-3 px-6 rounded-full text-lg font-bold duration-300 hover:scale-105 active:scale-100">
-            {signedIn ? "View Your Gallery" : "Sign In To Get Started"}
+            onClick={handleCurate}
+            className="border-2 border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black
+             mt-10 py-3 px-6 rounded-full text-lg font-bold duration-300 active:scale-95">
+            Curate Your Gallery
           </button>
-        </div>
-          <div className="hidden lg:block bg-gallery_background dark:bg-dark1 rounded-3xl p-6">
-           
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="">
-                <p className="text-white text-sm font-bold">
-                  Drag &amp; Drop to curate
-                </p>
-                <div className="bg-white p-2 rounded-xl mt-3">
-                  <img src="/images/gallery1.png" />
-                </div>
-              </div>
-              <div className="">
-                <p className="text-white text-sm font-bold">
-                  Share with the world
-                </p>
-                <div className="bg-white p-2 rounded-xl mt-3">
-                  <img src="/images/gallery2.png" />
-                </div>
-              </div>
-            </div>
+
+          <div className="mt-20 collector flex justify-around flex-wrap">
+            <p>3k+ galleries</p>
+            |
+            <p>5k+ artists</p>
+            |
+            <p>20k+ artworks</p>
           </div>
-      </div> */}
+        </div>
+        
+        <div className="bg-white p-2 rounded-xl shadow-lg animate-enter">
+          <img src="/images/gallery2.png" />
+        </div>          
+      </div>
 
 
-      <h2 className="text-4xl font-bold mb-8">Spotlight</h2>
+
+
+      {/* <h2 className="text-4xl font-bold mb-8">Spotlight</h2>
       <div className="min-h-[100vw] lg:min-h-[520px] xl:min-h-[550px]">
         <GalleryImages />
-        {/* {loading ? (
+        {loading ? (
           <>
             <div className="grid grid-cols-1 lg:grid-cols-12">
               <div className="lg:col-span-6">
@@ -95,8 +105,8 @@ export default function Hero() {
             {showGalleries && <GalleryImages />}
             {showListing && <CollectorListing />}
           </>
-        )} */}
-      </div>
+        )}
+      </div> */}
     </div>
   );
 }

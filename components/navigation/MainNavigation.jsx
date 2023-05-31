@@ -110,7 +110,9 @@ export default function MainNavigation() {
             className="fixed inset-0 overflow-hidden z-20"
             onClose={() => setOpen(true)}
           >
+
             <div className="absolute inset-0 overflow-hidden">
+              
               <Transition.Child
                 as={Fragment}
                 enter="ease-in-out duration-500"

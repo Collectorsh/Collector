@@ -15,9 +15,9 @@ export default function About() {
             <br/><br/>
             At Collector, we believe that great art deserves to be seen. Our platform is here to help you find stunning digital art, making it easy for anyone to enjoy creativity at its finest.
             <br/><br/>
-            The world of NFTs has changed how we create, share, and collect art, allowing everyone to take part. But as more and more art fills the NFT market, it's becoming harder to find the real gems. Lots of talented artists get lost in the crowd, and it's often hard to know where to look.
+            The world of NFTs has changed how we create, share, and collect art, allowing everyone to take part. But as more and more art fills the NFT market, it&apos;s becoming harder to find the real gems. Lots of talented artists get lost in the crowd, and it&apos;s often hard to know where to look.
             <br /><br />
-            Here at Collector, we strive to cut through the noise. Our platform empowers artists and collectors to tell the stories behind the artwork, providing a rich context that deepens appreciation and builds trust. We're dedicated to making the art discovery process simpler, more meaningful, and more enjoyable for everyone.
+            Here at Collector, we strive to cut through the noise. Our platform empowers artists and collectors to tell the stories behind the artwork, providing a rich context that deepens appreciation and builds trust. We&apos;re dedicated to making the art discovery process simpler, more meaningful, and more enjoyable for everyone.
             <br /><br />
             One of our unique features is our free 2D galleries. These galleries allow collectors to showcase their collections and introduce others to their favorite artists. This way, we can create a community where art is shared and enjoyed by all.
             <br /><br />

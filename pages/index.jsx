@@ -5,6 +5,7 @@ import Galleries from "/components/home/Galleries";
 import DropSecondary from "/components/home/DropSecondary";
 import Tools from "/components/home/Tools";
 import UserContext from "/contexts/user";
+import GalleryImages from "../components/home/GalleryImages";
 
 export default function Home() {
   const [user] = useContext(UserContext);
@@ -12,9 +13,15 @@ export default function Home() {
   return (
     <div className="dark:bg-black">
       <MainNavigation />
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-8">
-        <Hero />
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-8 mt-10">
+        <h2 className="text-4xl font-bold mb-8">Spotlight</h2>
+        <div className="min-h-[100vw] lg:min-h-[520px] xl:min-h-[550px]">
+          <GalleryImages />
+        </div>
       </div>
+      {/* <div className="max-w-screen-xl mx-auto px-4 sm:px-8">
+        <Hero />
+      </div> */}
       {/* <div className="border-t border-neutral-100 dark:border-neutral-800">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
           <DropSecondary />
@@ -23,6 +30,12 @@ export default function Home() {
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 border-t border-neutral-100 dark:border-neutral-800">
         <Galleries />
       </div>
+      {/* <div className="max-w-screen-xl mx-auto px-4 sm:px-8 mb-10">
+        <h2 className="text-4xl font-bold mb-8">Spotlight</h2>
+        <div className="min-h-[100vw] lg:min-h-[520px] xl:min-h-[550px]">
+          <GalleryImages />
+        </div>
+      </div> */}
       <div className="border-t border-neutral-100 dark:border-neutral-800">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
           <Tools />

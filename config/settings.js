@@ -7,13 +7,13 @@ const dev = {
 };
 
 const prod = {
-  apiHost: process.env.NEXT_PUBLIC_ALT_API || "https://api.collector.sh",
+  apiHost: process.env.NEXT_PUBLIC_ALT_API || "https://collector.sh/collector-api",
   host: "https://collector.sh",
   dao21: "https://api.21dao.xyz",
 };
 
 const beta = {
-  apiHost: "https://api.collector.sh",
+  apiHost: "https://collector.sh/collector-api",
   host: "https://dev.collector.sh",
   dao21: "https://api.21dao.xyz",
 };
@@ -58,6 +58,6 @@ export const monthlyCharge = 1000000000;
 export const yearlyCharge = 8000000000;
 export const connection = new Connection(process.env.NEXT_PUBLIC_RPC, {
   httpHeaders: {
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_HELLOMOON_API_KEY}`,
+    Authorization: `Bearer ${ process.env.NEXT_PUBLIC_HELLOMOON_API_KEY }`,
   },
 });

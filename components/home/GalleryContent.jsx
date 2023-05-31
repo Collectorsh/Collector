@@ -33,7 +33,7 @@ export default function GalleryContent({ name, items }) {
   return (
     <div
       id="feed"
-      className="rounded-xl mt-6 bg-gray-500/20"
+      className="rounded-xl mb-6"
       // className="bg-gray-50 dark:bg-dark1 rounded-lg mt-6"
       // style={{
       //   backgroundImage: `url(${
@@ -48,7 +48,7 @@ export default function GalleryContent({ name, items }) {
       // }}
     >
       <div
-        className="p-4 rounded-lg overflow-hidden"
+        className="lg:p-4 rounded-lg overflow-hidden"
         // style={{
         //   background: "rgba(0, 0, 0, 0.6)",
         //   backdropFilter: "blur(8px)",
@@ -57,13 +57,13 @@ export default function GalleryContent({ name, items }) {
         <h2 className="font-semibold mb-3 ml-2 w-fit">
           {name}
         </h2>
-        <div className="grid grid-flow-col grid-cols-card auto-cols-card py-4 gap-6 overflow-x-auto items-start">
+        <div className="grid grid-flow-col grid-cols-card auto-cols-card p-4 gap-6 overflow-x-auto items-start">
           {items ? (
             <>
               {items.map((item, index) => (
                 <div
                   key={index}
-                  className="overflow-hidden relative h-[385px] sm:h-[315px] w-[375px] sm:w-[315px] px-4"
+                  className="bg-gray-400/10 shadow-lg rounded-xl overflow-hidden relative w-[315px] p-3"
                 >
                   <div className="rounded-lg overflow-hidden">
                     <Link href={`/${item.username}`}>
@@ -71,7 +71,7 @@ export default function GalleryContent({ name, items }) {
                         <img
                           src={cdnImage(item.mint)}
                           onError={(e) => addDefaultSource(e, item.image)}
-                          className="object-center object-cover w-full mb-4 h-[325px] sm:h-[250px] border border-neutral-300 dark:border-neutral-800 rounded-xl"
+                          className="object-center object-cover w-full mb-4 h-[325px] sm:h-[250px]  rounded-lg"
                         />
                       </a>
                     </Link>

@@ -1,20 +1,19 @@
 .wallet-adapter-button {
   background-color: transparent;
-  border: none;
   color: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
   font-size: 16px;
-  font-weight: 600;
+  /* font-weight: 600; */
   height: 48px;
-  line-height: 48px;
-  padding: 0;
-  border-radius: 30px;
+  /* line-height: 48px; */
+  /* padding: 0; */
+  /* border-radius: 30px; */
 }
 
 .wallet-adapter-button-trigger {
-  @apply bg-none text-black dark:text-white border-none text-sm;
+  @apply bg-none text-black dark:text-white text-base font-bold;
 }
 
 .wallet-adapter-button:not([disabled]):focus-visible {

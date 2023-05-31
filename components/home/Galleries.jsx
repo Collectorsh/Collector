@@ -25,19 +25,21 @@ export default function GalleriesPage() {
   }, []);
 
   return (
-    <div className="clear-both py-6">
-      <h2 className="text-2xl font-semibold text-neutral-800 w-full inline-block dark:text-whitish">
-        Featured Galleries
-      </h2>
-      <p className="font-semibold mb-2 hover:underline dark:text-white">
-        <Link href="/galleries">
-          <a>See all Galleries</a>
-        </Link>
-        <ArrowRightIcon
-          className="h-4 w-4 ml-1 inline cursor-pointer"
-          aria-hidden="true"
-        />
-      </p>
+    <div className="py-6">
+      <div className="text-center">
+        <h2 className="text-2xl font-semibold text-neutral-800 dark:text-whitish">
+          Featured Galleries
+        </h2>
+        <p className="font-semibold hover:underline dark:text-white">
+          <Link href="/galleries">
+            <a>See all Galleries</a>
+          </Link>
+          <ArrowRightIcon
+            className="h-4 w-4 ml-1 inline cursor-pointer"
+            aria-hidden="true"
+          />
+        </p>
+      </div>
       <GalleryContent name="Dao's &amp; Collectives" items={daos} />
       <GalleryContent name="Popular Galleries" items={popular} />
     </div>

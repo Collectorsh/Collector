@@ -42,15 +42,18 @@ export default function MainNavigation() {
   return (
     <div className="pb-[76px]">
       {showModal && <CreateUsernameModal />}
-      <nav className="bg-white dark:bg-black shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed max-w-screen-2xl mx-auto px-4 sm:px-8">
+      <nav className="bg-white dark:bg-black shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
+        <div className="max-w-screen-2xl mx-auto">
+
+       
         <div>
           <div className="flex">
             <div className="flex items-center col-span-1 w-[200px] lg:w-1/2">
               <div className="cursor-pointer md:my-3 w-[200px]">
                 {/* <!-- Website Logo --> */}
                 <Link href="/">
-                  <a className="collector text-2xl font-bold">
-                  collect<span className="w-[0.82rem] h-[0.8rem] rounded-[0.38rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r
+                  <a className="collector text-3xl font-bold">
+                  collect<span className="w-[1.025rem] h-[1rem] rounded-[0.45rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r
                   </a>
                 </Link>
               </div>
@@ -257,7 +260,8 @@ export default function MainNavigation() {
               </div>
             </div>
           </Dialog>
-        </Transition.Root>
+          </Transition.Root>
+        </div>
       </nav>
     </div>
   );

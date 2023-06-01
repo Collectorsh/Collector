@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { cdnImage } from "/utils/cdnImage";
 import ContentLoader from "react-content-loader";
+// import { addDefaultSource } from "../../utils/addDefaultSource";
 
 export default function GalleryContent({ name, items }) {
+  console.log("🚀 ~ file: GalleryContent.jsx:7 ~ GalleryContent ~ items:", items)
   function addDefaultSource(e, url) {
-    if (!url) return;
+    if (!url || url.includes("cdn.collector.sh")) return;
     e.target.src = url;
   }
 
@@ -60,44 +62,47 @@ export default function GalleryContent({ name, items }) {
         <div className="grid grid-flow-col grid-cols-card auto-cols-card p-4 gap-6 overflow-x-auto items-start">
           {items ? (
             <>
-              {items.map((item, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-400/10 shadow-lg rounded-xl overflow-hidden relative w-[315px] p-3"
-                >
-                  <div className="rounded-lg overflow-hidden">
-                    <Link href={`/${item.username}`}>
-                      <a>
-                        <img
-                          src={cdnImage(item.mint)}
-                          onError={(e) => addDefaultSource(e, item.image)}
-                          className="object-center object-cover w-full mb-4 h-[325px] sm:h-[250px]  rounded-lg"
-                        />
-                      </a>
-                    </Link>
-                  </div>
-                  <div className="mt-2">
-                    <Link href={`/${item.username}`}>
-                      <a>
-                        {item.twitter_profile_image && (
+              {items.map((item, index) => {
+                if(item.image.includes("cdn.collector.sh")) return null
+                return (
+                  <div
+                    key={index}
+                    className="bg-gray-400/10 shadow-lg rounded-xl overflow-hidden relative w-[315px] p-3"
+                  >
+                    <div className="rounded-lg overflow-hidden">
+                      <Link href={`/${ item.username }`}>
+                        <a>
                           <img
-                            src={item.twitter_profile_image}
-                            className="w-8 h-8 mr-1.5 rounded-full float-left"
+                            src={cdnImage(item.mint)}
+                            onError={(e) => addDefaultSource(e, item.image)}
+                            className="object-center object-cover w-full mb-4 h-[325px] sm:h-[250px]  rounded-lg"
                           />
-                        )}
-
-                        <div className="mt-2">
-                          {item.username && (
-                            <p className="inline font-bold leading-7">
-                              @{item.username}
-                            </p>
+                        </a>
+                      </Link>
+                    </div>
+                    <div className="mt-2">
+                      <Link href={`/${ item.username }`}>
+                        <a>
+                          {item.twitter_profile_image && (
+                            <img
+                              src={item.twitter_profile_image}
+                              className="w-8 h-8 mr-1.5 rounded-full float-left"
+                            />
                           )}
-                        </div>
-                      </a>
-                    </Link>
+
+                          <div className="mt-2">
+                            {item.username && (
+                              <p className="inline font-bold leading-7">
+                                @{item.username}
+                              </p>
+                            )}
+                          </div>
+                        </a>
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </>
           ) : (
             <>{loadingImages()}</>

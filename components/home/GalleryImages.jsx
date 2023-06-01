@@ -56,7 +56,7 @@ export default function GalleryImages() {
         <>
           <div className="lg:col-span-6">
             <div className="text-center">
-              <div className="overflow-hidden col-span-2 relative -mt-2 max-h-[100vw] lg:max-h-[520px] xl:max-h-[550px] rounded-xl">
+              <div className="overflow-hidden col-span-2 relative -mt-2 max-h-[300px] lg:max-h-[520px] xl:max-h-[550px] rounded-xl flex justify-center items-center">
                 <Image token={metadata} size="large" />
               </div>
             </div>

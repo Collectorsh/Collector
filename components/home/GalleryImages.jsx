@@ -5,6 +5,8 @@ import getMetadataFromMint from "/data/nft/getMetadataFromMint";
 import Image from "/components/Image";
 import ContentLoader from "react-content-loader";
 import { set } from "nprogress";
+import axios from "axios";
+import { cdnImage } from "../../utils/cdnImage";
 
 export default function GalleryImages() {
   const [metadata, setMetadata] = useState();
@@ -13,11 +15,16 @@ export default function GalleryImages() {
   const asyncGetGalleryImages = useCallback(async () => {
     try {
       let res = await getGalleryImages();
+
+      if (!res.mint) throw new Error("No Mint address")
+
       let data = await getMetadataFromMint(res.mint);
+
 
       if (data && res) {
         data.username = res.username;
         data.twitter = res.twitter;
+
         setMetadata(data);
         setError(0)
       } else {
@@ -30,14 +37,14 @@ export default function GalleryImages() {
 
   useEffect(() => {
     asyncGetGalleryImages();
-  }, [asyncGetGalleryImages]);
+  }, []);
 
   useEffect(() => {
     //if error try again
     if (error !== 0 && error < 9) {
       asyncGetGalleryImages();
     }
-  },[error, asyncGetGalleryImages])
+  },[error])
 
   const removeElement = (e) => {
     e.target.parentNode.remove();

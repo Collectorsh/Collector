@@ -51,7 +51,7 @@ export default function GalleryImages() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 mb-6">
+    <div className="grid grid-cols-1 lg:grid-cols-12 pb-12">
       {metadata ? (
         <>
           <div className="lg:col-span-6">
@@ -87,7 +87,7 @@ export default function GalleryImages() {
                 </div>
                 <div className="mt-16">
                   <Link href={`/nft/${metadata.mint}`}>
-                    <a className="py-3.5 px-4 rounded-3xl border-2 border-black dark:border-white text-black dark:text-white cursor-pointer hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-bold">
+                    <a className="py-3.5 px-4 rounded-lg border-2 duration-300 border-black dark:border-white text-black dark:text-white cursor-pointer hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-bold">
                       View Artwork
                     </a>
                   </Link>
@@ -111,7 +111,7 @@ export default function GalleryImages() {
                 </div>
                 <div className="mt-16">
                   <Link href={`/${metadata.username}`}>
-                    <a className="py-3.5 px-4 rounded-3xl border-2 border-black dark:border-white text-black dark:text-white cursor-pointer hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-bold">
+                    <a className="py-3.5 px-4 duration-300 rounded-lg border-2 border-black dark:border-white text-black dark:text-white cursor-pointer hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-bold">
                       View Gallery
                     </a>
                   </Link>

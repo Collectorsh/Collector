@@ -2,11 +2,21 @@ import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import getGalleries from "/data/home/getGalleries";
 import { Oval } from "react-loader-spinner";
+import debounce from "lodash.debounce";
 
 export default function Galleries() {
+  const [search, setSearch] = useState("");
   const [galleries, setGalleries] = useState();
   const alpha = Array.from(Array(26)).map((e, i) => i + 65);
   const alphabet = [...["#"], ...alpha.map((x) => String.fromCharCode(x))];
+
+  const searchDebounce = debounce((text) => {
+    setSearch(text);
+  }, 300)
+
+  const handleSearch = (e) => { 
+    searchDebounce(e.target.value);
+  }
 
   const fetchGalleries = useCallback(async () => {
     let res = await getGalleries();
@@ -44,7 +54,7 @@ export default function Galleries() {
       "float-left",
       "align-middle"
     );
-    e.target.parentNode.parentNode.replaceChild(
+    e.target.parentNode.parentNode?.replaceChild(
       newDiv,
       e.target.parentNode.parentNode.children[0]
     );
@@ -59,15 +69,26 @@ export default function Galleries() {
       )}
       {galleries && (
         <>
+          <input
+            className="border-black dark:border-white border-2 rounded-md p-2 mb-4 bg-transparent"
+            placeholder="Search by Username"
+            onChange={handleSearch}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setSearch("")
+                e.target.value = ""
+              }
+            }}
+          />
           {alphabet.map((letter, index) => (
-            <div key={index}>
+            <div key={letter+index}>
               <h2 className="font-bold underline mb-4 dark:text-whitish">
                 {letter}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {series(letter).map((item, index) => (
+                {series(letter).filter(item => item.username.includes(search)).map((item, index) => (
                   <div
-                    key={index}
+                    key={item.username}
                     className="mb-6 w-fit py-2 px-4 cursor-pointer dark:text-whitish align-middle"
                   >
                     <Link href={`/${item.username}`} title="">

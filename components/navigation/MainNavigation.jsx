@@ -53,7 +53,7 @@ export default function MainNavigation() {
                 {/* <!-- Website Logo --> */}
                 <Link href="/">
                   <a className="collector text-3xl font-bold">
-                  collect<span className="w-[1.025rem] h-[1rem] rounded-[0.45rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r
+                  collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r
                   </a>
                 </Link>
               </div>

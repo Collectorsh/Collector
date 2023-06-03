@@ -59,21 +59,22 @@ export default function Hero() {
           <button
             onClick={handleCurate}
             className="border-2 border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black
-             mt-10 py-3 px-6 rounded-full text-lg font-bold duration-300 active:scale-95">
+             mt-10 py-3 px-6 rounded-lg text-lg font-bold duration-300 active:scale-95">
             Curate Your Gallery
           </button>
 
-          <div className="mt-20 collector flex justify-around flex-wrap">
-            <p>3k+ galleries</p>
+          {/* <div className="mt-20 collector flex justify-around flex-wrap">
+            <p>1.7k+ galleries</p>
             |
-            <p>5k+ artists</p>
+            <p>5.4k+ artists</p>
             |
-            <p>20k+ artworks</p>
-          </div>
+            <p>10.4k+ artworks</p>
+          </div> */}
         </div>
         
-        <div className="bg-white p-2 rounded-xl shadow-lg animate-enter">
-          <img src="/images/gallery2.png" />
+        <div className="bg-gray-300/20 lg:shadow-lg p-3 rounded-xl delay-200 animate-enter">
+          <img className="dark:hidden rounded-lg" src="/images/hero-gal-light.png" />
+          <img className="hidden dark:block rounded-lg" src="/images/hero-gal-dark.png" />
         </div>          
       </div>
 

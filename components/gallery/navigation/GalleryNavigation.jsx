@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import React, {
   useState,
@@ -47,6 +48,9 @@ export default function GalleryNavigation({ user }) {
                 src={user.twitter_profile_image}
                 alt="default img"
                 className="h-8 w-8 rounded-full inline mr-2 float-left"
+                onError={(e) => {
+                  e.target.className = "hidden"
+                }}
               />
             )}
             <h2 className="text-2xl text-gray-800 font-bold align-middle dark:text-gray-100 mr-2">
@@ -81,13 +85,16 @@ export default function GalleryNavigation({ user }) {
               title="Collector Home"
               className="align-middle inline"
             >
-              <HomeIcon
+              {/* <HomeIcon
                 className="h-6 w-6 inline mx-2 cursor-pointer text-slate-900 dark:text-gray-100 hover:scale-110"
                 aria-hidden="true"
-              />
+              /> */}
+              <div className="cursor-pointer select-none mr-4 bg-black dark:bg-white rounded-full h-8 w-8 flex justify-center items-center">
+                <p className="collector text-3xl text-white dark:text-black -mt-[0.35rem]">c</p>
+              </div>
             </Link>
 
-            <Link
+            {/* <Link
               href={`/${user.username}/profile`}
               title="Profile"
               className="align-middle inline"
@@ -100,9 +107,9 @@ export default function GalleryNavigation({ user }) {
                   />
                 </Tippy>
               </a>
-            </Link>
+            </Link> */}
 
-            <Link
+            {/* <Link
               href={`https://twitter.com/intent/tweet?text=${host}/${user.username}`}
               title="Share to Twitter"
               className="align-middle inline"
@@ -115,7 +122,7 @@ export default function GalleryNavigation({ user }) {
                   <ShareIcon className="w-6 h-6 inline mr-4 text-slate-900 dark:text-gray-100 cursor-pointer hover:scale-110 focus:outline-none" />
                 </Tippy>
               </a>
-            </Link>
+            </Link> */}
 
             <div className="mr-1">
               <DarkMode />
@@ -206,15 +213,18 @@ export default function GalleryNavigation({ user }) {
                               className="align-middle inline"
                             >
                               <a>
-                                <HomeIcon
+                                {/* <HomeIcon
                                   className="h-6 w-6 inline mr-4 cursor-pointer text-slate-900 dark:text-gray-100 hover:scale-110"
                                   aria-hidden="true"
-                                />
+                                /> */}
+                                <div className="inline-flex mr-4 bg-black dark:bg-white rounded-full h-8 w-8 justify-center items-center">
+                                  <p className="collector text-3xl text-white dark:text-black -mt-[0.35rem]">c</p>
+                                </div>
                                 <span className="-ml-2">Home</span>
                               </a>
                             </Link>
                           </div>
-                          <div className="mt-6 dark:text-gray-200">
+                          {/* <div className="mt-6 dark:text-gray-200">
                             <Link
                               href={`/${user.username}/profile`}
                               title="Profile"
@@ -228,8 +238,8 @@ export default function GalleryNavigation({ user }) {
                                 <span className="-ml-2">Profile</span>
                               </a>
                             </Link>
-                          </div>
-                          <div className="mt-6 dark:text-gray-200">
+                          </div> */}
+                          {/* <div className="mt-6 dark:text-gray-200">
                             <Link
                               href={`https://twitter.com/intent/tweet?text=${host}/${user.username}`}
                               title="Share to Twitter"
@@ -240,7 +250,7 @@ export default function GalleryNavigation({ user }) {
                                 <span className="-ml-2">Share to Twitter</span>
                               </a>
                             </Link>
-                          </div>
+                          </div> */}
                           <div className="mt-6 dark:text-gray-200">
                             {loggedInUser &&
                               loggedInUser.username !== user.username && (

@@ -12,7 +12,7 @@ export default function Gallery() {
       {/* Profile dropdown */}
       <Menu as="div" className="mr-8 relative">
         <div>
-          <Menu.Button className="flex text-sm rounded-lg px-3 focus:outline-none border border-black dark:border-white">
+          <Menu.Button className="flex text-sm rounded px-3 focus:outline-none border border-black dark:border-white">
             <span className="sr-only">Open user menu</span>
             <p className="text-base cursor-pointer inline font-bold text-gray-900 dark:text-gray-100">
               Curate

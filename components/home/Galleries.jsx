@@ -4,28 +4,39 @@ import getPopularGalleries from "/data/home/getPopularGalleries";
 import getDaos from "/data/home/getDaos";
 import { ArrowRightIcon } from "@heroicons/react/outline";
 import GalleryContent from "/components/home/GalleryContent";
+import getCuratedGalleries from "/data/home/getCuratedGalleries";
 
 export default function GalleriesPage() {
   const [popular, setPopular] = useState();
   const [daos, setDaos] = useState();
+  const [curated, setCurated] = useState();
 
-  const fetchPopularGalleries = useCallback(async () => {
-    let res = await getPopularGalleries();
-    if (res) setPopular(res.data);
-  }, []);
+  // const fetchPopularGalleries = useCallback(async () => {
+  //   let res = await getPopularGalleries();
+  //   if (res) setPopular(res.data);
+  // }, []);
 
-  const fetchDaos = useCallback(async () => {
-    let res = await getDaos();
-    if (res) setDaos(res.data);
-  }, []);
+  // const fetchDaos = useCallback(async () => {
+  //   let res = await getDaos();
+  //   if (res) setDaos(res.data);
+  // }, []);
 
+  // useEffect(() => {
+  //   fetchDaos();
+  //   fetchPopularGalleries();
+  // }, []);
+
+  const fetchCurated = useCallback(async () => { 
+    const res = await getCuratedGalleries()
+    const randomized = res.data.sort(() => Math.random() - 0.5)
+    if (res) setCurated([...randomized, ...randomized])
+  }, [])
   useEffect(() => {
-    fetchDaos();
-    fetchPopularGalleries();
-  }, []);
+    fetchCurated()
+  }, [fetchCurated])
 
   return (
-    <div className="py-6">
+    <div className="py-10">
       <div className="text-center">
         <h2 className="text-2xl font-semibold text-neutral-800 dark:text-whitish">
           Featured Galleries
@@ -40,8 +51,9 @@ export default function GalleriesPage() {
           />
         </p>
       </div>
-      <GalleryContent name="Dao's &amp; Collectives" items={daos} />
-      <GalleryContent name="Popular Galleries" items={popular} />
+      {/* <GalleryContent name="Dao's &amp; Collectives" items={daos} />
+      <GalleryContent name="Popular Galleries" items={popular} /> */}
+      <GalleryContent name="" items={curated} />
     </div>
   );
 }

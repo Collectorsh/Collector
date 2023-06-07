@@ -72,9 +72,9 @@ export default function MainNavigation() {
 
 
 
-                {/* <Link href="/galleries">
+                {/* <Link href="/discover">
                   <a className="mr-8 font-bold">
-                    Directory
+                    Discover
                   </a>
                 </Link> */}
               <Link href="/about">
@@ -182,12 +182,12 @@ export default function MainNavigation() {
                           >
                             <Link href="/">Home</Link>
                               </p>
-                              {/* <p
-                                className={`text-xl cursor-pointer border-b-2 py-2 border-gray-100 dark:border-dark3 ${ path === "/galleries" ? "font-bold" : ""
-                                  }`}
-                              >
-                                <Link href="/galleries">Directory<Link>
+                              {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                <Link href="/discover">Discover</Link>
                               </p> */}
+                              <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                <Link href="/about">About</Link>
+                              </p>
                             {/* {!user && (
                               <>
                                 <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
@@ -223,6 +223,7 @@ export default function MainNavigation() {
                                       Profile
                                     </Link>
                                   </p> */}
+           
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href="/settings">Settings</Link>
                                   </p>

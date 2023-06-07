@@ -3,6 +3,7 @@ import ShopTitle from "/components/shop/ShopTitle";
 import Collection from "/components/shop/Collection";
 import getCollection from "/data/shop/getCollection";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 function CollectionHome({ collection }) {
   const router = useRouter();

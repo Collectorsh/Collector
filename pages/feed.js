@@ -1,6 +1,7 @@
 import MainNavigation from "/components/navigation/MainNavigation";
 import Feed from "/components/home/Feed";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function FeedHome() {
   const router = useRouter();

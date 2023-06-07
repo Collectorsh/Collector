@@ -15,7 +15,7 @@ import { CartProvider } from "/contexts/cart";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import PlausibleProvider from "next-plausible";
 import Footer from "/components/Footer";
-
+import banner from "/public/Collector Hero.jpeg"
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
   cache: new InMemoryCache(),
@@ -28,9 +28,20 @@ export default function MyApp({ Component, pageProps }) {
       <div>
         <Head>
           <meta charSet="UTF-8" />
-          <meta name="keywords" content="Collect &amp; Share beautiful art" />
+          <title>Collector</title>
           <meta name="author" content="Collector" />
-          <link rel="icon" href="/favicon.ico" />
+          <meta name="keywords" content="Collect &amp; Share beautiful art" />
+
+          <meta key="desc" name="description" content="Discover &amp; Share Beautiful Art" />
+          <meta key="view" name="viewport" content="width=device-width, initial-scale=1" />
+          <meta key="ogtitle" name="og:title" content="Collector" />
+          <meta key="ogdesc" name="og:description" content="Discover &amp; Share Beautiful Art" />
+          <meta key="image" property="og:image" content={banner} />
+          <meta key="twitimage" property='twitter:image' content={banner} />
+          <meta key="url" name="og:url" content="https://collector.sh/" />
+          <meta key="card" property="twitter:card" content="summary_large_image" />
+          <link key="icon" rel="icon" href="/favicon.ico" />
+
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
             rel="preconnect"
@@ -51,7 +62,7 @@ export default function MyApp({ Component, pageProps }) {
             type="text/css"
             href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
           />
-          <title>Discover &amp; Share Beautiful Art</title>
+         
         </Head>
       </div>
       <ApolloProvider client={client}>

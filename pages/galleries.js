@@ -1,5 +1,5 @@
 import MainNavigation from "/components/navigation/MainNavigation";
-import Galleries from "/components/discover/galleries";
+import Galleries from "/components/galleries/Galleries";
 
 export default function Discover() {
   return (

@@ -13,16 +13,6 @@ import { connection } from "/config/settings";
 import { useRouter } from "next/router";
 
 function Nft({ image, token }) {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/")
-  }, [router])
-
-  return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <h1>404</h1>
-    </div>
-  )
   const [, setSingleNft] = useContext(SingleNftContext);
   const auctionHouses = auctionHousesArray.map((a) => a.address);
   const [offers, setOffers] = useState([]);

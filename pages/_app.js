@@ -16,6 +16,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import PlausibleProvider from "next-plausible";
 import Footer from "/components/Footer";
 import banner from "/public/Collector Hero.jpeg"
+
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
   cache: new InMemoryCache(),

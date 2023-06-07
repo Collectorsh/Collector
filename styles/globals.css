@@ -471,3 +471,7 @@ figcaption {
 .landscape {
   grid-column-end: span 1.5;
 }
+
+.markdown h1 {
+  @apply text-3xl font-bold mb-4;
+}

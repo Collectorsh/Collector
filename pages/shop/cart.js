@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import MainNavigation from "/components/navigation/MainNavigation";
 import Cart from "/components/shop/Cart";
 import ShopTitle from "/components/shop/ShopTitle";
+import { useEffect } from "react";
 
 export default function CartHome() {
   const router = useRouter();

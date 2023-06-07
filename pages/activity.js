@@ -9,6 +9,16 @@ import Artists from "/components/follow/Artists";
 
 function Activity() {
   const router = useRouter();
+  useEffect(() => {
+    router.replace("/")
+  }, [router])
+
+  return (
+    <div className="w-full h-screen flex justify-center items-center">
+      <h1>404</h1>
+    </div>
+  )
+  // const router = useRouter();
   const { id } = router.query;
   const [selected, setSelected] = useState(id || "buynow");
 

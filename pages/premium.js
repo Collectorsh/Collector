@@ -2,6 +2,7 @@ import Link from "next/link";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { CheckIcon } from "@heroicons/react/solid";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Premium() {
   const router = useRouter();

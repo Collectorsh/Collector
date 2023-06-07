@@ -2,6 +2,7 @@ import getDropFromName from "/data/drops/getDropFromName";
 import MainNavigation from "/components/navigation/MainNavigation";
 import Secondary from "./secondary";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 function Market({ name, drop }) {
   const router = useRouter();

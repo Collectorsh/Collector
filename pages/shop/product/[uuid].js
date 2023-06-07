@@ -3,6 +3,7 @@ import ShopTitle from "/components/shop/ShopTitle";
 import Product from "/components/shop/Product";
 import getProduct from "/data/shop/getProduct";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 function ProductHome({ product, collection, wallet }) {
   const router = useRouter();

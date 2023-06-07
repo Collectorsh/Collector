@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import Nft from "./nft";
+import { useEffect } from "react";
 
 export default function Items({ items }) {
   const router = useRouter();

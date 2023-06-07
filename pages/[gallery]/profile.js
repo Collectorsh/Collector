@@ -4,8 +4,20 @@ import getFeed from "/data/home/getFeed";
 import getFollowingById from "/data/artists/getFollowingById";
 import ProfilePage from "/components/profile/ProfilePage";
 import MainNavigation from "/components/navigation/MainNavigation";
+import { useRouter } from "next/router";
 
 function Profile({ profileUser }) {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/")
+  }, [router])
+
+  return (
+    <div className="w-full h-screen flex justify-center items-center">
+      <h1>404</h1>
+    </div>
+  )
+
   const [activity, setActivity] = useState();
   const [image, setImage] = useState();
   const [following, setFollowing] = useState();

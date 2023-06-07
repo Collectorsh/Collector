@@ -1,8 +1,21 @@
 import Link from "next/link";
 import getAllDrops from "/data/drops/getAllDrops";
 import MainNavigation from "/components/navigation/MainNavigation";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 export default function Drops({ drops }) {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/")
+  }, [router])
+
+  return (
+    <div className="w-full h-screen flex justify-center items-center">
+      <h1>404</h1>
+    </div>
+  )
+  
   return (
     <div>
       <MainNavigation />

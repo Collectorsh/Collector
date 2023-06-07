@@ -5,10 +5,12 @@ import { cdnImage } from "/utils/cdnImage";
 import { addDefaultSource } from "/utils/addDefaultSource";
 import useElementObserver from "../../hooks/useElementObserver";
 import Image from "next/image";
+import ContentLoader from "react-content-loader";
+import clsx from "clsx";
 
 export default function Nft({ user, token, onLoad }) {
   const [videoUrl, setVideoUrl] = useState();
-
+  const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     if (!token) return;
     try {
@@ -29,7 +31,7 @@ export default function Nft({ user, token, onLoad }) {
   }, [token]);
 
   const onImageLoad = (event) => {
-    // event.target.parentNode.parentNode.parentNode.classList.add("loaded");
+    setLoaded(true);
     onLoad()
   };
 
@@ -42,9 +44,19 @@ export default function Nft({ user, token, onLoad }) {
           user && user.rounded && "rounded-2xl"
           }`}
       >
+        <div className={clsx("md:p-4 top-0 left-0 w-full", loaded ? "hidden" : "absolute")}>
+          <ContentLoader
+            speed={2}
+            className="w-full mb-4 h-[250px] rounded-lg"
+            backgroundColor="#bbbbbb"
+            foregroundColor="#aaaaaa"
+          >
+            <rect className="w-full h-full" />
+          </ContentLoader>
+        </div>
 
         <Link href={`/nft/${ token.mint }`} title="">
-          <a>
+          <a className={loaded ? "animate-enter" : "opacity-0"}>
             {videoUrl ? (
               <>
                 <video
@@ -54,7 +66,8 @@ export default function Nft({ user, token, onLoad }) {
                   playsInline
                   id="video"
                   className="mx-auto w-100 h-100 cursor-pointer object-center object-cover"
-                  onLoadedData={onImageLoad}
+                  // onLoadedData={onImageLoad}
+                  onCanPlay={onImageLoad}
                 >
                   <source src={videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.

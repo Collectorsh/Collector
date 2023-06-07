@@ -1,8 +1,19 @@
+import { useRouter } from "next/router";
 import MainNavigation from "/components/navigation/MainNavigation";
 import Cart from "/components/shop/Cart";
 import ShopTitle from "/components/shop/ShopTitle";
 
 export default function CartHome() {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/")
+  }, [router])
+
+  return (
+    <div className="w-full h-screen flex justify-center items-center">
+      <h1>404</h1>
+    </div>
+  )
   return (
     <div className="dark:bg-black">
       <MainNavigation />

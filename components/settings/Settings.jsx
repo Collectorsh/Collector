@@ -112,7 +112,7 @@ export default function Settings() {
                         </div>
                       </dd>
                     </div>
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white dark:bg-dark2">
+                    {/* <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white dark:bg-dark2">
                       <dt className="text-sm font-medium text-gray-500 dark:text-gray-200">
                         Twitter
                       </dt>
@@ -142,7 +142,7 @@ export default function Settings() {
                           )}
                         </div>
                       </dd>
-                    </div>
+                    </div> */}
                     <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
                       <dt className="text-sm font-medium text-gray-500 dark:text-gray-200">
                         Email

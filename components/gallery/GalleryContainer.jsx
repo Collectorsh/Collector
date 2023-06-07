@@ -44,7 +44,7 @@ export default function GalleryContainer({ tokens, user }) {
                 return <Card key={index} token={token} user={user} onLoad={handleLoad} />;
             })}
         </Masonry>
-        {lazyLoadIndex < tokens?.length ? <LazyLoader cb={handleLazyLoad} /> : null}
+        {lazyLoadIndex < tokens?.length ? <LazyLoader cb={handleLazyLoad} rootMargin="500px"/> : null}
       </div>
     </div>
   );

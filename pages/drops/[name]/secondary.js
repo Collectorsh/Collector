@@ -9,8 +9,20 @@ import { roundToTwo } from "/utils/roundToTwo";
 import { Metaplex } from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { useRouter } from "next/router";
 
 export default function Secondary({ drop }) {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/")
+  }, [router])
+
+  return (
+    <div className="w-full h-screen flex justify-center items-center">
+      <h1>404</h1>
+    </div>
+  )
+
   const wallet = useWallet();
   const [mints, setMints] = useState();
   const [stats, setStats] = useState();

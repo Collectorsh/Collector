@@ -8,7 +8,7 @@ export default function Terms({ content }) {
   return (
     <>
       <MainNavigation />
-      <div className='max-w-screen-xl mx-auto py-4 sm:py-8 markdown'>
+      <div className='max-w-screen-xl mx-auto p-4 sm:p-8 markdown'>
         <ReactMarkdown>
           {content}
         </ReactMarkdown>

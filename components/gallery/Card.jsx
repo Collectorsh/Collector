@@ -41,7 +41,7 @@ function Card(props) {
       {token && (
         <>
           <Nft user={user} token={token} onLoad={handleLoad} />
-          <Listings token={token} />
+          {/* <Listings token={token} /> */}
           <ShowOffers token={token} />
           <MetaContainer user={user} token={token} />
         </>

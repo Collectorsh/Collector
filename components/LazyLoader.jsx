@@ -1,13 +1,19 @@
 import { useEffect, useRef } from "react";
 import useElementObserver from "../hooks/useElementObserver";
 
-const LazyLoader = ({cb}) => {
+const LazyLoader = ({cb, rootMargin = "20px"}) => {
   const ref = useRef(null)
-  const isVisible = useElementObserver(ref, "10px")
+  const isVisible = useElementObserver(ref, rootMargin)
   useEffect(() => {
+    let interId
     if (isVisible) {
       cb()
-    }
+      interId = setInterval(() => { 
+        cb()
+      }, 500)
+    } else clearInterval(interId)
+
+    return () => clearInterval(interId)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[isVisible])
   return (

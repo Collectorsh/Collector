@@ -18,7 +18,7 @@ function SettingsPage() {
     <div>
       <CheckLoggedIn />
       <MainNavigation />
-      <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-8">
+      <div className="relative max-w-screen-2xl mx-auto p-4 sm:p-8">
         <div className="mx-auto clear-both">
           <div className="mx-auto pt-3 md:px-0">
             <h2 className="mt-8 mb-12 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-whitish">
@@ -58,9 +58,9 @@ function SettingsPage() {
               </ul>
             </div>
             {selected === "settings" && <Settings />}
-            {selected === "notifications" && user && user.token_holder && (
+            {/* {selected === "notifications" && user && user.token_holder && (
               <Notifications />
-            )}
+            )} */}
             {selected === "wallets" && <Wallets />}
           </div>
         </div>

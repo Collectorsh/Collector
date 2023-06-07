@@ -1,8 +1,19 @@
 import getDropFromName from "/data/drops/getDropFromName";
 import MainNavigation from "/components/navigation/MainNavigation";
 import Secondary from "./secondary";
+import { useRouter } from "next/router";
 
 function Market({ name, drop }) {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/")
+  }, [router])
+
+  return (
+    <div className="w-full h-screen flex justify-center items-center">
+      <h1>404</h1>
+    </div>
+  )
   return (
     <div className="dark:bg-black dark:text-whitish">
       <MainNavigation />

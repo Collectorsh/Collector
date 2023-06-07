@@ -7,6 +7,16 @@ import { Oval } from "react-loader-spinner";
 
 export default function Search() {
   const router = useRouter();
+  useEffect(() => {
+    router.replace("/")
+  }, [router])
+
+  return (
+    <div className="w-full h-screen flex justify-center items-center">
+      <h1>404</h1>
+    </div>
+  )
+
   const { address } = router.query;
   const [tokens, setTokens] = useState();
   const [notFound, setNotFound] = useState(false);

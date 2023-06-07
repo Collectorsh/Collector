@@ -2,8 +2,19 @@ import MainNavigation from "/components/navigation/MainNavigation";
 import ShopTitle from "/components/shop/ShopTitle";
 import Collection from "/components/shop/Collection";
 import getCollection from "/data/shop/getCollection";
+import { useRouter } from "next/router";
 
 function CollectionHome({ collection }) {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/")
+  }, [router])
+
+  return (
+    <div className="w-full h-screen flex justify-center items-center">
+      <h1>404</h1>
+    </div>
+  )
   return (
     <div className="dark:bg-black">
       <MainNavigation />

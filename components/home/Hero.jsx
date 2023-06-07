@@ -64,11 +64,11 @@ export default function Hero() {
           </button>
 
           {/* <div className="mt-20 collector flex justify-around flex-wrap">
-            <p>1.7k+ galleries</p>
+            <p>4.1k+ galleries</p>
             |
-            <p>5.4k+ artists</p>
+            <p>11.3k+ artists</p>
             |
-            <p>10.4k+ artworks</p>
+            <p>54k+ artworks</p>
           </div> */}
         </div>
         

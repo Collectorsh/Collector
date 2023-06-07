@@ -2,17 +2,23 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <div className="bg-neutral-800 text-white dark:bg-[#080808] border-t border-neutral-800">
+    <div className="border-t border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:text-white bg-neutral-100">
       <div className="pt-16 max-w-screen-2xl mx-auto px-4 sm:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 pb-4">
           <div>
             <h1 className="col-span-2 sm:col-span-1 text-2xl">Collector</h1>
-            <p className="mt-2">Discover, Collect, &amp; Share Art on Solana</p>
+            <p className="mt-2">Discover and share beautiful art</p>
           </div>
           <div className="mt-8 sm:mt-0 col-span-2 sm:col-span-1 align-right">
             <div className="float-left sm:float-right">
               <Link href="/about">
                 <a className="inline mr-6">About</a>
+              </Link>
+              <Link href="/terms">
+                <a className="inline mr-6">Terms</a>
+              </Link>
+              <Link href="/privacy">
+                <a className="inline mr-6">Privacy</a>
               </Link>
               <Link href="https://twitter.com/collector_sh">
                 <a target="_blank">
@@ -37,8 +43,8 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="border-t border-neutral-700 pb-4"></div>
-        <div className="text-sm pb-24 text-neutral-200">Copyright 2023</div>
+        {/* <div className="border-t border-neutral-200 dark:border-neutral-800 pb-4"></div> */}
+        <div className="text-sm py-12">Copyright 2023</div>
       </div>
     </div>
   );

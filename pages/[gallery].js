@@ -13,7 +13,6 @@ import { auctionHousesArray } from "/config/settings";
 import { Metaplex } from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
 import { useRouter } from "next/router";
-import Image from "next/image";
 
 //{ user, tokens }
 function Gallery({user}) {
@@ -29,6 +28,7 @@ function Gallery({user}) {
   const fetchListings = useCallback(async () => {
     const newListings = [];
     const newOffers = [];
+
     for (const auctionHouse of auctionHouses) {
       const lstngs = await metaplex.auctionHouse().findListings({
         auctionHouse: { address: auctionHouse, isNative: true },

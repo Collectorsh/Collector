@@ -72,11 +72,11 @@ export default function MainNavigation() {
 
 
 
-                {/* <Link href="/discover">
+                <Link href="/discover">
                   <a className="mr-8 font-bold">
                     Discover
                   </a>
-                </Link> */}
+                </Link>
               <Link href="/about">
                 <a className="mr-8 font-bold">
                   About
@@ -182,9 +182,9 @@ export default function MainNavigation() {
                           >
                             <Link href="/">Home</Link>
                               </p>
-                              {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                              <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                 <Link href="/discover">Discover</Link>
-                              </p> */}
+                              </p>
                               <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                 <Link href="/about">About</Link>
                               </p>

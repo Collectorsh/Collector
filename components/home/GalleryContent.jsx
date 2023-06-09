@@ -5,12 +5,13 @@ import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import "swiper/css/navigation";
 import { Navigation } from "swiper";
+import { addDefaultSource } from "../../utils/addDefaultSource";
 
 export default function GalleryContent({ name, items }) {
-  function addDefaultSource(e, url) {
-    if (!url || url.includes("cdn.collector.sh")) return;
-    e.target.src = url;
-  }
+  // function addDefaultSource(e, url) {
+  //   if (!url || url.includes("cdn.collector.sh")) return;
+  //   e.target.src = url;
+  // }
 
   const loadingSlides = () => {
     return Array.from({ length: 6 }, (_, index) => (
@@ -57,7 +58,7 @@ export default function GalleryContent({ name, items }) {
                   <a>
                     <img
                       src={cdnImage(item.mint)}
-                      onError={(e) => addDefaultSource(e, item.image)}
+                      onError={(e) => addDefaultSource(e, item.mint, item.image)}
                       className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
                     />
                   </a>

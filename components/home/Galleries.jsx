@@ -42,7 +42,7 @@ export default function GalleriesPage() {
           Featured Galleries
         </h2>
         <p className="font-semibold hover:underline dark:text-white">
-          <Link href="/galleries">
+          <Link href="/discover">
             <a>See all Galleries</a>
           </Link>
           <ArrowRightIcon

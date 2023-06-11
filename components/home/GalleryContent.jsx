@@ -6,6 +6,7 @@ import 'swiper/css';
 import "swiper/css/navigation";
 import { Navigation } from "swiper";
 import { addDefaultSource } from "../../utils/addDefaultSource";
+import axios from "axios";
 
 export default function GalleryContent({ name, items }) {
   const loadingSlides = () => {
@@ -40,6 +41,20 @@ export default function GalleryContent({ name, items }) {
   }
 
   const imageSlides = () => { 
+
+    const defaultSource = async (e, mint, url) => {
+      e.target.style.background = "black";
+      e.target.style.opacity = 0;
+      if (!url || url.includes("cdn.collector.sh")) return;
+      try {
+        const res = await axios.get(url).then(res => res.data);
+        const image = typeof res.image === "object" ? res.image : url
+        e.target.src = image;
+        e.target.style.opacity = 1;
+      } catch (err) {
+        console.log(err);
+      }
+    }
     return items.map((item, index) => {
       if (item.image.includes("cdn.collector.sh")) return null;
       return (
@@ -53,7 +68,7 @@ export default function GalleryContent({ name, items }) {
                   <a>
                     <img
                       src={cdnImage(item.mint)}
-                      onError={(e) => addDefaultSource(e, item.mint, item.image)}
+                      onError={(e) => defaultSource(e, item.mint, item.image)}
                       className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
                     />
                   </a>

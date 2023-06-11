@@ -7,6 +7,7 @@ import { cdnImage } from "../utils/cdnImage";
 import debounce from "lodash.debounce";
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, XCircleIcon } from "@heroicons/react/solid";
 import { addDefaultSource } from "../utils/addDefaultSource";
+import axios from "axios";
 
 const totalPerPage = 8
 
@@ -21,6 +22,23 @@ export default function Discover() {
     setSearch(text);
     setPage(1)
   }, 300)
+
+  const defaultSource = async (e, mint, url) => {
+    e.target.style.background = "black";
+    e.target.style.opacity = 0;
+    if (!url || url.includes("cdn.collector.sh")) return;
+    try {
+      const res = await axios.get(url).then(res => {
+        return res.data
+      })
+      const image = typeof res.image === "object" ? res.image : url
+  
+      e.target.src = image;
+      e.target.style.opacity = 1;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const handleSearch = (e) => {
     searchDebounce(e.target.value);
@@ -72,7 +90,7 @@ export default function Discover() {
                   <img
                     // src={item.image}
                     src={cdnImage(item.mint)}
-                    onError={(e) => addDefaultSource(e, item.mint, item.image)}
+                    onError={(e) => defaultSource(e, item.mint, item.image)}
                     className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
                   />
                 </a>

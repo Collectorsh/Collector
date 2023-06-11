@@ -4,7 +4,7 @@ import EditGallery from "/components/edit/EditGallery";
 import MainNavigation from "/components/navigation/MainNavigation";
 import Settings from "/components/edit/Settings";
 
-function Gallery() {
+function Edit() {
   const [selected, setSelected] = useState("gallery");
 
   const changeSelected = (sel) => {
@@ -50,4 +50,4 @@ function Gallery() {
   );
 }
 
-export default Gallery;
+export default Edit;

@@ -8,11 +8,6 @@ import { Navigation } from "swiper";
 import { addDefaultSource } from "../../utils/addDefaultSource";
 
 export default function GalleryContent({ name, items }) {
-  // function addDefaultSource(e, url) {
-  //   if (!url || url.includes("cdn.collector.sh")) return;
-  //   e.target.src = url;
-  // }
-
   const loadingSlides = () => {
     return Array.from({ length: 6 }, (_, index) => (
       <SwiperSlide key={`slide-${ index }`}>
@@ -48,7 +43,7 @@ export default function GalleryContent({ name, items }) {
     return items.map((item, index) => {
       if (item.image.includes("cdn.collector.sh")) return null;
       return (
-        <SwiperSlide key={item.mint+ index}>
+        <SwiperSlide key={item.mint + index}>
           <div className="md:p-4">
             <div
               className="bg-gray-300/20 md:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
@@ -105,7 +100,6 @@ export default function GalleryContent({ name, items }) {
       <Swiper
         navigation
         modules={[Navigation]}
-        // wrapperClass="lg:p-4"
         spaceBetween={0}
         slidesPerView={1}
         grabCursor={true}

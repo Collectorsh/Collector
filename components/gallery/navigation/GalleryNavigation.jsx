@@ -252,7 +252,7 @@ export default function GalleryNavigation({ user }) {
                             </Link>
                           </div> */}
                           <div className="mt-6 dark:text-gray-200">
-                            {loggedInUser &&
+                            {/* {loggedInUser &&
                               loggedInUser.username !== user.username && (
                                 <>
                                   {loggedInUser.following.find(
@@ -287,7 +287,7 @@ export default function GalleryNavigation({ user }) {
                                     </Tippy>
                                   )}
                                 </>
-                              )}
+                              )} */}
                           </div>
                         </div>
                         {/* /End replace */}

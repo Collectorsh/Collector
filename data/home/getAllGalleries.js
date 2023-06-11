@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "/data/client/apiClient";
 import useSWR from 'swr'
-import { set } from "nprogress";
 
 async function getAllGalleries(page = 1, perPage = 30, search) {
   try {

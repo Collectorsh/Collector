@@ -97,7 +97,6 @@ async function getMetadata(publicKeys) {
       }
     }
   }
-  console.log("🚀 ~ file: getMetadata.js:215 ~ getMetadata ~ results (old tokens):", results)
   results = results.sort((a, b) =>
     coalesce(a.order_id, +Infinity) > coalesce(b.order_id, +Infinity)
       ? 1

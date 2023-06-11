@@ -13,17 +13,7 @@ export default function EditGallery() {
 
   const getTokens = useCallback(async (u) => {
     let tkns = await getMetadata(u.public_keys);
-    
-    const withImages = await Promise.all(tkns.map(async (tok) => {
-      try {
-        const res = await getMetadataFromUri(tok);
-        return res
-      } catch (er) {
-        console.log(er)
-        return tok
-      }
-    }))
-    setTokens(withImages);
+    setTokens(tkns);
   }, []);
 
   useEffect(() => {

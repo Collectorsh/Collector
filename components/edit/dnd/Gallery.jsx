@@ -362,13 +362,13 @@ const OverlayImage = ({ mint, tokens }) => {
   const addDefaultImage = async (e, mint, tokens) => {
     e.target.style.background = "grey";
     const token = tokens.find((t) => t.mint === mint);
-    if(token?.image) e.target.src = token.image;
-    // try {
-    //   let res = await axios.get(token.uri);
-    //   e.target.src = res.data.image;
-    // } catch(err) {
-    //   console.log(err)
-    // }
+    // if(token?.image) e.target.src = token.image;
+    try {
+      let res = await axios.get(token.uri);
+      e.target.src = res.data.image;
+    } catch(err) {
+      console.log(err)
+    }
   };
 
   return (

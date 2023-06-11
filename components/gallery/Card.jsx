@@ -9,14 +9,13 @@ import useElementObserver from "../../hooks/useElementObserver";
 function Card(props) {
   const user = props.user;
   const onLoad = props.onLoad;
-  const isMounted = useRef(true);
   const [token, setToken] = useState();
   const [loaded, setLoaded] = useState(false);
 
   const initGetData = useCallback(async (tok) => {
     try {
       const res = await getMetadataFromUri(tok);
-      if (res && isMounted.current === true) setToken(res);
+      if (res) setToken(res);
     } catch (error) {
       console.log(error);
     }
@@ -24,9 +23,6 @@ function Card(props) {
 
   useEffect(() => {
     initGetData(props.token);
-    return () => {
-      isMounted.current = false;
-    };
   }, [props.token, initGetData]);
 
   const handleLoad = () => { 

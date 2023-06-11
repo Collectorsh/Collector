@@ -22,18 +22,19 @@ import LazyLoader from "../../LazyLoader";
 
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
-  const [columns, setColumns] = useState(user.columns);
+  const [columns, setColumns] = useState(user?.columns);
   const [items, setItems] = useState();
   const [bulkEdit, setBulkEdit] = useState(false);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   useEffect(() => {
-    const vis = tokens.filter((t) => t.visible === true);
-    const hid = tokens.filter((t) => t.visible === false);
+    const tokenClone = cloneDeep(tokens);
+    const vis = tokenClone.filter((t) => t.visible === true);
+    const hid = tokenClone.filter((t) => t.visible === false);
     const itemz = { visible: vis, hidden: hid };
     setItems(itemz);
-  }, []);
+  }, [tokens]);
 
   const hideSelected = () => {
     const clonedItems = cloneDeep(items);
@@ -83,12 +84,13 @@ export default function Gallery({ tokens, user }) {
     }
 
     if (activeContainer !== overContainer) {
-      setItems((items) => {
+      setItems((prev) => {
+        const itemsClone = cloneDeep(prev);
         const activeIndex = active.data.current.sortable.index;
         const overIndex = over.data.current?.sortable.index || 0;
 
         const res = moveBetweenContainers(
-          items,
+          itemsClone,
           activeContainer,
           activeIndex,
           overContainer,
@@ -108,18 +110,19 @@ export default function Gallery({ tokens, user }) {
     if (active.id !== over.id) {
       if (over.id === "hide") {
         if (active.data.current.sortable.containerId === "hidden") return;
-        setItems((items) => {
+        setItems((prev) => {
+          const itemsClone = cloneDeep(prev);
           const activeIndex = active.data.current.sortable.index;
-          let newItems;
-          newItems = moveToHidden(items, active.id, activeIndex);
+  
+          const newItems = moveToHidden(itemsClone, active.id, activeIndex);
           return newItems;
         });
       } else if (over.id === "show") {
         if (active.data.current.sortable.containerId === "visible") return;
-        setItems((items) => {
+        setItems((prev) => {
+          const itemsClone = cloneDeep(prev);
           const activeIndex = active.data.current.sortable.index;
-          let newItems;
-          newItems = moveToVisible(items, active.id, activeIndex);
+          const newItems = moveToVisible(itemsClone, active.id, activeIndex);
           return newItems;
         });
       } else {
@@ -128,20 +131,21 @@ export default function Gallery({ tokens, user }) {
           over.data.current?.sortable.containerId || over.id;
         const activeIndex = active.data.current.sortable.index;
         const overIndex = over.data.current?.sortable.index || 0;
-        setItems((items) => {
+        setItems((prev) => {
+          const itemsClone = cloneDeep(prev);
           let newItems;
           if (activeContainer === overContainer) {
             newItems = {
-              ...items,
+              ...itemsClone,
               [overContainer]: arrayMove(
-                items[overContainer],
+                itemsClone[overContainer],
                 activeIndex,
                 overIndex
               ),
             };
           } else {
             newItems = moveBetweenContainers(
-              items,
+              itemsClone,
               activeContainer,
               activeIndex,
               overContainer,
@@ -165,42 +169,46 @@ export default function Gallery({ tokens, user }) {
   };
 
   const moveBetweenContainers = (
-    items,
+    prevItems,
     activeContainer,
     activeIndex,
     overContainer,
     overIndex,
     item
   ) => {
-    const itm = items[activeContainer].filter((t) => t.mint === item)[0];
+    const newItems = cloneDeep(prevItems);
+    const itm = newItems[activeContainer].filter((t) => t.mint === item)[0];
     return {
-      ...items,
-      [activeContainer]: removeAtIndex(items[activeContainer], activeIndex),
-      [overContainer]: insertAtIndex(items[overContainer], overIndex, itm),
+      ...newItems,
+      [activeContainer]: removeAtIndex(newItems[activeContainer], activeIndex),
+      [overContainer]: insertAtIndex(newItems[overContainer], overIndex, itm),
     };
   };
 
-  const moveToHidden = (items, item, activeIndex) => {
-    const itm = items.visible.filter((t) => t.mint === item)[0];
+  const moveToHidden = (prevItems, item, activeIndex) => {
+    const newItems = cloneDeep(prevItems);
+    const itm = newItems.visible.filter((t) => t.mint === item)[0];
     return {
-      ...items,
-      visible: removeAtIndex(items.visible, activeIndex),
-      hidden: insertAtIndex(items.hidden, items.hidden.length, itm),
+      ...newItems,
+      visible: removeAtIndex(newItems.visible, activeIndex),
+      hidden: insertAtIndex(newItems.hidden, newItems.hidden.length, itm),
     };
   };
 
-  const moveToVisible = (items, item, activeIndex) => {
-    const itm = items.hidden.filter((t) => t.mint === item)[0];
+  const moveToVisible = (prevItems, item, activeIndex) => {
+    const newItems = cloneDeep(prevItems);
+    const itm = newItems.hidden.filter((t) => t.mint === item)[0];
     return {
-      ...items,
-      hidden: removeAtIndex(items.hidden, activeIndex),
-      visible: insertAtIndex(items.visible, items.visible.length, itm),
+      ...newItems,
+      hidden: removeAtIndex(newItems.hidden, activeIndex),
+      visible: insertAtIndex(newItems.visible, newItems.visible.length, itm),
     };
   };
 
   return (
     <>
       <Toaster />
+ 
       <DndContext
         sensors={sensors}
         onDragStart={handleDragStart}
@@ -273,7 +281,7 @@ export default function Gallery({ tokens, user }) {
 const Visible = ({ items, columns, bulkEdit }) => {
   const { setNodeRef } = useDroppable({ id: "show" });
   const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
-  const renderedItems = items.visible//.slice(0, lazyLoadIndex)
+  const renderedItems = items.visible.slice(0, lazyLoadIndex)
   const handleLazyLoad = () => {
     setLazyLoadIndex(prev => prev + 9);
   }
@@ -309,7 +317,7 @@ const Visible = ({ items, columns, bulkEdit }) => {
           ))}
         </Grid>
       </SortableContext>
-      {/* {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null} */}
+      {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null}
     </div>
   );
 };
@@ -317,7 +325,7 @@ const Visible = ({ items, columns, bulkEdit }) => {
 const Hidden = ({ items }) => {
   const { setNodeRef } = useDroppable({ id: "hide" });
   const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
-  const renderedItems = items.hidden//.slice(0, lazyLoadIndex)
+  const renderedItems = items.hidden.slice(0, lazyLoadIndex)
   const handleLazyLoad = () => {
     setLazyLoadIndex(prev => prev + 9);
   }
@@ -345,7 +353,7 @@ const Hidden = ({ items }) => {
           ))}
         </Grid>
       </SortableContext>
-      {/* {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null} */}
+      {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null}
     </div>
   );
 };
@@ -354,8 +362,13 @@ const OverlayImage = ({ mint, tokens }) => {
   const addDefaultImage = async (e, mint, tokens) => {
     e.target.style.background = "grey";
     const token = tokens.find((t) => t.mint === mint);
-    let res = await axios.get(token.uri);
-    e.target.src = res.data.image;
+    if(token?.image) e.target.src = token.image;
+    // try {
+    //   let res = await axios.get(token.uri);
+    //   e.target.src = res.data.image;
+    // } catch(err) {
+    //   console.log(err)
+    // }
   };
 
   return (

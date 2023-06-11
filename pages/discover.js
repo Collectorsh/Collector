@@ -8,11 +8,6 @@ import debounce from "lodash.debounce";
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, XCircleIcon } from "@heroicons/react/solid";
 import { addDefaultSource } from "../utils/addDefaultSource";
 
-// function addDefaultSource(e, url, user) {
-//   if (!url || url.includes("cdn.collector.sh")) return;
-//   e.target.src = url;
-// }
-
 const totalPerPage = 8
 
 export default function Discover() {
@@ -152,14 +147,14 @@ export default function Discover() {
             </div>
             <div className="mb-4 flex justify-center items-center gap-2">
               <button
-               className="disabled:brightness-50"
+               className="disabled:invert-[0.5]"
                 disabled={Boolean(page === 1)}
                 onClick={() => setPage(1)}
               >
                 <ChevronDoubleLeftIcon className="fill-black dark:fill-white" width={16} height={16} />
               </button>
               <button
-                className="disabled:brightness-50"
+                className="disabled:invert-[0.5]"
                 disabled={Boolean(page === 1)}
                 onClick={() => setPage(prev => prev-1)}
               >
@@ -169,14 +164,14 @@ export default function Discover() {
               {total ? <span className="mx-2">{page} / {total ? totalPages : "..."}</span> : null}
 
               <button
-                className="disabled:brightness-50"
+                className="disabled:invert-[0.5]"
                 disabled={Boolean(page >= totalPages)}
                 onClick={() => setPage(prev => prev+1)}
               >
                 <ArrowRightIcon className="fill-black dark:fill-white" width={16} height={16} />
               </button>
               <button
-                 className="disabled:brightness-50"
+                 className="disabled:invert-[0.5]"
                 disabled={Boolean(page >= totalPages)}
                 onClick={() => setPage(totalPages)}
               >

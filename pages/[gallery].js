@@ -14,10 +14,9 @@ import { Metaplex } from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
 import { useRouter } from "next/router";
 
-//{ user, tokens }
+
 function Gallery({user}) {
-  const router = useRouter();
-  // const [user, setUser] = useState(null);
+
   const [tokens, setTokens] = useState([]);
 
   const [, setListings] = useContext(ListingsContext);
@@ -73,22 +72,10 @@ function Gallery({user}) {
       console.log("fetching user")
       if(!user) return;
       try {
-        // let username = router.query.gallery //context.params.gallery;
-        // let res = await getUserFromUsername(username);
-        // let user = null;
-        // if (res.status === "success") {
-        //   user = res.user;
-        //   let tokens = {};
         const tokens = await getMetadata(user.public_keys);
         if(tokens) setTokens(tokens);
-          // setUser(user);
-        // } else {
-        //   console.log("error fetching user")
-        //   // return { props: {} };
-        // }
       } catch (err) {
         console.log(err);
-        // return { props: {} };
       }
     })()
   }, [user])
@@ -135,9 +122,7 @@ export async function getServerSideProps(context) {
     let user = null;
     if (res.status === "success") {
       user = res.user;
-      // let tokens = {};
-      // tokens = await getMetadata(user.public_keys);
-      return { props: { user, } };
+      return { props: { user} };
     } else {
       return { props: {} };
     }

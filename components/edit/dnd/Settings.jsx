@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Oval } from "react-loader-spinner";
 import { success, error } from "/utils/toastMessages";
 import saveLayout from "/data/dashboard/saveLayout";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
+import { useCallback } from "react";
 
 export default function Settings({
   items,
@@ -15,25 +16,38 @@ export default function Settings({
   showAll,
 }) {
   const [saving, setSaving] = useState(false);
-
+  
   const doSaveLayout = async () => {
-    const updatedItems = [];
-    for (const [index, i] of items.visible.entries()) {
-      i.order_id = index + 1;
-      i.visible = true;
-      updatedItems.push(i);
-    }
-    for (const [index, i] of items.hidden.entries()) {
-      i.order_id = index + 1;
-      i.visible = false;
-      updatedItems.push(i);
-    }
+    const { visible, hidden } = items
+
+    const updatedVisible = visible.map((item, index) => { 
+      return {
+        ...item,
+        order_id: index + 1,
+        visible: true
+      }
+    })
+    const updatedHidden = hidden.map((item, index) => { 
+      return {
+        ...item,
+        order_id: index + 1,
+        visible: false
+      }
+    })
+    const updatedItems = [...updatedVisible, ...updatedHidden]
+
+    const check = {}
+    updatedItems.forEach((item) => { 
+      if (check[item.mint]) check[item.mint]++
+      else check[item.mint] = 1
+    })
+
     setSaving(true);
     const res = await saveLayout(user.api_key, updatedItems, columns);
     if (res.data.status === "success") success("Layout saved");
     else error(res.msg);
     setSaving(false);
-  };
+  }
 
   return (
     <div className="mt-2">

@@ -7,7 +7,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { addDefaultSource } from "/utils/addDefaultSource";
 
 export const Photo = forwardRef(
-  ({ mint, uri, index, faded, style, section, bulkEdit, ...props }, ref) => {
+  ({ mint, uri, image, index, faded, style, section, bulkEdit, ...props }, ref) => {
     const height = props.height ? props.height : 200;
 
     const inlineStyles = {
@@ -25,15 +25,15 @@ export const Photo = forwardRef(
       inlineStyles.width = height;
     }
 
-    const defaultSource = async (e, mint, url) => {
-      try {
-        const res = await axios.get(url);
-        const image = res.data.image;
-        addDefaultSource(e, mint, image);
-      } catch (err) {
-        console.log(err);
-      }
-    };
+    // const defaultSource = async (e, mint, url) => {
+    //   try {
+    //     const res = await axios.get(url);
+    //     const image = res.data.image;
+    //     addDefaultSource(e, mint, image);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // };
 
     function classNames(...classes) {
       return classes.filter(Boolean).join(" ");
@@ -58,7 +58,7 @@ export const Photo = forwardRef(
         <img
           className="w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
           src={cdnImage(mint)}
-          onError={(e) => defaultSource(e, mint, uri)}
+          onError={(e) => addDefaultSource(e, mint, image)}
           onLoad={onImageLoad}
           ref={ref}
           style={inlineStyles}

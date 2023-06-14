@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper";
 import { addDefaultSource } from "../../utils/addDefaultSource";
 import axios from "axios";
+import { useState } from "react";
 
 export default function GalleryContent({ name, items }) {
   const loadingSlides = () => {
@@ -41,64 +42,11 @@ export default function GalleryContent({ name, items }) {
   }
 
   const imageSlides = () => { 
-
-    const defaultSource = async (e, mint, url) => {
-      e.target.style.background = "black";
-      e.target.style.opacity = 0;
-      if (!url || url.includes("cdn.collector.sh")) return;
-      try {
-        const res = await axios.get(url).then(res => res.data);
-        const image = typeof res.image === "object" ? res.image : url
-        e.target.src = image;
-        e.target.style.opacity = 1;
-      } catch (err) {
-        console.log(err);
-      }
-    }
     return items.map((item, index) => {
-      if (item.image.includes("cdn.collector.sh")) return null;
+      // if (item.image.includes("cdn.collector.sh")) return null;
       return (
         <SwiperSlide key={item.mint + index}>
-          <div className="md:p-4">
-            <div
-              className="bg-gray-300/20 md:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
-            >
-              <div className="rounded-lg overflow-hidden flex justify-center items-center mb-4 relative h-[250px]">
-                <Link href={`/${ item.username }`}>
-                  <a>
-                    <img
-                      src={cdnImage(item.mint)}
-                      onError={(e) => defaultSource(e, item.mint, item.image)}
-                      className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
-                    />
-                  </a>
-                </Link>
-              </div>
-              <div className="mt-2">
-                <Link href={`/${ item.username }`}>
-                  <a>
-                    {item.twitter_profile_image && (
-                      <img
-                        src={item.twitter_profile_image}
-                        className="w-8 h-8 mr-1.5 rounded-full float-left"
-                        onError={(e) => {                                 
-                          e.target.className = "hidden"
-                        }}
-                      />
-                    )}
-
-                    <div className="mt-2">
-                      {item.username && (
-                        <p className="inline font-bold leading-7">
-                          {item.username}
-                        </p>
-                      )}
-                    </div>
-                  </a>
-                </Link>
-              </div>
-            </div>
-          </div>
+          <ImageSlide item={item} />
         </SwiperSlide>
       )
     })
@@ -134,6 +82,69 @@ export default function GalleryContent({ name, items }) {
           : loadingSlides()
         }
       </Swiper>
+    </div>
+  )
+}
+
+const ImageSlide = ({ item }) => {
+  const [errorCount, setErrorCount] = useState(0);
+  
+  const defaultSource = async (e, mint, url) => {
+    e.target.style.background = "black";
+    e.target.style.opacity = 0;
+    if (!url) return;
+
+    if(errorCount > 1) return
+    setErrorCount(errorCount + 1)
+    try {
+      const res = await axios.get(url).then(res => res.data);
+      const image = typeof res.image === "object" ? res.image : url
+      e.target.src = image;
+      e.target.style.opacity = 1;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  return(
+    <div className="md:p-4">
+      <div
+        className="bg-gray-300/20 md:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
+      >
+        <div className="rounded-lg overflow-hidden flex justify-center items-center mb-4 relative h-[250px]">
+          <Link href={`/${ item.username }`}>
+            <a>
+              <img
+                src={cdnImage(item.mint)}
+                onError={(e) => defaultSource(e, item.mint, item.image)}
+                className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
+              />
+            </a>
+          </Link>
+        </div>
+        <div className="mt-2">
+          <Link href={`/${ item.username }`}>
+            <a>
+              {item.twitter_profile_image && (
+                <img
+                  src={item.twitter_profile_image}
+                  className="w-8 h-8 mr-1.5 rounded-full float-left"
+                  onError={(e) => {
+                    e.target.className = "hidden"
+                  }}
+                />
+              )}
+
+              <div className="mt-2">
+                {item.username && (
+                  <p className="inline font-bold leading-7">
+                    {item.username}
+                  </p>
+                )}
+              </div>
+            </a>
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }

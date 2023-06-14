@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import { cdnImage } from "/utils/cdnImage";
 import axios from "axios";
 import { DotsVerticalIcon } from "@heroicons/react/outline";
@@ -8,6 +8,8 @@ import { addDefaultSource } from "/utils/addDefaultSource";
 
 export const Photo = forwardRef(
   ({ mint, uri, index, faded, style, section, bulkEdit, ...props }, ref) => {
+
+    const [errorCount, setErrorCount] = useState(0);
     const height = props.height ? props.height : 200;
 
     const inlineStyles = {
@@ -26,6 +28,8 @@ export const Photo = forwardRef(
     }
 
     const defaultSource = async (e, mint, url) => {
+      if (errorCount > 1) return;
+      setErrorCount(errorCount + 1);
       try {
         const res = await axios.get(url).then(res => {
           return res.data

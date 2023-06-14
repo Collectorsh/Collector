@@ -359,10 +359,13 @@ const Hidden = ({ items }) => {
 };
 
 const OverlayImage = ({ mint, tokens }) => {
+  [errorCount, setErrorCount] = useState(0);
   const addDefaultImage = async (e, mint, tokens) => {
     e.target.style.background = "grey";
     const token = tokens.find((t) => t.mint === mint);
     // if(token?.image) e.target.src = token.image;
+    if (errorCount > 1) return;
+    setErrorCount(errorCount + 1);
     try {
       let res = await axios.get(token.uri);
       e.target.src = res.data.image;

@@ -5,31 +5,30 @@ import { Oval } from "react-loader-spinner";
 import Gallery from "./dnd/Gallery";
 import { useRouter } from "next/router";
 import getMetadataFromUri from "../../data/nft/getMetadataFromUri";
+import { useMetadata } from "/data/nft/getMetadata";
 
 export default function EditGallery() {
   const [user] = useContext(UserContext);
-  const [tokens, setTokens] = useState();
-  const router = useRouter();
+  // const [tokens, setTokens] = useState();
+  const tokens = useMetadata(user?.public_keys);
 
-  const getTokens = useCallback(async (u) => {
-    let tkns = await getMetadata(u.public_keys);
-    setTokens(tkns);
-  }, []);
+  // const getTokens = useCallback(async (u) => {
+  //   let tkns = await getMetadata(u.public_keys);
+  //   setTokens(tkns);
+  // }, []);
 
-  useEffect(() => {
-    if (user) {
-      getTokens(user);
-    }
-  }, [user, getTokens]);
+  // useEffect(() => {
+  //   if (user) {
+  //     getTokens(user);
+  //   }
+  // }, [user, getTokens]);
 
   return (
     <div className="dark:bg-black mt-2 pb-12">
       {tokens && user ? (
         <Gallery tokens={tokens} user={user} />
       ) : (
-        <div className="mt-4 w-[50px] mx-auto h-64">
-          <Oval color="#fff" secondaryColor="#000" height={50} width={50} />
-        </div>
+        <h1 className="animate-pulse font-bold text-4xl text-center mt-[15%]">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
       )}
     </div>
   );

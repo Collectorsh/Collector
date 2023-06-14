@@ -5,7 +5,7 @@ import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
 import { connection } from "/config/settings";
 import hellomoonClient from "../client/helloMoonClient";
-import { publicKey } from "@project-serum/anchor/dist/cjs/utils";
+import useSWR from 'swr'
 
 function coalesce(val, def) {
   if (val === null || typeof val === "undefined") return def;
@@ -43,10 +43,13 @@ async function getMetadata(publicKeys) {
   }
 
 
+  console.log("🚀 ~ pre filter results:", results.length)
   // Filter out any that don't have data uri's 
-  results = results.filter(
-    (item) => item.uri !== "" && item.creator !== undefined
-  );
+  results = results.filter((item) => {
+    const useable = item.uri !== "" && item.creator !== undefined
+    if (!useable) console.log("🚀 ~ filtered item", item)
+    return useable
+  });
 
   // Retrieve order and visibility from the server
   const res = await apiClient.post("/get_visibility_and_order", {
@@ -104,6 +107,7 @@ async function getMetadata(publicKeys) {
       ? -1
       : 0
   );
+  console.log("🚀 ~ post filter results:", results.length)
   return results;
 }
 
@@ -315,7 +319,14 @@ async function getMetadataHELLO(publicKeys) {
 
 export default getMetadata;
 
-
+const fetcher = async(keys) => {
+  if(!keys) return undefined
+  return await getMetadata(keys)
+}
+export function useMetadata(publicKeys) {
+  const { data: tokens, error } = useSWR(publicKeys, fetcher)
+  return tokens
+}
 
 //TOKEN
 // {

@@ -217,7 +217,7 @@ export default function Gallery({ tokens, user }) {
         onDragCancel={handleDragCancel}
       >
         {items && (
-          <div className="grid grid-cols-1 sm:grid-cols-12">
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
             <div className="col-span-1 sm:col-span-3">
               <Settings
                 items={items}
@@ -234,7 +234,7 @@ export default function Gallery({ tokens, user }) {
                 <Hidden items={items} />
               </div>
             </div>
-            <div className="col-span-1 sm:col-span-8 sm:col-end-13">
+            <div className="col-span-1 sm:col-span-9">
               <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2">
                 <div className="grid grid-cols-3">
                   <div className="col-span-1 text-left">
@@ -281,7 +281,7 @@ export default function Gallery({ tokens, user }) {
 const Visible = ({ items, columns, bulkEdit }) => {
   const { setNodeRef } = useDroppable({ id: "show" });
   const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
-  const renderedItems = items.visible.slice(0, lazyLoadIndex)
+  const renderedItems = items.visible//.slice(0, lazyLoadIndex)
   const handleLazyLoad = () => {
     setLazyLoadIndex(prev => prev + 9);
   }
@@ -317,7 +317,7 @@ const Visible = ({ items, columns, bulkEdit }) => {
           ))}
         </Grid>
       </SortableContext>
-      {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null}
+      {/* {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null} */}
     </div>
   );
 };
@@ -325,7 +325,7 @@ const Visible = ({ items, columns, bulkEdit }) => {
 const Hidden = ({ items }) => {
   const { setNodeRef } = useDroppable({ id: "hide" });
   const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
-  const renderedItems = items.hidden.slice(0, lazyLoadIndex)
+  const renderedItems = items.hidden//.slice(0, lazyLoadIndex)
   const handleLazyLoad = () => {
     setLazyLoadIndex(prev => prev + 9);
   }
@@ -353,7 +353,7 @@ const Hidden = ({ items }) => {
           ))}
         </Grid>
       </SortableContext>
-      {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null}
+      {/* {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null} */}
     </div>
   );
 };

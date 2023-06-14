@@ -13,11 +13,13 @@ import { auctionHousesArray } from "/config/settings";
 import { Metaplex } from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
 import { useRouter } from "next/router";
+import { useMetadata } from "../data/nft/getMetadata";
 
 
 function Gallery({user}) {
 
-  const [tokens, setTokens] = useState([]);
+  // const [tokens, setTokens] = useState([]);
+  const tokens = useMetadata(user?.public_keys);
 
   const [, setListings] = useContext(ListingsContext);
   const [, setOffers] = useContext(OffersContext);
@@ -67,18 +69,18 @@ function Gallery({user}) {
     fetchListings();
   }, []);
 
-  useEffect(() => {
-    (async function fetchUser() {
-      console.log("fetching user")
-      if(!user) return;
-      try {
-        const tokens = await getMetadata(user.public_keys);
-        if(tokens) setTokens(tokens);
-      } catch (err) {
-        console.log(err);
-      }
-    })()
-  }, [user])
+  // useEffect(() => {
+  //   (async function fetchUser() {
+  //     console.log("fetching user")
+  //     if(!user) return;
+  //     try {
+  //       const tokens = await getMetadata(user.public_keys);
+  //       if(tokens) setTokens(tokens);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   })()
+  // }, [user])
 
   return (
     <div className="dark:bg-black">

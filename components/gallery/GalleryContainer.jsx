@@ -27,7 +27,10 @@ export default function GalleryContainer({ tokens, user }) {
 
   return (
     <div className="clear-both w-full mt-6">
-      {imagesLoaded < 3 && <h2 className="animate-pulse font-bold text-4xl text-center text-greeny mt-[25%]">Collector</h2>}
+      {imagesLoaded < 2 && (
+        // <h2 className="animate-pulse font-bold text-4xl text-center text-greeny mt-[25%]">Collector</h2>
+        <h1 className="animate-pulse font-bold text-4xl text-center mt-[25%]">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
+      )}
       <div className="clear-both">
         <Masonry
           breakpointCols={breakpointColumnsObj}

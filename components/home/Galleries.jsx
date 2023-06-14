@@ -11,26 +11,12 @@ export default function GalleriesPage() {
   const [daos, setDaos] = useState();
   const [curated, setCurated] = useState();
 
-  // const fetchPopularGalleries = useCallback(async () => {
-  //   let res = await getPopularGalleries();
-  //   if (res) setPopular(res.data);
-  // }, []);
-
-  // const fetchDaos = useCallback(async () => {
-  //   let res = await getDaos();
-  //   if (res) setDaos(res.data);
-  // }, []);
-
-  // useEffect(() => {
-  //   fetchDaos();
-  //   fetchPopularGalleries();
-  // }, []);
-
   const fetchCurated = useCallback(async () => { 
     const res = await getCuratedGalleries()
     const randomized = res.data.sort(() => Math.random() - 0.5)
     if (res) setCurated([...randomized, ...randomized])
   }, [])
+  
   useEffect(() => {
     fetchCurated()
   }, [fetchCurated])

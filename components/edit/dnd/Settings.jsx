@@ -52,23 +52,28 @@ export default function Settings({
   return (
     <div className="mt-2">
       <button
-        className="w-[49%] py-2.5 px-4 rounded-3xl bg-gray-200 text-black dark:bg-dark3 dark:text-white cursor-pointer hover:bg-gray-100 hover:dark:bg-dark1 font-bold"
+        className="mb-3 w-[49%] py-2.5 px-4 rounded-3xl bg-gray-200 text-black dark:bg-dark3 dark:text-white cursor-pointer hover:bg-gray-100 hover:dark:bg-dark1 font-bold"
         onClick={() => hideAll()}
       >
         <span>Hide All</span>
       </button>
       <button
-        className="w-[49%] float-right py-2.5 px-4 rounded-3xl bg-gray-200 text-black dark:bg-dark3 dark:text-white cursor-pointer hover:bg-gray-100 hover:dark:bg-dark1 font-bold"
+        className="mb-3 w-[49%] float-right py-2.5 px-4 rounded-3xl bg-gray-200 text-black dark:bg-dark3 dark:text-white cursor-pointer hover:bg-gray-100 hover:dark:bg-dark1 font-bold"
         onClick={() => showAll()}
       >
         <span>Show All</span>
       </button>
+      
       <button
-        className="w-full mt-4 py-2.5 px-4 rounded-3xl bg-[#444] text-white dark:bg-whitish dark:text-black cursor-pointer hover:bg-black hover:dark:bg-white font-bold"
-        onClick={() => doSaveLayout()}
-      >
+        onClick={doSaveLayout}
+        disabled={saving}
+        className="
+          border-2 border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black
+          py-3 px-6 rounded-lg text-lg font-bold duration-300 active:scale-95
+          w-full disabled:scale-100 disabled:hover:bg-inherit disabled:hover:text-inherit"
+        >
         {saving ? (
-          <span className="w-fit mx-auto">
+          <span className="w-fit mx-auto inline-block">
             <Oval color="#FFF" secondaryColor="#666" height={20} width={20} />
           </span>
         ) : (
@@ -154,7 +159,7 @@ export default function Settings({
           >
             5
           </label>
-        </div>
+        </div> 
       </div>
     </div>
   );

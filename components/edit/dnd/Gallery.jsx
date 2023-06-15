@@ -359,7 +359,7 @@ const Hidden = ({ items }) => {
 };
 
 const OverlayImage = ({ mint, tokens }) => {
-  [errorCount, setErrorCount] = useState(0);
+  const [errorCount, setErrorCount] = useState(0);
   const addDefaultImage = async (e, mint, tokens) => {
     e.target.style.background = "grey";
     const token = tokens.find((t) => t.mint === mint);

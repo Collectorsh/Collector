@@ -7,6 +7,7 @@ import useElementObserver from "../../hooks/useElementObserver";
 import Image from "next/image";
 import ContentLoader from "react-content-loader";
 import clsx from "clsx";
+import CloudinaryImage from "../CloudinaryImage";
 
 export default function Nft({ user, token, onLoad }) {
   const [videoUrl, setVideoUrl] = useState();
@@ -44,16 +45,16 @@ export default function Nft({ user, token, onLoad }) {
           user && user.rounded && "rounded-2xl"
           }`}
       >
-        <div className={clsx("md:p-4 top-0 left-0 w-full", loaded ? "hidden" : "absolute")}>
+        {/* <div className={clsx("md:p-4 top-0 left-0 w-full", loaded ? "hidden" : "absolute")}>
           <ContentLoader
             speed={2}
             className="w-full mb-4 h-[250px] rounded-lg"
-            backgroundColor="#bbbbbb"
-            foregroundColor="#aaaaaa"
+             backgroundColor="rgba(120,120,120,0.2)"
+            foregroundColor="rgba(120,120,120,0.1)"
           >
             <rect className="w-full h-full" />
           </ContentLoader>
-        </div>
+        </div> */}
 
         <Link href={`/nft/${ token.mint }`} title="">
           <a className={loaded ? "animate-enter" : "opacity-0"}>
@@ -87,6 +88,10 @@ export default function Nft({ user, token, onLoad }) {
                   className="mx-auto cursor-pointer object-center object-cover"
                   onError={(e) => addDefaultSource(e, token.mint, token.image)}
               />
+                // <CloudinaryImage
+                //   id={token.mint}
+                //   onLoad={onImageLoad}
+                // />
             )}
           </a>
         </Link>        

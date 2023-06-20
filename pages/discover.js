@@ -37,16 +37,16 @@ export default function Discover() {
           <ContentLoader
             speed={2}
             className="w-full mb-4 h-[250px] rounded-lg"
-            backgroundColor="#bbbbbb"
-            foregroundColor="#aaaaaa"
+            backgroundColor="rgba(120,120,120,0.2)"
+            foregroundColor="rgba(120,120,120,0.1)"
           >
             <rect className="w-full h-full" />
           </ContentLoader>
           <ContentLoader
             speed={2}
             className="w-full h-8 mt-2"
-            backgroundColor="#bbbbbb"
-            foregroundColor="#aaaaaa"
+            backgroundColor="rgba(120,120,120,0.2)"
+            foregroundColor="rgba(120,120,120,0.1)"
           >
             <circle cx="16" cy="16" r="16" />
             <rect x="46" y="5" className="w-[80%] h-3/4" rx="4" />

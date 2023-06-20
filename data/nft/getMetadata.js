@@ -12,7 +12,7 @@ function coalesce(val, def) {
   return val;
 }
 
-//OLD
+//ONCHAIN
 async function getMetadata(publicKeys) {
   var results = [];
   var tokenAccounts = [];
@@ -226,7 +226,7 @@ async function getMetadataHELIUS(publicKeys) {
 }
 
 //NEW Hellomoon
-async function getMetadataHELLO(publicKeys) { 
+async function getMetadataMOON(publicKeys) { 
   const baseTokens = []
 
   for (const publicKey of publicKeys) { 

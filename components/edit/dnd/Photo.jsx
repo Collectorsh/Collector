@@ -5,9 +5,10 @@ import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { addDefaultSource } from "/utils/addDefaultSource";
+import CloudinaryImage from "../../CloudinaryImage";
 
 export const Photo = forwardRef(
-  ({ mint, uri, index, faded, style, section, bulkEdit, ...props }, ref) => {
+  ({ mint, uri, image, index, faded, style, section, bulkEdit, ...props }, ref) => {
 
     const [errorCount, setErrorCount] = useState(0);
     const height = props.height ? props.height : 200;
@@ -19,7 +20,7 @@ export const Photo = forwardRef(
       width: "100%",
       gridRowStart: index === 0 ? "span 1" : null,
       gridColumnStart: index === 0 ? "span 1" : null,
-      backgroundColor: "grey",
+      backgroundColor: "rgba(120,120,120,0.1)",
       ...style,
     };
 
@@ -47,22 +48,23 @@ export const Photo = forwardRef(
     }
 
     const onImageLoad = (event) => {
+      console.log("LOADED")
       event.target.parentNode.style.display = "block";
     };
 
     return (
-      <div className="relative hidden">
+      <div className="relative">
         {section === "visible" && bulkEdit === true && (
           <input
             id={`select-${mint}`}
             type="checkbox"
             name="bulk"
             className="absolute left-1 top-1 w-6 h-6 cursor-pointer"
-            style={{ accentColor: "#31f292" }}
+            style={{ accentColor: "rgba(120,120,120,0.1)" }}
             defaultChecked
           />
         )}
-        <img
+        {/* <img
           className="w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
           src={cdnImage(mint)}
           onError={(e) => defaultSource(e, mint, uri)}
@@ -70,7 +72,23 @@ export const Photo = forwardRef(
           ref={ref}
           style={inlineStyles}
           {...props}
-        />
+        /> */}
+        <div
+          ref={ref}
+          style={inlineStyles}
+          {...props}
+          className="overflow-hidden rounded-lg shadow-sm"
+        >
+          <CloudinaryImage
+            className="w-full h-full cursor-pointer hover:origin-center object-center object-cover"
+            id={`nft-demo/${ mint }`}
+            mint={mint}
+            imageUrl={image}
+            responsiveSteps={[500]}
+            onLoad={onImageLoad}
+            displayError
+          />
+        </div>
         <Menu as="div" className="absolute top-1 right-0">
           <div>
             <Menu.Button className="inline-flex justify-center focus:outline-none">

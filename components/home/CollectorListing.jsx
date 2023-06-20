@@ -99,8 +99,8 @@ export default function CollectorListing() {
           <ContentLoader
             speed={2}
             className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] rounded-xl"
-            backgroundColor="#bbbbbb"
-            foregroundColor="#aaaaaa"
+            backgroundColor="rgba(120,120,120,0.2)"
+            foregroundColor="rgba(120,120,120,0.1)"
           >
             <rect className="w-full h-[100vw] lg:h-[520px] xl:h-[550px]" />
           </ContentLoader>

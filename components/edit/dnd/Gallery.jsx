@@ -19,14 +19,16 @@ import cloneDeep from "lodash/cloneDeep";
 import { Toaster } from "react-hot-toast";
 import { cdnImage } from "/utils/cdnImage";
 import LazyLoader from "../../LazyLoader";
+import CloudinaryImage from "../../CloudinaryImage";
 
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
   const [columns, setColumns] = useState(user?.columns);
   const [items, setItems] = useState();
   const [bulkEdit, setBulkEdit] = useState(false);
-
+  
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+  console.log("🚀 ~ file: Gallery.jsx:28 ~ Gallery ~ items:", items)
 
   useEffect(() => {
     const tokenClone = cloneDeep(tokens);
@@ -367,18 +369,28 @@ const OverlayImage = ({ mint, tokens }) => {
     if (errorCount > 1) return;
     setErrorCount(errorCount + 1);
     try {
-      let res = await axios.get(token.uri);
+      let res = await axios.get(token?.uri);
       e.target.src = res.data.image;
     } catch(err) {
       console.log(err)
     }
   };
 
+  const token = tokens.find((t) => t.mint === mint);
+
   return (
-    <img
-      src={cdnImage(mint)}
-      className="w-[150px] h-[150px] w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
-      onError={(e) => addDefaultImage(e, mint, tokens)}
+    // <img
+    //   src={cdnImage(mint)}
+    //   className="w-[150px] h-[150px] w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
+    //   // onError={(e) => addDefaultImage(e, mint, tokens)}
+    // />
+    <CloudinaryImage
+      id={`nft-demo/${ mint }`}
+      mint={mint}
+      className="w-[150px] h-[150px] cursor-pointer hover:origin-center object-center object-cover shadow-sm bg-gray-400/50 rounded-md"
+      imageUrl={token.image}
+      responsiveSteps={[150]}
+      noOptimization
     />
   );
 };

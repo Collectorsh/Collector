@@ -34,7 +34,7 @@ export const Photo = forwardRef(
         const res = await axios.get(url).then(res => {
           return res.data
         })
-        const image = typeof res.image === "object" ? res.image : url
+        const image = typeof res === "object" ? res.image : url
 
         addDefaultSource(e, mint, image);
       } catch (err) {

@@ -47,7 +47,7 @@ async function getMetadata(publicKeys) {
   // Filter out any that don't have data uri's 
   results = results.filter((item) => {
     const useable = item.uri !== "" && item.creator !== undefined
-    if (!useable) console.log("🚀 ~ filtered item", item)
+    // if (!useable) console.log("🚀 ~ filtered item", item)
     return useable
   });
 

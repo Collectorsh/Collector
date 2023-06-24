@@ -16,6 +16,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import PlausibleProvider from "next-plausible";
 import Footer from "/components/Footer";
 import banner from "/public/Collector Hero.jpeg"
+import { ImageFallbackProvider } from "../contexts/imageFallback";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
@@ -69,26 +70,28 @@ export default function MyApp({ Component, pageProps }) {
       <ApolloProvider client={client}>
         <WalletContextProvider>
           <UserProvider>
-            <ListingsProvider>
-              <ActivitiesProvider>
-                <FollowingProvider>
-                  <OffersProvider>
-                    <SingleNftProvider>
-                      <ThemeProvider enableSystem={true} attribute="class">
-                        <PlausibleProvider domain="collector.sh">
-                          <CartProvider>
-                            <div className="min-h-[100vh] dark:bg-black dark:text-white">
-                              <Component {...pageProps} />
-                            </div>
-                            <Footer />
-                          </CartProvider>
-                        </PlausibleProvider>
-                      </ThemeProvider>
-                    </SingleNftProvider>
-                  </OffersProvider>
-                </FollowingProvider>
-              </ActivitiesProvider>
-            </ListingsProvider>
+            <ImageFallbackProvider>
+              <ListingsProvider>
+                <ActivitiesProvider>
+                  <FollowingProvider>
+                    <OffersProvider>
+                      <SingleNftProvider>
+                        <ThemeProvider enableSystem={true} attribute="class">
+                          <PlausibleProvider domain="collector.sh">
+                            <CartProvider>
+                              <div className="min-h-[100vh] dark:bg-black dark:text-white">
+                                <Component {...pageProps} />
+                              </div>
+                              <Footer />
+                            </CartProvider>
+                          </PlausibleProvider>
+                        </ThemeProvider>
+                      </SingleNftProvider>
+                    </OffersProvider>
+                  </FollowingProvider>
+                </ActivitiesProvider>
+              </ListingsProvider>
+            </ImageFallbackProvider>
           </UserProvider>
         </WalletContextProvider>
       </ApolloProvider>

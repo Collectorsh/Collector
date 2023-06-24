@@ -1,14 +1,14 @@
 import React, { forwardRef, useState } from "react";
-import { cdnImage } from "/utils/cdnImage";
 import axios from "axios";
 import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { addDefaultSource } from "/utils/addDefaultSource";
 import CloudinaryImage from "../../CloudinaryImage";
+import ContentLoader from "react-content-loader";
 
 export const Photo = forwardRef(
-  ({ mint, uri, image, index, faded, style, section, bulkEdit, ...props }, ref) => {
+  ({ mint, uri, index, faded, style, section, bulkEdit, ...props }, ref) => {
 
     const [errorCount, setErrorCount] = useState(0);
     const height = props.height ? props.height : 200;
@@ -48,7 +48,7 @@ export const Photo = forwardRef(
     }
 
     const onImageLoad = (event) => {
-      console.log("LOADED")
+      // console.log("LOADED")
       event.target.parentNode.style.display = "block";
     };
 
@@ -81,12 +81,11 @@ export const Photo = forwardRef(
         >
           <CloudinaryImage
             className="w-full h-full cursor-pointer hover:origin-center object-center object-cover"
-            id={`nft-demo/${ mint }`}
+            id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ mint }`}
             mint={mint}
-            imageUrl={image}
-            responsiveSteps={[500]}
+            // noLazyLoad
             onLoad={onImageLoad}
-            displayError
+            width={500}
           />
         </div>
         <Menu as="div" className="absolute top-1 right-0">

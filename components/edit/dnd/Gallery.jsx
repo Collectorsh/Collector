@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import {
   DndContext,
@@ -21,6 +21,8 @@ import { cdnImage } from "/utils/cdnImage";
 import LazyLoader from "../../LazyLoader";
 import CloudinaryImage from "../../CloudinaryImage";
 
+//TODO try scroll based lazy load for images
+
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
   const [columns, setColumns] = useState(user?.columns);
@@ -28,7 +30,6 @@ export default function Gallery({ tokens, user }) {
   const [bulkEdit, setBulkEdit] = useState(false);
   
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
-  console.log("🚀 ~ file: Gallery.jsx:28 ~ Gallery ~ items:", items)
 
   useEffect(() => {
     const tokenClone = cloneDeep(tokens);
@@ -207,6 +208,11 @@ export default function Gallery({ tokens, user }) {
     };
   };
 
+  const overlay = useMemo(() => {
+    if (!activeId) return null;
+    return <OverlayImage mint={activeId} tokens={tokens} />
+  }, [activeId, tokens])
+
   return (
     <>
       <Toaster />
@@ -272,8 +278,8 @@ export default function Gallery({ tokens, user }) {
             </div>
           </div>
         )}
-        <DragOverlay adjustScale={false}>
-          {activeId ? <OverlayImage mint={activeId} tokens={tokens} /> : null}
+        <DragOverlay adjustScale={false} className="flex justify-center items-center">
+          {overlay}
         </DragOverlay>
       </DndContext>
     </>
@@ -282,11 +288,35 @@ export default function Gallery({ tokens, user }) {
 
 const Visible = ({ items, columns, bulkEdit }) => {
   const { setNodeRef } = useDroppable({ id: "show" });
-  const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
-  const renderedItems = items.visible//.slice(0, lazyLoadIndex)
-  const handleLazyLoad = () => {
-    setLazyLoadIndex(prev => prev + 9);
+  const [llIndex, setllIndex] = useState(0)
+  const renderable = items.visible//.slice(0, llIndex)
+  const handleLazyLoad = () => setllIndex(prev => prev + 9);
+  
+  const renderedItems = () => { 
+    return renderable.map((token, index) => (
+      <div key={token.mint+"visible"}>
+        <SortablePhoto
+          key={token.mint}
+          mint={token.mint}
+          uri={token.uri}
+          index={index}
+          height={
+            columns === 2
+              ? 350
+              : columns === 3
+                ? 250
+                : columns === 4
+                  ? 200
+                  : 150
+          }
+          section="visible"
+          bulkEdit={bulkEdit}
+        />
+      </div>
+
+    ))
   }
+
   return (
     <div
       ref={setNodeRef}
@@ -294,42 +324,38 @@ const Visible = ({ items, columns, bulkEdit }) => {
     >
       <SortableContext
         id="visible"
-        items={renderedItems.map((i) => i.mint)}
+        items={renderable.map((i) => i.mint)}
         strategy={rectSortingStrategy}
       >
         <Grid columns={columns}>
-          {renderedItems.map((token, index) => (
-            <SortablePhoto
-              key={token.mint}
-              mint={token.mint}
-              uri={token.uri}
-              index={index}
-              height={
-                columns === 2
-                  ? 350
-                  : columns === 3
-                  ? 250
-                  : columns === 4
-                  ? 200
-                  : 150
-              }
-              section="visible"
-              bulkEdit={bulkEdit}
-            />
-          ))}
+          {renderedItems()}
         </Grid>
       </SortableContext>
-      {/* {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null} */}
+      {/* {llIndex < items.visible.length ? <LazyLoader cb={handleLazyLoad} rootMargin="500px" /> : null} */}
     </div>
   );
 };
 
 const Hidden = ({ items }) => {
   const { setNodeRef } = useDroppable({ id: "hide" });
-  const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
-  const renderedItems = items.hidden//.slice(0, lazyLoadIndex)
-  const handleLazyLoad = () => {
-    setLazyLoadIndex(prev => prev + 9);
+  const [llIndex, setllIndex] = useState(0)
+  const renderable = items.hidden//.slice(0, llIndex)
+  const handleLazyLoad = () => setllIndex(prev => prev + 9);
+
+  const renderedItems = () => {
+    return renderable.map((token, index) => (
+      <div key={token.mint + "hidden"}>
+        <SortablePhoto
+          key={token.mint}
+          mint={token.mint}
+          uri={token.uri}
+          index={index}
+          height={150}
+          section="hidden"
+        />
+      </div>
+
+    ))
   }
 
   return (
@@ -339,58 +365,30 @@ const Hidden = ({ items }) => {
     >
       <SortableContext
         id="hidden"
-        items={renderedItems.map((i) => i.mint)}
+        items={renderable.map((i) => i.mint)}
         strategy={rectSortingStrategy}
       >
         <Grid columns={2}>
-          {renderedItems.map((token, index) => (
-            <SortablePhoto
-              key={token.mint}
-              mint={token.mint}
-              uri={token.uri}
-              index={index}
-              height={150}
-              section="hidden"
-            />
-          ))}
+          {renderedItems()}
         </Grid>
       </SortableContext>
-      {/* {(lazyLoadIndex < items.hidden.length) ? <LazyLoader cb={handleLazyLoad} /> : null} */}
+      {/* {llIndex < items.visible.length ? <LazyLoader cb={handleLazyLoad} rootMargin="200px" /> : null} */}
     </div>
   );
 };
 
 const OverlayImage = ({ mint, tokens }) => {
-  const [errorCount, setErrorCount] = useState(0);
-  const addDefaultImage = async (e, mint, tokens) => {
-    e.target.style.background = "grey";
-    const token = tokens.find((t) => t.mint === mint);
-    // if(token?.image) e.target.src = token.image;
-    if (errorCount > 1) return;
-    setErrorCount(errorCount + 1);
-    try {
-      let res = await axios.get(token?.uri);
-      e.target.src = res.data.image;
-    } catch(err) {
-      console.log(err)
-    }
-  };
-
   const token = tokens.find((t) => t.mint === mint);
 
   return (
-    // <img
-    //   src={cdnImage(mint)}
-    //   className="w-[150px] h-[150px] w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
-    //   // onError={(e) => addDefaultImage(e, mint, tokens)}
-    // />
     <CloudinaryImage
-      id={`nft-demo/${ mint }`}
+      id={`${process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ mint }`}
       mint={mint}
-      className="w-[150px] h-[150px] cursor-pointer hover:origin-center object-center object-cover shadow-sm bg-gray-400/50 rounded-md"
-      imageUrl={token.image}
-      responsiveSteps={[150]}
-      noOptimization
+      width={150}
+      height={150}
+      className="w-[150px] h-[150px] cursor-pointer object-center object-cover shadow-sm bg-gray-400/50 rounded-lg"
+      noLazyLoad
+      noFallback
     />
   );
 };

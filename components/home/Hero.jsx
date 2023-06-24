@@ -77,14 +77,16 @@ export default function Hero() {
           <CloudinaryImage
             id="v1686972792/demo/hero-gal-dark_ecdrjl.png"
             className="hidden dark:block rounded-lg overflow-hidden"
-            responsiveSteps={[1500, 2000]}
-            // placeholderClassName="w-full h-full min-w-[564px] min-h-[481px] rounded-lg "
+            width={1200}
+            noLazyLoad
+            noFallback
           />
           <CloudinaryImage
             id="v1686972792/demo/hero-gal-light_nvxdwu.png"
             className="dark:hidden rounded-lg overflow-hidden"
-            responsiveSteps={[1500, 2000]}
-            placeholderClassName="w-full h-full min-w-[564px] min-h-[481px] rounded-lg"
+            width={1200}
+            noLazyLoad
+            noFallback
           />
           {/* <img className="dark:hidden rounded-lg" src="/images/hero-gal-light.png" />
           <img className="hidden dark:block rounded-lg" src="/images/hero-gal-dark.png" /> */}

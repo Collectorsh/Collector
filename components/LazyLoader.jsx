@@ -3,7 +3,8 @@ import useElementObserver from "../hooks/useElementObserver";
 
 const LazyLoader = ({cb, rootMargin = "20px"}) => {
   const ref = useRef(null)
-  const isVisible = useElementObserver(ref, rootMargin)
+  const { isVisible } = useElementObserver(ref, rootMargin)
+  
   useEffect(() => {
     let interId
     if (isVisible) {
@@ -15,7 +16,8 @@ const LazyLoader = ({cb, rootMargin = "20px"}) => {
 
     return () => clearInterval(interId)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[isVisible])
+  }, [isVisible])
+  
   return (
     <div className="w-full flex justify-center p-6" ref={ref}>
       <svg className="animate-spin" fill="none" height={40} viewBox="0 0 24 24" width={40} xmlns="http://www.w3.org/2000/svg">

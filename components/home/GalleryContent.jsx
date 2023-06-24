@@ -121,10 +121,10 @@ const ImageSlide = ({ item }) => {
                 className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
               /> */}
               <CloudinaryImage
-                id={`nft-demo/${item.mint}`}
+                id={`nft-demo/${ item.mint }`}
                 mint={item.mint}
-                imageUrl={item.image}
-                responsiveSteps={[700]}
+                width={700}
+                noLazyLoad
               />
         </div>
             </a>

@@ -1,104 +1,148 @@
 
-import { AdvancedImage, responsive, lazyload, placeholder} from '@cloudinary/react';
+import { scale } from "@cloudinary/url-gen/actions/resize";
+import { dpr } from "@cloudinary/url-gen/actions/delivery";
+
 import cloudinaryCloud from "../data/client/cloudinary";
-import { useState } from "react";
-import ImageFallback, { HandleUpload } from "../utils/imageFallback";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import clsx from 'clsx';
+import useElementObserver from '../hooks/useElementObserver';
+
+import { useFallbackImage, useImageFallbackContext } from '../contexts/imageFallback';
+import ContentLoader from 'react-content-loader';
+
 
 //ref 
 // Advanced Image plugins: https://cloudinary.com/documentation/react_image_transformations#plugins
 // Fetching/optimizations: https://cloudinary.com/documentation/image_optimization 
-// Responsive https://cloudinary.com/documentation/responsive_images
 
 //TODO dive further into responsive
+// Responsive https://cloudinary.com/documentation/responsive_images
 
-const CloudinaryContent = ({
+
+const CloudinaryImage = ({
   id,
   mint,
-  imageUrl,
+  metadata, //offchain metadata
   className,
   quality = 'auto', //auto:best | auto:good | auto:eco | auto:low
-  responsiveSteps = [],
   onLoad,
-  placeholderMode, //pixelate | blur | predominant-color (only use placeholder for large images and make sure to provide width and height to prevent page jumping )
-  width,
+  width, //number | "auto"
   height,
-  displayError = false,
-  noOptimization = false
+  noFallback = false,
+  noLazyLoad = false,
+  errorDisplay = {
+    type: "CDN",
+    content: (
+      <ContentLoader
+        speed={2}
+        className="w-full h-full rounded-lg"
+        backgroundColor="rgba(120,120,120,0.2)"
+        foregroundColor="rgba(120,120,120,0.1)"
+      >
+        <rect className="w-full h-full" />
+      </ContentLoader>
+    )
+  }
 }) => {
+  const { addNonCDNMint } = useImageFallbackContext()
+  const fallback = useFallbackImage(mint)
   const [error, setError] = useState(null) 
+  const imageRef = useRef()
+  const llRef = useRef()
+  const { hasBeenObserved } = useElementObserver(llRef, "500px 500px 500px 500px")
 
-  const cldImg = cloudinaryCloud.image(id)
-  cldImg
-    .format('auto')
-    .quality(quality)
+  console.log("CLOUDINARY RENDER")
 
-  const responsivePlugin = responsiveSteps.length ? responsive({ steps: responsiveSteps }) : undefined
-  const placeholderPlugin = placeholderMode ? placeholder({ mode: placeholderMode }) : undefined
-
-  const plugins = noOptimization ? undefined : [
-    lazyload({ rootMargin: '500px 0px 500px 0px' }),
-    responsivePlugin,
-    placeholderPlugin,
-  ].filter(p => Boolean(p))
+  const buildCldImg = useCallback((id) => {
+    const cldImg = cloudinaryCloud.image(id)
+    cldImg
+      .format('auto')
+      .quality(quality)
+      .delivery(dpr("auto"));
   
-  const handleError = async (e) => { 
-    
-    
-    if (e.target.src.includes("e_vectorize")) {
-      console.log("Placeholder Error:", e.target.src)
+    if (width) cldImg.resize(scale().width(width))
+    return cldImg
+  }, [quality, width])
+
+  const cldImg = buildCldImg(id)
+
+  useEffect(() => {
+    if (error === "CDN" && fallback) {
+      if (fallback?.id) {
+        const src = buildCldImg(fallback.id).toURL();
+        if (imageRef.current) {
+          imageRef.current.src = src
+          imageRef.current.style.opacity = 1;
+        }
+        setError("Using CDN Fallback")
+      } else if (fallback.fallbackImage) {
+        // imageRef.current.src = fallback.fallbackImage
+        // imageRef.current.style.opacity = 1;
+        setError("Using Fallback Image")
+      }
+    }
+  }, [error, fallback, buildCldImg])
+  
+
+  const handleError = async (e) => {    
+    if (!id) {
+      console.log("No CDN ID provided")
       return;
     }
+    // return console.log("IMAGE ERROR")
+    // if (e.target.src.includes("e_vectorize")) {
+    //   console.log("Placeholder Error:", e.target.src)
+    //   return;
+    // }
 
     e.target.style.opacity = 0;
-
-    if (noOptimization) return;
-
-
+    e.target.src = "";
+    if (noFallback) return;
     if (!error) {
-      console.log("Error Finding Image In CDN: ", e.target.src)
-
-      if (!mint) return;
-      const confirmedImageUrl = await ImageFallback(imageUrl, mint)
-
-      if (!confirmedImageUrl) {
-        setError("Unable to fetch image from mint")
-        console.log("Error Fetching Image Metadata: ", mint)
-        return;
-      } 
-      e.target.src = confirmedImageUrl;
-      e.target.style.opacity = 1;
-      //handle upload to Cloudinary
-      const uploaded = await HandleUpload(confirmedImageUrl, mint)
-      console.log("Uploaded: ", uploaded)
-      setError("no image in CDN")
-    } else if ("no image in CDN"){
-      setError("Bad Image URL")
+      setError("CDN")
+     
+      //API call 
+      addNonCDNMint(mint)
+      // if (metadata?.image && metadata?.mint) {
+      //   addNonCDNMetadata(metadata)
+      // } else if (mint) {
+      //   addNonCDNMint(mint)
+      // }
     }
+  }
+
+  const handleLoad = (e) => {
+    if (onLoad) onLoad(e)
+    imageRef.current.style.opacity = 1;
   }
 
   return (
     <>
-      {(error === "Bad Image URL" && displayError)
+      <div ref={noLazyLoad ? null : llRef} className='w-0 h-0  opacity-0' />
+      {(errorDisplay && error === errorDisplay.type)
+        ? (<div className={clsx(className, "absolute")}>
+          {errorDisplay.content}
+        </div>)
+        : null
+      }
+      {(hasBeenObserved || noLazyLoad) && (cldImg.toURL()) 
         ? (
-          <div className="pt-6 text-center opacity-0 hover:opacity-100 duration-200">
-            <p>Sorry, we are not able to load this image right now.</p>
-            <p className='text-sm opacity-70 mt-3'>Please make sure this token has valid image metadata: <span className='truncate max-w-[4rem] inline-block -mb-1'>{mint}</span> </p>
-            <a className="underline text-sm opacity-70" href={`https://explorer.solana.com/address/${ mint }`}>right click me</a>
-          </div>
-        )
-        : (
-          <AdvancedImage
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            style={{opacity: 0}}
+            ref={imageRef}
             className={className}
             width={width}
             height={height}
-            cldImg={cldImg}
-            plugins={plugins}
-            onLoad={onLoad}
+            src={cldImg.toURL()} alt=""
+            onLoad={handleLoad}
             onError={handleError}
           />
-        )}
+        )
+        : null
+      }
     </>
   )
 }
 
-export default CloudinaryContent;
+export default CloudinaryImage;

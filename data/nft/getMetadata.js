@@ -42,8 +42,6 @@ async function getMetadata(publicKeys) {
     }
   }
 
-
-  console.log("🚀 ~ pre filter results:", results.length)
   // Filter out any that don't have data uri's 
   results = results.filter((item) => {
     const useable = item.uri !== "" && item.creator !== undefined
@@ -107,7 +105,7 @@ async function getMetadata(publicKeys) {
       ? -1
       : 0
   );
-  console.log("🚀 ~ post filter results:", results.length)
+
   return results;
 }
 

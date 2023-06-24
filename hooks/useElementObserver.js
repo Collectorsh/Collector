@@ -1,7 +1,8 @@
-import { useState, useEffect, MutableRefObject } from 'react'
+import { useState, useEffect, MutableRefObject, useMemo } from 'react'
 
 const useElementObserver = (element, rootMargin) => {
   const [isVisible, setState] = useState(false);
+  const [hasBeenObserved, setHasBeenObserved] = useState(false);
 
   useEffect(() => {
     const current = element.current
@@ -16,7 +17,15 @@ const useElementObserver = (element, rootMargin) => {
     return () => current && observer.unobserve(current);
   }, [element, rootMargin]);
 
-  return isVisible;
+  useEffect(() => { 
+    if(isVisible && !hasBeenObserved) setHasBeenObserved(true)
+  },[isVisible, hasBeenObserved])
+
+
+  return {
+    isVisible,
+    hasBeenObserved
+  };
 };
 
 export default useElementObserver

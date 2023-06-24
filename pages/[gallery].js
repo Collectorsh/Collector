@@ -17,7 +17,6 @@ import { useMetadata } from "../data/nft/getMetadata";
 
 
 function Gallery({user}) {
-
   // const [tokens, setTokens] = useState([]);
   const tokens = useMetadata(user?.public_keys);
 

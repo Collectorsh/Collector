@@ -118,7 +118,6 @@ const CloudinaryImage = ({
   }
 
   const handleLoad = (e) => {
-    console.log("HIT", id)
     setOpacity(1) 
     if (onLoad) onLoad(e)
   }

@@ -114,13 +114,16 @@ const ImageSlide = ({ item }) => {
       >
         <Link href={`/${ item.username }`}>
           <a >
-            <CloudinaryImage
-              id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ item.mint }`}
-              mint={item.mint}
-              width={700}
-              noLazyLoad
-              className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
-            />
+            {/* <div className="w-full h-full"> */}
+              <CloudinaryImage
+                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ item.mint }`}
+                mint={item.mint}
+                width={700}
+                noLazyLoad
+                className="rounded-lg flex-shrink-0 w-full h-[250px] object-cover"
+              />
+            {/* </div> */}
+
           </a>
         </Link>
         <div className="mt-2">

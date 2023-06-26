@@ -169,7 +169,7 @@ const ImageCard = ({item }) => {
       <div
         className="bg-gray-300/20 sm:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
       >
-        <div className="rounded-lg overflow-hidden flex justify-center items-center mb-4 relative h-[250px]">
+        <div className="mb-4 relative h-[250px]">
           <Link href={`/${ item.username }`}>
             <a>
               <CloudinaryImage
@@ -177,6 +177,7 @@ const ImageCard = ({item }) => {
                 mint={item.mint}
                 width={700}
                 noLazyLoad
+                className="flex-shrink-0 w-full h-full object-cover rounded-lg"
               />
             </a>
           </Link>

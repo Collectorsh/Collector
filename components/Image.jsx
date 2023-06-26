@@ -2,6 +2,7 @@ import Script from "next/script";
 import React, { useState, useEffect } from "react";
 import { cdnImage } from "/utils/cdnImage";
 import { addDefaultSource } from "/utils/addDefaultSource";
+import CloudinaryImage from "./CloudinaryImage";
 
 export default function Image({ token, size = "small" }) {
   const [videoUrl, setVideoUrl] = useState();
@@ -72,12 +73,18 @@ export default function Image({ token, size = "small" }) {
           />
         </>
       ) : (
-        <img
-          src={cdnImage(token.mint)}
-          onLoad={onImageLoad}
-          className={style()}
-          onError={(e) => addDefaultSource(e, token.mint, token.image)}
-        />
+          <CloudinaryImage
+            mint={token.mint}
+            id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+            width={1200}
+            noLazyLoad
+          />
+        // <img
+        //   src={cdnImage(token.mint)}
+        //   onLoad={onImageLoad}
+        //   className={style()}
+        //   onError={(e) => addDefaultSource(e, token.mint, token.image)}
+        // />
       )}
     </>
   );

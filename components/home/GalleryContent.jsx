@@ -112,23 +112,17 @@ const ImageSlide = ({ item }) => {
       <div
         className="bg-gray-300/20 md:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
       >
-          <Link href={`/${ item.username }`}>
-            <a >
-        <div className="rounded-lg overflow-hidden flex justify-center items-center mb-4 relative h-[250px]">
-              {/* <img
-                src={cdnImage(item.mint)}
-                onError={(e) => defaultSource(e, item.mint, item.image)}
-                className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
-              /> */}
-              <CloudinaryImage
-                id={`nft-demo/${ item.mint }`}
-                mint={item.mint}
-                width={700}
-                noLazyLoad
-              />
-        </div>
-            </a>
-          </Link>
+        <Link href={`/${ item.username }`}>
+          <a >
+            <CloudinaryImage
+              id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ item.mint }`}
+              mint={item.mint}
+              width={700}
+              noLazyLoad
+              className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
+            />
+          </a>
+        </Link>
         <div className="mt-2">
           <Link href={`/${ item.username }`}>
             <a>

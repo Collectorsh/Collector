@@ -8,8 +8,9 @@ import debounce from "lodash.debounce";
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, XCircleIcon } from "@heroicons/react/solid";
 import { addDefaultSource } from "../utils/addDefaultSource";
 import axios from "axios";
+import CloudinaryImage from "../components/CloudinaryImage";
 
-const totalPerPage = 8
+const totalPerPage = 12
 
 export default function Discover() {
   const searchRef = useRef()
@@ -29,7 +30,7 @@ export default function Discover() {
   }
 
   const loadingCards = () => {
-    return Array.from({ length: 8 }, (_, index) => (
+    return Array.from({ length: totalPerPage }, (_, index) => (
       <div className="" key={index}>
         <div
           className="bg-gray-300/20 lg:shadow-lg rounded-xl relative p-3 mx-auto"
@@ -163,26 +164,6 @@ export default function Discover() {
 }
 
 const ImageCard = ({item }) => {
-  const [errorCount, setErrorCount] = useState(0)
-  const defaultSource = async (e, mint, url) => {
-    e.target.style.background = "black";
-    e.target.style.opacity = 0;
-    if (errorCount > 1) return
-    setErrorCount(prev => prev + 1)
-    if (!url) return;
-    try {
-      const res = await axios.get(url).then(res => {
-        return res.data
-      })
-      const image = typeof res.image === "object" ? res.image : url
-
-      e.target.src = image;
-      e.target.style.opacity = 1;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   return (
     <div key={item.image} className="">
       <div
@@ -191,11 +172,11 @@ const ImageCard = ({item }) => {
         <div className="rounded-lg overflow-hidden flex justify-center items-center mb-4 relative h-[250px]">
           <Link href={`/${ item.username }`}>
             <a>
-              <img
-                // src={item.image}
-                src={cdnImage(item.mint)}
-                onError={(e) => defaultSource(e, item.mint, item.image)}
-                className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
+              <CloudinaryImage
+                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ item.mint }`}
+                mint={item.mint}
+                width={700}
+                noLazyLoad
               />
             </a>
           </Link>

@@ -9,6 +9,7 @@ import useElementObserver from '../hooks/useElementObserver';
 
 import { useFallbackImage, useImageFallbackContext } from '../contexts/imageFallback';
 import ContentLoader from 'react-content-loader';
+import { set } from "@project-serum/anchor/dist/cjs/utils/features";
 
 
 //ref 
@@ -47,44 +48,52 @@ const CloudinaryImage = ({
   const { addNonCDNMint } = useImageFallbackContext()
   const fallback = useFallbackImage(mint)
   const [error, setError] = useState(null) 
-  const imageRef = useRef()
   const llRef = useRef()
   const { hasBeenObserved } = useElementObserver(llRef, "500px 500px 500px 500px")
 
-  console.log("CLOUDINARY RENDER")
+  const [fallbackUrl, setFallbackUrl] = useState(null)
+  const [opacity, setOpacity] = useState(noLazyLoad ? 1 : 0)
 
-  const buildCldImg = useCallback((id) => {
+  // console.log("CLOUDINARY RENDER")
+
+  const buildCldImg = (id, overrideQuality) => {
     const cldImg = cloudinaryCloud.image(id)
     cldImg
       .format('auto')
-      .quality(quality)
+      .quality(overrideQuality || quality)
       .delivery(dpr("auto"));
   
     if (width) cldImg.resize(scale().width(width))
     return cldImg
-  }, [quality, width])
+  }
 
   const cldImg = buildCldImg(id)
 
   useEffect(() => {
-    if (error === "CDN" && fallback) {
+    if (error === "CDN" && Boolean(fallback)) {
       if (fallback?.id) {
-        const src = buildCldImg(fallback.id).toURL();
-        if (imageRef.current) {
-          imageRef.current.src = src
-          imageRef.current.style.opacity = 1;
-        }
-        setError("Using CDN Fallback")
-      } else if (fallback.fallbackImage) {
-        // imageRef.current.src = fallback.fallbackImage
-        // imageRef.current.style.opacity = 1;
-        setError("Using Fallback Image")
+        //TODO figure out another way to image cache bust besides adding another transformation (it cost moneys)
+        const cldImgFB = buildCldImg(fallback.id, "auto:eco")
+        
+        setFallbackUrl(cldImgFB.toURL())
+        setOpacity(1)
+        
+        setError("Using CDN Return ID")
+      } else if (fallback?.fallbackImage) {
+        //handle no CDN image
+        setError("Using Metadata Fallback Image")
+      } else {
+        console.log("Error with fallback:", fallback)
+        setError("No Fallback")
       }
     }
-  }, [error, fallback, buildCldImg])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, fallback])
   
 
   const handleError = async (e) => {    
+    
+    setOpacity(0)
     if (!id) {
       console.log("No CDN ID provided")
       return;
@@ -94,33 +103,31 @@ const CloudinaryImage = ({
     //   console.log("Placeholder Error:", e.target.src)
     //   return;
     // }
-
-    e.target.style.opacity = 0;
-    e.target.src = "";
     if (noFallback) return;
     if (!error) {
-      setError("CDN")
-     
+      
       //API call 
       addNonCDNMint(mint)
       // if (metadata?.image && metadata?.mint) {
-      //   addNonCDNMetadata(metadata)
-      // } else if (mint) {
-      //   addNonCDNMint(mint)
-      // }
+        //   addNonCDNMetadata(metadata)
+        // } else if (mint) {
+          //   addNonCDNMint(mint)
+          // }
+      setError("CDN")
     }
   }
 
   const handleLoad = (e) => {
+    console.log("HIT", id)
+    setOpacity(1) 
     if (onLoad) onLoad(e)
-    imageRef.current.style.opacity = 1;
   }
-
+  
   return (
     <>
       <div ref={noLazyLoad ? null : llRef} className='w-0 h-0  opacity-0' />
       {(errorDisplay && error === errorDisplay.type)
-        ? (<div className={clsx(className, "absolute")}>
+        ? (<div className={clsx("absolute top-0 left-0 w-full h-full", className)}>
           {errorDisplay.content}
         </div>)
         : null
@@ -129,12 +136,11 @@ const CloudinaryImage = ({
         ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            style={{opacity: 0}}
-            ref={imageRef}
+            style={{opacity}}
             className={className}
             width={width}
             height={height}
-            src={cldImg.toURL()} alt=""
+            src={fallbackUrl || cldImg.toURL()} alt=""
             onLoad={handleLoad}
             onError={handleError}
           />

@@ -14,7 +14,7 @@ export const ImageFallbackProvider = ({ children }) => {
   const nonCDNMintsRef = useRef([]);//mint[]
   const uploadSentRef = useRef([]);//mint[]
   const [cloudinaryCompleted, setCloudinaryCompleted] = useState([]);//{nftMint, id, fallbackImage}[]
-
+  const [waiting, setWaiting] = useState(0);
   //BATCHES (wasnt working well, keeping just incase we move to workers, if so probably remove the sub batchess)
   // const handleMetaFallbacks = debounce(async () => {
   //   console.log("🚀 ~ file: imageFallback.js:32 ~ handleMetaFallbacks ~ nonCDNMintsRef.current.length === muploadSentRef.current.length:", nonCDNMintsRef.current.length, uploadSentRef.current.length)
@@ -40,7 +40,8 @@ export const ImageFallbackProvider = ({ children }) => {
   // }, 500)
 
   const handleOneUpload = async (mint) => { 
-    if(uploadSentRef.current.includes(mint)) return;
+    if (uploadSentRef.current.includes(mint)) return;
+    setWaiting(prev => prev + 1)
     try {
       uploadSentRef.current = [...uploadSentRef.current, mint];
       const cloudinaryUpload = await MetadataFallbacks([mint]);
@@ -67,13 +68,13 @@ export const ImageFallbackProvider = ({ children }) => {
 
   //   handleImageFallbacks() //similar to handleMetaFallbacks but already have the meata data
   // },[])
-  
 
   return (
     <ImageFallbackContext.Provider value={{
       addNonCDNMint,
       // addNonCDNMetadata,
       fallbackImages: cloudinaryCompleted,
+      waiting
     }}>
       {children}
     </ImageFallbackContext.Provider>

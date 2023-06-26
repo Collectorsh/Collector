@@ -20,6 +20,7 @@ import { Toaster } from "react-hot-toast";
 import { cdnImage } from "/utils/cdnImage";
 import LazyLoader from "../../LazyLoader";
 import CloudinaryImage from "../../CloudinaryImage";
+import { useImageFallbackContext } from "../../../contexts/imageFallback";
 
 //TODO try scroll based lazy load for images
 
@@ -28,6 +29,9 @@ export default function Gallery({ tokens, user }) {
   const [columns, setColumns] = useState(user?.columns);
   const [items, setItems] = useState();
   const [bulkEdit, setBulkEdit] = useState(false);
+  const { fallbackImages, waiting } = useImageFallbackContext()
+
+  const progress = (fallbackImages.length / waiting)*100
   
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
@@ -243,7 +247,21 @@ export default function Gallery({ tokens, user }) {
               </div>
             </div>
             <div className="col-span-1 sm:col-span-9">
-              <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2">
+              <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2 relative">
+
+                {waiting && waiting > fallbackImages.length && (
+                  <div className="absolute w-full h-full bg-gray-100 dark:bg-dark3 rounded top-0 left-0 flex items-center px-4 gap-4">
+                    <p className="flex-shrink-0">Optimizing Images: <span>({fallbackImages.length}/{waiting})</span></p>
+                    <div className="border-2 border-black dark:border-white rounded-full w-full h-3 relative" >
+                      <div
+                        style={{ width: `${ progress }%` }}
+                        className="bg-black dark:bg-white rounded-full h-2 w-0 absolute inset-0 animate-pulse"
+                      />
+                    </div>
+                  </div>
+                  
+                )}
+
                 <div className="grid grid-cols-3">
                   <div className="col-span-1 text-left">
                     <input

@@ -12,7 +12,7 @@ import findMarket from "/data/drops/findMarket";
 import { connection } from "/config/settings";
 import { useRouter } from "next/router";
 
-function Nft({ image, token }) {
+function Nft({ token }) {
   const [, setSingleNft] = useContext(SingleNftContext);
   const auctionHouses = auctionHousesArray.map((a) => a.address);
   const [offers, setOffers] = useState([]);
@@ -114,7 +114,7 @@ function Nft({ image, token }) {
               name="twitter:description"
               content={`View ${token.name} on Collector`}
             />
-            <meta name="twitter:image" content={image} />
+            {/* <meta name="twitter:image" content={image} /> */}
           </>
         )}
       </Head>
@@ -130,9 +130,9 @@ function Nft({ image, token }) {
 
 export async function getServerSideProps(context) {
   let mint = context.params.mint;
-  let image = cdnImage(mint);
+  // let image = cdnImage(mint);
   let token = await getMetadataFromMint(mint);
-  return { props: { image, token } };
+  return { props: { token } };
 }
 
 export default Nft;

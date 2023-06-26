@@ -8,8 +8,10 @@ import { Navigation } from "swiper";
 import { addDefaultSource } from "../../utils/addDefaultSource";
 import axios from "axios";
 import { useState } from "react";
+import CloudinaryImage from "../CloudinaryImage";
 
 export default function GalleryContent({ name, items }) {
+
   const loadingSlides = () => {
     return Array.from({ length: 6 }, (_, index) => (
       <SwiperSlide key={`slide-${ index }`}>
@@ -20,16 +22,16 @@ export default function GalleryContent({ name, items }) {
             <ContentLoader
               speed={2}
                 className="w-full mb-4 h-[250px] rounded-lg"
-              backgroundColor="#bbbbbb"
-              foregroundColor="#aaaaaa"
+              backgroundColor="rgba(120,120,120,0.2)"
+              foregroundColor="rgba(120,120,120,0.1)"
             >
               <rect className="w-full h-full" />
             </ContentLoader>
             <ContentLoader
               speed={2}
               className="w-full h-8 mt-2"
-              backgroundColor="#bbbbbb"
-              foregroundColor="#aaaaaa"
+              backgroundColor="rgba(120,120,120,0.2)"
+              foregroundColor="rgba(120,120,120,0.1)"
             >
               <circle cx="16" cy="16" r="16" />
               <rect x="46" y="5" className="w-[80%] h-3/4" rx="4" />
@@ -110,17 +112,17 @@ const ImageSlide = ({ item }) => {
       <div
         className="bg-gray-300/20 md:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
       >
-        <div className="rounded-lg overflow-hidden flex justify-center items-center mb-4 relative h-[250px]">
-          <Link href={`/${ item.username }`}>
-            <a>
-              <img
-                src={cdnImage(item.mint)}
-                onError={(e) => defaultSource(e, item.mint, item.image)}
-                className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
-              />
-            </a>
-          </Link>
-        </div>
+        <Link href={`/${ item.username }`}>
+          <a >
+            <CloudinaryImage
+              id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ item.mint }`}
+              mint={item.mint}
+              width={700}
+              noLazyLoad
+              className="rounded-lg flex-shrink-0 absolute inset-0 w-full h-full object-cover"
+            />
+          </a>
+        </Link>
         <div className="mt-2">
           <Link href={`/${ item.username }`}>
             <a>

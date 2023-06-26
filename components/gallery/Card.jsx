@@ -8,11 +8,12 @@ import useElementObserver from "../../hooks/useElementObserver";
 
 function Card(props) {
   const user = props.user;
-  const onLoad = props.onLoad;
+  const columns = props.columns;
   const [token, setToken] = useState();
   const [loaded, setLoaded] = useState(false);
 
   const initGetData = useCallback(async (tok) => {
+    // console.log("METADATA HIT")
     try {
       const res = await getMetadataFromUri(tok);
       if (res) setToken(res);
@@ -21,22 +22,18 @@ function Card(props) {
     }
   }, []);
 
-  useEffect(() => {
-    initGetData(props.token);
-  }, [props.token, initGetData]);
-
   const handleLoad = () => { 
-    onLoad()
     setLoaded(true)
+    initGetData(props.token);
   }
 
   return (
     <div
       className={`col-span-1 mb-8 sm:mb-0 sm:col-span-${props.token.span} relative text-center h-fit transition-opacity duration-300 opacity-0 ${loaded && "loaded"}`}
     >
+      <Nft user={user} token={props.token} tokenMetadata={token} onLoad={handleLoad} columns={columns} />
       {token && (
         <>
-          <Nft user={user} token={token} onLoad={handleLoad} />
           <Listings token={token} />
           <ShowOffers token={token} />
           <MetaContainer user={user} token={token} />

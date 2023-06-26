@@ -3,23 +3,32 @@ import Script from "next/script";
 import React, { useState, useEffect, useRef } from "react";
 import { cdnImage } from "/utils/cdnImage";
 import { addDefaultSource } from "/utils/addDefaultSource";
-import useElementObserver from "../../hooks/useElementObserver";
-import Image from "next/image";
+
 import ContentLoader from "react-content-loader";
 import clsx from "clsx";
+import CloudinaryImage from "../CloudinaryImage";
 
-export default function Nft({ user, token, onLoad }) {
+export default function Nft({ user, token, onLoad, tokenMetadata, columns }) {
   const [videoUrl, setVideoUrl] = useState();
   const [loaded, setLoaded] = useState(false);
+
+  const responsiveSteps = () => {
+    switch (columns) {
+      case 2: return 2000;
+      case 3: return 1000;
+      default: return 600;
+    }
+  }
+
   useEffect(() => {
-    if (!token) return;
+    if (!tokenMetadata) return;
     try {
-      if (token.animation_url) {
-        if (token.animation_url.split(".").pop().includes("mp4")) {
-          setVideoUrl(token.animation_url);
+      if (tokenMetadata.animation_url) {
+        if (tokenMetadata.animation_url.split(".").pop().includes("mp4")) {
+          setVideoUrl(tokenMetadata.animation_url);
         }
       } else {
-        for (let file of token.properties.files) {
+        for (let file of tokenMetadata.properties.files) {
           if (file.type && file.type === "video/mp4") {
             setVideoUrl(file.uri);
           }
@@ -28,7 +37,7 @@ export default function Nft({ user, token, onLoad }) {
     } catch (err) {
       // expected to have some errors
     }
-  }, [token]);
+  }, [tokenMetadata]);
 
   const onImageLoad = (event) => {
     setLoaded(true);
@@ -44,16 +53,16 @@ export default function Nft({ user, token, onLoad }) {
           user && user.rounded && "rounded-2xl"
           }`}
       >
-        <div className={clsx("md:p-4 top-0 left-0 w-full", loaded ? "hidden" : "absolute")}>
+        {/* <div className={clsx("md:p-4 top-0 left-0 w-full", loaded ? "hidden" : "absolute")}>
           <ContentLoader
             speed={2}
             className="w-full mb-4 h-[250px] rounded-lg"
-            backgroundColor="#bbbbbb"
-            foregroundColor="#aaaaaa"
+             backgroundColor="rgba(120,120,120,0.2)"
+            foregroundColor="rgba(120,120,120,0.1)"
           >
             <rect className="w-full h-full" />
           </ContentLoader>
-        </div>
+        </div> */}
 
         <Link href={`/nft/${ token.mint }`} title="">
           <a className={loaded ? "animate-enter" : "opacity-0"}>
@@ -80,12 +89,15 @@ export default function Nft({ user, token, onLoad }) {
                 />
               </>
             ) : (
-                <img
-                  alt=""
-                  src={cdnImage(token.mint)}
+              <CloudinaryImage
+                  id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ token.mint }`}
+                  // className="mx-auto cursor-pointer object-center object-cover"
+                  mint={token.mint}
                   onLoad={onImageLoad}
-                  className="mx-auto cursor-pointer object-center object-cover"
-                  onError={(e) => addDefaultSource(e, token.mint, token.image)}
+                  noLazyLoad
+                  quality="auto:best"
+                  width={responsiveSteps()}
+                  metadata={tokenMetadata}
               />
             )}
           </a>

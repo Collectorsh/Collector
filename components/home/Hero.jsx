@@ -7,6 +7,7 @@ import ContentLoader from "react-content-loader";
 import UserContext from "../../contexts/user";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { useRouter } from "next/router";
+import CloudinaryImage from "../CloudinaryImage";
 
 export default function Hero() {
   const [user, setUser] = useContext(UserContext);
@@ -72,9 +73,23 @@ export default function Hero() {
           </div> */}
         </div>
         
-        <div className="bg-gray-300/20 lg:shadow-lg p-3 rounded-xl delay-200 animate-enter">
-          <img className="dark:hidden rounded-lg" src="/images/hero-gal-light.png" />
-          <img className="hidden dark:block rounded-lg" src="/images/hero-gal-dark.png" />
+        <div className="bg-gray-300/20 lg:shadow-lg p-3 rounded-xl delay-200 animate-enter w-fit mx-auto">
+          <CloudinaryImage
+            id="v1686972792/demo/hero-gal-dark_ecdrjl.png"
+            className="hidden dark:block rounded-lg overflow-hidden"
+            width={1200}
+            noLazyLoad
+            noFallback
+          />
+          <CloudinaryImage
+            id="v1686972792/demo/hero-gal-light_nvxdwu.png"
+            className="dark:hidden rounded-lg overflow-hidden"
+            width={1200}
+            noLazyLoad
+            noFallback
+          />
+          {/* <img className="dark:hidden rounded-lg" src="/images/hero-gal-light.png" />
+          <img className="hidden dark:block rounded-lg" src="/images/hero-gal-dark.png" /> */}
         </div>          
       </div>
 
@@ -91,8 +106,8 @@ export default function Hero() {
                 <ContentLoader
                   speed={2}
                   className="w-full h-[100vw] lg:h-[520px] xl:h-[550px] rounded-xl"
-                  backgroundColor="#bbbbbb"
-                  foregroundColor="#aaaaaa"
+                  backgroundColor="rgba(120,120,120,0.2)"
+                  foregroundColor="rgba(120,120,120,0.1)"
                 >
                   <rect className="w-full h-[100vw] lg:h-[520px] xl:h-[550px]" />
                 </ContentLoader>

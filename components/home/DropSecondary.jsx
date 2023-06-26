@@ -29,8 +29,8 @@ export default function DropSecondary() {
           <ContentLoader
             speed={2}
             className="w-full mb-4 h-[325px] sm:h-[250px] border border-neutral-300 dark:border-neutral-800 rounded-xl"
-            backgroundColor="#bbbbbb"
-            foregroundColor="#aaaaaa"
+            backgroundColor="rgba(120,120,120,0.2)"
+            foregroundColor="rgba(120,120,120,0.1)"
           >
             <rect className="w-full mb-4 h-[325px] sm:h-[250px] border border-neutral-300 dark:border-neutral-800 rounded-xl" />
           </ContentLoader>

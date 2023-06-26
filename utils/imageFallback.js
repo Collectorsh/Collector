@@ -1,31 +1,38 @@
 import axios from "axios";
 import hellomoonClient from "../data/client/helloMoonClient";
+import apiClient from "../data/client/apiClient";
 
-export default async function ImageFallback(imageUrl, mint) {
-  if (imageUrl) {
-    //check if image is valid
-    try {
-      const image = (typeof imageUrl === "string") ? imageUrl : imageUrl.image;
-      const urlType = await axios.post("/api/checkContent", {
-        urls: [image],
-      }).then(res => res.data[0])
-      console.log("🚀 ~ file: imageFallback.js:11 ~ ImageFallback ~ urlType:", urlType)
+export default async function ImageFallback(mint) {
+  try {
+    const image = await HandleNoUrl(mint)
+    if (!image) throw new Error("No image found")
+    
+    const cloudinary = await HandleUpload(image, mint)
 
-      if (urlType.fileType === "image") return imageUrl;
-    } catch (error) {
-      console.log("Error checking image type", error);
-    }
+    return cloudinary.public_id;
+  } catch (error) {
+    console.log("Error checking image type", error);
   }
-
-  return handleNoUrl(mint);
 }
 
-async function handleNoUrl(mint) {
+export async function MetadataFallbacks(mints) {
+  try {
+    const cloudinaryUploads = await apiClient.post("/images/upload_with_mints", {
+      mints,
+    }).then(res => res.data)
+
+    return cloudinaryUploads;
+  } catch (error) {
+    console.log("Error uploading with mints", error);
+  }
+}
+
+async function HandleNoUrl(mint) {
   try {
     const nftURI = await hellomoonClient.post("/v0/nft/mint_information", {
       nftMint: mint,
     }).then(res => res.data.data[0].nftMetadataJson.uri)
-  
+
     const metadata = await axios.get(nftURI).then(res => res.data)
     return metadata.image;
   } catch (e) {
@@ -44,3 +51,13 @@ export async function HandleUpload(content, mint) {
     console.log("Error uploading image", error);
   }
 }
+
+// export async function DoubleCheckCloudinaryExists(url) {
+//   try {
+//     const result = await axios.get(url).then(res => res.data)
+//     if (Boolean(result)) return true
+//   } catch (e) {
+//     console.log(`Error with cloudinary url: ${url}`, e)
+//   }
+//   return false
+// }

@@ -59,10 +59,6 @@ export default function Discover() {
 
   const imageCards = () => {
     return galleries.map((item, index) => {
-      if (!item.image) {
-        console.log("no image", item)
-        return null
-      }
       return <ImageCard key={item.mint} item={item}/>
     })
   }

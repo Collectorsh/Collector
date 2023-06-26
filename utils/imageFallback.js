@@ -1,6 +1,6 @@
 import axios from "axios";
 import hellomoonClient from "../data/client/helloMoonClient";
-import apiClient from "../data/client/apiClient";
+import apiClient, { apiClientLong } from "../data/client/apiClient";
 
 export default async function ImageFallback(mint) {
   try {
@@ -17,7 +17,7 @@ export default async function ImageFallback(mint) {
 
 export async function MetadataFallbacks(mints) {
   try {
-    const cloudinaryUploads = await apiClient.post("/images/upload_with_mints", {
+    const cloudinaryUploads = await apiClientLong.post("/images/upload_with_mints", {
       mints,
     }).then(res => res.data)
 

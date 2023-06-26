@@ -140,7 +140,8 @@ const CloudinaryImage = ({
             className={className}
             width={width}
             height={height}
-            src={fallbackUrl || cldImg.toURL()} alt=""
+            src={fallbackUrl || cldImg.toURL()}
+            alt={metadata?.name || ""}
             onLoad={handleLoad}
             onError={handleError}
           />

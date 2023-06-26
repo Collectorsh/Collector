@@ -78,6 +78,7 @@ export default function Image({ token, size = "small" }) {
             id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
             width={1200}
             noLazyLoad
+            quality="auto:best"
           />
         // <img
         //   src={cdnImage(token.mint)}

@@ -5,7 +5,7 @@ import ShowListing from "/components/single/ShowListing";
 import ShowSell from "/components/single/ShowSell";
 import ShowMakeOffer from "/components/single/ShowMakeOffer";
 import { ToastContainer } from "react-toastify";
-import Image from "/components/Image";
+import NFTImage from "/components/Image";
 import SingleNftContext from "/contexts/single_nft";
 import { sortHighestListing } from "/utils/sortHighestListing";
 import { sortHighestOffer } from "/utils/sortHighestOffer";
@@ -71,7 +71,7 @@ export default function Single({ token, market, refetch }) {
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-16 mt-12">
         <div className="col-span-1">
-          <Image token={token} size="max" />
+          <NFTImage token={token} size="max" alt=""/>
         </div>
         <div className="col-span-1">
           <h1 className="text-4xl mb-2 dark:text-white tracking-wide">

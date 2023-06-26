@@ -27,7 +27,7 @@ export default function Footer() {
               </Link>
               <Link href="https://twitter.com/collector_sh">
                 <a target="_blank">
-                  <icon icon="twitter" svgclass="w-6 h-6">
+                  <icon icon="twitter">
                     <svg-icon>
                       <svg
                         width="24"

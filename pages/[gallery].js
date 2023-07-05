@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useCallback, useState } from "react";
+import React, { useEffect, useContext, useCallback, useState, useMemo } from "react";
 import Head from "next/head";
 import getUserFromUsername from "/data/user/getUserFromUsername";
 import getMetadata from "/data/nft/getMetadata";
@@ -14,10 +14,10 @@ import { Metaplex } from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
 import { useRouter } from "next/router";
 import { useMetadata } from "../data/nft/getMetadata";
+import { useImageFallbackContext } from "../contexts/imageFallback";
 
 
 function Gallery({user}) {
-  // const [tokens, setTokens] = useState([]);
   const tokens = useMetadata(user?.public_keys);
 
   const [, setListings] = useContext(ListingsContext);
@@ -25,61 +25,73 @@ function Gallery({user}) {
   const auctionHouses = auctionHousesArray.map((a) => a.address);
   const metaplex = new Metaplex(connection);
 
+  const { waiting, completed, uploadAll, cloudinaryCompleted } = useImageFallbackContext()
+  const progress = ((completed) / waiting) * 100
+  const showProgress = Boolean(waiting && waiting > completed)
+
+  const visibleTokens = useMemo(() => tokens?.filter(token => token.visible), [tokens]);
+
+  const renderedTokens = useMemo(() => {
+    if(!visibleTokens) return []
+    const optimized = visibleTokens?.filter(token => token.optimized === "True")
+    const completed = visibleTokens?.filter(token => cloudinaryCompleted.some(({ mint }) => mint === token.mint))
+    return [...optimized, ...completed]
+  },[visibleTokens, cloudinaryCompleted]);
+
+  useEffect(() => {
+    if (!waiting) {
+      uploadAll(visibleTokens)//will optimized any images not optimized yet
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleTokens])
+
   const fetchListings = useCallback(async () => {
     const newListings = [];
     const newOffers = [];
 
-    for (const auctionHouse of auctionHouses) {
-      const lstngs = await metaplex.auctionHouse().findListings({
-        auctionHouse: { address: auctionHouse, isNative: true },
-      });
-      for (const list of lstngs.filter(
-        (l) => l.canceledAt === null && l.purchaseReceiptAddress === null
-      )) {
-        newListings.push({
-          address: list.metadataAddress.toBase58(),
-          price: list.price.basisPoints.toNumber(),
-          seller: list.sellerAddress.toBase58(),
-          auctionHouse: list.auctionHouse,
-          tradeState: list.tradeStateAddress._bn,
-          tradeStateBump: list.tradeStateAddress.bump,
+    try {
+      for (const auctionHouse of auctionHouses) {
+        const lstngs = await metaplex.auctionHouse()?.findListings({
+          auctionHouse: { address: auctionHouse, isNative: true },
         });
-      }
-      const bids = await metaplex.auctionHouse().findBids({
-        auctionHouse: { address: auctionHouse, isNative: true },
-      });
-      for (const bid of bids.filter((b) => b.canceledAt === null)) {
-        if (bid.canceledAt) continue;
-        newOffers.push({
-          address: bid.metadataAddress.toBase58(),
-          price: bid.price.basisPoints.toNumber(),
-          buyer: bid.buyerAddress.toBase58(),
-          auctionHouse: bid.auctionHouse,
-          tradeState: bid.tradeStateAddress._bn,
-          tradeStateBump: bid.tradeStateAddress.bump,
+        for (const list of lstngs.filter(
+          (l) => l.canceledAt === null && l.purchaseReceiptAddress === null
+        )) {
+          newListings.push({
+            address: list.metadataAddress.toBase58(),
+            price: list.price.basisPoints.toNumber(),
+            seller: list.sellerAddress.toBase58(),
+            auctionHouse: list.auctionHouse,
+            tradeState: list.tradeStateAddress._bn,
+            tradeStateBump: list.tradeStateAddress.bump,
+          });
+        }
+        const bids = await metaplex.auctionHouse().findBids({
+          auctionHouse: { address: auctionHouse, isNative: true },
         });
+        for (const bid of bids.filter((b) => b.canceledAt === null)) {
+          if (bid.canceledAt) continue;
+          newOffers.push({
+            address: bid.metadataAddress.toBase58(),
+            price: bid.price.basisPoints.toNumber(),
+            buyer: bid.buyerAddress.toBase58(),
+            auctionHouse: bid.auctionHouse,
+            tradeState: bid.tradeStateAddress._bn,
+            tradeStateBump: bid.tradeStateAddress.bump,
+          });
+        }
       }
+      setListings(newListings);
+      setOffers(newOffers);
+  
+    } catch (err) {
+      console.error("Error fetching listings: ", err);
     }
-    setListings(newListings);
-    setOffers(newOffers);
   }, []);
 
   useEffect(() => {
     fetchListings();
   }, []);
-
-  // useEffect(() => {
-  //   (async function fetchUser() {
-  //     console.log("fetching user")
-  //     if(!user) return;
-  //     try {
-  //       const tokens = await getMetadata(user.public_keys);
-  //       if(tokens) setTokens(tokens);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   })()
-  // }, [user])
 
   return (
     <div className="dark:bg-black">
@@ -95,14 +107,26 @@ function Gallery({user}) {
               name="twitter:description"
               content="Show off your Solana NFT's with Collector"
             />
-            <meta name="twitter:image" content={tokens.length ? cdnImage(tokens[0].mint) : user.profile_image} />
+            <meta name="twitter:image" content={visibleTokens.length ? cdnImage(visibleTokens[0].mint) : user.profile_image} />
           </>
         )}
       </Head>
       {user ? <GalleryNavigation user={user} /> : <MainNavigation />}
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 clear-both">
+        {(showProgress) ? (
+          <div className="w-full rounded top-0 left-0 flex items-center py-4 gap-4">
+            <p className="flex-shrink-0">Optimizing Images: <span>({completed}/{waiting})</span></p>
+            <div className="border-2 border-black dark:border-white rounded-full w-full h-3 relative" >
+              <div
+                style={{ width: `${ progress }%` }}
+                className="bg-black dark:bg-white rounded-full h-2 w-0 absolute inset-0 animate-pulse"
+              />
+            </div>
+          </div>
+        ) : null
+        }
         <div className="mx-auto pt-3">
-          {(user) && <GalleryContainer tokens={tokens} user={user} />}
+          {(user) && <GalleryContainer tokens={renderedTokens} user={user} />}
           {(!user) && (
             <div className="max-w-7xl mx-auto">
               <p className="dark:text-gray-100 pt-8">

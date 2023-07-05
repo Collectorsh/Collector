@@ -77,7 +77,8 @@
     "swiper": "^9.3.2",
     "swr": "^2.1.5",
     "tweetnacl": "^1.0.3",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",

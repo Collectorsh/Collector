@@ -9,11 +9,11 @@ const apiClient = axios.create({
 });
 
 export const apiClientLong = axios.create({
-  timeout: 30000,
   baseURL: apiHost,
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 1000 * 60 * 5,
 });
 
 export default apiClient;

@@ -1,57 +1,110 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { success, error } from "/utils/toastMessages";
-import { MetadataFallbacks } from "../utils/imageFallback";
+import { OptimizeWithMints } from "../utils/imageFallback";
 
 import { useCallback } from "react";
 import debounce from "lodash.debounce";
+import { useRouter } from "next/router";
+import UserContext from "./user";
+import useWebSocket from "../hooks/useWebsocket";
 
 const ImageFallbackContext = createContext();
 
 export const useImageFallbackContext = () => useContext(ImageFallbackContext);
 
 export const ImageFallbackProvider = ({ children }) => {
+  const router = useRouter();
+  const [user] = useContext(UserContext);
   // mint addresses that arent associated with a CDN image
   const nonCDNMintsRef = useRef([]);//mint[]
   const uploadSentRef = useRef([]);//mint[]
-  const [cloudinaryCompleted, setCloudinaryCompleted] = useState([]);//{nftMint, id, fallbackImage}[]
+  const [cloudinaryCompleted, setCloudinaryCompleted] = useState([]);//{mint, imageId}[]
+  const [cloudinaryError, setCloudinaryError] = useState([]);//{mint, error}[]
   const [waiting, setWaiting] = useState(0);
-  //BATCHES (wasnt working well, keeping just incase we move to workers, if so probably remove the sub batchess)
-  // const handleMetaFallbacks = debounce(async () => {
-  //   console.log("🚀 ~ file: imageFallback.js:32 ~ handleMetaFallbacks ~ nonCDNMintsRef.current.length === muploadSentRef.current.length:", nonCDNMintsRef.current.length, uploadSentRef.current.length)
-  //   if (nonCDNMintsRef.current.length === 0 || nonCDNMintsRef.current.length === uploadSentRef.current.length) {
-  //     return;
+  const [completed, setCompleted] = useState(0);
+
+//   useEffect(() => {
+//     setWaiting(0)
+//     setCompleted(0)
+//  },[router.pathname])
+  
+  // const handleWebsocketMessages = useCallback((message, data) => { 
+  //   switch (message) { 
+  //     case "Image Optimized": {
+  //       const { mint, imageId } = data;
+  //       setCloudinaryCompleted(prev => [...prev, { mint, imageId }])
+  //       setCompleted(prev => prev + 1)
+  //     }
+  //     case "Optimizing Error": {
+  //       const { mint, error } = data;
+  //       setCloudinaryError(prev => [...prev, { mint, error }])
+  //       setCompleted(prev => prev + 1)
+  //     }
+  //     case "Image Metadata Errors": {
+  //       const { tokens, error } = data;
+  //       setCloudinaryError(prev => [...prev, ...tokens])
+  //       setCompleted(prev => prev + tokens.length)
+  //     }
   //   }
+  // }, [])
+  // useWebSocket(handleWebsocketMessages)
 
-  //   const waitingMints = nonCDNMintsRef.current
-  //     .filter(mint => !uploadSentRef.current.includes(mint))
-    
-  //   if (!waitingMints.length) return;
-  //   console.log("🚀 ~ file: imageFallback.js:36 ~ handleMetaFallbacks ~ waitingMints:", waitingMints.length)
-  //   uploadSentRef.current = [...uploadSentRef.current, ...waitingMints];
+  //upload all with mintvisibily : optiomized as nil
+  const uploadAll = async (tokens) => { 
+    if (!tokens || tokens.length === 0) return;
+    const unoptimizedMints = [];
+    const errorMints = []
+    tokens.forEach((token) => {
+      if (token.optimized === "Error") errorMints.push({
+        mint: token.mint,
+        error: token.optimizedError || "No Error Message",
+      })
+      else if (token.optimized === "Pending") errorMints.push({
+        mint: token.mint,
+        error: "Optimization Process Interrupted",
+      })
+      else if (!token.optimized) {
+        unoptimizedMints.push(token.mint)
+      }
+    })
+    setCloudinaryError(prev => [...prev, ...errorMints])
 
-  //   const batchSize = 5
-  //   for (let i = 0; i < waitingMints.length; i += batchSize) { 
-  //     success(`Uploading ${i+batchSize} of ${waitingMints.length} images`)
-  //     const batch = waitingMints.slice(i, i + batchSize);
-  //     const cloudinaryUploads = await MetadataFallbacks(batch);
-  //     if (!cloudinaryUploads) continue;
-  //     setCloudinaryCompleted(prev => [...prev, ...cloudinaryUploads]);
-  //   }
-  // }, 500)
+    setWaiting(unoptimizedMints.length)
+    setCompleted(0)
 
-  const handleOneUpload = async (mint) => { 
+    //Trying individualy until websocket (and/or) async workers are fixed
+    unoptimizedMints.forEach(async (mint) => { 
+      try {
+        const res = await OptimizeWithMints([mint], user.username);
+        if(!res) throw new Error("No response from server")
+        const cloudinaryUpload = res[0];
+        if (cloudinaryUpload?.imageId) setCloudinaryCompleted(prev => [...prev, cloudinaryUpload]);
+        else setCloudinaryError(prev => [...prev, cloudinaryUpload]);
+        console.log("Optimization Request Complete")
+      } catch (error) { 
+        setCloudinaryError(prev => [...prev, { mint, error: error.message }]);
+        console.log("Error optimizing image", error);
+      } finally {
+        setCompleted(prev => prev + 1)
+      }
+    })
+    //all at once, response depends on websockets
+     // await OptimizeWithMints(unoptimizedMints, user.username);
+  }
+   
+  const handleOneUpload = useCallback(async (mint) => { 
     if (uploadSentRef.current.includes(mint)) return;
     setWaiting(prev => prev + 1)
     try {
       uploadSentRef.current = [...uploadSentRef.current, mint];
-      const cloudinaryUpload = await MetadataFallbacks([mint]);
+      const cloudinaryUpload = await OptimizeWithMints([mint], user?.username);
       if (!cloudinaryUpload) return;
       setCloudinaryCompleted(prev => [...prev, ...cloudinaryUpload]);
+      setCompleted(prev => prev + 1)
     } catch (error) {
       console.log("Error uploading one image", error);
     }
-  }
-
+  }, [user?.username])
 
   const addNonCDNMint = useCallback((newMint) => {
     //skip if already added
@@ -59,7 +112,7 @@ export const ImageFallbackProvider = ({ children }) => {
     nonCDNMintsRef.current = [...nonCDNMintsRef.current, newMint];
 
     handleOneUpload(newMint)
-  }, [])
+  }, [handleOneUpload])
 
   // const addNonCDNMetadata = useCallback((newMetadata) => { 
   //   //skip if already added
@@ -71,10 +124,13 @@ export const ImageFallbackProvider = ({ children }) => {
 
   return (
     <ImageFallbackContext.Provider value={{
+      uploadAll,
       addNonCDNMint,
       // addNonCDNMetadata,
-      fallbackImages: cloudinaryCompleted,
-      waiting
+      cloudinaryCompleted,
+      cloudinaryError,
+      waiting,
+      completed
     }}>
       {children}
     </ImageFallbackContext.Provider>
@@ -84,7 +140,15 @@ export const ImageFallbackProvider = ({ children }) => {
 export default ImageFallbackContext;
 
 export const useFallbackImage = (mint) => {
-  const { fallbackImages} = useImageFallbackContext();
-  const fallbackImage = useMemo(() => fallbackImages.find(meta => meta.mint === mint), [mint, fallbackImages]);
-  return fallbackImage
+  const { cloudinaryCompleted } = useImageFallbackContext();
+  const [completedImage, setCompletedImage] = useState(null);
+
+  useEffect(() => {
+    const foundImage = cloudinaryCompleted.find(meta => meta.mint === mint);
+    if (foundImage) {
+      setCompletedImage(foundImage);
+    }
+  }, [mint, cloudinaryCompleted]);
+
+  return completedImage;
 }

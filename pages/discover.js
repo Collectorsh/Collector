@@ -18,12 +18,12 @@ export default function Discover() {
   const [page, setPage] = useState(1);
   const {galleries, total} = useAllGalleries(page, totalPerPage, search)
 
-  const totalPages = Math.ceil(total/totalPerPage)
+  const totalPages = Math.ceil(total / totalPerPage)
+  
   const searchDebounce = debounce((text) => {
     setSearch(text);
     setPage(1)
   }, 300)
-
 
   const handleSearch = (e) => {
     searchDebounce(e.target.value);
@@ -173,6 +173,7 @@ const ImageCard = ({item }) => {
                 mint={item.mint}
                 width={700}
                 noLazyLoad
+                useUploadFallback
                 className="flex-shrink-0 w-full h-full object-cover rounded-lg"
               />
             </a>

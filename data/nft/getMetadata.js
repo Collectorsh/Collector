@@ -7,7 +7,7 @@ import { connection } from "/config/settings";
 import hellomoonClient from "../client/helloMoonClient";
 import useSWR from 'swr'
 
-function coalesce(val, def) {
+export function coalesce(val, def) {
   if (val === null || typeof val === "undefined") return def;
   return val;
 }
@@ -52,11 +52,12 @@ async function getMetadata(publicKeys) {
   // Retrieve order and visibility from the server
   const res = await apiClient.post("/get_visibility_and_order", {
     public_key: publicKeys[0],
+    mints: results.map((r) => r.mint),
   });
 
   // Loop through results and set visibility and order
   for (const result of results) {
-    let token = res.data.mints.find((m) => m.mint_address === result.mint);
+    const token = res.data.mints.find((m) => m.mint_address === result.mint);
 
     if (token) {
       result.order_id = token.order_id;
@@ -64,6 +65,8 @@ async function getMetadata(publicKeys) {
       result.accept_offers = token.accept_offers;
       result.estimate = token.estimate;
       result.span = token.span;
+      result.optimized = token.optimized;
+      result.optimizedError = token.error_message
     } else {
       result.order_id = null;
       result.visible = res.data.default;
@@ -127,104 +130,8 @@ function data(pubKey) {
   return data;
 }
 
-//NEW Helius
-async function getMetadataHELIUS(publicKeys) {
-  const baseTokens = []
-
-  for (const publicKey of publicKeys) {
-    let paginationToken = undefined
-    let requestCount = 0
-    while (requestCount === 0 || paginationToken) {
-      const res = await axios.post(`https://rpc.helius.xyz/?api-key=e00e277a-978f-4dda-b516-a017c5588f6b`, {
-        "jsonrpc": "2.0",
-        "id": publicKey,
-        "method": "getAssetsByOwner",
-        "params": {
-          "ownerAddress": publicKey,
-          "page": 1,
-          "limit": 1000,
-          // "sortBy": {
-            //   "sortBy": "created",
-            //   "sortDirection": "asc"
-            // },
-            // "before": "string",
-            // "after": "string"
-          }
-        })
-        console.log("🚀 ~ file: getMetadata.js:139 ~ HELIUS:", res)
-
-      if (res?.paginationToken) {
-        paginationToken = res.paginationToken
-      } else {
-        paginationToken = undefined
-      }
-
-      if (res?.data) {
-        baseTokens.push(...res.data)
-      }
-      requestCount++;
-    }
-  }
-
-  const visAndOrders = await apiClient.post("/get_visibility_and_order", {
-    public_key: publicKeys[0],
-  });
-
-  const creatorDetails = await apiClient.post("/creator/details", {
-    tokens: baseTokens,
-  });
-
-  for (const token of baseTokens) {
-
-    const visibilityAndOrder = visAndOrders.data.mints.find((m) => m.mint_address === token.nftMint)
-    const filteredCreatorDetails = creatorDetails.data.filter((t) => t.public_key === token.creator);
-
-    token.owner = token.ownerAccount
-    token.address = token.metadataAddress
-    token.mint = token.nftMint
-    token.name = token.metadataJson.name
-    token.uri = token.metadataJson.uri
-    token.symbol = token.metadataJson.symbol
-
-    if (visibilityAndOrder) {
-      token.order_id = visibilityAndOrder.order_id;
-      token.visible = visibilityAndOrder.visible;
-      token.accept_offers = visibilityAndOrder.accept_offers;
-      token.estimate = visibilityAndOrder.estimate;
-      token.span = visibilityAndOrder.span;
-    } else {
-      token.order_id = null;
-      token.visible = visAndOrders.data.default;
-      token.span = 1;
-    }
-
-    if (filteredCreatorDetails.length > 0) {
-      const filteredCreatorDetail = filteredCreatorDetails[filteredCreatorDetails.length - 1];
-      token.artist_name = filteredCreatorDetail.name;
-      token.artist_twitter = filteredCreatorDetail.twitter;
-      if (token.artist_twitter === null) {
-        const filteredCreatorDetail = creatorDetails.data.find(
-          (t) => t.public_key === token.creator && t.twitter !== null
-        );
-        if (filteredCreatorDetail) token.artist_twitter = filteredCreatorDetail.twitter;
-      }
-    }
-
-  }
-  // TODO find associatedTokenAccountAddress with hello moon here or find it at time of use
-
-  console.log("🚀 ~ file: getMetadata.js:215 ~ getMetadata ~ baseTokens:", baseTokens.length)
-  return baseTokens.sort((a, b) =>
-    coalesce(a.order_id, +Infinity) > coalesce(b.order_id, +Infinity)
-      ? 1
-      : coalesce(b.order_id, +Infinity) > coalesce(a.order_id, +Infinity)
-        ? -1
-        : 0
-  );
-}
-
 //NEW Hellomoon
-async function getMetadataMOON(publicKeys) { 
+async function getMetadataHELLOMOON(publicKeys) { 
   const baseTokens = []
 
   for (const publicKey of publicKeys) { 
@@ -237,6 +144,11 @@ async function getMetadataMOON(publicKeys) {
           limit: 1000,
           paginationToken
         })
+        // .post("/v0/nft/mint_information", { //mints by creator
+        //   verifiedCreator: publicKey,
+        //   limit: 1000,
+        //   paginationToken
+        // })
         .then((res) => {
           return res.data;
         })
@@ -253,7 +165,6 @@ async function getMetadataMOON(publicKeys) {
       if (res?.data) {
         baseTokens.push(...res.data)
       }
-      console.log("🚀 ~ file: getMetadata.js:253 ~ getMetadata ~ res:", res)
       requestCount++;
     }
   }
@@ -284,6 +195,8 @@ async function getMetadataMOON(publicKeys) {
       token.accept_offers = visibilityAndOrder.accept_offers;
       token.estimate = visibilityAndOrder.estimate;
       token.span = visibilityAndOrder.span;
+      token.optimized = visibilityAndOrder.optimized;
+      token.optimizedError = visibilityAndOrder.error
     } else {
       token.order_id = null;
       token.visible = visAndOrders.data.default;
@@ -305,7 +218,6 @@ async function getMetadataMOON(publicKeys) {
   }
   // TODO find associatedTokenAccountAddress with hello moon here or find it at time of use
     
-  console.log("🚀 ~ file: getMetadata.js:215 ~ getMetadata ~ baseTokens:", baseTokens.length)
   return baseTokens.sort((a, b) =>
     coalesce(a.order_id, +Infinity) > coalesce(b.order_id, +Infinity)
       ? 1

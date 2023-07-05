@@ -81,9 +81,6 @@ async function scaleImage(buffer) {
   
       if (!reduceBy) reduceBy = Math.round(metadata.width * (1 - SCALE_FACTOR));
   
-      console.log("🚀 ~ file: uploadContent.js:73 ~ scaleImage ~ imageSize:", imageSize)
-      console.log("🚀 ~ file: uploadContent.js:80 ~ scaleImage ~ reduceBy:", reduceBy)
-  
       const width = metadata.width - reduceBy;
       scaledBuffer = await image.resize(width).toBuffer();
       // Check the new file size

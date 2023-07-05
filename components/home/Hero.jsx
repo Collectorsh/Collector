@@ -79,14 +79,12 @@ export default function Hero() {
             className="hidden dark:block rounded-lg overflow-hidden"
             width={1200}
             noLazyLoad
-            noFallback
           />
           <CloudinaryImage
             id="v1686972792/demo/hero-gal-light_nvxdwu.png"
             className="dark:hidden rounded-lg overflow-hidden"
             width={1200}
             noLazyLoad
-            noFallback
           />
           {/* <img className="dark:hidden rounded-lg" src="/images/hero-gal-light.png" />
           <img className="hidden dark:block rounded-lg" src="/images/hero-gal-dark.png" /> */}

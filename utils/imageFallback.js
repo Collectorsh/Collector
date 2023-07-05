@@ -15,10 +15,11 @@ export default async function ImageFallback(mint) {
   }
 }
 
-export async function MetadataFallbacks(mints) {
+export async function OptimizeWithMints(mints, username) {
   try {
-    const cloudinaryUploads = await apiClientLong.post("/images/upload_with_mints", {
+    const cloudinaryUploads = await apiClient.post("/images/upload_with_mints", {
       mints,
+      username
     }).then(res => res.data)
 
     return cloudinaryUploads;
@@ -27,7 +28,7 @@ export async function MetadataFallbacks(mints) {
   }
 }
 
-async function HandleNoUrl(mint) {
+export async function HandleNoUrl(mint) {
   try {
     const nftURI = await hellomoonClient.post("/v0/nft/mint_information", {
       nftMint: mint,

@@ -120,6 +120,7 @@ const ImageSlide = ({ item }) => {
                 mint={item.mint}
                 width={700}
                 noLazyLoad
+                useUploadFallback
                 className="rounded-lg flex-shrink-0 w-full h-[250px] object-cover"
               />
             {/* </div> */}

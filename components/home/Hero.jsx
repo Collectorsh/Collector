@@ -75,13 +75,13 @@ export default function Hero() {
         
         <div className="bg-gray-300/20 lg:shadow-lg p-3 rounded-xl delay-200 animate-enter w-fit mx-auto">
           <CloudinaryImage
-            id="v1686972792/demo/hero-gal-dark_ecdrjl.png"
+            id="global/hero-gal-dark.png"
             className="hidden dark:block rounded-lg overflow-hidden"
             width={1200}
             noLazyLoad
           />
           <CloudinaryImage
-            id="v1686972792/demo/hero-gal-light_nvxdwu.png"
+            id="global/hero-gal-light.png"
             className="dark:hidden rounded-lg overflow-hidden"
             width={1200}
             noLazyLoad

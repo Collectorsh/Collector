@@ -14,6 +14,7 @@ export function coalesce(val, def) {
 
 //ONCHAIN
 async function getMetadata(publicKeys) {
+  console.log("🚀 ~ file: getMetadata.js:17 ~ getMetadata ~ publicKeys:", publicKeys)
   var results = [];
   var tokenAccounts = [];
   for (const publicKey of publicKeys) {
@@ -42,6 +43,7 @@ async function getMetadata(publicKeys) {
     }
   }
 
+  // console.log("🚀 ~ file: getMetadata.js:51 ~ results=results.filter ~ results:", results.length)
   // Filter out any that don't have data uri's 
   results = results.filter((item) => {
     const useable = item.uri !== "" && item.creator !== undefined
@@ -133,6 +135,7 @@ function data(pubKey) {
 //NEW Hellomoon
 async function getMetadataHELLOMOON(publicKeys) { 
   const baseTokens = []
+  
 
   for (const publicKey of publicKeys) { 
     let paginationToken = undefined
@@ -168,6 +171,7 @@ async function getMetadataHELLOMOON(publicKeys) {
       requestCount++;
     }
   }
+  console.log("🚀 ~ file: getMetadata.js:138 ~ getMetadata ~ baseTokens:", baseTokens.length)
 
   const visAndOrders = await apiClient.post("/get_visibility_and_order", {
     public_key: publicKeys[0],

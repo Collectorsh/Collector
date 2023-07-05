@@ -21,6 +21,7 @@ import { cdnImage } from "/utils/cdnImage";
 import LazyLoader from "../../LazyLoader";
 import CloudinaryImage from "../../CloudinaryImage";
 import { useImageFallbackContext } from "../../../contexts/imageFallback";
+import OptimizeFeedbackModal from "./OptimizeFeedbackModal";
 
 //TODO try scroll based lazy load for images
 
@@ -29,19 +30,50 @@ export default function Gallery({ tokens, user }) {
   const [columns, setColumns] = useState(user?.columns);
   const [items, setItems] = useState();
   const [bulkEdit, setBulkEdit] = useState(false);
-  const { fallbackImages, waiting } = useImageFallbackContext()
+  const { waiting, completed, uploadAll, cloudinaryCompleted } = useImageFallbackContext()
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
 
-  const progress = (fallbackImages.length / waiting)*100
+  useEffect(() => {    
+    if (!waiting) {
+      uploadAll(tokens)//will optimized any images not optimized yet
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokens])
+  
+  // useEffect(() => {
+  //   const optimizedTokens = tokens.filter((token) => token.optimized === "True")
+  //   const tokenClone = cloneDeep(optimizedTokens);
+  //   const vis = tokenClone.filter((t) => t.visible === true);
+  //   const hid = tokenClone.filter((t) => t.visible === false);
+  //   const itemz = { visible: vis, hidden: hid };
+  //   setItems(itemz);
+  // }, [tokens]);
+
+  useEffect(() => { 
+    if(!tokens) return;
+    if (!waiting || (Boolean(completed) && completed >= waiting)) { 
+      const optimizedTokens = tokens.filter((token) => token.optimized === "True" || cloudinaryCompleted?.some((c) => c.mint === token.mint && Boolean(c.imageId)))
+      const tokenClone = cloneDeep(optimizedTokens);
+      const vis = tokenClone.filter((t) => t.visible === true);
+      const hid = tokenClone.filter((t) => t.visible === false);
+      const itemz = { visible: vis, hidden: hid };
+      setItems(itemz);
+    }
+  },[tokens, completed, waiting, cloudinaryCompleted])
+
+
+  //TODO: set up websocket to sub and listen for completed images to update the completed list
+
+  const progress = ((completed) / waiting) * 100
+  const showProgress = Boolean(waiting && waiting > completed)
+
+  useEffect(() => {
+    if(showProgress) setFeedbackOpen(true)
+    else setFeedbackOpen(false)
+  },[showProgress])
   
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
-  useEffect(() => {
-    const tokenClone = cloneDeep(tokens);
-    const vis = tokenClone.filter((t) => t.visible === true);
-    const hid = tokenClone.filter((t) => t.visible === false);
-    const itemz = { visible: vis, hidden: hid };
-    setItems(itemz);
-  }, [tokens]);
 
   const hideSelected = () => {
     const clonedItems = cloneDeep(items);
@@ -220,6 +252,7 @@ export default function Gallery({ tokens, user }) {
   return (
     <>
       <Toaster />
+      <OptimizeFeedbackModal isOpen={feedbackOpen} setIsOpen={setFeedbackOpen} waiting={waiting} completed={completed} progress={progress} />
  
       <DndContext
         sensors={sensors}
@@ -249,9 +282,9 @@ export default function Gallery({ tokens, user }) {
             <div className="col-span-1 sm:col-span-9">
               <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2 relative">
 
-                {waiting && waiting > fallbackImages.length && (
+                {(showProgress) ? (
                   <div className="absolute w-full h-full bg-gray-100 dark:bg-dark3 rounded top-0 left-0 flex items-center px-4 gap-4">
-                    <p className="flex-shrink-0">Optimizing Images: <span>({fallbackImages.length}/{waiting})</span></p>
+                    <p className="flex-shrink-0">Optimizing Images: <span>({completed}/{waiting})</span></p>
                     <div className="border-2 border-black dark:border-white rounded-full w-full h-3 relative" >
                       <div
                         style={{ width: `${ progress }%` }}
@@ -259,8 +292,8 @@ export default function Gallery({ tokens, user }) {
                       />
                     </div>
                   </div>
-                  
-                )}
+                  ) : null
+                }
 
                 <div className="grid grid-cols-3">
                   <div className="col-span-1 text-left">
@@ -396,7 +429,7 @@ const Hidden = ({ items }) => {
 };
 
 const OverlayImage = ({ mint, tokens }) => {
-  const token = tokens.find((t) => t.mint === mint);
+  // const token = tokens.find((t) => t.mint === mint);
 
   return (
     <CloudinaryImage

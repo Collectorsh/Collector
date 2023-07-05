@@ -43,16 +43,16 @@ export default function GalleryNavigation({ user }) {
       <nav className="mx-auto pt-5 px-0 align-middle dark:bg-black">
         <div className="grid grid-cols-6">
           <div className="flex items-center col-span-3 md:col-span-2">
-            {user.twitter_user_id && (
+            {/* {user.twitter_user_id && (
               <img
                 src={user.twitter_profile_image}
                 alt="default img"
                 className="h-8 w-8 rounded-full inline mr-2 float-left"
                 onError={(e) => {
-                  e.target.className = "hidden"
+                  e.target.className = "hidden opacity-0";
                 }}
               />
-            )}
+            )} */}
             <h2 className="text-2xl text-gray-800 font-bold align-middle dark:text-gray-100 mr-2">
               <Link
                 href={`/${user.username}`}

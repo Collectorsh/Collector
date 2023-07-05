@@ -7,18 +7,26 @@ import { addDefaultSource } from "/utils/addDefaultSource";
 import ContentLoader from "react-content-loader";
 import clsx from "clsx";
 import CloudinaryImage from "../CloudinaryImage";
+import { video } from "@cloudinary/url-gen/qualifiers/source";
 
-export default function Nft({ user, token, onLoad, tokenMetadata, columns }) {
+export default function Nft({ user, token, onLoad, tokenMetadata, columns, onError }) {
   const [videoUrl, setVideoUrl] = useState();
   const [loaded, setLoaded] = useState(false);
+  const videoRef = useRef();
 
   const responsiveSteps = () => {
     switch (columns) {
-      case 2: return 2000;
-      case 3: return 1000;
-      default: return 600;
+      case 2: return 1400;
+      case 3: return 800;
+      default: return 500;
     }
   }
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play()
+    }
+  }, [videoUrl])
 
   useEffect(() => {
     if (!tokenMetadata) return;
@@ -69,37 +77,40 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns }) {
             {videoUrl ? (
               <>
                 <video
+                  ref={videoRef}
                   autoPlay
                   muted
                   loop
                   playsInline
-                  id="video"
-                  className="mx-auto w-100 h-100 cursor-pointer object-center object-cover"
-                  // onLoadedData={onImageLoad}
-                  onCanPlay={onImageLoad}
+                  id={`video-${ token.mint }`}
+                  className="mx-auto w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10"
+                  onLoadedData={onImageLoad}
+                  // onCanPlay={onImageLoad}
                 >
                   <source src={videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
-                <Script
+                {/* <Script
                   id="autoplay-script"
                   dangerouslySetInnerHTML={{
-                    __html: `document.getElementById("video").play()`,
+                    __html: `document.getElementById("video-${token.mint}").play()`,
                   }}
-                />
+                /> */}
               </>
-            ) : (
-              <CloudinaryImage
-                  id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ token.mint }`}
-                  // className="mx-auto cursor-pointer object-center object-cover"
-                  mint={token.mint}
-                  onLoad={onImageLoad}
-                  noLazyLoad
-                  quality="auto:best"
-                  width={responsiveSteps()}
-                  metadata={tokenMetadata}
-              />
-            )}
+            ) : null}
+            
+            <CloudinaryImage
+              id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+              // className="mx-auto cursor-pointer object-center object-cover"
+              mint={token.mint}
+              onLoad={onImageLoad}
+              noLazyLoad
+              quality="auto:best"
+              width={responsiveSteps()}
+              metadata={tokenMetadata}
+              onError={onError}
+            />
+            
           </a>
         </Link>        
       </div>

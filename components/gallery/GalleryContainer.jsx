@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Card from "/components/gallery/Card";
 import Masonry from "react-masonry-css";
 import LazyLoader from "../LazyLoader";
@@ -7,7 +7,7 @@ import clsx from "clsx";
 export default function GalleryContainer({ tokens, user }) {
   const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
 
-  const renderedTokens = tokens?.slice(0, lazyLoadIndex)
+  const renderedTokens = tokens//?.slice(0, lazyLoadIndex)
 
   const handleLazyLoad = () => {
     setLazyLoadIndex(prev => prev + 9);
@@ -22,9 +22,10 @@ export default function GalleryContainer({ tokens, user }) {
     400: 1
   };
 
+
   return (
     <div className="clear-both w-full mt-6">
-      {!tokens && (
+      {!tokens.length && (
         // <h2 className="animate-pulse font-bold text-4xl text-center text-greeny mt-[25%]">Collector</h2>
         <h1 className="animate-pulse font-bold text-4xl text-center mt-[25%]">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
       )}
@@ -40,8 +41,7 @@ export default function GalleryContainer({ tokens, user }) {
         >
           {Array.isArray(renderedTokens) &&
             renderedTokens.map((token, index) => {
-              if (token.visible)
-                return <Card key={index} token={token} user={user} columns={columns} />;
+              return <Card key={index} token={token} user={user} columns={columns} />;
             })}
         </Masonry>
 
@@ -60,7 +60,7 @@ export default function GalleryContainer({ tokens, user }) {
             })}
         </div> */}
       
-        {lazyLoadIndex < tokens?.length ? <LazyLoader cb={handleLazyLoad} rootMargin="700px"/> : null}
+        {/* {lazyLoadIndex < tokens?.length ? <LazyLoader cb={handleLazyLoad} rootMargin="1000px 1000px 1000px 1000px"/> : null} */}
       </div>
     </div>
   );

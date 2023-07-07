@@ -14,8 +14,7 @@ export function coalesce(val, def) {
 
 //ONCHAIN
 async function getMetadata(publicKeys) {
-  console.log("🚀 ~ file: getMetadata.js:17 ~ getMetadata ~ publicKeys:", publicKeys)
-  var results = [];
+  var onChainResults = [];
   var tokenAccounts = [];
   for (const publicKey of publicKeys) {
     const tokenMetadata = await Metadata.findDataByOwner(
@@ -23,7 +22,7 @@ async function getMetadata(publicKeys) {
       new PublicKey(publicKey)
     );
     for (const meta of tokenMetadata) {
-      results.push({
+      onChainResults.push({
         mint: meta.mint,
         name: meta.data.name,
         uri: meta.data.uri,
@@ -42,42 +41,32 @@ async function getMetadata(publicKeys) {
       });
     }
   }
-
-  // console.log("🚀 ~ file: getMetadata.js:51 ~ results=results.filter ~ results:", results.length)
   // Filter out any that don't have data uri's 
-  results = results.filter((item) => {
+  onChainResults = onChainResults.filter((item) => {
     const useable = item.uri !== "" && item.creator !== undefined
-    // if (!useable) console.log("🚀 ~ filtered item", item)
     return useable
   });
 
   // Retrieve order and visibility from the server
-  const res = await apiClient.post("/get_visibility_and_order", {
+  const APIresults = await apiClient.post("/get_visibility_and_order", {
     public_key: publicKeys[0],
-    mints: results.map((r) => r.mint),
-  });
+    tokens: onChainResults,
+    // mints: onChainResults.map(token => token.mint),
+  }).then(res => res.data)
+  
+  // const results = APIresults.mints
+  const results = APIresults.tokens
 
   // Loop through results and set visibility and order
   for (const result of results) {
-    const token = res.data.mints.find((m) => m.mint_address === result.mint);
 
-    if (token) {
-      result.order_id = token.order_id;
-      result.visible = token.visible;
-      result.accept_offers = token.accept_offers;
-      result.estimate = token.estimate;
-      result.span = token.span;
-      result.optimized = token.optimized;
-      result.optimizedError = token.error_message
-    } else {
-      result.order_id = null;
-      result.visible = res.data.default;
-      result.span = 1;
+    if (!result.mint) {
+      result.mint = result.mint_address
     }
 
     // Also find the associatedTokenAccountAddress
-    let ta = tokenAccounts.find((a) => a.mint === result.mint);
-    result.associatedTokenAccountAddress = ta.associatedTokenAccountAddress;
+    let ta = tokenAccounts?.find((a) => a.mint === result.mint);
+    result.associatedTokenAccountAddress = ta?.associatedTokenAccountAddress;
     // Add metadata address
     const metadataPDA = await Metadata.getPDA(new PublicKey(result.mint));
     result.address = metadataPDA.toBase58();

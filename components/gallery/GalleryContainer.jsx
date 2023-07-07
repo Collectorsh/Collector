@@ -7,7 +7,7 @@ import clsx from "clsx";
 export default function GalleryContainer({ tokens, user }) {
   const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
 
-  const renderedTokens = tokens//?.slice(0, lazyLoadIndex)
+  const renderedTokens = tokens?.slice(0, lazyLoadIndex)
 
   const handleLazyLoad = () => {
     setLazyLoadIndex(prev => prev + 9);
@@ -60,7 +60,7 @@ export default function GalleryContainer({ tokens, user }) {
             })}
         </div> */}
       
-        {/* {lazyLoadIndex < tokens?.length ? <LazyLoader cb={handleLazyLoad} rootMargin="1000px 1000px 1000px 1000px"/> : null} */}
+        {lazyLoadIndex < tokens?.length ? <LazyLoader cb={handleLazyLoad} rootMargin="1000px 1000px 1000px 1000px"/> : null}
       </div>
     </div>
   );

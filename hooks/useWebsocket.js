@@ -1,45 +1,47 @@
-import { useEffect, useRef, useContext } from 'react';
-import { w3cwebsocket as W3CWebSocket } from "websocket";
-import UserContext from '../contexts/user';
+import { useEffect, useRef, useContext, useState, useCallback } from 'react';
+
 import { apiHost } from '../config/settings';
 
-function useWebSocket(onMessage) {
-  const clientRef = useRef(null);
-  const [user] = useContext(UserContext);
+import { ActionCableContext } from '../contexts/webSocket';
+import UserContext from '../contexts/user';
+import { useImageFallbackContext } from '../contexts/imageFallback';
+
+const useActionCable = (handlers = {}, user) => {
+  const cable = useContext(ActionCableContext);
+
+  const channelName = "NotificationsChannel"
+  const username = user?.username || "guest"
+
 
   useEffect(() => {
-    const client = new W3CWebSocket(`${ apiHost }/cable?username=${ user?.username || "guest" }`);
+    if(!cable) return
+        
+    const subscription = cable.subscriptions.create({ channel: channelName, username: username }, {
+      connected: () => {
+        console.log("Connected to channel: " + channelName);
+        if (handlers.connected) handlers.connected();
+      },
 
-    client.onopen = () => {
-      console.log('WebSocket Client Connected');
-    };
+      disconnected: () => {
+        console.log("Disconnected from channel: " + channelName);
+        if (handlers.disconnected) handlers.disconnected();
+      },
 
-    client.onerror = (error) => {
-      console.log(`WebSocket Error: ${error.message }`);
-    };
-
-    client.onclose = (event) => {
-      console.log(`WebSocket Connection Closed: ${ event.code }`);
-    };
-
-    client.onmessage = (message) => {
-      const result = JSON.parse(message.data);
-      console.log("🚀 WEBSCOCKET HIT", result);
-      if (result.type === 'message') {
-        const { message, data } = result;
-        onMessage(message, data);
+      received: (data) => {
+        console.log("Received data: ", data);
+        // setReceivedData(data);  // Save the received data in state
+        if (handlers.received) handlers.received(data);
       }
-    };
+    });
 
-    clientRef.current = client;
 
+    // Clean up function
     return () => {
-      if (clientRef.current) {
-        clientRef.current.close();
-      }
-    };
-  }, [user?.username, onMessage]);
+      cable?.subscriptions.remove(subscription);
+    }
 
-  return clientRef;  // Return the client ref if you want to use it outside
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username, cable]); 
 }
-export default useWebSocket;
+export default useActionCable;
+

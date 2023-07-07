@@ -19,15 +19,22 @@ export default function OptimizeFeedbackModal({isOpen, setIsOpen, completed, wai
           <br />
           <p className="mb-6">This only needs to be done once and it usually takes less than a second per artwork. However, if there are large file sizes or if your collection is large it could take a several minutes. Thank you for your patience!</p>
 
-          <div className="flex items-center gap-4 relative">
-            <p className="flex-shrink-0">Optimizing Images: <span>({completed}/{waiting})</span></p>
-            <div className="border-2 border-black dark:border-white rounded-full w-full h-3 relative" >
-              <div
-                style={{ width: `${ progress }%` }}
-                className="bg-black dark:bg-white rounded-full h-2 w-0 absolute inset-0 animate-pulse"
-              />
-            </div>
-          </div>
+          {completed === 0
+            ? (
+              <p className="italic text-center animate-pulse">Gathering Metadata...</p>
+            )
+            : (
+              <div className="flex items-center gap-4 relative">
+                <p className="flex-shrink-0">Optimizing Images: <span>({completed}/{waiting})</span></p>
+                <div className="border-2 border-black dark:border-white rounded-full w-full h-3 relative" >
+                  <div
+                    style={{ width: `${ progress }%` }}
+                    className="bg-black dark:bg-white rounded-full h-2 w-0 absolute inset-0 animate-pulse"
+                  />
+                </div>
+              </div>
+            )
+          }
         </Dialog.Panel>
       </div>
     </Dialog>

@@ -1,6 +1,16 @@
 import axios from "axios";
 
 async function getMetadataFromUri(token) {
+
+  let uri = token.uri;
+
+  if (!uri) { 
+    const nftURI = await hellomoonClient.post("/v0/nft/mint_information", {
+      nftMint: token.mint,
+    }).then(res => res.data.data[0].nftMetadataJson.uri)
+    uri = nftURI;
+  }
+
   return axios.get(token.uri).then((response) => {
     return {
       ...token,

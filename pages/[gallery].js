@@ -18,6 +18,7 @@ import { useImageFallbackContext } from "../contexts/imageFallback";
 
 
 function Gallery({user}) {
+  // console.log("🚀 ~ file: [gallery].js:21 ~ Gallery ~ user:", user)
   const tokens = useMetadata(user?.public_keys);
 
   const [, setListings] = useContext(ListingsContext);
@@ -31,6 +32,7 @@ function Gallery({user}) {
 
   const visibleTokens = useMemo(() => tokens?.filter(token => token.visible), [tokens]);
 
+
   const renderedTokens = useMemo(() => {
     if(!visibleTokens) return []
     const optimized = visibleTokens?.filter(token => token.optimized === "True")
@@ -39,7 +41,7 @@ function Gallery({user}) {
   },[visibleTokens, cloudinaryCompleted]);
 
   useEffect(() => {
-    if (!waiting) {
+    if (!waiting && visibleTokens?.length > 0) {
       uploadAll(visibleTokens)//will optimized any images not optimized yet
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -17,6 +17,7 @@ import PlausibleProvider from "next-plausible";
 import Footer from "/components/Footer";
 import banner from "/public/Collector Hero.jpeg"
 import { ImageFallbackProvider } from "../contexts/imageFallback";
+import { ActionCableProvider } from "../contexts/webSocket";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
@@ -70,28 +71,30 @@ export default function MyApp({ Component, pageProps }) {
       <ApolloProvider client={client}>
         <WalletContextProvider>
           <UserProvider>
-            <ImageFallbackProvider>
-              <ListingsProvider>
-                <ActivitiesProvider>
-                  <FollowingProvider>
-                    <OffersProvider>
-                      <SingleNftProvider>
-                        <ThemeProvider enableSystem={true} attribute="class">
-                          <PlausibleProvider domain="collector.sh">
-                            <CartProvider>
-                              <div className="min-h-[100vh] dark:bg-black dark:text-white">
-                                <Component {...pageProps} />
-                              </div>
-                              <Footer />
-                            </CartProvider>
-                          </PlausibleProvider>
-                        </ThemeProvider>
-                      </SingleNftProvider>
-                    </OffersProvider>
-                  </FollowingProvider>
-                </ActivitiesProvider>
-              </ListingsProvider>
-            </ImageFallbackProvider>
+            <ActionCableProvider>
+              <ImageFallbackProvider>
+                <ListingsProvider>
+                  <ActivitiesProvider>
+                    <FollowingProvider>
+                      <OffersProvider>
+                        <SingleNftProvider>
+                          <ThemeProvider enableSystem={true} attribute="class">
+                            <PlausibleProvider domain="collector.sh">
+                              <CartProvider>
+                                <div className="min-h-[100vh] dark:bg-black dark:text-white">
+                                  <Component {...pageProps} />
+                                </div>
+                                <Footer />
+                              </CartProvider>
+                            </PlausibleProvider>
+                          </ThemeProvider>
+                        </SingleNftProvider>
+                      </OffersProvider>
+                    </FollowingProvider>
+                  </ActivitiesProvider>
+                </ListingsProvider>
+              </ImageFallbackProvider>
+            </ActionCableProvider>
           </UserProvider>
         </WalletContextProvider>
       </ApolloProvider>
@@ -102,6 +105,7 @@ export default function MyApp({ Component, pageProps }) {
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import Router from "next/router";
+
 
 NProgress.configure({
   minimum: 0.3,

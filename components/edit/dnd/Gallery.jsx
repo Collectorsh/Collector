@@ -40,29 +40,26 @@ export default function Gallery({ tokens, user }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokens])
   
-  // useEffect(() => {
-  //   const optimizedTokens = tokens.filter((token) => token.optimized === "True")
-  //   const tokenClone = cloneDeep(optimizedTokens);
-  //   const vis = tokenClone.filter((t) => t.visible === true);
-  //   const hid = tokenClone.filter((t) => t.visible === false);
-  //   const itemz = { visible: vis, hidden: hid };
-  //   setItems(itemz);
-  // }, [tokens]);
+  useEffect(() => {
+    const optimizedTokens = tokens
+    const tokenClone = cloneDeep(optimizedTokens);
+    const vis = tokenClone.filter((t) => t.visible === true);
+    const hid = tokenClone.filter((t) => t.visible === false);
+    const itemz = { visible: vis, hidden: hid };
+    setItems(itemz);
+  }, [tokens]);
 
-  useEffect(() => { 
-    if(!tokens) return;
-    if (!waiting || (Boolean(completed) && completed >= waiting)) { 
-      const optimizedTokens = tokens.filter((token) => token.optimized === "True" || cloudinaryCompleted?.some((c) => c.mint === token.mint && Boolean(c.imageId)))
-      const tokenClone = cloneDeep(optimizedTokens);
-      const vis = tokenClone.filter((t) => t.visible === true);
-      const hid = tokenClone.filter((t) => t.visible === false);
-      const itemz = { visible: vis, hidden: hid };
-      setItems(itemz);
-    }
-  },[tokens, completed, waiting, cloudinaryCompleted])
-
-
-  //TODO: set up websocket to sub and listen for completed images to update the completed list
+  // useEffect(() => { 
+  //   if(!tokens) return;
+  //   if (!waiting || (Boolean(completed) && completed >= waiting)) { 
+  //     const optimizedTokens = tokens.filter((token) => token.optimized === "True" || cloudinaryCompleted?.some((c) => c.mint === token.mint && Boolean(c.imageId)))
+  //     const tokenClone = cloneDeep(optimizedTokens);
+  //     const vis = tokenClone.filter((t) => t.visible === true);
+  //     const hid = tokenClone.filter((t) => t.visible === false);
+  //     const itemz = { visible: vis, hidden: hid };
+  //     setItems(itemz);
+  //   }
+  // },[tokens, completed, waiting, cloudinaryCompleted])
 
   const progress = ((completed) / waiting) * 100
   const showProgress = Boolean(waiting && waiting > completed)

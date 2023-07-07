@@ -60,24 +60,24 @@ export const ImageFallbackProvider = ({ children }) => {
     const errorMints = []
 
     //TEST
-    // const unoptimizedMints = tokens.map(tok => tok.mint)
+    const unoptimizedMints = tokens.map(tok => tok.mint)
     
     //REAL CODE
-    const unoptimizedMints = [];
-    console.log("🚀 ~ file: imageFallback.js:67 ~ uploadAll ~ unoptimizedMints:", unoptimizedMints)
-    tokens.forEach((token) => {
-      if (token.optimized === "Error") errorMints.push({
-        mint: token.mint,
-        error: token.optimizedError || "No Error Message",
-      })
-      else if (token.optimized === "Pending") errorMints.push({
-        mint: token.mint,
-        error: "Optimization Process Interrupted",
-      })
-      else if (!token.optimized) {
-        unoptimizedMints.push(token.mint)
-      }
-    })
+    // const unoptimizedMints = [];
+    // console.log("🚀 ~ file: imageFallback.js:67 ~ uploadAll ~ unoptimizedMints:", unoptimizedMints)
+    // tokens.forEach((token) => {
+    //   if (token.optimized === "Error") errorMints.push({
+    //     mint: token.mint,
+    //     error: token.optimizedError || "No Error Message",
+    //   })
+    //   else if (token.optimized === "Pending") errorMints.push({
+    //     mint: token.mint,
+    //     error: "Optimization Process Interrupted",
+    //   })
+    //   else if (!token.optimized) {
+    //     unoptimizedMints.push(token.mint)
+    //   }
+    // })
 
     setCloudinaryError(prev => [...prev, ...errorMints])
 

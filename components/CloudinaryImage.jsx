@@ -101,7 +101,7 @@ const CloudinaryImage = ({
       console.log("No CDN ID provided")
       return;
     }
-    console.log("IMAGE ERROR", id, error)
+    // console.log("IMAGE ERROR", id, error)
 
     if (!error) {
       //API call 

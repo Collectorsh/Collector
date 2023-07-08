@@ -54,8 +54,7 @@ const CloudinaryImage = ({
   const [fallbackUrl, setFallbackUrl] = useState(null)
   const [opacity, setOpacity] = useState(0)
 
-
-  console.log("CLOUDINARY RENDER")
+  // console.log("CLOUDINARY RENDER")
 
   useEffect(() => {
     if(noLazyLoad) return
@@ -137,7 +136,7 @@ const CloudinaryImage = ({
     if (onLoad) onLoad(e)
   }
 
-  const lazyStyle = noLazyLoad ? {} : { transitionDuration: "0.3s", visibility: isVisible ? "visible" : "hidden" }
+  const lazyStyle = noLazyLoad ? {} : { transitionDuration: "0.3s" }//, visibility: isVisible ? "visible" : "hidden" }
 
   return (
     <>
@@ -149,7 +148,7 @@ const CloudinaryImage = ({
         : null
       }
       {
-        (cldImg.toURL())//(hasBeenObserved || noLazyLoad) && 
+        (hasBeenObserved || noLazyLoad) && (cldImg.toURL())//
         ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img

@@ -31,7 +31,6 @@ function Gallery({user}) {
 
   const visibleTokens = useMemo(() => tokens?.filter(token => token.visible), [tokens]);
 
-
   const renderedTokens = useMemo(() => {
     if(!visibleTokens) return []
     const optimized = visibleTokens?.filter(token => token.optimized === "True")

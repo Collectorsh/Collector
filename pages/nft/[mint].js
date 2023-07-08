@@ -12,7 +12,9 @@ import findMarket from "/data/drops/findMarket";
 import { connection } from "/config/settings";
 import { useRouter } from "next/router";
 
-function Nft({ token }) {
+function Nft(
+  { token }
+) {
   const [, setSingleNft] = useContext(SingleNftContext);
   const auctionHouses = auctionHousesArray.map((a) => a.address);
   const [offers, setOffers] = useState([]);

@@ -1,11 +1,21 @@
 import Script from "next/script";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { cdnImage } from "/utils/cdnImage";
 import { addDefaultSource } from "/utils/addDefaultSource";
 import CloudinaryImage from "./CloudinaryImage";
 
 export default function Image({ token, size = "small" }) {
   const [videoUrl, setVideoUrl] = useState();
+
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
 
   useEffect(() => {
     if (!token.image) return;
@@ -48,6 +58,8 @@ export default function Image({ token, size = "small" }) {
     return styles;
   }
 
+  if (!isMounted.current) return null;
+
   return (
     <>
       {videoUrl ? (
@@ -73,19 +85,17 @@ export default function Image({ token, size = "small" }) {
           />
         </>
       ) : (
-          <CloudinaryImage
-            mint={token.mint}
-            id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-            width={1200}
-            noLazyLoad
-            quality="auto:best"
-          />
-        // <img
-        //   src={cdnImage(token.mint)}
-        //   onLoad={onImageLoad}
-        //   className={style()}
-        //   onError={(e) => addDefaultSource(e, token.mint, token.image)}
-        // />
+          <div className="relative">
+            <CloudinaryImage
+              mint={token.mint}
+              id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+              width={1200}
+              noLazyLoad
+              quality="auto:best"
+              useMetadataFallback
+              useUploadFallback
+            />
+          </div>
       )}
     </>
   );

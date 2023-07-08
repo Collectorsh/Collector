@@ -4,7 +4,7 @@ import Masonry from "react-masonry-css";
 import LazyLoader from "../LazyLoader";
 import clsx from "clsx";
 
-export default function GalleryContainer({ tokens, user }) {
+export default function GalleryContainer({ tokens, user, uploadAllCompleted }) {
   const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
 
   const renderedTokens = tokens?.slice(0, lazyLoadIndex)
@@ -26,8 +26,9 @@ export default function GalleryContainer({ tokens, user }) {
   return (
     <div className="clear-both w-full mt-6">
       {!tokens.length && (
-        // <h2 className="animate-pulse font-bold text-4xl text-center text-greeny mt-[25%]">Collector</h2>
-        <h1 className="animate-pulse font-bold text-4xl text-center mt-[25%]">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
+        uploadAllCompleted
+          ? <h1 className="font-bold text-2xl text-center mt-[25%]">Looks like there is not any artwork here at the moment :/</h1>
+          : <h1 className="animate-pulse font-bold text-4xl text-center mt-[25%]">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
       )}
       <div className="clear-both">
         <Masonry

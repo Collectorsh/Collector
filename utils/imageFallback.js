@@ -15,12 +15,12 @@ export default async function ImageFallback(mint) {
   }
 }
 
-export async function OptimizeWithMints(mints, username) {
+export async function OptimizeWithMints(mints, socket_id) {
   if(!mints.length) return;
   try {
     const cloudinaryUploads = await apiClient.post("/images/upload_with_mints", {
       mints,
-      username
+      socket_id //change key to socket_id too
     }).then(res => res.data)
 
     return cloudinaryUploads;

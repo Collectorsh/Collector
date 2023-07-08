@@ -9,6 +9,7 @@ import useElementObserver from '../hooks/useElementObserver';
 
 import { useFallbackImage, useImageFallbackContext } from '../contexts/imageFallback';
 import ContentLoader from 'react-content-loader';
+import { HandleNoUrl } from "../utils/imageFallback";
 
 
 //ref 
@@ -29,6 +30,7 @@ const CloudinaryImage = ({
   width, //number | "auto"
   height,
   useUploadFallback = false,
+  useMetadataFallback = false,
   noLazyLoad = false,
   errorDisplay = {
     type: "CDN",
@@ -101,10 +103,11 @@ const CloudinaryImage = ({
       console.log("No CDN ID provided")
       return;
     }
-    // console.log("IMAGE ERROR", id, error)
+    console.log("IMAGE ERROR", id, error)
 
     if (!error) {
       //API call 
+      setError("CDN")
 
       if(useUploadFallback) addNonCDNMint(mint)
       // if (metadata?.image && metadata?.mint) {
@@ -113,13 +116,12 @@ const CloudinaryImage = ({
       //   addNonCDNMint(mint)
       // }
     
-      setError("CDN")
-    
-      //USE METADATA URL (NOT OPTIMIZED)
-      // const image = await HandleNoUrl(mint)
-      // setFallbackUrl(image)
-      // setOpacity(1)
-      // setError("Using fetched meta Fallback Image")
+      if (useMetadataFallback) {
+        // USE METADATA URL (NOT OPTIMIZED)
+        const image = await HandleNoUrl(mint)
+        setFallbackUrl(image)
+        setOpacity(1)
+      }
       
     }
   }

@@ -15,7 +15,7 @@ export const ActionCableProvider = ({ children }) => {
   useEffect(() => {
     if (typeof window !== "undefined" && CableApp?.cable === undefined) {
       loadConsumer().then((createConsumer) => {
-        const host = apiHost.replace("https", "wss").replace("http", "wss");
+        const host = apiHost.replace("https", "wss").replace("http", "ws");
         setCableApp({
           cable: createConsumer(`${ host }/cable`),
         });

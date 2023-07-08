@@ -18,7 +18,6 @@ import { useImageFallbackContext } from "../contexts/imageFallback";
 
 
 function Gallery({user}) {
-  // console.log("🚀 ~ file: [gallery].js:21 ~ Gallery ~ user:", user)
   const tokens = useMetadata(user?.public_keys);
 
   const [, setListings] = useContext(ListingsContext);
@@ -26,7 +25,7 @@ function Gallery({user}) {
   const auctionHouses = auctionHousesArray.map((a) => a.address);
   const metaplex = new Metaplex(connection);
 
-  const { waiting, completed, uploadAll, cloudinaryCompleted } = useImageFallbackContext()
+  const { waiting, completed, uploadAll, cloudinaryCompleted, uploadAllCompleted } = useImageFallbackContext()
   const progress = ((completed) / waiting) * 100
   const showProgress = Boolean(waiting && waiting > completed)
 
@@ -115,7 +114,7 @@ function Gallery({user}) {
       </Head>
       {user ? <GalleryNavigation user={user} /> : <MainNavigation />}
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 clear-both">
-        {(showProgress) ? (
+        {(showProgress && !uploadAllCompleted) ? (
           <div className="w-full rounded top-0 left-0 flex items-center py-4 gap-4">
             <p className="flex-shrink-0">Optimizing Images: <span>({completed}/{waiting})</span></p>
             <div className="border-2 border-black dark:border-white rounded-full w-full h-3 relative" >
@@ -128,7 +127,8 @@ function Gallery({user}) {
         ) : null
         }
         <div className="mx-auto pt-3">
-          {(user) && <GalleryContainer tokens={renderedTokens} user={user} />}
+
+          {(user) && <GalleryContainer tokens={renderedTokens} user={user} uploadAllCompleted={uploadAllCompleted} />}
           {(!user) && (
             <div className="max-w-7xl mx-auto">
               <p className="dark:text-gray-100 pt-8">

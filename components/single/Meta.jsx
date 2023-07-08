@@ -20,7 +20,7 @@ export default function Meta({ token, collector, market }) {
               )}
               {token.artist_twitter && (
                 <>
-                  {token.artist_twitter_image && (
+                  {/* {token.artist_twitter_image && (
                     <div>
                       <img
                         src={token.artist_twitter_image}
@@ -28,7 +28,7 @@ export default function Meta({ token, collector, market }) {
                         onError={(e) => removeElement(e)}
                       />
                     </div>
-                  )}
+                  )} */}
                   <Link
                     href={`https://twitter.com/${token.artist_twitter}`}
                     title={token.artist_twitter}

@@ -1,47 +1,53 @@
 import { useEffect, useRef, useContext, useState, useCallback } from 'react';
 
-import { apiHost } from '../config/settings';
-
 import { ActionCableContext } from '../contexts/webSocket';
-import UserContext from '../contexts/user';
-import { useImageFallbackContext } from '../contexts/imageFallback';
 
-const useActionCable = (handlers = {}, user) => {
+export const makeSocketID = (username, pathname) => {
+  if(!username) return null
+  const page = pathname === "/" ? "home" : pathname.replace("/", "")
+  return `${ username }-${ page }`
+}
+
+const useActionCable = (handlers = {}, socket_id) => {
   const cable = useContext(ActionCableContext);
-
   const channelName = "NotificationsChannel"
-  const username = user?.username || "guest"
-
 
   useEffect(() => {
-    if(!cable) return
-        
-    const subscription = cable.subscriptions.create({ channel: channelName, username: username }, {
-      connected: () => {
-        console.log("Connected to channel: " + channelName);
-        if (handlers.connected) handlers.connected();
-      },
+    if(!cable || !socket_id) return
+    let subscription;
 
-      disconnected: () => {
-        console.log("Disconnected from channel: " + channelName);
-        if (handlers.disconnected) handlers.disconnected();
-      },
-
-      received: (data) => {
-        console.log("Received data: ", data);
-        // setReceivedData(data);  // Save the received data in state
-        if (handlers.received) handlers.received(data);
-      }
-    });
+    try {
+      //change username: to soclek_id
+      subscription = cable.subscriptions.create({ channel: channelName, socket_id: socket_id }, {
+        connected: () => {
+          console.log("Connected to channel: " + socket_id);
+          if (handlers.connected) handlers.connected();
+        },
+  
+        disconnected: () => {
+          console.log("Disconnected from channel: " + socket_id);
+          if (handlers.disconnected) handlers.disconnected();
+        },
+  
+        received: (data) => {
+          // console.log("🚀 socket Received data: ", data);
+          if (handlers.received) handlers.received(data);
+        }
+      });
+    } catch (error) { 
+      console.log("Error Connecting to websocket: ", error);
+    }
 
 
     // Clean up function
     return () => {
-      cable?.subscriptions.remove(subscription);
+      if (subscription) {
+        cable?.subscriptions.remove(subscription);
+      }
     }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username, cable]); 
+  }, [socket_id, cable]); 
 }
 export default useActionCable;
 

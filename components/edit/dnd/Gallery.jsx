@@ -30,7 +30,7 @@ export default function Gallery({ tokens, user }) {
   const [columns, setColumns] = useState(user?.columns);
   const [items, setItems] = useState();
   const [bulkEdit, setBulkEdit] = useState(false);
-  const { waiting, completed, uploadAll, cloudinaryCompleted } = useImageFallbackContext()
+  const { waiting, completed, uploadAll, uploadAllCompleted } = useImageFallbackContext()
   const [feedbackOpen, setFeedbackOpen] = useState(false)
 
   useEffect(() => {    
@@ -38,7 +38,7 @@ export default function Gallery({ tokens, user }) {
       uploadAll(tokens)//will optimized any images not optimized yet
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokens])
+  }, [tokens, waiting])
   
   useEffect(() => {
     const optimizedTokens = tokens
@@ -62,7 +62,7 @@ export default function Gallery({ tokens, user }) {
   // },[tokens, completed, waiting, cloudinaryCompleted])
 
   const progress = ((completed) / waiting) * 100
-  const showProgress = Boolean(waiting && waiting > completed)
+  const showProgress = Boolean(waiting && waiting > completed) && !uploadAllCompleted
 
   useEffect(() => {
     if(showProgress) setFeedbackOpen(true)

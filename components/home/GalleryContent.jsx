@@ -130,7 +130,7 @@ const ImageSlide = ({ item }) => {
         <div className="mt-2">
           <Link href={`/${ item.username }`}>
             <a>
-              {item.twitter_profile_image && (
+              {/* {item.twitter_profile_image && (
                 <img
                   src={item.twitter_profile_image}
                   className="w-8 h-8 mr-1.5 rounded-full float-left"
@@ -138,9 +138,9 @@ const ImageSlide = ({ item }) => {
                     e.target.className = "hidden"
                   }}
                 />
-              )}
+              )} */}
 
-              <div className="mt-2">
+              <div className="mt-2 ml-2">
                 {item.username && (
                   <p className="inline font-bold leading-7">
                     {item.username}

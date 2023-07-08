@@ -2,7 +2,7 @@ import MainNavigation from "../components/navigation/MainNavigation";
 import ContentLoader from "react-content-loader";
 import Link from "next/link";
 import { useAllGalleries } from "../data/home/getAllGalleries";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cdnImage } from "../utils/cdnImage";
 import debounce from "lodash.debounce";
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, XCircleIcon } from "@heroicons/react/solid";
@@ -159,7 +159,7 @@ export default function Discover() {
   )
 }
 
-const ImageCard = ({item }) => {
+const ImageCard = ({ item }) => {
   return (
     <div key={item.image} className="">
       <div
@@ -182,7 +182,7 @@ const ImageCard = ({item }) => {
         <div className="mt-2">
           <Link href={`/${ item.username }`}>
             <a>
-              {item.twitter_profile_image && (
+              {/* {item.twitter_profile_image && (
                 <img
                   src={item.twitter_profile_image}
                   className="w-8 h-8 mr-1.5 rounded-full float-left"
@@ -190,7 +190,7 @@ const ImageCard = ({item }) => {
                     e.target.className = "hidden"
                   }}
                 />
-              )}
+              )} */}
 
               <div className="mt-2">
                 {item.username && (

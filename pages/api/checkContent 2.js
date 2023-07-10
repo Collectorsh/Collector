@@ -6,7 +6,9 @@ export default async function handler(req, res) {
   try {
     const results = await Promise.all(urls.map(async (url) => {
       try {
-        const response = await axios.get(url, { responseType: 'arraybuffer' });
+        const response = await axios.get(url,
+          { responseType: 'arraybuffer' }
+        );
         const fileType = response.headers['content-type'];
   
         if (fileType) {

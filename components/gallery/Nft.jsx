@@ -87,10 +87,11 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
               // className="mx-auto cursor-pointer object-center object-cover"
               mint={token.mint}
               onLoad={onImageLoad}
-              quality="auto:best"
+              // quality="auto:best"
               width={responsiveSteps()}
               metadata={tokenMetadata}
               onError={onError}
+              // noLazyLoad
             />
             
           </a>

@@ -30,7 +30,7 @@ export default function Gallery({ tokens, user }) {
   const [columns, setColumns] = useState(user?.columns);
   const [items, setItems] = useState();
   const [bulkEdit, setBulkEdit] = useState(false);
-  const { waiting, completed, uploadAll, uploadAllCompleted } = useImageFallbackContext()
+  const { waiting, completed, uploadAll, uploadAllCompleted, cloudinaryCompleted } = useImageFallbackContext()
   const [feedbackOpen, setFeedbackOpen] = useState(false)
 
   useEffect(() => {    
@@ -41,13 +41,13 @@ export default function Gallery({ tokens, user }) {
   }, [tokens, waiting])
   
   useEffect(() => {
-    const optimizedTokens = tokens
+    const optimizedTokens = tokens.filter((t) => t.optimized === "True" || cloudinaryCompleted.some(cc => cc.mint === t.mint))
     const tokenClone = cloneDeep(optimizedTokens);
     const vis = tokenClone.filter((t) => t.visible === true);
     const hid = tokenClone.filter((t) => t.visible === false);
     const itemz = { visible: vis, hidden: hid };
     setItems(itemz);
-  }, [tokens]);
+  }, [tokens, cloudinaryCompleted]);
 
   const progress = ((completed) / waiting) * 100
   const showProgress = Boolean(waiting && waiting > completed) && !uploadAllCompleted

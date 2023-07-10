@@ -49,7 +49,7 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
 
   const onImageLoad = (event) => {
     setLoaded(true);
-    onLoad()
+    onLoad(event)
   };
 
   return (
@@ -61,17 +61,6 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
           user && user.rounded && "rounded-2xl"
           }`}
       >
-        {/* <div className={clsx("md:p-4 top-0 left-0 w-full", loaded ? "hidden" : "absolute")}>
-          <ContentLoader
-            speed={2}
-            className="w-full mb-4 h-[250px] rounded-lg"
-             backgroundColor="rgba(120,120,120,0.2)"
-            foregroundColor="rgba(120,120,120,0.1)"
-          >
-            <rect className="w-full h-full" />
-          </ContentLoader>
-        </div> */}
-
         <Link href={`/nft/${ token.mint }`} title="">
           <a className={loaded ? "animate-enter" : "opacity-0"}>
             {videoUrl ? (
@@ -90,12 +79,6 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
                   <source src={videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
-                {/* <Script
-                  id="autoplay-script"
-                  dangerouslySetInnerHTML={{
-                    __html: `document.getElementById("video-${token.mint}").play()`,
-                  }}
-                /> */}
               </>
             ) : null}
             
@@ -104,11 +87,11 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
               // className="mx-auto cursor-pointer object-center object-cover"
               mint={token.mint}
               onLoad={onImageLoad}
-              noLazyLoad
-              quality="auto:best"
+              // quality="auto:best"
               width={responsiveSteps()}
               metadata={tokenMetadata}
               onError={onError}
+              // noLazyLoad
             />
             
           </a>

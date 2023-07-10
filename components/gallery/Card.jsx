@@ -4,7 +4,7 @@ import Listings from "/components/gallery/Listings";
 import ShowOffers from "/components/gallery/ShowOffers";
 import Nft from "/components/gallery/Nft";
 import MetaContainer from "/components/gallery/MetaContainer";
-import useElementObserver from "../../hooks/useElementObserver";
+
 import clsx from "clsx";
 
 function Card(props) {
@@ -24,9 +24,11 @@ function Card(props) {
     }
   }, []);
 
-  const handleLoad = () => { 
-    setLoaded(true)
-    initGetData(props.token);
+  const handleLoad = (e) => { 
+    if (!loaded) {
+      setLoaded(true)
+      initGetData(props.token);
+    }
   }
 
   const handleError = () => {
@@ -37,9 +39,10 @@ function Card(props) {
     <div
       className={clsx("col-span-1 mb-8 sm:mb-0",
         // `sm:col-span-${props.token.span}`,
-        "relative text-center h-fit transition-opacity duration-300 opacity-0",
+        "relative text-center transition-opacity duration-300 opacity-0",
+        "h-fit",
         loaded && "loaded",
-        error && "hidden"
+        error && "hidden",
       )}
     >
       <Nft user={user} token={props.token} tokenMetadata={token} onLoad={handleLoad} onError={handleError} columns={columns} />

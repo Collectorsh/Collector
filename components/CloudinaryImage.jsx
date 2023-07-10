@@ -3,7 +3,7 @@ import { scale, limitFill } from "@cloudinary/url-gen/actions/resize";
 import { dpr } from "@cloudinary/url-gen/actions/delivery";
 
 import cloudinaryCloud from "../data/client/cloudinary";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import clsx from 'clsx';
 import useElementObserver from '../hooks/useElementObserver';
 
@@ -26,7 +26,7 @@ const CloudinaryImage = ({
   className,
   quality = 'auto', //auto:best | auto:good | auto:eco | auto:low
   onLoad,
-  onError,
+
   width, //number | "auto"
   height,
   useUploadFallback = false,
@@ -50,12 +50,17 @@ const CloudinaryImage = ({
   const fallback = useFallbackImage(mint)
   const [error, setError] = useState(null) 
   const llRef = useRef()
-  const { hasBeenObserved } = useElementObserver(llRef, "1000px 1000px 1000px 1000px")
-
+  const { isVisible, hasBeenObserved } = useElementObserver(llRef, "100px")
   const [fallbackUrl, setFallbackUrl] = useState(null)
-  const [opacity, setOpacity] = useState(noLazyLoad ? 1 : 0)
+  const [opacity, setOpacity] = useState(0)
 
   // console.log("CLOUDINARY RENDER")
+
+  useEffect(() => {
+    if(noLazyLoad) return
+    if (isVisible) setOpacity(1)
+    else setOpacity(0)
+  }, [isVisible, noLazyLoad])
 
   const buildCldImg = (id, overrideQuality) => {
     const cldImg = cloudinaryCloud.image(id)
@@ -65,7 +70,6 @@ const CloudinaryImage = ({
       .delivery(dpr("auto"));
   
     if (width) cldImg.resize(limitFill().width(width))
-    // cloudinaryCloud.resize.limit().width(width)
     return cldImg
   }
 
@@ -97,13 +101,12 @@ const CloudinaryImage = ({
   }, [error, fallback])
   
 
-  const handleError = async (e) => {    
+  const handleError = async (e) => {   
     setOpacity(0)
     if (!id) {
       console.log("No CDN ID provided")
       return;
     }
-    console.log("IMAGE ERROR", id, error)
 
     if (!error) {
       //API call 
@@ -127,37 +130,43 @@ const CloudinaryImage = ({
   }
 
   const handleLoad = (e) => {
+    console.log("IMAGE LOADED")
+    // setFullHeight(e.target.offsetHeight)
     setOpacity(1) 
     if (onLoad) onLoad(e)
   }
-  
+
+  const lazyStyle = noLazyLoad ? {} : { transitionDuration: "0.3s" }//, visibility: isVisible ? "visible" : "hidden" }
+
   return (
     <>
-      <div ref={noLazyLoad ? null : llRef} className='w-0 h-0  opacity-0' />
+      {noLazyLoad ? null : <div ref={llRef} className='w-1 h-full opacity-0 absolute -z-10' />}
       {(errorDisplay && error === errorDisplay.type)
         ? (<div className={clsx("absolute top-0 left-0 w-full h-full", className)}>
           {errorDisplay.content}
         </div>)
         : null
       }
-      {(hasBeenObserved || noLazyLoad) && (cldImg.toURL()) 
+      {
+        (hasBeenObserved || noLazyLoad) && (cldImg.toURL())//
         ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            style={{opacity}}
-            className={className}
-            width={width}
-            height={height}
-            src={fallbackUrl || cldImg.toURL()}
-            alt={metadata?.name || ""}
-            onLoad={handleLoad}
-            onError={handleError}
-          />
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          style={{ opacity, ...lazyStyle }}
+          className={className}
+          width={width}
+          height={height}
+          src={fallbackUrl || cldImg.toURL()}
+          alt={metadata?.name || ""}
+          onLoad={handleLoad}
+          onError={handleError}
+        />
         )
         : null
       }
+
     </>
   )
 }
 
-export default CloudinaryImage;
+export default memo(CloudinaryImage);

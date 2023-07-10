@@ -1,3 +1,4 @@
+import { has } from 'ramda';
 import { useState, useEffect, MutableRefObject, useMemo } from 'react'
 
 const useElementObserver = (element, rootMargin) => {
@@ -21,7 +22,7 @@ const useElementObserver = (element, rootMargin) => {
     if(isVisible && !hasBeenObserved) setHasBeenObserved(true)
   },[isVisible, hasBeenObserved])
 
-
+  // return hasBeenObserved
   return {
     isVisible,
     hasBeenObserved

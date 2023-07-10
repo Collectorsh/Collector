@@ -1,17 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Card from "/components/gallery/Card";
 import Masonry from "react-masonry-css";
 import LazyLoader from "../LazyLoader";
-import clsx from "clsx";
 
 export default function GalleryContainer({ tokens, user, uploadAllCompleted }) {
-  const [lazyLoadIndex, setLazyLoadIndex] = useState(9);
+  const [llIndex, setLlIndex] = useState(9)
+  const handleLoad = () => setLlIndex(prev => prev + 9)
 
-  const renderedTokens = tokens?.slice(0, lazyLoadIndex)
-
-  const handleLazyLoad = () => {
-    setLazyLoadIndex(prev => prev + 9);
-  }
+  const renderedTokens = tokens//.slice(0, llIndex)
 
   const columns = user && user.columns ? user.columns : 3;
 
@@ -22,7 +18,21 @@ export default function GalleryContainer({ tokens, user, uploadAllCompleted }) {
     400: 1
   };
 
+  useEffect(() => {
+    if (window.performance) {
+      console.log("clearing resource timings")
+      // // Set the buffer size to a larger number
+      // window.performance.setResourceTimingBufferSize(300); // Double the default size
+      window.performance.clearResourceTimings();
 
+      // Listen for the 'resourcetimingbufferfull' event
+      window.performance.onresourcetimingbufferfull = function() {
+        // Increase the buffer size again if it gets full
+        window.performance.setResourceTimingBufferSize(window.performance.getEntriesByType("resource").length * 2);
+      };
+    }
+  }, [])
+  
   return (
     <div className="clear-both w-full mt-6">
       {!tokens.length && (
@@ -60,8 +70,8 @@ export default function GalleryContainer({ tokens, user, uploadAllCompleted }) {
                 return <Card key={index} token={token} user={user} onLoad={handleLoad} />;
             })}
         </div> */}
-      
-        {lazyLoadIndex < tokens?.length ? <LazyLoader cb={handleLazyLoad} rootMargin="1000px 1000px 1000px 1000px"/> : null}
+        
+        {/* {llIndex < tokens.length && (<LazyLoader cb={handleLoad} rootMargin="50px" />)} */}
       </div>
     </div>
   );

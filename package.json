@@ -74,6 +74,7 @@
     "react-slick": "^0.29.0",
     "react-toastify": "^9.0.1",
     "react-tooltip": "^4.2.21",
+    "react-virtualized": "^9.22.5",
     "sharp": "^0.32.1",
     "swiper": "^9.3.2",
     "swr": "^2.1.5",

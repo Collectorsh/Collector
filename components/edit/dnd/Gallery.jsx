@@ -23,7 +23,7 @@ import CloudinaryImage from "../../CloudinaryImage";
 import { useImageFallbackContext } from "../../../contexts/imageFallback";
 import OptimizeFeedbackModal from "./OptimizeFeedbackModal";
 
-//TODO try scroll based lazy load for images
+import { Grid as VirtualGrid, AutoSizer } from 'react-virtualized';
 
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
@@ -48,18 +48,6 @@ export default function Gallery({ tokens, user }) {
     const itemz = { visible: vis, hidden: hid };
     setItems(itemz);
   }, [tokens]);
-
-  // useEffect(() => { 
-  //   if(!tokens) return;
-  //   if (!waiting || (Boolean(completed) && completed >= waiting)) { 
-  //     const optimizedTokens = tokens.filter((token) => token.optimized === "True" || cloudinaryCompleted?.some((c) => c.mint === token.mint && Boolean(c.imageId)))
-  //     const tokenClone = cloneDeep(optimizedTokens);
-  //     const vis = tokenClone.filter((t) => t.visible === true);
-  //     const hid = tokenClone.filter((t) => t.visible === false);
-  //     const itemz = { visible: vis, hidden: hid };
-  //     setItems(itemz);
-  //   }
-  // },[tokens, completed, waiting, cloudinaryCompleted])
 
   const progress = ((completed) / waiting) * 100
   const showProgress = Boolean(waiting && waiting > completed) && !uploadAllCompleted
@@ -112,8 +100,8 @@ export default function Gallery({ tokens, user }) {
       return;
     }
 
-    const activeContainer = active.data.current.sortable.containerId;
-    const overContainer = over.data.current?.sortable.containerId;
+    const activeContainer = active.data.current?.sortable.containerId;
+    const overContainer = over.data.current?.sortable?.containerId;
 
     if (!overContainer) {
       return;
@@ -336,13 +324,11 @@ export default function Gallery({ tokens, user }) {
 
 const Visible = ({ items, columns, bulkEdit }) => {
   const { setNodeRef } = useDroppable({ id: "show" });
-  const [llIndex, setllIndex] = useState(0)
-  const renderable = items.visible//.slice(0, llIndex)
-  const handleLazyLoad = () => setllIndex(prev => prev + 9);
-  
-  const renderedItems = () => { 
+  const renderable = items.visible
+
+  const getRenderedItems = () => {
     return renderable.map((token, index) => (
-      <div key={token.mint+"visible"}>
+      <div key={token.mint + "visible"}>
         <SortablePhoto
           key={token.mint}
           mint={token.mint}
@@ -361,9 +347,54 @@ const Visible = ({ items, columns, bulkEdit }) => {
           bulkEdit={bulkEdit}
         />
       </div>
-
     ))
   }
+  const renderedItems = getRenderedItems()
+  
+  //NEEDS TO FIGURE OUT DRAGGING outside constinaers for virtualized list to work
+  // const getVirtualItems = () => { 
+  //   const virtualizedList = [[]]
+  //   const rowIndex = 0
+  //   renderable.forEach((token, index) => {
+  //     let row = virtualizedList[rowIndex]
+  //     if (row.length >= columns) {
+  //       rowIndex++
+  //       virtualizedList.push([])
+  //       row = virtualizedList[rowIndex]
+  //     }
+  //     row.push(<div key={token.mint+"visible"}>
+  //       <SortablePhoto
+  //         key={token.mint}
+  //         mint={token.mint}
+  //         uri={token.uri}
+  //         index={index}
+  //         height={
+  //           columns === 2
+  //             ? 350
+  //             : columns === 3
+  //               ? 250
+  //               : columns === 4
+  //                 ? 200
+  //                 : 150
+  //         }
+  //         section="visible"
+  //         bulkEdit={bulkEdit}
+  //       />
+  //     </div>
+  //     )
+  //   })
+  //   return virtualizedList
+  // }
+
+  // const virtualItems = getVirtualItems()
+
+  // function cellRenderer({ columnIndex, key, rowIndex, style }) {
+  //   return (
+  //     <div key={key} style={style}>
+  //       {virtualItems[rowIndex][columnIndex]}
+  //     </div>
+  //   );
+  // }
 
   return (
     <div
@@ -375,11 +406,34 @@ const Visible = ({ items, columns, bulkEdit }) => {
         items={renderable.map((i) => i.mint)}
         strategy={rectSortingStrategy}
       >
+        {/* <AutoSizer> //NEEDS TO FIGURE OUT DRAGGING outside constinaers for virtualized list to work
+          {({ height, width }) => {
+            return (
+              <VirtualGrid
+                cellRenderer={cellRenderer}
+                columnCount={virtualItems[0].length}
+                columnWidth={300}
+                height={height}
+                rowCount={virtualItems.length}
+                rowHeight={
+                  columns === 2
+                    ? 350
+                    : columns === 3
+                      ? 250
+                      : columns === 4
+                        ? 200
+                        : 150
+                }
+                width={width}
+              />
+            )
+          }}
+        </AutoSizer>  */}
+
         <Grid columns={columns}>
-          {renderedItems()}
+          {renderedItems}
         </Grid>
       </SortableContext>
-      {/* {llIndex < items.visible.length ? <LazyLoader cb={handleLazyLoad} rootMargin="500px" /> : null} */}
     </div>
   );
 };

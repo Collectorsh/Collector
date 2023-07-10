@@ -4,9 +4,7 @@ import getGalleryImages from "/data/home/getGalleryImages";
 import getMetadataFromMint from "/data/nft/getMetadataFromMint";
 import Image from "/components/Image";
 import ContentLoader from "react-content-loader";
-import { set } from "nprogress";
-import axios from "axios";
-import { cdnImage } from "../../utils/cdnImage";
+
 
 export default function GalleryImages() {
   const [metadata, setMetadata] = useState();

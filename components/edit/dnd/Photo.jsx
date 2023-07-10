@@ -64,15 +64,6 @@ export const Photo = forwardRef(
             defaultChecked
           />
         )}
-        {/* <img
-          className="w-full cursor-pointer hover:origin-center object-center object-cover shadow-sm"
-          src={cdnImage(mint)}
-          onError={(e) => defaultSource(e, mint, uri)}
-          onLoad={onImageLoad}
-          ref={ref}
-          style={inlineStyles}
-          {...props}
-        /> */}
         <div
           ref={ref}
           style={inlineStyles}
@@ -83,6 +74,7 @@ export const Photo = forwardRef(
             className="w-full h-full cursor-pointer hover:origin-center object-center object-cover"
             id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ mint }`}
             mint={mint}
+            noLazyLoad
             onLoad={onImageLoad}
             width={500}
           />

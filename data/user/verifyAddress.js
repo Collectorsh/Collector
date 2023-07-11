@@ -28,6 +28,7 @@ async function verifyAddress(
       let res = await addWallet(publicKey.toBase58(), signature, nonce, apiKey);
       return res;
     } else {
+      if (!signTransaction) return 
       let message = loginMessage + nonce;
       let tx = await buildAuthTx(message);
       tx.feePayer = publicKey;

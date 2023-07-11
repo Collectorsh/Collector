@@ -3,11 +3,8 @@ import ContentLoader from "react-content-loader";
 import Link from "next/link";
 import { useAllGalleries } from "../data/home/getAllGalleries";
 import { useEffect, useRef, useState } from "react";
-import { cdnImage } from "../utils/cdnImage";
 import debounce from "lodash.debounce";
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, XCircleIcon } from "@heroicons/react/solid";
-import { addDefaultSource } from "../utils/addDefaultSource";
-import axios from "axios";
 import CloudinaryImage from "../components/CloudinaryImage";
 
 const totalPerPage = 12

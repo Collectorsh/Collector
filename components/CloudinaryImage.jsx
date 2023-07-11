@@ -169,4 +169,4 @@ const CloudinaryImage = ({
   )
 }
 
-export default memo(CloudinaryImage);
+export default CloudinaryImage;

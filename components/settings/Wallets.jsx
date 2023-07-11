@@ -46,7 +46,7 @@ export default function Wallets() {
         usingLedger
       ).then((res) => {
         if (!res) {
-          console.log("Nor response from verifyAddress")
+          console.log("No response from verifyAddress")
         } else if (res?.data?.status === "success") {
           success("Wallet added successfully");
           setUser(res.data.user);

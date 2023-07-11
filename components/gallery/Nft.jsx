@@ -73,8 +73,8 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
                   playsInline
                   id={`video-${ token.mint }`}
                   className="mx-auto w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10"
-                  onLoadedData={onImageLoad}
-                  // onCanPlay={onImageLoad}
+                  // onLoadedData={onImageLoad}
+                  onCanPlay={onImageLoad}
                 >
                   <source src={videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.
@@ -87,11 +87,9 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
               // className="mx-auto cursor-pointer object-center object-cover"
               mint={token.mint}
               onLoad={onImageLoad}
-              // quality="auto:best"
               width={responsiveSteps()}
               metadata={tokenMetadata}
               onError={onError}
-              // noLazyLoad
             />
             
           </a>

@@ -99,7 +99,6 @@ async function getMetadata(publicKeys) {
       ? -1
       : 0
   );
-  console.log("🚀 ~ file: getMetadata.js:102 ~ getMetadata ~ results:", results.length)
 
   return results;
 }

@@ -52,7 +52,7 @@ const CloudinaryImage = ({
   const llRef = useRef()
   const { isVisible, hasBeenObserved } = useElementObserver(llRef, "100px")
   const [fallbackUrl, setFallbackUrl] = useState(null)
-  const [opacity, setOpacity] = useState(0)
+  const [opacity, setOpacity] = useState(noLazyLoad ? 1 : 0)
 
   // console.log("CLOUDINARY RENDER")
 

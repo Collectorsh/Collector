@@ -99,6 +99,7 @@ async function getMetadata(publicKeys) {
       ? -1
       : 0
   );
+  console.log("🚀 ~ file: getMetadata.js:102 ~ getMetadata ~ results:", results.length)
 
   return results;
 }
@@ -162,9 +163,14 @@ async function getMetadataHELLOMOON(publicKeys) {
   }
   console.log("🚀 ~ file: getMetadata.js:138 ~ getMetadata ~ baseTokens:", baseTokens.length)
 
+  // const visAndOrders = await apiClient.post("/get_visibility_and_order", {
+  //   public_key: publicKeys[0],
+  // });
+
   const visAndOrders = await apiClient.post("/get_visibility_and_order", {
     public_key: publicKeys[0],
-  });
+    tokens: baseTokens.map(t => ({...t, mint: t.nftMint})),
+  }).then(res => res.data)
 
   const creatorDetails = await apiClient.post("/creator/details", {
     tokens: baseTokens,
@@ -172,7 +178,7 @@ async function getMetadataHELLOMOON(publicKeys) {
 
   for(const token of baseTokens) {
     
-    const visibilityAndOrder = visAndOrders.data.mints.find((m) => m.mint_address === token.nftMint)
+    const visibilityAndOrder = visAndOrders.tokens.find((m) => m.mint === token.nftMint)
     const filteredCreatorDetails = creatorDetails.data.filter((t) => t.public_key === token.creator);
     
     token.owner = token.ownerAccount
@@ -190,10 +196,6 @@ async function getMetadataHELLOMOON(publicKeys) {
       token.span = visibilityAndOrder.span;
       token.optimized = visibilityAndOrder.optimized;
       token.optimizedError = visibilityAndOrder.error
-    } else {
-      token.order_id = null;
-      token.visible = visAndOrders.data.default;
-      token.span = 1;
     }
 
     if (filteredCreatorDetails.length > 0) {
@@ -211,6 +213,7 @@ async function getMetadataHELLOMOON(publicKeys) {
   }
   // TODO find associatedTokenAccountAddress with hello moon here or find it at time of use
     
+  console.log("🚀 ~ file: getMetadata.js:222 ~ getMetadata ~ baseTokens:", baseTokens.length)
   return baseTokens.sort((a, b) =>
     coalesce(a.order_id, +Infinity) > coalesce(b.order_id, +Infinity)
       ? 1

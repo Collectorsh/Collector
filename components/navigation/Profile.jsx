@@ -26,15 +26,15 @@ export default function MainNavigation() {
         <div>
           <Menu.Button className="flex text-sm rounded-full focus:outline-none">
             <span className="sr-only">Open user menu</span>
-            {user && user.twitter_profile_image ? (
+            {/* {user && user.twitter_profile_image ? (
               <img
                 src={user.twitter_profile_image}
                 alt="default img"
                 className="h-8 w-8 rounded-full"
               />
-            ) : (
+            ) : ( */}
               <UserCircleIcon className="h-8 w-8 rounded-full bg-gray-50 text-black" />
-            )}
+            {/* )} */}
           </Menu.Button>
         </div>
         <Transition

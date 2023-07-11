@@ -3,16 +3,13 @@ import {
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import {
-  LedgerWalletAdapter,
-  PhantomWalletAdapter,
-  SlopeWalletAdapter,
-  SolflareWalletAdapter,
-  SolletExtensionWalletAdapter,
-  SolletWalletAdapter,
-  TorusWalletAdapter,
-  GlowWalletAdapter,
-} from "@solana/wallet-adapter-wallets";
+
+import { LedgerWalletAdapter } from "@solana/wallet-adapter-ledger";
+import {PhantomWalletAdapter} from "@solana/wallet-adapter-phantom";
+import { SolflareWalletAdapter } from "@solana/wallet-adapter-solflare";
+import { SolletWalletAdapter } from "@solana/wallet-adapter-sollet";
+import { GlowWalletAdapter } from "@solana/wallet-adapter-glow";
+
 import { clusterApiUrl } from "@solana/web3.js";
 import { useCallback, useMemo } from "react";
 
@@ -33,11 +30,11 @@ export const WalletContextProvider = ({ children }) => {
       new LedgerWalletAdapter(),
       new GlowWalletAdapter(),
       new PhantomWalletAdapter(),
-      new SlopeWalletAdapter(),
+      // new SlopeWalletAdapter(),
       new SolflareWalletAdapter({ network }),
-      new TorusWalletAdapter(),
+      // // new TorusWalletAdapter(),
       new SolletWalletAdapter({ network }),
-      new SolletExtensionWalletAdapter({ network }),
+      // new SolletExtensionWalletAdapter({ network }),
     ],
     [network]
   );

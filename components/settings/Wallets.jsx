@@ -37,6 +37,7 @@ export default function Wallets() {
     wallet.connect().then(() => {
       setAddingWallet(false);
       if (user.public_keys.includes(wallet.publicKey.toBase58())) return;
+
       verifyAddress(
         wallet.publicKey,
         wallet.signMessage,
@@ -44,13 +45,15 @@ export default function Wallets() {
         wallet.signTransaction,
         usingLedger
       ).then((res) => {
-        if (res.data.status === "success") {
+        if (!res) {
+          console.log("No response from verifyAddress")
+        } else if (res?.data?.status === "success") {
           success("Wallet added successfully");
           setUser(res.data.user);
         } else {
           error(res.data.msg);
         }
-      });
+      });      
     });
   }, [wallet]);
 

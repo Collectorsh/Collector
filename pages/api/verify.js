@@ -10,9 +10,9 @@ export default async function handler(req, res) {
   try {
     var tx = req.body.tx.data;
     tx = Transaction.from(Buffer.from(tx));
+    const inx = tx.instructions.find(inx => inx.programId.toBase58() == MEMO_PROGRAM_ID)
 
-    const inx = tx.instructions[0];
-    if (!inx.programId.toBase58() === MEMO_PROGRAM_ID)
+    if (!inx)
       return res
         .status(200)
         .json({ status: "error", msg: "Incorrect program ID" });

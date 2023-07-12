@@ -35,6 +35,7 @@ export default function Wallets() {
   useEffect(() => {
     if (!wallet || !wallet.publicKey || !user || !addingWallet) return;
     wallet.connect().then(() => {
+      if(!wallet.connected) return
       setAddingWallet(false);
       if (user.public_keys.includes(wallet.publicKey.toBase58())) return;
 
@@ -55,7 +56,7 @@ export default function Wallets() {
         }
       });      
     });
-  }, [wallet]);
+  }, [wallet?.connected, user]);
 
   async function addWallet() {
     wallet.disconnect().then(() => {

@@ -9,7 +9,7 @@ import {PhantomWalletAdapter} from "@solana/wallet-adapter-phantom";
 import { SolflareWalletAdapter } from "@solana/wallet-adapter-solflare";
 import { SolletWalletAdapter } from "@solana/wallet-adapter-sollet";
 import { GlowWalletAdapter } from "@solana/wallet-adapter-glow";
-
+import { BackpackWalletAdapter } from "@solana/wallet-adapter-backpack"
 import { clusterApiUrl } from "@solana/web3.js";
 import { useCallback, useMemo } from "react";
 
@@ -35,6 +35,7 @@ export const WalletContextProvider = ({ children }) => {
       // // new TorusWalletAdapter(),
       new SolletWalletAdapter({ network }),
       // new SolletExtensionWalletAdapter({ network }),
+      new BackpackWalletAdapter(),
     ],
     [network]
   );

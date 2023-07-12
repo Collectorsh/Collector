@@ -12,7 +12,6 @@ export default async function handler(req, res) {
     tx = Transaction.from(Buffer.from(tx));
     const inx = tx.instructions.find(inx => inx.programId.toBase58() == MEMO_PROGRAM_ID)
     
-    console.log("🚀 ~ file: verify.js:16 ~ handler ~ inx:", inx)
     if (!inx)
       return res
         .status(200)

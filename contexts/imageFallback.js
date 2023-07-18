@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { success, error } from "/utils/toastMessages";
-import { OptimizeWithMints } from "../utils/imageFallback";
+import { OptimizeSingleMint, OptimizeWithMints, OptimizeWithTokens } from "../utils/imageFallback";
 
 import { useCallback } from "react";
 import { useRouter } from "next/router";
@@ -61,16 +61,16 @@ export const ImageFallbackProvider = ({ children }) => {
 
   useActionCable({ received: handleWebsocketMessages }, socket_id)
 
-  //upload all with mintvisibily : optiomized as nil
+  //upload all with optiomized as nil
   const uploadAll = async (tokens) => { 
     if (!tokens || tokens.length === 0 || !user?.username) return;
     const errorMints = []
 
     //TEST
-    // const unoptimizedMints = tokens.map(tok => tok.mint)
-    
+    // const unoptimizedTokens = tokens
+
     //REAL CODE
-    const unoptimizedMints = [];
+    const unoptimizedTokens = [];
     tokens.forEach((token) => {
       if (token.optimized === "Error") errorMints.push({
         mint: token.mint,
@@ -81,17 +81,17 @@ export const ImageFallbackProvider = ({ children }) => {
         error: "Optimization Process Interrupted",
       })
       else if (!token.optimized) {
-        unoptimizedMints.push(token.mint)
+        unoptimizedTokens.push(token)
       }
     })
 
     setCloudinaryError(errorMints)
 
-    setWaiting(unoptimizedMints.length)
+    setWaiting(unoptimizedTokens.length)
     setCompleted(0)
 
     // BATCH all at once, response depends on websockets
-    const res = await OptimizeWithMints(unoptimizedMints, socket_id);
+    const res = await OptimizeWithTokens(unoptimizedTokens, socket_id);
     setUploadAllCompleted(true)
     if (res && res.completed) {
       console.log("Completed Batch Upload", res)
@@ -105,20 +105,12 @@ export const ImageFallbackProvider = ({ children }) => {
 
     setWaiting(prev => prev + 1)
     try {
-      await OptimizeWithMints([newMint], socket_id);
+      await OptimizeSingleMint(newMint, socket_id);
     } catch (error) {
       console.log("Error uploading one image", error);
     }
     // handleOneUpload(newMint)
   }, [socket_id])
-
-  // const addNonCDNMetadata = useCallback((newMetadata) => { 
-  //   //skip if already added
-  //   if (nonCDNMetadatasRef.current.find(prev => prev.mint === newMetadata.mint)) return;
-  //   nonCDNMetadatasRef.current = [...nonCDNMetadatasRef.current, newMetadata];
-
-  //   handleImageFallbacks() //similar to handleMetaFallbacks but already have the meata data
-  // },[])
 
   return (
     <ImageFallbackContext.Provider value={{

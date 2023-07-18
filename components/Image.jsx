@@ -6,7 +6,9 @@ import CloudinaryImage from "./CloudinaryImage";
 
 export default function Image({ token, size = "small" }) {
   const [videoUrl, setVideoUrl] = useState();
+  const [htmlUrl, setHtmlUrl] = useState();
 
+  const iframeRef = useRef(null);
   const isMounted = useRef(false);
 
   useEffect(() => {
@@ -24,6 +26,8 @@ export default function Image({ token, size = "small" }) {
     } else if (token.animation_url) {
       if (token.animation_url.split(".").pop().includes("mp4")) {
         setVideoUrl(token.animation_url);
+      } else if (token.animation_url.split(".").pop().includes("html")) {
+        setHtmlUrl(token.animation_url);
       }
     } else {
       try {
@@ -37,7 +41,7 @@ export default function Image({ token, size = "small" }) {
         console.log(err);
       }
     }
-  }, [token.image]);
+  }, [token]);
 
   const onImageLoad = (event) => {
     event.target.classList.add("loaded");
@@ -62,6 +66,7 @@ export default function Image({ token, size = "small" }) {
 
   return (
     <>
+      
       {videoUrl ? (
         <>
           <video
@@ -86,6 +91,13 @@ export default function Image({ token, size = "small" }) {
         </>
       ) : (
           <div className="relative">
+            {/* {htmlUrl ? (
+              <iframe
+                ref={iframeRef}
+                className={"absolute inset z-20 w-full h-full"}
+                src={htmlUrl} title={token.name || token.mint}
+              />
+            ) : null} */}
             <CloudinaryImage
               mint={token.mint}
               id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}

@@ -1,20 +1,19 @@
 import Link from "next/link";
-import Script from "next/script";
 import React, { useState, useEffect, useRef } from "react";
-import { cdnImage } from "/utils/cdnImage";
-import { addDefaultSource } from "/utils/addDefaultSource";
 
-import ContentLoader from "react-content-loader";
-import clsx from "clsx";
 import CloudinaryImage from "../CloudinaryImage";
+
+import useElementObserver from "../../hooks/useElementObserver";
 import { video } from "@cloudinary/url-gen/qualifiers/source";
 
 export default function Nft({ user, token, onLoad, columns, onError }) {
   
   const [videoUrl, setVideoUrl] = useState();
   const [loaded, setLoaded] = useState(false);
-  const videoRef = useRef();
-  
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const videoRef = useRef(null);
+
+  const { isVisible } = useElementObserver(videoRef, "500px")  
 
   const responsiveSteps = () => {
     switch (columns) {
@@ -25,10 +24,15 @@ export default function Nft({ user, token, onLoad, columns, onError }) {
   }
 
   useEffect(() => {
-    if (videoRef.current) {
+    if (!videoRef.current) return;
+
+    if (isVisible && videoLoaded) {
       videoRef.current.play()
+    } else {
+      videoRef.current.pause()
     }
-  }, [videoUrl])
+
+  },[videoRef.current, isVisible, videoLoaded])
 
   useEffect(() => {
     if (!token) return;
@@ -68,15 +72,19 @@ export default function Nft({ user, token, onLoad, columns, onError }) {
             {videoUrl && loaded ? (
               <>
                 <video
-                  ref={videoRef}
                   autoPlay
+                  ref={videoRef}
+                  preload="metadata"
                   muted
                   loop
                   playsInline
                   id={`video-${ token.mint }`}
                   className="mx-auto w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10 duration-200 opacity-0"
-                  // onLoadedData={onImageLoad}
-                  onCanPlay={e => e.target.classList.add("opacity-100")}
+                  // onCanPlay onLoadedData
+                  onCanPlayThrough={e => {
+                    e.target.classList.add("opacity-100")
+                    setVideoLoaded(true)
+                  }}
                   onError={(e) => e.target.classList.add("hidden")}
                 >
                   <source src={videoUrl} type="video/mp4" />
@@ -84,17 +92,16 @@ export default function Nft({ user, token, onLoad, columns, onError }) {
                 </video>
               </>
             ) : null}
-            
+     
             <CloudinaryImage
               id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-              // className="mx-auto cursor-pointer object-center object-cover"
+              className={videoLoaded ? "invisible" : undefined}
               mint={token.mint}
               onLoad={onImageLoad}
               width={responsiveSteps()}
               metadata={token}
               onError={onError}
-            />
-            
+            />            
           </a>
         </Link>        
       </div>

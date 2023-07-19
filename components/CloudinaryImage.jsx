@@ -144,7 +144,7 @@ const CloudinaryImage = ({
         : null
       }
       {
-        (cldImg.toURL())//(isVisible || noLazyLoad) && //for true lazy load (if using ideally find a way to maintain images in memory so they dont need to be fetched everytime)
+        (hasBeenObserved || noLazyLoad) && (cldImg.toURL())//(isVisible || noLazyLoad) && //for true lazy load (if using ideally find a way to maintain images in memory so they dont need to be fetched everytime)
         ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img

@@ -74,9 +74,9 @@ export default function Nft({ user, token, onLoad, columns, onError }) {
                   loop
                   playsInline
                   id={`video-${ token.mint }`}
-                  className="mx-auto w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10"
+                  className="mx-auto w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10 duration-200 opacity-0"
                   // onLoadedData={onImageLoad}
-                  // onCanPlay={onImageLoad}
+                  onCanPlay={e => e.target.classList.add("opacity-100")}
                   onError={(e) => e.target.classList.add("hidden")}
                 >
                   <source src={videoUrl} type="video/mp4" />

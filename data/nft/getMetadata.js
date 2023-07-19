@@ -212,7 +212,7 @@ async function getMetadata(publicKeys, justVisible = false) {
 
     if (!visibility) {
       result.order_id = null;
-      result.visible = user_default;
+      result.visible = false //user_default; //forcing to false 
       result.span = 1;
     } else {
       result.order_id = visibility.order_id;

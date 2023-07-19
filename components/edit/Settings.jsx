@@ -209,7 +209,7 @@ export default function Settings() {
                         </div>
                       </dd>
                     </div>
-                    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
+                    {/* <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
                       <dt className="text-sm font-medium text-gray-500">
                         Default Visibility
                       </dt>
@@ -233,7 +233,7 @@ export default function Settings() {
                           automatically be visible in your gallery
                         </div>
                       </dd>
-                    </div>
+                    </div> */}
                   </dl>
                 </div>
               </div>

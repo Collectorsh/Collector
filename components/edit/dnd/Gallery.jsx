@@ -32,7 +32,7 @@ export default function Gallery({ tokens, user }) {
   const [bulkEdit, setBulkEdit] = useState(false);
   const { waiting, completed, uploadAll, uploadAllCompleted, cloudinaryCompleted } = useImageFallbackContext()
   const [feedbackOpen, setFeedbackOpen] = useState(false)
-
+  
   useEffect(() => {    
     if (!waiting) {
       uploadAll(tokens)//will optimized any images not optimized yet

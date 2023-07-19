@@ -18,7 +18,7 @@ import { useImageFallbackContext } from "../contexts/imageFallback";
 
 
 function Gallery({user}) {
-  const tokens = useMetadata(user?.public_keys);
+  const tokens = useMetadata(user?.public_keys, true);
 
   const [, setListings] = useContext(ListingsContext);
   const [, setOffers] = useContext(OffersContext);

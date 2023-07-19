@@ -9,10 +9,12 @@ import clsx from "clsx";
 import CloudinaryImage from "../CloudinaryImage";
 import { video } from "@cloudinary/url-gen/qualifiers/source";
 
-export default function Nft({ user, token, onLoad, tokenMetadata, columns, onError }) {
+export default function Nft({ user, token, onLoad, columns, onError }) {
+  
   const [videoUrl, setVideoUrl] = useState();
   const [loaded, setLoaded] = useState(false);
   const videoRef = useRef();
+  
 
   const responsiveSteps = () => {
     switch (columns) {
@@ -29,14 +31,14 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
   }, [videoUrl])
 
   useEffect(() => {
-    if (!tokenMetadata) return;
+    if (!token) return;
     try {
-      if (tokenMetadata.animation_url) {
-        if (tokenMetadata.animation_url.split(".").pop().includes("mp4")) {
-          setVideoUrl(tokenMetadata.animation_url);
+      if (token.animation_url) {
+        if (token.animation_url.split(".").pop().includes("mp4")) {
+          setVideoUrl(token.animation_url);
         }
       } else {
-        for (let file of tokenMetadata.properties.files) {
+        for (let file of token.properties.files) {
           if (file.type && file.type === "video/mp4") {
             setVideoUrl(file.uri);
           }
@@ -45,7 +47,7 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
     } catch (err) {
       // expected to have some errors
     }
-  }, [tokenMetadata]);
+  }, [token]);
 
   const onImageLoad = (event) => {
     setLoaded(true);
@@ -63,7 +65,7 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
       >
         <Link href={`/nft/${ token.mint }`} title="">
           <a className={loaded ? "animate-enter" : "opacity-0"}>
-            {videoUrl ? (
+            {videoUrl && loaded ? (
               <>
                 <video
                   ref={videoRef}
@@ -74,7 +76,8 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
                   id={`video-${ token.mint }`}
                   className="mx-auto w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10"
                   // onLoadedData={onImageLoad}
-                  onCanPlay={onImageLoad}
+                  // onCanPlay={onImageLoad}
+                  onError={(e) => e.target.classList.add("hidden")}
                 >
                   <source src={videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.
@@ -88,7 +91,7 @@ export default function Nft({ user, token, onLoad, tokenMetadata, columns, onErr
               mint={token.mint}
               onLoad={onImageLoad}
               width={responsiveSteps()}
-              metadata={tokenMetadata}
+              metadata={token}
               onError={onError}
             />
             

@@ -20,11 +20,6 @@ export default function GalleryContainer({ tokens, user, uploadAllCompleted }) {
 
   useEffect(() => {
     if (window.performance) {
-      console.log("clearing resource timings")
-      // // Set the buffer size to a larger number
-      // window.performance.setResourceTimingBufferSize(300); // Double the default size
-      window.performance.clearResourceTimings();
-
       // Listen for the 'resourcetimingbufferfull' event
       window.performance.onresourcetimingbufferfull = function() {
         // Increase the buffer size again if it gets full

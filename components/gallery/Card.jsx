@@ -10,24 +10,27 @@ import clsx from "clsx";
 function Card(props) {
   const user = props.user;
   const columns = props.columns;
-  const [token, setToken] = useState();
+  // const [token, setToken] = useState();
+  const token = props.token;
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
-  const initGetData = useCallback(async (tok) => {
-    // console.log("METADATA HIT")
-    try {
-      const res = await getMetadataFromUri(tok);
-      if (res) setToken(res);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+
+  //NOW fetching metadata on intial load, shouldnt need this (keeping for a bit just in case (Jul 18th 2023))
+  // const initGetData = useCallback(async (tok) => {
+  //   // console.log("METADATA HIT")
+  //   try {
+  //     const res = await getMetadataFromUri(tok);
+  //     if (res) setToken(res);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
   const handleLoad = (e) => { 
     if (!loaded) {
       setLoaded(true)
-      initGetData(props.token);
+      // initGetData(props.token);
     }
   }
 
@@ -45,9 +48,9 @@ function Card(props) {
         error && "hidden",
       )}
     >
-      <Nft user={user} token={props.token} tokenMetadata={token} onLoad={handleLoad} onError={handleError} columns={columns} />
       {token && (
         <>
+          <Nft user={user} token={token} onLoad={handleLoad} onError={handleError} columns={columns} />
           <Listings token={token} />
           <ShowOffers token={token} />
           <MetaContainer user={user} token={token} />

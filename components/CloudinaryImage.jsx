@@ -85,11 +85,11 @@ const CloudinaryImage = ({
         setOpacity(1)
         
         setError("Using CDN Return ID")
-      } else if (fallback?.fallbackImage) {
+      } else if (fallback?.fallbackImage) { //image coming back from API (deprecated)
         //handle no CDN image
 
-        // setFallbackUrl(fallback.fallbackImage)
-        // setOpacity(1)
+        setFallbackUrl(fallback.fallbackImage)
+        setOpacity(1)
 
         setError("Using Metadata Fallback Image")
       } else {
@@ -109,21 +109,18 @@ const CloudinaryImage = ({
     }
 
     if (!error) {
-      //API call 
+      //assume a CDN error
       setError("CDN")
 
-      if(useUploadFallback) addNonCDNMint(mint)
-      // if (metadata?.image && metadata?.mint) {
-      //   addNonCDNMetadata(metadata)
-      // } else if (mint) {
-      //   addNonCDNMint(mint)
-      // }
-    
+      if (useUploadFallback) addNonCDNMint(mint)
+      
       if (useMetadataFallback) {
         // USE METADATA URL (NOT OPTIMIZED)
         const image = await HandleNoUrl(mint)
-        setFallbackUrl(image)
-        setOpacity(1)
+        if (image) {
+          setFallbackUrl(image)
+          setOpacity(1)
+        }
       }
       
     }
@@ -131,12 +128,11 @@ const CloudinaryImage = ({
 
   const handleLoad = (e) => {
     console.log("IMAGE LOADED")
-    // setFullHeight(e.target.offsetHeight)
-    setOpacity(1) 
+    // setFullHeight(e.target.offsetHeight) //for maintaining layouts (currently not using)
     if (onLoad) onLoad(e)
   }
 
-  const lazyStyle = noLazyLoad ? {} : { transitionDuration: "0.3s" }//, visibility: isVisible ? "visible" : "hidden" }
+  const lazyStyle = noLazyLoad ? {} : { transitionDuration: "0.3s" }
 
   return (
     <>
@@ -148,7 +144,7 @@ const CloudinaryImage = ({
         : null
       }
       {
-        (hasBeenObserved || noLazyLoad) && (cldImg.toURL())//
+        (cldImg.toURL())//(isVisible || noLazyLoad) && //for true lazy load (if using ideally find a way to maintain images in memory so they dont need to be fetched everytime)
         ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img

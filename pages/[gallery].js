@@ -12,13 +12,12 @@ import { pluralize } from "/utils/pluralize";
 import { auctionHousesArray } from "/config/settings";
 import { Metaplex } from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
-import { useRouter } from "next/router";
 import { useMetadata } from "../data/nft/getMetadata";
 import { useImageFallbackContext } from "../contexts/imageFallback";
 
 
 function Gallery({user}) {
-  const tokens = useMetadata(user?.public_keys, true);
+  const tokens = useMetadata(user?.public_keys, { justVisible: true });
 
   const [, setListings] = useContext(ListingsContext);
   const [, setOffers] = useContext(OffersContext);
@@ -87,11 +86,14 @@ function Gallery({user}) {
     } catch (err) {
       console.error("Error fetching listings: ", err);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    fetchListings();
-  }, []);
+    //only fetch listings if we have tokens
+    if (tokens?.length) fetchListings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokens]);
 
   return (
     <div className="dark:bg-black">

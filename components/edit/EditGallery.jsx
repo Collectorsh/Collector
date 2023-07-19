@@ -10,7 +10,7 @@ import { useMetadata } from "/data/nft/getMetadata";
 export default function EditGallery() {
   const [user] = useContext(UserContext);
   // const [tokens, setTokens] = useState();
-  const tokens = useMetadata(user?.public_keys);
+  const tokens = useMetadata(user?.public_keys, { useArtistDetails: false});
 
   return (
     <div className="dark:bg-black mt-2 pb-12">

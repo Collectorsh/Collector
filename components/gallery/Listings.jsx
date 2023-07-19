@@ -10,7 +10,8 @@ export default function Listings({ token }) {
 
   useEffect(() => {
     let lstngs = listings.filter((l) => l.address === token.address);
-    if (!lstngs) return;
+    
+    if (!lstngs.length) return;
     let highest = sortHighestListing(token, lstngs);
     setListing(highest);
   }, [listings]);

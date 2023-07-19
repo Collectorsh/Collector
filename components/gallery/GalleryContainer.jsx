@@ -4,10 +4,7 @@ import Masonry from "react-masonry-css";
 import LazyLoader from "../LazyLoader";
 
 export default function GalleryContainer({ tokens, user, uploadAllCompleted }) {
-  const [llIndex, setLlIndex] = useState(9)
-  const handleLoad = () => setLlIndex(prev => prev + 9)
-
-  const renderedTokens = tokens//.slice(0, llIndex)
+  const renderedTokens = tokens
 
   const columns = user && user.columns ? user.columns : 3;
 
@@ -65,8 +62,6 @@ export default function GalleryContainer({ tokens, user, uploadAllCompleted }) {
                 return <Card key={index} token={token} user={user} onLoad={handleLoad} />;
             })}
         </div> */}
-        
-        {/* {llIndex < tokens.length && (<LazyLoader cb={handleLoad} rootMargin="50px" />)} */}
       </div>
     </div>
   );

@@ -52,6 +52,11 @@ export const ImageFallbackProvider = ({ children }) => {
         setCompleted(prev => prev + tokens.length)
         break;
       }
+      case "Resizing Images": {
+        const { resizing } = data;
+        console.log("Resizing Images", resizing)
+        break;
+      }
       case "TEST": {
         console.log("TEST", data)
         break;
@@ -66,7 +71,7 @@ export const ImageFallbackProvider = ({ children }) => {
     if (!tokens || tokens.length === 0 || !user?.username) return;
     const errorMints = []
 
-    //TEST
+    //TEST 🚀
     // const unoptimizedTokens = tokens
 
     //REAL CODE
@@ -109,7 +114,6 @@ export const ImageFallbackProvider = ({ children }) => {
     } catch (error) {
       console.log("Error uploading one image", error);
     }
-    // handleOneUpload(newMint)
   }, [socket_id])
 
   return (
@@ -119,7 +123,6 @@ export const ImageFallbackProvider = ({ children }) => {
       setCloudinaryError,
       uploadAll,
       addNonCDNMint,
-      // addNonCDNMetadata,
       uploadAllCompleted,
       cloudinaryCompleted,
       cloudinaryError,

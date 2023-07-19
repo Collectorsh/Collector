@@ -123,7 +123,10 @@ function data(pubKey) {
 }
 
 //HELIUS METADATA BY OWNER
-async function getMetadata(publicKeys, justVisible = false) { 
+async function getMetadata(publicKeys, {
+  justVisible = false,
+  useArtistDetails = true
+}) { 
   const baseTokens = []
   const tokenAccounts = {}
  
@@ -157,13 +160,14 @@ async function getMetadata(publicKeys, justVisible = false) {
       baseTokens.push(...res.items)
     }
 
-    //associated token accounts
-    let tokenAccountRes = await axios.post(rpcHost, data(publicKey));
-    for (const account of tokenAccountRes.data.result.value) {
-      let associatedTokenAccountAddress = account.pubkey;
-      let mint = account.account.data.parsed.info.mint;
-      tokenAccounts[mint] = associatedTokenAccountAddress;
-    }
+    //For now this gets picked up on detail pages seperately
+    // //associated token accounts
+    // let tokenAccountRes = await axios.post(rpcHost, data(publicKey));
+    // for (const account of tokenAccountRes.data.result.value) {
+    //   let associatedTokenAccountAddress = account.pubkey;
+    //   let mint = account.account.data.parsed.info.mint;
+    //   tokenAccounts[mint] = associatedTokenAccountAddress;
+    // }
   }
 
   const mungedTokens = baseTokens.map((token) => { 
@@ -199,9 +203,7 @@ async function getMetadata(publicKeys, justVisible = false) {
 
   const { visibilities, optimizations, user_default } = visResults
 
-  const creatorResp = await apiClient.post("/creator/details", {
-    tokens: mungedTokens,
-  });
+
 
   const results = []  
 
@@ -225,6 +227,23 @@ async function getMetadata(publicKeys, justVisible = false) {
       result.optimizationError = optimization.error_message;
     }
     
+    results.push(result)
+  }
+  
+  if (justVisible) {
+    results = results.filter((r) => r.visible);
+  }
+
+  const creatorResp = useArtistDetails
+    ? await apiClient.post("/creator/details", {
+      tokens: results,
+    })
+    : { data: [] };
+
+  for (const result of results) { 
+    // Add metadata PDA address
+    const metadataPDA = await Metadata.getPDA(new PublicKey(result.mint));
+    result.address = metadataPDA.toBase58(); 
 
     // Loop through results and set artist name, twitter
     let tokens = creatorResp.data.filter((t) => t.public_key === result.creator);
@@ -240,21 +259,9 @@ async function getMetadata(publicKeys, justVisible = false) {
       }
     }
 
-    
-    results.push(result)
-  }
-  
-  if (justVisible) {
-    results = results.filter((r) => r.visible);
-  }
-
-  for (const result of results) { 
-    // Add metadata PDA address
-    const metadataPDA = await Metadata.getPDA(new PublicKey(result.mint));
-    result.address = metadataPDA.toBase58();
-
+     //For now this gets picked up on detail pages seperately
     //associated token account
-    result.associatedTokenAccountAddress = tokenAccounts[result.mint];
+    // result.associatedTokenAccountAddress = tokenAccounts[result.mint];
   }
 
   results = results.sort((a, b) => {

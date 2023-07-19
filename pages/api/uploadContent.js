@@ -3,7 +3,7 @@ import axios from 'axios';
 import { v2 as cloudinary } from 'cloudinary'
 import sharp from 'sharp';
 
-const SCALE_FACTOR = 0.9;
+const SCALE_FACTOR = 0.80;
 const MAX_FILE_SIZE = 20000000; // 20MB
 
 
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     const result = await cloudinary.uploader
       .upload(content, {
         resource_type: "auto",
-        public_id: `nft-demo/${ mint }`,
+        public_id: `${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ mint }`,
         overwrite: true,
       })
     
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
         cloudinary.uploader
           .upload_stream({
             resource_type: "auto",
-            public_id: `nft-demo/${ mint }`,
+            public_id: `${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ mint }`,
             overwrite: true,
           }, (error, result) => {
             if (error) {
@@ -69,15 +69,27 @@ async function scaleImage(buffer) {
   let scaledBuffer = buffer;
   let imageSize = Buffer.byteLength(scaledBuffer);
 
-  while (imageSize > MAX_FILE_SIZE) {
-    // Scale down the image
-    const image = sharp(scaledBuffer);
-    const metadata = await image.metadata();
-    const width = Math.round(metadata.width * SCALE_FACTOR);
-    scaledBuffer = await image.resize(width).toBuffer();
+  let reduceBy;
+  let iterations = 0
+  while (imageSize > MAX_FILE_SIZE && iterations < 5) {
 
-    // Check the new file size
-    imageSize = Buffer.byteLength(scaledBuffer);
+    // Scale down the image
+    try {
+      const image = sharp(scaledBuffer);
+      const metadata = await image.metadata();
+  
+  
+      if (!reduceBy) reduceBy = Math.round(metadata.width * (1 - SCALE_FACTOR));
+  
+      const width = metadata.width - reduceBy;
+      scaledBuffer = await image.resize(width).toBuffer();
+      // Check the new file size
+      imageSize = Buffer.byteLength(scaledBuffer);
+    } catch (e) {
+      console.log("Error scaling image", e);
+    }
+
+    iterations++;
   }
 
   return scaledBuffer;

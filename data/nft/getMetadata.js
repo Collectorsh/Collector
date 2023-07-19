@@ -198,7 +198,6 @@ async function getMetadata(publicKeys, justVisible = false) {
   }).then(res => res.data)
 
   const { visibilities, optimizations, user_default } = visResults
-  console.log("🚀 ~ file: getMetadata.js:201 ~ getMetadata ~  user_default:",  user_default)
 
   const creatorResp = await apiClient.post("/creator/details", {
     tokens: mungedTokens,

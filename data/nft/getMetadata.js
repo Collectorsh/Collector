@@ -377,12 +377,12 @@ async function getMetadata(publicKeys, {
 
 export default getMetadata;
 
-const fetcher = async ({ publicKeys, justVisible }) => {
-  if(!publicKeys) return undefined
-  return await getMetadata(publicKeys, justVisible )
+const fetcher = async ({ publicKeys, options }) => {
+  if (!publicKeys) return undefined
+  return await getMetadata(publicKeys, options)
 }
-export function useMetadata(publicKeys, justVisible = false) {
-  const { data: tokens, error } = useSWR({ publicKeys, justVisible }, fetcher)
+export function useMetadata(publicKeys, options) {
+  const { data: tokens, error } = useSWR({ publicKeys, options }, fetcher)
   return tokens
 }
 

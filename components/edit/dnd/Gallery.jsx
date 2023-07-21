@@ -23,8 +23,6 @@ import CloudinaryImage from "../../CloudinaryImage";
 import { useImageFallbackContext } from "../../../contexts/imageFallback";
 import OptimizeFeedbackModal from "./OptimizeFeedbackModal";
 
-import { Grid as VirtualGrid, AutoSizer } from 'react-virtualized';
-
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
   const [columns, setColumns] = useState(user?.columns);

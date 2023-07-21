@@ -5,24 +5,38 @@ import UserContext from "../../contexts/user";
 import EditWrapper from "../../components/curatorProfile/editWrapper";
 import { PencilAltIcon, PhotographIcon } from "@heroicons/react/solid";
 import EditImageModal from "../../components/curatorProfile/editImageModal";
+import EditBioModal from "../../components/curatorProfile/editBioModal";
 
 function ProfilePage({ curator }) {
   const [user] = useContext(UserContext);
 
   const [editBannerOpen, setEditBannerOpen] = useState(false);
   const [editPfpOpen, setEditPfpOpen] = useState(false);
+  const [editBioOpen, setEditBioOpen] = useState(false);
 
   const isOwner = Boolean(user && user.public_keys.includes(curator?.public_keys?.[0]));
 
-  const handleEditBanner = () => {
-    alert("Edit Banner placeholder")
+  const handleEditBanner = (selectedToken) => {
+    console.log("🚀 selectedToken:", selectedToken)
+    alert("Edit Banner placeholder", selectedToken)
+
     setEditBannerOpen(false);
   }
 
-  const handleEditPfp = () => { 
-    alert("Edit Pfp placeholder")
+  const handleEditPfp = (selectedToken) => { 
+    console.log("🚀 selectedToken:", selectedToken)
+    alert("Edit Pfp placeholder", selectedToken)
+
     setEditPfpOpen(false);
   }
+
+  const handleEditBio = (newBio) => {
+    console.log("🚀 newBio:", newBio)
+    alert("Edit Bio placeholder", newBio)
+
+    setEditBioOpen(false);
+  }
+
   return (
     <>
       <MainNavigation />
@@ -65,7 +79,7 @@ function ProfilePage({ curator }) {
         <div className="group/bio">
           <EditWrapper
             isOwner={isOwner}
-            onEdit={handleEditBanner}
+            onEdit={() => setEditBioOpen(true)}
             placement="outside-tr"
             groupHoverClass="group-hover/bio:opacity-100"
             icon={<PencilAltIcon className="w-6 h-6" />}
@@ -88,6 +102,12 @@ function ProfilePage({ curator }) {
         onClose={() => setEditPfpOpen(false)}
         onSave={handleEditPfp}
         type="pfp"
+      />
+      <EditBioModal
+        isOpen={editBioOpen}
+        onClose={() => setEditBioOpen(false)}
+        onSave={handleEditBio}
+        bio={curator.bio}
       />
     </>
   );

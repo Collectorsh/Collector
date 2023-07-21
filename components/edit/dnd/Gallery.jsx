@@ -23,8 +23,6 @@ import CloudinaryImage from "../../CloudinaryImage";
 import { useImageFallbackContext } from "../../../contexts/imageFallback";
 import OptimizeFeedbackModal from "./OptimizeFeedbackModal";
 
-import { Grid as VirtualGrid, AutoSizer } from 'react-virtualized';
-
 export default function Gallery({ tokens, user }) {
   const [activeId, setActiveId] = useState(null);
   const [columns, setColumns] = useState(user?.columns);
@@ -351,51 +349,6 @@ const Visible = ({ items, columns, bulkEdit }) => {
   }
   const renderedItems = getRenderedItems()
   
-  //NEEDS TO FIGURE OUT DRAGGING outside constinaers for virtualized list to work
-  // const getVirtualItems = () => { 
-  //   const virtualizedList = [[]]
-  //   const rowIndex = 0
-  //   renderable.forEach((token, index) => {
-  //     let row = virtualizedList[rowIndex]
-  //     if (row.length >= columns) {
-  //       rowIndex++
-  //       virtualizedList.push([])
-  //       row = virtualizedList[rowIndex]
-  //     }
-  //     row.push(<div key={token.mint+"visible"}>
-  //       <SortablePhoto
-  //         key={token.mint}
-  //         mint={token.mint}
-  //         uri={token.uri}
-  //         index={index}
-  //         height={
-  //           columns === 2
-  //             ? 350
-  //             : columns === 3
-  //               ? 250
-  //               : columns === 4
-  //                 ? 200
-  //                 : 150
-  //         }
-  //         section="visible"
-  //         bulkEdit={bulkEdit}
-  //       />
-  //     </div>
-  //     )
-  //   })
-  //   return virtualizedList
-  // }
-
-  // const virtualItems = getVirtualItems()
-
-  // function cellRenderer({ columnIndex, key, rowIndex, style }) {
-  //   return (
-  //     <div key={key} style={style}>
-  //       {virtualItems[rowIndex][columnIndex]}
-  //     </div>
-  //   );
-  // }
-
   return (
     <div
       ref={setNodeRef}

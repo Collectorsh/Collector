@@ -406,30 +406,6 @@ const Visible = ({ items, columns, bulkEdit }) => {
         items={renderable.map((i) => i.mint)}
         strategy={rectSortingStrategy}
       >
-        {/* <AutoSizer> //NEEDS TO FIGURE OUT DRAGGING outside constinaers for virtualized list to work
-          {({ height, width }) => {
-            return (
-              <VirtualGrid
-                cellRenderer={cellRenderer}
-                columnCount={virtualItems[0].length}
-                columnWidth={300}
-                height={height}
-                rowCount={virtualItems.length}
-                rowHeight={
-                  columns === 2
-                    ? 350
-                    : columns === 3
-                      ? 250
-                      : columns === 4
-                        ? 200
-                        : 150
-                }
-                width={width}
-              />
-            )
-          }}
-        </AutoSizer>  */}
-
         <Grid columns={columns}>
           {renderedItems}
         </Grid>

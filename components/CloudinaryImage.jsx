@@ -54,7 +54,7 @@ const CloudinaryImage = ({
   const [fallbackUrl, setFallbackUrl] = useState(null)
   const [opacity, setOpacity] = useState(noLazyLoad ? 1 : 0)
 
-  // console.log("CLOUDINARY RENDER")
+  console.log("CLOUDINARY RENDER")
 
   useEffect(() => {
     if(noLazyLoad) return
@@ -112,9 +112,9 @@ const CloudinaryImage = ({
       //assume a CDN error
       setError("CDN")
 
-      if (useUploadFallback) addNonCDNMint(mint)
+      if (useUploadFallback && mint) addNonCDNMint(mint)
       
-      if (useMetadataFallback) {
+      if (useMetadataFallback && mint) {
         // USE METADATA URL (NOT OPTIMIZED)
         const image = await HandleNoUrl(mint)
         if (image) {

@@ -10,7 +10,7 @@ import SearchBar from "../SearchBar";
 export default function EditImageModal({ title, isOpen, onClose, onSave, type }) {
   const [user] = useContext(UserContext);
   const tokens = useMetadata(user?.public_keys, {
-    useArtistDetails: true,
+    useArtistDetails: false,
     justVisible: false
   });
 
@@ -27,7 +27,10 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
   }
   const handleClose = () => { 
     onClose();
-    setTimeout(() => setSearch(""), 500);
+    setTimeout(() => {
+      setSearch("")
+      setSelected(null);
+    }, 500);
   }
 
   const orderedTokens = useMemo(() => {
@@ -66,7 +69,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
       {orderedTokens
         ? (
           <div className="my-4 border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
-            <div className={clsx("w-full h-[532px] p-2 overflow-auto grid gap-4 rounded-lg items-center", gridColumns)}>
+            <div className={clsx("w-full h-[532px] p-2 overflow-auto grid gap-4 rounded-lg", gridColumns)}>
               {orderedTokens.map((token, i) => { 
                 const isSelected = selected?.mint === token.mint;
                 return (
@@ -80,8 +83,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
                       )}
                       id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
                       mint={token.mint}
-                      // noLazyLoad
-                      width={500}
+                      width={isBanner ? 800 : 500}
                     />
                   </button>
                 )

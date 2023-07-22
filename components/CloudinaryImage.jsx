@@ -54,7 +54,7 @@ const CloudinaryImage = ({
   const [fallbackUrl, setFallbackUrl] = useState(null)
   const [opacity, setOpacity] = useState(noLazyLoad ? 1 : 0)
 
-  console.log("CLOUDINARY RENDER")
+  // console.log("CLOUDINARY RENDER")
 
   useEffect(() => {
     if(noLazyLoad) return

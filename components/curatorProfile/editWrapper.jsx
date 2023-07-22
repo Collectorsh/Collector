@@ -7,7 +7,8 @@ const EditWrapper = ({
   onEdit,
   placement,
   icon = <CogIcon className="w-8 h-8" />,
-  groupHoverClass
+  groupHoverClass,
+  className
 }) => { 
   
   const getPlacement = () => {
@@ -22,7 +23,7 @@ const EditWrapper = ({
     <button
       disabled={!isOwner}
       onClick={onEdit}
-      className={clsx("absolute", getPlacement(),
+      className={clsx("absolute z-[19]", getPlacement(),
         "bg-neutral-200 dark:bg-neutral-700 rounded-full p-1 shadow-lg dark:shadow-white/10",
         "duration-300 opacity-30 hover:opacity-100",
         groupHoverClass,
@@ -33,7 +34,7 @@ const EditWrapper = ({
     </button>
   )
   return (
-    <div className="inline-block relative h-full w-full">
+    <div className={clsx("inline-block relative h-full w-full", className)}>
       {isOwner && editButton}
       {children}
     </div>

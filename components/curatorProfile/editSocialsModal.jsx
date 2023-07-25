@@ -7,7 +7,7 @@ import { Menu, Transition } from "@headlessui/react"
 import clsx from "clsx"
 
 const EditSocialsModal = ({ socials, onSave, isOpen, onClose }) => { 
-  const [newSocials, setNewSocials] = useState(socials)
+  const [newSocials, setNewSocials] = useState(socials || [])
 
   const cantSave = newSocials.some(social => social.link === "")
   const noMoreSocials = newSocials.length >= 5

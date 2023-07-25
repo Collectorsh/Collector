@@ -50,7 +50,6 @@ export default function MainNavigation() {
           <div className="flex">
             <div className="flex items-center col-span-1 w-[200px] lg:w-1/2">
               <div className="cursor-pointer md:my-3 w-[200px]">
-                {/* <!-- Website Logo --> */}
                 <Link href="/">
                   <a className="collector text-3xl font-bold">
                   collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r

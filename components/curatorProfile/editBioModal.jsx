@@ -4,7 +4,7 @@ import Modal from "../Modal"
 import { hd } from "@cloudinary/url-gen/qualifiers/streamingProfile"
 
 const EditBioModal = ({ bio, onSave, isOpen, onClose }) => { 
-  const [newBio, setNewBio] = useState(bio)
+  const [newBio, setNewBio] = useState(bio || "")
 
   const handleEnter = (e) => {
     //will need to figure out some way to handle new lines before using this ("shift + enter"?)

@@ -22,9 +22,10 @@ export const ImageFallbackProvider = ({ children }) => {
   const [completed, setCompleted] = useState(0);
   const [uploadAllCompleted, setUploadAllCompleted] = useState(false);
 
-  const socket_id = useMemo(() => makeSocketID(user?.username, router.asPath ), [user?.username, router.asPath])
+  const socket_id = useMemo(() => makeSocketID(router.asPath, user?.username), [user?.username, router.asPath])
 
   useEffect(() => {
+    //reset fallback image state when changing pages
     setWaiting(0)
     setCompleted(0)
     setCloudinaryError([])

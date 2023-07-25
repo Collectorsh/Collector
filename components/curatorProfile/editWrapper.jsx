@@ -24,7 +24,7 @@ const EditWrapper = ({
       disabled={!isOwner}
       onClick={onEdit}
       className={clsx("absolute z-[19]", getPlacement(),
-        "bg-neutral-200 dark:bg-neutral-700 rounded-full p-1 shadow-lg dark:shadow-white/10",
+        "bg-neutral-200 dark:bg-neutral-700 rounded-full shadow-lg dark:shadow-white/10",
         "duration-300 opacity-30 hover:opacity-100",
         groupHoverClass,
         "hover:scale-110 active:scale-100",

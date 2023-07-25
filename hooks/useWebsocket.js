@@ -2,10 +2,15 @@ import { useEffect, useRef, useContext, useState, useCallback } from 'react';
 
 import { ActionCableContext } from '../contexts/webSocket';
 
-export const makeSocketID = (username, pathname) => {
-  if(!username) return null
-  const page = pathname === "/" ? "home" : pathname.replace("/", "")
-  return `${ username }-${ page }`
+export const makeSocketID = (pathname, username) => {
+  switch (pathname) { 
+    case "/edit": {
+      if (!username) return null
+      return `${ username }-edit`
+    }
+    case "/": return null //no socket needed for home page
+    default: return pathname.replace("/", "")
+  }
 }
 
 const useActionCable = (handlers = {}, socket_id) => {
@@ -13,7 +18,7 @@ const useActionCable = (handlers = {}, socket_id) => {
   const channelName = "NotificationsChannel"
 
   useEffect(() => {
-    if(!cable || !socket_id) return
+    if (!cable || !socket_id) return
     let subscription;
 
     try {

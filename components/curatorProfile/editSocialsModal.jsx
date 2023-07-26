@@ -129,7 +129,7 @@ const SocialIconDropdown = ({ type, setType }) => {
     <Menu as="div" className="relative">
       {({ open }) => (
         <>
-          <Menu.Button className="flex items-center w-fit">
+          <Menu.Button className="flex items-center justify-between w-10">
             {getIcon(type)}
             <ChevronDownIcon
               className={clsx("h-5 w-5 duration-200", open ? "transform rotate-180" : "")}
@@ -147,13 +147,18 @@ const SocialIconDropdown = ({ type, setType }) => {
             leaveTo="transform opacity-0 scale-95"
           >
             <Menu.Items
-              className="absolute top-0 left-0 mt-6 w-fit flex flex-col justify-center rounded-md shadow  bg-white dark:bg-black z-20"
+              className="absolute top-0 left-0 mt-6 w-fit flex flex-col justify-center rounded-md shadow  bg-white dark:bg-black z-20 outline-none focus:outline-none"
             >
               {socialTypes.map((socialType, index) => (
-                <Menu.Item key={socialType+index}>
+                <Menu.Item
+                  key={socialType + index}
+                >
                   <button
-                    className="p-2 duration-200 opacity-75 hover:opacity-100 hover:scale-105 active:scale-100"
-                    onClick={() => setType(socialType)}
+                    className="p-2 duration-200 opacity-75 hover:opacity-100 hover:scale-105 active:scale-100 flex items-center justify-center"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setType(socialType)
+                    }}
                   >
                     {getIcon(socialType)}
                   </button>

@@ -40,6 +40,7 @@ export default function Modal({
                 "relative p-4 rounded-lg bg-white dark:bg-neutral-800",
                 "shadow-md shadow-black/25 dark:shadow-neutral-500/25",
                 "w-full max-h-[calc(100%-1rem)] overflow-y-auto",
+                "flex flex-col",
                 widthClass
               )}
             >

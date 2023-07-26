@@ -37,7 +37,11 @@ module.exports = {
       },
       animation: {
         enter: 'enter 1s ease-out',
-      }
+      },
+      height: { screen: '100svh' },
+      maxHeight: { screen: '100svh' },
+      minHeight: { screen: '100svh' },
+      pointerEvents: ['hover', 'no-touch'],
     },
   },
   plugins: [],

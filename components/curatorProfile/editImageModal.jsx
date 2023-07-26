@@ -9,6 +9,7 @@ import SearchBar from "../SearchBar";
 
 export default function EditImageModal({ title, isOpen, onClose, onSave, type }) {
   const [user] = useContext(UserContext);
+
   const tokens = useMetadata(user?.public_keys, {
     useArtistDetails: false,
     justVisible: false
@@ -57,7 +58,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
     }
   }, [type])
 
-  if(!user) return null
+  // if(!user) return null
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title={title}>
       <SearchBar
@@ -92,7 +93,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
           </div>
 
         )
-        : <div className="h-[532px] flex items-center justify-center">
+        : <div className="h-[532px] max-h-full flex items-center justify-center">
           <p className="animate-pulse">Gathering your digital assets...</p>
         </div>
         }

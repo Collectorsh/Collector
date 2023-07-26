@@ -20,9 +20,7 @@ import { Toaster } from "react-hot-toast";
 const bioPlaceholder = "Tell us about yourself!";
 
 function ProfilePage({ curator }) {
-  const router = useRouter();
   const [user] = useContext(UserContext);
-  console.log("🚀 ~ file: [username].js:23 ~ ProfilePage ~ user:", user)
 
   const [editBannerOpen, setEditBannerOpen] = useState(false);
   const [editPfpOpen, setEditPfpOpen] = useState(false);
@@ -36,8 +34,6 @@ function ProfilePage({ curator }) {
 
   const [bannerLoaded, setBannerLoaded] = useState(true);
   const [pfpLoaded, setPfpLoaded] = useState(true);
-
-  console.log("🚀 ~ file: [username].js:32 ~ ProfilePage ~ socials:", socials)
   
   const isOwner = Boolean(user && user.public_keys.includes(curator?.public_keys?.[0]) && user.api_key);
   const galleries = curator?.pro_galleries
@@ -53,6 +49,7 @@ function ProfilePage({ curator }) {
   }, [pfp, curator?.profile_image])
 
   const handleEditBanner = async (selectedToken) => {
+    if(!isOwner) return;
     setBanner(selectedToken.mint);
     const res = await updateBannerImage(user.api_key, selectedToken.mint)
     if (res.status === "success") success("Banner Updated")
@@ -60,6 +57,7 @@ function ProfilePage({ curator }) {
   }
 
   const handleEditPfp = async (selectedToken) => { 
+    if (!isOwner) return;
     setPfp(selectedToken.mint);
     const res = await updateProfileImage(user.api_key, selectedToken.mint)
     if (res.status === "success") success("Profile Image Updated!")
@@ -67,6 +65,7 @@ function ProfilePage({ curator }) {
   }
 
   const handleEditBio = async (newBio) => {
+    if (!isOwner) return;
     setBio(newBio);
     const res = await updateBio(user.api_key, newBio)
     console.log("🚀 ~ file: [username].js:55 ~ handleEditBio ~ res:", res)
@@ -75,6 +74,7 @@ function ProfilePage({ curator }) {
   }
 
   const handleEditSocials = async (newSocials) => { 
+    if(!isOwner) return;
     setSocials(newSocials);
     const res = await updateSocials(user.api_key, newSocials)
     if (res.status === "success") success("Socials Updated!")
@@ -120,7 +120,7 @@ function ProfilePage({ curator }) {
             )}
           </div>
         </EditWrapper>
-        <div className="w-36 h-36 absolute -bottom-12 ml-6 lg:ml-12 2xl:ml-6 group/pfp">
+        <div className="w-32 h-32 lg:w-40 lg:h-40 absolute -bottom-12 ml-6 lg:ml-12 2xl:ml-6 group/pfp">
           <EditWrapper
             isOwner={isOwner}
             onEdit={() => setEditPfpOpen(true)}
@@ -131,7 +131,7 @@ function ProfilePage({ curator }) {
             {pfp ? (
               <CloudinaryImage
                 className={clsx(
-                  "w-36 h-36 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black",
+                  "w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black",
                   !pfpLoaded && "animate-pulse"
                 )}
                 id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ pfp }`}
@@ -141,7 +141,7 @@ function ProfilePage({ curator }) {
                 height={144}
               />
             ) : (
-                <div className="flex justify-center items-center w-36 h-36 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black">
+                <div className="flex justify-center items-center w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black">
                   <p className="collector text-8xl font-bold mb-5">c</p>
                 </div>
             )}
@@ -200,32 +200,34 @@ function ProfilePage({ curator }) {
         }
 
       </div>
-      <EditImageModal
-        title="Edit Banner Image"
-        isOpen={editBannerOpen}
-        onClose={() => setEditBannerOpen(false)}
-        onSave={handleEditBanner}
-        type="banner"
-      />
-      <EditImageModal
-        title="Edit Profile Image"
-        isOpen={editPfpOpen}
-        onClose={() => setEditPfpOpen(false)}
-        onSave={handleEditPfp}
-        type="pfp"
-      />
-      <EditBioModal
-        isOpen={editBioOpen}
-        onClose={() => setEditBioOpen(false)}
-        onSave={handleEditBio}
-        bio={curator.bio}
-      />
-      <EditSocialsModal
-        isOpen={editSocialsOpen}
-        onClose={() => setEditSocialsOpen(false)}
-        onSave={handleEditSocials}
-        socials={curator.socials}
-      />
+      {isOwner && (<>
+        <EditImageModal
+          title="Edit Banner Image"
+          isOpen={editBannerOpen}
+          onClose={() => setEditBannerOpen(false)}
+          onSave={handleEditBanner}
+          type="banner"
+        />
+        <EditImageModal
+          title="Edit Profile Image"
+          isOpen={editPfpOpen}
+          onClose={() => setEditPfpOpen(false)}
+          onSave={handleEditPfp}
+          type="pfp"
+        />
+        <EditBioModal
+          isOpen={editBioOpen}
+          onClose={() => setEditBioOpen(false)}
+          onSave={handleEditBio}
+          bio={curator.bio}
+        />
+        <EditSocialsModal
+          isOpen={editSocialsOpen}
+          onClose={() => setEditSocialsOpen(false)}
+          onSave={handleEditSocials}
+          socials={curator.socials}
+        />
+      </>)}
     </>
   );
 }

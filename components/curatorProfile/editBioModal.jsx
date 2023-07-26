@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import MainButton from "../MainButton"
 import Modal from "../Modal"
-import { hd } from "@cloudinary/url-gen/qualifiers/streamingProfile"
 
 const EditBioModal = ({ bio, onSave, isOpen, onClose }) => { 
   const [newBio, setNewBio] = useState(bio || "")

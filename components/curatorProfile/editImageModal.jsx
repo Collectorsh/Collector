@@ -58,7 +58,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
     }
   }, [type])
 
-  // if(!user) return null
+  if(!user) return null
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title={title}>
       <SearchBar

@@ -71,7 +71,6 @@ function ProfilePage({ curator }) {
     if (!isOwner) return;
     setBio(newBio);
     const res = await updateBio(user.api_key, newBio)
-    console.log("🚀 ~ file: [username].js:55 ~ handleEditBio ~ res:", res)
     if (res.status === "success") success("Bio Updated!")
     else error("Bio update failed")
   }
@@ -266,7 +265,7 @@ export async function getServerSideProps(context) {
         curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
         name: "Hoops Gallery",
         description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-        available_artworks: ["EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP", "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24"],
+        available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
         is_published: true,
         banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
       },
@@ -275,7 +274,7 @@ export async function getServerSideProps(context) {
         curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
         name: "Abstract StuffG",
         description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-        available_artworks: ["EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP", "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24"],
+        available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
         is_published: true,
         banner_image: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24",
       },
@@ -284,7 +283,7 @@ export async function getServerSideProps(context) {
         curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
         name: "Photography Exhibit",
         description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-        available_artworks: ["EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP", "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24"],
+        available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
         is_published: true,
         banner_image: "86Umq7881f1QXpr91B1jPjpGMYu3CeZFFx4Rt25u5K24",
       },
@@ -293,7 +292,7 @@ export async function getServerSideProps(context) {
         curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
         name: "Hoops Gallery Old",
         description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-        available_artworks: ["EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP", "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24"],
+        available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
         is_published: false,
         banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
       },
@@ -310,11 +309,11 @@ export async function getServerSideProps(context) {
     //   pro_galleries: galleries
     // }
 
-    let username = context.params.username;
+    const username = context.params.username;
     const res = await getUserFromUsername(username)
 
     const curator = res?.user;
-    // curator.pro_galleries = galleries; //for mocking galleries only
+    curator.pro_galleries = galleries; //for mocking galleries only
 
     if (curator && curator?.subscription_level === "pro") {
       return { props: { curator } };

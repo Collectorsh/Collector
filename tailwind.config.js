@@ -1,3 +1,4 @@
+const { fontFamily } = require('tailwindcss/defaultTheme')
 module.exports = {
   darkMode: "class",
   content: [
@@ -6,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["DM Sans", ...fontFamily.sans],
+        display: ["DM Serif Text", ...fontFamily.serif],
+      },
       colors: {
         orange: "#FDA63E",
         gallery_background: "#17132E",
@@ -42,6 +47,9 @@ module.exports = {
       maxHeight: { screen: '100svh' },
       minHeight: { screen: '100svh' },
       pointerEvents: ['hover', 'no-touch'],
+      scale: {
+        '-1': '-1',
+      }
     },
   },
   plugins: [],

@@ -150,7 +150,7 @@ const CloudinaryImage = ({
         <img
           style={{ opacity, ...lazyStyle }}
           className={className}
-          width={width}
+          // width={width}
           height={height}
           src={fallbackUrl || cldImg.toURL()}
           alt={metadata?.name || ""}

@@ -5,36 +5,22 @@ import { useRouter } from "next/router"
 import Tippy from "@tippyjs/react"
 import "tippy.js/dist/tippy.css";
 import { InformationCircleIcon } from "@heroicons/react/solid"
+import { useEditName } from "../proGallery/editNameModal"
 
 const decimalRegex = /^\d+(\.\d+)?$/;
-
+export const urlRegex = /^[a-zA-Z0-9_-]{2,64}$/; 
 
 const CreateGalleryModal = ({ isOpen, onClose }) => {
   const router = useRouter()
-  const [galleryName, setGalleryName] = useState('')
-  const [galleryNameError, setGalleryNameError] = useState(null)
-  const [galleryDescription, setGalleryDescription] = useState('')
+  const { newName: galleryName, nameError, nameValid, setNewName } = useEditName("")
+
   const [curatorFee, setCuratorFee] = useState(undefined)
-  console.log("🚀 ~ file: createGalleryModal.jsx:15 ~ CreateGalleryModal ~ curatorFee:", curatorFee)
   const [curatorFeeError, setCuratorFeeError] = useState(null)
   const [galleryBanner, setGalleryBanner] = useState(undefined)
+  const [galleryDescription, setGalleryDescription] = useState('')
 
-  const nameValid = galleryName?.length >= 3 && galleryName && !galleryNameError 
   const feeValid = decimalRegex.test(curatorFee) && !curatorFeeError
   const galleryValid = nameValid && feeValid
-
-  useEffect(() => {
-    if (galleryName?.length <= 2) return;
-
-    const urlRegex = /^[a-zA-Z0-9_-]{2,64}$/; 
-    const isUrlValid = urlRegex.test(galleryName)
-
-    const isUnique = true // TODO: check if gallery name is unique
-
-    if (!isUnique) setGalleryNameError("Sorry this gallery name is already taken")
-    if (!isUrlValid) setGalleryNameError("Gallery Name must be 3-64 characters and can only contain letters, numbers, underscores, and dashes") 
-    if (isUrlValid && isUnique) setGalleryNameError(null)
-  }, [galleryName])
 
   useEffect(() => { 
     if (curatorFee === undefined) return;
@@ -43,9 +29,10 @@ const CreateGalleryModal = ({ isOpen, onClose }) => {
     else setCuratorFeeError(null)
   },[curatorFee])
 
-  const handleCreate= () => {
-    onSave(newBio)
-    onClose()
+  const handleCreate = async () => {
+    //TODO: await send to DB and make new gallery
+
+    router.push(`/pro/${galleryName}`)
   }
 
   const handleClose = () => { 
@@ -56,7 +43,7 @@ const CreateGalleryModal = ({ isOpen, onClose }) => {
     <Modal
       isOpen={isOpen} onClose={handleClose}
       title="Create New Pro Gallery"
-      widthClass="max-w-3xl"
+      widthClass="max-w-lg"
     >
       <div>
         <div className="relative flex items-center gap-1 mb-1">
@@ -72,17 +59,17 @@ const CreateGalleryModal = ({ isOpen, onClose }) => {
           type="text"
           className="w-full border-4 px-3 py-2 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900"
           placeholder="Gallery Name"
-          onChange={(e) => setGalleryName(e.target.value)}
+          onChange={(e) => setNewName(e.target.value.replace(" ", "_"))}
           value={galleryName}
         />
-        <p className="text-sm pl-4 italic text-red-500 h-4">{galleryNameError}</p>
+        <p className="text-sm pl-4 italic text-red-500 h-4">{nameError}</p>
       </div>
 
       <div>
         <div className="relative flex items-center gap-1 mb-1">
           <p className="font-bold">Curator Fee* <i className="text-sm">(you cannot change this after the fact)</i>:</p>
           <Tippy
-            content="Keep in mind Collector takes a 5% platform fee as well. Max curator fee is 50%."
+            content="Keep in mind, Collector also takes a 5% platform fee. Max curator fee is 50%."
             className="shadow-lg"
           >
             <InformationCircleIcon className="w-4" />

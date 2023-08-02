@@ -1,4 +1,4 @@
-import {useContext, useEffect, useMemo, useState } from "react";
+import {useContext, useMemo, useState } from "react";
 import MainButton from "../MainButton";
 import UserContext from "../../contexts/user";
 import { useMetadata } from "../../data/nft/getMetadata";

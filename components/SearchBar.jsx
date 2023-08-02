@@ -15,7 +15,7 @@ const SearchBar = ({ search, setSearch, placeholder="Search", className }) => {
   }
   return (
     <div className={clsx(
-      "flex items-center justify-between gap-1 border-2 rounded-md p-2 mb-4",
+      "flex items-center justify-between gap-1 border-2 rounded-md p-2",
       "border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900",
       className
     )} >

@@ -2,22 +2,22 @@ import { useState } from "react"
 import MainButton from "../MainButton"
 import Modal from "../Modal"
 
-const EditBioModal = ({ bio, onSave, isOpen, onClose }) => { 
-  const [newBio, setNewBio] = useState(bio || "")
+const EditDescriptionModal = ({ description, onSave, isOpen, onClose }) => {
+  const [newDescription, setNewDescription] = useState(description || "")
 
-  const handleSave = () => { 
-    onSave(newBio)
+  const handleSave = () => {
+    onSave(newDescription)
     onClose()
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Edit Your Bio">
+    <Modal isOpen={isOpen} onClose={onClose} title="Edit The Gallery Description">
       <textarea
         className="my-4 border-4 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
           w-full h-80 sm:h-56 p-3
         "
-        onChange={(e) => setNewBio(e.target.value)}
-        value={newBio}
+        onChange={(e) => setNewDescription(e.target.value)}
+        value={newDescription}
       />
       <div className="w-full flex justify-end gap-4">
         <MainButton onClick={onClose}>
@@ -32,4 +32,4 @@ const EditBioModal = ({ bio, onSave, isOpen, onClose }) => {
 
 }
 
-export default EditBioModal
+export default EditDescriptionModal

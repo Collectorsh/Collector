@@ -56,6 +56,7 @@ const GlobalEditBar = ({ setModules, setOpen, isOpen, handlePublish, handleInvit
       <div className='flex gap-4 flex-wrap justify-center  md:place-self-end'>
         <MainButton
           disabled={!isPublished}
+          onClick={() => setIsEditingDraft(false)}
         >
           {isPublished ? "View Published" : "Not Published"}
         </MainButton>
@@ -64,6 +65,7 @@ const GlobalEditBar = ({ setModules, setOpen, isOpen, handlePublish, handleInvit
           className="flex gap-2 items-center"
           handlePublish={handlePublish}
           solid
+          disabled={!hasChanges}
         >
           Publish Draft
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">

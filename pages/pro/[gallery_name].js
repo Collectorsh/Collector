@@ -39,14 +39,18 @@ function ProGalleryPage({ gallery }) {
   const [publishedContent, setPublishedContent] = useState(gallery?.published_content);
   const [draftContent, setDraftContent] = useState(gallery?.draft_content);
 
-  const isOwner = Boolean(user && user.public_keys.includes(gallery?.curator_address) && user.api_key);
-  const displayEdit = isOwner && globalEditOpen;
-  const displayGallery = Boolean(gallery?.is_published || isOwner);
+  const isOwner = user//Boolean(user && user.public_keys.includes(gallery?.curator_address) && user.api_key);
+ 
 
   const useDraftContent = isEditingDraft && isOwner;
   const banner = useDraftContent ? draftContent?.banner_image : publishedContent?.banner_image;
   const description = useDraftContent ? draftContent?.description : publishedContent?.description;
   const modules = useDraftContent ? draftContent?.modules : publishedContent?.modules;
+
+  const displayPublishedEdit = globalEditOpen && isOwner;
+  const displayDraftEdit = globalEditOpen && useDraftContent;
+  const displayGallery = Boolean(gallery?.is_published || isOwner);
+
   const hasChanges = JSON.stringify(draftContent) !== JSON.stringify(publishedContent);
 
   //TODO fetch draft content if isOwner
@@ -55,11 +59,6 @@ function ProGalleryPage({ gallery }) {
   useEffect(() => {
     if (isOwner) {
       setGlobalEditOpen(true)
-
-      //if unpublished, display draft content
-      if (!gallery?.is_published) {
-        setIsEditingDraft(true)
-      }
     }
   }, [isOwner, gallery?.is_published, gallery?.draft_content])
 
@@ -156,7 +155,7 @@ function ProGalleryPage({ gallery }) {
       <MainNavigation />
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 group/banner">
         <EditWrapper
-          isOwner={displayEdit}
+          isOwner={displayDraftEdit}
           onEdit={() => setEditBannerOpen(true)}
           placement="inside-tr"
           groupHoverClass="group-hover/banner:opacity-100"
@@ -186,7 +185,7 @@ function ProGalleryPage({ gallery }) {
        
         <div className="group/name w-fit mb-2 mx-auto">
           <EditWrapper
-            isOwner={displayEdit}
+            isOwner={displayPublishedEdit}
             onEdit={() => setEditNameOpen(true)}
             placement="outside-tr"
             groupHoverClass="group-hover/name:opacity-100"
@@ -212,7 +211,7 @@ function ProGalleryPage({ gallery }) {
   
         <div className="group/description w-fit mx-auto">
           <EditWrapper
-            isOwner={displayEdit}
+            isOwner={displayDraftEdit}
             onEdit={() => setEditDescriptionOpen(true)}
             placement="outside-tr"
             groupHoverClass="group-hover/description:opacity-100"
@@ -226,7 +225,7 @@ function ProGalleryPage({ gallery }) {
 
         <DisplayModules
           modules={modules}
-          isOwner={displayEdit}
+          isOwner={displayDraftEdit}
           setModules={handleEditModules}
           submittedTokens={gallery.submitted_tokens}
         />
@@ -242,6 +241,7 @@ function ProGalleryPage({ gallery }) {
               isEditingDraft={isEditingDraft}
               setIsEditingDraft={setIsEditingDraft}
               hasChanges={hasChanges}
+              isPublished={isPublished}
             />
           )
           : null
@@ -348,7 +348,7 @@ export async function getServerSideProps(context) {
           aspect_ratio: 1, animation_url: "https://arweave.net/YoRtjMdbBmo0E-aKMWP51kve1xcUGyAYwI2jlGwR1lY?ext=mp4"
         }
       ],
-      is_published: false,
+      is_published: true,
       draft_content: content,
       published_content: content,
       curator: {

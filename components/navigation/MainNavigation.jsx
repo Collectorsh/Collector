@@ -233,7 +233,7 @@ export default function MainNavigation() {
                                       <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                         <Link href={`/profile/${ user.username }`}>
                                       
-                                          Pro Galleries
+                                          Profile
                                           
                                         </Link>
                                       </p>

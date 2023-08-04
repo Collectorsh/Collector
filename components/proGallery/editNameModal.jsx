@@ -34,11 +34,11 @@ const EditNameModal = ({ name, onSave, isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Edit Gallery Name">
-      <p className="font-bold text-yellow-500 pl-2 mt-6 text-center">Please note, changing the gallery name will also change this gallery&apos;s url.</p>
+      <p className="pl-2 mt-6 text-center">Please note, changing the name here will change the published gallery&apos;s url.</p>
       <input
-        className="my-4 border-4 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
-          w-full p-3
-        "
+        className="my-4 border-4 rounded-xl
+        border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 
+        w-full p-3"
         onChange={(e) => setNewName(e.target.value.replaceAll(" ", "_"))}
         value={newName}
       />

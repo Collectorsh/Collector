@@ -9,7 +9,7 @@ import { roundToPrecision } from '../../utils/maths';
 import Link from 'next/link';
 import useElementObserver from '../../hooks/useElementObserver';
 
-const ArtModule = ({ artModule, onNewArtModule, isOwner, submittedTokens }) => {
+const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule }) => {
   const breakpoint = useBreakpoints()  
   const [editArtOpen, setEditArtOpen] = useState(false)
   
@@ -33,7 +33,7 @@ const ArtModule = ({ artModule, onNewArtModule, isOwner, submittedTokens }) => {
   }, [artModule.tokens, breakpoint])
 
   return (
-    <div className="relative group w-full group/artRow">
+    <div className="relative group w-full group/artRow min-h-[4rem]">
       <EditWrapper
         isOwner={isOwner}
         onEdit={() => setEditArtOpen(true)}
@@ -43,20 +43,29 @@ const ArtModule = ({ artModule, onNewArtModule, isOwner, submittedTokens }) => {
         {itemRows.map((row, i) => {
           return (
             <div
-              key={i}
-              className={clsx(
-                "flex flex-col md:flex-row w-full gap-8 mb-8",
+            key={i}
+            className={clsx(
+              "flex flex-col md:flex-row w-full gap-6 mb-6",
               )}>
               {row}
             </div>
           )
         })}
       </EditWrapper>
+      {isOwner && !artModule.tokens.length
+        ? (
+          <div className='absolute inset-0 w-full h-full flex justify-center items-center p-2'>
+            <p>Click the gear icon in the top left to edit this Art Module</p>
+          </div>
+        )
+        : null
+      }
       {isOwner
         ? (
           <EditArtModuleModal
             artModule={artModule}
-            onNewArtModule={onNewArtModule}
+            onEditArtModule={onEditArtModule}
+            onDeleteModule={onDeleteModule}
             isOpen={editArtOpen}
             onClose={() => setEditArtOpen(false)}
             submittedTokens={submittedTokens}
@@ -113,13 +122,13 @@ export const ArtItem = ({ token, columns, widthPercent }) => {
   }
   return (
     <div
-      className={clsx("relative duration-300 max-w-fit mx-auto",)}
+      className={clsx("relative duration-300 max-w-fit mx-auto ",)}
       style={{
         width: columns > 1 ? `${widthPercent}%` : "100%"
       }}
     >
       <Link href={`/nft/${ token.mint }`} >
-        <a className='relative block w-fit mx-auto hover:scale-[102%] duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg'>
+        <a className='relative block w-fit mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0'>
           {videoUrl && loaded ? (
             <>
               <video
@@ -131,7 +140,6 @@ export const ArtItem = ({ token, columns, widthPercent }) => {
                 playsInline
                 id={`video-${ token.mint }`}
                 className="mx-auto w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10 duration-200 opacity-0"
-                // onCanPlay onLoadedData
                 onCanPlayThrough={e => {
                   e.target.classList.add("opacity-100")
                   setVideoLoaded(true)
@@ -165,7 +173,7 @@ export const ArtItem = ({ token, columns, widthPercent }) => {
         {token.price
           ? (
             <div className="flex items-center gap-2 flex-wrap">
-              <p className='font-bold text-lg'>{roundToPrecision(token.price, 2)} ◎</p>
+              <p className='font-bold text-lg'>{roundToPrecision(token.price, 2)}◎</p>
               <MainButton
                 onClick={handleBuy}
                 className="px-3"

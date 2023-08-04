@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import MainButton from "../MainButton";
+import MainButton, { WarningButton } from "../MainButton";
 import UserContext from "../../contexts/user";
 import { useMetadata } from "../../data/nft/getMetadata";
 import CloudinaryImage from "../CloudinaryImage";
@@ -15,7 +15,7 @@ const tabs = ["submitted"]
 
 //Excluding search and user owned tokens till post MVP
 
-export default function EditArtModuleModal({ isOpen, onClose, onNewArtModule, artModule, submittedTokens }) {
+export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, artModule, submittedTokens, onDeleteModule }) {
   const breakpoint = useBreakpoints()  
 
   const [newArtModule, setNewArtModule] = useState(artModule)
@@ -51,7 +51,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onNewArtModule, ar
   }, [activeTabIndex]);
 
   const handleSave = () => {
-    onNewArtModule(newArtModule);
+    onEditArtModule(newArtModule);
     onClose();
     setTimeout(() => setSearch(""), 500);
   }
@@ -61,7 +61,6 @@ export default function EditArtModuleModal({ isOpen, onClose, onNewArtModule, ar
       setSearch("")
     }, 500);
   }
-
   
   const items = useMemo(() => {
     if (!newArtModule?.tokens) return []
@@ -121,8 +120,17 @@ export default function EditArtModuleModal({ isOpen, onClose, onNewArtModule, ar
   //   )
 
   const submittedContent = (
-    <div className="border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+    <div className="relative border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+      {moduleFull ?
+        <p
+          className="absolute top-[50%] right-[50%] translate-x-[50%] -translate-y-[50%] z-50 shadow-lg
+          bg-neutral-200/50 dark:bg-neutral-800/50 px-5 py-2 rounded-lg font-bold"
+        >Module Full</p>
+        : null
+      }
       <div className={clsx("w-full h-full max-h-[266px] p-2 overflow-auto grid gap-4 rounded-lg", "grid-cols-1 md:grid-cols-2 xl:grid-cols-3")}>
+        
+
         {submittedTokens?.map((token, i) => {
           const alreadyInModule = newArtModule?.tokens.findIndex(arrayToken => arrayToken.mint === token.mint) >= 0
           const handleAdd = ({ target }) => {
@@ -147,7 +155,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onNewArtModule, ar
             >
               <CloudinaryImage
                 className={clsx("flex-shrink-0 object-cover shadow-lg dark:shadow-white/5",
-                  "w-full h-[250px] ",
+                  "w-full h-[250px]",
                 )}
                 id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
                 mint={token.mint}
@@ -166,14 +174,16 @@ export default function EditArtModuleModal({ isOpen, onClose, onNewArtModule, ar
   // if (!user) return null
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Edit Art Module">
+
       {/* <SearchBar
         className="ml-2 pl-4 w-full max-w-[20rem] mt-8"
         search={search}
         setSearch={setSearch}
         placeholder="Search By Artwork"
       /> */}
+        
 
-      <div className="relative mx-auto w-fit mt-8">
+      <div className="relative mx-auto w-fit mt-4">
         <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
           {tabs.map((tab, i) => {
             const handleClick = () => {
@@ -193,7 +203,6 @@ export default function EditArtModuleModal({ isOpen, onClose, onNewArtModule, ar
               </button>
             )
           })}
-
         </div>
         <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
         <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700" />
@@ -209,12 +218,10 @@ export default function EditArtModuleModal({ isOpen, onClose, onNewArtModule, ar
       {tabContent[activeTabIndex]}
 
       <hr className="block border-neutral-200 dark:border-neutral-700 my-4" />
-      
-
         <div className={clsx(
-          "w-full h-[500px] p-4 max-h-full overflow-auto md:overflow-visible",
+          "w-full h-[400px] p-4 max-h-full overflow-auto md:overflow-visible",
           "flex flex-col md:flex-row w-full gap-2",
-          "items-center md:justify-center"
+          "items-center md:justify-center "
         )}>
           {items.length
             ? items
@@ -222,13 +229,18 @@ export default function EditArtModuleModal({ isOpen, onClose, onNewArtModule, ar
           } 
         </div>
       
-      <div className="w-full flex justify-end gap-4 mt-4">
-        <MainButton onClick={handleClose}>
-          Cancel
-        </MainButton>
-        <MainButton onClick={handleSave} solid>
-          Save
-        </MainButton>
+      <div className="w-full flex justify-center md:justify-between items-center gap-4 mt-4 flex-wrap">
+        <WarningButton onClick={onDeleteModule}>
+          Delete Module
+        </WarningButton>
+        <div className="flex gap-4">
+          <MainButton onClick={handleClose}>
+            Cancel
+          </MainButton>
+          <MainButton onClick={handleSave} solid>
+            Save
+          </MainButton>
+        </div>
       </div>
 
     </Modal>
@@ -259,7 +271,7 @@ const EditArtItem = ({ columns, widthPercent, token, onRemove }) => {
           className={clsx(
             "object-contain",
             "shadow-lg rounded-lg",
-            "max-h-[500px]"
+            "max-h-[400px]"
           )}
           id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
           noLazyLoad

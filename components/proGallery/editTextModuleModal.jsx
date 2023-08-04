@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import MainButton from "../MainButton"
+import MainButton, { WarningButton } from "../MainButton"
 import Modal from "../Modal"
 import dynamic from "next/dynamic";
 import 'react-quill/dist/quill.snow.css';
@@ -29,11 +29,15 @@ const modules = {
   ]
 };
 
-const EditTextModuleModal = ({ textModule, onNewTextModule, isOpen, onClose }) => {
+const EditTextModuleModal = ({ textModule, onEditTextModule, isOpen, onClose, onDeleteModule }) => {
   const [newTextModule, setNewTextModule] = useState(textModule)
   
   const handleSave = () => {
-    onNewTextModule(newTextModule)
+    onEditTextModule(newTextModule)
+    onClose()
+  }
+
+  const handleClose = () => {
     onClose()
   }
 
@@ -61,13 +65,19 @@ const EditTextModuleModal = ({ textModule, onNewTextModule, isOpen, onClose }) =
         />
 
       </div>
-      <div className="w-full flex justify-end gap-4">
-        <MainButton onClick={onClose}>
-          Cancel
-        </MainButton>
-        <MainButton onClick={handleSave} solid>
-          Save
-        </MainButton>
+
+      <div className="w-full flex justify-center md:justify-between items-center gap-4 mt-4 flex-wrap">
+        <WarningButton onClick={onDeleteModule}>
+          Delete Module
+        </WarningButton>
+        <div className="flex gap-4">
+          <MainButton onClick={handleClose}>
+            Cancel
+          </MainButton>
+          <MainButton onClick={handleSave} solid>
+            Save
+          </MainButton>
+        </div>
       </div>
     </Modal>
   )

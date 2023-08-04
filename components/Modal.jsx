@@ -12,7 +12,7 @@ export default function Modal({
 }) {
   return (
     <Transition show={isOpen} as={Fragment}>
-      <Dialog onClose={onClose} className="z-[100] relative w-screen h-screen dark:text-white">
+      <Dialog onClose={onClose} className="z-[1001] relative w-screen h-screen dark:text-white">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

@@ -8,33 +8,85 @@ import EditDescriptionModal from "../../components/proGallery/editDescriptionMod
 import EditNameModal from "../../components/proGallery/editNameModal";
 import EditBannerModal from "../../components/proGallery/editBannerModal";
 import clsx from "clsx";
-import TextModule from "../../components/proGallery/textModule";
 import Link from "next/link";
-import ArtModule from "../../components/proGallery/artModule";
+import { v4 as uuidv4 } from 'uuid';
+import DisplayModules from "../../components/proGallery/displayModules";
+import GlobalEditBar from "../../components/proGallery/globalEditBar";
+import { success } from "../../utils/toast";
+import { shootConfetti } from "../../utils/confetti";
+import { set } from "nprogress";
 
-function ProGalleryPage({ gallery, curator }) {
+  //TODO: on isEditingDraft change, switch to draft gallery
+  //TODO: if owner fetch draft gallery
+  //TODO: if unpublished, display draft gallery
+  //TODO: connect to websocket for listing updates
+  
+
+function ProGalleryPage({ gallery }) {
   const [user] = useContext(UserContext);
 
   const [editNameOpen, setEditNameOpen] = useState(false);
   const [editBannerOpen, setEditBannerOpen] = useState(false);
   const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);
-
-  const [name, setName] = useState(gallery?.name);
-  const [banner, setBanner] = useState(gallery?.banner_image);
-  const [description, setDescription] = useState(gallery?.description);
-  const [content, setContent] = useState(gallery?.content || []);
-
+  const [globalEditOpen, setGlobalEditOpen] = useState(false);
+  const [inviteArtistsModalOpen, setInviteArtistsModalOpen] = useState(false);
+  const [publishModalOpen, setPublishModalOpen] = useState(false);
+  const [isEditingDraft, setIsEditingDraft] = useState(!gallery?.is_published); //defaults to true if unpublished
+  const [isPublished, setIsPublished] = useState(gallery?.is_published);
   const [bannerLoaded, setBannerLoaded] = useState(true);
 
-  //TODO: connect to websocket for listing updates
+  const [name, setName] = useState(gallery?.name);
+  const [publishedContent, setPublishedContent] = useState(gallery?.published_content);
+  const [draftContent, setDraftContent] = useState(gallery?.draft_content);
 
   const isOwner = Boolean(user && user.public_keys.includes(gallery?.curator_address) && user.api_key);
+  const displayEdit = isOwner && globalEditOpen;
   const displayGallery = Boolean(gallery?.is_published || isOwner);
 
+  const useDraftContent = isEditingDraft && isOwner;
+  const banner = useDraftContent ? draftContent?.banner_image : publishedContent?.banner_image;
+  const description = useDraftContent ? draftContent?.description : publishedContent?.description;
+  const modules = useDraftContent ? draftContent?.modules : publishedContent?.modules;
+  const hasChanges = JSON.stringify(draftContent) !== JSON.stringify(publishedContent);
+
+  //TODO fetch draft content if isOwner
+  // const draftContent = useDraftContent(gallery?.name, isOwner, user?.api_key);
+  
   useEffect(() => {
+    if (isOwner) {
+      setGlobalEditOpen(true)
+
+      //if unpublished, display draft content
+      if (!gallery?.is_published) {
+        setIsEditingDraft(true)
+      }
+    }
+  }, [isOwner, gallery?.is_published, gallery?.draft_content])
+
+  useEffect(() => {
+    if (!useDraftContent) return
     //set loaded to false when the banner changes
-    if (banner !== gallery?.banner_image) setBannerLoaded(false);
-  }, [banner, gallery?.banner_image])
+    if (banner !== publishedContent.banner_image) setBannerLoaded(false);
+  }, [banner, publishedContent.banner_image, useDraftContent])
+
+  const handlePublish = async () => { 
+    //TODO API command that copies draft content to published content
+    // const res = await PublishDraft(draftContent)
+    
+    //await successfull response from API
+    setIsPublished(true)
+    shootConfetti(3)
+  }
+
+  const saveDraftContent = async (newContent) => { 
+    if(!newContent || !isOwner) return
+    console.log("UPDATE CONTENT PLACEHOLDER", newContent)
+
+    //TODO create update draft content API route
+    // const res = await updateGalleryDraftContent(user.api_key, gallery.name, newContent)
+    // if (res.status === "success") success("Gallery Content Updated!")
+    // else error("Gallery Content update failed")
+  }
 
   const handleEditName = async (newName) => {
     if (!isOwner) return;
@@ -47,42 +99,47 @@ function ProGalleryPage({ gallery, curator }) {
     //router.replace(`/pro/${ newName }`)
   }
 
-  const handleEditDescription = async (newDescription) => {
+  const handleEditDescription = (newDescription) => {
     if (!isOwner) return;
-    setDescription(newDescription);
-
-    //TODO create update description API route
-    // const res = await updateGalleryDescription(user.api_key, newDescription)
-    // if (res.status === "success") success("Description Updated!")
-    // else error("Description update failed")
+    setDraftContent(prev => {
+      const newContent = {
+        ...prev,
+        description: newDescription
+      }
+      saveDraftContent(newContent)
+      return newContent
+    });
   }
 
-  const handleEditBanner = async (newToken) => { 
+  const handleEditBanner = (newToken) => { 
     if (!isOwner) return;
-    setBanner(newToken.mint);
-
-    //TODO create update banner API route
-    // const res = await updateGalleryBanner(user.api_key, newToken.mint)
-    // if (res.status === "success") success("Banner Updated!")
-    // else error("Banner update failed")
+    setDraftContent(prev => {
+      const newContent = {
+        ...prev,
+        banner: newToken.mint
+      }
+      saveDraftContent(newContent)
+      return newContent
+    });
   }
 
-  const handleEditContent = async (newContent) => { 
+  const handleEditModules = (setModulesCB) => {
     if (!isOwner) return;
-    setContent(newContent);
+    
+    setDraftContent(prev => {
+      const newModules = typeof setModulesCB === "function"
+        ? setModulesCB(prev.modules)
+        : setModulesCB
+      
+      const newContent = {
+        ...prev,
+        modules: newModules
+      }
+      saveDraftContent(newContent)
+      return newContent
+    })
 
-    //TODO create update content API route
-    // const res = await updateGalleryContent(user.api_key, newContent)
-    // if (res.status === "success") success("Gallery Content Updated!")
-    // else error("Gallery content update failed")
   }
-
-  const handleEditModule = (newModule, index) => {
-    const newContent = [...content];
-    newContent[index] = newModule;
-    handleEditContent(newContent);
-  }
-
 
   if (!displayGallery) return (
     <>
@@ -99,7 +156,7 @@ function ProGalleryPage({ gallery, curator }) {
       <MainNavigation />
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 group/banner">
         <EditWrapper
-          isOwner={isOwner}
+          isOwner={displayEdit}
           onEdit={() => setEditBannerOpen(true)}
           placement="inside-tr"
           groupHoverClass="group-hover/banner:opacity-100"
@@ -129,7 +186,7 @@ function ProGalleryPage({ gallery, curator }) {
        
         <div className="group/name w-fit mb-2 mx-auto">
           <EditWrapper
-            isOwner={isOwner}
+            isOwner={displayEdit}
             onEdit={() => setEditNameOpen(true)}
             placement="outside-tr"
             groupHoverClass="group-hover/name:opacity-100"
@@ -155,7 +212,7 @@ function ProGalleryPage({ gallery, curator }) {
   
         <div className="group/description w-fit mx-auto">
           <EditWrapper
-            isOwner={isOwner}
+            isOwner={displayEdit}
             onEdit={() => setEditDescriptionOpen(true)}
             placement="outside-tr"
             groupHoverClass="group-hover/description:opacity-100"
@@ -167,65 +224,93 @@ function ProGalleryPage({ gallery, curator }) {
 
         <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
 
-        <div className="grid grid-cols-1 gap-4 p-4">
-          {content.map((item, i) => {
-            switch (item.type) {
-              case "text": {
-                return <TextModule
-                  key={item.type + i}
-                  textModule={item}
-                  onNewTextModule={(newTM) => handleEditModule(newTM, i)}
-                  isOwner={isOwner}
-                />
-              }
-              case "art": {
-                return <ArtModule
-                  key={item.type + i}
-                  artModule={item}
-                  onNewArtModule={(newAM) => handleEditModule(newAM, i)}
-                  isOwner={isOwner}
-                  submittedTokens={gallery.submitted_tokens}
-                />
-              }
-            }
-          })}
-        </div>
-      
+        <DisplayModules
+          modules={modules}
+          isOwner={displayEdit}
+          setModules={handleEditModules}
+          submittedTokens={gallery.submitted_tokens}
+        />
+
+        {isOwner
+          ? (
+            <GlobalEditBar
+              isOpen={globalEditOpen}
+              setOpen={setGlobalEditOpen}
+              setModules={handleEditModules}
+              handleInviteArtists={() => setInviteArtistsModalOpen(true)}
+              handlePublish={() => setPublishModalOpen(true)}
+              isEditingDraft={isEditingDraft}
+              setIsEditingDraft={setIsEditingDraft}
+              hasChanges={hasChanges}
+            />
+          )
+          : null
+        }
       </div>
-      {isOwner && (
-        <>
-          <EditNameModal
-            isOpen={editNameOpen}
-            onClose={() => setEditNameOpen(false)}
-            onSave={handleEditName}
-            name={name}
-          />
-          <EditDescriptionModal
-            isOpen={editDescriptionOpen}
-            onClose={() => setEditDescriptionOpen(false)}
-            onSave={handleEditDescription}
-            description={description}
-          />
-          <EditBannerModal
-            isOpen={editBannerOpen}
-            onClose={() => setEditBannerOpen(false)}
-            onSave={handleEditBanner}
-            submittedTokens={gallery.submitted_tokens}
-          />
-        </>
-      )}
+      {isOwner
+        ? (
+          <>
+            <EditNameModal
+              isOpen={editNameOpen}
+              onClose={() => setEditNameOpen(false)}
+              onSave={handleEditName}
+              name={name}
+            />
+            <EditDescriptionModal
+              isOpen={editDescriptionOpen}
+              onClose={() => setEditDescriptionOpen(false)}
+              onSave={handleEditDescription}
+              description={description}
+            />
+            <EditBannerModal
+              isOpen={editBannerOpen}
+              onClose={() => setEditBannerOpen(false)}
+              onSave={handleEditBanner}
+              submittedTokens={gallery.submitted_tokens}
+            />
+          </>
+        )
+        : null
+      }
     </>
   )
 }
 
+
+
 export async function getServerSideProps(context) {
   try {
     ////Mocking Galleries
+    const content = {
+      description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
+      banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
+      modules: [
+        {
+          id: uuidv4(),
+          type: "text", textDelta: JSON.stringify({ "ops": [{ "insert": "This is a text block" }] })
+        },
+        {
+          id: uuidv4(),
+          type: "art", tokens: [
+            {
+              mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24",
+              name: "hoops", price: 10, artist: "EV3",
+              aspect_ratio: 1.7985611511
+            },
+            {
+              mint: "3Utt2yZdMyEX1wrrsrAbuVSweft1JVi8GwiuSP1U5r2G",
+              name: "test with a long name", price: 0, artist: "EV3 with a long name",
+              aspect_ratio: 0.6093313357
+            }
+          ]
+        },
+      ]
+    }
+
     const gallery = {
       id: 1,
       curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
       name: "Hoops_Gallery",
-      description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
       submitted_tokens: [
         {
           mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24",
@@ -263,31 +348,13 @@ export async function getServerSideProps(context) {
           aspect_ratio: 1, animation_url: "https://arweave.net/YoRtjMdbBmo0E-aKMWP51kve1xcUGyAYwI2jlGwR1lY?ext=mp4"
         }
       ],
-      is_published: true,
-      banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
+      is_published: false,
+      draft_content: content,
+      published_content: content,
       curator: {
         username: "EV3",
         profile_image: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP",
       },
-      content: [
-        { type: "text", textDelta: JSON.stringify({ "ops": [{ "insert": "This is a text block" }] }) },
-        { type: "text", textDelta: "{}" },
-        {
-          type: "art", tokens: [
-            {
-              mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24",
-              name: "hoops", price: 10, artist: "EV3",
-              aspect_ratio: 1.7985611511
-            },
-            {
-              mint: "3Utt2yZdMyEX1wrrsrAbuVSweft1JVi8GwiuSP1U5r2G",
-              name: "test with a long name", price: 0, artist: "EV3 with a long name",
-              aspect_ratio: 0.6093313357
-            }
-          ]
-        },
-        {type: "art", tokens: []}
-      ]
     }
 
     // const gallery_name = context.params.gallery_name;

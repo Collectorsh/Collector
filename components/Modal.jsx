@@ -12,7 +12,7 @@ export default function Modal({
 }) {
   return (
     <Transition show={isOpen} as={Fragment}>
-      <Dialog onClose={onClose} className="z-[100] relative w-screen h-screen dark:text-white">
+      <Dialog onClose={onClose} className="z-[1001] relative w-screen h-screen dark:text-white">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -39,7 +39,7 @@ export default function Modal({
               className={clsx(
                 "relative p-4 rounded-lg bg-white dark:bg-neutral-800",
                 "shadow-md shadow-black/25 dark:shadow-neutral-500/25",
-                "w-full max-h-[calc(100%-1rem)] overflow-y-auto",
+                "w-full max-h-[calc(100%-1rem)]",
                 "flex flex-col",
                 widthClass
               )}

@@ -49,6 +49,16 @@ export default function Gallery() {
                 </a>
               </Link>
             </Menu.Item>
+            {user.subscription_level === "pro" ? (
+              <Menu.Item>
+                <Link href={`/profile/${ user.username }`}>
+                  <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Pro Galleries
+                  </a>
+                </Link>
+              </Menu.Item>
+            ) : null}
+            
           </Menu.Items>
         </Transition>
       </Menu>

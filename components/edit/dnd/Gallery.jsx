@@ -17,8 +17,6 @@ import Settings from "./Settings";
 
 import cloneDeep from "lodash/cloneDeep";
 import { Toaster } from "react-hot-toast";
-import { cdnImage } from "/utils/cdnImage";
-import LazyLoader from "../../LazyLoader";
 import CloudinaryImage from "../../CloudinaryImage";
 import { useImageFallbackContext } from "../../../contexts/imageFallback";
 import OptimizeFeedbackModal from "./OptimizeFeedbackModal";

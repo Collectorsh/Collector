@@ -19,7 +19,7 @@ const GalleryHighlight = ({ gallery, isOwner }) => {
         </div>
 
         <div className="my-12">
-          <h2 className="font-bold text-4xl collector mb-8 text-center">{name}</h2>
+          <h2 className="font-bold text-4xl collector mb-8 text-center">{name.replaceAll("_", " ")}</h2>
           <p className="text-center px-4 md:px-10 whitespace-pre-wrap">{description}</p>
         </div>
       </a>

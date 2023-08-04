@@ -24,7 +24,10 @@ const GalleryListItem = ({ gallery, isOwner }) => {
       >
         <PublishedTag isPublished={is_published} isOwner={isOwner} />
         <div className="relative shadow-lg shadow-black/25 dark:shadow-neutral-500/25 rounded-xl overflow-hidden" >
-          <div className="absolute text-center top-0 left-0 p-8 w-full h-full overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
+          <div className="absolute text-center top-0 left-0 p-8 w-full h-full overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50 
+          transition-opacity duration-300 opacity-0 group-hover:opacity-100
+          backdrop-blur-sm
+          ">
             <p
               style={{
                 "-webkit-mask-image": "linear-gradient(to bottom, black 60%, transparent 100%)",
@@ -39,7 +42,7 @@ const GalleryListItem = ({ gallery, isOwner }) => {
             width={1400}
           />
         </div>
-        <h3 className="font-bold collector text-2xl text-center my-2">{name}</h3>
+        <h3 className="font-bold collector text-2xl text-center my-2">{name.replaceAll("_", " ")}</h3>
       </a>
     </Link>
   )

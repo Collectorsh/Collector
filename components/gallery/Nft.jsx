@@ -32,7 +32,7 @@ export default function Nft({ user, token, onLoad, columns, onError }) {
       videoRef.current.pause()
     }
 
-  },[videoRef.current, isVisible, videoLoaded])
+  },[isVisible, videoLoaded])
 
   useEffect(() => {
     if (!token) return;

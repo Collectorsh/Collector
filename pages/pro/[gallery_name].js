@@ -82,7 +82,7 @@ function ProGalleryPage({ gallery }) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve("API call completed!");
-        }, 1000); // delay for 2 seconds
+        }, 500); // delay for 2 seconds
       });
     }
     await fakeApiCall()

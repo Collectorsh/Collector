@@ -4,7 +4,7 @@ import {  ChevronDownIcon, PlusIcon, UserAddIcon } from '@heroicons/react/solid'
 import clsx from 'clsx';
 import { RoundedCurve } from './roundedCurveSVG';
 
-const GlobalEditBar = ({ setModules, setOpen, isOpen, handlePublish, handleInviteArtists, isEditingDraft, setIsEditingDraft, isPublished, hasChanges }) => {
+const GlobalEditBar = ({ setModules, setOpen, isOpen, handlePublish, handleInviteArtists, isEditingDraft, setIsEditingDraft, isPublished, hasChanges, handleUnpublish }) => {
 
   const addArtModule = () => {
     setModules((prev) => [...prev, { type: "art", id: uuidv4(), tokens: [] }])
@@ -63,19 +63,17 @@ const GlobalEditBar = ({ setModules, setOpen, isOpen, handlePublish, handleInvit
 
         <MainButton
           className="flex gap-2 items-center"
-          handlePublish={handlePublish}
+          onClick={handlePublish}
           solid
-          disabled={!hasChanges}
+          disabled={!hasChanges && isPublished}
         >
           Publish Draft
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-          </svg>
           {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15" />
-              </svg> */}
-
-
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+          </svg> */}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15" />
+          </svg>
         </MainButton>
       </div>
     </>
@@ -84,6 +82,7 @@ const GlobalEditBar = ({ setModules, setOpen, isOpen, handlePublish, handleInvit
   const publishedButtons = (
     <>
       <WarningButton
+        onClick={handleUnpublish}
       >
         Unpublish
       </WarningButton>

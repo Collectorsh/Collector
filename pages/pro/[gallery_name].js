@@ -44,7 +44,7 @@ function ProGalleryPage({ gallery }) {
   const [publishedContent, setPublishedContent] = useState(gallery?.published_content);
   const [draftContent, setDraftContent] = useState(gallery?.draft_content);
 
-  const isOwner = Boolean(user && user.public_keys.includes(gallery?.curator_address) && user.api_key);
+  const isOwner = Boolean(user)//Boolean(user && user.public_keys.includes(gallery?.curator_address) && user.api_key);
  
   const useDraftContent = isEditingDraft && isOwner;
   const banner = useDraftContent ? draftContent?.banner_image : publishedContent?.banner_image;

@@ -99,8 +99,9 @@ const PublishConfirmationModal = ({ isOpen, onClose, name, onPublish, onViewPubl
   return (
     <Modal isOpen={isOpen} onClose={handleClose}
       title={`Publish ${ name.replaceAll("_", " ") }`}
+      widthClass="max-w-screen-sm"
     >
-      <div className="flex flex-col gap-3 py-6 items-center justify-center h-32">
+      <div className="flex flex-col gap-3 py-6 text-center items-center justify-center h-32">
         { getContent()}
       </div>
       <div className="w-full flex justify-center flex-wrap gap-4">

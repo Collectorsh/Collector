@@ -8,7 +8,6 @@ import getUserFromUsername from "../../data/user/getUserFromUsername"
 
 const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
   const [newApproveArtists, setNewApprovedArtists] = useState(approvedArtists || [])
-  console.log("🚀 ~ file: inviteArtistsModal.jsx:11 ~ InviteArtistsModal ~ newApproveArtists:", newApproveArtists)
   const [search, setSearch] = useState('')
   const [error, setError] = useState('')
   

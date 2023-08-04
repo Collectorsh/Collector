@@ -47,7 +47,7 @@ const PublishConfirmationModal = ({ isOpen, onClose, name, onPublish, onViewPubl
   }
 
   const getContent = () => {
-    if (saving) return <p className="animate-pulse">Saving...</p>
+    if (saving) return <p className="animate-pulse">Publishing...</p>
     if (error) return <p>Oops, looks like something went wrong. Try again in a few seconds!</p>
     if (publishSuccess) return (
       <>

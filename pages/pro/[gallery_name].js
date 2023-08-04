@@ -19,11 +19,9 @@ import PublishConfirmationModal from "../../components/proGallery/publishConfirm
 import UnpublishConfirmationModal from "../../components/proGallery/unpublishConfirmationModal";
 import InviteArtistsModal from "../../components/proGallery/inviteArtistsModal";
 
-  //TODO: on isEditingDraft change, switch to draft gallery
-  //TODO: if owner fetch draft gallery
-  //TODO: if unpublished, display draft gallery
-  //TODO: connect to websocket for listing updates
-  
+
+//TODO: connect to websocket for listing updates
+//TODO: uncomment isOwner requirments  for production
 
 function ProGalleryPage({ gallery }) {
   const [user] = useContext(UserContext);
@@ -110,7 +108,7 @@ function ProGalleryPage({ gallery }) {
   }
 
   const handleInviteArtists = async (newArtists) => { 
-    //TODO API command that updates approved artists list
+    //TODO API command that updates approved artists list (probably just artist/user id and then on fetch join to users table by id)
 
     setApprovedArtists(newArtists)
   }

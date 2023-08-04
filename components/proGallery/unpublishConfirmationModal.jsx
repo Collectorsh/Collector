@@ -11,6 +11,7 @@ const UnpublishConfirmationModal = ({ onUnpublish, isOpen, onClose, name }) => {
     <Modal
       isOpen={isOpen} onClose={onClose}
       title={`Unpublish ${ name.replaceAll("_", " ") }`}
+      widthClass="max-w-screen-sm"
     >
       <div className="flex flex-col gap-3 py-6 items-center justify-center h-32">
         <p className="text-xl font-bold">Are you sure?</p>

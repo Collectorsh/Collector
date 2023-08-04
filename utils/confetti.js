@@ -1,3 +1,4 @@
+import zIndex from "@material-ui/core/styles/zIndex";
 import confetti from "canvas-confetti";
 
 const randomInRange = (min, max) => {
@@ -12,13 +13,15 @@ export const shootConfetti = async (count = 1) => {
       angle: randomInRange(50, 120),
       spread: randomInRange(60, 80),
       particleCount: randomInRange(100, 200),
-      origin: { y: 0.5 }
+      origin: { y: 0.5 },
+      zIndex: 1002
     });
     confetti({
       angle: randomInRange(50, 120),
       spread: randomInRange(60, 80),
       particleCount: randomInRange(100, 200),
-      origin: { y: 0.6 }
+      origin: { y: 0.6 },
+      zIndex: 1002
     });
     if (i < maxCount - 1) {
       await pause()

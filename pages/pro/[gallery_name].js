@@ -15,6 +15,9 @@ import GlobalEditBar from "../../components/proGallery/globalEditBar";
 import { success } from "../../utils/toast";
 import { shootConfetti } from "../../utils/confetti";
 import { set } from "nprogress";
+import PublishConfirmationModal from "../../components/proGallery/publishConfirmationModal";
+import UnpublishConfirmationModal from "../../components/proGallery/unpublishConfirmationModal";
+import InviteArtistsModal from "../../components/proGallery/inviteArtistsModal";
 
   //TODO: on isEditingDraft change, switch to draft gallery
   //TODO: if owner fetch draft gallery
@@ -31,17 +34,18 @@ function ProGalleryPage({ gallery }) {
   const [globalEditOpen, setGlobalEditOpen] = useState(false);
   const [inviteArtistsModalOpen, setInviteArtistsModalOpen] = useState(false);
   const [publishModalOpen, setPublishModalOpen] = useState(false);
+  const [unpublishModalOpen, setUnpublishModalOpen] = useState(false);
   const [isEditingDraft, setIsEditingDraft] = useState(!gallery?.is_published); //defaults to true if unpublished
   const [isPublished, setIsPublished] = useState(gallery?.is_published);
   const [bannerLoaded, setBannerLoaded] = useState(true);
 
+  const [approvedArtists, setApprovedArtists] = useState(gallery?.approved_artists || []);
   const [name, setName] = useState(gallery?.name);
   const [publishedContent, setPublishedContent] = useState(gallery?.published_content);
   const [draftContent, setDraftContent] = useState(gallery?.draft_content);
 
-  const isOwner = user//Boolean(user && user.public_keys.includes(gallery?.curator_address) && user.api_key);
+  const isOwner = Boolean(user && user.public_keys.includes(gallery?.curator_address) && user.api_key);
  
-
   const useDraftContent = isEditingDraft && isOwner;
   const banner = useDraftContent ? draftContent?.banner_image : publishedContent?.banner_image;
   const description = useDraftContent ? draftContent?.description : publishedContent?.description;
@@ -71,20 +75,44 @@ function ProGalleryPage({ gallery }) {
   const handlePublish = async () => { 
     //TODO API command that copies draft content to published content
     // const res = await PublishDraft(draftContent)
-    
+    //failed return false
+
+    //delay for placeholder
+    function fakeApiCall() {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("API call completed!");
+        }, 1000); // delay for 2 seconds
+      });
+    }
+    await fakeApiCall()
+
     //await successfull response from API
+    setPublishedContent(draftContent)
     setIsPublished(true)
-    shootConfetti(3)
+    return true
+  }
+
+  const handleUnpublish = async () => { 
+    //TODO API command that sets is_published to false
+    setIsPublished(false)
+    setIsEditingDraft(true)
   }
 
   const saveDraftContent = async (newContent) => { 
     if(!newContent || !isOwner) return
-    console.log("UPDATE CONTENT PLACEHOLDER", newContent)
+    console.log("UPDATE CONTENT PLACEHOLDER")
 
     //TODO create update draft content API route
     // const res = await updateGalleryDraftContent(user.api_key, gallery.name, newContent)
     // if (res.status === "success") success("Gallery Content Updated!")
     // else error("Gallery Content update failed")
+  }
+
+  const handleInviteArtists = async (newArtists) => { 
+    //TODO API command that updates approved artists list
+
+    setApprovedArtists(newArtists)
   }
 
   const handleEditName = async (newName) => {
@@ -238,6 +266,7 @@ function ProGalleryPage({ gallery }) {
               setModules={handleEditModules}
               handleInviteArtists={() => setInviteArtistsModalOpen(true)}
               handlePublish={() => setPublishModalOpen(true)}
+              handleUnpublish={() => setUnpublishModalOpen(true)}
               isEditingDraft={isEditingDraft}
               setIsEditingDraft={setIsEditingDraft}
               hasChanges={hasChanges}
@@ -267,6 +296,26 @@ function ProGalleryPage({ gallery }) {
               onClose={() => setEditBannerOpen(false)}
               onSave={handleEditBanner}
               submittedTokens={gallery.submitted_tokens}
+            />
+            <PublishConfirmationModal
+              isPublished={isPublished}
+              name={name}
+              isOpen={publishModalOpen}
+              onClose={() => setPublishModalOpen(false)}
+              onPublish={handlePublish}
+              onViewPublished={() => setIsEditingDraft(false)}
+            />
+            <UnpublishConfirmationModal
+              name={name}
+              isOpen={unpublishModalOpen}
+              onClose={() => setUnpublishModalOpen(false)}
+              onUnpublish={handleUnpublish}
+            />
+            <InviteArtistsModal
+              isOpen={inviteArtistsModalOpen}
+              onClose={() => setInviteArtistsModalOpen(false)}
+              onInvite={handleInviteArtists}
+              approvedArtists={approvedArtists}
             />
           </>
         )
@@ -311,6 +360,12 @@ export async function getServerSideProps(context) {
       id: 1,
       curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
       name: "Hoops_Gallery",
+      // approved_artists: [ //probable will be joined with artists from users table
+      //   {
+      //     artist_address:
+      //     username:
+      //   }
+      // ],
       submitted_tokens: [
         {
           mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24",

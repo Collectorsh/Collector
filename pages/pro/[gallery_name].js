@@ -109,7 +109,7 @@ function ProGalleryPage({ gallery }) {
 
   const handleInviteArtists = async (newArtists) => { 
     //TODO API command that updates approved artists list (probably just artist/user id and then on fetch join to users table by id)
-
+//set selected artists as "curator_approved" true
     setApprovedArtists(newArtists)
   }
 

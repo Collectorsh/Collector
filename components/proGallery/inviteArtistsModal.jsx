@@ -13,7 +13,16 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
   
   const handleInvite = () => {
     onInvite(newApproveArtists)
+    handleClose({keepCurrent: true})
+  }
+
+  const handleClose = ({ keepCurrent } = { keepCurrent: false }) => { 
     onClose()
+    setTimeout(() => {
+      if(!keepCurrent) setNewApprovedArtists(approvedArtists || [])
+      setSearch('')
+      setError('')
+    },500)
   }
 
   const useAddress = search.length >= 32
@@ -40,7 +49,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Invite Artists" widthClass="max-w-screen-md">
+    <Modal isOpen={isOpen} onClose={handleClose} title="Invite Artists" widthClass="max-w-screen-md">
 
       <p className="text-center mt-6">Artists must have a Collector account</p>
  
@@ -79,14 +88,14 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
             <ArtistChip
               key={artist.username+i}
               name={artist.username}
-              onRemove={() => setNewApprovedArtists(newApproveArtists.filter(a => a.username !== artist.username))}
+              onRemove={() => setNewApprovedArtists(prev => prev.filter(a => a.username !== artist.username))}
             />
           )
         })}
       </div>
       
       <div className="w-full flex justify-center gap-4">
-        <MainButton onClick={onClose}>
+        <MainButton onClick={handleClose}>
           Cancel
         </MainButton>
         <MainButton onClick={handleInvite} solid>

@@ -7,6 +7,9 @@ import { ChevronDownIcon } from "@heroicons/react/outline";
 export default function Gallery() {
   const [user] = useContext(UserContext);
 
+  //TODO - check if curator is approved once routes and db are set up
+  const isCuratorApproved = true//user.curator_approved
+
   return (
     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:pr-0 z-20">
       {/* Profile dropdown */}
@@ -54,6 +57,15 @@ export default function Gallery() {
                 <Link href={`/profile/${ user.username }`}>
                   <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                     Profile
+                  </a>
+                </Link>
+              </Menu.Item>
+            ) : null}
+            {isCuratorApproved ? (
+              <Menu.Item>
+                <Link href={`/submissions`}>
+                  <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Submissions
                   </a>
                 </Link>
               </Menu.Item>

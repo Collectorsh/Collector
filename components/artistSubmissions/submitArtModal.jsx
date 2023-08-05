@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import MainButton from "../MainButton";
 import UserContext from "../../contexts/user";
 import { useMetadata } from "../../data/nft/getMetadata";
@@ -92,7 +92,9 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, gallery }) {
                   )}
                   id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
                   mint={token.mint}
+                  metadata={token}
                   width={800}
+                  useMetadataFallback
                 />
                 {alreadySubmitted
                   ? <p

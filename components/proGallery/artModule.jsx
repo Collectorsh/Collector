@@ -151,13 +151,16 @@ export const ArtItem = ({ token, columns, widthPercent }) => {
               </video>
             </>
           ) : null}
-        <CloudinaryImage
-          className={clsx(
-            "object-contain",
-           
-            "max-h-[75vh]"
-          )}
-          id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+          <CloudinaryImage
+            mint={token.mint}
+            metadata={token}
+            useMetadataFallback
+            useUploadFallback
+            className={clsx(
+              "object-contain",
+              "max-h-[75vh]"
+            )}
+            id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
             noLazyLoad
             onLoad={() => setLoaded(true)}
         />

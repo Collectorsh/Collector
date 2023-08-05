@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import UserContext from "../contexts/user";
 import CloudinaryImage from "../components/CloudinaryImage";
 import MainButton from "../components/MainButton";
@@ -7,6 +7,8 @@ import CheckLoggedIn from "../components/CheckLoggedIn";
 import { useRouter } from "next/router";
 import MainNavigation from "../components/navigation/MainNavigation";
 import SubmitArtModal from "../components/artistSubmissions/submitArtModal";
+import EditSubmissionsModal from "../components/artistSubmissions/editSubmissionsModal";
+import { Toaster } from "react-hot-toast";
 
 const Submissions = ({ }) => {
   const [user] = useContext(UserContext);
@@ -14,6 +16,19 @@ const Submissions = ({ }) => {
 
   const [approvedGalleries, setApprovedGalleries] = useState([])
   const [galleryToEdit, setGalleryToEdit] = useState(null)
+  const [editSubmissionsOpen, setEditSubmissionsOpen] = useState(false)
+
+  const submissions = useMemo(() => {
+    if (!user?.public_keys) return []
+    const gallerySet = approvedGalleries.reduce((acc, gallery) => { 
+      if (!gallery.submitted_tokens) return acc
+      //TODO: filter out tokens that are not from the user
+      const artistSubmissions = gallery.submitted_tokens//.filter(token => user.public_keys.includes(token.creator))
+      artistSubmissions.forEach(token => acc.add(token))
+      return acc
+    }, new Set())
+    return Array.from(gallerySet)
+  }, [approvedGalleries, user?.public_keys])
 
   useEffect(() => {
     if(!user) return
@@ -29,13 +44,30 @@ const Submissions = ({ }) => {
   }
 
   const handleSubmit = (gallery, newTokens) => {
-    //TODO: API call to submit tokens to galleries "submitted_tokens"
     setApprovedGalleries(prev => {
       const newGallery = prev.find(g => g.id === gallery.id)
       if (!newGallery) return prev
       if(newGallery.submitted_tokens) newGallery.submitted_tokens.push(...newTokens)
       else newGallery.submitted_tokens = newTokens
-      return prev.map(g => g.id === gallery.id ? newGallery : g)
+      const newGalleries = prev.map(g => g.id === gallery.id ? newGallery : g)
+
+      //TODO: API call to submit tokens to galleries "submitted_tokens"
+      return newGalleries
+    })
+  }
+
+  const handleEditListing = (newToken) => {
+    console.log("🚀 ~ file: submissions.js:60 ~ handleEditListing ~ newToken:", newToken)
+    setApprovedGalleries(prev => {
+      const newGalleries = prev.map(g => { 
+        const newGallery = { ...g }
+        const oldSubmitted = newGallery.submitted_tokens || []
+        const newSubmittedTokens = oldSubmitted.map(t => t.mint === newToken.mint ? newToken : t)
+        newGallery.submitted_tokens = newSubmittedTokens
+        return newGallery
+      })
+      //TODO: API call to eduit tokens listing prices in galleries "submitted_tokens"
+      return newGalleries
     })
   }
 
@@ -43,10 +75,15 @@ const Submissions = ({ }) => {
     <>
       <CheckLoggedIn />
       <MainNavigation />
+      <Toaster />
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
-        <div className="flex justify-between items-center gap-4">
+        <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Approved Curations</h2>
-          <MainButton className="px-3 py-1 flex gap-1 items-center">
+          <MainButton
+            className="px-3 py-1 flex gap-1 items-center"
+            disabled={!submissions.length}
+            onClick={() => setEditSubmissionsOpen(true)}
+          >
             <CogIcon className="w-5 h-5" />
             <spam>Edit Submission Listings</spam>
           </MainButton>
@@ -92,6 +129,12 @@ const Submissions = ({ }) => {
         onClose={handleCloseSubmitModal}
         onSubmit={handleSubmit}
         gallery={galleryToEdit}
+      />
+      <EditSubmissionsModal
+        isOpen={editSubmissionsOpen}
+        onClose={() => setEditSubmissionsOpen(false)}
+        submissions={submissions}
+        handleEditListing={handleEditListing}
       />
     </>
   )

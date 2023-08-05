@@ -116,7 +116,7 @@ const CloudinaryImage = ({
       
       if (useMetadataFallback && mint) {
         // USE METADATA URL (NOT OPTIMIZED)
-        const image = await HandleNoUrl(mint)
+        const image = metadata?.image || await HandleNoUrl(mint)
         if (image) {
           setFallbackUrl(image)
           setOpacity(1)

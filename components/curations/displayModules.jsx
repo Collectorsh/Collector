@@ -3,8 +3,14 @@ import ArtModule from './artModule'
 import SortableModule from './sortableModule'
 import SortableModulesWrapper from './sortableModulesWrapper'
 
-const DisplayModules = ({modules, setModules, isOwner, submittedTokens}) => {
-
+const DisplayModules = ({
+  modules,
+  setModules,
+  isOwner,
+  submittedTokens,
+  approvedArtists,
+  handleBuyNowPurchase
+}) => {
   const handleEditModule = (newModule) => {
     const newModules = [...modules];
     const index = newModules.findIndex((module) => module.id === newModule.id);
@@ -29,7 +35,14 @@ const DisplayModules = ({modules, setModules, isOwner, submittedTokens}) => {
           key={module.id}
           id = {module.id}
         >
-          <Module module={module} handleEditModule={handleEditModule} submittedTokens={submittedTokens} isOwner onDeleteModule={()=>handleDeleteModule(module.id)} />
+          <Module
+            isOwner
+            module={module}
+            handleEditModule={handleEditModule}
+            submittedTokens={submittedTokens}
+            onDeleteModule={() => handleDeleteModule(module.id)}
+            approvedArtists={approvedArtists}
+          />
         </SortableModule>
       ))}
     />
@@ -39,7 +52,12 @@ const DisplayModules = ({modules, setModules, isOwner, submittedTokens}) => {
     <div className="grid grid-cols-1 gap-4 p-4">
       {modules.map((module, i) => (
         <div key={module.id}>
-          <Module module={module} />
+          <Module
+            module={module}
+            submittedTokens={submittedTokens}
+            approvedArtists={approvedArtists}
+            handleBuyNowPurchase={handleBuyNowPurchase}
+          />
         </div>
       ))}
     </div>
@@ -48,7 +66,15 @@ const DisplayModules = ({modules, setModules, isOwner, submittedTokens}) => {
 
 export default DisplayModules
 
-export const Module = ({ module, handleEditModule, isOwner, submittedTokens, onDeleteModule }) => {
+export const Module = ({
+  module,
+  handleEditModule,
+  isOwner,
+  submittedTokens,
+  onDeleteModule,
+  approvedArtists,
+  handleBuyNowPurchase
+}) => {
   switch (module.type) {
     case "text": {
       return (
@@ -68,6 +94,8 @@ export const Module = ({ module, handleEditModule, isOwner, submittedTokens, onD
           onEditArtModule={handleEditModule}
           isOwner={isOwner}
           submittedTokens={submittedTokens}
+          approvedArtists={approvedArtists}
+          handleBuyNowPurchase={handleBuyNowPurchase}
         />
       )
     }

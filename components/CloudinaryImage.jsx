@@ -26,9 +26,8 @@ const CloudinaryImage = ({
   className,
   quality = 'auto', //auto:best | auto:good | auto:eco | auto:low
   onLoad,
-
+  imageRef,
   width, //number | "auto"
-  height,
   useUploadFallback = false,
   useMetadataFallback = false,
   noLazyLoad = false,
@@ -112,11 +111,13 @@ const CloudinaryImage = ({
       //assume a CDN error
       setError("CDN")
 
-      if (useUploadFallback && mint) addNonCDNMint(mint)
+      if(!mint) return
+
+      if (useUploadFallback) addNonCDNMint(mint)
       
-      if (useMetadataFallback && mint) {
+      if (useMetadataFallback) {
         // USE METADATA URL (NOT OPTIMIZED)
-        const image = await HandleNoUrl(mint)
+        const image = metadata?.image || await HandleNoUrl(mint)
         if (image) {
           setFallbackUrl(image)
           setOpacity(1)
@@ -146,17 +147,16 @@ const CloudinaryImage = ({
       {
         (hasBeenObserved || noLazyLoad) && (cldImg.toURL())//(isVisible || noLazyLoad) && //for true lazy load (if using ideally find a way to maintain images in memory so they dont need to be fetched everytime)
         ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          style={{ opacity, ...lazyStyle }}
-          className={className}
-          // width={width}
-          height={height}
-          src={fallbackUrl || cldImg.toURL()}
-          alt={metadata?.name || ""}
-          onLoad={handleLoad}
-          onError={handleError}
-        />
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            ref={imageRef}
+            style={{ opacity, ...lazyStyle }}
+            className={className}
+            src={fallbackUrl || cldImg.toURL()}
+            alt={metadata?.name || ""}
+            onLoad={handleLoad}
+            onError={handleError}
+          />
         )
         : null
       }

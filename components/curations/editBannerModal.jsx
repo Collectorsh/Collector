@@ -7,7 +7,6 @@ import clsx from "clsx";
 import Modal from "../Modal";
 import SearchBar from "../SearchBar";
 import { RoundedCurve } from "./roundedCurveSVG";
-import { set } from "nprogress";
 
 const tabs = ["submitted", "owned"]
 

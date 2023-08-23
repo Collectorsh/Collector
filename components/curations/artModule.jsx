@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import EditWrapper from '../curatorProfile/editWrapper';
 import EditArtModuleModal from './editArtModuleModal';
 import CloudinaryImage from '../CloudinaryImage';
@@ -8,29 +8,49 @@ import useBreakpoints from '../../hooks/useBreakpoints';
 import { roundToPrecision } from '../../utils/maths';
 import Link from 'next/link';
 import useElementObserver from '../../hooks/useElementObserver';
+import recordSale from '../../data/salesHistory/recordSale';
+import { shootConfetti } from '../../utils/confetti';
+import { Oval } from 'react-loader-spinner';
+import Tippy from "@tippyjs/react"
+import "tippy.js/dist/tippy.css";
+import UserContext from '../../contexts/user';
+import { error, success } from '../../utils/toast';
 
-const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule }) => {
+const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleBuyNowPurchase }) => {
   const breakpoint = useBreakpoints()  
   const [editArtOpen, setEditArtOpen] = useState(false)
   
-  
+
   const itemRows = useMemo(() => {
-    const tokens = artModule.tokens
+    if(!approvedArtists || !submittedTokens) return []
+
+    const tokenMints = artModule.tokens
     const isMobile = ["", "sm", "md"].includes(breakpoint)
-    const cols = isMobile ? 1 : tokens.length
+    const cols = isMobile ? 1 : tokenMints.length
     
-    const useHalfRow = ["lg", "xl"].includes(breakpoint) && tokens.length > 2
-    const halfIndex = Math.floor(tokens.length / 2)
+    const useHalfRow = ["lg", "xl"].includes(breakpoint) && tokenMints.length > 2
+    const halfIndex = Math.floor(tokenMints.length / 2)
     const rows = useHalfRow
-    ? [tokens.slice(0, halfIndex), tokens.slice(halfIndex)]
-    : [tokens]
+    ? [tokenMints.slice(0, halfIndex), tokenMints.slice(halfIndex)]
+    : [tokenMints]
     
-    return rows.map(tokenRow => tokenRow.map((token, i) => {
+    return rows.map(tokenRow => tokenRow.map((tokenMint, i) => {
+      const token = submittedTokens.find(t => t.mint === tokenMint)
+      const artist = approvedArtists.find(a => a.id === token.artist_id)
       const totalWidthRatio = tokenRow.reduce((acc, token) => acc + token.aspect_ratio, 0)
-      const widthPercent = (token.aspect_ratio / totalWidthRatio ) * 100
-      return <ArtItem key={token.mint} token={token} widthPercent={widthPercent} columns={cols} />
+      const widthPercent = (token.aspect_ratio / totalWidthRatio) * 100
+      return (
+        <ArtItem
+          key={tokenMint}
+          token={token}
+          widthPercent={widthPercent}
+          columns={cols}
+          artist={artist}
+          handleBuyNowPurchase={handleBuyNowPurchase}
+        />
+      )
     }))
-  }, [artModule.tokens, breakpoint])
+  }, [artModule.tokens, breakpoint, submittedTokens, approvedArtists, handleBuyNowPurchase])
 
   return (
     <div className="relative group w-full group/artRow min-h-[4rem]">
@@ -79,13 +99,19 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
 export default ArtModule;
 
-export const ArtItem = ({ token, columns, widthPercent }) => {  
+export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurchase }) => {  
   const [loaded, setLoaded] = useState(false);
   const [videoUrl, setVideoUrl] = useState();
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [purchasing, setPurchasing] = useState(false)
   const videoRef = useRef(null);
 
+  const [user] = useContext(UserContext);
+
   const { isVisible } = useElementObserver(videoRef, "500px")  
+
+  const isListed = token.listed_status === "listed"
+  const isSold = token.listed_status === "sold"
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -100,26 +126,40 @@ export const ArtItem = ({ token, columns, widthPercent }) => {
 
   useEffect(() => {
     if (!token) return;
-    try {
-      if (token.animation_url) {
-        if (token.animation_url.split(".").pop().includes("mp4")) {
-          setVideoUrl(token.animation_url);
-        }
-      } else {
-        for (let file of token.properties.files) {
-          if (file.type && file.type === "video/mp4") {
-            setVideoUrl(file.uri);
-          }
-        }
+
+    if (token.animation_url) {
+      if (token.animation_url.split(".").pop().includes("mp4")) {
+        setVideoUrl(token.animation_url);
       }
-    } catch (err) {
-      // expected to have some errors
     }
   }, [token]);
 
-  const handleBuy = (e) => {
-    alert("Buy")
+  const handleBuy = async (e) => {
+    if (!handleBuyNowPurchase || !user) return;
+
+    setPurchasing(true)
+    
+    const txHash = await handleBuyNowPurchase(token.listing_receipt)
+
+    const res = await recordSale({
+      apiKey: user.api_key,
+      curationId: token.curation_id,
+      token: token,
+      buyerId: user.id,
+      buyerAddress: user.public_keys[0],
+      saleType: "buy_now",
+      txHash: txHash,
+    })
+
+    if (res?.status === "success") {
+      success(`Congrats! ${ token.name } has been collected!`)
+      shootConfetti(3)
+    } else {
+      error(`Error buying ${ token.name }: ${ res?.message }`)
+    }
+    setPurchasing(false)
   }
+
   return (
     <div
       className={clsx("relative duration-300 max-w-fit mx-auto ",)}
@@ -151,38 +191,61 @@ export const ArtItem = ({ token, columns, widthPercent }) => {
               </video>
             </>
           ) : null}
-        <CloudinaryImage
-          className={clsx(
-            "object-contain",
-           
-            "max-h-[75vh]"
-          )}
-          id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+          <CloudinaryImage
+            mint={token.mint}
+            metadata={token}
+            useUploadFallback
+            className={clsx(
+              "object-contain",
+              "max-h-[75vh]"
+            )}
+            id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
             noLazyLoad
             onLoad={() => setLoaded(true)}
         />
         </a>
       </Link>
-      <div className="w-full mt-2 px-3 mx-auto
+      <div className="w-full mt-4 px-4 mx-auto
       flex flex-wrap gap-3 justify-between items-center"
       >
         <div className='flex flex-col items-start gap-1'>
           <p className='font-bold text-lg'>{token.name} </p>
-          <p className=''>by {token.artist}</p>
+          {artist ? (
+            <p>by {artist.username}</p>
+          ) : null}
         </div>
-        {token.price
+        {isListed //&& token.buy_now_price
           ? (
             <div className="flex items-center gap-2 flex-wrap">
-              <p className='font-bold text-lg'>{roundToPrecision(token.price, 2)}◎</p>
-              <MainButton
-                onClick={handleBuy}
-                className="px-3"
-                noPadding
-              >Buy Now</MainButton>
+              <p className='font-bold text-lg'>{roundToPrecision(token.buy_now_price, 2)}◎</p>
+              <Tippy
+                content="Connect your wallet first!"
+                className="shadow-lg"
+                disabled={Boolean(user)}
+              >
+                <div>
+                  <MainButton
+                    onClick={handleBuy}
+                    className="px-3 w-28"
+                    noPadding
+                    disabled={!handleBuyNowPurchase || purchasing || !user}
+                  >
+                    {purchasing
+                      ? (
+                        <span className="inline-block translate-y-0.5">
+                          <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+                        </span>
+                      )
+                      : "Buy Now"
+                    }
+                  </MainButton>
+                </div>
+              </Tippy>
             </div>
           )
           : null
-          }
+        }
+        {isSold ? <p className='font-bold text-lg'>Sold!</p> : null}
       </div>
 
     </div>

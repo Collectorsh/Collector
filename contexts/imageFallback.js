@@ -5,7 +5,7 @@ import { OptimizeSingleMint, OptimizeWithMints, OptimizeWithTokens } from "../ut
 import { useCallback } from "react";
 import { useRouter } from "next/router";
 import UserContext from "./user";
-import useActionCable, { makeSocketID } from "../hooks/useWebsocket";
+import useActionCable, { makeNotificationsSocketID } from "../hooks/useWebsocket";
 
 const ImageFallbackContext = createContext();
 
@@ -22,7 +22,7 @@ export const ImageFallbackProvider = ({ children }) => {
   const [completed, setCompleted] = useState(0);
   const [uploadAllCompleted, setUploadAllCompleted] = useState(false);
 
-  const socket_id = useMemo(() => makeSocketID(router.asPath, user?.username), [user?.username, router.asPath])
+  const socket_id = useMemo(() => makeNotificationsSocketID(router.asPath, user?.username), [user?.username, router.asPath])
 
   useEffect(() => {
     //reset fallback image state when changing pages
@@ -65,7 +65,7 @@ export const ImageFallbackProvider = ({ children }) => {
     }
   }, [])
 
-  useActionCable({ received: handleWebsocketMessages }, socket_id)
+  useActionCable(socket_id, { received: handleWebsocketMessages })
 
   //upload all with optiomized as nil
   const uploadAll = async (tokens) => { 

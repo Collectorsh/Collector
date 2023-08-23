@@ -6,10 +6,10 @@ import EditWrapper from "../../components/curatorProfile/editWrapper";
 import { PencilAltIcon, PhotographIcon, PlusIcon } from "@heroicons/react/solid";
 import EditImageModal from "../../components/curatorProfile/editImageModal";
 import EditBioModal from "../../components/curatorProfile/editBioModal";
-import GalleryHighlight from "../../components/curatorProfile/galleryHighlight";
+import CurationHighlight from "../../components/curatorProfile/curationHighlight";
 import SocialLink from "../../components/SocialLink";
 import EditSocialsModal from "../../components/curatorProfile/editSocialsModal";
-import GalleryList from "../../components/curatorProfile/galleryList";
+import CurationList from "../../components/curatorProfile/curationList";
 import { useRouter } from "next/router";
 import { updateBannerImage, updateBio, updateProfileImage, updateSocials } from "../../data/user/updateProfile";
 import { success, error } from "/utils/toastMessages";
@@ -17,18 +17,20 @@ import getUserFromUsername from "../../data/user/getUserFromUsername";
 import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
 import MainButton from "../../components/MainButton";
-import CreateGalleryModal from "../../components/curatorProfile/createGalleryModal";
+import CreateCurationModal from "../../components/curatorProfile/createCurationModal";
+import getCuratorFromUsername from "../../data/user/getCuratorByUsername";
 
 const bioPlaceholder = "Tell us about yourself!";
 
 function ProfilePage({ curator }) {
+  console.log("🚀 ~ file: [username].js:26 ~ ProfilePage ~ curator:", curator)
   const [user] = useContext(UserContext);
 
   const [editBannerOpen, setEditBannerOpen] = useState(false);
   const [editPfpOpen, setEditPfpOpen] = useState(false);
   const [editBioOpen, setEditBioOpen] = useState(false);
   const [editSocialsOpen, setEditSocialsOpen] = useState(false);
-  const [createGalleryOpen, setCreateGalleryOpen] = useState(false);
+  const [createCurationOpen, setCreateCurationOpen] = useState(false);
 
   const [banner, setBanner] = useState(curator?.banner_image);
   const [pfp, setPfp] = useState(curator?.profile_image);
@@ -39,7 +41,7 @@ function ProfilePage({ curator }) {
   const [pfpLoaded, setPfpLoaded] = useState(true);
   
   const isOwner = Boolean(user && user.public_keys.includes(curator?.public_keys?.[0]) && user.api_key);
-  const galleries = curator?.pro_galleries
+  const curations = curator?.curations
 
   useEffect(() => {
     //set loaded to false when the banner changes
@@ -87,7 +89,7 @@ function ProfilePage({ curator }) {
     <>
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <p className="dark:text-gray-100 pt-20 text-center">Sorry, we could not find a Pro user with that name</p>
+        <p className="dark:text-gray-100 pt-20 text-center">Sorry, we could not find a Curator with that name</p>
       </div>
     </>
   )
@@ -140,7 +142,6 @@ function ProfilePage({ curator }) {
                 noLazyLoad
                 onLoad={() => setPfpLoaded(true)}
                 width={144}
-                height={144}
               />
             ) : (
                 <div className="flex justify-center items-center w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black">
@@ -188,14 +189,14 @@ function ProfilePage({ curator }) {
 
         <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
         
-        {galleries?.length
+        {curations?.length
           ? (
             <>
-              <GalleryHighlight gallery={galleries[0]} isOwner={isOwner} />
+              <CurationHighlight curation={curations[0]} isOwner={isOwner} />
       
               <hr className="my-12 border-neutral-200 dark:border-neutral-800" />  
               
-              <GalleryList galleries={galleries.slice(1)} isOwner={isOwner}/>
+              <CurationList curations={curations.slice(1)} isOwner={isOwner}/>
             </>
           )
           : null
@@ -205,9 +206,9 @@ function ProfilePage({ curator }) {
           ? (
             <MainButton
               className="mx-auto flex items-center"
-              onClick={() => setCreateGalleryOpen(true)}
+              onClick={() => setCreateCurationOpen(true)}
             >
-              Create New Pro Gallery <PlusIcon className="w-6 h-6 ml-2" />
+              Create New Curation <PlusIcon className="w-6 h-6 ml-2" />
             </MainButton>
           )
           : null
@@ -244,9 +245,9 @@ function ProfilePage({ curator }) {
               onSave={handleEditSocials}
               socials={curator.socials}
             />
-            <CreateGalleryModal
-              isOpen={createGalleryOpen}
-              onClose={() => setCreateGalleryOpen(false)}
+            <CreateCurationModal
+              isOpen={createCurationOpen}
+              onClose={() => setCreateCurationOpen(false)}
             />
           </>
         )
@@ -258,45 +259,45 @@ function ProfilePage({ curator }) {
 
 export async function getServerSideProps(context) {
   try {
-    ////Mocking Galleries
-    const galleries = [
-      {
-        id: 1,
-        curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-        name: "Hoops Gallery",
-        description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-        available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
-        is_published: true,
-        banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
-      },
-      {
-        id: 2,
-        curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-        name: "Abstract StuffG",
-        description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-        available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
-        is_published: true,
-        banner_image: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24",
-      },
-      {
-        id: 3,
-        curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-        name: "Photography Exhibit",
-        description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-        available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
-        is_published: true,
-        banner_image: "86Umq7881f1QXpr91B1jPjpGMYu3CeZFFx4Rt25u5K24",
-      },
-      {
-        id: 4,
-        curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-        name: "Hoops Gallery Old",
-        description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-        available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
-        is_published: false,
-        banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
-      },
-    ]
+    ////Mocking curations
+    // const curations = [
+    //   {
+    //     id: 1,
+    //     curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
+    //     name: "Hoops Gallery",
+    //     description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
+    //     available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
+    //     is_published: true,
+    //     banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
+    //   },
+    //   {
+    //     id: 2,
+    //     curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
+    //     name: "Abstract StuffG",
+    //     description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
+    //     available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
+    //     is_published: true,
+    //     banner_image: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24",
+    //   },
+    //   {
+    //     id: 3,
+    //     curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
+    //     name: "Photography Exhibit",
+    //     description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
+    //     available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
+    //     is_published: true,
+    //     banner_image: "86Umq7881f1QXpr91B1jPjpGMYu3CeZFFx4Rt25u5K24",
+    //   },
+    //   {
+    //     id: 4,
+    //     curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
+    //     name: "Hoops Gallery Old",
+    //     description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
+    //     available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
+    //     is_published: false,
+    //     banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
+    //   },
+    // ]
 
     ////Mocking Curator
     // const curator = {
@@ -309,13 +310,13 @@ export async function getServerSideProps(context) {
     //   pro_galleries: galleries
     // }
 
+    // curator.curations = curations; //for mocking galleries only
+    
     const username = context.params.username;
-    const res = await getUserFromUsername(username)
+    console.log("🚀 ~ file: [username].js:316 ~ getServerSideProps ~ username :", username )
+    const curator = await getCuratorFromUsername(username)
 
-    const curator = res?.user;
-    curator.pro_galleries = galleries; //for mocking galleries only
-
-    if (curator && curator?.subscription_level === "pro") {
+    if (curator) {
       return { props: { curator } };
     } else {
       return { props: {} };

@@ -45,7 +45,7 @@ export const WarningButton = ({ children, className, disabled, noPadding, warnin
         "text-lg font-bold",
         noPadding ? "" : "py-3 px-6",
         "disabled:scale-100 disabled:opacity-50",
-        "disabled:bg-transparent dark:disabled:bg-transparent disabled:border-red-500",
+        "disabled:bg-transparent dark:disabled:bg-transparent disabled:border-red-500 disabled:text-red-500",
         className
       )}
       {...props}

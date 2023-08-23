@@ -55,7 +55,7 @@ const EditTextModuleModal = ({ textModule, onEditTextModule, isOpen, onClose, on
       className="overflow-visible"
       isOpen={isOpen} onClose={onClose} title="Edit Text Module">
       <div className="my-4 border-4 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
-          w-full p-2
+          w-full p-2 min-h-[8rem]
         ">
         <ReactQuill
           theme="snow"

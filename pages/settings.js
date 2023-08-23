@@ -27,29 +27,31 @@ function SettingsPage() {
             <div className="w-full border-b border-gray-200 dark:border-dark3 pb-3">
               <ul className="font-bold">
                 <li
-                  className={`cursor-pointer hover:text-greeny inline px-2 mr-3 pb-3.5 ${
-                    selected === "settings" &&
-                    "text-greeny font-extrabold border-b border-b-2 border-greeny"
+                  className={`cursor-pointer hover:opacity-100 duration-300 inline px-2 mr-3 pb-3.5 ${
+                    selected === "settings"
+                    ? "border-b-2 border-black dark:border-white opacity-100"
+                    : "opacity-50"
                   }`}
                   onClick={() => changeSelected("settings")}
                 >
                   Settings
                 </li>
-                {user && user.token_holder && (
+                {/* {user && user.token_holder && (
                   <li
-                    className={`cursor-pointer hover:text-greeny inline px-2 mx-3 pb-3.5 ${
+                    className={`cursor-pointer inline px-2 mx-3 pb-3.5 ${
                       selected === "notifications" &&
-                      "text-greeny font-extrabold border-b border-b-2 border-greeny"
+                      "border-b border-b-2 border-greeny"
                     }`}
                     onClick={() => changeSelected("notifications")}
                   >
                     Notifications
                   </li>
-                )}
+                )} */}
                 <li
-                  className={`cursor-pointer hover:text-greeny inline px-2 mx-3 pb-3.5 ${
-                    selected === "wallets" &&
-                    "text-greeny font-extrabold border-b border-b-2 border-greeny"
+                  className={`cursor-pointer hover:opacity-100 duration-300 inline px-2 mx-3 pb-3.5 ${
+                    selected === "wallets"
+                      ? "border-b-2 border-black dark:border-white opacity-100"
+                      : "opacity-50"
                   }`}
                   onClick={() => changeSelected("wallets")}
                 >

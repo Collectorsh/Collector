@@ -20,22 +20,14 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
 
   const [newArtModule, setNewArtModule] = useState(artModule)
   
-  // const [user] = useContext(UserContext);
-
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(134);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
   const tabsRef = useRef([]);
 
-  // const tokens = useMetadata(user?.public_keys, {
-  //   useArtistDetails: false,
-  //   justVisible: false
-  // });
-
   const [search, setSearch] = useState("");
 
   const moduleFull = newArtModule?.tokens.length >= 4
-
 
   useEffect(() => {
     function setTabPosition() {
@@ -63,18 +55,24 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
   }
   
   const items = useMemo(() => {
-    if (!newArtModule?.tokens) return []
+    if (!newArtModule?.tokens || !submittedTokens) return []
     const isMobile = ["", "sm", "md"].includes(breakpoint)
     const cols = isMobile ? 1 : newArtModule.tokens.length
-    const totalWidthRatio = newArtModule.tokens.reduce((acc, token) => acc + token.aspect_ratio, 0)
 
-    return newArtModule.tokens.map((token, i) => {
+    const tokens = newArtModule.tokens
+      .map((tokenMint, i) => submittedTokens.find(token => token.mint === tokenMint))
+      .filter(token => Boolean(token))
+    const totalWidthRatio = tokens.reduce((acc, token) => acc + token.aspect_ratio, 0)
+
+    return tokens.map((token, i) => {
       const widthPercent = (token.aspect_ratio / totalWidthRatio) * 100
 
       const handleRemove = () => {
         setNewArtModule(prev => {
           const newTokens = [...prev.tokens]
-          const index = newTokens.findIndex(arrayToken => arrayToken.mint === token.mint)
+          const index = newTokens.findIndex(tokenMint => tokenMint === token.mint)
+          if (index < 0) return prev
+
           newTokens.splice(index, 1)
           return {
             ...prev,
@@ -85,7 +83,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
 
       return <EditArtItem key={token.mint} token={token} widthPercent={widthPercent} columns={cols} onRemove={handleRemove} />
     })
-  }, [newArtModule?.tokens, breakpoint])
+  }, [newArtModule?.tokens, breakpoint, submittedTokens])
 
   //Will need to add listing somewhere with owned tokens
   // const ownedContent = orderedTokens
@@ -131,21 +129,20 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
       <div className={clsx("w-full h-full max-h-[266px] p-2 overflow-auto grid gap-4 rounded-lg", "grid-cols-1 md:grid-cols-2 xl:grid-cols-3")}>
         
 
-        {submittedTokens?.map((token, i) => {
-          const alreadyInModule = newArtModule?.tokens.findIndex(arrayToken => arrayToken.mint === token.mint) >= 0
+        {submittedTokens?.length === 0
+          ? (<div className="col-span-3 h-[250px] flex justify-center items-center">
+            <p>
+              There are currently no submissions
+            </p>
+          </div>)
+          : submittedTokens?.map((token, i) => {
+          const alreadyInModule = newArtModule?.tokens.findIndex(arrayTokenMint => arrayTokenMint === token.mint) >= 0
           const handleAdd = ({ target }) => {
-            if (alreadyInModule || moduleFull) return 
-            const newToken = { ...token }
-
-            if (!newToken.aspect_ratio) {
-              if (!target.naturalHeight || !target.naturalWidth) return
-
-              newToken.aspect_ratio = target.naturalWidth / target.naturalHeight
-            }
+            if (alreadyInModule || moduleFull) return             
             
             setNewArtModule(prev => ({
               ...prev,
-              tokens: [...(prev?.tokens || []), newToken]
+              tokens: [...(prev?.tokens || []), token.mint]
             }))
           }
           return (
@@ -171,7 +168,6 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
   // const tabContent = [submittedContent, ownedContent]
   const tabContent = [submittedContent]
 
-  // if (!user) return null
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Edit Art Module">
 

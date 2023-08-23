@@ -1,4 +1,3 @@
-import { useState } from "react"
 import MainButton, { WarningButton } from "../MainButton"
 import Modal from "../Modal"
 

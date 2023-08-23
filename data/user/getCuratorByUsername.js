@@ -1,25 +1,25 @@
 import apiClient from "/data/client/apiClient";
 import useSWR from 'swr'
 
-async function getUserFromUsername(username) {
+async function getCuratorFromUsername(username) {
   try {
-    let res = await apiClient.post("/user/from_username", {
+    let res = await apiClient.post("/user/get_curator_by_username", {
       username: username,
     });
-    return res.data;
+    return res.data.curator;
   } catch (err) {
     console.log(err);
   }
 }
 
-export default getUserFromUsername;
+export default getCuratorFromUsername;
 
 
 const fetcher = async (username) => {
   if (!username) return undefined
-  return await getUserFromUsername(username)
+  return await getCuratorFromUsername(username)
 }
-export function useUserFromUsername(username) {
+export function useCuratorFromUsername(username) {
   const { data, error } = useSWR(username, fetcher)
   return data
 }

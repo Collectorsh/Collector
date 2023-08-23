@@ -7,8 +7,7 @@ import { ChevronDownIcon } from "@heroicons/react/outline";
 export default function Gallery() {
   const [user] = useContext(UserContext);
 
-  //TODO - check if curator is approved once routes and db are set up
-  const isCuratorApproved = true//user.curator_approved
+  const isCuratorApproved = user.curator_approved
 
   return (
     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:pr-0 z-20">

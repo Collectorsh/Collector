@@ -413,8 +413,7 @@ const OverlayImage = ({ mint, tokens }) => {
     <CloudinaryImage
       id={`${process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ mint }`}
       mint={mint}
-      width={150}
-      height={150}
+      width={500}
       className="w-[150px] h-[150px] cursor-pointer object-center object-cover shadow-sm bg-gray-400/50 rounded-lg"
       noLazyLoad
       noFallback

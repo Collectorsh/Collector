@@ -14,6 +14,7 @@ import getOwnerCollectorName from "/data/getOwnerCollectorName";
 import Meta from "/components/single/Meta";
 
 export default function Single({ token, market, refetch }) {
+  console.log("🚀 ~ file: Single.jsx:17 ~ Single ~ token:", token)
   const { publicKey } = useWallet();
   const [singleNft] = useContext(SingleNftContext);
   const [listing, setListing] = useState();

@@ -2,7 +2,8 @@ import { useEffect, useRef, useContext, useState, useCallback } from 'react';
 
 import { ActionCableContext } from '../contexts/webSocket';
 
-export const makeSocketID = (pathname, username) => {
+export const makeNotificationsSocketID = (pathname, username) => {
+  if  (pathname.includes("curations")) return null //curations has its own handler  
   switch (pathname) { 
     case "/edit": {
       if (!username) return null
@@ -13,16 +14,14 @@ export const makeSocketID = (pathname, username) => {
   }
 }
 
-const useActionCable = (handlers = {}, socket_id) => {
+const useActionCable = (socket_id, handlers = {}, channelName = "NotificationsChannel") => {
   const cable = useContext(ActionCableContext);
-  const channelName = "NotificationsChannel"
 
   useEffect(() => {
     if (!cable || !socket_id) return
     let subscription;
 
     try {
-      //change username: to soclek_id
       subscription = cable.subscriptions.create({ channel: channelName, socket_id: socket_id }, {
         connected: () => {
           console.log("Connected to channel: " + socket_id);

@@ -6,12 +6,6 @@ import getKeyHash from "../../../data/key_hash/getHash";
 import apiClient from "../../../data/client/apiClient";
 import crypto from 'crypto'
 
-import { mplHydra, MembershipModel, fetchFanout, findFanoutNativeAccountPda, findFanoutPda, init, addMemberWallet, distributeWallet} from "@metaplex-foundation/mpl-hydra";
-import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { transactionBuilderGroup, keypairIdentity as umiKeypairIdentity } from "@metaplex-foundation/umi";
-import { rpcHost } from "../../../config/settings";
-import { fromWeb3JsKeypair } from "@metaplex-foundation/umi-web3js-adapters";
-
 export const PLATFORM_FEE_POINTS = 500 //5%
 export const MAX_CURATOR_FEE_POINTS = 5000 //50%
 
@@ -76,42 +70,6 @@ export default async function handler(req, res) {
     
     await fundAccount(fundingKeypair, authorityKeypair.publicKey)
 
-    //CREATE HYDRA WALLET
-    const umiAuthorityIdentity = umiKeypairIdentity(fromWeb3JsKeypair(authorityKeypair), true)
-   
-    const umi = createUmi(rpcHost).use(umiAuthorityIdentity).use(mplHydra());
-    
-    const hydraName = `curation-${curationName}-${authorityKeypair.publicKey.toString().slice(0, 5)}`
-
-    const [fanoutPubkey, bumpSeed] = findFanoutPda(umi, { name: hydraName });
-    const [hydraAccountPubkey, nativeAccountBumpSeed] = findFanoutNativeAccountPda(umi, { fanout: fanoutPubkey });
-
-    await init(umi, {
-      bumpSeed,
-      nativeAccountBumpSeed,
-      name: hydraName,
-      model: MembershipModel.Wallet,
-      totalShares: feePoints,
-    }).sendAndConfirm(umi);
-
-    console.log("Hydra created")
-
-    //Add hydra members
-    const curatorMembership = addMemberWallet(umi, {
-      member: new PublicKey(curatorWithdrawalPubkey),
-      fanout: fanoutPubkey,
-      shares: curatorFeePoints,
-    })
-
-    const platformMembership = addMemberWallet(umi, {
-      member: new PublicKey(platformWithdrawalPubkey),
-      fanout: fanoutPubkey,
-      shares: PLATFORM_FEE_POINTS,
-    })
-
-    await transactionBuilderGroup([curatorMembership, platformMembership]).sendAndConfirm(umi);
-    console.log("Members added")
-
     //CREATE AUCTION HOUSE
     const metaplex = new Metaplex(connection).use(keypairIdentity(authorityKeypair));
        
@@ -120,8 +78,7 @@ export default async function handler(req, res) {
       .create({
         sellerFeeBasisPoints: feePoints, 
         authority: authorityKeypair,
-        feeWithdrawalDestination: fundingKeypair.publicKey, // withdrawals from the fee account go back to the parent funding account
-        treasuryWithdrawalDestination: hydraAccountPubkey, // Hydra Account address
+        //withdrawals default to authority
 
         //ref https://docs.metaplex.com/programs/auction-house/auction-house-settings#require-sign-off
         // requireSignOff: true,
@@ -132,9 +89,10 @@ export default async function handler(req, res) {
     
     console.log("Auction house created:", auctionHouse.address.toString())
 
-    const minBalance = LAMPORTS_PER_SOL * 0.005
-    await fundAccount(fundingKeypair, new PublicKey(auctionHouse.feeAccountAddress), minBalance)
-    console.log("Funded auction house")
+    //TODO probably will need to add this back in when dealing with auctions
+    // const minBalance = LAMPORTS_PER_SOL * 0.005
+    // await fundAccount(fundingKeypair, new PublicKey(auctionHouse.feeAccountAddress), minBalance)
+    // console.log("Funded auction house")
 
     const apiResult = await apiClient.post("/curation/create", {
       name: curationName,
@@ -142,7 +100,6 @@ export default async function handler(req, res) {
       curator_fee: curatorFee,
       auction_house_address: auctionHouse.address.toString(),
       private_key_hash: encryptedSecretKey.toString('base64'),
-      hydra_name: hydraName,
       payout_address: curatorWithdrawalPubkey,
     }).then(res => res.data)
 
@@ -157,7 +114,7 @@ export default async function handler(req, res) {
 
       const balanceLamports = await connection.getBalance(new PublicKey(authorityKeypair.publicKey));
 
-      const refundAmount = balanceLamports - feeCost
+      const refundAmount = balanceLamports// - feeCost
       if (refundAmount <= 0) throw new Error("Not enough balance to refund")
       
       const recoverTX = new Transaction().add(

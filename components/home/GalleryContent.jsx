@@ -16,9 +16,7 @@ export default function GalleryContent({ name, items }) {
     return Array.from({ length: 6 }, (_, index) => (
       <SwiperSlide key={`slide-${ index }`}>
         <div className="md:p-4">
-          <div
-            className="bg-gray-300/20 lg:shadow-lg rounded-xl relative p-3 mx-auto"
-          >
+          <div className="bg-gray-300/20 lg:shadow-lg rounded-xl relative p-3 mx-auto">
             <ContentLoader
               speed={2}
                 className="w-full mb-4 h-[250px] rounded-lg"
@@ -91,21 +89,8 @@ export default function GalleryContent({ name, items }) {
 const ImageSlide = ({ item }) => {
   const [errorCount, setErrorCount] = useState(0);
   
-  const defaultSource = async (e, mint, url) => {
-    e.target.style.background = "black";
-    e.target.style.opacity = 0;
-    if (!url) return;
-
-    if(errorCount > 1) return
-    setErrorCount(errorCount + 1)
-    try {
-      const res = await axios.get(url).then(res => res.data);
-      const image = typeof res.image === "object" ? res.image : url
-      e.target.src = image;
-      e.target.style.opacity = 1;
-    } catch (err) {
-      console.log(err);
-    }
+  const token = {
+    mint: item.mint,
   }
   return(
     <div className="md:p-4">
@@ -116,8 +101,9 @@ const ImageSlide = ({ item }) => {
           <a >
             {/* <div className="w-full h-full"> */}
               <CloudinaryImage
-                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ item.mint }`}
-                mint={item.mint}
+                // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ item.mint }`}
+                // mint={item.mint}
+                token={token}
                 width={700}
                 noLazyLoad
                 useUploadFallback

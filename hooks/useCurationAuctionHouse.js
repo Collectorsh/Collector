@@ -4,12 +4,18 @@ import { LAMPORTS_PER_SOL, PublicKey, ba } from "@solana/web3.js";
 import { useEffect, useState } from "react";
 import { connection } from "../config/settings";
 import { PLATFORM_FEE_POINTS } from "../pages/api/curations/create";
+import { getSplitBalance } from "../pages/api/curations/withdraw";
+
+
 
 const useCurationAuctionHouse = (curation) => {
   const wallet = useWallet();
 
   const [auctionHouse, setAuctionHouse] = useState(null);
-  const [collectedFees, setCollectedFees] = useState(0);
+  const [collectedFees, setCollectedFees] = useState({
+    curatorBalance: 0,
+    platformBalance: 0
+  });
 
   const auctionHouseAddress = curation?.auction_house_address
 
@@ -25,6 +31,10 @@ const useCurationAuctionHouse = (curation) => {
       const auctionHouse = await auctionHouseSDK
         .findByAddress({ address: new PublicKey(auctionHouseAddress) });
       setAuctionHouse(auctionHouse)
+      console.log("🚀 ~ file: useCurationAuctionHouse.js:34 ~feeAccountAddress:", auctionHouse.feeAccountAddress.toString())
+      console.log("🚀 ~ file: useCurationAuctionHouse.js:34 ~treasuryAddress:", auctionHouse.treasuryAccountAddress.toString())
+      console.log("🚀 ~ file: useCurationAuctionHouse.js:33 ~ auctionHouseAddress:", auctionHouseAddress)
+
     })()
 
   }, [wallet.connected, auctionHouseAddress, auctionHouseSDK, auctionHouse])
@@ -32,19 +42,7 @@ const useCurationAuctionHouse = (curation) => {
   useEffect(() => {
     if (!auctionHouse || !curation) return
     (async () => { 
-      const balanceLamports = await connection.getBalance(new PublicKey(auctionHouse.feeAccountAddress));
-      // Convert lamports to SOL
-      const balanceSol = balanceLamports / LAMPORTS_PER_SOL;
-      
-      const curatorFeePoints = curation.curator_fee * 100
-      const totalPoints = curatorFeePoints + PLATFORM_FEE_POINTS
-      const curatorFees = balanceSol * (curatorFeePoints / totalPoints)
-      const platformFees = balanceSol * (PLATFORM_FEE_POINTS / totalPoints)
-
-      const fees = {
-        curator: curatorFees,
-        platform: platformFees
-      }
+      const fees = await getSplitBalance(connection, auctionHouse.treasuryAccountAddress, curation.curator_fee)
       setCollectedFees(fees)
     })()
   }, [auctionHouse, curation])
@@ -83,22 +81,18 @@ const useCurationAuctionHouse = (curation) => {
   }
 
   const handleBuyNowPurchase = async (listingReceipt) => { 
-    console.log("🚀 ~ file: useAuctionHouse.js:67 ~ handleBuyNowPurchase ~ listingReceipt:", listingReceipt)
     const listing = await auctionHouseSDK
       .findListingByReceipt({
         auctionHouse,
         receiptAddress: new PublicKey(listingReceipt),
         loadJsonMetadata: false
       });
-    console.log("🚀 ~ file: useAuctionHouse.js:73 ~ handleBuyNowPurchase ~ listing:", listing)
 
     const bought = await auctionHouseSDK
       .buy({
         auctionHouse,
         listing,
       })
-    console.log("🚀 ~ file: test.js:99 ~ buyListing ~ bought:", bought)
-
     return bought.response.signature
   }
 
@@ -116,7 +110,7 @@ const useCurationAuctionHouse = (curation) => {
   //   })()
   // }, [auctionHouse, auctionHouseSDK])
 
-  return { handleBuyNowList, handleDelist, handleBuyNowPurchase, collectedFees }
+  return { handleBuyNowList, handleDelist, handleBuyNowPurchase, collectedFees, setCollectedFees }
 }
 
 export default useCurationAuctionHouse;

@@ -1,7 +1,5 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import MainButton from "../MainButton";
-import UserContext from "../../contexts/user";
-import { useMetadata } from "../../data/nft/getMetadata";
 import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
 import Modal from "../Modal";
@@ -11,38 +9,13 @@ import { Oval } from "react-loader-spinner";
 
 const tabs = ["1/1", "Editions"]
 
-export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation }) {
-  const [user] = useContext(UserContext);
-
-  const tokens = useMetadata(user?.public_keys, {
-    useArtistDetails: false,
-    justVisible: false,
-    justCreator: true 
-  });
-
+export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, tokens }) {
+  console.log("🚀 ~ file: submitArtModal.jsx:13 ~ SubmitArtModal ~ tokens:", tokens)
   const [selectedTokens, setSelectedTokens] = useState([]);
   const [submitting, setSubmitting] = useState(false);
 
-  const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const [tabUnderlineWidth, setTabUnderlineWidth] = useState(45);
-  const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
-  const tabsRef = useRef([]);
-
-
   const curationName = curation?.name.replaceAll("_", " ")
 
-  useEffect(() => {
-    function setTabPosition() {
-      const currentTab = tabsRef.current[activeTabIndex];
-      if (!currentTab) return
-      setTabUnderlineLeft(currentTab.offsetLeft);
-      setTabUnderlineWidth(currentTab.clientWidth);
-    }
-    setTabPosition()
-    window.addEventListener("resize", setTabPosition);
-
-    return () => window.removeEventListener("resize", setTabPosition);
-  }, [activeTabIndex]);
 
   const clearState = () => {
     setTimeout(() => {
@@ -65,26 +38,7 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation }) 
 
   const ownedContent = useMemo(() => {
     if (!tokens) return null
-
-    let filteredTokens = []
-    const singles = tokens.filter(t => !t.isEdition)
-
-    const editions = tokens.filter(t => t.isEdition).reduce((acc, curr) => {
-      const editionPresent = acc.find(a => a.image === curr.image)
-      if (!editionPresent) return [...acc, curr]
-      return acc
-    }, [])
-    
-    switch (activeTabIndex) { 
-      case 0:
-        filteredTokens = singles
-        break;
-      case 1:
-        filteredTokens = editions
-        break;
-    }
-
-    return filteredTokens.map((token) => (
+    return tokens.map((token) => (
       <ArtworkItem
         key={token.mint}
         token={token}
@@ -93,49 +47,13 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation }) 
         setSelectedTokens={setSelectedTokens}
       />
     ))
-  },[tokens, activeTabIndex, curation?.submitted_token_listings, selectedTokens])
+  }, [tokens, selectedTokens, curation?.submitted_token_listings])
         
 
-  if (!user) return null
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title={`Submit Artworks`}>
       <p className="mt-4 text-lg font-bold text-center">Choose the pieces you would like to submit to {curationName}</p>
-      <p className="text-center mb-4">Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price</p>
-
-      {/* KEEP THIS, uncomment for editions */}
-      {/* <div className="relative mx-auto w-fit">
-        <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
-          {tabs.map((tab, i) => {
-            const handleClick = () => {
-              setActiveTabIndex(i);
-            }
-            const isSelected = activeTabIndex === i;
-
-            return (
-              <button
-                key={tab}
-                ref={(el) => (tabsRef.current[i] = el)}
-                className={clsx(
-                  "px-3 py-1 capitalize hover:opacity-100 hover:scale-[102%] font-bold duration-300",
-                  isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
-                onClick={handleClick}
-              >
-                {tab}
-              </button>
-            )
-          })}
-
-        </div>
-        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700" />
-        <span
-          className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner shadow-black/10 dark:shadow-white/10"
-        />
-        <span
-          className="absolute rounded-full bottom-0 block h-1 bg-black dark:bg-white transition-all duration-300"
-          style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
-        />
-      </div> */}
+      <p className="text-center mb-8">Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price</p>
 
       <div className="border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
         <div className={clsx("w-full h-[266px] p-2 overflow-auto grid gap-4 rounded-lg",
@@ -248,9 +166,9 @@ const ArtworkItem = ({ token, submittedTokens, selectedTokens, setSelectedTokens
           isSelected && "ring-4 ring-black dark:ring-white",
           alreadySubmitted && "opacity-50 blur-[2px]"
         )}
-        id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-        mint={token.mint}
-        metadata={token}
+        // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+        // mint={token.mint}
+        token={token}
         width={800}
         useMetadataFallback
       />

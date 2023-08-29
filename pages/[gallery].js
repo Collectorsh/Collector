@@ -14,6 +14,7 @@ import { Metaplex } from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
 import { useMetadata } from "../data/nft/getMetadata";
 import { useImageFallbackContext } from "../contexts/imageFallback";
+import { getTokenCldImageId } from "../components/CloudinaryImage";
 
 
 function Gallery({user}) {
@@ -36,7 +37,10 @@ function Gallery({user}) {
   const renderedTokens = useMemo(() => {
     if(!visibleTokens) return []
     const optimized = visibleTokens?.filter(token => token.optimized === "True")
-    const completed = visibleTokens?.filter(token => cloudinaryCompleted.some(({ mint }) => mint === token.mint))
+    const completed = visibleTokens?.filter(token => {
+      const cld_id = getTokenCldImageId(token)
+      return cloudinaryCompleted.some((cc) => cc.cld_id === cld_id)
+    })
     return [...optimized, ...completed]
   },[visibleTokens, cloudinaryCompleted]);
 

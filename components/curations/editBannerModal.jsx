@@ -88,8 +88,9 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
                     "w-full h-[250px] rounded-lg",
                     isSelected && "ring-4 ring-black dark:ring-white"
                   )}
-                  id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-                  mint={token.mint}
+                  // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+                  // mint={token.mint}
+                  token={token}
                   width={800}
                 />
               </button>
@@ -118,8 +119,9 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
                   "w-full h-[250px] rounded-lg",
                   isSelected && "ring-4 ring-black dark:ring-white"
                 )}
-                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-                mint={token.mint}
+                // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+                // mint={token.mint}
+                token={token}
                 width={800}
               />
             </button>

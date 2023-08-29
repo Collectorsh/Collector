@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import CloudinaryImage from "../../components/CloudinaryImage";
+import CloudinaryImage, { getTokenCldImageId } from "../../components/CloudinaryImage";
 import MainNavigation from "../../components/navigation/MainNavigation";
 import UserContext from "../../contexts/user";
 import EditWrapper from "../../components/curatorProfile/editWrapper";
@@ -23,7 +23,6 @@ import getCuratorFromUsername from "../../data/user/getCuratorByUsername";
 const bioPlaceholder = "Tell us about yourself!";
 
 function ProfilePage({ curator }) {
-  console.log("🚀 ~ file: [username].js:26 ~ ProfilePage ~ curator:", curator)
   const [user] = useContext(UserContext);
 
   const [editBannerOpen, setEditBannerOpen] = useState(false);
@@ -54,17 +53,19 @@ function ProfilePage({ curator }) {
   }, [pfp, curator?.profile_image])
 
   const handleEditBanner = async (selectedToken) => {
-    if(!isOwner) return;
-    setBanner(selectedToken.mint);
-    const res = await updateBannerImage(user.api_key, selectedToken.mint)
+    if (!isOwner) return;
+    const cldId = getTokenCldImageId(selectedToken)
+    setBanner(cldId);
+    const res = await updateBannerImage(user.api_key, cldId)
     if (res.status === "success") success("Banner Updated")
     else error("Banner update failed")
   }
 
   const handleEditPfp = async (selectedToken) => { 
     if (!isOwner) return;
-    setPfp(selectedToken.mint);
-    const res = await updateProfileImage(user.api_key, selectedToken.mint)
+    const cldId = getTokenCldImageId(selectedToken)
+    setPfp(cldId);
+    const res = await updateProfileImage(user.api_key, cldId)
     if (res.status === "success") success("Profile Image Updated!")
     else error("Profile image update failed")
   }
@@ -259,61 +260,7 @@ function ProfilePage({ curator }) {
 
 export async function getServerSideProps(context) {
   try {
-    ////Mocking curations
-    // const curations = [
-    //   {
-    //     id: 1,
-    //     curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-    //     name: "Hoops Gallery",
-    //     description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-    //     available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
-    //     is_published: true,
-    //     banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
-    //   },
-    //   {
-    //     id: 2,
-    //     curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-    //     name: "Abstract StuffG",
-    //     description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-    //     available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
-    //     is_published: true,
-    //     banner_image: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24",
-    //   },
-    //   {
-    //     id: 3,
-    //     curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-    //     name: "Photography Exhibit",
-    //     description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-    //     available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
-    //     is_published: true,
-    //     banner_image: "86Umq7881f1QXpr91B1jPjpGMYu3CeZFFx4Rt25u5K24",
-    //   },
-    //   {
-    //     id: 4,
-    //     curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-    //     name: "Hoops Gallery Old",
-    //     description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-    //     available_artworks: [{ mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP" }, { mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24" }],
-    //     is_published: false,
-    //     banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
-    //   },
-    // ]
-
-    ////Mocking Curator
-    // const curator = {
-    //   username: "Test Curator",
-    //   bio: "Test Bio, this has a lot of words, so could take up a lot of space if someone want to get wordy with it\nand a there should be a line break\nand here.\nThanks for listening to my ted talk!",
-    //   profile_image: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP",
-    //   banner_image: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24",
-    //   public_keys: ["EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX"],
-    //   socials: [{ type: "twitter", link: "https://twitter.com/EV3RETH" }, { type: "other", link: "https://google.com" }],
-    //   pro_galleries: galleries
-    // }
-
-    // curator.curations = curations; //for mocking galleries only
-    
     const username = context.params.username;
-    console.log("🚀 ~ file: [username].js:316 ~ getServerSideProps ~ username :", username )
     const curator = await getCuratorFromUsername(username)
 
     if (curator) {

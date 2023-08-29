@@ -99,8 +99,9 @@ export default function Image({ token, size = "small" }) {
               />
             ) : null} */}
             <CloudinaryImage
-              mint={token.mint}
-              id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+              // mint={token.mint}
+              token={token}
+              // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
               width={1200}
               noLazyLoad
               quality="auto:best"

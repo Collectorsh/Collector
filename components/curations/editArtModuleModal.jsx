@@ -101,8 +101,9 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
   //                   "w-full h-[250px] rounded-lg",
   //                   isSelected && "ring-4 ring-black dark:ring-white"
   //                 )}
-  //                 id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-  //                 mint={token.mint}
+  //                 //id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+  //                 //mint={token.mint}
+  //                 token={token}
   //                 width={800}
   //               />
   //             </button>
@@ -154,8 +155,9 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
                 className={clsx("flex-shrink-0 object-cover shadow-lg dark:shadow-white/5",
                   "w-full h-[250px]",
                 )}
-                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-                mint={token.mint}
+                // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+                // mint={token.mint}
+                token={token}
                 width={500}
               />
             </button>
@@ -269,7 +271,8 @@ const EditArtItem = ({ columns, widthPercent, token, onRemove }) => {
             "shadow-lg rounded-lg",
             "max-h-[400px]"
           )}
-          id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+          // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+          token={token}
           noLazyLoad
           onLoad={() => setLoaded(true)}
         />

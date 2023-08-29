@@ -11,7 +11,6 @@ async function createCuration({ curationName, apiKey, curatorFee, curatorWithdra
         curatorFee,
         curatorWithdrawalPubkey
       },
-      // { timeout: 1000 * 60 * 5, } // 5 minutes
     ).then(res => res.data)
 
     return result

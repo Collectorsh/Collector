@@ -6,6 +6,7 @@ import { RoundedCurve } from './roundedCurveSVG';
 import { roundToPrecision } from '../../utils/maths';
 import { useState } from 'react';
 import Tippy from '@tippyjs/react';
+import { Oval } from 'react-loader-spinner';
 
 const GlobalEditBar = ({
   setModules,
@@ -44,12 +45,12 @@ const GlobalEditBar = ({
     return "Draft: Up To Date"
   }
 
-
   const handleWithdraw = async () => { 
     setWithdrawing(true)
     await handleWithdrawFees()
     setWithdrawing(false)
   }
+
   const draftButtons = (
     <>
       <div className='flex gap-4 flex-wrap justify-center md:place-self-start'>
@@ -66,7 +67,6 @@ const GlobalEditBar = ({
         >
           Add Text Module <PlusIcon className="w-5 h-5" />
         </MainButton>
-
       </div>
 
       <MainButton
@@ -100,9 +100,9 @@ const GlobalEditBar = ({
     </>
   )
 
-  const curatorFee = roundToPrecision(collectedFees.curator, 2)
+  const curatorBalance = collectedFees ? collectedFees.curatorBalance : 0
+  const curatorFee = roundToPrecision(curatorBalance, 3)
   const fees = collectedFees ? <span>{curatorFee}◎</span> : <span className='animate-pulse'>...</span>
-  console.log("🚀 ~ file: globalEditBar.jsx:116 ~ collectedFees.curator:", collectedFees.curator)
 
   const publishedButtons = (
     <>
@@ -114,14 +114,26 @@ const GlobalEditBar = ({
         </WarningButton>
         <MainButton
           onClick={handleWithdraw}
-          disabled={withdrawing || !collectedFees.curator} 
+          disabled={withdrawing || !curatorBalance} 
+          className="min-w-[250px]"
         >
-          Withdraw Fees
-          <Tippy
-            content={`${ roundToPrecision(collectedFees.curator, 6)} Sol`}
-          >
-            <span> ({fees})</span>
-          </Tippy>
+          {withdrawing
+            ? (
+              <span className="inline-block translate-y-0.5">
+                <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+              </span>
+            )
+            : (
+              <>
+                <span>Withdraw Fees</span>
+                <Tippy
+                  content="Minus Solana transaction fees"
+                >
+                  <span> ({fees})</span>
+                </Tippy>
+              </>
+            )
+          }
         </MainButton>
           
       </div>

@@ -166,8 +166,9 @@ const ImageCard = ({ item }) => {
           <Link href={`/${ item.username }`}>
             <a>
               <CloudinaryImage
-                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ item.mint }`}
-                mint={item.mint}
+                // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ item.mint }`}
+                // mint={item.mint}
+                token={token}
                 width={700}
                 noLazyLoad
                 useUploadFallback

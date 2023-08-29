@@ -8,14 +8,23 @@ import { useRouter } from "next/router";
 import MainNavigation from "../components/navigation/MainNavigation";
 import SubmitArtModal from "../components/artistSubmissions/submitArtModal";
 import getCurationsByApprovedArtist from "../data/curation/getCurationsByApprovedArtist";
-import submitToken from "../data/curationListings/submitToken";
+import { submitEditionTokens, submitSingleToken } from "../data/curationListings/submitToken";
 import { error, success } from "../utils/toast";
 import EditListingsModal from "../components/artistSubmissions/editListingsModal";
 import { Toaster } from "react-hot-toast";
+import Link from "next/link";
+import clsx from "clsx";
+import { useMetadata } from "../data/nft/getMetadata";
 
 const Submissions = ({ }) => {
   const [user] = useContext(UserContext);
   const router = useRouter()
+
+  const userTokens = useMetadata(user?.public_keys, {
+    useArtistDetails: false,
+    justVisible: false,
+    justCreator: true
+  });
 
   const [approvedCurations, setApprovedCurations] = useState([])
   const [curationToEdit, setCurationToEdit] = useState(null)
@@ -51,9 +60,9 @@ const Submissions = ({ }) => {
   }
 
   const handleSubmit = async (curation, newTokens) => {    
-    const results = await Promise.allSettled(newTokens.map(async(token) => { 
-      const isPrimarySale = !token.primarySaleHappened
-      const res = await submitToken({
+    const results = await Promise.allSettled(newTokens.map(async (token) => { 
+      const isPrimarySale = !token.primary_sale_happened
+      const res = await submitSingleToken({
         token,
         apiKey: user.api_key,
         curationId: curation.id,
@@ -65,17 +74,22 @@ const Submissions = ({ }) => {
       if (res?.status === "success" && res?.listing) {
         return res.listing
       } else {
-        error(`Failed to submit token ${ token.name } to gallery ${ curation.name }`)
+        error(`Failed to submit token ${ token.name } to ${ curation.name }`)
         return null
-      }
+      } 
     }))
 
     const listings = results
       .filter(result => result.status === "fulfilled" && result.value)
-      .map(result => result.value);
+      .reduce((acc, result) => { 
+        const value = result.value
+        if (Array.isArray(value)) acc.push(...value)
+        else acc.push(value)
+        return acc
+      },[])
 
     if (listings.length) {
-      success(`Successfully submitted ${ listings.length } tokens to gallery ${ curation.name }`)
+      success(`Successfully submitted ${ listings.length } piece(s) to ${ curation.name }`)
       setApprovedCurations(prev => {
         const newCuration = prev.find(g => g.id === curation.id)
         if (!newCuration) return prev
@@ -89,12 +103,15 @@ const Submissions = ({ }) => {
     }
   }
 
-  const handleEditListing = (newToken, curation) => {
+  const handleEditListings = (newTokens, curation) => {
     setApprovedCurations(prev => prev.map(g => { 
       if (g.id !== curation.id) return g
       const newCuration = { ...g }
       const oldSubmitted = newCuration.submitted_token_listings || []
-      const newSubmittedTokens = oldSubmitted.map(t => t.mint === newToken.mint ? newToken : t)
+      const newSubmittedTokens = oldSubmitted.map(t => {
+        const newToken = newTokens.find(nt => nt.mint === t.mint)
+        return newToken || t
+      })
       newCuration.submitted_token_listings = newSubmittedTokens
 
       setCurationToEdit(newCuration)
@@ -119,18 +136,29 @@ const Submissions = ({ }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 px-4">
           {approvedCurations.map(curation => {
-            const { banner_image, name, id, curator } = curation
-            const artistSubmissions = curation.submitted_token_listings.filter(listing => user?.public_keys.includes(listing.artist_address))
+            const { banner_image, name, id, curator, is_published } = curation
+            const artistSubmissions = curation.submitted_token_listings.filter(listing => {
+              const creatorsAddresses = listing.creators?.map((creator) => creator.address)
+              const userKeys = user?.public_keys || []
+              const isArtist = userKeys.includes(listing.artist_address) || Boolean(creatorsAddresses?.find(address => userKeys.includes(address)))
+              const notSold = listing.listed_status !== "sold"
+              return isArtist && notSold
+            })
             return (
               <div key={id} className="relative">
-                <div className="relative shadow-lg shadow-black/25 dark:shadow-neutral-500/25 rounded-xl overflow-hidden">
-                  <CloudinaryImage
-                    className="w-full h-[300px] object-cover"
-                    id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ banner_image }`}
-                    noLazyLoad
-                    width={1400}
-                  />
-                </div>
+                <Link href={`/curations/${ name }`} >
+                  <a className={clsx(
+                    !is_published && "pointer-events-none",
+                    "relative shadow-lg shadow-black/25 dark:shadow-neutral-500/25 rounded-xl overflow-hidden hover:-translate-y-3 duration-300 block"
+                  )}>
+                    <CloudinaryImage
+                      className="w-full h-[300px] object-cover"
+                      id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ banner_image }`}
+                      noLazyLoad
+                      width={1400}
+                    />
+                  </a>
+                </Link>
                 <div className="my-2 px-3 gap-3 flex justify-between flex-wrap">
                   <div>
                     <h3 className="font-bold collector text-2xl">{name.replaceAll("_", " ")}</h3>
@@ -168,11 +196,12 @@ const Submissions = ({ }) => {
         onClose={handleCloseModal}
         onSubmit={handleSubmit}
         curation={curationToEdit}
+        tokens={userTokens}
       />
       <EditListingsModal
         isOpen={editListingsOpen}
         onClose={handleCloseModal}
-        handleEditListing={handleEditListing}
+        handleEditListings={handleEditListings}
         curation={curationToEdit}
       />
     </>
@@ -180,67 +209,3 @@ const Submissions = ({ }) => {
 }
 
 export default Submissions
-
-// function mockGetApprovedCurations(userID) { //Mock API
-//   if (!userID) return []
-
-//   try {
-//     ////Mocking Galleries
-//     const curator = {
-//       username: "Test Curator",
-//       profile_image: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP",
-
-//     }
-//     const curations = [
-//       {
-//         id: 1,
-//         curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-//         curator_fee: 20,
-//         curator: curator,
-//         name: "Hoops Gallery",
-//         description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-//         is_published: true,
-//         banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
-//       },
-//       {
-//         id: 2,
-//         curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-//         curator: curator,
-//         curator_fee: 20,
-//         name: "Abstract StuffG",
-//         description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-//         is_published: true,
-//         banner_image: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24",
-//       },
-//       {
-//         id: 3,
-//         curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-//         curator: curator,
-//         curator_fee: 20,
-//         name: "Photography Exhibit",
-//         description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-//         is_published: true,
-//         banner_image: "86Umq7881f1QXpr91B1jPjpGMYu3CeZFFx4Rt25u5K24",
-//       },
-//       {
-//         id: 4,
-//         curator_address: "EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX",
-//         curator: curator,
-//         curator_fee: 20,
-//         name: "Hoops Gallery Old",
-//         description: "Gallery Description goes here, where you can talk all about why you made this gallery and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the gallery it self",
-//         is_published: false,
-//         banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
-//       },
-//     ]
-
-//     // const gallery_name = context.params.gallery_name;
-//     const curations = await getcurationsByApprovedArtist(userId);
-  
-
-//     return curations
-//   } catch (err) {
-//     console.log(err);
-//     return []
-//   }
-// }

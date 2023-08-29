@@ -1,6 +1,6 @@
 import apiClient from "../client/apiClient";
 
-async function submitToken({
+export async function submitSingleToken({
   token,
   apiKey,
   curationId,
@@ -9,7 +9,9 @@ async function submitToken({
   artistId
 }) {
   try {
-    const res = await apiClient.post("/curation_listing/submit_token", {
+    const res = await apiClient.post("/curation_listing/submit_single_token", {
+      token_mint: token.mint,
+      is_edition: token.is_edition,
       api_key: apiKey,
       curation_id: curationId,
       aspect_ratio: aspectRatio,
@@ -18,11 +20,11 @@ async function submitToken({
       artist_id: artistId,
       artist_address: token.creator,
       name: token.name,
-      token_mint: token.mint,
       animation_url: token.animation_url,
       image: token.image,
       description: token.description,
-      is_primary_sale: !token.primarySaleHappened
+      is_primary_sale: !token.primary_sale_happened,
+      creators: token.creators,
     })
 
     return res.data;
@@ -30,5 +32,3 @@ async function submitToken({
     console.log(err);
   }
 }
-
-export default submitToken;

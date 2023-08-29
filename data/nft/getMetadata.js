@@ -3,6 +3,7 @@ import apiClient from "/data/client/apiClient";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
 import useSWR from 'swr'
+import { getTokenCldImageId } from "../../components/CloudinaryImage";
 
 export function coalesce(val, def) {
   if (val === null || typeof val === "undefined") return def;
@@ -69,7 +70,9 @@ async function getMetadata(publicKeys, options) {
 
   const mungedTokens = creatorFilteredTokens.map((token) => { 
     const { content, creators, ownership, id } = token
-  
+
+    const isEdition = false//!token.supply//IMPORTANT TODO find better edition detection (its currently saying Coca mints and metaplex 1/1 are editions)
+    // if(isEdition) console.log("EDITIOM", token)
     return{
       // creator: creators.sort((a, b) => a.share - b.share)?.[0]?.address, //sorted by highest share of royalties
       creator: creators[0]?.address,
@@ -79,16 +82,14 @@ async function getMetadata(publicKeys, options) {
       mint: id,
       name: content.metadata.name,
       owner: ownership.owner,
-      properties: {
-        files: content.files,
-        creators: creators,
-      },
+      files: content.files,
+      creators: creators,
       symbol: content.metadata.symbol,
       uri: content.json_uri,
       attributes: content.metadata.attributes,
       royalties: token.royalties,
-      primarySaleHappened: token.royalty?.primary_sale_happened,
-      isEdition: !token.supply || token.supply.print_max_supply > 0, //TODO double check this as an edition verification
+      primary_sale_happened: token.royalty?.primary_sale_happened,
+      is_edition: isEdition
     }
 
   }).filter((item) => {
@@ -99,6 +100,7 @@ async function getMetadata(publicKeys, options) {
   const visResults = await apiClient.post("/get_visibility_and_order", {
     public_key: publicKeys[0],
     mints: mungedTokens.map(token => token.mint),
+    cld_ids: mungedTokens.map(token => getTokenCldImageId(token)),
   }).then(res => res.data)
 
   const { visibilities, optimizations, user_default } = visResults
@@ -107,8 +109,9 @@ async function getMetadata(publicKeys, options) {
 
   for (const token of mungedTokens) {
     let result = { ...token }
+    const cld_id = getTokenCldImageId(token)
     const visibility = visibilities[token.mint]
-    const optimization = optimizations[token.mint]
+    const optimization = optimizations[cld_id]
 
     if (!visibility) {
       result.order_id = null;
@@ -122,7 +125,7 @@ async function getMetadata(publicKeys, options) {
 
     if (optimization) {
       result.optimized = optimization.optimized;
-      result.optimizationError = optimization.error_message;
+      result.optimization_error = optimization.error_message;
     }
     
     results.push(result)
@@ -204,7 +207,10 @@ export function useMetadata(publicKeys, options) {
 //   symbol: null
 //   uri: "https://arweave.net/7mFIohLnmRGtmyT95ohcGuGJ-zgf9jL8c2QHjTESiRU"
 //   visible: true
-//   isEdition: boolean
+//   is_edition: boolean
+//   optimized: boolean
+//   optimization_error: string
+//   primary_sale_happened
 // }
 ///
 

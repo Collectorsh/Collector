@@ -17,7 +17,7 @@ import Settings from "./Settings";
 
 import cloneDeep from "lodash/cloneDeep";
 import { Toaster } from "react-hot-toast";
-import CloudinaryImage from "../../CloudinaryImage";
+import CloudinaryImage, { getTokenCldImageId } from "../../CloudinaryImage";
 import { useImageFallbackContext } from "../../../contexts/imageFallback";
 import OptimizeFeedbackModal from "./OptimizeFeedbackModal";
 
@@ -37,7 +37,10 @@ export default function Gallery({ tokens, user }) {
   }, [tokens, waiting])
   
   useEffect(() => {
-    const optimizedTokens = tokens.filter((t) => t.optimized === "True" || cloudinaryCompleted.some(cc => cc.mint === t.mint))
+    const optimizedTokens = tokens.filter((t) => {
+      const cld_id = getTokenCldImageId(t)
+      return t.optimized === "True" || cloudinaryCompleted.some(cc => cc.cld_id === cld_id)
+    })
     const tokenClone = cloneDeep(optimizedTokens);
     const vis = tokenClone.filter((t) => t.visible === true);
     const hid = tokenClone.filter((t) => t.visible === false);
@@ -327,7 +330,7 @@ const Visible = ({ items, columns, bulkEdit }) => {
       <div key={token.mint + "visible"}>
         <SortablePhoto
           key={token.mint}
-          mint={token.mint}
+          token={token}
           uri={token.uri}
           index={index}
           height={
@@ -376,7 +379,7 @@ const Hidden = ({ items }) => {
       <div key={token.mint + "hidden"}>
         <SortablePhoto
           key={token.mint}
-          mint={token.mint}
+          token={token}
           uri={token.uri}
           index={index}
           height={150}
@@ -407,12 +410,13 @@ const Hidden = ({ items }) => {
 };
 
 const OverlayImage = ({ mint, tokens }) => {
-  // const token = tokens.find((t) => t.mint === mint);
+  const token = tokens.find((t) => t.mint === mint);
 
   return (
     <CloudinaryImage
-      id={`${process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ mint }`}
-      mint={mint}
+      // id={`${process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ mint }`}
+      // mint={mint}
+      token={token}
       width={500}
       className="w-[150px] h-[150px] cursor-pointer object-center object-cover shadow-sm bg-gray-400/50 rounded-lg"
       noLazyLoad

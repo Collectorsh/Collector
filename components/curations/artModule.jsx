@@ -192,14 +192,14 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
             </>
           ) : null}
           <CloudinaryImage
-            mint={token.mint}
-            metadata={token}
+            // mint={token.mint}
+            // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+            token={token}
             useUploadFallback
             className={clsx(
               "object-contain",
               "max-h-[75vh]"
             )}
-            id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
             noLazyLoad
             onLoad={() => setLoaded(true)}
         />

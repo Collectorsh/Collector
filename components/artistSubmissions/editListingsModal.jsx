@@ -11,13 +11,15 @@ import UserContext from "../../contexts/user";
 import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 
 
-const EditListingsModal = ({ isOpen, onClose, handleEditListing, curation }) => {
+const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) => {
   const [user] = useContext(UserContext);
   const { handleBuyNowList, handleDelist } = useCurationAuctionHouse(curation)
 
   const submissions = curation?.submitted_token_listings.filter(listing => user.public_keys.includes(listing.owner_address)) || []
-  
+
   const onList = async (token, listingPrice) => {
+ 
+    // handle 1/1 list
     const receipt = await handleBuyNowList(token.mint, listingPrice)
   
     if (!receipt) { 
@@ -38,11 +40,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListing, curation }) => 
       return
     }
 
-    // if (token.listed_status === "listed") { //based on prev state
-    //   success(`${ token.name } listing has been updated!`)
-    // } else {
     success(`${ token.name } has been listed!`)
-    // }
 
     const newToken = {
       ...token,
@@ -50,7 +48,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListing, curation }) => 
       buy_now_price: Number(listingPrice),
     }
 
-    handleEditListing(newToken, curation)
+    handleEditListings([newToken], curation)
   }
 
   const onDelist = async (token) => {
@@ -76,7 +74,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListing, curation }) => 
       listing_receipt: null
     }
 
-    handleEditListing(newToken, curation)
+    handleEditListings([newToken], curation)
   }
   return (
     <Modal
@@ -109,12 +107,13 @@ export default EditListingsModal;
 const Submission = ({ token, onList, onDelist }) => { 
   const [listing, setListing] = useState(false)
   const [listingPrice, setListingPrice] = useState(token.buy_now_price || "")
-
   const disableListing = !listingPrice || listingPrice <= 0 || listingPrice == token.buy_now_price || listing
 
   const price = roundToPrecision(token.buy_now_price, 3)
 
   const isListed = token.listed_status === "listed"
+  const isEdition = token.is_edition
+  const editionSupply = token.supply
 
   const handleList = async () => {
     setListing(true)
@@ -135,15 +134,17 @@ const Submission = ({ token, onList, onDelist }) => {
         className={clsx("flex-shrink-0 overflow-hidden object-cover",
           "w-full h-[250px] rounded-t-lg p-1",
         )}
-        id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-        mint={token.mint}
-        metadata={token}
+        // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+        // mint={token.mint}
+        token={token}
         width={800}
         useMetadataFallback
         useUploadFallback
       />
       <div className="p-2">
-        <h3 className="font-bold text-xl mb-2 px-1">{token.name}</h3>
+        <div className="flex flex-wrap justify-between items-center gap-3 mb-2 ">
+          <h3 className="font-bold text-xl px-1">{token.name}</h3>
+        </div>
         {isListed
           ? (
             <div className="flex justify-between  items-center flex-wrap">
@@ -191,38 +192,6 @@ const Submission = ({ token, onList, onDelist }) => {
             </div>
           )
         }
-        
-        {/* <div className="flex gap-3 w-full">
-
-          <div className="flex w-full items-center border-2 px-3 py-0 rounded-lg border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800">
-            <input
-              type="number"
-              className="outline-none bg-transparent w-full"
-              placeholder="Buy Now Price"
-              onChange={(e) => setListingPrice(e.target.value)}
-              value={listingPrice}
-            />
-            <p>◎</p>
-          </div>
-          <MainButton
-            solid
-            onClick={handleList}
-            disabled={disableListing}
-            noPadding
-            className={clsx("px-3 w-24 flex-shrink-0")}
-          >
-            {listing
-              ? (
-                <span className="inline-block translate-y-0.5">
-                  <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
-                </span>
-              )
-              : isListed ? "Update" : "List!"
-            }
-          </MainButton>     
-    
-        </div>
-        */}
       </div>
     </div>
   )

@@ -6,9 +6,9 @@ async function withdrawFromTreasury({ privateKeyHash, curation }) {
     const result = await axios.post("/api/curations/withdraw",
       {
         privateKeyHash,
-        hydraName: curation.hydra_name,
         curatorWithdrawalPubkey: curation.payout_address,
-        auctionHouseAddress: curation.auction_house_address
+        auctionHouseAddress: curation.auction_house_address,
+        curatorFee: curation.curator_fee,
       },
     ).then(res => res.data)
 

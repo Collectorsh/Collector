@@ -3,7 +3,7 @@ import UserContext from "../../contexts/user";
 import MainNavigation from "../../components/navigation/MainNavigation";
 import { Toaster } from "react-hot-toast";
 import EditWrapper from "../../components/curatorProfile/editWrapper";
-import CloudinaryImage from "../../components/CloudinaryImage";
+import CloudinaryImage, { getTokenCldImageId } from "../../components/CloudinaryImage";
 import EditDescriptionModal from "../../components/curations/editDescriptionModal";
 import EditNameModal from "../../components/curations/editNameModal";
 import EditBannerModal from "../../components/curations/editBannerModal";
@@ -31,10 +31,9 @@ import { roundToPrecision } from "../../utils/maths";
 const descriptionPlaceholder = "Tell us about this curation."
 
 function CurationPage({ curation }) {
-  console.log("🚀 ~ file: [curation_name].js:34 ~ CurationPage ~ curation:", curation)
   const [user] = useContext(UserContext);
   const router = useRouter();
-  const { handleBuyNowPurchase, collectedFees } = useCurationAuctionHouse(curation)
+  const { handleBuyNowPurchase, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
 
   const [editNameOpen, setEditNameOpen] = useState(false);
   const [editBannerOpen, setEditBannerOpen] = useState(false);
@@ -53,7 +52,6 @@ function CurationPage({ curation }) {
   const [publishedContent, setPublishedContent] = useState(curation?.published_content);
   const [draftContent, setDraftContent] = useState(null);
   const [privateKeyHash, setPrivateKeyHash] = useState(null);
-  console.log("🚀 ~ file: [curation_name].js:55 ~ CurationPage ~ privateKeyHash:", privateKeyHash)
 
   const isOwner = Boolean(user && user.api_key && user.public_keys.includes(curation?.curator.public_keys[0]));
  
@@ -198,10 +196,11 @@ function CurationPage({ curation }) {
 
   const handleEditBanner = (newToken) => { 
     if (!isOwner) return;
+    const cldId = getTokenCldImageId(newToken)
     setDraftContent(prev => {
       const newContent = {
         ...prev,
-        banner_image: newToken.mint
+        banner_image: cldId
       }
       handleSaveDraftContent(newContent)
       return newContent
@@ -234,7 +233,11 @@ function CurationPage({ curation }) {
     })
 
     if (res?.status === "success") {
-      success(`Successfully withdrew ${ roundToPrecision(res.withdrawn, 2) } SOL!`)
+      setCollectedFees({
+        curatorBalance: 0,
+        platformBalance: 0
+      })
+      success(`Successfully withdrew ${ roundToPrecision(collectedFees.curatorBalance, 3) } SOL!`)
     } else {
       error(`Withdrawal failed`)
     }
@@ -416,79 +419,6 @@ function CurationPage({ curation }) {
 
 export async function getServerSideProps(context) {
   try {
-    ////Mocking Galleries
-    // const content = {
-    //   description: "Curation Description goes here, where you can talk all about why you made this curation and what it means to you. A few things to look out for, themes and such.\n\nBut dont say too much cause you will have plenty of time to explain each piece in the curation it self",
-    //   banner_image: "2DrSghx7ueY4iQjXdrSj1zpH4u9pGmLrLx53iPRpY2q2",
-    //   modules: [
-    //     {
-    //       id: uuidv4(),
-    //       type: "text", textDelta: JSON.stringify({ "ops": [{ "insert": "This is a text block" }] })
-    //     },
-    //     {
-    //       id: uuidv4(),
-    //       type: "art", tokens: ["24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24","3Utt2yZdMyEX1wrrsrAbuVSweft1JVi8GwiuSP1U5r2G"]
-    //     },
-    //   ]
-    // }
-
-    // const curation = {
-    //   id: 1,
-    //   curator_id: 1,
-    //   name: "Hoops_curation",
-    //   // approved_artists: [ //probable will be joined with artists from users table
-    //   //   {
-    //   //     artist_address:
-    //   //     username:
-    //   //   }
-    //   // ],
-    //  submitted_token_listings: [
-    //     {
-    //       mint: "24KpSGXNemEF42dGKGXPf9ufAafW3SPZxRzSu5ERtf24",
-    //       name: "hoops", buy_now_price: 10, artist_name: "EV3",
-    //       aspect_ratio: 1.7985611511
-    //     },
-    //     {
-    //       mint: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP",
-    //       name: "test", buy_now_price: 20.696969, artist_name: "EV3",
-    //       aspect_ratio: 1
-    //     },
-    //     {
-    //       mint: "3Utt2yZdMyEX1wrrsrAbuVSweft1JVi8GwiuSP1U5r2G",
-    //       name: "test with a long name", buy_now_price: 0, artist_name: "EV3 with a long name",
-    //       aspect_ratio: 0.6093313357
-    //     },
-    //     {
-    //       mint: "HGqeUWQkq37K2KqkJTtA3JUqRrDibuWcwyULFiBqSUfb",
-    //       name: "clouds", buy_now_price: 420.69, artist_name: "artists name",
-    //       aspect_ratio: 1.7777777778
-    //     },
-    //     {
-    //       mint: "BkvVPbb13FEj6h7AqX3ENR1ppzjYcANfxh7NGUzHAxZw",
-    //       name: "mask", buy_now_price: 40, artist_name: "artists name2",
-    //       aspect_ratio: 0.6666666667
-    //     },
-    //     {
-    //       mint: "BGkSrHa3ikiHpNiSqnEwJkoARh7BP2yQvk9HsRAqCdm9",
-    //       name: "photo", buy_now_price: 0, artist_name: "artists name5",
-    //       aspect_ratio: 1.5,
-    //     },
-    //     {
-    //       mint: "EDtDEFjtLDrC3cB5eagihfFYS8Dq9WtsfdL6Cx2YPGNB",
-    //       name: "video", buy_now_price: 100, artist_name: "Pips",
-    //       aspect_ratio: 1, animation_url: "https://arweave.net/YoRtjMdbBmo0E-aKMWP51kve1xcUGyAYwI2jlGwR1lY?ext=mp4"
-    //     }
-    //   ],
-    //   is_published: true,
-    //   draft_content: content,
-    //   published_content: content,
-    //   curator: {
-    //     username: "EV3",
-    //     profile_image: "EP8gUvR2ZH5iB5QonbGYcuzwpcGesWoy8kSxdtMfzKoP",
-    //     public_keys: ["EZAdWMUWCKSPH6r6yNysspQsZULwT9zZPqQzRhrUNwDX"]
-    //   },
-    // }
-
     const name = context.params.curation_name;
     const curation = await getCurationByName(name)
 

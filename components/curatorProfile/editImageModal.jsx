@@ -82,8 +82,9 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
                         isPfp ? "rounded-full h-[150px] w-[150px] md:h-[200px] md:w-[200px]" : "w-full h-[250px] rounded-lg",
                         isSelected && "ring-4 ring-black dark:ring-white"
                       )}
-                      id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-                      mint={token.mint}
+                      // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+                      // mint={token.mint}
+                      token={token}
                       width={isBanner ? 800 : 500}
                     />
                   </button>

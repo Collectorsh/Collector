@@ -10,7 +10,6 @@ import { Oval } from "react-loader-spinner";
 const tabs = ["1/1", "Editions"]
 
 export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, tokens }) {
-  console.log("🚀 ~ file: submitArtModal.jsx:13 ~ SubmitArtModal ~ tokens:", tokens)
   const [selectedTokens, setSelectedTokens] = useState([]);
   const [submitting, setSubmitting] = useState(false);
 
@@ -146,7 +145,7 @@ const ArtworkItem = ({ token, submittedTokens, selectedTokens, setSelectedTokens
     if (!imageRef.current) return
     const newToken = { ...token }
 
-    newToken.aspectRatio = getAspectRatio(imageRef.current)
+    newToken.aspect_ratio = getAspectRatio(imageRef.current)
     setSelectedTokens(prev => {
       if (!isSelected) return [...prev, newToken];
       return [...prev.slice(0, index), ...prev.slice(index + 1)];

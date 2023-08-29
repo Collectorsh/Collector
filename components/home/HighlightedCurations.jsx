@@ -4,6 +4,7 @@ import CurationHighlight from "../curatorProfile/curationHighlight";
 
 export default function HighlightedCurations() {
   const [curations, setCurations] = useState(null);
+  console.log("🚀 ~ file: HighlightedCurations.jsx:7 ~ HighlightedCurations ~ curations:", curations)
 
   const fetchCurated = useCallback(async () => {
     const res = await getHighlightedCurations()
@@ -21,7 +22,7 @@ export default function HighlightedCurations() {
           Curation Highlight
         </h2>
       </div>
-      {curations
+      {curations?.length
         ? (<CurationHighlight curation={curations[0]} withCurator/>)
         : null
       }

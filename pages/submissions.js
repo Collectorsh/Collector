@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import MainNavigation from "../components/navigation/MainNavigation";
 import SubmitArtModal from "../components/artistSubmissions/submitArtModal";
 import getCurationsByApprovedArtist from "../data/curation/getCurationsByApprovedArtist";
-import { submitEditionTokens, submitSingleToken } from "../data/curationListings/submitToken";
+import { submitEditionTokens, submitSingleToken, submitTokens } from "../data/curationListings/submitToken";
 import { error, success } from "../utils/toast";
 import EditListingsModal from "../components/artistSubmissions/editListingsModal";
 import { Toaster } from "react-hot-toast";
@@ -60,6 +60,34 @@ const Submissions = ({ }) => {
   }
 
   const handleSubmit = async (curation, newTokens) => {    
+    const res = await submitTokens({
+      tokens: newTokens,
+      apiKey: user.api_key,
+      curationId: curation.id,
+      ownerId: user.id,
+    })
+
+    if (res?.status !== "success" ) {
+      error(`Failed to submit tokens to ${ curation.name }`)
+    } else {
+      const listings = res.listings
+      success(`Successfully submitted ${ listings.length } piece(s) to ${ curation.name }`)
+      setApprovedCurations(prev => {
+        const newCuration = prev.find(g => g.id === curation.id)
+        if (!newCuration) return prev
+        if (newCuration.submitted_token_listings) newCuration.submitted_token_listings.push(...listings)
+        else newCuration.submitted_token_listings = listings
+  
+        setCurationToEdit(newCuration)
+        const newCurations = prev.map(g => g.id === curation.id ? newCuration : g)
+        return newCurations
+      })
+    } 
+
+
+    return
+
+    ///SINGLE
     const results = await Promise.allSettled(newTokens.map(async (token) => { 
       const isPrimarySale = !token.primary_sale_happened
       const res = await submitSingleToken({

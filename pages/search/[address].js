@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect, useCallback } from "react";
 import MainNavigation from "/components/navigation/MainNavigation";
 import GalleryContainer from "/components/gallery/GalleryContainer";
-import getMetadata from "/data/nft/getMetadata";
 import { Oval } from "react-loader-spinner";
 
 export default function Search() {
@@ -18,23 +17,23 @@ export default function Search() {
   )
 
   const { address } = router.query;
-  const [tokens, setTokens] = useState();
+  const [tokens, setTokens] = useState(); //useTokens instead
   const [notFound, setNotFound] = useState(false);
 
-  const initGetMetadata = useCallback(async (address) => {
-    if (!address) return;
+  // const initGetMetadata = useCallback(async (address) => {
+  //   if (!address) return;
 
-    try {
-      let res = await getMetadata([address]);
-      setTokens(res);
-    } catch {
-      setNotFound(true);
-    }
-  }, []);
+  //   try {
+  //     let res = await getMetadata([address]);
+  //     setTokens(res);
+  //   } catch {
+  //     setNotFound(true);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    initGetMetadata(address);
-  }, [address]);
+  // useEffect(() => {
+  //   initGetMetadata(address);
+  // }, [address]);
 
   return (
     <div className="dark:bg-black">

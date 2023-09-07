@@ -23,7 +23,11 @@ export const getTokenCldImageId = (token) => {
   if(!token) return null
   //remove special characters and https/http from images link to use as an identifier 
   const clean = (text) => text.replace(/[^\w]/g, '').replace("https", "").replace("http", "");
-  return (token.is_edition && token.image)
+
+  //TODO if parent is available from helius then use that instead of image, 
+  //and add is_master_edition to the check(they would be the parent)
+
+  return ((token.is_edition) && token.image)
     ? `edition-${clean(token.image)}`
     : token.mint
 }
@@ -32,6 +36,7 @@ const CloudinaryImage = ({
   id,
   token,
   className,
+  style,
   quality = 'auto', //auto:best | auto:good | auto:eco | auto:low
   onLoad,
   imageRef,
@@ -154,7 +159,7 @@ const CloudinaryImage = ({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             ref={imageRef}
-            style={{ opacity, ...lazyStyle }}
+            style={{ ...style, opacity, ...lazyStyle }}
             className={className}
             src={fallbackUrl || cldImg.toURL()}
             alt={token?.name || ""}

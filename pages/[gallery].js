@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useCallback, useState, useMemo } from "react";
 import Head from "next/head";
 import getUserFromUsername from "/data/user/getUserFromUsername";
-import getMetadata from "/data/nft/getMetadata";
 import GalleryContainer from "/components/gallery/GalleryContainer";
 import GalleryNavigation from "/components/gallery/navigation/GalleryNavigation";
 import MainNavigation from "/components/navigation/MainNavigation";
@@ -12,13 +11,13 @@ import { pluralize } from "/utils/pluralize";
 import { auctionHousesArray } from "/config/settings";
 import { Metaplex } from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
-import { useMetadata } from "../data/nft/getMetadata";
+import { useTokens } from "../data/nft/getTokens";
 import { useImageFallbackContext } from "../contexts/imageFallback";
 import { getTokenCldImageId } from "../components/CloudinaryImage";
 
 
 function Gallery({user}) {
-  const tokens = useMetadata(user?.public_keys, {
+  const tokens = useTokens(user?.public_keys, {
     justVisible: true,
     useArtistDetails: true
   });

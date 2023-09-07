@@ -7,24 +7,25 @@ async function recordSale({
   buyerId,
   buyerAddress,
   saleType,
-  txHash
+  txHash,
+  editionsMinted
 }) {
   try {
+    if (!txHash) throw new Error("txHash is required");
+    
     let res = await apiClient.post("/sales_history/record_sale", {
       api_key: apiKey,
       token_mint: token.mint,
       curation_id: curationId,
       price: token.buy_now_price,
-      is_primary_sale: token.is_primary_sale,
+      is_primary_sale: !token.primary_sale_happened,
       sale_type: saleType,
       tx_hash: txHash,
-      token_name: token.name,
       buyer_id: buyerId,
       buyer_address: buyerAddress,
       seller_id: token.owner_id,
       seller_address: token.owner_address,
-      artist_id: token.artist_id,
-      artist_address: token.artist_address,
+      editions_minted: editionsMinted,
     })
 
     return res.data;

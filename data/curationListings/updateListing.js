@@ -1,13 +1,14 @@
 import apiClient from "../client/apiClient";
 
-async function updateListing({ apiKey, tokenMint, buyNowPrice, curationId, listingReceipt }) {
+async function updateListing({ apiKey, tokenMint, buyNowPrice, curationId, listingReceipt, editionMarketAddress }) {
   try {
     let res = await apiClient.post("/curation_listing/update_listing", {
       api_key: apiKey,
       curation_id: curationId,
       token_mint: tokenMint,
       buy_now_price: buyNowPrice,
-      listing_receipt: listingReceipt
+      listing_receipt: listingReceipt,
+      master_edition_market_address: editionMarketAddress
     })
 
     return res.data;

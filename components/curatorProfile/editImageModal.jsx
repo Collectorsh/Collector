@@ -1,7 +1,7 @@
 import {useContext, useMemo, useState } from "react";
 import MainButton from "../MainButton";
 import UserContext from "../../contexts/user";
-import { useMetadata } from "../../data/nft/getMetadata";
+import { useTokens } from "../../data/nft/getTokens";
 import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
 import Modal from "../Modal";
@@ -10,7 +10,7 @@ import SearchBar from "../SearchBar";
 export default function EditImageModal({ title, isOpen, onClose, onSave, type }) {
   const [user] = useContext(UserContext);
 
-  const tokens = useMetadata(user?.public_keys, {
+  const tokens = useTokens(user?.public_keys, {
     useArtistDetails: false,
     justVisible: false
   });

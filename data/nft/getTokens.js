@@ -1,22 +1,27 @@
 import axios from "axios";
 import apiClient from "/data/client/apiClient";
-import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
+import { Metadata, Edition, MetadataProgram } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
 import useSWR from 'swr'
 import { getTokenCldImageId } from "../../components/CloudinaryImage";
+import { connection } from "../../config/settings";
+import { Metaplex } from "@metaplex-foundation/js";
 
 export function coalesce(val, def) {
   if (val === null || typeof val === "undefined") return def;
   return val;
 }
 
-//HELIUS METADATA BY OWNER
-async function getMetadata(publicKeys, options) { 
+const DEBUG = false
 
-  //set defaults when not provided the options object
+//HELIUS METADATA BY OWNER
+async function getTokens(publicKeys, options) { 
+  DEBUG && console.time("getTokens Time")
+  //set defaults when not provided the options object (must use ??)
   const justVisible = options.justVisible ?? false
   const useArtistDetails = options.useArtistDetails ?? true
   const justCreator = options.justCreator ?? false
+  const useTokenMetadata = options.useTokenMetadata ?? false
 
   const baseTokens = []
   const tokenAccounts = {}
@@ -71,10 +76,7 @@ async function getMetadata(publicKeys, options) {
   const mungedTokens = creatorFilteredTokens.map((token) => { 
     const { content, creators, ownership, id } = token
 
-    const isEdition = false//!token.supply//IMPORTANT TODO find better edition detection (its currently saying Coca mints and metaplex 1/1 are editions)
-    // if(isEdition) console.log("EDITIOM", token)
-    return{
-      // creator: creators.sort((a, b) => a.share - b.share)?.[0]?.address, //sorted by highest share of royalties
+    return {
       creator: creators[0]?.address,
       description: content.metadata.description,
       animation_url: content.links.animation_url,
@@ -87,9 +89,14 @@ async function getMetadata(publicKeys, options) {
       symbol: content.metadata.symbol,
       uri: content.json_uri,
       attributes: content.metadata.attributes,
-      royalties: token.royalties,
+      royalties: token.royalty,
       primary_sale_happened: token.royalty?.primary_sale_happened,
-      is_edition: isEdition
+      //TODO Get from Helius when available and remove useTokenMetadata
+      // is_edition: 
+      // parent:
+      // is_master_edition:
+      // supply:
+      // max_supply:
     }
 
   }).filter((item) => {
@@ -135,17 +142,43 @@ async function getMetadata(publicKeys, options) {
     results = results.filter((r) => r.visible);
   }
 
+
   const creatorResp = useArtistDetails
     ? await apiClient.post("/creator/details", {
       tokens: results,
     })
     : { data: [] };
+  
+    // const metaplex = Metaplex.make(connection);
+    for (const result of results) { 
+      
+      //get onchain Metadata //TODO get this info from Helius once available
+      if (useTokenMetadata) {
+        //this works but takes a long time
+        // const metadata = await metaplex.nfts().findByMint({ mintAddress: new PublicKey(result.mint) });
+        // result.is_master_edition = metadata.edition.maxSupply && Number(metadata.edition.maxSupply?.toString()) > 0
+        // result.is_edition = !metadata.edition.isOriginal
+        // result.address = metadata.metadataAddress.toString()
+        try {
+          //TODO check if this is actually needed
+          // Add metadata PDA address
+          // const metadataPDA = await Metadata.getPDA(new PublicKey(result.mint));
+          // result.address = metadataPDA.toBase58(); 
 
-  for (const result of results) { 
-    // Add metadata PDA address
-    const metadataPDA = await Metadata.getPDA(new PublicKey(result.mint));
-    result.address = metadataPDA.toBase58(); 
-
+          const edition = await Metadata.getEdition(connection, result.mint)
+          const { data } = edition
+          
+          result.is_master_edition = data.maxSupply && Number(data.maxSupply?.toString()) > 0
+          result.supply = data.supply ? Number(data.supply.toString()) : undefined
+          result.max_supply = data.maxSupply ? Number(data.maxSupply.toString()) : undefined
+          
+          result.is_edition = Boolean(data.parent)
+          result.parent = data.parent?.toString()
+        } catch (err) {
+          console.log("Error getting metadata for mint", result.mint)
+        }
+      }  
+      
     // Loop through results and set artist name, twitter
     let tokens = creatorResp.data.filter((t) => t.public_key === result.creator);
     if (tokens.length > 0) {
@@ -160,6 +193,7 @@ async function getMetadata(publicKeys, options) {
       }
     }
 
+
      //For now this gets picked up on detail pages seperately
     //associated token account
     // result.associatedTokenAccountAddress = tokenAccounts[result.mint];
@@ -172,16 +206,17 @@ async function getMetadata(publicKeys, options) {
     return aOrderId > bOrderId ? 1 : bOrderId > aOrderId ? -1 : 0;
   });
 
+  DEBUG && console.timeEnd("getTokens Time")
   return results;
 }
 
-export default getMetadata;
+export default getTokens;
 
 const fetcher = async ({ publicKeys, options }) => {
   if(!publicKeys) return undefined
-  return await getMetadata(publicKeys, options)
+  return await getTokens(publicKeys, options)
 }
-export function useMetadata(publicKeys, options) {
+export function useTokens(publicKeys, options) {
   const { data: tokens, error } = useSWR({ publicKeys, options }, fetcher)
   return tokens
 }

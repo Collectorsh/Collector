@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import getMetadataFromUri from "/data/nft/getMetadataFromUri";
 import Listings from "/components/gallery/Listings";
 import ShowOffers from "/components/gallery/ShowOffers";
 import Nft from "/components/gallery/Nft";
@@ -15,22 +14,9 @@ function Card(props) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
-
-  //NOW fetching metadata on intial load, shouldnt need this (keeping for a bit just in case (Jul 18th 2023))
-  // const initGetData = useCallback(async (tok) => {
-  //   // console.log("METADATA HIT")
-  //   try {
-  //     const res = await getMetadataFromUri(tok);
-  //     if (res) setToken(res);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, []);
-
   const handleLoad = (e) => { 
     if (!loaded) {
       setLoaded(true)
-      // initGetData(props.token);
     }
   }
 

@@ -15,12 +15,33 @@ import Tippy from "@tippyjs/react"
 import "tippy.js/dist/tippy.css";
 import UserContext from '../../contexts/user';
 import { error, success } from '../../utils/toast';
+import { getMintEditionTX } from '../../utils/curations/mintEdition';
+import { connection } from '../../config/settings';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { set } from 'nprogress';
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleBuyNowPurchase }) => {
   const breakpoint = useBreakpoints()  
   const [editArtOpen, setEditArtOpen] = useState(false)
-  
 
+  // const [rowHeight, setRowHeight] = useState(0)
+  // const [rowWidth, setRowWidth] = useState(0)
+  // const rowRef = useRef(null)
+
+  // useEffect(() => { 
+  //   const getRowHeight = () => { 
+  //     if(!rowRef.current) return
+  //     const rowHeight = rowRef.current.offsetHeight
+  //     setRowHeight(rowHeight)
+
+  //     const rowWidth = rowRef.current.offsetWidth
+  //     setRowWidth(rowWidth)
+  //   }
+  //   getRowHeight()
+  //   window.addEventListener('resize', getRowHeight)
+  //   return () => window.removeEventListener('resize', getRowHeight)
+  // }, [])
+  
   const itemRows = useMemo(() => {
     if(!approvedArtists || !submittedTokens) return []
 
@@ -37,8 +58,9 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
     return rows.map(tokenRow => tokenRow.map((tokenMint, i) => {
       const token = submittedTokens.find(t => t.mint === tokenMint)
       const artist = approvedArtists.find(a => a.id === token.artist_id)
-      const totalWidthRatio = tokenRow.reduce((acc, token) => acc + token.aspect_ratio, 0)
-      const widthPercent = (token.aspect_ratio / totalWidthRatio) * 100
+      const totalWidthRatio = tokenRow.reduce((acc, token) => acc + Number(token.aspect_ratio), 0)
+      const widthPercent = (Number(token.aspect_ratio) / totalWidthRatio) * 100
+      // const width = (widthPercent / 100) * rowWidth
       return (
         <ArtItem
           key={tokenMint}
@@ -47,13 +69,18 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
           columns={cols}
           artist={artist}
           handleBuyNowPurchase={handleBuyNowPurchase}
+          // height={rowHeight}
+          // width={width}
         />
       )
     }))
   }, [artModule.tokens, breakpoint, submittedTokens, approvedArtists, handleBuyNowPurchase])
 
   return (
-    <div className="relative group w-full group/artRow min-h-[4rem]">
+    <div
+      // ref={rowRef}
+      className="relative group w-full group/artRow min-h-[4rem]"
+    >
       <EditWrapper
         isOwner={isOwner}
         onEdit={() => setEditArtOpen(true)}
@@ -99,19 +126,42 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
 export default ArtModule;
 
-export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurchase }) => {  
+export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurchase, height, width }) => {  
+  const [user] = useContext(UserContext);
+  const wallet = useWallet()
+
   const [loaded, setLoaded] = useState(false);
-  const [videoUrl, setVideoUrl] = useState();
+  const [videoUrl, setVideoUrl] = useState(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
   const videoRef = useRef(null);
 
-  const [user] = useContext(UserContext);
+  const [isWrapped, setIsWrapped] = useState(false)
+  const wrapContainerRef = useRef(null);
+  const wrapItemRef = useRef(null);
 
   const { isVisible } = useElementObserver(videoRef, "500px")  
 
+  
+  const isMasterEdition = token.is_master_edition
+  const isEdition = token.is_edition
+  const supply = token.supply
+  const maxSupply = token.max_supply
+
   const isListed = token.listed_status === "listed"
-  const isSold = token.listed_status === "sold"
+  const isSold = token.listed_status === "sold" || isMasterEdition && supply >= maxSupply
+
+  const supplyText = `${ maxSupply- supply}/${maxSupply}${isListed ? " Available": ""}`
+
+  useEffect(() => {
+    const findIsWrapped = () => {
+      const isWrapped = wrapContainerRef.current.offsetHeight - wrapItemRef.current.offsetHeight > 30//30px threshold 
+      setIsWrapped(isWrapped)
+    }
+    findIsWrapped()
+    window.addEventListener('resize',findIsWrapped)
+    return () => window.removeEventListener('resize', findIsWrapped)
+  }, [])
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -138,33 +188,82 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
     if (!handleBuyNowPurchase || !user) return;
 
     setPurchasing(true)
-    
-    const txHash = await handleBuyNowPurchase(token.listing_receipt)
 
-    const res = await recordSale({
-      apiKey: user.api_key,
-      curationId: token.curation_id,
-      token: token,
-      buyerId: user.id,
-      buyerAddress: user.public_keys[0],
-      saleType: "buy_now",
-      txHash: txHash,
-    })
+    if (isMasterEdition) {
+      //Handle Edition mint/purchase
+      let txHash
+      try {
+        const builder = await getMintEditionTX({
+          connection: connection,
+          newOwnerPubkey: wallet.publicKey,
+          masterEditionMint: token.mint,
+          marketAddress: token.master_edition_market_address
+        })
 
-    if (res?.status === "success") {
-      success(`Congrats! ${ token.name } has been collected!`)
-      shootConfetti(3)
-    } else {
-      error(`Error buying ${ token.name }: ${ res?.message }`)
+        if (!builder) {
+          const err = new Error(`Error Building ${ token.name } Buy Edition Transaction`)
+          throw new Error(err)
+        }
+
+        const { mintEditionTX } = builder
+  
+        txHash = await wallet.sendTransaction(mintEditionTX, connection)
+      } catch (err) {
+        console.log("Error sending edition buy tx", err.message)
+      }
+
+      const res = await recordSale({
+        apiKey: user.api_key,
+        curationId: token.curation_id,
+        token: token,
+        buyerId: user.id,
+        buyerAddress: user.public_keys[0],
+        saleType: "edition_mint",
+        txHash: txHash,
+        editionsMinted: 1
+      })
+      
+      if (res?.status === "success") {
+        success(`Congrats! You've collected a ${ token.name } Edition!`)
+        shootConfetti(1)
+      } else {
+        error(`Error buying ${ token.name }: ${ res?.message }`)
+      }
+      
+        
+    } else if (isEdition) {
+      //TODO Handle edition purchase
+      return
+    } else { 
+      //Handle 1/1 buy now purchase
+      const txHash = await handleBuyNowPurchase(token.listing_receipt)
+  
+      const res = await recordSale({
+        apiKey: user.api_key,
+        curationId: token.curation_id,
+        token: token,
+        buyerId: user.id,
+        buyerAddress: user.public_keys[0],
+        saleType: "buy_now",
+        txHash: txHash,
+      })
+  
+      if (res?.status === "success") {
+        success(`Congrats! ${ token.name } has been collected!`)
+        shootConfetti(3)
+      } else {
+        error(`Error buying ${ token.name }: ${ res?.message }`)
+      }
     }
+    
     setPurchasing(false)
   }
-
+  
   return (
     <div
       className={clsx("relative duration-300 max-w-fit mx-auto ",)}
       style={{
-        width: columns > 1 ? `${widthPercent}%` : "100%"
+        width: columns > 1 ? `${ widthPercent }%` : "100%",
       }}
     >
       <Link href={`/nft/${ token.mint }`} >
@@ -191,61 +290,77 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
               </video>
             </>
           ) : null}
+
+         
+
           <CloudinaryImage
-            // mint={token.mint}
-            // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
             token={token}
             useUploadFallback
             className={clsx(
               "object-contain",
-              "max-h-[75vh]"
+              "max-h-[75vh]",
             )}
             noLazyLoad
             onLoad={() => setLoaded(true)}
-        />
+          />
+
         </a>
       </Link>
-      <div className="w-full mt-4 px-4 mx-auto
+      <div
+        className="w-full mt-4 px-4 mx-auto
       flex flex-wrap gap-3 justify-between items-center"
+        ref={wrapContainerRef}
       >
-        <div className='flex flex-col items-start gap-1'>
-          <p className='font-bold text-lg'>{token.name} </p>
+        <div
+          className={clsx('flex gap-1', "flex-col items-start")}
+        >
+          <p className='font-bold text-xl'>{token.name}</p>
           {artist ? (
             <p>by {artist.username}</p>
           ) : null}
         </div>
-        {isListed //&& token.buy_now_price
-          ? (
-            <div className="flex items-center gap-2 flex-wrap">
-              <p className='font-bold text-lg'>{roundToPrecision(token.buy_now_price, 2)}◎</p>
-              <Tippy
-                content="Connect your wallet first!"
-                className="shadow-lg"
-                disabled={Boolean(user)}
-              >
-                <div>
-                  <MainButton
-                    onClick={handleBuy}
-                    className="px-3 w-28"
-                    noPadding
-                    disabled={!handleBuyNowPurchase || purchasing || !user}
-                  >
-                    {purchasing
-                      ? (
-                        <span className="inline-block translate-y-0.5">
-                          <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
-                        </span>
-                      )
-                      : "Buy Now"
-                    }
-                  </MainButton>
-                </div>
-              </Tippy>
-            </div>
-          )
-          : null
-        }
-        {isSold ? <p className='font-bold text-lg'>Sold!</p> : null}
+        <div
+          ref={wrapItemRef}
+          className={clsx('flex flex-col gap-1', isWrapped ? "items-start" : "items-center")}
+        >
+          {isMasterEdition
+            ? (
+              <span className='font-bold'>{supplyText}</span>
+            )
+            : null} 
+          {isListed
+            ? (
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className='font-bold text-lg'>{roundToPrecision(token.buy_now_price, 2)}◎</p>
+                <Tippy
+                  content="Connect your wallet first!"
+                  className="shadow-lg"
+                  disabled={Boolean(user)}
+                >
+                  <div>
+                    <MainButton
+                      onClick={handleBuy}
+                      className={clsx("px-3", isMasterEdition ? "w-36" : "w-28")}
+                      noPadding
+                      disabled={!handleBuyNowPurchase || purchasing || !user}
+                    >
+                      {purchasing
+                        ? (
+                          <span className="inline-block translate-y-0.5">
+                            <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+                          </span>
+                        )
+                        : isMasterEdition ? "Buy Edition" : "Buy Now"
+                      }
+                    </MainButton>
+                  </div>
+                </Tippy>
+              </div>
+            )
+            : null
+          }
+          {isSold ? <p className='font-bold text-lg'>Sold {isMasterEdition ? " Out" : ""}!</p> : null}
+        </div>
       </div>
 
     </div>

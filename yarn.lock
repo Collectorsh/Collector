@@ -2094,6 +2094,18 @@
     "@solana/web3.js" "^1.35.1"
     bs58 "^4.0.1"
 
+"@metaplex-foundation/mpl-fixed-price-sale@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-fixed-price-sale/-/mpl-fixed-price-sale-0.13.0.tgz#c23a6e09fe64d573d8e45887f95db176a564e1c8"
+  integrity sha512-vY3a0qpGjjBLurvFJXoUjG59tBjQkMGztXkvNfbQjgFPecW4+t1zd+0YJenk7Pr9G0BvtEdnW6yriSwCEkPTnA==
+  dependencies:
+    "@metaplex-foundation/beet" "^0.7.1"
+    "@metaplex-foundation/beet-solana" "^0.4.0"
+    "@metaplex-foundation/cusper" "^0.0.2"
+    "@solana/buffer-layout" "^4.0.0"
+    "@solana/spl-token" "^0.3.6"
+    "@solana/web3.js" "^1.66.2"
+
 "@metaplex-foundation/mpl-hydra@^1.0.0-alpha.12":
   version "1.0.0-alpha.12"
   resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-hydra/-/mpl-hydra-1.0.0-alpha.12.tgz#8d90a641cd411b86e8f3b40c06db6b632b714853"
@@ -3101,7 +3113,7 @@
     buffer-layout "^1.2.0"
     dotenv "10.0.0"
 
-"@solana/spl-token@^0.3.5", "@solana/spl-token@^0.3.6":
+"@solana/spl-token@^0.3.5", "@solana/spl-token@^0.3.6", "@solana/spl-token@^0.3.8":
   version "0.3.8"
   resolved "https://registry.yarnpkg.com/@solana/spl-token/-/spl-token-0.3.8.tgz#8e9515ea876e40a4cc1040af865f61fc51d27edf"
   integrity sha512-ogwGDcunP9Lkj+9CODOWMiVJEdRtqHAtX2rWF62KxnnSWtMZtV9rDhTrZFshiyJmxDnRL/1nKE1yJHg4jjs3gg==

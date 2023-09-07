@@ -1,7 +1,6 @@
 import toast from "react-hot-toast";
 
 export const success = (text) => {
-  console.log("🚀 ~ file: toastMessages.js:4 ~ success ~ text:", text)
   toast(text, {
     duration: 4000,
     icon: "🎉",
@@ -15,7 +14,6 @@ export const success = (text) => {
 };
 
 export const error = (text) => {
-  console.log("🚀 ~ file: toastMessages.js:19 ~ error ~ text:", text)
   toast(text, {
     duration: 4000,
     icon: "❌",

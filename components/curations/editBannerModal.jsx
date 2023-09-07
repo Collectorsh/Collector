@@ -1,7 +1,7 @@
 import {useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import MainButton from "../MainButton";
 import UserContext from "../../contexts/user";
-import { useMetadata } from "../../data/nft/getMetadata";
+import { useTokens } from "../../data/nft/getTokens";
 import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
 import Modal from "../Modal";
@@ -18,7 +18,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
   const tabsRef = useRef([]);
 
-  const tokens = useMetadata(user?.public_keys, {
+  const tokens = useTokens(user?.public_keys, {
     useArtistDetails: false,
     justVisible: false
   });

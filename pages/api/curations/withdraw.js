@@ -43,6 +43,8 @@ export default async function handler(req, res) {
     
     const { curatorBalance, platformBalance } = await getSplitBalance(connection, auctionHouse.treasuryAccountAddress, curatorFee)
     const balance = curatorBalance + platformBalance
+
+    //
     if (balance <= 0) throw new Error("No funds available to withdraw")
 
     await metaplex

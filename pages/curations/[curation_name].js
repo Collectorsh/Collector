@@ -72,10 +72,9 @@ function CurationPage({ curation }) {
   const handleWebsocketMessages = useCallback(({ message, data }) => {
     switch (message) {
       case "Listing Update": {
-        const { mint, listed_status, buy_now_price, listing_receipt } = data;
         setSubmittedTokens((prev) => prev.map((token) => { 
-          return token.mint === mint
-            ? { ...token, listed_status, buy_now_price, listing_receipt }
+          return token.mint === data.mint
+            ? { ...token, ...data }
             : token
           })
         )

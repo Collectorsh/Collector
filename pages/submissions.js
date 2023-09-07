@@ -14,16 +14,17 @@ import EditListingsModal from "../components/artistSubmissions/editListingsModal
 import { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import clsx from "clsx";
-import { useMetadata } from "../data/nft/getMetadata";
+import { useTokens } from "../data/nft/getTokens";
 
 const Submissions = ({ }) => {
   const [user] = useContext(UserContext);
   const router = useRouter()
 
-  const userTokens = useMetadata(user?.public_keys, {
+  const userTokens = useTokens(user?.public_keys, {
     useArtistDetails: false,
     justVisible: false,
-    justCreator: true
+    justCreator: true,
+    useTokenMetadata: true
   });
 
   const [approvedCurations, setApprovedCurations] = useState([])
@@ -32,6 +33,16 @@ const Submissions = ({ }) => {
   const [editListingsOpen, setEditListingsOpen] = useState(false)
 
   const [loadingCurations, setLoadingCurations] = useState(true)
+
+  const submissionMints = useMemo(() => { 
+    const mints = new Set()
+    approvedCurations?.forEach(curation => { 
+      curation?.submitted_token_listings?.forEach(listing => { 
+        mints.add(listing.mint)
+      })
+    })
+    return Array.from(mints)
+  }, [approvedCurations])
 
   useEffect(() => {
     if(!user) return
@@ -59,7 +70,7 @@ const Submissions = ({ }) => {
     setEditListingsOpen(true)
   }
 
-  const handleSubmit = async (curation, newTokens) => {    
+  const handleSubmit = async (curation, newTokens) => {
     const res = await submitTokens({
       tokens: newTokens,
       apiKey: user.api_key,
@@ -67,7 +78,7 @@ const Submissions = ({ }) => {
       ownerId: user.id,
     })
 
-    if (res?.status !== "success" ) {
+    if (res?.status !== "success") {
       error(`Failed to submit tokens to ${ curation.name }`)
     } else {
       const listings = res.listings
@@ -82,63 +93,16 @@ const Submissions = ({ }) => {
         const newCurations = prev.map(g => g.id === curation.id ? newCuration : g)
         return newCurations
       })
-    } 
-
-
-    return
-
-    ///SINGLE
-    const results = await Promise.allSettled(newTokens.map(async (token) => { 
-      const isPrimarySale = !token.primary_sale_happened
-      const res = await submitSingleToken({
-        token,
-        apiKey: user.api_key,
-        curationId: curation.id,
-        ownerId: user.id,
-        artistId: isPrimarySale ? user.id : undefined,
-        aspectRatio: token.aspectRatio, //aspectRatio added in the submitArtModal
-      })
-
-      if (res?.status === "success" && res?.listing) {
-        return res.listing
-      } else {
-        error(`Failed to submit token ${ token.name } to ${ curation.name }`)
-        return null
-      } 
-    }))
-
-    const listings = results
-      .filter(result => result.status === "fulfilled" && result.value)
-      .reduce((acc, result) => { 
-        const value = result.value
-        if (Array.isArray(value)) acc.push(...value)
-        else acc.push(value)
-        return acc
-      },[])
-
-    if (listings.length) {
-      success(`Successfully submitted ${ listings.length } piece(s) to ${ curation.name }`)
-      setApprovedCurations(prev => {
-        const newCuration = prev.find(g => g.id === curation.id)
-        if (!newCuration) return prev
-        if (newCuration.submitted_token_listings) newCuration.submitted_token_listings.push(...listings)
-        else newCuration.submitted_token_listings = listings
-
-        setCurationToEdit(newCuration)
-        const newCurations = prev.map(g => g.id === curation.id ? newCuration : g)
-        return newCurations
-      })
     }
   }
 
-  const handleEditListings = (newTokens, curation) => {
+  const handleEditListings = (newToken, curation) => {
     setApprovedCurations(prev => prev.map(g => { 
       if (g.id !== curation.id) return g
       const newCuration = { ...g }
       const oldSubmitted = newCuration.submitted_token_listings || []
       const newSubmittedTokens = oldSubmitted.map(t => {
-        const newToken = newTokens.find(nt => nt.mint === t.mint)
-        return newToken || t
+        return newToken.mint === t.mint ? newToken : t
       })
       newCuration.submitted_token_listings = newSubmittedTokens
 
@@ -225,6 +189,7 @@ const Submissions = ({ }) => {
         onSubmit={handleSubmit}
         curation={curationToEdit}
         tokens={userTokens}
+        submissionMints={submissionMints}
       />
       <EditListingsModal
         isOpen={editListingsOpen}

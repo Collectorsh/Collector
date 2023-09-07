@@ -1,7 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import MainButton, { WarningButton } from "../MainButton";
-import UserContext from "../../contexts/user";
-import { useMetadata } from "../../data/nft/getMetadata";
 import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
 import Modal from "../Modal";

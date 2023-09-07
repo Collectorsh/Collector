@@ -6,7 +6,7 @@ import { connection } from "../config/settings";
 import { PLATFORM_FEE_POINTS } from "../pages/api/curations/create";
 import { getSplitBalance } from "../pages/api/curations/withdraw";
 
-
+const DEBUG = true
 
 const useCurationAuctionHouse = (curation) => {
   const wallet = useWallet();
@@ -26,17 +26,15 @@ const useCurationAuctionHouse = (curation) => {
   //set auction house
   useEffect(() => {
     if(!wallet.connected || !auctionHouseAddress || auctionHouse) return
-
     (async () => {
       const auctionHouse = await auctionHouseSDK
         .findByAddress({ address: new PublicKey(auctionHouseAddress) });
       setAuctionHouse(auctionHouse)
-      console.log("🚀 ~ file: useCurationAuctionHouse.js:34 ~feeAccountAddress:", auctionHouse.feeAccountAddress.toString())
-      console.log("🚀 ~ file: useCurationAuctionHouse.js:34 ~treasuryAddress:", auctionHouse.treasuryAccountAddress.toString())
-      console.log("🚀 ~ file: useCurationAuctionHouse.js:33 ~ auctionHouseAddress:", auctionHouseAddress)
-
+      DEBUG && console.log("auctionHouseAddress:", auctionHouseAddress)
+      DEBUG && console.log("feeAccountAddress:", auctionHouse.feeAccountAddress.toString())
+      DEBUG && console.log("treasuryAddress:", auctionHouse.treasuryAccountAddress.toString())
+      DEBUG && console.log("fee Points:", auctionHouse.sellerFeeBasisPoints)
     })()
-
   }, [wallet.connected, auctionHouseAddress, auctionHouseSDK, auctionHouse])
   
   useEffect(() => {
@@ -65,52 +63,47 @@ const useCurationAuctionHouse = (curation) => {
   }
 
   const handleDelist = async (listingReceipt) => {
-    const listing = await auctionHouseSDK
-      .findListingByReceipt({
-        auctionHouse,
-        receiptAddress: new PublicKey(listingReceipt),
-        loadJsonMetadata: false
-      });
+    try {
+      const listing = await auctionHouseSDK
+        .findListingByReceipt({
+          auctionHouse,
+          receiptAddress: new PublicKey(listingReceipt),
+          loadJsonMetadata: false
+        });
 
-    const canceled = await auctionHouseSDK
-      .cancelListing({
-        auctionHouse,
-        listing,
-      })
-    console.log("🚀 ~ file: useAuctionHouse.js:63 ~ handleDelist ~ canceled:", canceled)
+      const canceled = await auctionHouseSDK
+        .cancelListing({
+          auctionHouse,
+          listing,
+        })
+      
+      return canceled.response.signature
+    } catch (error) {
+      console.log(error)
+    } 
   }
 
   const handleBuyNowPurchase = async (listingReceipt) => { 
-    const listing = await auctionHouseSDK
-      .findListingByReceipt({
-        auctionHouse,
-        receiptAddress: new PublicKey(listingReceipt),
-        loadJsonMetadata: false
-      });
-
-    const bought = await auctionHouseSDK
-      .buy({
-        auctionHouse,
-        listing,
-      })
-    return bought.response.signature
+    try {
+      const listing = await auctionHouseSDK
+        .findListingByReceipt({
+          auctionHouse,
+          receiptAddress: new PublicKey(listingReceipt),
+          loadJsonMetadata: false
+        });
+  
+      const bought = await auctionHouseSDK
+        .buy({
+          auctionHouse,
+          listing,
+        })
+      return bought.response.signature
+    } catch(error) {
+      console.log(error)
+    }
   }
 
-
-  // useEffect(() => {
-  //   if (!auctionHouse) return
-    
-  //   const getListings = async (mint) => {
-  //     return auctionHouseSDK.findListings({ auctionHouse });
-  //   }
-
-  //   (async () => {
-  //     const listings = await getListings("4Ahy6nQnftgafYyuXsGiAKHsHRNcP8yghin6yMNcdYfd")
-  //     console.log("🚀 ~ file: editListingsModal.jsx:23 ~ listings:", listings)
-  //   })()
-  // }, [auctionHouse, auctionHouseSDK])
-
-  return { handleBuyNowList, handleDelist, handleBuyNowPurchase, collectedFees, setCollectedFees }
+  return { handleBuyNowList, handleDelist, handleBuyNowPurchase, collectedFees, setCollectedFees, auctionHouse }
 }
 
 export default useCurationAuctionHouse;

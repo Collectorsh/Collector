@@ -3,18 +3,10 @@ import React, { useState, useEffect, useCallback } from "react";
 import MainNavigation from "/components/navigation/MainNavigation";
 import GalleryContainer from "/components/gallery/GalleryContainer";
 import { Oval } from "react-loader-spinner";
+import NotFound from "../../components/404";
 
 export default function Search() {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/")
-  }, [router])
-
-  return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <h1>404</h1>
-    </div>
-  )
+  return <NotFound />
 
   const { address } = router.query;
   const [tokens, setTokens] = useState(); //useTokens instead

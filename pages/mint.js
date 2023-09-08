@@ -4,19 +4,11 @@ import { createTheme, ThemeProvider } from "@material-ui/core";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import NotFound from "../components/404";
 
 export default function MintHome() {
 
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/")
-  }, [router])
-
-  return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <h1>404</h1>
-    </div>
-  )
+  return <NotFound />
   const theme = createTheme({
     palette: {
       type: "dark",

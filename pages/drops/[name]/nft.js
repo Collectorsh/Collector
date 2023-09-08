@@ -6,19 +6,11 @@ import { marketplaceLink } from "/utils/marketplaceHelpers";
 import MarketplaceLogo from "/components/MarketplaceLogo";
 import { roundToTwo } from "/utils/roundToTwo";
 import { useRouter } from "next/router";
+import NotFound from "../../../components/404";
 
 export default function Nft({ mint }) {
 
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/")
-  }, [router])
-
-  return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <h1>404</h1>
-    </div>
-  )
+  return <NotFound />
 
   const [token, setToken] = useState();
   const [artist, setArtist] = useState();

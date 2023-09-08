@@ -2,18 +2,10 @@ import MainNavigation from "/components/navigation/MainNavigation";
 import Feed from "/components/home/Feed";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import NotFound from "../components/404";
 
 export default function FeedHome() {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/")
-  }, [router])
-
-  return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <h1>404</h1>
-    </div>
-  )
+  return <NotFound />
   return (
     <div>
       <MainNavigation />

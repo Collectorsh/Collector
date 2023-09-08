@@ -6,18 +6,11 @@ import Bids from "/components/activity/Bids";
 import MainNavigation from "/components/navigation/MainNavigation";
 import CheckLoggedIn from "/components/CheckLoggedIn";
 import Artists from "/components/follow/Artists";
+import NotFound from "../components/404";
 
 function Activity() {
+  return <NotFound />
   const router = useRouter();
-  useEffect(() => {
-    router.replace("/")
-  }, [router])
-
-  return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <h1>404</h1>
-    </div>
-  )
   // const router = useRouter();
   const { id } = router.query;
   const [selected, setSelected] = useState(id || "buynow");

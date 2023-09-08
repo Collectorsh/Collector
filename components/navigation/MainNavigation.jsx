@@ -49,12 +49,14 @@ export default function MainNavigation() {
         <div>
           <div className="flex">
             <div className="flex items-center col-span-1 w-[200px] lg:w-1/2">
-              <div className="cursor-pointer md:my-3 w-[200px]">
+              <div className="cursor-pointer md:my-3 w-[200px] flex gap-4 items-center ">
                 <Link href="/">
                   <a className="collector text-3xl font-bold">
                   collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r
-                  </a>
-                </Link>
+                    </a>
+                  </Link>
+                  {/* <span className="mt-2 collector">-</span> */}
+                  <span className="mt-[10px] collector tracking-wide">Beta</span>
               </div>
             </div>
             <div className="hidden md:flex items-center justify-end w-full">
@@ -70,12 +72,12 @@ export default function MainNavigation() {
                 {/* {!user && <Premium />} */}
 
 
-
+{/* 
                 <Link href="/discover">
                   <a className="mr-8 font-bold">
                     Discover
                   </a>
-                </Link>
+                </Link> */}
               <Link href="/about">
                 <a className="mr-8 font-bold">
                   About
@@ -181,9 +183,9 @@ export default function MainNavigation() {
                           >
                             <Link href="/">Home</Link>
                               </p>
-                              <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                              {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                 <Link href="/discover">Discover</Link>
-                              </p>
+                              </p> */}
                               <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                 <Link href="/about">About</Link>
                               </p>

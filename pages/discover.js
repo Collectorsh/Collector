@@ -6,10 +6,12 @@ import { useEffect, useRef, useState } from "react";
 import debounce from "lodash.debounce";
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, XCircleIcon } from "@heroicons/react/solid";
 import CloudinaryImage from "../components/CloudinaryImage";
+import NotFound from "../components/404";
 
 const totalPerPage = 12
 
 export default function Discover() {
+  return <NotFound />
   const searchRef = useRef()
   const [search, setSearch] = useState();
   const [page, setPage] = useState(1);

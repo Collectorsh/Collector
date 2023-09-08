@@ -8,18 +8,10 @@ import PublicMint from "/components/drops/public";
 import getDropFromName from "/data/drops/getDropFromName";
 import { fetchImages } from "/hooks/fetchImages";
 import { useRouter } from "next/router";
+import NotFound from "../../components/404";
 
 export default function ArtistDrop({ name, drop }) {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/")
-  }, [router])
-
-  return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <h1>404</h1>
-    </div>
-  )
+  return <NotFound />
 
   const [images, setImages] = useState([]);
   const address = drop ? new PublicKey(drop.candy_machine) : null;

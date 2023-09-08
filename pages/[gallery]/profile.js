@@ -5,18 +5,10 @@ import getFollowingById from "/data/artists/getFollowingById";
 import ProfilePage from "/components/profile/ProfilePage";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { useRouter } from "next/router";
+import NotFound from "../../components/404";
 
 function Profile({ profileUser }) {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/")
-  }, [router])
-
-  return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <h1>404</h1>
-    </div>
-  )
+  return <NotFound />
 
   const [activity, setActivity] = useState();
   const [image, setImage] = useState();

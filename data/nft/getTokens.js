@@ -33,7 +33,7 @@ async function getTokens(publicKeys, options) {
     while (continueFetching) {
       const res = await axios.post(`https://mainnet.helius-rpc.com/?api-key=${ process.env.NEXT_PUBLIC_HELIUS_API_KEY }`, {
           "jsonrpc": "2.0",
-          "id": `collector`,
+          "id": `collector-tokens-${publicKey}-${page}`,
           "method": "getAssetsByOwner",
           "params": {
             "ownerAddress": publicKey,
@@ -193,8 +193,7 @@ async function getTokens(publicKeys, options) {
       }
     }
 
-
-     //For now this gets picked up on detail pages seperately
+    //For now this gets picked up on detail pages seperately
     //associated token account
     // result.associatedTokenAccountAddress = tokenAccounts[result.mint];
   }

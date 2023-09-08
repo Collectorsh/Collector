@@ -136,13 +136,12 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
   const [purchasing, setPurchasing] = useState(false)
   const videoRef = useRef(null);
 
-  const [isWrapped, setIsWrapped] = useState(false)
-  const wrapContainerRef = useRef(null);
-  const wrapItemRef = useRef(null);
+  // const [isWrapped, setIsWrapped] = useState(false)
+  // const wrapContainerRef = useRef(null);
+  // const wrapItemRef = useRef(null);
 
   const { isVisible } = useElementObserver(videoRef, "500px")  
 
-  
   const isMasterEdition = token.is_master_edition
   const isEdition = token.is_edition
   const supply = token.supply
@@ -151,17 +150,19 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
   const isListed = token.listed_status === "listed"
   const isSold = token.listed_status === "sold" || isMasterEdition && supply >= maxSupply
 
-  const supplyText = `${ maxSupply- supply}/${maxSupply}${isListed ? " Available": ""}`
+  const supplyText = isMasterEdition
+    ? `${ maxSupply - supply }/${ maxSupply } Editions`
+    : "1 of 1"
 
-  useEffect(() => {
-    const findIsWrapped = () => {
-      const isWrapped = wrapContainerRef.current.offsetHeight - wrapItemRef.current.offsetHeight > 30//30px threshold 
-      setIsWrapped(isWrapped)
-    }
-    findIsWrapped()
-    window.addEventListener('resize',findIsWrapped)
-    return () => window.removeEventListener('resize', findIsWrapped)
-  }, [])
+  // useEffect(() => {
+  //   const findIsWrapped = () => {
+  //     const isWrapped = wrapContainerRef.current.offsetHeight - wrapItemRef.current.offsetHeight > 30//30px threshold 
+  //     setIsWrapped(isWrapped)
+  //   }
+  //   findIsWrapped()
+  //   window.addEventListener('resize',findIsWrapped)
+  //   return () => window.removeEventListener('resize', findIsWrapped)
+  // }, [])
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -300,7 +301,7 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
               "object-contain",
               "max-h-[75vh]",
             )}
-            noLazyLoad
+            // noLazyLoad
             onLoad={() => setLoaded(true)}
           />
 
@@ -308,30 +309,40 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
       </Link>
       <div
         className="w-full mt-4 px-4 mx-auto
-      flex flex-wrap gap-3 justify-between items-center"
-        ref={wrapContainerRef}
+      flex flex-wrap gap-x-6 gap-y-3 justify-between items-start"
+        // ref={wrapContainerRef}
       >
         <div
           className={clsx('flex gap-1', "flex-col items-start")}
         >
-          <p className='font-bold text-xl'>{token.name}</p>
+          <p className='font-bold text-2xl leading-8'>{token.name}</p>
+
           {artist ? (
             <p>by {artist.username}</p>
           ) : null}
+
+          <div className='flex items-center gap-2 '>
+            {isListed
+              ? <>
+                <p className=''>{roundToPrecision(token.buy_now_price, 2)}◎</p>
+                <span>-</span>
+              </>
+              : null
+            }
+            <span className=''>{supplyText}</span>
+          </div>
         </div>
         <div
-          ref={wrapItemRef}
-          className={clsx('flex flex-col gap-1', isWrapped ? "items-start" : "items-center")}
+          // ref={wrapItemRef}
+          className={clsx(
+            'flex flex-col gap-1',
+            // isWrapped ? "items-start" : "items-center"
+          )}
         >
-          {isMasterEdition
-            ? (
-              <span className='font-bold'>{supplyText}</span>
-            )
-            : null} 
           {isListed
             ? (
               <div className="flex items-center gap-2 flex-wrap">
-                <p className='font-bold text-lg'>{roundToPrecision(token.buy_now_price, 2)}◎</p>
+               
                 <Tippy
                   content="Connect your wallet first!"
                   className="shadow-lg"
@@ -340,7 +351,9 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
                   <div>
                     <MainButton
                       onClick={handleBuy}
-                      className={clsx("px-3", isMasterEdition ? "w-36" : "w-28")}
+                      className={clsx("px-3", 
+                      "w-24"
+                      )}
                       noPadding
                       disabled={!handleBuyNowPurchase || purchasing || !user}
                     >
@@ -350,7 +363,7 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
                             <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
                           </span>
                         )
-                        : isMasterEdition ? "Buy Edition" : "Buy Now"
+                        : "Collect"
                       }
                     </MainButton>
                   </div>
@@ -359,7 +372,7 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
             )
             : null
           }
-          {isSold ? <p className='font-bold text-lg'>Sold {isMasterEdition ? " Out" : ""}!</p> : null}
+          {isSold ? <p className='font-bold text-xl'>Sold {isMasterEdition ? " Out" : ""}!</p> : null}
         </div>
       </div>
 

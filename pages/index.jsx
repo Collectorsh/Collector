@@ -4,8 +4,9 @@ import Hero from "/components/home/Hero";
 import Galleries from "/components/home/Galleries";
 import UserContext from "/contexts/user";
 import HighlightedCurations from "../components/home/HighlightedCurations";
+import getHighlightedCurations from "../data/curation/getHighlightedCurations";
 
-export default function Home() {
+export default function Home({highlightedCurations}) {
   const [user] = useContext(UserContext);
   return (
     <div className="dark:bg-black">
@@ -13,12 +14,26 @@ export default function Home() {
       <div className="max-w-screen-xl mx-auto px-4 sm:px-8">
         <Hero />
       </div>
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 border-t border-neutral-100 dark:border-neutral-800 py-10">
-        <HighlightedCurations />
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8  border-neutral-100 dark:border-neutral-800 py-10">
+        <HighlightedCurations curations={highlightedCurations} />
       </div>
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 border-t border-neutral-100 dark:border-neutral-800 py-10">
+      {/* <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 border-t border-neutral-100 dark:border-neutral-800 py-10">
         <Galleries />
-      </div>
+      </div> */}
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  try {
+    const res = await getHighlightedCurations()
+    if (res) {
+      return { props: { highlightedCurations: res } };
+    } else {
+      return { props: {} };
+    }
+  } catch (err) {
+    console.log(err);
+    return { props: {} };
+  }
 }

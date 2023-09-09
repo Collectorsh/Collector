@@ -27,6 +27,7 @@ export const getTokenCldImageId = (token) => {
   //TODO if parent is available from helius then use that instead of image, 
   //and add is_master_edition to the check(they would be the parent)
 
+  //MAKE SURE TO CHANGE THIS IN THE API AS WELL in image service
   return ((token.is_edition) && token.image)
     ? `edition-${clean(token.image)}`
     : token.mint

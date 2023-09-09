@@ -220,7 +220,7 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
   }
 
   const handleClick = () => {
-    if (!imageRef.current) return
+    if (!imageRef.current || !token.image) return
     const newToken = { ...token }
 
     newToken.aspect_ratio = getAspectRatio(imageRef.current)

@@ -8,7 +8,8 @@ export default function Modal({
   isOpen,
   onClose,
   children,
-  widthClass = "max-w-screen-xl"
+  widthClass = "max-w-screen-xl",
+  closeButtonPlacement = "absolute top-2 right-2"
 }) {
   return (
     <Transition show={isOpen} as={Fragment}>
@@ -44,7 +45,7 @@ export default function Modal({
                 widthClass
               )}
             >
-              <button onClick={onClose} className="absolute top-2 right-2 duration-200 hover:scale-105 active:scale-100">
+              <button onClick={onClose} className={clsx("duration-200 hover:scale-105 active:scale-100", closeButtonPlacement)}>
                 <XCircleIcon className="w-8 h-8" />
               </button>
               {title ? <Dialog.Title className="text-center font-bold text-3xl">{title}</Dialog.Title> : null}

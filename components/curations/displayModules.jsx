@@ -9,7 +9,7 @@ const DisplayModules = ({
   isOwner,
   submittedTokens,
   approvedArtists,
-  handleBuyNowPurchase
+  handleCollect
 }) => {
   const handleEditModule = (newModule) => {
     const newModules = [...modules];
@@ -56,7 +56,7 @@ const DisplayModules = ({
             module={module}
             submittedTokens={submittedTokens}
             approvedArtists={approvedArtists}
-            handleBuyNowPurchase={handleBuyNowPurchase}
+            handleCollect={handleCollect}
           />
         </div>
       ))}
@@ -73,7 +73,7 @@ export const Module = ({
   submittedTokens,
   onDeleteModule,
   approvedArtists,
-  handleBuyNowPurchase
+  handleCollect
 }) => {
   switch (module.type) {
     case "text": {
@@ -95,7 +95,7 @@ export const Module = ({
           isOwner={isOwner}
           submittedTokens={submittedTokens}
           approvedArtists={approvedArtists}
-          handleBuyNowPurchase={handleBuyNowPurchase}
+          handleCollect={handleCollect}
         />
       )
     }

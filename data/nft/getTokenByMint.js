@@ -22,10 +22,12 @@ async function getTokenByMint(tokenMint) {
     return res.data.result;
   }).catch((err) => {
     console.log("Error Fetching Token Metadata by Mint:", err);
-    continueFetching = false
   });
+
+  if (!token) return null;
     
   const { content, creators, ownership, id } = token
+
   const mungedToken = {
     creator: creators[0]?.address,
     description: content.metadata.description,
@@ -49,16 +51,19 @@ async function getTokenByMint(tokenMint) {
     // max_supply:
   }
  
+
+  if (!mungedToken.mint || !mungedToken.image) return null
+  
   try {
     const edition = await Metadata.getEdition(connection, mungedToken.mint)
-    const { data } = edition
-    
+    const { data } = edition    
     mungedToken.is_master_edition = data.maxSupply && Number(data.maxSupply?.toString()) > 0
     mungedToken.supply = data.supply ? Number(data.supply.toString()) : undefined
     mungedToken.max_supply = data.maxSupply ? Number(data.maxSupply.toString()) : undefined
     
     mungedToken.is_edition = Boolean(data.parent)
     mungedToken.parent = data.parent?.toString()
+    mungedToken.edition_number = data.edition?.toString()
   } catch (err) {
     console.log("Error getting metadata for mint", mungedToken.mint)
   }
@@ -82,6 +87,16 @@ async function getTokenByMint(tokenMint) {
       mungedToken.artist_twitter =detail.twitter;
     }
   }
+
+  const owner_res = await apiClient.post("/user/get_user_by_address",
+    { address: mungedToken.owner }
+  ).then((res) => res.data)
+
+  if (owner_res?.status === "success") {
+    const owner = owner_res.user
+    mungedToken.owner_name = owner.username;
+    mungedToken.owner_account = owner
+  } 
 
   DEBUG && console.timeEnd("getTokenByMint Time")
   return mungedToken;

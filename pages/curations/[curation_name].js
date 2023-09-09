@@ -33,7 +33,7 @@ const descriptionPlaceholder = "Tell us about this curation."
 function CurationPage({ curation }) {
   const [user] = useContext(UserContext);
   const router = useRouter();
-  const { handleBuyNowPurchase, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
+  const { handleCollect, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
 
   const [editNameOpen, setEditNameOpen] = useState(false);
   const [editBannerOpen, setEditBannerOpen] = useState(false);
@@ -341,7 +341,7 @@ function CurationPage({ curation }) {
           setModules={handleEditModules}
           submittedTokens={submittedTokens}
           approvedArtists={approvedArtists}
-          handleBuyNowPurchase={handleBuyNowPurchase}
+          handleCollect={handleCollect}
         />
 
         {isOwner

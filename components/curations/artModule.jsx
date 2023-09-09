@@ -20,7 +20,7 @@ import { connection } from '../../config/settings';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { set } from 'nprogress';
 
-const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleBuyNowPurchase }) => {
+const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
   const [editArtOpen, setEditArtOpen] = useState(false)
 
@@ -57,6 +57,7 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
     
     return rows.map(tokenRow => tokenRow.map((tokenMint, i) => {
       const token = submittedTokens.find(t => t.mint === tokenMint)
+      if (!token) return null
       const artist = approvedArtists.find(a => a.id === token.artist_id)
       const totalWidthRatio = tokenRow.reduce((acc, token) => acc + Number(token.aspect_ratio), 0)
       const widthPercent = (Number(token.aspect_ratio) / totalWidthRatio) * 100
@@ -68,13 +69,13 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
           widthPercent={widthPercent}
           columns={cols}
           artist={artist}
-          handleBuyNowPurchase={handleBuyNowPurchase}
+          handleCollect={handleCollect}
           // height={rowHeight}
           // width={width}
         />
       )
-    }))
-  }, [artModule.tokens, breakpoint, submittedTokens, approvedArtists, handleBuyNowPurchase])
+    })).filter(row => Boolean(row))
+  }, [artModule.tokens, breakpoint, submittedTokens, approvedArtists, handleCollect])
 
   return (
     <div
@@ -126,7 +127,7 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
 export default ArtModule;
 
-export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurchase, height, width }) => {  
+export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, height, width }) => {  
   const [user] = useContext(UserContext);
   const wallet = useWallet()
 
@@ -186,77 +187,10 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
   }, [token]);
 
   const handleBuy = async (e) => {
-    if (!handleBuyNowPurchase || !user) return;
+    if (!handleCollect || !user) return;
 
     setPurchasing(true)
-
-    if (isMasterEdition) {
-      //Handle Edition mint/purchase
-      let txHash
-      try {
-        const builder = await getMintEditionTX({
-          connection: connection,
-          newOwnerPubkey: wallet.publicKey,
-          masterEditionMint: token.mint,
-          marketAddress: token.master_edition_market_address
-        })
-
-        if (!builder) {
-          const err = new Error(`Error Building ${ token.name } Buy Edition Transaction`)
-          throw new Error(err)
-        }
-
-        const { mintEditionTX } = builder
-  
-        txHash = await wallet.sendTransaction(mintEditionTX, connection)
-      } catch (err) {
-        console.log("Error sending edition buy tx", err.message)
-      }
-
-      const res = await recordSale({
-        apiKey: user.api_key,
-        curationId: token.curation_id,
-        token: token,
-        buyerId: user.id,
-        buyerAddress: user.public_keys[0],
-        saleType: "edition_mint",
-        txHash: txHash,
-        editionsMinted: 1
-      })
-      
-      if (res?.status === "success") {
-        success(`Congrats! You've collected a ${ token.name } Edition!`)
-        shootConfetti(1)
-      } else {
-        error(`Error buying ${ token.name }: ${ res?.message }`)
-      }
-      
-        
-    } else if (isEdition) {
-      //TODO Handle edition purchase
-      return
-    } else { 
-      //Handle 1/1 buy now purchase
-      const txHash = await handleBuyNowPurchase(token.listing_receipt)
-  
-      const res = await recordSale({
-        apiKey: user.api_key,
-        curationId: token.curation_id,
-        token: token,
-        buyerId: user.id,
-        buyerAddress: user.public_keys[0],
-        saleType: "buy_now",
-        txHash: txHash,
-      })
-  
-      if (res?.status === "success") {
-        success(`Congrats! ${ token.name } has been collected!`)
-        shootConfetti(3)
-      } else {
-        error(`Error buying ${ token.name }: ${ res?.message }`)
-      }
-    }
-    
+    await handleCollect(token)
     setPurchasing(false)
   }
   
@@ -355,7 +289,7 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleBuyNowPurc
                       "w-24"
                       )}
                       noPadding
-                      disabled={!handleBuyNowPurchase || purchasing || !user}
+                      disabled={!handleCollect || purchasing || !user}
                     >
                       {purchasing
                         ? (

@@ -98,10 +98,9 @@ async function getTokens(publicKeys, options) {
       // supply:
       // max_supply:
     }
-
   }).filter((item) => {
-    const useable = item.uri !== "" && item.creator !== undefined
-    return useable
+    const notUsable = !item.uri || !item.creator || !item.mint || !item.image
+    return !notUsable
   });
 
   const visResults = await apiClient.post("/get_visibility_and_order", {
@@ -174,6 +173,7 @@ async function getTokens(publicKeys, options) {
           
           result.is_edition = Boolean(data.parent)
           result.parent = data.parent?.toString()
+          result.edition_number = data.edition?.toString()
         } catch (err) {
           console.log("Error getting metadata for mint", result.mint)
         }

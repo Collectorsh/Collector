@@ -1,0 +1,68 @@
+import Tippy from "@tippyjs/react"
+import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse"
+import MainButton from "../MainButton"
+import { Oval } from "react-loader-spinner"
+import UserContext from "../../contexts/user";
+import { useContext, useState } from "react";
+import clsx from "clsx";
+import Link from "next/link";
+
+export default function DetailListings({ curation, mint }) {
+  const [user] = useContext(UserContext);
+  const { handleCollect } = useCurationAuctionHouse(curation)
+  const [purchasing, setPurchasing] = useState(false)
+  const listingToken = curation.submitted_token_listings?.find(l => l.mint === mint)
+
+  if (!listingToken) return null
+  const isListed = listingToken.listed_status === "listed"
+
+  const handleBuy = async (e) => {
+    if (!handleCollect || !user) return;
+
+    setPurchasing(true)
+    await handleCollect(listingToken)
+    setPurchasing(false)
+  }
+
+  return (
+    <div className="flex my-4 justify-between items-center">
+      <Link href={`/curations/${curation.name}`}>
+        <a className="hover:scale-105 duration-300">
+          <p className="font-bold text-xl">{curation.name.replaceAll("_", " ")}</p>
+          <p>Curated by {curation.curator.username}</p>
+        </a>
+      </Link>
+      {isListed
+        ? (
+          <Tippy
+            content="Connect your wallet first!"
+            className="shadow-lg"
+            disabled={Boolean(user)}
+          >
+            <div>
+              <MainButton
+                onClick={handleBuy}
+                className={clsx("px-3",
+                  "w-24"
+                )}
+                noPadding
+                disabled={!handleCollect || purchasing || !user}
+              >
+                {purchasing
+                  ? (
+                    <span className="inline-block translate-y-0.5">
+                      <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+                    </span>
+                  )
+                  : "Collect"
+                }
+              </MainButton>
+            </div>
+          </Tippy>
+        )
+        : null
+      }
+      
+    </div>
+  )
+}

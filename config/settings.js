@@ -13,8 +13,8 @@ const prod = {
 };
 
 const beta = {
-  apiHost: "https://collector.sh/collector-api",
-  host: "https://dev.collector.sh",
+  apiHost: "https://collector-testing-kvak9.ondigitalocean.app/collector-api",
+  host: "https://collector-testing-kvak9.ondigitalocean.app",
   dao21: "https://api.21dao.xyz",
 };
 

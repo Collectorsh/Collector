@@ -21,7 +21,11 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
 
   const { handleBuyNowList, handleDelist, auctionHouse } = useCurationAuctionHouse(curation)
 
-  const submissions = curation?.submitted_token_listings.filter(listing => user.public_keys.includes(listing.owner_address)) || []
+  const submissions = curation?.submitted_token_listings.filter(listing => {
+    const owned = user.public_keys.includes(listing.owner_address)
+    const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
+    return owned && !closedMaster
+  }) || []
 
   const onList = async (token, listingPrice) => {
     let newToken
@@ -260,7 +264,7 @@ const Submission = ({ token, onList, onDelist }) => {
 
   return (
     <div className="relative h-fit shadow-md shadow-black/10 dark:shadow-white/5 rounded-lg
-      bg-neutral-100 dark:bg-neutral-900
+      bg-neutral-100 dark:bg-neutral-700
     ">
       <CloudinaryImage
         className={clsx("flex-shrink-0 overflow-hidden object-cover",

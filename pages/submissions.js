@@ -133,7 +133,10 @@ const Submissions = ({ }) => {
               const creatorsAddresses = listing.creators?.map((creator) => creator.address)
               const userKeys = user?.public_keys || []
               const isArtist = userKeys.includes(listing.artist_address) || Boolean(creatorsAddresses?.find(address => userKeys.includes(address)))
-              const notSold = listing.listed_status !== "sold" || (listing.is_master_edition && listing.listed_status !== "master-edition-closed")
+              const isMasterEdition = listing.is_master_edition
+              const notSold = isMasterEdition
+                ? listing.listed_status !== "master-edition-closed"
+                : listing.listed_status !== "sold" 
               return isArtist && notSold
             })
             return (

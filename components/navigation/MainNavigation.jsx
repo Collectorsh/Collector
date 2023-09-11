@@ -12,6 +12,8 @@ import Gallery from "/components/navigation/Gallery";
 import Activity from "/components/navigation/Activity";
 import Premium from "/components/navigation/Premium";
 import CreateUsernameModal from "/components/CreateUsernameModal";
+import { truncate } from "../../utils/truncate";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 export default function MainNavigation() {
   const wallet = useWallet();
@@ -41,6 +43,7 @@ export default function MainNavigation() {
 
   return (
     <div className="pb-[76px]">
+      <ConnectWallet />
       {showModal && <CreateUsernameModal />}
       <nav className="bg-white dark:bg-black shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
         <div className="max-w-screen-2xl mx-auto">
@@ -90,7 +93,14 @@ export default function MainNavigation() {
                   {/* {!user.token_holder && <Premium />} */}
                 </>
               )}
-              {user ? <Profile /> : <ConnectWallet />}
+                {user
+                  ? <Profile />
+                  : (
+                    <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                      <WalletMultiButton />
+                    </div>
+                  )
+                }
               <DarkMode />
             </div>
             {/* <!-- Mobile menu button --> */}
@@ -145,7 +155,7 @@ export default function MainNavigation() {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <div className="absolute top-0 left-0 flex pt-4 pr-2 sm:-ml-10 sm:pr-4 z-30">
+                <div className="absolute top-0 left-0 flex pt-4 pr-2 z-30">
                   <button
                     type="button"
                     className="rounded-md text-gray-800 hover:text-black outline-none focus:outline-none cursor-pointer ml-4 dark:text-white"
@@ -172,9 +182,8 @@ export default function MainNavigation() {
                         <div className="absolute inset-0 px-4 sm:px-6 mt-2">
                           <div className="mt-4 dark:text-gray-200">
                             <div className="mr-4 inline">
-                              <DarkMode />
+                              <DarkMode withText/>
                             </div>
-                            <span className="-ml-2">Toggle Dark Mode</span>
                           </div>
                           <div className="mt-6 dark:text-gray-200">
                             <p
@@ -265,14 +274,19 @@ export default function MainNavigation() {
                                     </>
                                   )} */}
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <a onClick={signOut}>Sign Out</a>
+                                      <a onClick={signOut}>
+                                        Sign Out
+                                        <span className=" ml-4 text-sm">{truncate(wallet?.publicKey?.toString())}</span>
+                                      </a>
                                   </p>
                                 </div>
                               </>
                             )}
                             {!user && (
                               <div className="mt-8 md:mt-0">
-                                <ConnectWallet />
+                                  <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                                    <WalletMultiButton />
+                                  </div>
                               </div>
                             )}
                           </div>

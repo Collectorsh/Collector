@@ -36,7 +36,7 @@ export default function DetailPage({token, curations}) {
   const artistName = token?.artist_name ? token.artist_name.replace("_", " ") : truncate(token?.creator, 4)
   const ownerName = token?.owner_name ? token.owner_name.replace("_", " ") : truncate(token?.owner, 4)
   const supplyText = isMasterEdition
-    ? `Master - ${ maxSupply - supply }/${ maxSupply } Editions Available`
+    ? `${ maxSupply - supply }/${ maxSupply } Editions Available`
     : isEdition
       ? `Edition #${ editionNumber } ${maxSupply ? ` of ${ maxSupply }` :""}`
       : "1 of 1"
@@ -67,7 +67,7 @@ export default function DetailPage({token, curations}) {
     <>
       <MainNavigation />
       <ArtModal isOpen={imageExpanded} onClose={() => setImageExpanded(false)} token={token} />
-      <div className="w-full max-w-screen-2xl mx-auto px-8 py-10 grid md:grid-cols-2 gap-10">
+      <div className="w-full max-w-screen-2xl mx-auto px-8 py-10 grid gap-10">
         <div className="relative shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg overflow-hidden w-fit h-fit mx-auto group">
           <button
             onClick={expandImage}
@@ -123,7 +123,7 @@ export default function DetailPage({token, curations}) {
           />
         </div>
 
-        <div>
+        <div className="max-w-screen-sm w-full mx-auto">
           <div className="flex justify-between items-start flex-wrap gap-4">
             <div className="flex flex-col gap-1">
               <h1 className="collector text-4xl">{token?.name}</h1>
@@ -144,7 +144,7 @@ export default function DetailPage({token, curations}) {
             ? (
               <div className="mt-10">
                 <hr className="border-neutral-200 dark:border-neutral-800" />
-                <h2 className="text-lg mt-5">Curation Listings</h2>
+                <h2 className="text-lg mt-5">Listings</h2>
                 {curations?.map(curation => (
                   <DetailListings key={token.mint} curation={curation} mint={token.mint} />
                 ))}

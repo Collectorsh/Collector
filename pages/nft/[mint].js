@@ -26,8 +26,7 @@ export default function DetailPage({token, curations}) {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
   const [imageExpanded, setImageExpanded] = useState(false);
-  const defaultImageWidth = "70vw";
-  const [imageWidth, setImageWidth] = useState(defaultImageWidth);
+  const [imageWidth, setImageWidth] = useState("70vw");
   const videoRef = useRef(null);
   const imageRef = useRef(null);
 
@@ -37,8 +36,6 @@ export default function DetailPage({token, curations}) {
   const maxSupply = token?.max_supply
   const editionNumber = token?.edition_number
 
-  const solscanUrl = token?.mint ? `https://solscan.io/token/${ token.mint }` : ""
-
   const artistName = token?.artist_name ? token.artist_name.replace("_", " ") : truncate(token?.creator, 4)
   const ownerName = token?.owner_name ? token.owner_name.replace("_", " ") : truncate(token?.owner, 4)
   const supplyText = isMasterEdition
@@ -46,6 +43,16 @@ export default function DetailPage({token, curations}) {
     : isEdition
       ? `Edition #${ editionNumber } ${maxSupply ? ` of ${ maxSupply }` :""}`
       : "1 of 1"
+  const solscanUrl = token?.mint ? `https://solscan.io/token/${ token?.mint }` : ""
+
+
+  const activeCurations = curations?.filter(curation => {
+    return curation.submitted_token_listings?.find(l => {
+      const isToken = l.mint === token.mint
+      const isSold = l.listed_status === "sold" || l.listed_status === "master-edition-closed"
+      return isToken && !isSold
+    })
+  })
   
   useEffect(() => {
     if(!imgLoaded) return;
@@ -85,13 +92,12 @@ export default function DetailPage({token, curations}) {
     <>
       <MainNavigation />
       <ArtModal isOpen={imageExpanded} onClose={() => setImageExpanded(false)} token={token} />
-      <div className="max-w-screen-2xl mx-auto w-full px-2 py-5">
+      <div className={clsx("max-w-screen-2xl mx-auto w-full px-2 py-5 duration-200", imgLoaded ? "opacity-100" : "opacity-0")}>
           {!imgLoaded ? (
               <ContentLoader
                 speed={2}
-                className={`mx-auto w-[${ defaultImageWidth }] h-[75vh] rounded-xl`}
+                className={`mx-auto w-[70vw] h-[75vh] rounded-xl`}
                 backgroundColor="rgba(120,120,120,0.2)"
-                // backgroundColor="rgba(120,120,120,1.2)"
                 foregroundColor="rgba(120,120,120,0.1)"
               >
                 <rect className="w-full h-full" />
@@ -161,14 +167,14 @@ export default function DetailPage({token, curations}) {
             
           </div>
         
-          <p className="text-xs mt-4 whitespace-pre-wrap">{token?.description}</p>
-          {curations.length > 0
+          <p className="text-xs my-4 whitespace-pre-wrap">{token?.description}</p>
+          {activeCurations.length > 0
             ? (
               <div className="my-4">
                 <hr className="border-neutral-200 dark:border-neutral-800" />
-                <h2 className="text-lg mt-5 ">Listings</h2>
+                <h2 className="text-lg mt-5 mb-2 ">Listings</h2>
                 <div className="grid md:grid-cols-2 gap-6">
-                  {curations?.map(curation => (
+                  {activeCurations?.map(curation => (
                     <DetailListings key={token.mint} curation={curation} mint={token.mint} />
                   ))}
                 </div>
@@ -180,15 +186,31 @@ export default function DetailPage({token, curations}) {
           }
           <hr className="border-neutral-200 dark:border-neutral-800" />
           
-          <a className="block hover:scale-105 duration-300 w-fit mt-4" href={solscanUrl}>
+          <div className="flex flex-wrap gap-x-4 mt-4">
             <span className="font-bold">Mint Address: </span>
-            {truncate(token?.mint)}
-          </a>
-      
-           
+            <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl}>
+              {truncate(token?.mint)}
+            </a>
+          </div>
+
+          <div className="flex flex-wrap gap-x-4 mt-2">
+            <p className="font-bold ">Creators: </p>
+            {token.creators?.map(creator => (
+              <AddressLink key={creator.address} address={creator.address} />
+            ))}
+          </div>      
         </div>
       </div>
     </>
+  )
+}
+
+const AddressLink = ({ address}) => { 
+  const solscanUrl = address ? `https://solscan.io/account/${ address }` : ""
+  return (
+    <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl}>
+      {truncate(address, 4)}
+    </a>
   )
 }
 

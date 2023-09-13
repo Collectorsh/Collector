@@ -8,9 +8,7 @@ import CloudinaryImage from "../../CloudinaryImage";
 import ContentLoader from "react-content-loader";
 
 export const Photo = forwardRef(
-  ({ mint, uri, index, faded, style, section, bulkEdit, ...props }, ref) => {
-
-    const [errorCount, setErrorCount] = useState(0);
+  ({ token, uri, index, faded, style, section, bulkEdit, ...props }, ref) => {
     const height = props.height ? props.height : 200;
 
     const inlineStyles = {
@@ -28,21 +26,6 @@ export const Photo = forwardRef(
       inlineStyles.width = height;
     }
 
-    const defaultSource = async (e, mint, url) => {
-      if (errorCount > 1) return;
-      setErrorCount(errorCount + 1);
-      try {
-        const res = await axios.get(url).then(res => {
-          return res.data
-        })
-        const image = typeof res === "object" ? res.image : url
-
-        addDefaultSource(e, mint, image);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     function classNames(...classes) {
       return classes.filter(Boolean).join(" ");
     }
@@ -56,7 +39,7 @@ export const Photo = forwardRef(
       <div className="relative">
         {section === "visible" && bulkEdit === true && (
           <input
-            id={`select-${mint}`}
+            id={`select-${token.mint}`}
             type="checkbox"
             name="bulk"
             className="absolute left-1 top-1 w-6 h-6 cursor-pointer"
@@ -72,8 +55,9 @@ export const Photo = forwardRef(
         >
           <CloudinaryImage
             className="w-full h-full cursor-pointer hover:origin-center object-center object-cover"
-            id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ mint }`}
-            mint={mint}
+            // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ mint }`}
+            // mint={mint}
+            token={token}
             noLazyLoad
             onLoad={onImageLoad}
             width={500}
@@ -102,7 +86,7 @@ export const Photo = forwardRef(
                 <Menu.Item>
                   {({ active }) => (
                     <a
-                      href={`/nft/${mint}`}
+                      href={`/nft/${token.mint}`}
                       target="_blank"
                       rel="noreferrer"
                       className={classNames(

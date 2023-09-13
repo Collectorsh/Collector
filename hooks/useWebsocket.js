@@ -2,22 +2,26 @@ import { useEffect, useRef, useContext, useState, useCallback } from 'react';
 
 import { ActionCableContext } from '../contexts/webSocket';
 
-export const makeSocketID = (username, pathname) => {
-  if(!username) return null
-  const page = pathname === "/" ? "home" : pathname.replace("/", "")
-  return `${ username }-${ page }`
+export const makeNotificationsSocketID = (pathname, username) => {
+  if  (pathname.includes("curations")) return null //curations has its own handler  
+  switch (pathname) { 
+    case "/edit": {
+      if (!username) return null
+      return `${ username }-edit`
+    }
+    case "/": return null //no socket needed for home page
+    default: return pathname.replace("/", "")
+  }
 }
 
-const useActionCable = (handlers = {}, socket_id) => {
+const useActionCable = (socket_id, handlers = {}, channelName = "NotificationsChannel") => {
   const cable = useContext(ActionCableContext);
-  const channelName = "NotificationsChannel"
 
   useEffect(() => {
-    if(!cable || !socket_id) return
+    if (!cable || !socket_id) return
     let subscription;
 
     try {
-      //change username: to soclek_id
       subscription = cable.subscriptions.create({ channel: channelName, socket_id: socket_id }, {
         connected: () => {
           console.log("Connected to channel: " + socket_id);

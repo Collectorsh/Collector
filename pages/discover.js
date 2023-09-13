@@ -6,10 +6,12 @@ import { useEffect, useRef, useState } from "react";
 import debounce from "lodash.debounce";
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, XCircleIcon } from "@heroicons/react/solid";
 import CloudinaryImage from "../components/CloudinaryImage";
+import NotFound from "../components/404";
 
 const totalPerPage = 12
 
 export default function Discover() {
+  return <NotFound />
   const searchRef = useRef()
   const [search, setSearch] = useState();
   const [page, setPage] = useState(1);
@@ -166,8 +168,9 @@ const ImageCard = ({ item }) => {
           <Link href={`/${ item.username }`}>
             <a>
               <CloudinaryImage
-                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ item.mint }`}
-                mint={item.mint}
+                // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ item.mint }`}
+                // mint={item.mint}
+                token={token}
                 width={700}
                 noLazyLoad
                 useUploadFallback

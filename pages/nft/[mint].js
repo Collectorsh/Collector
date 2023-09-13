@@ -1,140 +1,227 @@
-import React, { useEffect, useContext, useCallback, useState } from "react";
-import Head from "next/head";
-import MainNavigation from "/components/navigation/MainNavigation";
-import getMetadataFromMint from "/data/nft/getMetadataFromMint";
-import Single from "/components/single/Single";
-import { cdnImage } from "/utils/cdnImage";
-import SingleNftContext from "/contexts/single_nft";
-import { auctionHousesArray } from "/config/settings";
-import { PublicKey } from "@solana/web3.js";
-import { Metaplex } from "@metaplex-foundation/js";
-import findMarket from "/data/drops/findMarket";
-import { connection } from "/config/settings";
+import ContentLoader from "react-content-loader";
+import NotFound from "../../components/404";
+import CloudinaryImage from "../../components/CloudinaryImage";
+import MainNavigation from "../../components/navigation/MainNavigation"
+import getTokenByMint, { useTokenByMint } from "../../data/nft/getTokenByMint";
+import { nullifyUndefinedArr, nullifyUndefinedObj } from "../../utils/nullifyUndefined";
+import { useEffect, useRef, useState } from "react";
+import { truncate } from "../../utils/truncate";
 import { useRouter } from "next/router";
+import getCurationsByListingMint from "../../data/curation/getCurationsByListingMint";
+import { ArrowsExpandIcon } from "@heroicons/react/solid";
+import clsx from "clsx";
+import ArtModal from "../../components/detail/artModal";
+import DetailListings from "../../components/detail/listings";
+import Link from "next/link";
+import { image } from "@cloudinary/url-gen/qualifiers/source";
+import { getImageSize } from "react-image-size";
 
-function Nft(
-  { token }
-) {
-  const [, setSingleNft] = useContext(SingleNftContext);
-  const auctionHouses = auctionHousesArray.map((a) => a.address);
-  const [offers, setOffers] = useState([]);
-  const [listings, setListings] = useState([]);
-  const [market, setMarket] = useState();
-  const metaplex = new Metaplex(connection);
+export default function DetailPage({token, curations}) {
+  // return <NotFound />
+  // const router = useRouter();
+  // const { mint } = router.query;
+  // const token = useTokenByMint(mint);
 
-  /////////////////////////////////////////////////////////////////////////////////////
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoUrl, setVideoUrl] = useState(null);
+  const [imageExpanded, setImageExpanded] = useState(false);
+  const [imageWidth, setImageWidth] = useState("70vw");
+  const videoRef = useRef(null);
+  const imageRef = useRef(null);
 
-  // Fetch Offers and Listings
+  const isMasterEdition = token?.is_master_edition
+  const isEdition = token?.is_edition
+  const supply = token?.supply
+  const maxSupply = token?.max_supply
+  const editionNumber = token?.edition_number
 
-  const fetchNft = useCallback(async (token) => {
-    const mintPubKey = new PublicKey(token.mint);
-    for (const auctionHouse of auctionHouses) {
-      const bids = await metaplex.auctionHouse().findBids({
-        auctionHouse: { address: auctionHouse, isNative: true },
-        mint: mintPubKey,
-      });
-      for (const bid of bids) {
-        if (bid.canceledAt || bid.purchaseReceiptAddress) continue;
-        setOffers([
-          ...offers,
-          {
-            price: bid.price.basisPoints.toNumber(),
-            buyer: bid.buyerAddress.toBase58(),
-            auctionHouse: bid.auctionHouse,
-            tradeState: bid.tradeStateAddress._bn,
-            tradeStateBump: bid.tradeStateAddress.bump,
-          },
-        ]);
-      }
+  const artistName = token?.artist_name ? token.artist_name.replace("_", " ") : truncate(token?.creator, 4)
+  const ownerName = token?.owner_name ? token.owner_name.replace("_", " ") : truncate(token?.owner, 4)
+  const supplyText = isMasterEdition
+    ? `${ maxSupply - supply }/${ maxSupply } Editions Available`
+    : isEdition
+      ? `Edition #${ editionNumber } ${maxSupply ? ` of ${ maxSupply }` :""}`
+      : "1 of 1"
+  const solscanUrl = token?.mint ? `https://solscan.io/token/${ token?.mint }` : ""
 
-      const lstngs = await metaplex.auctionHouse().findListings({
-        auctionHouse: { address: auctionHouse, isNative: true },
-        mint: mintPubKey,
-      });
-      for (const list of lstngs) {
-        if (list.canceledAt || list.purchaseReceiptAddress) continue;
-        setListings([
-          ...listings,
-          {
-            price: list.price.basisPoints.toNumber(),
-            seller: list.sellerAddress.toBase58(),
-            auctionHouse: list.auctionHouse,
-            tradeState: list.tradeStateAddress._bn,
-            tradeStateBump: list.tradeStateAddress.bump,
-          },
-        ]);
+
+  const activeCurations = curations?.filter(curation => {
+    return curation.submitted_token_listings?.find(l => {
+      const isToken = l.mint === token.mint
+      const isListed = l.listed_status === "listed"
+      return isToken && isListed
+    })
+  })
+  
+  useEffect(() => {
+    if(!imgLoaded) return;
+    const getImageSize = () => {
+      if (!imageRef.current) return;
+      const width = imageRef.current.clientWidth
+      setImageWidth(`${width}px`);
+    }
+    getImageSize();
+    window.addEventListener("resize", getImageSize);
+    return () => window.removeEventListener("resize", getImageSize);
+  }, [imgLoaded])
+
+  useEffect(() => {
+    if (!videoRef.current) return;
+    if (videoLoaded) {
+      videoRef.current.play()
+    } else {
+      videoRef.current.pause()
+    }
+
+  }, [videoLoaded])
+
+  useEffect(() => {
+    if (!token) return;
+
+    if (token.animation_url) {
+      if (token.animation_url.split(".").pop().includes("mp4")) {
+        setVideoUrl(token.animation_url);
       }
     }
-  }, []);
+  }, [token]);
 
-  // Run once on page load
-  useEffect(() => {
-    fetchNft(token);
-  }, [token, fetchNft]);
-
-  useEffect(() => {
-    setSingleNft({
-      creators: token.creators,
-      offers: offers,
-      listings: listings,
-    });
-  }, [offers, listings, token]);
-
-  const sleep = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
-
-  // Refetch function to update NFT and Activities
-  const refetch = async (token) => {
-    await sleep(10000);
-    fetchNft(token);
-  };
-
-  /////////////////////////////////////////////////////////////////////////////////////
-
-  // Find if mint belongs to a drop and has a marketplace
-  const fetchMarketplace = useCallback(async () => {
-    const res = await findMarket(token.mint);
-    if (res.status === "success") setMarket(res.market);
-  }, []);
-
-  // Run once on page load
-  useEffect(() => {
-    fetchMarketplace();
-  }, []);
-
-  /////////////////////////////////////////////////////////////////////////////////////
+  const expandImage = () => setImageExpanded(!imageExpanded)
 
   return (
-    <div className="dark:bg-black">
-      <Head>
-        {token && (
-          <>
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" content={token.name} />
-            <meta
-              name="twitter:description"
-              content={`View ${token.name} on Collector`}
-            />
-            {/* <meta name="twitter:image" content={image} /> */}
-          </>
-        )}
-      </Head>
-
+    <>
       <MainNavigation />
+      <ArtModal isOpen={imageExpanded} onClose={() => setImageExpanded(false)} token={token} />
+      <div className={clsx("max-w-screen-2xl mx-auto w-full px-2 py-5 duration-200", imgLoaded ? "opacity-100" : "opacity-0")}>
+          {!imgLoaded ? (
+              <ContentLoader
+                speed={2}
+                className={`mx-auto w-[70vw] h-[75vh] rounded-xl`}
+                backgroundColor="rgba(120,120,120,0.2)"
+                foregroundColor="rgba(120,120,120,0.1)"
+              >
+                <rect className="w-full h-full" />
+              </ContentLoader>
+            
+          ) : null}
+        <div className="relative shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg overflow-hidden w-fit h-fit mx-auto group">
+          <button
+            onClick={expandImage}
+            className={clsx("absolute z-[15] right-5 top-5 p-0.5",
+              "bg-neutral-200 dark:bg-neutral-700 rounded shadow-lg dark:shadow-white/10",
+              "duration-300",
+              "opacity-50 hover:opacity-100 group-hover:opacity-100",
+              "hover:scale-110 active:scale-100",
+            )}
+          >
+            <ArrowsExpandIcon className="w-7 h-7" />
+          </button>
+          {videoUrl && imgLoaded ? (
+            <>
+              <video
+                autoPlay
+                ref={videoRef}
+                preload="metadata"
+                muted
+                loop
+                playsInline
+                id={`video-${ token.mint }`}
+                className="w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10 duration-200 opacity-0"
+                onCanPlayThrough={e => {
+                  e.target.classList.add("opacity-100")
+                  setVideoLoaded(true)
+                }}
+                onError={(e) => e.target.classList.add("hidden")}
+              >
+                <source src={videoUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </>
+          ) : null}
 
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
-        <Single token={token} market={market} refetch={refetch} />
+          <CloudinaryImage
+            imageRef={imageRef}
+            className="max-h-[75vh]"
+            token={token}
+            useUploadFallback
+            onLoad={() => setImgLoaded(true)}
+          />
+        </div>
+
+        <div
+          className="mt-3 px-4 mx-auto"
+          style={{ maxWidth: imageWidth }}
+        >
+          <div className="flex flex-col gap-1">
+            <h1 className="collector text-4xl">{token?.name}</h1>
+            {artistName
+              ? <p>by {artistName}</p>
+              : null
+            }
+            <p className=''>{supplyText}</p>
+            {!isMasterEdition
+              ? <p className="">Owned by {ownerName}</p>
+              : null
+            }
+          </div>
+        
+          <p className="text-xs my-4 whitespace-pre-wrap">{token?.description}</p>
+          {activeCurations.length > 0
+            ? (
+              <div className="my-4">
+                <hr className="border-neutral-200 dark:border-neutral-800" />
+                <h2 className="text-lg mt-5 mb-2 ">Listings</h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {activeCurations?.map(curation => (
+                    <DetailListings key={token.mint} curation={curation} mint={token.mint} />
+                  ))}
+                </div>
+
+              
+              </div>
+            )
+            : null
+          }
+          <hr className="border-neutral-200 dark:border-neutral-800" />
+          
+          <div className="flex flex-wrap gap-x-4 mt-4">
+            <span className="font-bold">Mint Address: </span>
+            <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl}>
+              {truncate(token?.mint)}
+            </a>
+          </div>
+
+          <div className="flex flex-wrap gap-x-4 mt-2">
+            <p className="font-bold ">Creators: </p>
+            {token.creators?.map(creator => (
+              <AddressLink key={creator.address} address={creator.address} />
+            ))}
+          </div>      
+        </div>
       </div>
-    </div>
-  );
+    </>
+  )
+}
+
+const AddressLink = ({ address}) => { 
+  const solscanUrl = address ? `https://solscan.io/account/${ address }` : ""
+  return (
+    <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl}>
+      {truncate(address, 4)}
+    </a>
+  )
 }
 
 export async function getServerSideProps(context) {
-  let mint = context.params.mint;
-  // let image = cdnImage(mint);
-  let token = await getMetadataFromMint(mint);
-  return { props: { token } };
+  const mint = context.params.mint;
+
+  const baseCurations = await getCurationsByListingMint(mint)
+    .then(res => res?.curations);
+
+  const curations = nullifyUndefinedArr(baseCurations);
+
+  const baseToken = await getTokenByMint(mint);
+  const token = nullifyUndefinedObj(baseToken);
+  return { props: { token, curations } };
 }
 
-export default Nft;

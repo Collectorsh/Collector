@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { success, error } from "/utils/toastMessages";
-import { OptimizeSingleMint, OptimizeWithMints, OptimizeWithTokens } from "../utils/imageFallback";
+import { OptimizeSingleToken, OptimizeWithTokens } from "../utils/imageFallback";
 
 import { useCallback } from "react";
 import { useRouter } from "next/router";
 import UserContext from "./user";
-import useActionCable, { makeSocketID } from "../hooks/useWebsocket";
+import useActionCable, { makeNotificationsSocketID } from "../hooks/useWebsocket";
+import { getTokenCldImageId } from "../components/CloudinaryImage";
 
 const ImageFallbackContext = createContext();
 
@@ -22,9 +23,10 @@ export const ImageFallbackProvider = ({ children }) => {
   const [completed, setCompleted] = useState(0);
   const [uploadAllCompleted, setUploadAllCompleted] = useState(false);
 
-  const socket_id = useMemo(() => makeSocketID(user?.username, router.asPath ), [user?.username, router.asPath])
+  const socket_id = useMemo(() => makeNotificationsSocketID(router.asPath, user?.username), [user?.username, router.asPath])
 
   useEffect(() => {
+    //reset fallback image state when changing pages
     setWaiting(0)
     setCompleted(0)
     setCloudinaryError([])
@@ -35,14 +37,14 @@ export const ImageFallbackProvider = ({ children }) => {
   const handleWebsocketMessages = useCallback(({ message, data }) => {
     switch (message) {
       case "Image Optimized": {
-        const { mint, imageId } = data;
-        setCloudinaryCompleted(prev => [...prev, { mint, imageId }])
+        const { cld_id, imageId } = data;
+        setCloudinaryCompleted(prev => [...prev, { cld_id, imageId }])
         setCompleted(prev => prev + 1)
         break;
       }
       case "Optimizing Error": {
-        const { mint, error } = data;
-        setCloudinaryError(prev => [...prev, { mint, error }])
+        const { cld_id, error } = data;
+        setCloudinaryError(prev => [...prev, { cld_id, error }])
         setCompleted(prev => prev + 1)
         break;
       }
@@ -64,17 +66,12 @@ export const ImageFallbackProvider = ({ children }) => {
     }
   }, [])
 
-  useActionCable({ received: handleWebsocketMessages }, socket_id)
+  useActionCable(socket_id, { received: handleWebsocketMessages })
 
   //upload all with optiomized as nil
   const uploadAll = async (tokens) => { 
     if (!tokens || tokens.length === 0 || !user?.username) return;
     const errorMints = []
-
-    //TEST 🚀
-    // const unoptimizedTokens = tokens
-
-    //REAL CODE
     const unoptimizedTokens = [];
     tokens.forEach((token) => {
       if (token.optimized === "Error") errorMints.push({
@@ -90,6 +87,11 @@ export const ImageFallbackProvider = ({ children }) => {
       }
     })
 
+    // unoptimizedTokens.splice(10)
+    // //IMPORTANT TODO test this for edition optimizations and then revert
+    // console.log("🚀 ~ file: imageFallback.js:93 ~ uploadAll ~ unoptimizedTokens:", unoptimizedTokens)
+    // return 
+    
     setCloudinaryError(errorMints)
 
     setWaiting(unoptimizedTokens.length)
@@ -103,14 +105,16 @@ export const ImageFallbackProvider = ({ children }) => {
     }
   }
 
-  const addNonCDNMint = useCallback(async (newMint) => {
+  const uploadSingleToken = useCallback(async (token) => {
     //skip if already added
-    if (uploadSentRef.current.includes(newMint)) return;
-    uploadSentRef.current = [...uploadSentRef.current, newMint];
+    const cldId = getTokenCldImageId(token);
+
+    if (uploadSentRef.current.includes(cldId)) return;
+    uploadSentRef.current = [...uploadSentRef.current, cldId];
 
     setWaiting(prev => prev + 1)
     try {
-      await OptimizeSingleMint(newMint, socket_id);
+      await OptimizeSingleToken(token, socket_id);
     } catch (error) {
       console.log("Error uploading one image", error);
     }
@@ -122,7 +126,7 @@ export const ImageFallbackProvider = ({ children }) => {
       setCompleted,
       setCloudinaryError,
       uploadAll,
-      addNonCDNMint,
+      uploadSingleToken,
       uploadAllCompleted,
       cloudinaryCompleted,
       cloudinaryError,
@@ -136,16 +140,16 @@ export const ImageFallbackProvider = ({ children }) => {
 
 export default ImageFallbackContext;
 
-export const useFallbackImage = (mint) => {
+export const useFallbackImage = (token) => {
   const { cloudinaryCompleted } = useImageFallbackContext();
   const [completedImage, setCompletedImage] = useState(null);
-
+  const cld_id = getTokenCldImageId(token);
   useEffect(() => {
-    const foundImage = cloudinaryCompleted.find(meta => meta.mint === mint);
+    const foundImage = cloudinaryCompleted.find(meta => meta.cld_id === cld_id);
     if (foundImage) {
       setCompletedImage(foundImage);
     }
-  }, [mint, cloudinaryCompleted]);
+  }, [cld_id, cloudinaryCompleted]);
 
   return completedImage;
 }

@@ -4,18 +4,10 @@ import Product from "/components/shop/Product";
 import getProduct from "/data/shop/getProduct";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import NotFound from "../../../components/404";
 
 function ProductHome({ product, collection, wallet }) {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/")
-  }, [router])
-
-  return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <h1>404</h1>
-    </div>
-  )
+  return <NotFound />
   return (
     <div className="dark:bg-black">
       <MainNavigation />

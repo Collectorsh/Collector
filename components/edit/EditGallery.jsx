@@ -1,16 +1,12 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useContext } from "react";
 import UserContext from "/contexts/user";
-import getMetadata from "/data/nft/getMetadata";
-import { Oval } from "react-loader-spinner";
 import Gallery from "./dnd/Gallery";
-import { useRouter } from "next/router";
-import getMetadataFromUri from "../../data/nft/getMetadataFromUri";
-import { useMetadata } from "/data/nft/getMetadata";
+import { useTokens } from "/data/nft/getTokens";
 
 export default function EditGallery() {
   const [user] = useContext(UserContext);
   // const [tokens, setTokens] = useState();
-  const tokens = useMetadata(user?.public_keys, {
+  const tokens = useTokens(user?.public_keys, {
     justVisible: false,
     useArtistDetails: false
   });

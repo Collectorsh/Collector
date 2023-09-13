@@ -28,11 +28,11 @@ export async function OptimizeWithMints(mints, socket_id) {
     console.log("Error uploading with mints", error);
   }
 } 
-export async function OptimizeSingleMint(mint, socket_id) {
-  if (!mint) return;
+export async function OptimizeSingleToken(token, socket_id) {
+  if (!token) return;
   try {
-    const cloudinaryUploads = await apiClient.post("/images/upload_single_mint", {
-      mint,
+    const cloudinaryUploads = await apiClient.post("/images/upload_single_token", {
+      token,
       socket_id //change key to socket_id too
     }).then(res => res.data)
 

@@ -15,7 +15,7 @@ import { CartProvider } from "/contexts/cart";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import PlausibleProvider from "next-plausible";
 import Footer from "/components/Footer";
-import banner from "/public/Collector Hero.jpeg"
+import banner from "/public/Collector Hero.png"
 import { ImageFallbackProvider } from "../contexts/imageFallback";
 import { ActionCableProvider } from "../contexts/webSocket";
 

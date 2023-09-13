@@ -5,7 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Photo } from "./Photo";
 
 export const SortablePhoto = (props) => {
-  const sortable = useSortable({ id: props.mint });
+  const sortable = useSortable({ id: props.token.mint });
   const {
     attributes,
     listeners,

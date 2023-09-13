@@ -2,39 +2,30 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect, useCallback } from "react";
 import MainNavigation from "/components/navigation/MainNavigation";
 import GalleryContainer from "/components/gallery/GalleryContainer";
-import getMetadata from "/data/nft/getMetadata";
 import { Oval } from "react-loader-spinner";
+import NotFound from "../../components/404";
 
 export default function Search() {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/")
-  }, [router])
-
-  return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <h1>404</h1>
-    </div>
-  )
+  return <NotFound />
 
   const { address } = router.query;
-  const [tokens, setTokens] = useState();
+  const [tokens, setTokens] = useState(); //useTokens instead
   const [notFound, setNotFound] = useState(false);
 
-  const initGetMetadata = useCallback(async (address) => {
-    if (!address) return;
+  // const initGetMetadata = useCallback(async (address) => {
+  //   if (!address) return;
 
-    try {
-      let res = await getMetadata([address]);
-      setTokens(res);
-    } catch {
-      setNotFound(true);
-    }
-  }, []);
+  //   try {
+  //     let res = await getMetadata([address]);
+  //     setTokens(res);
+  //   } catch {
+  //     setNotFound(true);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    initGetMetadata(address);
-  }, [address]);
+  // useEffect(() => {
+  //   initGetMetadata(address);
+  // }, [address]);
 
   return (
     <div className="dark:bg-black">

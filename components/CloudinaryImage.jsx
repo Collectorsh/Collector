@@ -19,16 +19,29 @@ import { HandleNoUrl } from "../utils/imageFallback";
 //TODO dive further into responsive
 // Responsive https://cloudinary.com/documentation/responsive_images
 
+export const getTokenCldImageId = (token) => { 
+  if(!token) return null
+  //remove special characters and https/http from images link to use as an identifier 
+  const clean = (text) => text.replace(/[^\w]/g, '').replace("https", "").replace("http", "");
+
+  //TODO if parent is available from helius then use that instead of image, 
+  //and add is_master_edition to the check(they would be the parent)
+
+  //MAKE SURE TO CHANGE THIS IN THE API AS WELL in image service
+  return ((token.is_edition) && token.image)
+    ? `edition-${clean(token.image)}`
+    : token.mint
+}
+
 const CloudinaryImage = ({
   id,
-  mint,
-  metadata, //offchain metadata
+  token,
   className,
+  style,
   quality = 'auto', //auto:best | auto:good | auto:eco | auto:low
   onLoad,
-
+  imageRef,
   width, //number | "auto"
-  height,
   useUploadFallback = false,
   useMetadataFallback = false,
   noLazyLoad = false,
@@ -46,8 +59,8 @@ const CloudinaryImage = ({
     )
   }
 }) => {
-  const { addNonCDNMint } = useImageFallbackContext()
-  const fallback = useFallbackImage(mint)
+  const { uploadSingleToken } = useImageFallbackContext()
+  const fallback = useFallbackImage(token)
   const [error, setError] = useState(null) 
   const llRef = useRef()
   const { isVisible, hasBeenObserved } = useElementObserver(llRef, "100px")
@@ -73,10 +86,12 @@ const CloudinaryImage = ({
     return cldImg
   }
 
-  const cldImg = buildCldImg(id)
+  const tokenID = Boolean(token) ? `${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ getTokenCldImageId(token) }` : null
+  const cldId = tokenID || id
+  const cldImg = buildCldImg(cldId)
 
   useEffect(() => {
-    if (error === "CDN" && Boolean(fallback)) {
+    if ((error === "CDN" || error === "Using Metadata Image") && Boolean(fallback)) {
       if (fallback?.imageId) {
         //TODO figure out another way to image cache bust besides adding another transformation (it cost moneys)
         const cldImgFB = buildCldImg(fallback.imageId, "auto:eco")
@@ -85,13 +100,6 @@ const CloudinaryImage = ({
         setOpacity(1)
         
         setError("Using CDN Return ID")
-      } else if (fallback?.fallbackImage) { //image coming back from API (deprecated)
-        //handle no CDN image
-
-        setFallbackUrl(fallback.fallbackImage)
-        setOpacity(1)
-
-        setError("Using Metadata Fallback Image")
       } else {
         console.log("Error with fallback:", fallback)
         setError("No Fallback")
@@ -103,7 +111,7 @@ const CloudinaryImage = ({
 
   const handleError = async (e) => {   
     setOpacity(0)
-    if (!id) {
+    if (!cldId) {
       console.log("No CDN ID provided")
       return;
     }
@@ -112,14 +120,17 @@ const CloudinaryImage = ({
       //assume a CDN error
       setError("CDN")
 
-      if (useUploadFallback) addNonCDNMint(mint)
+      if(!token) return
+
+      if (useUploadFallback) uploadSingleToken(token)
       
       if (useMetadataFallback) {
         // USE METADATA URL (NOT OPTIMIZED)
-        const image = await HandleNoUrl(mint)
+        const image = token?.image || await HandleNoUrl(token.mint)
         if (image) {
           setFallbackUrl(image)
           setOpacity(1)
+          setError("Using Metadata Image")
         }
       }
       
@@ -146,17 +157,16 @@ const CloudinaryImage = ({
       {
         (hasBeenObserved || noLazyLoad) && (cldImg.toURL())//(isVisible || noLazyLoad) && //for true lazy load (if using ideally find a way to maintain images in memory so they dont need to be fetched everytime)
         ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          style={{ opacity, ...lazyStyle }}
-          className={className}
-          width={width}
-          height={height}
-          src={fallbackUrl || cldImg.toURL()}
-          alt={metadata?.name || ""}
-          onLoad={handleLoad}
-          onError={handleError}
-        />
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            ref={imageRef}
+            style={{ ...style, opacity, ...lazyStyle }}
+            className={className}
+            src={fallbackUrl || cldImg.toURL()}
+            alt={token?.name || ""}
+            onLoad={handleLoad}
+            onError={handleError}
+          />
         )
         : null
       }

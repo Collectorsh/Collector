@@ -12,6 +12,8 @@ import Gallery from "/components/navigation/Gallery";
 import Activity from "/components/navigation/Activity";
 import Premium from "/components/navigation/Premium";
 import CreateUsernameModal from "/components/CreateUsernameModal";
+import { truncate } from "../../utils/truncate";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 export default function MainNavigation() {
   const wallet = useWallet();
@@ -41,6 +43,7 @@ export default function MainNavigation() {
 
   return (
     <div className="pb-[76px]">
+      <ConnectWallet />
       {showModal && <CreateUsernameModal />}
       <nav className="bg-white dark:bg-black shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
         <div className="max-w-screen-2xl mx-auto">
@@ -49,13 +52,14 @@ export default function MainNavigation() {
         <div>
           <div className="flex">
             <div className="flex items-center col-span-1 w-[200px] lg:w-1/2">
-              <div className="cursor-pointer md:my-3 w-[200px]">
-                {/* <!-- Website Logo --> */}
+              <div className="cursor-pointer md:my-3 w-[200px] flex gap-4 items-center ">
                 <Link href="/">
                   <a className="collector text-3xl font-bold">
                   collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r
-                  </a>
-                </Link>
+                    </a>
+                  </Link>
+                  {/* <span className="mt-2 collector">-</span> */}
+                  <span className="mt-[10px] collector tracking-wide">Beta</span>
               </div>
             </div>
             <div className="hidden md:flex items-center justify-end w-full">
@@ -71,12 +75,12 @@ export default function MainNavigation() {
                 {/* {!user && <Premium />} */}
 
 
-
+{/* 
                 <Link href="/discover">
                   <a className="mr-8 font-bold">
                     Discover
                   </a>
-                </Link>
+                </Link> */}
               <Link href="/about">
                 <a className="mr-8 font-bold">
                   About
@@ -89,7 +93,14 @@ export default function MainNavigation() {
                   {/* {!user.token_holder && <Premium />} */}
                 </>
               )}
-              {user ? <Profile /> : <ConnectWallet />}
+                {user
+                  ? <Profile />
+                  : (
+                    <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                      <WalletMultiButton />
+                    </div>
+                  )
+                }
               <DarkMode />
             </div>
             {/* <!-- Mobile menu button --> */}
@@ -144,7 +155,7 @@ export default function MainNavigation() {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <div className="absolute top-0 left-0 flex pt-4 pr-2 sm:-ml-10 sm:pr-4 z-30">
+                <div className="absolute top-0 left-0 flex pt-4 pr-2 z-30">
                   <button
                     type="button"
                     className="rounded-md text-gray-800 hover:text-black outline-none focus:outline-none cursor-pointer ml-4 dark:text-white"
@@ -171,9 +182,8 @@ export default function MainNavigation() {
                         <div className="absolute inset-0 px-4 sm:px-6 mt-2">
                           <div className="mt-4 dark:text-gray-200">
                             <div className="mr-4 inline">
-                              <DarkMode />
+                              <DarkMode withText/>
                             </div>
-                            <span className="-ml-2">Toggle Dark Mode</span>
                           </div>
                           <div className="mt-6 dark:text-gray-200">
                             <p
@@ -182,9 +192,9 @@ export default function MainNavigation() {
                           >
                             <Link href="/">Home</Link>
                               </p>
-                              <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                              {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                 <Link href="/discover">Discover</Link>
-                              </p>
+                              </p> */}
                               <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                 <Link href="/about">About</Link>
                               </p>
@@ -229,7 +239,16 @@ export default function MainNavigation() {
                                   </p>
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href="/edit">Edit Gallery</Link>
-                                  </p>
+                                    </p>
+                                    {user.subscription_level === "pro" ? (
+                                      <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                        <Link href={`/profile/${ user.username }`}>
+                                      
+                                          Profile
+                                          
+                                        </Link>
+                                      </p>
+                                    ) : null}
                                   {/* {user.token_holder && (
                                     <>
                                       <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
@@ -255,14 +274,19 @@ export default function MainNavigation() {
                                     </>
                                   )} */}
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <a onClick={signOut}>Sign Out</a>
+                                      <a onClick={signOut}>
+                                        Sign Out
+                                        <span className=" ml-4 text-sm">{truncate(wallet?.publicKey?.toString())}</span>
+                                      </a>
                                   </p>
                                 </div>
                               </>
                             )}
                             {!user && (
                               <div className="mt-8 md:mt-0">
-                                <ConnectWallet />
+                                  <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+                                    <WalletMultiButton />
+                                  </div>
                               </div>
                             )}
                           </div>

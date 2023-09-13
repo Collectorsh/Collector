@@ -7,15 +7,17 @@ import { ChevronDownIcon } from "@heroicons/react/outline";
 export default function Gallery() {
   const [user] = useContext(UserContext);
 
+  const isCuratorApproved = user.curator_approved
+
   return (
     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:pr-0 z-20">
       {/* Profile dropdown */}
       <Menu as="div" className="mr-8 relative">
         <div>
-          <Menu.Button className="flex text-sm rounded px-3 focus:outline-none border border-black dark:border-white">
+          <Menu.Button className="flex text-sm rounded px-3 focus:outline-none  border-black dark:border-white">
             <span className="sr-only">Open user menu</span>
             <p className="text-base cursor-pointer inline font-bold text-gray-900 dark:text-gray-100">
-              Curate
+              Menu
               <ChevronDownIcon
                 className="h-4 w-4 inline ml-1 mb-0.5"
                 aria-hidden="true"
@@ -49,6 +51,25 @@ export default function Gallery() {
                 </a>
               </Link>
             </Menu.Item>
+            {user.subscription_level === "pro" ? (
+              <Menu.Item>
+                <Link href={`/profile/${ user.username }`}>
+                  <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Profile
+                  </a>
+                </Link>
+              </Menu.Item>
+            ) : null}
+            {isCuratorApproved ? (
+              <Menu.Item>
+                <Link href={`/submissions`}>
+                  <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Submissions
+                  </a>
+                </Link>
+              </Menu.Item>
+            ) : null}
+            
           </Menu.Items>
         </Transition>
       </Menu>

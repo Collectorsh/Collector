@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  h1, .collector {
+    @apply font-display
+  }
+}
+
 .Toastify__toast-container {
   padding: 16px;
   width: 500px;
@@ -36,21 +42,13 @@ html, body {
   color: #eee;
 }
 
-h1,
-.collector {
-  font-family: "DM Serif Text", serif;
-}
-
-h2 {
-  font-family: "DM Sans", sans-serif;
-}
-
 h4 {
   font-weight: 600;
 }
 
 .wallet-adapter-modal-title {
   font-family: sans-serif;
+  @apply font-sans
 }
 
 .masonry-grid {
@@ -370,8 +368,9 @@ input:checked + .toggle-bg {
 
 .button,
 .menu {
-  font-family: "DM Sans", "Roboto", "Helvetica Neue", Helvetica, Arial,
-    sans-serif;
+  @apply font-sans;
+  /* font-family: "DM Sans", "Roboto", "Helvetica Neue", Helvetica, Arial,
+    sans-serif; */
   font-weight: bold;
   cursor: pointer;
   font-size: 1rem;
@@ -491,3 +490,53 @@ code {
   box-shadow: -3px -3px 7px #ffffff,-1px -1px 2px rgba(0, 0, 0, 0.15),2px 2px 3px rgba(0, 0, 0, 0.15);
   background-color: #ffffff
 }
+
+/* QUILL (rich text editor) OVERRIDES */
+.ql-container.ql-container {
+  @apply font-sans
+}
+
+.ql-container.ql-container.ql-disabled .ql-editor{
+  @apply p-0;
+}
+
+.ql-container.ql-container.ql-snow, .ql-toolbar.ql-toolbar.ql-snow {
+  @apply border-0;
+}
+
+.ql-toolbar.ql-toolbar.ql-snow {
+  @apply border-b-2 border-neutral-200 dark:border-neutral-700;
+}
+
+.ql-snow.ql-snow .ql-picker{
+  @apply text-current
+}
+.ql-snow.ql-snow .ql-stroke {
+  @apply stroke-current;
+}
+.ql-snow.ql-snow .ql-fill {
+  @apply fill-current;
+}
+.ql-snow.ql-snow.ql-toolbar button {
+  @apply duration-300;
+}
+.ql-snow.ql-snow.ql-toolbar button:hover {
+  @apply scale-110;
+}
+
+.ql-snow.ql-snow.ql-toolbar .ql-picker .ql-picker-options {
+  @apply bg-white dark:bg-neutral-800 rounded shadow border-neutral-200 dark:border-neutral-700;
+}
+
+.ql-snow.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+  @apply rounded border-neutral-200 dark:border-neutral-700 
+}
+
+.ql-snow.ql-snow .ql-picker .ql-picker-label {
+  @apply duration-300
+}
+
+.ql-snow.ql-snow .ql-picker .ql-picker-label:hover {
+  @apply scale-105
+}
+

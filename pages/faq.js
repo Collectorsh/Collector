@@ -2,18 +2,10 @@ import Link from "next/link";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import NotFound from "../components/404";
 
 export default function Faq() {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/")
-  }, [router])
-
-  return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <h1>404</h1>
-    </div>
-  )
+  return <NotFound />
   return (
     <div className="dark:bg-black dark:text-whitish">
       <MainNavigation />

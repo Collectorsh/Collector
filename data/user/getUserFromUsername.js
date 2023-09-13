@@ -1,4 +1,5 @@
 import apiClient from "/data/client/apiClient";
+import useSWR from 'swr'
 
 async function getUserFromUsername(username) {
   try {
@@ -12,3 +13,13 @@ async function getUserFromUsername(username) {
 }
 
 export default getUserFromUsername;
+
+
+const fetcher = async (username) => {
+  if (!username) return undefined
+  return await getUserFromUsername(username)
+}
+export function useUserFromUsername(username) {
+  const { data, error } = useSWR(username, fetcher)
+  return data
+}

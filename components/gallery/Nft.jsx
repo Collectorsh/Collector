@@ -32,7 +32,7 @@ export default function Nft({ user, token, onLoad, columns, onError }) {
       videoRef.current.pause()
     }
 
-  },[videoRef.current, isVisible, videoLoaded])
+  },[isVisible, videoLoaded])
 
   useEffect(() => {
     if (!token) return;
@@ -94,9 +94,10 @@ export default function Nft({ user, token, onLoad, columns, onError }) {
             ) : null}
      
             <CloudinaryImage
-              id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+              // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+              // mint={token.mint}
+              token={token}
               className={videoLoaded ? "invisible" : undefined}
-              mint={token.mint}
               onLoad={onImageLoad}
               width={responsiveSteps()}
               metadata={token}

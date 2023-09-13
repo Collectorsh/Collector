@@ -13,8 +13,8 @@ const prod = {
 };
 
 const beta = {
-  apiHost: "https://collector.sh/collector-api",
-  host: "https://dev.collector.sh",
+  apiHost: "https://collector-testing-kvak9.ondigitalocean.app/collector-api",
+  host: "https://collector-testing-kvak9.ondigitalocean.app",
   dao21: "https://api.21dao.xyz",
 };
 
@@ -56,8 +56,16 @@ export const loginMessage = "Please sign this message to log-in. ";
 export const toPublicKey = "RyvoTTxHVn48GaAA26d8TfBqZcrkVHN4Fyo2LsucTtV";
 export const monthlyCharge = 1000000000;
 export const yearlyCharge = 8000000000;
-export const connection = new Connection(process.env.NEXT_PUBLIC_RPC, {
-  httpHeaders: {
-    Authorization: `Bearer ${ process.env.NEXT_PUBLIC_HELLOMOON_API_KEY }`,
-  },
-});
+export const connection = new Connection(process.env.NEXT_PUBLIC_RPC)
+export const adminIDs = [
+  720, //Nate (username: n8solomon)
+  5421, //Scott (username: EV3)
+]
+
+//HELLO MOON rpc deprecated
+  // ,{
+  //   httpHeaders: {
+  //     Authorization: `Bearer ${ process.env.NEXT_PUBLIC_HELLOMOON_API_KEY }`, 
+  //   },
+  // }
+// );

@@ -2,6 +2,7 @@ import TextModule from './textModule'
 import ArtModule from './artModule'
 import SortableModule from './sortableModule'
 import SortableModulesWrapper from './sortableModulesWrapper'
+import { memo } from 'react'
 
 const DisplayModules = ({
   modules,

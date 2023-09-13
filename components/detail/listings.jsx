@@ -6,6 +6,7 @@ import UserContext from "../../contexts/user";
 import { useContext, useState } from "react";
 import clsx from "clsx";
 import Link from "next/link";
+import { roundToPrecision } from "../../utils/maths";
 
 export default function DetailListings({ curation, mint }) {
   const [user] = useContext(UserContext);
@@ -16,7 +17,8 @@ export default function DetailListings({ curation, mint }) {
   if (!listingToken) return null
   const isListed = listingToken.listed_status === "listed"
   const isSold = listingToken.listed_status === "sold" || listingToken.listed_status === "master-edition-closed"
-
+  console.log("🚀 ~ file: listings.jsx:20 ~ DetailListings ~ listingToken:", listingToken)
+  const price = roundToPrecision(Number(listingToken.buy_now_price), 3)
   const handleBuy = async (e) => {
     if (!handleCollect || !user) return;
 
@@ -43,9 +45,7 @@ export default function DetailListings({ curation, mint }) {
             <div>
               <MainButton
                 onClick={handleBuy}
-                className={clsx("px-3",
-                  "w-24"
-                )}
+                className={clsx("px-3 min-w-[10rem]" )}
                 noPadding
                 disabled={!handleCollect || purchasing || !user}
               >
@@ -55,7 +55,7 @@ export default function DetailListings({ curation, mint }) {
                       <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
                     </span>
                   )
-                  : "Collect"
+                  : `Collect (${ price}◎)` 
                 }
               </MainButton>
             </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import EditWrapper from '../curatorProfile/editWrapper';
-import EditTextModuleModal, { QuillContent } from './editTextModuleModal';
+import EditTextModuleModal from './editTextModuleModal';
+import { QuillContent } from '../Quill';
 
 const TextModule = ({ textModule, onEditTextModule, isOwner, onDeleteModule }) => { 
   const [editTextOpen, setEditTextOpen] = useState(false)

@@ -24,17 +24,17 @@ const CurationListItem = ({ curation, isOwner }) => {
       >
         <PublishedTag isPublished={is_published} isOwner={isOwner} />
         <div className="relative shadow-lg shadow-black/25 dark:shadow-neutral-500/25 rounded-xl overflow-hidden" >
-          <div className="absolute text-center top-0 left-0 p-8 w-full h-full overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50 
+          {/* <div className="absolute text-center top-0 left-0 p-8 w-full h-full overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50 
           transition-opacity duration-300 opacity-0 group-hover:opacity-100
           backdrop-blur-sm
           ">
             <p
               style={{
-                "-webkit-mask-image": "linear-gradient(to bottom, black 60%, transparent 100%)",
+                "WebkitMaskImage": "linear-gradient(to bottom, black 60%, transparent 100%)",
                 "mask-image": "linear-gradient(to bottom, black 60%, transparent 100%)"
               }}
               className="h-full w-full overflow-hidden whitespace-pre-wrap">{description}</p>
-          </div>
+          </div> */}
           <CloudinaryImage
             className="w-full h-[300px] object-cover "
             id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ banner_image}`}

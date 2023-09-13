@@ -19,6 +19,7 @@ import { Toaster } from "react-hot-toast";
 import MainButton from "../../components/MainButton";
 import CreateCurationModal from "../../components/curatorProfile/createCurationModal";
 import getCuratorFromUsername from "../../data/user/getCuratorByUsername";
+import { QuillContent } from "../../components/Quill";
 
 const bioPlaceholder = "Tell us about yourself!";
 
@@ -33,7 +34,9 @@ function ProfilePage({ curator }) {
 
   const [banner, setBanner] = useState(curator?.banner_image);
   const [pfp, setPfp] = useState(curator?.profile_image);
-  const [bio, setBio] = useState(curator?.bio || bioPlaceholder);
+  const bioDelta = curator?.bio_delta || JSON.stringify({ops:[{insert: curator?.bio || bioPlaceholder}]})
+
+  const [bio, setBio] = useState(bioDelta);
   const [socials, setSocials] = useState(curator?.socials || []);
 
   const [bannerLoaded, setBannerLoaded] = useState(true);
@@ -147,9 +150,9 @@ function ProfilePage({ curator }) {
                 width={144}
               />
             ) : (
-                <div className="flex justify-center items-center w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black">
-                  <p className="collector text-8xl font-bold mb-5">c</p>
-                </div>
+              <div className="flex justify-center items-center w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black">
+                <p className="collector text-8xl font-bold mb-5">c</p>
+              </div>
             )}
           </EditWrapper>
         </div>
@@ -178,7 +181,7 @@ function ProfilePage({ curator }) {
             </div>
           </EditWrapper>
         </div>
-        <div className="group/bio w-fit">
+        <div className="group/bio w-full">
           <EditWrapper
             isOwner={isOwner}
             onEdit={() => setEditBioOpen(true)}
@@ -186,7 +189,7 @@ function ProfilePage({ curator }) {
             groupHoverClass="group-hover/bio:opacity-100"
             // icon={<PencilAltIcon className="w-6 h-6" />}
           >
-            <p className="whitespace-pre-wrap">{bio}</p>
+            <QuillContent textDelta={bio}/>
           </EditWrapper>
         </div>
 
@@ -240,13 +243,13 @@ function ProfilePage({ curator }) {
               isOpen={editBioOpen}
               onClose={() => setEditBioOpen(false)}
               onSave={handleEditBio}
-              bio={curator.bio}
+              bio={bio}
             />
             <EditSocialsModal
               isOpen={editSocialsOpen}
               onClose={() => setEditSocialsOpen(false)}
               onSave={handleEditSocials}
-              socials={curator.socials}
+              socials={socials}
             />
             <CreateCurationModal
               isOpen={createCurationOpen}

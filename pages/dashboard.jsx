@@ -11,6 +11,7 @@ import { set } from "nprogress";
 import clsx from "clsx";
 import { roundToPrecision } from "../utils/maths";
 import { T } from "ramda";
+import { downloadCSV } from "../utils/csv";
 
 export default function Dashboard() { 
   const [user] = useContext(UserContext);
@@ -37,6 +38,25 @@ export default function Dashboard() {
     })
     if (records) setRecords(records);
     setFetching(false);
+  }
+
+  const handleDownload = () => {
+    // format records
+    const formattedRecords = records.map(record => { 
+      const { date, artistName, sellerName, collectorName, curatorName, saleType, curationName } = getDetailsFromRecord(record);
+      return {
+        Date: date,
+        Title: record.token_name,
+        Sale_Amount: Number(record.price),
+        Type: saleType,
+        Artist: artistName,
+        Seller: sellerName,
+        Collector: collectorName,
+        Curator: curatorName,
+        Curation: curationName,
+      }
+    })
+    downloadCSV(formattedRecords, `Curation_Sales-${dateRange.startDate.toLocaleDateString()}_to_${dateRange.endDate.toLocaleDateString()}`)
   }
 
   const { totalSales, uniqueArtists, uniqueCollectors } = useMemo(() => {
@@ -79,6 +99,13 @@ export default function Dashboard() {
             disabled={fetching}
           >
             Get them stats!
+          </MainButton>
+          <MainButton
+            className="flex-shrink-0"
+            onClick={handleDownload}
+            disabled={!records.length}
+          >
+            Download them stats! (CSV)
           </MainButton>
 
         </div>
@@ -142,23 +169,30 @@ const TableCell = ({ children, cap }) => {
   )
 }
 
-const RecordRow = ({ record }) => { 
+const getDetailsFromRecord = (record) => { 
   const date = new Date(record.created_at).toLocaleDateString();
   const artistName = record.artist ? record.artist.username : truncate(record.artist_address);
   const sellerName = record.seller ? record.seller.username : truncate(record.seller_address);
   const collectorName = record.buyer ? record.buyer.username : truncate(record.buyer_address);
   const curatorName = record.curation.curator ? record.curation.curator.username : "N/A"
+  const saleType = record.sale_type.replaceAll("_", " ");
+  const curationName = record.curation.name.replaceAll("_", " ");
+  return {date, artistName, sellerName, collectorName, curatorName, saleType, curationName}
+}
+
+const RecordRow = ({ record }) => { 
+  const { date, artistName, sellerName, collectorName, curatorName, saleType, curationName } = getDetailsFromRecord(record);
   return (
     <>
       <TableCell>{date}</TableCell>
       <TableCell>{record.token_name}</TableCell>
       <TableCell>{roundToPrecision(record.price, 5)}◎</TableCell>
-      <TableCell cap>{record.sale_type.replaceAll("_", " ")}</TableCell>
+      <TableCell>{saleType}</TableCell>
       <TableCell>{artistName}</TableCell>
       <TableCell>{sellerName}</TableCell>
       <TableCell>{collectorName}</TableCell>
       <TableCell>{curatorName}</TableCell>
-      <TableCell>{record.curation.name.replaceAll("_", " ")}</TableCell>
+      <TableCell>{curationName}</TableCell>
     </>
   )
 }

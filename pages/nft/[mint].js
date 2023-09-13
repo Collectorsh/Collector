@@ -49,8 +49,8 @@ export default function DetailPage({token, curations}) {
   const activeCurations = curations?.filter(curation => {
     return curation.submitted_token_listings?.find(l => {
       const isToken = l.mint === token.mint
-      const isSold = l.listed_status === "sold" || l.listed_status === "master-edition-closed"
-      return isToken && !isSold
+      const isListed = l.listed_status === "listed"
+      return isToken && isListed
     })
   })
   
@@ -152,7 +152,6 @@ export default function DetailPage({token, curations}) {
           className="mt-3 px-4 mx-auto"
           style={{ maxWidth: imageWidth }}
         >
-          
           <div className="flex flex-col gap-1">
             <h1 className="collector text-4xl">{token?.name}</h1>
             {artistName
@@ -164,7 +163,6 @@ export default function DetailPage({token, curations}) {
               ? <p className="">Owned by {ownerName}</p>
               : null
             }
-            
           </div>
         
           <p className="text-xs my-4 whitespace-pre-wrap">{token?.description}</p>

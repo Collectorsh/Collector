@@ -1,8 +1,8 @@
 import apiClient from "../client/apiClient";
 
-export async function updateBio(api_key, bio) {
+export async function updateBio(api_key, bio_delta) {
   try {
-    const res = await apiClient.post("/user/update_bio", { api_key, bio });
+    const res = await apiClient.post("/user/update_bio", { api_key, bio_delta });
     return res.data;
   } catch (err) {
     console.log(err);

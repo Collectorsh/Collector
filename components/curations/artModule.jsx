@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import EditWrapper from '../curatorProfile/editWrapper';
 import EditArtModuleModal from './editArtModuleModal';
 import CloudinaryImage from '../CloudinaryImage';
@@ -91,7 +91,7 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
         {itemRows.map((row, i) => {
           return (
             <div
-            key={i}
+            key={artModule.id + "row" + i}
             className={clsx(
               "flex flex-col md:flex-row w-full gap-6 mb-6",
               )}>
@@ -129,7 +129,6 @@ export default ArtModule;
 
 export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, height, width }) => {  
   const [user] = useContext(UserContext);
-  const wallet = useWallet()
 
   const [loaded, setLoaded] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
@@ -235,7 +234,7 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
               "object-contain",
               "max-h-[75vh]",
             )}
-            // noLazyLoad
+            noLazyLoad
             onLoad={() => setLoaded(true)}
           />
 
@@ -243,7 +242,7 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
       </Link>
       <div
         className="w-full mt-4 px-4 mx-auto
-      flex flex-wrap gap-x-6 gap-y-3 justify-between items-start"
+          flex flex-wrap gap-x-6 gap-y-3 justify-between items-start"
         // ref={wrapContainerRef}
       >
         <div

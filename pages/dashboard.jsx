@@ -12,7 +12,8 @@ import clsx from "clsx";
 import { roundToPrecision } from "../utils/maths";
 import { T } from "ramda";
 import { downloadCSV } from "../utils/csv";
-
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
 export default function Dashboard() { 
   const [user] = useContext(UserContext);
 
@@ -43,17 +44,21 @@ export default function Dashboard() {
   const handleDownload = () => {
     // format records
     const formattedRecords = records.map(record => { 
-      const { date, artistName, sellerName, collectorName, curatorName, saleType, curationName } = getDetailsFromRecord(record);
+      const { date, artistName, sellerName, collectorName, curatorName, saleType, curationName, curatorAddress } = getDetailsFromRecord(record);
       return {
         Date: date,
         Title: record.token_name,
         Sale_Amount: Number(record.price),
         Type: saleType,
-        Artist: artistName,
-        Seller: sellerName,
-        Collector: collectorName,
-        Curator: curatorName,
         Curation: curationName,
+        Artist: artistName,
+        Artist_Address: record.artist_address,
+        Seller: sellerName,
+        Seller_Address: record.seller_address,
+        Collector: collectorName,
+        Collector_Address: record.buyer_address,
+        Curator: curatorName,
+        Curator_Address: curatorAddress,
       }
     })
     downloadCSV(formattedRecords, `Curation_Sales-${dateRange.startDate.toLocaleDateString()}_to_${dateRange.endDate.toLocaleDateString()}`)
@@ -125,11 +130,11 @@ export default function Dashboard() {
           <TableHeader>Title</TableHeader>
           <TableHeader>Sale Amount</TableHeader>
           <TableHeader>Type</TableHeader>
+          <TableHeader>Curation</TableHeader>
           <TableHeader>Artist</TableHeader>
           <TableHeader>Seller</TableHeader>
           <TableHeader>Collector</TableHeader>
           <TableHeader>Curator</TableHeader>
-          <TableHeader>Curation</TableHeader>
         </div>
         <div className="grid grid-cols-9">
           
@@ -161,11 +166,13 @@ const TableHeader = ({ children }) => {
   )
 }
 
-const TableCell = ({ children, cap }) => { 
+const TableCell = ({ children, tippyContent }) => { 
   return (
-    <p className={clsx("truncate border-b py-1 px-2", cap && "capitalize")}>
-      {children}
-    </p>
+    <Tippy content={tippyContent} className="align-start shadow-md min-w-fit" disabled={!tippyContent}>
+      <p className={clsx("truncate border-b py-1 px-2")}>
+        {children}
+      </p>
+    </Tippy>
   )
 }
 
@@ -177,22 +184,23 @@ const getDetailsFromRecord = (record) => {
   const curatorName = record.curation.curator ? record.curation.curator.username : "N/A"
   const saleType = record.sale_type.replaceAll("_", " ");
   const curationName = record.curation.name.replaceAll("_", " ");
-  return {date, artistName, sellerName, collectorName, curatorName, saleType, curationName}
+  const curatorAddress = record.curation.curator.public_keys[0]
+  return {date, artistName, sellerName, collectorName, curatorName, saleType, curationName, curatorAddress}
 }
 
 const RecordRow = ({ record }) => { 
-  const { date, artistName, sellerName, collectorName, curatorName, saleType, curationName } = getDetailsFromRecord(record);
+  const { date, artistName, sellerName, collectorName, curatorName, saleType, curationName, curatorAddress } = getDetailsFromRecord(record);
   return (
     <>
       <TableCell>{date}</TableCell>
       <TableCell>{record.token_name}</TableCell>
       <TableCell>{roundToPrecision(record.price, 5)}◎</TableCell>
       <TableCell>{saleType}</TableCell>
-      <TableCell>{artistName}</TableCell>
-      <TableCell>{sellerName}</TableCell>
-      <TableCell>{collectorName}</TableCell>
-      <TableCell>{curatorName}</TableCell>
       <TableCell>{curationName}</TableCell>
+      <TableCell tippyContent={record.artist_address}>{artistName}</TableCell>
+      <TableCell tippyContent={record.seller_address}>{sellerName}</TableCell>
+      <TableCell tippyContent={record.buyer_address}>{collectorName}</TableCell>
+      <TableCell tippyContent={curatorAddress}>{curatorName}</TableCell>
     </>
   )
 }

@@ -26,6 +26,8 @@ import { useRouter } from "next/router";
 import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 import withdrawFromTreasury from "../../data/curation/withdrawFromTreasury";
 import { roundToPrecision } from "../../utils/maths";
+import { QuillContent, deltaToPlainText } from "../../components/Quill";
+
 
 
 const descriptionPlaceholder = "Tell us about this curation."
@@ -57,9 +59,10 @@ function CurationPage({ curation }) {
  
   const useDraftContent = isEditingDraft && isOwner;
   const banner = useDraftContent ? draftContent?.banner_image : publishedContent?.banner_image;
-  const description = useDraftContent
-    ? draftContent?.description || descriptionPlaceholder
-    : publishedContent?.description;
+
+  const draftDescriptionDelta = draftContent?.description_delta || JSON.stringify({ ops: [{ insert: draftContent?.description || descriptionPlaceholder }] })
+  const publishedDescriptionDelta = publishedContent?.description_delta || JSON.stringify({ ops: [{ insert: publishedContent?.description || "" }] })
+  const description = useDraftContent ? draftDescriptionDelta : publishedDescriptionDelta;
   
   const modules = useDraftContent ? draftContent?.modules : publishedContent?.modules;
 
@@ -174,7 +177,6 @@ function CurationPage({ curation }) {
 
     if (res?.status === "success") {
       success(`${ newName } updated!`)
-      //TODO: check this url replace doesnt mess with state
       router.replace(`/curations/${ newName }`)
     } else {
       error(`${ curation.name } name update failed`)
@@ -186,7 +188,8 @@ function CurationPage({ curation }) {
     setDraftContent((prev) => {
       const newContent = {
         ...prev,
-        description: newDescription
+        description: deltaToPlainText(JSON.parse(newDescription)),
+        description_delta: newDescription
       }
       handleSaveDraftContent(newContent)
       return newContent
@@ -321,7 +324,7 @@ function CurationPage({ curation }) {
           </a>
         </Link>
   
-        <div className="group/description w-fit mx-auto">
+        <div className="group/description w-full mx-auto">
           <EditWrapper
             isOwner={displayDraftEdit}
             onEdit={() => setEditDescriptionOpen(true)}
@@ -329,7 +332,8 @@ function CurationPage({ curation }) {
             groupHoverClass="group-hover/description:opacity-100"
           // icon={<PencilAltIcon className="w-6 h-6" />}
           >
-            <p className="whitespace-pre-wrap text-center">{description}</p>
+            {/* <p className="whitespace-pre-wrap text-center">{description}</p> */}
+            <QuillContent textDelta={description} />
           </EditWrapper>
         </div>
 

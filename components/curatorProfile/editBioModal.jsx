@@ -1,7 +1,8 @@
 import { useState } from "react"
 import MainButton from "../MainButton"
 import Modal from "../Modal"
-import { QuillEditor } from "../curations/editTextModuleModal"
+import { QuillEditor } from "../Quill"
+
 
 const EditBioModal = ({ bio, onSave, isOpen, onClose }) => { 
   const [newBio, setNewBio] = useState(bio || "{}")

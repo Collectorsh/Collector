@@ -15,6 +15,7 @@ export default function DetailListings({ curation, mint }) {
 
   if (!listingToken) return null
   const isListed = listingToken.listed_status === "listed"
+  const isSold = listingToken.listed_status === "sold" || listingToken.listed_status === "master-edition-closed"
 
   const handleBuy = async (e) => {
     if (!handleCollect || !user) return;
@@ -25,7 +26,7 @@ export default function DetailListings({ curation, mint }) {
   }
 
   return (
-    <div className="flex my-4 justify-between items-center">
+    <div className="flex flex-wrap justify-between gap-2 items-center">
       <Link href={`/curations/${curation.name}`}>
         <a className="hover:scale-105 duration-300">
           <p className="font-bold text-xl">{curation.name.replaceAll("_", " ")}</p>
@@ -60,9 +61,10 @@ export default function DetailListings({ curation, mint }) {
             </div>
           </Tippy>
         )
-        : null
-      }
-      
+        : <MainButton className="px-3" noPadding disabled>
+          {isSold ? "Sold!" : "Currently Unlisted"}
+        </MainButton>
+      }    
     </div>
   )
 }

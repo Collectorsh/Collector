@@ -57,6 +57,10 @@ export const toPublicKey = "RyvoTTxHVn48GaAA26d8TfBqZcrkVHN4Fyo2LsucTtV";
 export const monthlyCharge = 1000000000;
 export const yearlyCharge = 8000000000;
 export const connection = new Connection(process.env.NEXT_PUBLIC_RPC)
+export const adminIDs = [
+  720, //Nate (username: n8solomon)
+  5421, //Scott (username: EV3)
+]
 
 //HELLO MOON rpc deprecated
   // ,{

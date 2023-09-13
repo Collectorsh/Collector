@@ -15,10 +15,11 @@ export default function Home({highlightedCurations}) {
         <Hero />
       </div>
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-8  border-neutral-100 dark:border-neutral-800 py-10">
-        {highlightedCurations
+        {!highlightedCurations
           ? <HighlightedCurations curations={highlightedCurations} />
-          : <div className="flex justify-center items-center mt-28">
-            <p className="text-xl">Curations Coming Soon!</p>
+          : <div className="flex flex-col gap-5 justify-center items-center mt-28">
+            <p className="text-8xl">🚧</p>
+            <p className="text-xl">Coming Soon!</p>
           </div>
         }
       </div>

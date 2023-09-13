@@ -58,7 +58,7 @@ export default function Hero() {
         <div className="text-center" >
           {/* <p className="text-6xl collector">Discover & Share <br/>Beautiful Art on Solana</p> */}
 
-          <p className="text-6xl collector leading-36">Collect, Curate, and Discover<br /> Beautiful Art</p>
+          <p className="text-6xl collector leading-[5rem]">Collect, Curate, and Discover<br /> Beautiful Art</p>
           {/* <button
             onClick={handleCurate}
             className="border-2 border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black

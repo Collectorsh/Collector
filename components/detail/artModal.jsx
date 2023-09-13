@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
 import Modal from "../Modal";
@@ -10,8 +10,30 @@ export default function ArtModal({ isOpen, onClose, token }) {
   const [videoUrl, setVideoUrl] = useState(null);
   const videoRef = useRef(null);
 
-  if (!token) return null
 
+
+  useEffect(() => {
+    if (!videoRef.current) return;
+    if (videoLoaded) {
+      videoRef.current.play()
+    } else {
+      videoRef.current.pause()
+    }
+
+  }, [videoLoaded])
+
+  useEffect(() => {
+    if (!token) return;
+
+    if (token.animation_url) {
+      if (token.animation_url.split(".").pop().includes("mp4")) {
+        setVideoUrl(token.animation_url);
+      }
+    }
+  }, [token]);
+
+  if (!token) return null
+  
   return (
     <Modal
       isOpen={isOpen} onClose={onClose}
@@ -53,7 +75,7 @@ export default function ArtModal({ isOpen, onClose, token }) {
           </>
         ) : null}
         <CloudinaryImage
-          className="max-h-[90vh]"
+          className="max-h-[calc(100svh-5rem)] max-h-[calc(100vh-5rem)]"
           token={token}
           useUploadFallback
           onLoad={() => setImgLoaded(true)}

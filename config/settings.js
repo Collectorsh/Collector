@@ -52,7 +52,19 @@ export const rpcHost = process.env.NEXT_PUBLIC_RPC;
 export const apiHost = config.apiHost;
 export const host = config.host;
 export const dao21 = config.dao21;
-export const loginMessage = "Please sign this message to log-in. ";
+export const loginMessage = "Welcome to Collector! Please sign this message to log-in. ";
+// export const loginMessage = "Welcome to Collector!\n\n Dive into a world where you can collect, curate, and discover beautiful art.\n\n By signing or approving this message, you confirm the ownership of this wallet address.\n\n This action is completely free and you will not be charged. ";
+// export const loginMessage = `
+//   Welcome to Collector!
+
+//   Dive into a world where you can collect, curate, and discover beautiful art. By signing or approving this message, you confirm the ownership of this wallet address. This action is completely free and you won't be charged.
+//   Please note, your use of Collector is governed by our Terms of Service and Privacy Policy.
+
+//   Happy Collecting 🖼
+
+//   Terms (https://collector.sh/terms)
+//   Privacy Policy (https://collector.sh/privacy)
+// `
 export const toPublicKey = "RyvoTTxHVn48GaAA26d8TfBqZcrkVHN4Fyo2LsucTtV";
 export const monthlyCharge = 1000000000;
 export const yearlyCharge = 8000000000;

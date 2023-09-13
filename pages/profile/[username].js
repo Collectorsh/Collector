@@ -40,7 +40,9 @@ function ProfilePage({ curator }) {
   const [pfpLoaded, setPfpLoaded] = useState(true);
   
   const isOwner = Boolean(user && user.public_keys.includes(curator?.public_keys?.[0]) && user.api_key);
-  const curations = curator?.curations
+  const curations = isOwner
+    ? curator?.curations.sort(curation => curation.is_published ? -1 : 1)
+    : curator?.curations.filter(curation => curation.is_published);
 
   useEffect(() => {
     //set loaded to false when the banner changes

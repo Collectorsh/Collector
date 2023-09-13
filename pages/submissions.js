@@ -55,11 +55,11 @@ const Submissions = ({ }) => {
     })()
   }, [user, router])
 
-  const handleCloseModal = () => { 
-    setEditSubmissionsOpen(false)
-    setEditListingsOpen(false)
-    setCurationToEdit(null)
-  }
+  // const handleCloseModal = () => { 
+  //   setEditSubmissionsOpen(false)
+  //   setEditListingsOpen(false)
+  //   setCurationToEdit(null)
+  // }
 
   const handleOpenSubmitModal = (curation) => { 
     setCurationToEdit(curation)
@@ -94,6 +94,7 @@ const Submissions = ({ }) => {
         return newCurations
       })
     }
+    setEditListingsOpen(true)
   }
 
   const handleEditListings = (newToken, curation) => {
@@ -188,7 +189,8 @@ const Submissions = ({ }) => {
       </div>
       <SubmitArtModal
         isOpen={editSubmissionsOpen}
-        onClose={handleCloseModal}
+        // onClose={handleCloseModal}
+        onClose={() => setEditSubmissionsOpen(false)}
         onSubmit={handleSubmit}
         curation={curationToEdit}
         tokens={userTokens}
@@ -196,7 +198,8 @@ const Submissions = ({ }) => {
       />
       <EditListingsModal
         isOpen={editListingsOpen}
-        onClose={handleCloseModal}
+        // onClose={handleCloseModal}
+        onClose={() => setEditListingsOpen(false)}
         handleEditListings={handleEditListings}
         curation={curationToEdit}
       />

@@ -63,7 +63,8 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
     tokens.forEach(token => {
       const notSubmittedAnywhere = !submissionMints.includes(token.mint)
       const notSubmittedForThisCuration = !curation?.submitted_token_listings.find(t => t.mint === token.mint)
-      if (token.is_master_edition && notSubmittedAnywhere) masterEditions.push(token)
+      const soldOut = token.is_master_edition ? token.supply >= token.max_supply : false
+      if (token.is_master_edition && notSubmittedAnywhere && !soldOut) masterEditions.push(token)
       else if (token.is_edition && notSubmittedForThisCuration) editions.push(token)
       else if (!token.is_master_edition && !token.is_edition && notSubmittedForThisCuration) artTokens.push(token)
     })    
@@ -161,8 +162,8 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
         })}
       </div>
 
-      <p className="text-center font-bold h-12">{selectedTokens.length ? "Once you've submitted, click the 'Edit Listings' button to list your pieces!": ""}</p>
-      
+      {/* <p className="text-center font-bold h-12">{selectedTokens.length ? "Once you've submitted, click the 'Edit Listings' button to list your pieces!": ""}</p>
+       */}
       <div className="w-full flex justify-end gap-4 relative">
         <MainButton onClick={handleClose}>
           Cancel

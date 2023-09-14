@@ -9,8 +9,6 @@ import DarkMode from "/components/navigation/DarkMode";
 import ConnectWallet from "/components/wallet/ConnectWallet";
 import Profile from "/components/navigation/Profile";
 import Gallery from "/components/navigation/Gallery";
-import Activity from "/components/navigation/Activity";
-import Premium from "/components/navigation/Premium";
 import CreateUsernameModal from "/components/CreateUsernameModal";
 import { truncate } from "../../utils/truncate";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
@@ -21,7 +19,6 @@ export default function MainNavigation() {
   const path = router.asPath;
   const [user, setUser] = useContext(UserContext);
   const [open, setOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   const isCuratorApproved = user?.curator_approved
 
@@ -37,16 +34,10 @@ export default function MainNavigation() {
     });
   }
 
-  useEffect(() => {
-    if (user && !user.username) setShowModal(true);
-    if (user && user.username) setShowModal(false);
-    if (!user) setShowModal(false);
-  }, [user]);
-
   return (
     <div className="pb-[76px]">
       <ConnectWallet />
-      {showModal && <CreateUsernameModal />}
+      <CreateUsernameModal />
       <nav className="bg-white dark:bg-black shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
         <div className="max-w-screen-2xl mx-auto">
 

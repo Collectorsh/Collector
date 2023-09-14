@@ -1,4 +1,5 @@
 import { Cloudinary } from "@cloudinary/url-gen";
+import { dpr } from "@cloudinary/url-gen/actions/delivery";
 
 
 const cloudinaryCloud = new Cloudinary({
@@ -7,5 +8,9 @@ const cloudinaryCloud = new Cloudinary({
   }
 });
 
-
 export default cloudinaryCloud
+
+export const baseCloudImageUrl = (id) => {
+  const cldImg = cloudinaryCloud.image(id)
+  return cldImg.toURL()
+}

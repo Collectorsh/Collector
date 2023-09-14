@@ -128,7 +128,7 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
       }
     
       <div className="w-full flex justify-end gap-4">
-        <MainButton onClick={handleClose}>
+        <MainButton onClick={handleClose} disabled={creating}>
           Cancel
         </MainButton>
         <MainButton onClick={handleCreate} solid disabled={!curationValid || creating}>

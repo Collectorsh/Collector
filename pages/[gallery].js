@@ -50,56 +50,56 @@ function Gallery({user}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visibleTokens])
 
-  const fetchListings = useCallback(async () => {
-    const newListings = [];
-    const newOffers = [];
+  // const fetchListings = useCallback(async () => {
+  //   const newListings = [];
+  //   const newOffers = [];
 
-    try {
-      for (const auctionHouse of auctionHouses) {
-        const lstngs = await metaplex.auctionHouse()?.findListings({
-          auctionHouse: { address: auctionHouse, isNative: true },
-        });
-        for (const list of lstngs.filter(
-          (l) => l.canceledAt === null && l.purchaseReceiptAddress === null
-        )) {
-          newListings.push({
-            address: list.metadataAddress.toBase58(),
-            price: list.price.basisPoints.toNumber(),
-            seller: list.sellerAddress.toBase58(),
-            auctionHouse: list.auctionHouse,
-            tradeState: list.tradeStateAddress._bn,
-            tradeStateBump: list.tradeStateAddress.bump,
-          });
-        }
-        const bids = await metaplex.auctionHouse().findBids({
-          auctionHouse: { address: auctionHouse, isNative: true },
-        });
-        for (const bid of bids.filter((b) => b.canceledAt === null)) {
-          if (bid.canceledAt) continue;
-          newOffers.push({
-            address: bid.metadataAddress.toBase58(),
-            price: bid.price.basisPoints.toNumber(),
-            buyer: bid.buyerAddress.toBase58(),
-            auctionHouse: bid.auctionHouse,
-            tradeState: bid.tradeStateAddress._bn,
-            tradeStateBump: bid.tradeStateAddress.bump,
-          });
-        }
-      }
-      setListings(newListings);
-      setOffers(newOffers);
+  //   try {
+  //     for (const auctionHouse of auctionHouses) {
+  //       const lstngs = await metaplex.auctionHouse()?.findListings({
+  //         auctionHouse: { address: auctionHouse, isNative: true },
+  //       });
+  //       for (const list of lstngs.filter(
+  //         (l) => l.canceledAt === null && l.purchaseReceiptAddress === null
+  //       )) {
+  //         newListings.push({
+  //           address: list.metadataAddress.toBase58(),
+  //           price: list.price.basisPoints.toNumber(),
+  //           seller: list.sellerAddress.toBase58(),
+  //           auctionHouse: list.auctionHouse,
+  //           tradeState: list.tradeStateAddress._bn,
+  //           tradeStateBump: list.tradeStateAddress.bump,
+  //         });
+  //       }
+  //       const bids = await metaplex.auctionHouse().findBids({
+  //         auctionHouse: { address: auctionHouse, isNative: true },
+  //       });
+  //       for (const bid of bids.filter((b) => b.canceledAt === null)) {
+  //         if (bid.canceledAt) continue;
+  //         newOffers.push({
+  //           address: bid.metadataAddress.toBase58(),
+  //           price: bid.price.basisPoints.toNumber(),
+  //           buyer: bid.buyerAddress.toBase58(),
+  //           auctionHouse: bid.auctionHouse,
+  //           tradeState: bid.tradeStateAddress._bn,
+  //           tradeStateBump: bid.tradeStateAddress.bump,
+  //         });
+  //       }
+  //     }
+  //     setListings(newListings);
+  //     setOffers(newOffers);
   
-    } catch (err) {
-      console.error("Error fetching listings: ", err);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //   } catch (err) {
+  //     console.error("Error fetching listings: ", err);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  useEffect(() => {
-    //only fetch listings if we have tokens
-    if (tokens?.length) fetchListings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokens]);
+  // useEffect(() => {
+  //   //only fetch listings if we have tokens
+  //   if (tokens?.length) fetchListings();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [tokens]);
 
   return (
     <div className="dark:bg-black">

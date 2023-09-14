@@ -6,10 +6,12 @@ import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
 import Modal from "../Modal";
 import SearchBar from "../SearchBar";
+import { useImageFallbackContext } from "../../contexts/imageFallback";
 
 export default function EditImageModal({ title, isOpen, onClose, onSave, type }) {
   const [user] = useContext(UserContext);
-
+  const { uploadSingleToken } = useImageFallbackContext()
+  
   const tokens = useTokens(user?.public_keys, {
     useArtistDetails: false,
     justVisible: false
@@ -22,6 +24,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
   const isPfp = type === "pfp";
 
   const handleSave = () => { 
+    uploadSingleToken(selected)
     onSave(selected);
     onClose();
     setTimeout(() => setSearch(""), 500);
@@ -42,10 +45,10 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
       return search ? (artNameMatch || artistNameMatch) : true;
     }
     const visible = tokens.filter((token) => {
-      return token.visible && token.optimized === "True" && searchFilter(token);
+      return token.visible && searchFilter(token);
     });
     const hidden = tokens.filter((token) => {
-      return !token.visible && token.optimized === "True" && searchFilter(token);
+      return !token.visible && searchFilter(token);
     });
     return [...visible, ...hidden];
   }, [tokens, search])
@@ -82,8 +85,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
                         isPfp ? "rounded-full h-[150px] w-[150px] md:h-[200px] md:w-[200px]" : "w-full h-[250px] rounded-lg",
                         isSelected && "ring-4 ring-black dark:ring-white"
                       )}
-                      // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-                      // mint={token.mint}
+                      useMetadataFallback
                       token={token}
                       width={isBanner ? 800 : 500}
                     />

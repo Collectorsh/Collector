@@ -141,7 +141,6 @@ async function getTokens(publicKeys, options) {
     results = results.filter((r) => r.visible);
   }
 
-
   const creatorResp = useArtistDetails
     ? await apiClient.post("/creator/details", {
       tokens: results,

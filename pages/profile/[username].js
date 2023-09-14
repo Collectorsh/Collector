@@ -141,13 +141,13 @@ function ProfilePage({ curator }) {
             {pfp ? (
               <CloudinaryImage
                 className={clsx(
-                  "w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black",
+                  "w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black",
                   !pfpLoaded && "animate-pulse"
                 )}
                 id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ pfp }`}
                 noLazyLoad
                 onLoad={() => setPfpLoaded(true)}
-                width={144}
+                width={500}
               />
             ) : (
               <div className="flex justify-center items-center w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black">

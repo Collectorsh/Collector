@@ -71,8 +71,10 @@ export const ImageFallbackProvider = ({ children }) => {
   //upload all with optiomized as nil
   const uploadAll = async (tokens) => { 
     if (!tokens || tokens.length === 0 || !user?.username) return;
+
     const errorMints = []
     const unoptimizedTokens = [];
+
     tokens.forEach((token) => {
       if (token.optimized === "Error") errorMints.push({
         mint: token.mint,
@@ -86,11 +88,6 @@ export const ImageFallbackProvider = ({ children }) => {
         unoptimizedTokens.push(token)
       }
     })
-
-    // unoptimizedTokens.splice(10)
-    // //IMPORTANT TODO test this for edition optimizations and then revert
-    // console.log("🚀 ~ file: imageFallback.js:93 ~ uploadAll ~ unoptimizedTokens:", unoptimizedTokens)
-    // return 
     
     setCloudinaryError(errorMints)
 
@@ -108,8 +105,8 @@ export const ImageFallbackProvider = ({ children }) => {
   const uploadSingleToken = useCallback(async (token) => {
     //skip if already added
     const cldId = getTokenCldImageId(token);
-
-    if (uploadSentRef.current.includes(cldId)) return;
+    const isOptimized = token?.optimized === "True"
+    if (uploadSentRef.current.includes(cldId) || isOptimized) return;
     uploadSentRef.current = [...uploadSentRef.current, cldId];
 
     setWaiting(prev => prev + 1)

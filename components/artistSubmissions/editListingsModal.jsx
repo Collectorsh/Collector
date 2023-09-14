@@ -234,7 +234,7 @@ const Submission = ({ token, onList, onDelist }) => {
   const editionSupply = token.supply
   const editionMaxSupply = token.max_supply
   const editionsLeft = editionMaxSupply - editionSupply
-  const isSoldOut = editionsLeft <= 0
+  const isSoldOut = isMasterEdition ? editionsLeft <= 0 : false
   const isListed = token.listed_status === "listed" || (isMasterEdition && isSoldOut)//to allow owner to withdraw master edition
   const isClosed = token.listed_status === "master-edition-closed"
   const disableListing = !listingPrice || listingPrice <= 0 || listingPrice == token.buy_now_price || listing || isSoldOut

@@ -23,6 +23,8 @@ export default function MainNavigation() {
   const [open, setOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  const isCuratorApproved = user?.curator_approved
+
   function toggleMenu() {
     setOpen(!open);
   }
@@ -75,7 +77,7 @@ export default function MainNavigation() {
                 {/* {!user && <Premium />} */}
 
 
-{/* 
+                {/* 
                 <Link href="/discover">
                   <a className="mr-8 font-bold">
                     Discover
@@ -245,6 +247,15 @@ export default function MainNavigation() {
                                         <Link href={`/profile/${ user.username }`}>
                                       
                                           Profile
+                                          
+                                        </Link>
+                                      </p>
+                                    ) : null}
+                                    {isCuratorApproved ? (
+                                      <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                        <Link href={`/submissions`}>
+                                      
+                                          Submissions
                                           
                                         </Link>
                                       </p>

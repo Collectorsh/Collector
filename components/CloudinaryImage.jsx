@@ -78,9 +78,9 @@ const CloudinaryImage = ({
   const buildCldImg = (id, overrideQuality) => {
     const cldImg = cloudinaryCloud.image(id)
     cldImg
-      // .format('auto')
-      // .quality(overrideQuality || quality)
-      // .delivery(dpr("auto"));
+      .format('auto')
+      .quality(overrideQuality || quality)
+      .delivery(dpr("auto"));
   
     if (width) cldImg.resize(limitFill().width(width))
     return cldImg

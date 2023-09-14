@@ -14,16 +14,15 @@ const tabs = ["submitted", "owned"]
 export default function EditBannerModal({ isOpen, onClose, onSave, submittedTokens }) {
   const [user] = useContext(UserContext);
   const { uploadSingleToken } = useImageFallbackContext()
+  const tokens = useTokens(user?.public_keys, {
+    useArtistDetails: false,
+    justVisible: false
+  });
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(134);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
   const tabsRef = useRef([]);
-
-  const tokens = useTokens(user?.public_keys, {
-    useArtistDetails: false,
-    justVisible: false
-  });
 
   const [selected, setSelected] = useState(null);
   const [search, setSearch] = useState("");
@@ -59,7 +58,8 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
   const searchFilter = useCallback((token) => {
     const artNameMatch = token.name.toLowerCase().includes(search.toLowerCase())
     const artistNameMatch = token.artist_name?.toLowerCase().includes(search.toLowerCase())
-    return search ? (artNameMatch || artistNameMatch) : true;
+    const mintAddressMatch = token.mint.toLowerCase() == search.toLowerCase()
+    return search ? (artNameMatch || artistNameMatch || mintAddressMatch) : true;
   },[search])
 
   const orderedTokens = useMemo(() => {

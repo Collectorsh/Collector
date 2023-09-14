@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import MainButton from "../MainButton";
 import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
@@ -6,12 +6,14 @@ import Modal from "../Modal";
 import { RoundedCurve } from "../curations/roundedCurveSVG";
 import { XIcon } from "@heroicons/react/solid";
 import { Oval } from "react-loader-spinner";
+import SearchBar from "../SearchBar";
 
 const tabs = ["Art", "Master Editions"]
 
 export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, tokens, submissionMints }) {
   const [selectedTokens, setSelectedTokens] = useState([]);
   const [submitting, setSubmitting] = useState(false);
+  const [search, setSearch] = useState("");
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(49);
@@ -53,6 +55,13 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
     clearState()
   }
 
+  const searchFilter = useCallback((token) => {
+    const artNameMatch = token.name.toLowerCase().includes(search.toLowerCase())
+    const artistNameMatch = token.artist_name?.toLowerCase().includes(search.toLowerCase())
+    const mintAddressMatch = token.mint.toLowerCase() == search.toLowerCase()
+    return search ? (artNameMatch || artistNameMatch || mintAddressMatch) : true;
+  }, [search])
+
   const ownedContent = useMemo(() => {
     if (!tokens) return null
 
@@ -61,6 +70,7 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
     const artTokens = []
     
     tokens.forEach(token => {
+      if(!searchFilter(token)) return
       const notSubmittedAnywhere = !submissionMints.includes(token.mint)
       const notSubmittedForThisCuration = !curation?.submitted_token_listings.find(t => t.mint === token.mint)
       const soldOut = token.is_master_edition ? token.supply >= token.max_supply : false
@@ -82,7 +92,7 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
         />
       )
     })
-  }, [tokens, selectedTokens, curation?.submitted_token_listings, activeTabIndex, submissionMints])
+  }, [tokens, selectedTokens, curation?.submitted_token_listings, activeTabIndex, submissionMints, searchFilter])
         
 
   return (
@@ -90,6 +100,13 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
       <p className="mt-4 text-lg font-bold text-center">Choose the pieces you would like to submit to {curationName}</p>
       <p className="text-center mb-8">Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price</p>
 
+      
+      <SearchBar
+        className="ml-2 pl-4 w-full max-w-[20rem] mt-8"
+        search={search}
+        setSearch={setSearch}
+        placeholder="Search By Artwork"
+      />
       <div className="relative mx-auto w-fit">
         <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
           {tabs.map((tab, i) => {
@@ -164,7 +181,7 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
 
       {/* <p className="text-center font-bold h-12">{selectedTokens.length ? "Once you've submitted, click the 'Edit Listings' button to list your pieces!": ""}</p>
        */}
-      <div className="w-full flex justify-end gap-4 relative">
+      <div className="w-full flex justify-end gap-4 relative mt-4">
         <MainButton onClick={handleClose}>
           Cancel
         </MainButton>

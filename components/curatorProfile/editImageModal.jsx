@@ -42,7 +42,8 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
     const searchFilter = (token) => {
       const artNameMatch = token.name.toLowerCase().includes(search.toLowerCase())
       const artistNameMatch = token.artist_name?.toLowerCase().includes(search.toLowerCase())
-      return search ? (artNameMatch || artistNameMatch) : true;
+      const mintAddressMatch = token.mint.toLowerCase() == search.toLowerCase()
+      return search ? (artNameMatch || artistNameMatch || mintAddressMatch) : true;
     }
     const visible = tokens.filter((token) => {
       return token.visible && searchFilter(token);

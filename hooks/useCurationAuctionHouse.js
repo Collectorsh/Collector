@@ -111,8 +111,6 @@ const useCurationAuctionHouse = (curation) => {
   }
 
   const handleCollect = async (token) => {
-    console.log("TOKEN", token)
-    console.log(user.username)
     if (!user || !token) return;
     const isMasterEdition = token.is_master_edition
     const isEdition = token.is_edition

@@ -50,8 +50,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
       } = builder
 
       const signature = await wallet.sendTransaction(listMasterEditionTX, connection)
+      const confirmation = await connection.confirmTransaction(signature);
 
-      if (!signature) {
+      if (!signature || Boolean(confirmation.value.err)) {
         error(`Error Listing ${ token.name } Editions Onchain`)
         return
       }
@@ -136,8 +137,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
       const { closeAndWithdrawMarketTX } = builder
 
       const delistTXSignature = await wallet.sendTransaction(closeAndWithdrawMarketTX, connection)
+      const confirmation = await connection.confirmTransaction(delistTXSignature);
 
-      if (!delistTXSignature) {
+      if (!delistTXSignature || Boolean(confirmation.value.err)) {
         error(`Error Delisting ${ token.name } Onchain`)
         return
       }
@@ -167,9 +169,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
       return
     } else {
       //Handle 1/1 delist
-      const delistTXSignature = await handleDelist(token.listing_receipt)
+      const delistTXSignatureConfirmation = await handleDelist(token.listing_receipt)
 
-      if (!delistTXSignature) {
+      if (!delistTXSignatureConfirmation) {
         error(`Error Delisting ${ token.name } Onchain`)
         return
       }

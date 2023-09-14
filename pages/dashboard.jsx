@@ -7,10 +7,8 @@ import Datepicker from "react-tailwindcss-datepicker";
 import MainButton from "../components/MainButton";
 import getSalesHistoryByRange from "../data/salesHistory/getByRange";
 import { truncate } from "../utils/truncate";
-import { set } from "nprogress";
 import clsx from "clsx";
 import { roundToPrecision } from "../utils/maths";
-import { T } from "ramda";
 import { downloadCSV } from "../utils/csv";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
@@ -30,6 +28,7 @@ export default function Dashboard() {
   const isAdmin = adminIDs.includes(user?.id)
 
   const handleFetch = async () => { 
+    if(!isAdmin) return
     setFetching(true);
     setRecords([]);
     const records = await getSalesHistoryByRange({
@@ -42,8 +41,9 @@ export default function Dashboard() {
   }
 
   const handleDownload = () => {
+    if (!isAdmin) return
     // format records
-    const formattedRecords = records.map(record => { 
+    const formattedRecords = records?.map(record => { 
       const { date, artistName, sellerName, collectorName, curatorName, saleType, curationName, curatorAddress } = getDetailsFromRecord(record);
       return {
         Date: date,

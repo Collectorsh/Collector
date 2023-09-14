@@ -130,7 +130,7 @@ export const getListMasterEditionTX = async ({
   const market = marketKeyPair.publicKey
   console.log("Edition Market Pubkey", market.toString())
 
-  const startDate = Math.round(Date.now() / 1000) + 5;
+  const startDate = Math.round(Date.now() / 1000) + 60; //1 min in the future
   const endDate = null //TODO alow this to be user set?
   const params = {
     name: `${ editionName } Market`,

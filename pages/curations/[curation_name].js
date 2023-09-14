@@ -280,17 +280,11 @@ function CurationPage({ curation }) {
   return (
     <>
       <Head>
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content={`${ curation.name.replaceAll("_", " ") } by ${ curation.curator.username }`}
-        />
-        <meta
-          name="twitter:description"
-          content="A Curation on Collector"
-        />
+        <meta key="ogdesc" name="og:description" content={`${ curation.name.replaceAll("_", " ") } by ${ curation.curator.username }`} />
+        <meta key="desc" name="description" content={`${ curation.name.replaceAll("_", " ") } by ${ curation.curator.username }`} />
         <meta key="image" property="og:image" content={metaImage} />
-        <meta name="twitter:image" content={metaImage} />
+        <meta key="twitimage" property='twitter:image' content={metaImage} />
+        <meta key="url" name="og:url" content={`https://collector.sh/curations/${ curation.name }`} />
       </Head>
       <Toaster />
       <MainNavigation />

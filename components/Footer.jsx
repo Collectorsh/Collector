@@ -12,7 +12,7 @@ export default function Footer() {
                 collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r
               </a>
             </Link>
-            <p className="mt-2">Discover & share beautiful art</p>
+            <p className="mt-2">Collect, Curate, and Discover Beautiful Art</p>
           </div>
           <div className="mt-8 sm:mt-0 col-span-2 sm:col-span-1 align-right">
             <div className="float-left sm:float-right">

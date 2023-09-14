@@ -105,7 +105,7 @@ async function getTokens(publicKeys, options) {
 
   const visResults = await apiClient.post("/get_visibility_and_order", {
     public_key: publicKeys[0],
-    mints: mungedTokens.map(token => token.mint),
+    // mints: mungedTokens.map(token => token.mint),
     cld_ids: mungedTokens.map(token => getTokenCldImageId(token)),
   }).then(res => res.data)
 

@@ -17,7 +17,7 @@ export default function DetailListings({ curation, mint }) {
   if (!listingToken) return null
   const isListed = listingToken.listed_status === "listed"
   const isSold = listingToken.listed_status === "sold" || listingToken.listed_status === "master-edition-closed"
-  console.log("🚀 ~ file: listings.jsx:20 ~ DetailListings ~ listingToken:", listingToken)
+
   const price = roundToPrecision(Number(listingToken.buy_now_price), 3)
   const handleBuy = async (e) => {
     if (!handleCollect || !user) return;

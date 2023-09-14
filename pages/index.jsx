@@ -7,7 +7,6 @@ import HighlightedCurations from "../components/home/HighlightedCurations";
 import getHighlightedCurations from "../data/curation/getHighlightedCurations";
 
 export default function Home({highlightedCurations}) {
-  console.log("🚀 ~ file: index.jsx:10 ~ Home ~ highlightedCurations:", highlightedCurations)
   const [user] = useContext(UserContext);
   return (
     <div className="dark:bg-black">

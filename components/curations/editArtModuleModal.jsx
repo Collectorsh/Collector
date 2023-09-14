@@ -170,50 +170,50 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Edit Art Module">
+      <div className="overflow-y-auto">
+        {/* <SearchBar
+          className="ml-2 pl-4 w-full max-w-[20rem] mt-8"
+          search={search}
+          setSearch={setSearch}
+          placeholder="Search By Artwork"
+        /> */}
+          
 
-      {/* <SearchBar
-        className="ml-2 pl-4 w-full max-w-[20rem] mt-8"
-        search={search}
-        setSearch={setSearch}
-        placeholder="Search By Artwork"
-      /> */}
-        
-
-      <div className="relative mx-auto w-fit mt-4">
-        <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
-          {tabs.map((tab, i) => {
-            const handleClick = () => {
-              setActiveTabIndex(i);
-            }
-            const isSelected = activeTabIndex === i;
-            return (
-              <button
-                key={tab}
-                ref={(el) => (tabsRef.current[i] = el)}
-                className={clsx(
-                  "px-3 py-1 capitalize hover:opacity-100 hover:scale-[102%] font-bold duration-300",
-                  isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
-                onClick={handleClick}
-              >
-                {tab} Art
-              </button>
-            )
-          })}
+        <div className="relative mx-auto w-fit mt-4">
+          <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
+            {tabs.map((tab, i) => {
+              const handleClick = () => {
+                setActiveTabIndex(i);
+              }
+              const isSelected = activeTabIndex === i;
+              return (
+                <button
+                  key={tab}
+                  ref={(el) => (tabsRef.current[i] = el)}
+                  className={clsx(
+                    "px-3 py-1 capitalize hover:opacity-100 hover:scale-[102%] font-bold duration-300",
+                    isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
+                  onClick={handleClick}
+                >
+                  {tab} Art
+                </button>
+              )
+            })}
+          </div>
+          <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
+          <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700" />
+          <span
+            className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner shadow-black/10 dark:shadow-white/10"
+          />
+          <span
+            className="absolute rounded-full bottom-0 block h-1 bg-black dark:bg-white transition-all duration-300"
+            style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
+          />
         </div>
-        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700" />
-        <span
-          className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner shadow-black/10 dark:shadow-white/10"
-        />
-        <span
-          className="absolute rounded-full bottom-0 block h-1 bg-black dark:bg-white transition-all duration-300"
-          style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
-        />
-      </div>
 
-      {tabContent[activeTabIndex]}
+        {tabContent[activeTabIndex]}
 
-      <hr className="block border-neutral-200 dark:border-neutral-700 my-4" />
+        <hr className="block border-neutral-200 dark:border-neutral-700 my-4" />
         <div className={clsx(
           "w-full h-[400px] p-4 max-h-full overflow-auto md:overflow-visible",
           "flex flex-col md:flex-row w-full gap-2",
@@ -224,6 +224,8 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
             : <p>Click an artwork above to add it to this module</p>
           } 
         </div>
+
+      </div>
       
       <div className="w-full flex justify-center md:justify-between items-center gap-4 mt-4 flex-wrap">
         <WarningButton onClick={onDeleteModule}>

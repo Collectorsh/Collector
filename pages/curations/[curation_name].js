@@ -79,10 +79,6 @@ function CurationPage({ curation }) {
   //currently we are allowing curations to be published without content
   const hasNoContent = false//{modules.length === 0 || !banner} 
 
-  // const metaImage = curation.published_content?.banner_image
-  //   ? `https://res.cloudinary.com/dukxp13zq/image/upload/v1694725740/${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ curation.published_content.banner_image }`
-  //   : metaPreviewImage
-
   const metaImage = curation.published_content?.banner_image
     ? baseCloudImageUrl(`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ curation.published_content.banner_image }`)
     : metaPreviewImage

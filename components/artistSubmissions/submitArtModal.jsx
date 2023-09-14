@@ -97,90 +97,89 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title={`Submit Artworks`}>
-      <p className="mt-4 text-lg font-bold text-center">Choose the pieces you would like to submit to {curationName}</p>
-      <p className="text-center mb-8">Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price</p>
+      <div className="overflow-y-auto">
+        <p className="mt-4 text-lg font-bold text-center">Choose the pieces you would like to submit to {curationName}</p>
+        <p className="text-center mb-4">Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price</p>
 
-      
-      <SearchBar
-        className="ml-2 pl-4 w-full max-w-[20rem] mt-8"
-        search={search}
-        setSearch={setSearch}
-        placeholder="Search By Artwork"
-      />
-      <div className="relative mx-auto w-fit">
-        <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
-          {tabs.map((tab, i) => {
-            const handleClick = () => {
-              setActiveTabIndex(i);
+        
+        <SearchBar
+          className="ml-2 pl-4 w-full max-w-[20rem]"
+          search={search}
+          setSearch={setSearch}
+          placeholder="Search By Artwork"
+        />
+        <div className="relative mx-auto w-fit">
+          <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
+            {tabs.map((tab, i) => {
+              const handleClick = () => {
+                setActiveTabIndex(i);
+              }
+              const isSelected = activeTabIndex === i;
+
+              // if(i === 0 && !activeTabIndex) setActiveTabIndex(0)
+
+              return (
+                <button
+                  key={tab}
+                  ref={(el) => (tabsRef.current[i] = el)}
+                  className={clsx(
+                    "px-3 py-1 capitalize hover:opacity-100 hover:scale-[102%] font-bold duration-300",
+                    isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
+                  onClick={handleClick}
+                >
+                  {tab}
+                </button>
+              )
+            })}
+
+          </div>
+          <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
+          <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700" />
+          <span
+            className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner shadow-black/10 dark:shadow-white/10"
+          />
+          <span
+            className="absolute rounded-full bottom-0 block h-1 bg-black dark:bg-white transition-all duration-300"
+            style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
+          />
+        </div>
+
+        <div className="border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden flex-shrink-0 bg-neutral-100 dark:bg-neutral-900">
+          <div className={clsx("w-full flex-shrink-0 h-[266px] p-2 overflow-auto grid gap-4 rounded-lg",
+            "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          )}>
+            {tokens
+              ? ownedContent
+              : (
+                <div className="col-span-4 h-full flex justify-center items-center">
+                  <p className="animate-pulse">Gathering your digital assets...</p>
+                </div>
+              )
             }
-            const isSelected = activeTabIndex === i;
+          </div>
+        </div>
 
-            // if(i === 0 && !activeTabIndex) setActiveTabIndex(0)
-
+        <div className="relative mx-auto w-fit mt-8">
+          <p className="bg-neutral-200 dark:bg-neutral-700 h-6 font-bold">Submitting</p>
+          <RoundedCurve className="absolute bottom-0 -left-8 w-8 h-6 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
+          <RoundedCurve className="absolute bottom-0 -right-8 w-8 h-6 fill-neutral-200 dark:fill-neutral-700" />
+        </div>
+        <div className="min-h-[5.5rem] border-4 rounded-xl p-2
+        border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
+        flex items-start flex-wrap gap-2
+        ">
+          {selectedTokens.map((token, i) => {
             return (
-              <button
-                key={tab}
-                ref={(el) => (tabsRef.current[i] = el)}
-                className={clsx(
-                  "px-3 py-1 capitalize hover:opacity-100 hover:scale-[102%] font-bold duration-300",
-                  isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
-                onClick={handleClick}
-              >
-                {tab}
-              </button>
+              <ArtChip
+                key={token.mint}
+                name={token.name}
+                isMasterEdition={token.is_master_edition}
+                onRemove={() => setSelectedTokens(prev => prev.filter(a => a.mint !== token.mint))}
+              />
             )
           })}
-
-        </div>
-        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700" />
-        <span
-          className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner shadow-black/10 dark:shadow-white/10"
-        />
-        <span
-          className="absolute rounded-full bottom-0 block h-1 bg-black dark:bg-white transition-all duration-300"
-          style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
-        />
-      </div>
-
-      <div className="border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
-        <div className={clsx("w-full h-[266px] p-2 overflow-auto grid gap-4 rounded-lg",
-          "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-        )}>
-          {tokens
-            ? ownedContent
-            : (
-              <div className="col-span-4 h-full flex justify-center items-center">
-                <p className="animate-pulse">Gathering your digital assets...</p>
-              </div>
-            )
-          }
         </div>
       </div>
-
-      <div className="relative mx-auto w-fit mt-8">
-        <p className="bg-neutral-200 dark:bg-neutral-700 h-6 font-bold">Submitting</p>
-        <RoundedCurve className="absolute bottom-0 -left-8 w-8 h-6 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-8 w-8 h-6 fill-neutral-200 dark:fill-neutral-700" />
-      </div>
-      <div className="min-h-[5.5rem] border-4 rounded-xl p-2
-       border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
-       flex items-start flex-wrap gap-2
-       ">
-        {selectedTokens.map((token, i) => {
-          return (
-            <ArtChip
-              key={token.mint}
-              name={token.name}
-              isMasterEdition={token.is_master_edition}
-              onRemove={() => setSelectedTokens(prev => prev.filter(a => a.mint !== token.mint))}
-            />
-          )
-        })}
-      </div>
-
-      {/* <p className="text-center font-bold h-12">{selectedTokens.length ? "Once you've submitted, click the 'Edit Listings' button to list your pieces!": ""}</p>
-       */}
       <div className="w-full flex justify-end gap-4 relative mt-4">
         <MainButton onClick={handleClose}>
           Cancel

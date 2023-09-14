@@ -75,8 +75,7 @@ export const adminIDs = [
   5421, //Scott (username: EV3)
 ]
 
-// export const metaPreviewImage = "https://res.cloudinary.com/dukxp13zq/image/upload/v1694725740/global/Collector_Hero_btrh4t.png"
-export const metaPreviewImage = baseCloudImageUrl("global/Collector_Hero_btrh4t.png")
+export const metaPreviewImage = baseCloudImageUrl("global/Collector_Hero_btrh4t")
 
 //HELLO MOON rpc deprecated
   // ,{

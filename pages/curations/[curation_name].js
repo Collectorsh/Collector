@@ -27,6 +27,10 @@ import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 import withdrawFromTreasury from "../../data/curation/withdrawFromTreasury";
 import { roundToPrecision } from "../../utils/maths";
 import { QuillContent, deltaToPlainText } from "../../components/Quill";
+import Head from "next/head";
+import { metaPreviewImage } from "../../config/settings";
+import cloudinaryCloud, { baseCldImage, baseCloudImageUrl } from "../../data/client/cloudinary";
+import { dpr } from "@cloudinary/url-gen/actions/delivery";
 
 
 
@@ -71,6 +75,17 @@ function CurationPage({ curation }) {
   const displayCuration = Boolean(curation?.is_published || isOwner);
 
   const hasChanges = JSON.stringify(draftContent) !== JSON.stringify(publishedContent);
+
+  //currently we are allowing curations to be published without content
+  const hasNoContent = false//{modules.length === 0 || !banner} 
+
+  // const metaImage = curation.published_content?.banner_image
+  //   ? `https://res.cloudinary.com/dukxp13zq/image/upload/v1694725740/${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ curation.published_content.banner_image }`
+  //   : metaPreviewImage
+
+  const metaImage = curation.published_content?.banner_image
+    ? baseCloudImageUrl(`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ curation.published_content.banner_image }`)
+    : metaPreviewImage
 
   const handleWebsocketMessages = useCallback(({ message, data }) => {
     switch (message) {
@@ -264,6 +279,19 @@ function CurationPage({ curation }) {
 
   return (
     <>
+      <Head>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content={`${ curation.name.replaceAll("_", " ") } by ${ curation.curator.username }`}
+        />
+        <meta
+          name="twitter:description"
+          content="A Curation on Collector"
+        />
+        <meta key="image" property="og:image" content={metaImage} />
+        <meta name="twitter:image" content={metaImage} />
+      </Head>
       <Toaster />
       <MainNavigation />
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 group/banner">
@@ -317,7 +345,7 @@ function CurationPage({ curation }) {
                 )}
                 id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ curation.curator.profile_image }`}
                 noLazyLoad
-                width={144}
+                width={500}
               />)
               : null
             }
@@ -361,7 +389,7 @@ function CurationPage({ curation }) {
               setIsEditingDraft={setIsEditingDraft}
               hasChanges={hasChanges}
               isPublished={isPublished}
-              noContent={modules.length === 0 || !banner}
+              noContent={hasNoContent}
               collectedFees={collectedFees}
               handleWithdrawFees={handleWithdrawFees}
             />

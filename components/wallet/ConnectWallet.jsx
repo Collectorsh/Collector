@@ -11,7 +11,7 @@ export default function ConnectWallet() {
   const wallet = useWallet();
   const [user, setUser] = useContext(UserContext);
   const [fetching, setFetching] = useState(false);
-  const [rejected, setRejected] = useState(false);
+  const [error, setError] = useState(false);
 
   const asyncGetApiKey = async (publicKey, signMessage) => {
     if (!publicKey || !signMessage) return;
@@ -20,7 +20,8 @@ export default function ConnectWallet() {
     if (res?.data.status === "success") {
       localStorage.setItem("api_key", res.data.user.api_key);
       setUser(res.data.user);
-    } 
+      setError(false);
+    } else setError(true);
   }
 
   const asyncGetUser = async (apiKey, publicKey, signMessage) => {
@@ -36,13 +37,13 @@ export default function ConnectWallet() {
 
   useEffect(() => {
     if(!wallet.connected) {
-      setRejected(false);
+      setError(false);
     }
   }, [wallet])
 
   useEffect(() => {
     if (user?.api_key) return;
-    if (fetching || rejected) return;
+    if (fetching || error) return;
     if (!wallet || !wallet.connected) return;
     
     (async () => {
@@ -56,14 +57,14 @@ export default function ConnectWallet() {
           await asyncGetApiKey(wallet.publicKey, wallet.signMessage);
         }
       } catch (e) {
-        setRejected(true);
+        setError(true);
         console.log("Error Signing In", e)
       }
       setFetching(false);
     })()
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallet, user, fetching, rejected]);
+  }, [wallet, user, fetching, Error]);
 
   return null
 }

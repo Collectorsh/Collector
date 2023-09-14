@@ -1,6 +1,6 @@
 import { Metaplex, keypairIdentity} from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
-import { Keypair, LAMPORTS_PER_SOL, PublicKey, Transaction, sendAndConfirmTransaction, SystemProgram, Connection } from "@solana/web3.js";
+import { Keypair, LAMPORTS_PER_SOL, PublicKey, Transaction, sendAndConfirmTransaction, SystemProgram, Connection, sendAndConfirmRawTransaction } from "@solana/web3.js";
 import { formatRSAPrivateKey, formatRSAPublicKey } from "../../../utils/formatRSA";
 import getKeyHash from "../../../data/key_hash/getHash";
 import apiClient from "../../../data/client/apiClient";

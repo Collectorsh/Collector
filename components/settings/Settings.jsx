@@ -6,6 +6,7 @@ import saveUser from "/data/user/saveUser";
 import getTwitterOAuthToken from "/data/dashboard/getTwitterOAuthToken";
 import destroyTwitter from "/data/dashboard/destroyTwitter";
 import TwitterLogo from "/components/logos/TwitterLogo.jsx";
+import { urlRegex } from "../curations/editNameModal";
 
 export default function Settings() {
   const [user, setUser] = useContext(UserContext);
@@ -49,6 +50,14 @@ export default function Settings() {
         return;
       }
     }
+
+    if (username) {
+      const isValid = urlRegex.test(username);
+      if (!isValid) { 
+        error('Must be 2 to 31 characters and only contain letters, numbers, "_" and "-"');
+        return;
+      }
+    } 
     const res = await saveUser(user.api_key, {
       username: username,
       email: email,

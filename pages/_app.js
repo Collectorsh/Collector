@@ -15,7 +15,6 @@ import { CartProvider } from "/contexts/cart";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import PlausibleProvider from "next-plausible";
 import Footer from "/components/Footer";
-import banner from "/public/Collector Hero.png"
 import { ImageFallbackProvider } from "../contexts/imageFallback";
 import { ActionCableProvider } from "../contexts/webSocket";
 
@@ -33,14 +32,14 @@ export default function MyApp({ Component, pageProps }) {
           <meta charSet="UTF-8" />
           <title>Collector</title>
           <meta name="author" content="Collector" />
-          <meta name="keywords" content="Collect &amp; Share beautiful art" />
+          <meta name="keywords" content="Collect, Curate, and Discover Beautiful Art" />
 
-          <meta key="desc" name="description" content="Discover &amp; Share Beautiful Art" />
+          <meta key="desc" name="description" content="Collect, Curate, and Discover Beautiful Art" />
           <meta key="view" name="viewport" content="width=device-width, initial-scale=1" />
           <meta key="ogtitle" name="og:title" content="Collector" />
-          <meta key="ogdesc" name="og:description" content="Discover &amp; Share Beautiful Art" />
-          <meta key="image" property="og:image" content={banner.src} />
-          <meta key="twitimage" property='twitter:image' content={banner.src} />
+          <meta key="ogdesc" name="og:description" content="Collect, Curate, and Discover Beautiful Art" />
+          <meta key="image" property="og:image" content={metaPreviewImage} />
+          <meta key="twitimage" property='twitter:image' content={metaPreviewImage} />
           <meta key="url" name="og:url" content="https://collector.sh/" />
           <meta key="card" property="twitter:card" content="summary_large_image" />
           <link key="icon" rel="icon" href="/favicon.ico" />
@@ -105,6 +104,7 @@ export default function MyApp({ Component, pageProps }) {
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import Router from "next/router";
+import { metaPreviewImage } from "../config/settings";
 
 
 NProgress.configure({

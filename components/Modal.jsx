@@ -46,10 +46,12 @@ export default function Modal({
                 widthClass
               )}
             >
+          
               <button onClick={onClose} className={clsx("duration-200 hover:scale-105 active:scale-100", closeButtonPlacement)}>
                 <XCircleIcon className="w-8 h-8" />
               </button>
-              {title ? <Dialog.Title className="text-center font-bold text-3xl">{title}</Dialog.Title> : null}
+              {title ? < Dialog.Title className="text-center font-bold text-3xl">{title}</Dialog.Title> : null}
+            
               {children}
             </Dialog.Panel>
           </Transition.Child>

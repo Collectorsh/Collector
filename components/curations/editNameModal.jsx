@@ -3,7 +3,7 @@ import MainButton from "../MainButton"
 import Modal from "../Modal"
 import { checkCurationNameAvailability } from "../../data/curation/updateCurationName";
 
-const urlRegex = /^(?!.*[_-]{2})[a-zA-Z0-9_-]{2,31}$/;
+export const urlRegex = /^(?!.*[_-]{2})[a-zA-Z0-9_-]{2,31}$/;
 
 const DEBOUNCE_TIME = 500;
 

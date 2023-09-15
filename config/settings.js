@@ -1,4 +1,5 @@
 import { Connection } from "@solana/web3.js";
+import { baseCldImage, baseCloudImageUrl } from "../data/client/cloudinary";
 
 const dev = {
   apiHost: "http://localhost:3001",
@@ -73,6 +74,8 @@ export const adminIDs = [
   720, //Nate (username: n8solomon)
   5421, //Scott (username: EV3)
 ]
+
+export const metaPreviewImage = baseCloudImageUrl("global/Collector_Hero_btrh4t")
 
 //HELLO MOON rpc deprecated
   // ,{

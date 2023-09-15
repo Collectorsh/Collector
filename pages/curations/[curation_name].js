@@ -3,7 +3,7 @@ import UserContext from "../../contexts/user";
 import MainNavigation from "../../components/navigation/MainNavigation";
 import { Toaster } from "react-hot-toast";
 import EditWrapper from "../../components/curatorProfile/editWrapper";
-import CloudinaryImage, { getTokenCldImageId } from "../../components/CloudinaryImage";
+import CloudinaryImage from "../../components/CloudinaryImage";
 import EditDescriptionModal from "../../components/curations/editDescriptionModal";
 import EditNameModal from "../../components/curations/editNameModal";
 import EditBannerModal from "../../components/curations/editBannerModal";
@@ -29,9 +29,8 @@ import { roundToPrecision } from "../../utils/maths";
 import { QuillContent, deltaToPlainText } from "../../components/Quill";
 import Head from "next/head";
 import { metaPreviewImage } from "../../config/settings";
-import cloudinaryCloud, { baseCldImage, baseCloudImageUrl } from "../../data/client/cloudinary";
-import { dpr } from "@cloudinary/url-gen/actions/delivery";
-
+import { baseCloudImageUrl } from "../../utils/cloudinary/baseCldUrl";
+import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/cloudinary/idParsing";
 
 
 const descriptionPlaceholder = "Tell us about this curation."
@@ -79,8 +78,10 @@ function CurationPage({ curation }) {
   //currently we are allowing curations to be published without content
   const hasNoContent = false//{modules.length === 0 || !banner} 
 
-  const metaImage = curation.published_content?.banner_image
-    ? baseCloudImageUrl(`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ curation.published_content.banner_image }`)
+  const bannerImgId = parseCloudImageId(banner)
+
+  const metaImage = curation?.published_content?.banner_image
+    ? baseCloudImageUrl(parseCloudImageId(curation.published_content.banner_image))
     : metaPreviewImage
 
   const handleWebsocketMessages = useCallback(({ message, data }) => {
@@ -209,7 +210,7 @@ function CurationPage({ curation }) {
 
   const handleEditBanner = (newToken) => { 
     if (!isOwner) return;
-    const cldId = getTokenCldImageId(newToken)
+    const cldId = isCustomId(newToken) ? newToken : getTokenCldImageId(newToken)
     setDraftContent(prev => {
       const newContent = {
         ...prev,
@@ -299,7 +300,7 @@ function CurationPage({ curation }) {
                   "absolute inset-0 w-full h-full object-cover 2xl:rounded-b-2xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25",
                   !bannerLoaded && "animate-pulse"
                 )}
-                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ banner }`}
+                id={bannerImgId}
                 noLazyLoad
                 onLoad={() => setBannerLoaded(true)}
                 // width={2000}
@@ -407,6 +408,7 @@ function CurationPage({ curation }) {
               onClose={() => setEditBannerOpen(false)}
               onSave={handleEditBanner}
               submittedTokens={submittedTokens}
+              curation={curation}
             />
             <PublishConfirmationModal
               isPublished={isPublished}

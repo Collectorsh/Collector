@@ -13,7 +13,7 @@ import { Metaplex } from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
 import { useTokens } from "../data/nft/getTokens";
 import { useImageFallbackContext } from "../contexts/imageFallback";
-import { getTokenCldImageId } from "../components/CloudinaryImage";
+import { getTokenCldImageId } from "../utils/cloudinary/idParsing";
 
 
 function Gallery({user}) {

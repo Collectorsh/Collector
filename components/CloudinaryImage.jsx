@@ -10,28 +10,11 @@ import useElementObserver from '../hooks/useElementObserver';
 import { useFallbackImage, useImageFallbackContext } from '../contexts/imageFallback';
 import ContentLoader from 'react-content-loader';
 import { HandleNoUrl } from "../utils/imageFallback";
-
+import { getTokenCldImageId } from "../utils/cloudinary/idParsing";
 
 //ref 
 // Advanced Image plugins: https://cloudinary.com/documentation/react_image_transformations#plugins
 // Fetching/optimizations: https://cloudinary.com/documentation/image_optimization 
-
-//TODO dive further into responsive
-// Responsive https://cloudinary.com/documentation/responsive_images
-
-export const getTokenCldImageId = (token) => { 
-  if(!token) return null
-  //remove special characters and https/http from images link to use as an identifier 
-  const clean = (text) => text.replace(/[^\w]/g, '').replace("https", "").replace("http", "");
-
-  //TODO if parent is available from helius then use that instead of image, 
-  //and add is_master_edition to the check(they would be the parent)
-
-  //MAKE SURE TO CHANGE THIS IN THE API AS WELL in image service
-  return ((token.is_edition) && token.image)
-    ? `edition-${clean(token.image)}`
-    : token.mint
-}
 
 const CloudinaryImage = ({
   id,

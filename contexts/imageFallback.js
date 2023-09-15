@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { useRouter } from "next/router";
 import UserContext from "./user";
 import useActionCable, { makeNotificationsSocketID } from "../hooks/useWebsocket";
-import { getTokenCldImageId } from "../components/CloudinaryImage";
+import { getTokenCldImageId } from "../utils/cloudinary/idParsing";
 
 const ImageFallbackContext = createContext();
 

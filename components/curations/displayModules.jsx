@@ -2,7 +2,6 @@ import TextModule from './textModule'
 import ArtModule from './artModule'
 import SortableModule from './sortableModule'
 import SortableModulesWrapper from './sortableModulesWrapper'
-import { memo } from 'react'
 
 const DisplayModules = ({
   modules,
@@ -51,7 +50,7 @@ const DisplayModules = ({
 
   return (
     <div className="grid grid-cols-1 gap-4 p-4">
-      {modules.map((module, i) => (
+      {modules?.map((module, i) => (
         <div key={module.id}>
           <Module
             module={module}

@@ -1,5 +1,5 @@
 import { Connection } from "@solana/web3.js";
-import { baseCldImage, baseCloudImageUrl } from "../data/client/cloudinary";
+import { baseCloudImageUrl } from "../utils/cloudinary/baseCldUrl";
 
 const dev = {
   apiHost: "http://localhost:3001",

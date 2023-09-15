@@ -3,9 +3,9 @@ import apiClient from "/data/client/apiClient";
 import { Metadata, Edition, MetadataProgram } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
 import useSWR from 'swr'
-import { getTokenCldImageId } from "../../components/CloudinaryImage";
 import { connection } from "../../config/settings";
 import { Metaplex } from "@metaplex-foundation/js";
+import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
 
 export function coalesce(val, def) {
   if (val === null || typeof val === "undefined") return def;

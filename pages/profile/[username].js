@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import CloudinaryImage, { getTokenCldImageId } from "../../components/CloudinaryImage";
+import CloudinaryImage from "../../components/CloudinaryImage";
 import MainNavigation from "../../components/navigation/MainNavigation";
 import UserContext from "../../contexts/user";
 import EditWrapper from "../../components/curatorProfile/editWrapper";
@@ -20,6 +20,7 @@ import MainButton from "../../components/MainButton";
 import CreateCurationModal from "../../components/curatorProfile/createCurationModal";
 import getCuratorFromUsername from "../../data/user/getCuratorByUsername";
 import { QuillContent } from "../../components/Quill";
+import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
 
 const bioPlaceholder = "Tell us about yourself!";
 
@@ -59,6 +60,7 @@ function ProfilePage({ curator }) {
 
   const handleEditBanner = async (selectedToken) => {
     if (!isOwner) return;
+    //TODO change to allow user-uploaded images
     const cldId = getTokenCldImageId(selectedToken)
     setBanner(cldId);
     const res = await updateBannerImage(user.api_key, cldId)
@@ -68,6 +70,7 @@ function ProfilePage({ curator }) {
 
   const handleEditPfp = async (selectedToken) => { 
     if (!isOwner) return;
+    //TODO change to allow user-uploaded images
     const cldId = getTokenCldImageId(selectedToken)
     setPfp(cldId);
     const res = await updateProfileImage(user.api_key, cldId)

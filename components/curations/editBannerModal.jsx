@@ -8,10 +8,18 @@ import Modal from "../Modal";
 import SearchBar from "../SearchBar";
 import { RoundedCurve } from "./roundedCurveSVG";
 import { useImageFallbackContext } from "../../contexts/imageFallback";
+import FileDrop from "../FileDrop";
+import { customIdPrefix } from "../../utils/cloudinary/idParsing";
+import uploadCldImage from "../../data/cloudinary/uploadCldImage";
 
-const tabs = ["submitted", "owned"]
+const uploadTabTitle = "Upload"
+const tabs = [
+  // uploadTabTitle,
+  "Submitted Art",
+  "Owned Art"
+]
 
-export default function EditBannerModal({ isOpen, onClose, onSave, submittedTokens }) {
+export default function EditBannerModal({ isOpen, onClose, onSave, submittedTokens, curation }) {
   const [user] = useContext(UserContext);
   const { uploadSingleToken } = useImageFallbackContext()
   const tokens = useTokens(user?.public_keys, {
@@ -20,13 +28,17 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
   });
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const [tabUnderlineWidth, setTabUnderlineWidth] = useState(134);
+  const [tabUnderlineWidth, setTabUnderlineWidth] = useState(80);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
   const tabsRef = useRef([]);
 
   const [selected, setSelected] = useState(null);
   const [search, setSearch] = useState("");
 
+  const [imageBuffer, setImageBuffer] = useState(null);
+  const [saving, setSaving] = useState(false);
+
+  const saveDisabled = (tabs[activeTabIndex] === uploadTabTitle ? !imageBuffer : !selected) || saving
 
   useEffect(() => {
     function setTabPosition() {
@@ -41,9 +53,32 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
     return () => window.removeEventListener("resize", setTabPosition);
   }, [activeTabIndex]);
 
-  const handleSave = () => { 
-    uploadSingleToken(selected)
-    onSave(selected);
+  const handleSave = async () => { 
+    if (saveDisabled) return
+    setSaving(true)
+    if (tabs[activeTabIndex] === uploadTabTitle) {
+      //Handle custom Uploads
+      const cldId = `${customIdPrefix}/curation-banner/${curation.id}`
+      const res = await uploadCldImage({
+        imageBuffer,
+        cldId: cldId
+      })
+      if (res?.public_id) {
+        console.log("🚀 ~ file: editBannerModal.jsx:60 ~ handleSave ~ res :", res.public_id)
+        console.log("🚀 ~ file: editBannerModal.jsx:67 ~ handleSave ~ cldId:", cldId)
+        onSave(cldId);
+      } else {
+        console.log("Error uploading image: ", res?.error)
+        setSaving(false)
+        return
+      }
+    } else {
+      //Handle token image uploads
+      await uploadSingleToken(selected)
+      onSave(selected);
+    }
+
+    setSaving(false)
     onClose();
     setTimeout(() => setSearch(""), 500);
   }
@@ -54,6 +89,10 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
       setSelected(null);
     }, 500);
   }
+
+  const onDrop = useCallback((fileBuffer) => {
+    setImageBuffer(fileBuffer);
+  }, []);
 
   const searchFilter = useCallback((token) => {
     const artNameMatch = token.name.toLowerCase().includes(search.toLowerCase())
@@ -78,39 +117,8 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
   
   const ownedContent = orderedTokens
     ? (
-      <div className="border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
-        <div className={clsx("w-full h-[532px] p-2 overflow-auto grid gap-4 rounded-lg", gridColumns)}>
-          {orderedTokens.map((token, i) => {
-            const isSelected = selected?.mint === token.mint;
-            return (
-              <button className="relative flex justify-center flex-shrink-0" key={token.mint}
-                onClick={() => setSelected(isSelected ? null : token)}
-              >
-                <CloudinaryImage
-                  className={clsx("flex-shrink-0 overflow-hidden object-cover shadow-lg dark:shadow-white/5",
-                    "w-full h-[250px] rounded-lg",
-                    isSelected && "ring-4 ring-black dark:ring-white"
-                  )}
-                  useMetadataFallback
-                  token={token}
-                  width={800}
-                />
-              </button>
-            )
-          })}
-        </div>
-      </div>
-    )
-    : (
-      <div className="h-[532px] max-h-full flex items-center justify-center">
-        <p className="animate-pulse">Gathering your digital assets...</p>
-      </div>
-    )
-
-  const submittedContent = (
-    <div className="border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
-      <div className={clsx("w-full h-[532px] p-2 overflow-auto grid gap-4 rounded-lg", gridColumns)}>
-        {submittedTokens?.filter(searchFilter).map((token, i) => {
+      <div className={clsx("w-full h-full p-2 overflow-auto grid gap-4 rounded-lg", gridColumns)}>
+        {orderedTokens.map((token, i) => {
           const isSelected = selected?.mint === token.mint;
           return (
             <button className="relative flex justify-center flex-shrink-0" key={token.mint}
@@ -122,7 +130,6 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
                   isSelected && "ring-4 ring-black dark:ring-white"
                 )}
                 useMetadataFallback
-                useUploadFallback
                 token={token}
                 width={800}
               />
@@ -130,10 +137,52 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
           )
         })}
       </div>
+    )
+    : (
+      <div className="h-full flex items-center justify-center">
+        <p className="animate-pulse">Gathering your digital assets...</p>
+      </div>
+    )
+
+  const submittedContent = (
+    <div className={clsx("w-full h-full p-2 overflow-auto grid gap-4 rounded-lg", gridColumns)}>
+      {submittedTokens?.filter(searchFilter).map((token, i) => {
+        const isSelected = selected?.mint === token.mint;
+        return (
+          <button className="relative flex justify-center flex-shrink-0" key={token.mint}
+            onClick={() => setSelected(isSelected ? null : token)}
+          >
+            <CloudinaryImage
+              className={clsx("flex-shrink-0 overflow-hidden object-cover shadow-lg dark:shadow-white/5",
+                "w-full h-[250px] rounded-lg",
+                isSelected && "ring-4 ring-black dark:ring-white"
+              )}
+              useMetadataFallback
+              useUploadFallback
+              token={token}
+              width={800}
+            />
+          </button>
+        )
+      })}
+    </div>
+  )
+
+  const uploadComp = (
+    <div className="p-2 rounded-lg h-full w-full">
+      <FileDrop
+        onDrop={onDrop}
+        fileName={``}
+        helperText={"Recommended resolution 1500x500"}
+      />
     </div>
   )
   
-  const tabContent = [submittedContent, ownedContent]
+  const tabContent = [
+    // uploadComp,
+    submittedContent,
+    ownedContent
+  ]
 
   if(!user) return null
   return (
@@ -153,8 +202,6 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
             }
             const isSelected = activeTabIndex === i;
 
-            // if(i === 0 && !activeTabIndex) setActiveTabIndex(0)
-
             return (
               <button
                 key={tab}
@@ -164,7 +211,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
                   isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
                 onClick={handleClick}
               >
-                {tab} Art
+                {tab}
               </button>
             )
           })}
@@ -180,13 +227,14 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
           style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
         />
       </div>
-      
-      {tabContent[activeTabIndex]}
+      <div className="h-[540px] max-h-full border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+        {tabContent[activeTabIndex]}
+      </div>
       <div className="w-full flex justify-end gap-4 mt-4">
         <MainButton onClick={handleClose}>
           Cancel
         </MainButton>
-        <MainButton onClick={handleSave} solid disabled={!selected}>
+        <MainButton onClick={handleSave} solid disabled={saveDisabled}>
           Save
         </MainButton>
       </div>

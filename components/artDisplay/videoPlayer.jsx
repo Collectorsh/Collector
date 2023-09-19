@@ -25,6 +25,7 @@ const VideoPlayer = ({
   useEffect(() => {
     const videoElement = videoRef.current;
     if (!videoElement) return;
+
     const handleIsPlaying = () => setIsPlaying(true)
     const handleIsPaused = () => setIsPlaying(false)
 
@@ -55,11 +56,9 @@ const VideoPlayer = ({
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
       videoRef.current.play()
-      setIsPlaying(true)
       setUserPaused(false)
     } else {
       videoRef.current.pause()
-      setIsPlaying(false)
       setUserPaused(true)
     }
   }
@@ -67,10 +66,12 @@ const VideoPlayer = ({
     preventPropAndDefault(e)
     if (!videoRef.current) return;
     setUserMuted(prev => {
+      if(videoRef.current.paused) videoRef.current.play()
       videoRef.current.muted = !prev
       return !prev
     })
   }
+
   const handleMute = (e) => {
     preventPropAndDefault(e)
     if (!videoRef.current || !userMuted) return;
@@ -81,6 +82,7 @@ const VideoPlayer = ({
     if (!videoRef.current || !userMuted) return;
     videoRef.current.muted = false
   }
+
   return (
     <div
       className={wrapperClass}
@@ -101,7 +103,7 @@ const VideoPlayer = ({
       />
 
       <video
-        autoPlay
+        // autoPlay
         ref={videoRef}
         preload="metadata"
         muted

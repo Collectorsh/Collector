@@ -177,18 +177,15 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
 
   useEffect(() => {
     if (!videoRef.current) return;
-
     if (isVisible && videoLoaded) {
       videoRef.current.play()
     } else {
       videoRef.current.pause()
     }
-
   }, [isVisible, videoLoaded])
 
   useEffect(() => {
     if (!token) return;
-
     if (token.animation_url) {
       if (token.animation_url.split(".").pop().split("ext=").pop().includes("mp4")) {
         setVideoUrl(token.animation_url);

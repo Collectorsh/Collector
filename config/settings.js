@@ -7,13 +7,13 @@ const dev = {
   dao21: "https://api.21dao.xyz",
 };
 
-const prod = {
+const production = {
   apiHost: process.env.NEXT_PUBLIC_ALT_API || "https://collector.sh/collector-api",
   host: "https://collector.sh",
   dao21: "https://api.21dao.xyz",
-};
+}; 
 
-const beta = {
+const test = {
   apiHost: "https://collector-testing-kvak9.ondigitalocean.app/collector-api",
   host: "https://collector-testing-kvak9.ondigitalocean.app",
   dao21: "https://api.21dao.xyz",
@@ -22,9 +22,9 @@ const beta = {
 const config = (function(environment) {
   switch (environment) {
     case "production":
-      return prod;
-    case "beta":
-      return beta;
+      return production;
+    case "test":
+      return test;
     default:
       return dev;
   }

@@ -37,7 +37,7 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
         <div className="my-8">
             <h2 className="font-bold text-4xl collector text-center">{name.replaceAll("_", " ")}</h2>
             {withCurator && curator
-              ? (<Link href={`/profile/${ curator.username }`} >
+              ? (<Link href={`/gallery/${ curator.username }`} >
                 <a className="flex gap-2 items-center justify-center mt-4 hover:scale-105 duration-300 w-fit mx-auto">
                   <p className="text-lg">Curated by {curator.username}</p>
                   {curator.profile_image

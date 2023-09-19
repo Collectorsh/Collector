@@ -12,6 +12,7 @@ import { Oval } from 'react-loader-spinner';
 import Tippy from "@tippyjs/react"
 import "tippy.js/dist/tippy.css";
 import UserContext from '../../contexts/user';
+import { MuteButton } from '../../pages/nft/[mint]';
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
@@ -132,6 +133,8 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
   const videoRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true)
+  const [hasAudio, setHasAudio] = useState(false)
 
   // const [isWrapped, setIsWrapped] = useState(false)
   // const wrapContainerRef = useRef(null);
@@ -174,20 +177,17 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
 
   useEffect(() => {
     if (!videoRef.current) return;
-
     if (isVisible && videoLoaded) {
       videoRef.current.play()
     } else {
       videoRef.current.pause()
     }
-
   }, [isVisible, videoLoaded])
 
   useEffect(() => {
     if (!token) return;
-
     if (token.animation_url) {
-      if (token.animation_url.split(".").pop().includes("mp4")) {
+      if (token.animation_url.split(".").pop().split("ext=").pop().includes("mp4")) {
         setVideoUrl(token.animation_url);
       }
     }
@@ -200,6 +200,24 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
     await handleCollect(token)
     setPurchasing(false)
   }
+
+  const handleMuteToggle = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!videoRef.current) return;
+    setIsMuted(prev => {
+      videoRef.current.muted = !prev
+      return !prev
+    })
+  }
+  const handleMute = () => {
+    if (!videoRef.current || !isMuted) return;
+    videoRef.current.muted = true
+  }
+  const handleUnMute = () => { 
+    if (!videoRef.current || !isMuted) return;
+    videoRef.current.muted = false
+  }
   
   return (
     <div
@@ -209,9 +227,20 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
       }}
     >
       <Link href={`/nft/${ token.mint }`} >
-        <a className='relative block w-fit mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0'>
-          {videoUrl && loaded ? (
+        <a
+          onMouseEnter={handleUnMute}
+          onMouseLeave={handleMute}
+          className='relative block w-fit mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0 group/wrapper'>
+          {videoUrl ? (
             <>
+       
+              <MuteButton
+                onClick={handleMuteToggle}
+                iconClassName="w-7 h-7"
+                isMuted={isMuted}
+                className="group-hover/wrapper:translate-y-2 group-active/wrapper:translate-y-0"
+              />
+    
               <video
                 autoPlay
                 ref={videoRef}
@@ -230,6 +259,7 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
                 <source src={videoUrl} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
+             
             </>
           ) : null}
 

@@ -15,6 +15,7 @@ import DetailListings from "../../components/detail/listings";
 import Link from "next/link";
 import { image } from "@cloudinary/url-gen/qualifiers/source";
 import { getImageSize } from "react-image-size";
+import { SpeakerphoneIcon } from "@heroicons/react/outline";
 
 export default function DetailPage({token, curations}) {
   // return <NotFound />
@@ -29,6 +30,7 @@ export default function DetailPage({token, curations}) {
   const [imageWidth, setImageWidth] = useState("70vw");
   const videoRef = useRef(null);
   const imageRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(false);
 
   const isMasterEdition = token?.is_master_edition
   const isEdition = token?.is_edition
@@ -66,27 +68,31 @@ export default function DetailPage({token, curations}) {
     return () => window.removeEventListener("resize", getImageSize);
   }, [imgLoaded])
 
-  useEffect(() => {
+   useEffect(() => {
     if (!videoRef.current) return;
-    if (videoLoaded) {
-      videoRef.current.play()
-    } else {
-      videoRef.current.pause()
-    }
-
+     if (videoLoaded) {
+       videoRef.current.play()
+       videoRef.current.muted = false
+     }
   }, [videoLoaded])
 
   useEffect(() => {
     if (!token) return;
-
     if (token.animation_url) {
-      if (token.animation_url.split(".").pop().includes("mp4")) {
+      if (token.animation_url.split(".").pop().split("ext=").pop().includes("mp4")) {
         setVideoUrl(token.animation_url);
       }
     }
   }, [token]);
 
   const expandImage = () => setImageExpanded(!imageExpanded)
+  const handleMuteToggle = () => {
+    if (!videoRef.current) return;
+    setIsMuted(prev => {
+      videoRef.current.muted = !prev
+      return !prev
+    })
+  }
 
   return (
     <>
@@ -104,13 +110,15 @@ export default function DetailPage({token, curations}) {
               </ContentLoader>
             
           ) : null}
-        <div className="relative shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg overflow-hidden w-fit h-fit mx-auto group">
+        <div
+          className="relative shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg overflow-hidden w-fit h-fit mx-auto group"
+        >
           <button
             onClick={expandImage}
             className={clsx("absolute z-[15] right-5 top-5 p-0.5",
               "bg-neutral-200 dark:bg-neutral-700 rounded shadow-lg dark:shadow-white/10",
               "duration-300",
-              "opacity-50 hover:opacity-100 group-hover:opacity-100",
+              "md:opacity-50 hover:opacity-100 group-hover:opacity-100",
               "hover:scale-110 active:scale-100",
             )}
           >
@@ -126,7 +134,7 @@ export default function DetailPage({token, curations}) {
                 loop
                 playsInline
                 id={`video-${ token.mint }`}
-                className="w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10 duration-200 opacity-0"
+                className="w-full h-full object-center object-cover absolute inset-0 z-10 duration-200 opacity-0"
                 onCanPlayThrough={e => {
                   e.target.classList.add("opacity-100")
                   setVideoLoaded(true)
@@ -136,6 +144,12 @@ export default function DetailPage({token, curations}) {
                 <source src={videoUrl} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
+              <MuteButton
+                onClick={handleMuteToggle}
+                isMuted={isMuted}
+                iconClassName="w-7 h-7"
+              />
+                
             </>
           ) : null}
 
@@ -225,3 +239,26 @@ export async function getServerSideProps(context) {
   return { props: { token, curations } };
 }
 
+export const MuteButton = ({ isMuted, onClick, className, iconClassName }) => { 
+  return (
+    <button
+      onClick={onClick}
+      className={clsx("absolute z-[15] right-5 bottom-5 p-0.5",
+        "bg-neutral-200 dark:bg-neutral-700 rounded shadow-lg dark:shadow-white/10",
+        "duration-300",
+        "md:opacity-50 hover:opacity-100 group-hover:opacity-100",
+        "hover:scale-110 active:scale-100",
+        className
+      )}
+    >
+      {isMuted
+        ? < svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={iconClassName}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.531V19.94a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.506-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.395C2.806 8.757 3.63 8.25 4.51 8.25H6.75z" />
+          </svg>
+        : <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={iconClassName}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+          </svg>
+      }
+    </button>
+  )
+}

@@ -327,7 +327,7 @@ function CurationPage({ curation }) {
             <h1 className="font-bold text-5xl">{name.replaceAll("_", " ")}</h1>
           </EditWrapper>
         </div>
-        <Link href={`/profile/${ curation.curator.username }`} >
+        <Link href={`/gallery/${ curation.curator.username }`} >
           <a className="flex gap-2 items-center justify-center mb-8 hover:scale-105 duration-300 w-fit mx-auto">
             <p className="text-lg">Curated by {curation.curator.username}</p>
             {curation.curator.profile_image

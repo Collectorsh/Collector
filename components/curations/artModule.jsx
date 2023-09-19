@@ -12,7 +12,9 @@ import { Oval } from 'react-loader-spinner';
 import Tippy from "@tippyjs/react"
 import "tippy.js/dist/tippy.css";
 import UserContext from '../../contexts/user';
-import { MuteButton } from '../../pages/nft/[mint]';
+import { MuteButton, PlayButton } from '../../pages/nft/[mint]';
+import { set } from 'nprogress';
+import VideoPlayer from '../artDisplay/videoPlayer';
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
@@ -128,19 +130,13 @@ export default ArtModule;
 export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, height, width, isMobile }) => {  
   const [user] = useContext(UserContext);
 
-  const [loaded, setLoaded] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
-  const videoRef = useRef(null);
-  const [isMuted, setIsMuted] = useState(true)
-  const [hasAudio, setHasAudio] = useState(false)
 
   // const [isWrapped, setIsWrapped] = useState(false)
   // const wrapContainerRef = useRef(null);
   // const wrapItemRef = useRef(null);
-
-  const { isVisible } = useElementObserver(videoRef, "500px")  
 
   const isMasterEdition = token.is_master_edition
   const isEdition = token.is_edition
@@ -167,23 +163,14 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
 
   // useEffect(() => {
   //   const findIsWrapped = () => {
-  //     const isWrapped = wrapContainerRef.current.offsetHeight - wrapItemRef.current.offsetHeight > 30//30px threshold 
+  //     const isWrapped = wrapContainerRef.current.offsetHeight - wrapItemRef.current.offsetHeight > 30//30px threshold
   //     setIsWrapped(isWrapped)
   //   }
   //   findIsWrapped()
   //   window.addEventListener('resize',findIsWrapped)
   //   return () => window.removeEventListener('resize', findIsWrapped)
   // }, [])
-
-  useEffect(() => {
-    if (!videoRef.current) return;
-    if (isVisible && videoLoaded) {
-      videoRef.current.play()
-    } else {
-      videoRef.current.pause()
-    }
-  }, [isVisible, videoLoaded])
-
+  
   useEffect(() => {
     if (!token) return;
     if (token.animation_url) {
@@ -200,24 +187,6 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
     await handleCollect(token)
     setPurchasing(false)
   }
-
-  const handleMuteToggle = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (!videoRef.current) return;
-    setIsMuted(prev => {
-      videoRef.current.muted = !prev
-      return !prev
-    })
-  }
-  const handleMute = () => {
-    if (!videoRef.current || !isMuted) return;
-    videoRef.current.muted = true
-  }
-  const handleUnMute = () => { 
-    if (!videoRef.current || !isMuted) return;
-    videoRef.current.muted = false
-  }
   
   return (
     <div
@@ -228,52 +197,28 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
     >
       <Link href={`/nft/${ token.mint }`} >
         <a
-          onMouseEnter={handleUnMute}
-          onMouseLeave={handleMute}
-          className='relative block w-fit mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0 group/wrapper'>
+          
+          className='relative block w-fit mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0 '>
           {videoUrl ? (
-            <>
-       
-              <MuteButton
-                onClick={handleMuteToggle}
-                iconClassName="w-7 h-7"
-                isMuted={isMuted}
-                className="group-hover/wrapper:translate-y-2 group-active/wrapper:translate-y-0"
-              />
-    
-              <video
-                autoPlay
-                ref={videoRef}
-                preload="metadata"
-                muted
-                loop
-                playsInline
-                id={`video-${ token.mint }`}
-                className="mx-auto w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10 duration-200 opacity-0"
-                onCanPlayThrough={e => {
-                  e.target.classList.add("opacity-100")
-                  setVideoLoaded(true)
-                }}
-                onError={(e) => e.target.classList.add("hidden")}
-              >
-                <source src={videoUrl} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-             
-            </>
+            <VideoPlayer
+              id={`video-player-${ token.mint }`}
+              videoUrl={videoUrl}
+              videoLoaded={videoLoaded}
+              setVideoLoaded={setVideoLoaded}
+              toggleMuteOnMouseOver
+              controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
+            />
           ) : null}
-
-         
 
           <CloudinaryImage
             token={token}
             className={clsx(
               "object-contain",
               "max-h-[75vh]",
+              videoLoaded && "invisible"
             )}
             width={cacheWidth}
             noLazyLoad
-            onLoad={() => setLoaded(true)}
           />
 
         </a>

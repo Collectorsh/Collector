@@ -6,24 +6,25 @@ export default function About() {
     <div className="dark:bg-black dark:text-whitish">
       <MainNavigation />
       <div className="max-w-3xl mx-auto pb-12">
-        <div className="px-4">
-          <h2 className="text-2xl w-full pt-8 font-extrabold mb-8 text-black inline-block dark:text-whitish">
-            About Collector
-          </h2>
-          <p>
-            Welcome to Collector, your place to discover and share beautiful art.
-            <br/><br/>
-            At Collector, we believe that great art deserves to be seen. Our platform is here to help you find stunning digital art, making it easy for anyone to enjoy creativity at its finest.
-            <br/><br/>
-            The world of NFTs has changed how we create, share, and collect art, allowing everyone to take part. But as more and more art fills the NFT market, it&apos;s becoming harder to find the real gems. Lots of talented artists get lost in the crowd, and it&apos;s often hard to know where to look.
+        <div className="px-4 mt-12">
+          <p className="text-lg">
+            Dear Art Lovers,
             <br /><br />
-            Here at Collector, we strive to cut through the noise. Our platform empowers artists and collectors to tell the stories behind the artwork, providing a rich context that deepens appreciation and builds trust. We&apos;re dedicated to making the art discovery process simpler, more meaningful, and more enjoyable for everyone.
+            I&apos;m Nate, the founder of Collector. My journey with Collector began from a personal challenge. As an avid art enthusiast, I constantly found myself overwhelmed, struggling to keep up with the incredible array of digital art emerging every day. Existing platforms just didn&apos;t cut it for me. I wanted a platform that could help me, and others like me, navigate this vast and vibrant world with ease. That&apos;s when Collector was born - not just as a project, but as a solution to my own problem.
             <br /><br />
-            One of our unique features is our free 2D galleries. These galleries allow collectors to showcase their collections and introduce others to their favorite artists. This way, we can create a community where art is shared and enjoyed by all.
+            Initially, Collector was centered around simple yet beautiful 2D galleries, where collectors could freely showcase their prized digital art collections. As we delved deeper into the needs of the art community, we introduced &apos;Curations&apos; as a part of our gallery offerings. Unlike our traditional galleries, each Curation is its own unique smart contract, a digital agreement offering unparalleled flexibility, even for those new to the concept.
             <br /><br />
-            And this is just the start. We invite you to join us on this journey, to help shape the digital art world and bring talented artists into the spotlight.
+            With the help of Scott, our technical lead, these Curations empower curators and artists, providing them with the tools and autonomy to run their businesses more effectively and to innovate in ways previously unimagined in the art space. Our commitment to leveraging cutting-edge technology for the art community goes beyond mere display; it&apos;s about fostering growth, creativity, and entrepreneurial spirit. While our galleries laid the foundation, the addition of Curations reflects our dedication to pushing the art space forward, adapting to its evolving needs, and exploring new possibilities.
             <br /><br />
-            Welcome to Collector. Welcome to the future of art discovery.
+            Art has the power to inspire, evoke emotion, and bring us together. Our mission with Collector is to make digital art a universal experience, and our vision is a future where our platform stands at the forefront of an art world that&apos;s open, inclusive, and bursting with creativity. Our values champion and support artists at every stage, empower curators with the tools to amplify artists&apos; voices, and build a community where collectors can come together, share, and grow.
+            <br /><br />
+            Thank you for being a part of this journey. I&apos;ve been deeply humbled by the overwhelming support for Collector. Together, we&apos;re redefining the art world.
+            <br /><br />
+            All the best,
+            <br /> <br />
+            Nate
+            <br />
+            Founder, Collector
           </p>
         </div>
       </div>

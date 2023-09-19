@@ -8,21 +8,17 @@ import useBreakpoints from '../../hooks/useBreakpoints';
 import { roundToPrecision } from '../../utils/maths';
 import Link from 'next/link';
 import useElementObserver from '../../hooks/useElementObserver';
-import recordSale from '../../data/salesHistory/recordSale';
-import { shootConfetti } from '../../utils/confetti';
 import { Oval } from 'react-loader-spinner';
 import Tippy from "@tippyjs/react"
 import "tippy.js/dist/tippy.css";
 import UserContext from '../../contexts/user';
-import { error, success } from '../../utils/toast';
-import { getMintEditionTX } from '../../utils/curations/mintEdition';
-import { connection } from '../../config/settings';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { set } from 'nprogress';
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
   const [editArtOpen, setEditArtOpen] = useState(false)
+
+  const wrapperRef = useRef(null)
+  const { isVisible } = useElementObserver(wrapperRef, "400px")
 
   // const [rowHeight, setRowHeight] = useState(0)
   // const [rowWidth, setRowWidth] = useState(0)
@@ -64,6 +60,7 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
       // const width = (widthPercent / 100) * rowWidth
       return (
         <ArtItem
+          isMobile={isMobile}
           key={tokenMint}
           token={token}
           widthPercent={widthPercent}
@@ -79,8 +76,8 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
   return (
     <div
-      // ref={rowRef}
-      className="relative group w-full group/artRow min-h-[4rem]"
+      ref={wrapperRef}
+      className={clsx("relative group w-full group/artRow min-h-[4rem] duration-300", isVisible ? "opacity-100" : "opacity-0")}
     >
       <EditWrapper
         isOwner={isOwner}
@@ -127,7 +124,7 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
 export default ArtModule;
 
-export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, height, width }) => {  
+export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, height, width, isMobile }) => {  
   const [user] = useContext(UserContext);
 
   const [loaded, setLoaded] = useState(false);
@@ -153,6 +150,17 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
   const supplyText = isMasterEdition
     ? `${ maxSupply - supply }/${ maxSupply } Editions`
     : "1 of 1"
+  
+  const cacheWidth = useMemo(() => { 
+    if (isMobile) return 1600
+    switch (columns) { 
+      case 1: return 3000
+      case 2: return 2000
+      case 3: return 1600
+      case 4: return 1200
+      default: return 1200
+    }
+  }, [columns, isMobile])
 
   // useEffect(() => {
   //   const findIsWrapped = () => {
@@ -229,11 +237,11 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
 
           <CloudinaryImage
             token={token}
-            useUploadFallback
             className={clsx(
               "object-contain",
               "max-h-[75vh]",
             )}
+            width={cacheWidth}
             noLazyLoad
             onLoad={() => setLoaded(true)}
           />
@@ -255,7 +263,7 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
           ) : null}
 
           <div className='flex items-center gap-2 '>
-            {isListed
+            {(token?.buy_now_price)
               ? <>
                 <p className=''>{roundToPrecision(token.buy_now_price, 2)}◎</p>
                 <span>-</span>

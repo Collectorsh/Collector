@@ -1,16 +1,16 @@
 import { v2 as cloudinary } from 'cloudinary'
 
 export default async function handler(req, res) {
-  const { imageBuffer , cldId } = req.body;
-  if (!imageBuffer || !cldId) return res.status(500).json({ error: "Missing required parameters" });
-  console.log("🚀 ~ file: uploadImage.js:5 ~ handler ~ imageBuffer:", imageBuffer)
-  const buffer = Buffer.from(imageBuffer, 'base64');
+  const { image_buffer , cld_id } = req.body;
+  if (!image_buffer || !cld_id) return res.status(500).json({ error: "Missing required parameters" });
+  console.log("🚀 ~ file: uploadImage.js:5 ~ handler ~ image_buffer:", image_buffer)
+  const buffer = Buffer.from(image_buffer, 'base64');
   if (!Buffer.isBuffer(buffer)) return res.status(500).json({ error: "Invalid image buffer" });
   try {
-    cloudinary.uploader
+    await cloudinary.uploader
       .upload_stream({
         resource_type: "auto",
-        public_id: cldId,
+        public_id: cld_id,
         overwrite: true,
       }, (error, result) => {
         if (error) {
@@ -20,7 +20,6 @@ export default async function handler(req, res) {
           res.status(200).json({ public_id: result.public_id });
         }
       }).end(buffer);
-    
   } catch (error) {
     console.log("Error uploading image", error.message);
     res.status(400).json({ error: error.message })

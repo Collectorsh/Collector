@@ -15,6 +15,8 @@ import DetailListings from "../../components/detail/listings";
 import Link from "next/link";
 import { image } from "@cloudinary/url-gen/qualifiers/source";
 import { getImageSize } from "react-image-size";
+import { SpeakerphoneIcon } from "@heroicons/react/outline";
+import VideoPlayer from "../../components/artDisplay/videoPlayer";
 
 export default function DetailPage({token, curations}) {
   // return <NotFound />
@@ -27,7 +29,6 @@ export default function DetailPage({token, curations}) {
   const [videoUrl, setVideoUrl] = useState(null);
   const [imageExpanded, setImageExpanded] = useState(false);
   const [imageWidth, setImageWidth] = useState("70vw");
-  const videoRef = useRef(null);
   const imageRef = useRef(null);
 
   const isMasterEdition = token?.is_master_edition
@@ -67,26 +68,16 @@ export default function DetailPage({token, curations}) {
   }, [imgLoaded])
 
   useEffect(() => {
-    if (!videoRef.current) return;
-    if (videoLoaded) {
-      videoRef.current.play()
-    } else {
-      videoRef.current.pause()
-    }
-
-  }, [videoLoaded])
-
-  useEffect(() => {
     if (!token) return;
-
     if (token.animation_url) {
-      if (token.animation_url.split(".").pop().includes("mp4")) {
+      if (token.animation_url.split(".").pop().split("ext=").pop().includes("mp4")) {
         setVideoUrl(token.animation_url);
       }
     }
   }, [token]);
 
   const expandImage = () => setImageExpanded(!imageExpanded)
+
 
   return (
     <>
@@ -104,44 +95,32 @@ export default function DetailPage({token, curations}) {
               </ContentLoader>
             
           ) : null}
-        <div className="relative shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg overflow-hidden w-fit h-fit mx-auto group">
+        <div
+          className="relative shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg overflow-hidden w-fit h-fit mx-auto group"
+        >
           <button
             onClick={expandImage}
             className={clsx("absolute z-[15] right-5 top-5 p-0.5",
               "bg-neutral-200 dark:bg-neutral-700 rounded shadow-lg dark:shadow-white/10",
               "duration-300",
-              "opacity-50 hover:opacity-100 group-hover:opacity-100",
+              "md:opacity-50 hover:opacity-100 group-hover:opacity-100",
               "hover:scale-110 active:scale-100",
             )}
           >
             <ArrowsExpandIcon className="w-7 h-7" />
           </button>
-          {videoUrl && imgLoaded ? (
-            <>
-              <video
-                autoPlay
-                ref={videoRef}
-                preload="metadata"
-                muted
-                loop
-                playsInline
-                id={`video-${ token.mint }`}
-                className="w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10 duration-200 opacity-0"
-                onCanPlayThrough={e => {
-                  e.target.classList.add("opacity-100")
-                  setVideoLoaded(true)
-                }}
-                onError={(e) => e.target.classList.add("hidden")}
-              >
-                <source src={videoUrl} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </>
+          {(videoUrl && !imageExpanded) ? (
+            <VideoPlayer
+              id={`video-player-${ token.mint }`}
+              videoUrl={videoUrl}
+              videoLoaded={videoLoaded}
+              setVideoLoaded={setVideoLoaded}
+            />
           ) : null}
 
           <CloudinaryImage
             imageRef={imageRef}
-            className="max-h-[75vh]"
+            className={clsx("max-h-[75vh]", videoLoaded && "invisible")}
             token={token}
             useUploadFallback
             onLoad={() => setImgLoaded(true)}

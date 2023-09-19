@@ -20,9 +20,10 @@ import MainButton from "../../components/MainButton";
 import CreateCurationModal from "../../components/curatorProfile/createCurationModal";
 import getCuratorFromUsername from "../../data/user/getCuratorByUsername";
 import { QuillContent } from "../../components/Quill";
-import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
+import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/cloudinary/idParsing";
 
 const bioPlaceholder = "Tell us about yourself!";
+const getBioDelta = (curator) => curator?.bio_delta || JSON.stringify({ ops: [{ insert: curator?.bio || bioPlaceholder }] })
 
 function ProfilePage({ curator }) {
   const [user] = useContext(UserContext);
@@ -35,9 +36,7 @@ function ProfilePage({ curator }) {
 
   const [banner, setBanner] = useState(curator?.banner_image);
   const [pfp, setPfp] = useState(curator?.profile_image);
-  const bioDelta = curator?.bio_delta || JSON.stringify({ops:[{insert: curator?.bio || bioPlaceholder}]})
-
-  const [bio, setBio] = useState(bioDelta);
+  const [bio, setBio] = useState(getBioDelta(curator));
   const [socials, setSocials] = useState(curator?.socials || []);
 
   const [bannerLoaded, setBannerLoaded] = useState(true);
@@ -47,6 +46,19 @@ function ProfilePage({ curator }) {
   const curations = isOwner
     ? curator?.curations.sort(curation => curation.is_published ? -1 : 1)
     : curator?.curations.filter(curation => curation.is_published);
+  
+  const bannerImgId = parseCloudImageId(banner)
+  const pfpImgId = parseCloudImageId(pfp)
+
+  useEffect(() => {
+    //update the state when the curator changes
+    if (curator) {
+      setBanner(curator.banner_image);
+      setPfp(curator.profile_image);
+      setBio(getBioDelta(curator));
+      setSocials(curator.socials || []);
+    }
+  },[curator])
 
   useEffect(() => {
     //set loaded to false when the banner changes
@@ -60,8 +72,7 @@ function ProfilePage({ curator }) {
 
   const handleEditBanner = async (selectedToken) => {
     if (!isOwner) return;
-    //TODO change to allow user-uploaded images
-    const cldId = getTokenCldImageId(selectedToken)
+    const cldId = isCustomId(selectedToken) ? selectedToken : getTokenCldImageId(selectedToken)
     setBanner(cldId);
     const res = await updateBannerImage(user.api_key, cldId)
     if (res.status === "success") success("Banner Updated")
@@ -70,8 +81,7 @@ function ProfilePage({ curator }) {
 
   const handleEditPfp = async (selectedToken) => { 
     if (!isOwner) return;
-    //TODO change to allow user-uploaded images
-    const cldId = getTokenCldImageId(selectedToken)
+    const cldId = isCustomId(selectedToken) ? selectedToken : getTokenCldImageId(selectedToken)
     setPfp(cldId);
     const res = await updateProfileImage(user.api_key, cldId)
     if (res.status === "success") success("Profile Image Updated!")
@@ -121,7 +131,7 @@ function ProfilePage({ curator }) {
                   "absolute inset-0 w-full h-full object-cover 2xl:rounded-b-2xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25",
                   !bannerLoaded && "animate-pulse"
                 )}
-                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${banner}`}
+                id={bannerImgId}
                 noLazyLoad
                 onLoad={() => setBannerLoaded(true)}
                 width={2000}
@@ -147,7 +157,7 @@ function ProfilePage({ curator }) {
                   "w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black",
                   !pfpLoaded && "animate-pulse"
                 )}
-                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ pfp }`}
+                id={pfpImgId}
                 noLazyLoad
                 onLoad={() => setPfpLoaded(true)}
                 width={500}

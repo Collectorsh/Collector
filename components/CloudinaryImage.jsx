@@ -120,8 +120,9 @@ const CloudinaryImage = ({
     }
   }
 
+
   const handleLoad = (e) => {
-    console.log("IMAGE LOADED")
+    // console.log("IMAGE LOADED")
     // setFullHeight(e.target.offsetHeight) //for maintaining layouts (currently not using)
     if (onLoad) onLoad(e)
   }

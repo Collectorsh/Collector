@@ -8,13 +8,14 @@ import Modal from "../Modal";
 import SearchBar from "../SearchBar";
 import { RoundedCurve } from "./roundedCurveSVG";
 import { useImageFallbackContext } from "../../contexts/imageFallback";
-import FileDrop from "../FileDrop";
+import FileDrop, { cleanFileName } from "../FileDrop";
 import { customIdPrefix } from "../../utils/cloudinary/idParsing";
 import uploadCldImage from "../../data/cloudinary/uploadCldImage";
+import { error } from "../../utils/toast";
 
 const uploadTabTitle = "Upload"
 const tabs = [
-  // uploadTabTitle,
+  uploadTabTitle,
   "Submitted Art",
   "Owned Art"
 ]
@@ -36,6 +37,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
   const [search, setSearch] = useState("");
 
   const [imageBuffer, setImageBuffer] = useState(null);
+  const [imageFileName, setImageFileName] = useState(null);
   const [saving, setSaving] = useState(false);
 
   const saveDisabled = (tabs[activeTabIndex] === uploadTabTitle ? !imageBuffer : !selected) || saving
@@ -58,16 +60,15 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
     setSaving(true)
     if (tabs[activeTabIndex] === uploadTabTitle) {
       //Handle custom Uploads
-      const cldId = `${customIdPrefix}/curation-banner/${curation.id}`
+      const cldId = `${customIdPrefix}/curation-banner/${curation.id}-${imageFileName}`
       const res = await uploadCldImage({
         imageBuffer,
         cldId: cldId
       })
       if (res?.public_id) {
-        console.log("🚀 ~ file: editBannerModal.jsx:60 ~ handleSave ~ res :", res.public_id)
-        console.log("🚀 ~ file: editBannerModal.jsx:67 ~ handleSave ~ cldId:", cldId)
-        onSave(cldId);
+        onSave(res.public_id); //will be same as cldId if uploaded correctly
       } else {
+        error("Error uploading image")
         console.log("Error uploading image: ", res?.error)
         setSaving(false)
         return
@@ -82,6 +83,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
     onClose();
     setTimeout(() => setSearch(""), 500);
   }
+  
   const handleClose = () => { 
     onClose();
     setTimeout(() => {
@@ -90,8 +92,12 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
     }, 500);
   }
 
-  const onDrop = useCallback((fileBuffer) => {
-    setImageBuffer(fileBuffer);
+  const onDrop = useCallback((imageFile) => {
+    setImageFileName(cleanFileName(imageFile.name));
+    
+    const reader = new FileReader();
+    reader.onloadend = () => setImageBuffer(Buffer.from(reader.result));
+    reader.readAsDataURL(imageFile);
   }, []);
 
   const searchFilter = useCallback((token) => {
@@ -169,17 +175,21 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
   )
 
   const uploadComp = (
-    <div className="p-2 rounded-lg h-full w-full">
+    <div className="p-2 rounded-lg h-full w-full relative">
+      {saving ? (
+        <div className="absolute inset-0 z-50 backdrop-blur-sm bg-neutral-200/50 dark:bg-neutral-700/50 animate-pulse flex justify-center items-center h-full">
+          <p className="text-lg">Uploading...</p>  
+        </div>
+      ) : null}
       <FileDrop
         onDrop={onDrop}
-        fileName={``}
         helperText={"Recommended resolution 1500x500"}
-      />
+        />
     </div>
   )
   
   const tabContent = [
-    // uploadComp,
+    uploadComp,
     submittedContent,
     ownedContent
   ]

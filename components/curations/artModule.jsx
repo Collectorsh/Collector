@@ -8,21 +8,20 @@ import useBreakpoints from '../../hooks/useBreakpoints';
 import { roundToPrecision } from '../../utils/maths';
 import Link from 'next/link';
 import useElementObserver from '../../hooks/useElementObserver';
-import recordSale from '../../data/salesHistory/recordSale';
-import { shootConfetti } from '../../utils/confetti';
 import { Oval } from 'react-loader-spinner';
 import Tippy from "@tippyjs/react"
 import "tippy.js/dist/tippy.css";
 import UserContext from '../../contexts/user';
-import { error, success } from '../../utils/toast';
-import { getMintEditionTX } from '../../utils/curations/mintEdition';
-import { connection } from '../../config/settings';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { MuteButton, PlayButton } from '../../pages/nft/[mint]';
 import { set } from 'nprogress';
+import VideoPlayer from '../artDisplay/videoPlayer';
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
   const [editArtOpen, setEditArtOpen] = useState(false)
+
+  const wrapperRef = useRef(null)
+  const { isVisible } = useElementObserver(wrapperRef, "400px")
 
   // const [rowHeight, setRowHeight] = useState(0)
   // const [rowWidth, setRowWidth] = useState(0)
@@ -64,6 +63,7 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
       // const width = (widthPercent / 100) * rowWidth
       return (
         <ArtItem
+          isMobile={isMobile}
           key={tokenMint}
           token={token}
           widthPercent={widthPercent}
@@ -79,8 +79,8 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
   return (
     <div
-      // ref={rowRef}
-      className="relative group w-full group/artRow min-h-[4rem]"
+      ref={wrapperRef}
+      className={clsx("relative group w-full group/artRow min-h-[4rem] duration-300", isVisible ? "opacity-100" : "opacity-0")}
     >
       <EditWrapper
         isOwner={isOwner}
@@ -127,20 +127,16 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
 export default ArtModule;
 
-export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, height, width }) => {  
+export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, height, width, isMobile }) => {  
   const [user] = useContext(UserContext);
 
-  const [loaded, setLoaded] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
-  const videoRef = useRef(null);
 
   // const [isWrapped, setIsWrapped] = useState(false)
   // const wrapContainerRef = useRef(null);
   // const wrapItemRef = useRef(null);
-
-  const { isVisible } = useElementObserver(videoRef, "500px")  
 
   const isMasterEdition = token.is_master_edition
   const isEdition = token.is_edition
@@ -153,33 +149,32 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
   const supplyText = isMasterEdition
     ? `${ maxSupply - supply }/${ maxSupply } Editions`
     : "1 of 1"
+  
+  const cacheWidth = useMemo(() => { 
+    if (isMobile) return 1600
+    switch (columns) { 
+      case 1: return 3000
+      case 2: return 2000
+      case 3: return 1600
+      case 4: return 1200
+      default: return 1200
+    }
+  }, [columns, isMobile])
 
   // useEffect(() => {
   //   const findIsWrapped = () => {
-  //     const isWrapped = wrapContainerRef.current.offsetHeight - wrapItemRef.current.offsetHeight > 30//30px threshold 
+  //     const isWrapped = wrapContainerRef.current.offsetHeight - wrapItemRef.current.offsetHeight > 30//30px threshold
   //     setIsWrapped(isWrapped)
   //   }
   //   findIsWrapped()
   //   window.addEventListener('resize',findIsWrapped)
   //   return () => window.removeEventListener('resize', findIsWrapped)
   // }, [])
-
-  useEffect(() => {
-    if (!videoRef.current) return;
-
-    if (isVisible && videoLoaded) {
-      videoRef.current.play()
-    } else {
-      videoRef.current.pause()
-    }
-
-  }, [isVisible, videoLoaded])
-
+  
   useEffect(() => {
     if (!token) return;
-
     if (token.animation_url) {
-      if (token.animation_url.split(".").pop().includes("mp4")) {
+      if (token.animation_url.split(".").pop().split("ext=").pop().includes("mp4")) {
         setVideoUrl(token.animation_url);
       }
     }
@@ -201,41 +196,29 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
       }}
     >
       <Link href={`/nft/${ token.mint }`} >
-        <a className='relative block w-fit mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0'>
-          {videoUrl && loaded ? (
-            <>
-              <video
-                autoPlay
-                ref={videoRef}
-                preload="metadata"
-                muted
-                loop
-                playsInline
-                id={`video-${ token.mint }`}
-                className="mx-auto w-full h-full cursor-pointer object-center object-cover absolute inset-0 z-10 duration-200 opacity-0"
-                onCanPlayThrough={e => {
-                  e.target.classList.add("opacity-100")
-                  setVideoLoaded(true)
-                }}
-                onError={(e) => e.target.classList.add("hidden")}
-              >
-                <source src={videoUrl} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </>
+        <a
+          
+          className='relative block w-fit mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0 '>
+          {videoUrl ? (
+            <VideoPlayer
+              id={`video-player-${ token.mint }`}
+              videoUrl={videoUrl}
+              videoLoaded={videoLoaded}
+              setVideoLoaded={setVideoLoaded}
+              toggleMuteOnMouseOver
+              controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
+            />
           ) : null}
-
-         
 
           <CloudinaryImage
             token={token}
-            useUploadFallback
             className={clsx(
               "object-contain",
               "max-h-[75vh]",
+              videoLoaded && "invisible"
             )}
+            width={cacheWidth}
             noLazyLoad
-            onLoad={() => setLoaded(true)}
           />
 
         </a>
@@ -255,7 +238,7 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
           ) : null}
 
           <div className='flex items-center gap-2 '>
-            {isListed
+            {(token?.buy_now_price)
               ? <>
                 <p className=''>{roundToPrecision(token.buy_now_price, 2)}◎</p>
                 <span>-</span>

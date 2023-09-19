@@ -79,6 +79,7 @@ function CurationPage({ curation }) {
   const hasNoContent = false//{modules.length === 0 || !banner} 
 
   const bannerImgId = parseCloudImageId(banner)
+  const pfpImgId = parseCloudImageId(curation?.curator?.profile_image)
 
   const metaImage = curation?.published_content?.banner_image
     ? baseCloudImageUrl(parseCloudImageId(curation.published_content.banner_image))
@@ -303,7 +304,7 @@ function CurationPage({ curation }) {
                 id={bannerImgId}
                 noLazyLoad
                 onLoad={() => setBannerLoaded(true)}
-                // width={2000}
+                width={3000}
               />
             ) : (
               <div className="absolute inset-0 w-full h-full object-cover 2xl:rounded-b-2xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25 flex justify-center items-center">
@@ -334,7 +335,7 @@ function CurationPage({ curation }) {
                 className={clsx(
                   "w-14 h-14 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800",
                 )}
-                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ curation.curator.profile_image }`}
+                id={pfpImgId}
                 noLazyLoad
                 width={500}
               />)

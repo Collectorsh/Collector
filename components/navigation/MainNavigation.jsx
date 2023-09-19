@@ -41,18 +41,18 @@ export default function MainNavigation() {
       <nav className="bg-white dark:bg-black shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
         <div className="max-w-screen-2xl mx-auto">
 
-       
+
         <div>
           <div className="flex">
-            <div className="flex items-center col-span-1 w-[200px] lg:w-1/2">
-              <div className="cursor-pointer md:my-3 w-[200px] flex gap-4 items-center ">
+            <div className="flex items-center col-span-1">
+              <div className="cursor-pointer md:my-3 flex gap-4 items-center ">
                 <Link href="/">
-                  <a className="collector text-3xl font-bold">
-                  collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r
+                  <a className="collector text-3xl font-bold flex items-center">
+                  collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r
                     </a>
                   </Link>
                   {/* <span className="mt-2 collector">-</span> */}
-                  <span className="mt-[10px] collector tracking-wide">Beta</span>
+                  <span className="mt-2 collector tracking-wide">Beta</span>
               </div>
             </div>
             <div className="hidden md:flex items-center justify-end w-full">

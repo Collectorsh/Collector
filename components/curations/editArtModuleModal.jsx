@@ -153,8 +153,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
                 className={clsx("flex-shrink-0 object-cover shadow-lg dark:shadow-white/5",
                   "w-full h-[250px]",
                 )}
-                // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-                // mint={token.mint}
+                useMetadataFallback
                 token={token}
                 width={500}
               />
@@ -271,7 +270,7 @@ const EditArtItem = ({ columns, widthPercent, token, onRemove }) => {
             "shadow-lg rounded-lg",
             "max-h-[400px]"
           )}
-          // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
+          useUploadFallback
           token={token}
           noLazyLoad
           onLoad={() => setLoaded(true)}

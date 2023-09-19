@@ -23,6 +23,7 @@ import { QuillContent } from "../../components/Quill";
 import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/cloudinary/idParsing";
 
 const bioPlaceholder = "Tell us about yourself!";
+const getBioDelta = (curator) => curator?.bio_delta || JSON.stringify({ ops: [{ insert: curator?.bio || bioPlaceholder }] })
 
 function ProfilePage({ curator }) {
   const [user] = useContext(UserContext);
@@ -35,9 +36,7 @@ function ProfilePage({ curator }) {
 
   const [banner, setBanner] = useState(curator?.banner_image);
   const [pfp, setPfp] = useState(curator?.profile_image);
-  const bioDelta = curator?.bio_delta || JSON.stringify({ops:[{insert: curator?.bio || bioPlaceholder}]})
-
-  const [bio, setBio] = useState(bioDelta);
+  const [bio, setBio] = useState(getBioDelta(curator));
   const [socials, setSocials] = useState(curator?.socials || []);
 
   const [bannerLoaded, setBannerLoaded] = useState(true);
@@ -50,6 +49,16 @@ function ProfilePage({ curator }) {
   
   const bannerImgId = parseCloudImageId(banner)
   const pfpImgId = parseCloudImageId(pfp)
+
+  useEffect(() => {
+    //update the state when the curator changes
+    if (curator) {
+      setBanner(curator.banner_image);
+      setPfp(curator.profile_image);
+      setBio(getBioDelta(curator));
+      setSocials(curator.socials || []);
+    }
+  },[curator])
 
   useEffect(() => {
     //set loaded to false when the banner changes

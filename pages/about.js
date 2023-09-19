@@ -22,7 +22,7 @@ export default function About() {
             <br /><br />
             All the best,
             <br /> <br />
-            Nate
+            <a href="https://twitter.com/N8Solomon">Nate</a>
             <br />
             Founder, Collector
           </p>

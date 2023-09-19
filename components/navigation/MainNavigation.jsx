@@ -235,7 +235,7 @@ export default function MainNavigation() {
                                     </p>
                                     {user.subscription_level === "pro" ? (
                                       <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                        <Link href={`/profile/${ user.username }`}>
+                                        <Link href={`/gallery/${ user.username }`}>
                                       
                                           Profile
                                           

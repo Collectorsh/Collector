@@ -25,8 +25,6 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
     },500)
   }
 
-  const useAddress = search.length >= 32
-
   const addDisabled = !search || newApproveArtists.find(user => user.username.toLowerCase() === search.toLowerCase()) 
 
   const handleSearch = async () => {
@@ -34,17 +32,13 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
     setError('')
     let artist;
     try {
-      if (!useAddress) artist = await getUserFromUsername(search).then(res => res.user)
-      // else artist = await getUserFromAddress(search) //TODO make this route (make sure it doesnt return sensitive info)
+      const artist = await getUserFromUsername(search).then(res => res.user)
       if (!artist) throw new Error("No user returned from API")
+      setNewApprovedArtists(prev => [...prev, artist])
+      setSearch('')
     } catch (e) {
       console.log("Error getting user:", e)
       setError("User not found")
-    }
-
-    if (artist) {
-      setNewApprovedArtists(prev => [...prev, artist])
-      setSearch('')
     }
   }
 
@@ -57,7 +51,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
         <SearchBar
           search={search}
           setSearch={setSearch}
-          placeholder="Add by username"//or address
+          placeholder="Add by username or address"
           className="w-full max-w-lg"
           onEnter={handleSearch}
         />

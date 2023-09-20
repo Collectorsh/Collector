@@ -196,8 +196,7 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
       }}
     >
       <Link href={`/nft/${ token.mint }`} >
-        <a
-          
+        <a  
           className='relative block w-fit mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0 '>
           {videoUrl ? (
             <VideoPlayer

@@ -53,9 +53,12 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
   
     const useHalfRow = isTablet && tokenMints.length > 2
     const halfIndex = Math.floor(tokenMints.length / 2)
-    const rows = useHalfRow
-      ? [tokenMints.slice(0, halfIndex), tokenMints.slice(halfIndex)]
-      : [tokenMints]
+    const rows =
+      isMobile
+        ? tokenMints.map(mint => [mint])
+        : useHalfRow
+          ? [tokenMints.slice(0, halfIndex), tokenMints.slice(halfIndex)]
+          : [tokenMints]
        
 
     return rows.map((tokenRow) => {
@@ -78,8 +81,14 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
       return tokens.map((token) => {
         const artist = approvedArtists.find(a => a.id === token.artist_id)
-        const tokenWidth = isMobile ? wrapperWidth : (Number(token.aspect_ratio) * rowHeight)
-        const tokenHeight = isMobile ? "100%" : rowHeight
+        // const tokenWidth = isMobile
+        //   ? wrapperWidth
+        //   : (Number(token.aspect_ratio) * rowHeight)
+        // const tokenHeight = isMobile
+        //   ? (Number(token.aspect_ratio) * wrapperWidth)
+        //   : rowHeight
+        const tokenWidth = (Number(token.aspect_ratio) * rowHeight)
+        const tokenHeight = rowHeight
         return (
           <ArtItem
             key={token.mint}
@@ -144,7 +153,7 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
 export default ArtModule;
 
-export const ArtItem = ({ token, columns, artist, handleCollect, height, width, isMobile }) => {  
+export const ArtItem = ({ token, artist, handleCollect, height, width }) => {  
   const [user] = useContext(UserContext);
 
   const [videoUrl, setVideoUrl] = useState(null);
@@ -205,7 +214,7 @@ export const ArtItem = ({ token, columns, artist, handleCollect, height, width, 
               setVideoLoaded={setVideoLoaded}
               toggleMuteOnMouseOver
               controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
-              wrapperClass='w-full h-full rounded-lg'
+              wrapperClass='w-full h-full rounded-lg group/controls'
               style={{
                 height,
                 maxWidth: width,
@@ -223,6 +232,7 @@ export const ArtItem = ({ token, columns, artist, handleCollect, height, width, 
             className={clsx(
               "object-cover duration-300",
               "max-h-[75vh]",
+              videoUrl && "absolute inset-0",
               videoLoaded && "hidden"
             )}
             width={cacheWidth}
@@ -293,7 +303,7 @@ export const ArtItem = ({ token, columns, artist, handleCollect, height, width, 
             )
             : null
           }
-          {isSold ? <p className='font-bold text-xl'>Sold {isMasterEdition ? " Out" : ""}!</p> : null}
+          {isSold ? <p className='font-bold text-xl leading-[32px]'>Sold {isMasterEdition ? " Out" : ""}!</p> : null}
         </div>
       </div>
 

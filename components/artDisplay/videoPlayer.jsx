@@ -8,8 +8,9 @@ const VideoPlayer = ({
   videoUrl,
   videoLoaded,
   setVideoLoaded,
-  wrapperClass = "absolute inset-0 z-10 w-full h-full group/controls",
-  controlsClass
+  wrapperClass="absolute inset-0 z-10 w-full h-full group/controls",
+  controlsClass,
+  style
 }) => { 
   const videoRef = useRef(null);
   const [userMuted, setUserMuted] = useState(true)
@@ -103,7 +104,7 @@ const VideoPlayer = ({
       />
 
       <video
-        // autoPlay
+        style={style}
         ref={videoRef}
         preload="metadata"
         muted

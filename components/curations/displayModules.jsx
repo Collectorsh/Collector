@@ -30,6 +30,8 @@ const DisplayModules = ({
       className="grid grid-cols-1 gap-4 p-4"
       setModules={setModules}
       modules={modules}
+      submittedTokens={submittedTokens}
+      approvedArtists={approvedArtists}
       moduleComponents={modules.map((module, i) => (
         <SortableModule
           key={module.id}
@@ -73,7 +75,7 @@ export const Module = ({
   submittedTokens,
   onDeleteModule,
   approvedArtists,
-  handleCollect
+  handleCollect,
 }) => {
   switch (module.type) {
     case "text": {

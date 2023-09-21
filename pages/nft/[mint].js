@@ -94,7 +94,7 @@ export default function DetailPage({token, curations}) {
                 <rect className="w-full h-full" />
               </ContentLoader>
             
-          ) : null}
+        ) : null}      
         <div
           className="relative shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg overflow-hidden w-fit h-fit mx-auto group"
         >

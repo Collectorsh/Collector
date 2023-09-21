@@ -225,6 +225,7 @@ const ArtChip = ({ name, onRemove, isMasterEdition }) => {
 
 const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedTokens}) => {
   const imageRef = useRef(null)
+  const [loadingArt, setLoadingArt] = useState(false)
   
   const index = selectedTokens.findIndex((t) => t.mint === token.mint);
   const isSelected = index !== -1;
@@ -233,25 +234,51 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
   const isMasterEdition = token.is_master_edition
 
   const getAspectRatio = (imageElement) => {
+
+    if (token.animation_url) {
+      try {
+        if (token.animation_url.split(".").pop().split("ext=").pop().includes("mp4")) {
+          //fetch video dimensions
+          const video = document.createElement("video")
+         
+          return new Promise((resolve, reject) => {
+            video.onloadedmetadata = () => resolve(Number(video.videoWidth / video.videoHeight))
+            video.onerror = (err) => reject(new Error(`Unable to load video - ${err}`));
+            video.src = token.animation_url
+            video.load()
+          });
+        } else {
+          //TODO handle HTML and GLB
+        }
+
+      } catch (err) {
+        console.log("Error fetching non-image dimensions: ", err)
+      }
+    }
     return Number(imageElement.naturalWidth / imageElement.naturalHeight)
   }
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!imageRef.current || !token.image) return
-    const newToken = { ...token }
 
-    newToken.aspect_ratio = getAspectRatio(imageRef.current)
-    setSelectedTokens(prev => {
-      if (!isSelected) return [...prev, newToken];
-      return [...prev.slice(0, index), ...prev.slice(index + 1)];
-    })
+    if (isSelected) {
+      setSelectedTokens(prev => [...prev.slice(0, index), ...prev.slice(index + 1)]);
+    } else {
+      const newToken = { ...token }
+  
+      setLoadingArt(true)
+      newToken.aspect_ratio = await getAspectRatio(imageRef.current)
+      setLoadingArt(false)
+  
+      setSelectedTokens(prev => [...prev, newToken])
+    }
   }
 
   return (
-    <button className="relative flex justify-center flex-shrink-0 disabled:scale-100"
+    <button className="relative flex justify-center flex-shrink-0 disabled:scale-100 disabled:blur-[2px]"
       key={token.mint}
       onClick={handleClick}
-      disabled={alreadySubmitted}
+      disabled={alreadySubmitted || loadingArt }
     >
       <CloudinaryImage
         imageRef={imageRef}

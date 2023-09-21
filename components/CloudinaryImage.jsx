@@ -93,7 +93,7 @@ const CloudinaryImage = ({
   
 
   const handleError = async (e) => {   
-    console.log("IMAGE ERROR", cldImg.toURL())
+    // console.log("IMAGE ERROR")
     setOpacity(0)
     if (!cldId) {
       console.log("No CDN ID provided")

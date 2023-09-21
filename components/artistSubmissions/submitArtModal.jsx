@@ -8,7 +8,7 @@ import { XIcon } from "@heroicons/react/solid";
 import { Oval } from "react-loader-spinner";
 import SearchBar from "../SearchBar";
 
-const tabs = ["Art", "Master Editions"]
+const tabs = ["1/1", "Master Editions"]
 
 export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, tokens, submissionMints }) {
   const [selectedTokens, setSelectedTokens] = useState([]);

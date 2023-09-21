@@ -7,21 +7,19 @@ const useElementObserver = (element, rootMargin) => {
   useEffect(() => {
     const current = element.current;
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setState(entry.isIntersecting);
-      }, { rootMargin }
+      (entries) => entries.forEach(entry => {
+        if (entry) setState(entry.isIntersecting);   
+      })
     );
-
     current && observer.observe(current);
 
     return () => current && observer.unobserve(current);
-  }, [element.current, rootMargin]);
+  }, [element, rootMargin]);
 
   useEffect(() => { 
     if(isVisible && !hasBeenObserved) setHasBeenObserved(true)
   },[isVisible, hasBeenObserved])
 
-  // return hasBeenObserved
   return {
     isVisible,
     hasBeenObserved

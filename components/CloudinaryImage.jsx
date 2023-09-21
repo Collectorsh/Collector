@@ -93,6 +93,7 @@ const CloudinaryImage = ({
   
 
   const handleError = async (e) => {   
+    console.log("IMAGE ERROR", cldImg.toURL())
     setOpacity(0)
     if (!cldId) {
       console.log("No CDN ID provided")
@@ -122,6 +123,8 @@ const CloudinaryImage = ({
 
 
   const handleLoad = (e) => {
+    if (noLazyLoad) setOpacity(1)
+    setError(null)
     // console.log("IMAGE LOADED")
     // setFullHeight(e.target.offsetHeight) //for maintaining layouts (currently not using)
     if (onLoad) onLoad(e)

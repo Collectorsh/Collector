@@ -13,6 +13,7 @@ import FileDrop, { cleanFileName } from "../components/FileDrop";
 export default function TestPage() {
   const [user] = useContext(UserContext);
   const wallet = useWallet();
+   
 
   const [imageBuffer, setImageBuffer] = useState(null);
   const [imageFileName, setImageFileName] = useState(null);
@@ -21,7 +22,8 @@ export default function TestPage() {
   const [description, setDescription] = useState("this is a test");
   const [attributes, setAttributes] = useState([]);
   const [sellerFeeBasisPoints, setSellerFeeBasisPoints] = useState(10);
-
+  
+  return <NotFound />
   // const getListings = async () => {
   //   const auctionHouseAddress = "GV4TGS3iKnac5H4k9ShJk3FjPSvKZMVkJuUx5gcxkdmJ"
   //   const auctionHouseSDK = new Metaplex(connection)

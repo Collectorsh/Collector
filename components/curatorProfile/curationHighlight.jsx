@@ -2,9 +2,14 @@ import CloudinaryImage from "../CloudinaryImage";
 import Link from "next/link";
 import { PublishedTag } from "./curationList";
 import { QuillContent } from "../Quill";
+import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
 
 const CurationHighlight = ({ curation, isOwner, withCurator }) => { 
-  const { banner_image, name, description, description_delta,  is_published, curator } = curation
+  const { banner_image, name, description, description_delta, is_published, curator } = curation
+  
+  const bannerImgId = parseCloudImageId(banner_image)
+  const pfpImgId = parseCloudImageId(curator?.profile_image)
+
   const descriptionComponent = (
     <div className="px-4 md:px-10 mt-4">
       {description_delta
@@ -23,7 +28,7 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
             ? (
               <CloudinaryImage
                 className=" absolute inset-0 w-full h-full object-cover rounded-xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25"
-                id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ banner_image}`}
+                id={bannerImgId}
                 noLazyLoad
                 width={2000}
               />
@@ -43,7 +48,7 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
                   {curator.profile_image
                     ? (<CloudinaryImage
                       className="w-14 h-14 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800"
-                      id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ curator.profile_image }`}
+                      id={pfpImgId}
                       noLazyLoad
                       width={144}
                     />)

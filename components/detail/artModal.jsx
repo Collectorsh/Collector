@@ -10,10 +10,8 @@ export default function ArtModal({ isOpen, onClose, token }) {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
 
-
   useEffect(() => {
     if (!token) return;
-
     if (token.animation_url) {
       if (token.animation_url.split(".").pop().includes("mp4")) {
         setVideoUrl(token.animation_url);

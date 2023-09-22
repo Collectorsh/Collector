@@ -91,6 +91,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
         error(`Error Listing ${ token.name } Onchain`)
         return
       }
+
       const res = await updateListing({
         curationId: curation.id,
         tokenMint: token.mint,
@@ -117,8 +118,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
   }
 
   const onDelist = async (token) => {
-
-    let newToken
+    let newToken;
     if (token.is_master_edition) {
       //Handle master edition market close, treasury withdraw & asset retrieval
       const builder = await getCloseAndWithdrawMarketTX({
@@ -251,6 +251,7 @@ const Submission = ({ token, onList, onDelist }) => {
     }
     setListing(false)
   }
+
   const handleUnlist = async () => { 
     try {
       setListing(true)
@@ -262,7 +263,7 @@ const Submission = ({ token, onList, onDelist }) => {
   }
 
   const delistText = isMasterEdition
-    ? isSoldOut ? "Withdraw" : "End Sale"
+    ? (isSoldOut ? "Withdraw" : "End Sale")
     : "Delist"
 
   return (

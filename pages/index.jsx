@@ -33,7 +33,6 @@ export default function Home({highlightedCurations}) {
 export async function getServerSideProps() {
   try {
     const res = await getHighlightedCurations()
-    console.log("🚀 ~ file: index.jsx:36 ~ getServerSideProps ~ res:", res)
     if (res) {
       return { props: { highlightedCurations: res } };
     } else {

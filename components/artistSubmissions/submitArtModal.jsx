@@ -267,8 +267,12 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
       const newToken = { ...token }
   
       setLoadingArt(true)
-      newToken.aspect_ratio = await getAspectRatio(imageRef.current)
+      const aspectRatio = await getAspectRatio(imageRef.current)
       setLoadingArt(false)
+
+      if (!aspectRatio) return console.log("Error getting aspect ratio")
+      
+      newToken.aspect_ratio = aspectRatio
   
       setSelectedTokens(prev => [...prev, newToken])
     }

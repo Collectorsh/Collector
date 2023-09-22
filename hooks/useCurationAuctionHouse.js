@@ -63,7 +63,6 @@ const useCurationAuctionHouse = (curation) => {
           // tokens: 1          // The number of tokens to list, for an NFT listing it must be 1 token
         });
       return listing.receipt.toString()
-      
     } catch (error) {
       console.log(error)
     }

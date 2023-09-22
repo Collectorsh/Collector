@@ -64,16 +64,6 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
     return rows.map((tokenRow) => {
       
       const tokens = tokenRow.map(mint => submittedTokens.find(sT => sT.mint === mint)).filter(t => Boolean(t))
-        // .map(t => {
-        //   if (t.mint === "282cXKpE4oqMZEa7zWVQw2WroKiN5Nq7EfNYJNacWGip") {
-        //     console.log(t)
-        //     return {
-        //       ...t,
-        //       aspect_ratio: 1.3296296296
-        //     }
-        //   }
-        //   return t
-        // })
 
       const totalAspectRatio = tokens.reduce((acc, token) => acc + Number(token.aspect_ratio || 1), 0)
       const rowGapOffset = gapSize * (tokens.length - 1)
@@ -81,12 +71,6 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
       return tokens.map((token) => {
         const artist = approvedArtists.find(a => a.id === token.artist_id)
-        // const tokenWidth = isMobile
-        //   ? wrapperWidth
-        //   : (Number(token.aspect_ratio) * rowHeight)
-        // const tokenHeight = isMobile
-        //   ? (Number(token.aspect_ratio) * wrapperWidth)
-        //   : rowHeight
         const tokenWidth = (Number(token.aspect_ratio) * rowHeight)
         const tokenHeight = rowHeight
         return (

@@ -13,14 +13,9 @@ const VideoPlayer = ({
   style
 }) => { 
   const videoRef = useRef(null);
-  const wrapperRef = useRef(null);
   const [userMuted, setUserMuted] = useState(true)
   const [userPaused, setUserPaused] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
-
-  // const [isWrapped, setIsWrapped] = useState(false)
-  // const wrapContainerRef = useRef(null);
-  // const wrapItemRef = useRef(null);
 
   const { isVisible } = useElementObserver(videoRef, "20px")  
 

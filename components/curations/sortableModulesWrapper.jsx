@@ -21,7 +21,7 @@ import {
 import { useState } from 'react';
 import { Module } from './displayModules';
 import { GrabHandle } from './sortableModule';
-const SortableModulesWrapper = ({ moduleComponents, modules, setModules, className }) => {
+const SortableModulesWrapper = ({ moduleComponents, modules, setModules, className, submittedTokens, approvedArtists }) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -35,7 +35,6 @@ const SortableModulesWrapper = ({ moduleComponents, modules, setModules, classNa
     setActiveId(active.id);
   }
 
-
   function handleDragEnd({active,over }) {
     setActiveId(null);
 
@@ -43,7 +42,6 @@ const SortableModulesWrapper = ({ moduleComponents, modules, setModules, classNa
       setModules((modules) => {
         const oldIndex = modules.findIndex(module => module.id === active.id);
         const newIndex = modules.findIndex(module => module.id === over.id);
-
 
         return arrayMove(modules, oldIndex, newIndex);
       });
@@ -53,11 +51,14 @@ const SortableModulesWrapper = ({ moduleComponents, modules, setModules, classNa
     const module = modules.find(module => module.id === id);
     if (!module) return null
     return (
-      <div className="relative rounded-lg ring-4 ring-neutral-200 dark:ring-neutral-700 cursor-grabbing bg-white dark:bg-black">
+      <div className="relative rounded-lg ring-4 ring-neutral-200 dark:ring-neutral-700 cursor-grabbing bg-white dark:bg-black w-full">
         <GrabHandle grabbing/>
-        <div className='pointer-events-none'>
-          <Module module={module} />
-
+        <div className='pointer-events-none w-full'>
+          <Module
+            module={module} 
+            submittedTokens={submittedTokens}
+            approvedArtists={approvedArtists}
+          />
         </div>
       </div>
     )

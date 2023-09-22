@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import EditWrapper from '../curatorProfile/editWrapper';
 import EditArtModuleModal from './editArtModuleModal';
 import CloudinaryImage from '../CloudinaryImage';
@@ -12,70 +12,96 @@ import { Oval } from 'react-loader-spinner';
 import Tippy from "@tippyjs/react"
 import "tippy.js/dist/tippy.css";
 import UserContext from '../../contexts/user';
-import { MuteButton, PlayButton } from '../../pages/nft/[mint]';
-import { set } from 'nprogress';
 import VideoPlayer from '../artDisplay/videoPlayer';
+import debounce from 'lodash.debounce';
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
+  const isMobile = ["", "sm", "md"].includes(breakpoint)
+  const isTablet = ["lg", "xl"].includes(breakpoint)
   const [editArtOpen, setEditArtOpen] = useState(false)
 
   const wrapperRef = useRef(null)
   const { isVisible } = useElementObserver(wrapperRef, "400px")
 
-  // const [rowHeight, setRowHeight] = useState(0)
-  // const [rowWidth, setRowWidth] = useState(0)
-  // const rowRef = useRef(null)
+  const [wrapperWidth, setWrapperWidth] = useState(0)
 
-  // useEffect(() => { 
-  //   const getRowHeight = () => { 
-  //     if(!rowRef.current) return
-  //     const rowHeight = rowRef.current.offsetHeight
-  //     setRowHeight(rowHeight)
+  const gapSize = 24 //in pixels (must be inline styled so that row height calculations can take the exact number into account)
 
-  //     const rowWidth = rowRef.current.offsetWidth
-  //     setRowWidth(rowWidth)
-  //   }
-  //   getRowHeight()
-  //   window.addEventListener('resize', getRowHeight)
-  //   return () => window.removeEventListener('resize', getRowHeight)
-  // }, [])
+  useEffect(() => { 
+    const getWrapperWidth = () => { 
+      if(!wrapperRef.current) return
+      const rowWidth = wrapperRef.current.offsetWidth
+      setWrapperWidth(rowWidth)
+    }
+
+    getWrapperWidth()
+
+    const debouncedGetWrapperWidth = debounce(getWrapperWidth, 200)
+
+    window.addEventListener('resize', debouncedGetWrapperWidth)
+    return () => {
+      debouncedGetWrapperWidth.cancel()
+      window.removeEventListener('resize', debouncedGetWrapperWidth)
+    }
+  }, [])
   
   const itemRows = useMemo(() => {
-    if(!approvedArtists || !submittedTokens) return []
+    if (!approvedArtists || !submittedTokens || !wrapperWidth) return []
 
     const tokenMints = artModule.tokens
-    const isMobile = ["", "sm", "md"].includes(breakpoint)
-    const cols = isMobile ? 1 : tokenMints.length
-    
-    const useHalfRow = ["lg", "xl"].includes(breakpoint) && tokenMints.length > 2
+  
+    const useHalfRow = isTablet && tokenMints.length > 2
     const halfIndex = Math.floor(tokenMints.length / 2)
-    const rows = useHalfRow
-    ? [tokenMints.slice(0, halfIndex), tokenMints.slice(halfIndex)]
-    : [tokenMints]
-    
-    return rows.map(tokenRow => tokenRow.map((tokenMint, i) => {
-      const token = submittedTokens.find(t => t.mint === tokenMint)
-      if (!token) return null
-      const artist = approvedArtists.find(a => a.id === token.artist_id)
-      const totalWidthRatio = tokenRow.reduce((acc, token) => acc + Number(token.aspect_ratio), 0)
-      const widthPercent = (Number(token.aspect_ratio) / totalWidthRatio) * 100
-      // const width = (widthPercent / 100) * rowWidth
-      return (
-        <ArtItem
-          isMobile={isMobile}
-          key={tokenMint}
-          token={token}
-          widthPercent={widthPercent}
-          columns={cols}
-          artist={artist}
-          handleCollect={handleCollect}
-          // height={rowHeight}
-          // width={width}
-        />
-      )
-    })).filter(row => Boolean(row))
-  }, [artModule.tokens, breakpoint, submittedTokens, approvedArtists, handleCollect])
+    const rows =
+      isMobile
+        ? tokenMints.map(mint => [mint])
+        : useHalfRow
+          ? [tokenMints.slice(0, halfIndex), tokenMints.slice(halfIndex)]
+          : [tokenMints]
+       
+
+    return rows.map((tokenRow) => {
+      
+      const tokens = tokenRow.map(mint => submittedTokens.find(sT => sT.mint === mint)).filter(t => Boolean(t))
+        // .map(t => {
+        //   if (t.mint === "282cXKpE4oqMZEa7zWVQw2WroKiN5Nq7EfNYJNacWGip") {
+        //     console.log(t)
+        //     return {
+        //       ...t,
+        //       aspect_ratio: 1.3296296296
+        //     }
+        //   }
+        //   return t
+        // })
+
+      const totalAspectRatio = tokens.reduce((acc, token) => acc + Number(token.aspect_ratio || 1), 0)
+      const rowGapOffset = gapSize * (tokens.length - 1)
+      const rowHeight = (wrapperWidth - rowGapOffset) / totalAspectRatio
+
+      return tokens.map((token) => {
+        const artist = approvedArtists.find(a => a.id === token.artist_id)
+        // const tokenWidth = isMobile
+        //   ? wrapperWidth
+        //   : (Number(token.aspect_ratio) * rowHeight)
+        // const tokenHeight = isMobile
+        //   ? (Number(token.aspect_ratio) * wrapperWidth)
+        //   : rowHeight
+        const tokenWidth = (Number(token.aspect_ratio) * rowHeight)
+        const tokenHeight = rowHeight
+        return (
+          <ArtItem
+            key={token.mint}
+            token={token}
+            artist={artist}
+            handleCollect={handleCollect}
+            height={tokenHeight}
+            width={tokenWidth}
+          />
+        )
+      })
+    })
+  }, [artModule.tokens, submittedTokens, approvedArtists, handleCollect, wrapperWidth, isMobile, isTablet])
 
   return (
     <div
@@ -91,10 +117,10 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
         {itemRows.map((row, i) => {
           return (
             <div
-            key={artModule.id + "row" + i}
-            className={clsx(
-              "flex flex-col md:flex-row w-full gap-6 mb-6",
-              )}>
+              key={artModule.id + "row" + i}
+              style={{gap: gapSize}} //gapSize must be coded so row height calculations can take them into account
+              className={clsx("flex flex-col md:flex-row w-full mb-6")}
+            >
               {row}
             </div>
           )
@@ -127,16 +153,12 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
 export default ArtModule;
 
-export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, height, width, isMobile }) => {  
+export const ArtItem = ({ token, artist, handleCollect, height, width }) => {  
   const [user] = useContext(UserContext);
 
   const [videoUrl, setVideoUrl] = useState(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
-
-  // const [isWrapped, setIsWrapped] = useState(false)
-  // const wrapContainerRef = useRef(null);
-  // const wrapItemRef = useRef(null);
 
   const isMasterEdition = token.is_master_edition
   const isEdition = token.is_edition
@@ -150,32 +172,19 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
     ? `${ maxSupply - supply }/${ maxSupply } Editions`
     : "1 of 1"
   
-  const cacheWidth = useMemo(() => { 
-    if (isMobile) return 1600
-    switch (columns) { 
-      case 1: return 3000
-      case 2: return 2000
-      case 3: return 1600
-      case 4: return 1200
-      default: return 1200
-    }
-  }, [columns, isMobile])
-
-  // useEffect(() => {
-  //   const findIsWrapped = () => {
-  //     const isWrapped = wrapContainerRef.current.offsetHeight - wrapItemRef.current.offsetHeight > 30//30px threshold
-  //     setIsWrapped(isWrapped)
-  //   }
-  //   findIsWrapped()
-  //   window.addEventListener('resize',findIsWrapped)
-  //   return () => window.removeEventListener('resize', findIsWrapped)
-  // }, [])
+  const cacheWidth = useMemo(() => {
+    //round up to bucket of 250 so we aren't caching too many sizes
+    //then double for max perceivable quality (ends up with buckets of 500)
+    return Math.ceil(width / 250) * 250 * 2
+  }, [width])
   
   useEffect(() => {
     if (!token) return;
     if (token.animation_url) {
       if (token.animation_url.split(".").pop().split("ext=").pop().includes("mp4")) {
         setVideoUrl(token.animation_url);
+      } else {
+        //TODO handle HTML and GLB
       }
     }
   }, [token]);
@@ -190,14 +199,13 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
   
   return (
     <div
-      className={clsx("relative duration-300 max-w-fit mx-auto ",)}
-      style={{
-        width: columns > 1 ? `${ widthPercent }%` : "100%",
-      }}
+      className={clsx("relative duration-300 w-fit mx-auto",)}
     >
       <Link href={`/nft/${ token.mint }`} >
         <a  
-          className='relative block w-fit mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0 '>
+          className={clsx(
+            'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0'
+          )}>
           {videoUrl ? (
             <VideoPlayer
               id={`video-player-${ token.mint }`}
@@ -206,15 +214,26 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
               setVideoLoaded={setVideoLoaded}
               toggleMuteOnMouseOver
               controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
+              wrapperClass='w-full h-full rounded-lg group/controls'
+              style={{
+                height,
+                maxWidth: width,
+                maxHeight: "75vh"
+              }}
             />
           ) : null}
 
           <CloudinaryImage
             token={token}
+            style={{
+              height,
+              maxWidth: width,
+            }}
             className={clsx(
-              "object-contain",
+              "object-cover duration-300",
               "max-h-[75vh]",
-              videoLoaded && "invisible"
+              videoUrl && "absolute inset-0",
+              videoLoaded && "hidden"
             )}
             width={cacheWidth}
             noLazyLoad
@@ -225,7 +244,6 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
       <div
         className="w-full mt-4 px-4 mx-auto
           flex flex-wrap gap-x-6 gap-y-3 justify-between items-start"
-        // ref={wrapContainerRef}
       >
         <div
           className={clsx('flex gap-1', "flex-col items-start")}
@@ -248,10 +266,8 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
           </div>
         </div>
         <div
-          // ref={wrapItemRef}
           className={clsx(
             'flex flex-col gap-1',
-            // isWrapped ? "items-start" : "items-center"
           )}
         >
           {isListed
@@ -287,7 +303,7 @@ export const ArtItem = ({ token, columns, widthPercent, artist, handleCollect, h
             )
             : null
           }
-          {isSold ? <p className='font-bold text-xl'>Sold {isMasterEdition ? " Out" : ""}!</p> : null}
+          {isSold ? <p className='font-bold text-xl leading-[32px]'>Sold {isMasterEdition ? " Out" : ""}!</p> : null}
         </div>
       </div>
 

@@ -8,10 +8,12 @@ const VideoPlayer = ({
   videoUrl,
   videoLoaded,
   setVideoLoaded,
-  wrapperClass = "absolute inset-0 z-10 w-full h-full group/controls",
-  controlsClass
+  wrapperClass="absolute inset-0 z-10 w-full h-full group/controls",
+  controlsClass,
+  style
 }) => { 
   const videoRef = useRef(null);
+  const wrapperRef = useRef(null);
   const [userMuted, setUserMuted] = useState(true)
   const [userPaused, setUserPaused] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -66,7 +68,9 @@ const VideoPlayer = ({
     preventPropAndDefault(e)
     if (!videoRef.current) return;
     setUserMuted(prev => {
-      if(videoRef.current.paused) videoRef.current.play()
+      // if (videoRef.current.paused) {
+      //   videoRef.current.play().catch((e) => console.log(e));
+      // }
       videoRef.current.muted = !prev
       return !prev
     })
@@ -81,13 +85,16 @@ const VideoPlayer = ({
     preventPropAndDefault(e)
     if (!videoRef.current || !userMuted) return;
     videoRef.current.muted = false
+    if (videoRef.current.paused && !userPaused) {
+      videoRef.current.play().catch((e) => console.log(e))
+    }
   }
 
   return (
     <div
       className={wrapperClass}
-      onMouseEnter={toggleMuteOnMouseOver && handleUnMute}
-      onMouseLeave={toggleMuteOnMouseOver && handleMute}
+      // onMouseEnter={toggleMuteOnMouseOver && handleUnMute}
+      // onMouseLeave={toggleMuteOnMouseOver && handleMute}
     >
       <PlayButton
         onClick={handlePlayToggle}
@@ -103,7 +110,7 @@ const VideoPlayer = ({
       />
 
       <video
-        // autoPlay
+        style={style}
         ref={videoRef}
         preload="metadata"
         muted

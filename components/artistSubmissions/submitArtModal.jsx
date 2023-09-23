@@ -7,6 +7,7 @@ import { RoundedCurve } from "../curations/roundedCurveSVG";
 import { XIcon } from "@heroicons/react/solid";
 import { Oval } from "react-loader-spinner";
 import SearchBar from "../SearchBar";
+import { truncate } from "../../utils/truncate";
 
 const tabs = ["1/1", "Master Editions"]
 
@@ -279,7 +280,7 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
   }
 
   return (
-    <button className="relative flex justify-center flex-shrink-0 disabled:scale-100 disabled:blur-[2px]"
+    <button className="relative flex justify-center flex-shrink-0 disabled:scale-100 disabled:blur-[2px] group"
       key={token.mint}
       onClick={handleClick}
       disabled={alreadySubmitted || loadingArt }
@@ -300,7 +301,17 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
               bg-neutral-200/50 dark:bg-neutral-800/50 px-5 py-2 rounded-lg font-bold"
         >
           Already Submitted</p>
-        : null}
+        : null
+      }
+      <div
+        className="absolute text-center top-0 left-0 p-8 w-full h-full overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50 
+          transition-opacity duration-300 opacity-0 group-hover:opacity-100
+          backdrop-blur-sm flex flex-col justify-center items-center rounded-lg 
+          "
+      >
+        <p className="font-bold">{token.name}</p>
+        <p>{truncate(token.mint)}</p>
+      </div>
     </button>
   )
   

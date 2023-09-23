@@ -15,6 +15,7 @@ import { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import clsx from "clsx";
 import { useTokens } from "../data/nft/getTokens";
+import { parseCloudImageId } from "../utils/cloudinary/idParsing";
 
 const Submissions = ({ }) => {
   const [user] = useContext(UserContext);
@@ -130,6 +131,9 @@ const Submissions = ({ }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 px-4">
           {approvedCurations.map(curation => {
             const { banner_image, name, id, curator, is_published } = curation
+
+            const bannerImgId = parseCloudImageId(banner_image)
+
             const artistSubmissions = curation.submitted_token_listings.filter(listing => {
               const creatorsAddresses = listing.creators?.map((creator) => creator.address)
               const userKeys = user?.public_keys || []
@@ -149,7 +153,7 @@ const Submissions = ({ }) => {
                   )}>
                     <CloudinaryImage
                       className="w-full h-[300px] object-cover"
-                      id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ banner_image }`}
+                      id={bannerImgId || curationListPlaceholderId}
                       noLazyLoad
                       width={1400}
                     />

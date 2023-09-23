@@ -23,10 +23,15 @@ import { QuillContent } from "../../components/Quill";
 import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/cloudinary/idParsing";
 
 const bioPlaceholder = "Tell us about yourself!";
-const getBioDelta = (curator) => curator?.bio_delta || JSON.stringify({ ops: [{ insert: curator?.bio || bioPlaceholder }] })
+const getBioDelta = (curator, isOwner) => {
+  if (curator?.bio_delta) return curator.bio_delta
+  else if (isOwner) return JSON.stringify({ ops: [{ insert: curator?.bio || bioPlaceholder }] })
+  else return JSON.stringify({ ops: [{ insert: "" }] })
+}
 
 function ProfilePage({ curator }) {
   const [user] = useContext(UserContext);
+  const isOwner = Boolean(user && user.public_keys.includes(curator?.public_keys?.[0]) && user.api_key);
 
   const [editBannerOpen, setEditBannerOpen] = useState(false);
   const [editPfpOpen, setEditPfpOpen] = useState(false);
@@ -36,13 +41,13 @@ function ProfilePage({ curator }) {
 
   const [banner, setBanner] = useState(curator?.banner_image);
   const [pfp, setPfp] = useState(curator?.profile_image);
-  const [bio, setBio] = useState(getBioDelta(curator));
+  const [bio, setBio] = useState(getBioDelta(curator, isOwner));
   const [socials, setSocials] = useState(curator?.socials || []);
 
   const [bannerLoaded, setBannerLoaded] = useState(true);
   const [pfpLoaded, setPfpLoaded] = useState(true);
   
-  const isOwner = Boolean(user && user.public_keys.includes(curator?.public_keys?.[0]) && user.api_key);
+
   const curations = isOwner
     ? curator?.curations.sort(curation => curation.is_published ? -1 : 1)
     : curator?.curations.filter(curation => curation.is_published);
@@ -55,7 +60,7 @@ function ProfilePage({ curator }) {
     if (curator) {
       setBanner(curator.banner_image);
       setPfp(curator.profile_image);
-      setBio(getBioDelta(curator));
+      setBio(getBioDelta(curator, isOwner));
       setSocials(curator.socials || []);
     }
   },[curator])

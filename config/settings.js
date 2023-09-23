@@ -76,6 +76,7 @@ export const adminIDs = [
 ]
 
 export const metaPreviewImage = baseCloudImageUrl("global/Collector_Hero_btrh4t")
+export const metaDescription = "Collect, Curate, and Discover Beautiful Art" 
 
 //HELLO MOON rpc deprecated
   // ,{

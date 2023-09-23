@@ -49,7 +49,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
         listMasterEditionTX,
         editionMarketAddress
       } = builder
-
+ 
       const signature = await wallet.sendTransaction(listMasterEditionTX, connection)
       const confirmation = await connection.confirmTransaction(signature);
 
@@ -157,9 +157,11 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
       }
       success(`${ token.name } Has Been Withdrawn!`)
 
+      const status = token.supply >= token.max_supply ? "master-edition-closed" : "unlisted"
+
       newToken = {
         ...token,
-        listed_status: "master-edition-closed",
+        listed_status: status,
         buy_now_price: null,
         primary_sale_happened: true
       }

@@ -4,6 +4,7 @@ import { createCreateStoreInstruction, findVaultOwnerAddress, createSavePrimaryM
 import { BN } from "@project-serum/anchor";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { Transaction, Keypair, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { truncate } from "../truncate";
 
 export const getListMasterEditionTX = async ({
   connection,
@@ -15,12 +16,13 @@ export const getListMasterEditionTX = async ({
   if (editionPrice === undefined) throw new Error("Edition price is required");
 
   const masterEditionPubkey = new PublicKey(masterEdition.mint)
+  const truncatedMint = truncate(masterEdition.mint)
   const primarySaleHappened = masterEdition.primary_sale_happened
-  const editionName = masterEdition.name
+  
   const maxSupply = masterEdition.max_supply - masterEdition.supply
   const creators = masterEdition.creators
-  const storeName = `${editionName} Store`
-  const storeDescription = `This is the store of ${editionName}.`
+  const storeName = `${truncatedMint}-S`
+  const storeDescription = ""
 
   //CREATE STORE 
   const mainTX = new Transaction();
@@ -133,8 +135,8 @@ export const getListMasterEditionTX = async ({
   const startDate = Math.round(Date.now() / 1000) + 60; //1 min in the future
   const endDate = null //TODO alow this to be user set?
   const params = {
-    name: `${ editionName } Market`,
-    description: `This is the market of ${ editionName }.`,
+    name: `${ truncatedMint }-M`,
+    description: "",
     startDate,
     endDate,
     mutable: true,

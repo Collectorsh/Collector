@@ -103,7 +103,7 @@ const useCurationAuctionHouse = (curation) => {
           auctionHouse,
           listing,
         })
-      return bought.response.signature
+      return bought?.response?.signature
     } catch(error) {
       console.log(error)
     }
@@ -153,8 +153,6 @@ const useCurationAuctionHouse = (curation) => {
       } else {
         error(`Error buying ${ token.name }: ${ res?.message }`)
       }
-
-
     } else if (isEdition) {
       //TODO Handle edition purchase
       return

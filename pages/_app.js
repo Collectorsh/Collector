@@ -32,17 +32,21 @@ export default function MyApp({ Component, pageProps }) {
           <meta charSet="UTF-8" />
           <title>Collector</title>
           <meta name="author" content="Collector" />
-          <meta name="keywords" content="Collect, Curate, and Discover Beautiful Art" />
-
-          <meta key="desc" name="description" content="Collect, Curate, and Discover Beautiful Art" />
+          <meta name="keywords" content="Collect, Collector.sh, Collector, Curate, Discover, Art, Beautiful" />
           <meta key="view" name="viewport" content="width=device-width, initial-scale=1" />
-          <meta key="ogtitle" name="og:title" content="Collector" />
-          <meta key="ogdesc" name="og:description" content="Collect, Curate, and Discover Beautiful Art" />
-          <meta key="image" property="og:image" content={metaPreviewImage} />
-          <meta key="twitimage" property='twitter:image' content={metaPreviewImage} />
-          <meta key="url" name="og:url" content="https://collector.sh/" />
-          <meta key="card" property="twitter:card" content="summary_large_image" />
           <link key="icon" rel="icon" href="/favicon.ico" />
+          <meta name="twitter:site" content="@collector_sh" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta key="og-title" property="og:title" content="Collector" />
+          <meta key="twitter-title" name="twitter:title" content="Collector" />
+
+          <meta key="description" name="description" content={metaDescription} />
+          <meta key="og-description" property="og:description" content={metaDescription} />
+          <meta key="og-url" property="og:url" content="https://collector.sh/" />
+          <meta key="og-image" property="og:image" content={metaPreviewImage} />
+
+          <meta key="twitter-description" name="twitter:description" content={metaDescription} />
+          <meta key="twitter-image" name="twitter:image" content={metaPreviewImage} />
 
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
@@ -104,7 +108,7 @@ export default function MyApp({ Component, pageProps }) {
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import Router from "next/router";
-import { metaPreviewImage } from "../config/settings";
+import { metaDescription, metaPreviewImage } from "../config/settings";
 
 
 NProgress.configure({

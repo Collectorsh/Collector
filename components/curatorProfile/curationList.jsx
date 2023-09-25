@@ -5,11 +5,11 @@ import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
 
 export const curationListPlaceholderId = "global/Collector_Hero_btrh4t"
 
-const CurationList = ({ curations, isOwner }) => {
+const CurationList = ({ curations, isOwner, withCurator }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       {curations?.map(curation => (
-        <CurationListItem key={curation.id} curation={curation} isOwner={isOwner} />
+        <CurationListItem key={curation.id} curation={curation} isOwner={isOwner} withCurator={withCurator} />
       ))}
     </div>
   )
@@ -17,8 +17,8 @@ const CurationList = ({ curations, isOwner }) => {
 
 export default CurationList;
 
-const CurationListItem = ({ curation, isOwner }) => { 
-  const { banner_image, name, description, is_published, } = curation
+const CurationListItem = ({ curation, isOwner, withCurator }) => { 
+  const { banner_image, name, description, is_published, curator } = curation
   const bannerImgId = parseCloudImageId(banner_image)
   return (
     <Link href={`/curations/${ name }`} >
@@ -35,7 +35,13 @@ const CurationListItem = ({ curation, isOwner }) => {
             width={1400}
           />
         </div>
-        <h3 className="font-bold collector text-2xl text-center my-2">{name.replaceAll("_", " ")}</h3>
+        <h3 className="font-bold collector text-2xl text-center my-2">
+          {name.replaceAll("_", " ")}
+        
+        </h3>
+          {withCurator && curator ? (
+            <p className="text-center"> Curated by {curator.username}</p>
+            ): null}
       </a>
     </Link>
   )

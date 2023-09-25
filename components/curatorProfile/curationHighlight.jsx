@@ -32,7 +32,6 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
                 noLazyLoad
                 width={2000}
               />
-
             )
             :
             <div className="absolute inset-0 w-full h-full object-cover rounded-xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25" />

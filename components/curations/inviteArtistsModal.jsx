@@ -25,17 +25,20 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
     },500)
   }
 
-  const addDisabled = !search || newApproveArtists.find(user => user.username.toLowerCase() === search.toLowerCase()) 
+  const addDisabled = !search || newApproveArtists.find(user => user.username?.toLowerCase() === search?.toLowerCase()) 
 
   const handleSearch = async () => {
     if (addDisabled) return
     setError('')
     let artist;
     try {
-      const artist = await getUserFromUsername(search).then(res => res.user)
-      if (!artist) throw new Error("No user returned from API")
-      setNewApprovedArtists(prev => [...prev, artist])
-      setSearch('')
+      const artist = await getUserFromUsername(search).then(res => res?.user)
+      if (!artist?.username) {
+        throw new Error("No user returned from API")
+      } else {
+        setNewApprovedArtists(prev => [...prev, artist])
+        setSearch('')
+      }
     } catch (e) {
       console.log("Error getting user:", e)
       setError("User not found")

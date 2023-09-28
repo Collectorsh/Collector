@@ -33,7 +33,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
     let artist;
     try {
       const artist = await getUserFromUsername(search).then(res => res?.user)
-      if (!artist) {
+      if (!artist?.username) {
         throw new Error("No user returned from API")
       } else {
         setNewApprovedArtists(prev => [...prev, artist])

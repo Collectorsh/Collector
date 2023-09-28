@@ -13,7 +13,7 @@ export const platformWithdrawalPubkey = "Emfvfxo51M7huTFgakJCwHvHFmBbQMwWUTgjJK6
 
 const AUTHORITY_INIT_FUNDS = 0.02 * LAMPORTS_PER_SOL
 
-export const fundAccount = async (fundingKeypair, recipientPubkey, lamportsToFund = AUTHORITY_INIT_FUNDS) => {  
+const fundAccount = async (fundingKeypair, recipientPubkey, lamportsToFund = AUTHORITY_INIT_FUNDS) => {  
   const fundingTX = new Transaction().add(
     SystemProgram.transfer({
       fromPubkey: fundingKeypair.publicKey,

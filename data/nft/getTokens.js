@@ -76,6 +76,11 @@ async function getTokens(publicKeys, options) {
   const mungedTokens = creatorFilteredTokens.map((token) => { 
     const { content, creators, ownership, id } = token
 
+    const files = content?.files?.map((file) => ({
+      ...file,
+      type: file.mime
+    }))
+
     return {
       creator: creators[0]?.address,
       description: content.metadata.description,
@@ -84,7 +89,7 @@ async function getTokens(publicKeys, options) {
       mint: id,
       name: content.metadata.name,
       owner: ownership.owner,
-      files: content.files,
+      files: files,
       creators: creators,
       symbol: content.metadata.symbol,
       uri: content.json_uri,

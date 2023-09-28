@@ -4,7 +4,6 @@ import useElementObserver from "../../hooks/useElementObserver";
 
 const VideoPlayer = ({
   id = "video-player",
-  toggleMuteOnMouseOver,
   videoUrl,
   videoLoaded,
   setVideoLoaded,
@@ -17,7 +16,7 @@ const VideoPlayer = ({
   const [userPaused, setUserPaused] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
 
-  const { isVisible } = useElementObserver(videoRef, "20px")  
+  const { isVisible } = useElementObserver(videoRef, "10px")  
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -42,7 +41,7 @@ const VideoPlayer = ({
     } else {
       videoRef.current.pause()
     }
-  }, [isVisible, videoLoaded, userPaused])
+  }, [isVisible, userPaused])
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();
@@ -71,25 +70,9 @@ const VideoPlayer = ({
     })
   }
 
-  const handleMute = (e) => {
-    preventPropAndDefault(e)
-    if (!videoRef.current || !userMuted) return;
-    videoRef.current.muted = true
-  }
-  const handleUnMute = (e) => {
-    preventPropAndDefault(e)
-    if (!videoRef.current || !userMuted) return;
-    videoRef.current.muted = false
-    if (videoRef.current.paused && !userPaused) {
-      videoRef.current.play().catch((e) => console.log(e))
-    }
-  }
-
   return (
     <div
       className={wrapperClass}
-      // onMouseEnter={toggleMuteOnMouseOver && handleUnMute}
-      // onMouseLeave={toggleMuteOnMouseOver && handleMute}
     >
       <PlayButton
         onClick={handlePlayToggle}

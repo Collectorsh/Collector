@@ -511,6 +511,7 @@ code {
 .ql-snow.ql-snow .ql-picker{
   @apply text-current
 }
+
 .ql-snow.ql-snow .ql-stroke {
   @apply stroke-current;
 }

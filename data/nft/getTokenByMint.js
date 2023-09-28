@@ -28,6 +28,11 @@ async function getTokenByMint(tokenMint) {
     
   const { content, creators, ownership, id } = token
 
+  const files = content?.files?.map((file) => ({
+    ...file,
+    type: file.mime
+  }))
+
   const mungedToken = {
     creator: creators[0]?.address,
     description: content.metadata.description,
@@ -36,7 +41,7 @@ async function getTokenByMint(tokenMint) {
     mint: id,
     name: content.metadata.name,
     owner: ownership.owner,
-    files: content.files,
+    files: files,
     creators: creators,
     symbol: content.metadata.symbol,
     uri: content.json_uri,

@@ -11,7 +11,7 @@ export const cleanFileName = (fileName) => {
   return fileName.split(".")[0].replaceAll(/[^a-zA-Z0-9_]/g, "-")
 }
 
-const FileDrop = ({ onDrop, acceptableFiles, helperText, imageClass }) => {
+const FileDrop = ({ onDrop, acceptableFiles, helperText, imageClass, maxFileSize = MaxCLDFileSize }) => {
   const dropzoneRef = createRef();
   const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
@@ -59,7 +59,7 @@ const FileDrop = ({ onDrop, acceptableFiles, helperText, imageClass }) => {
       onDropRejected={handleRejected}
       // onError={(err) => setError(err)}
       multiple={false}
-      maxSize={MaxCLDFileSize}
+      maxSize={maxFileSize}
     >
     {({ getRootProps, getInputProps }) => (
       <section className='w-full h-full border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden '>
@@ -69,7 +69,7 @@ const FileDrop = ({ onDrop, acceptableFiles, helperText, imageClass }) => {
           <p className='font-bold'>Drag and drop your image file here, or click to select</p>
           {helperText ? <p className='opacity-50'>{helperText}</p> : null}
           <p className='opacity-50'>Supported formats { accept["image/*"].join(", ")}</p>
-          <p className='opacity-50'>Max file size {MaxCLDFileSize/1000000} MB</p>
+            <p className='opacity-50'>Max file size {maxFileSize /1000000} MB</p>
           
             {image ? (
               <div

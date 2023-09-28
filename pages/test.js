@@ -1,28 +1,42 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import MainButton from "../components/MainButton"
 import UserContext from "../contexts/user";
 import MainNavigation from "../components/navigation/MainNavigation";
 
 import { useWallet } from "@solana/wallet-adapter-react";
-import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
+import { Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { connection } from "../config/settings";
 import NotFound from "../components/404";
-import { Metaplex, bundlrStorage, toMetaplexFile, walletAdapterIdentity } from "@metaplex-foundation/js";
+import { Metaplex, bundlrStorage, keypairIdentity, storageModule, toMetaplexFile, toMetaplexFileFromBrowser, walletAdapterIdentity } from "@metaplex-foundation/js";
 import FileDrop, { cleanFileName } from "../components/FileDrop";
+import apiClient from "../data/client/apiClient";
+import axios from "axios";
+import { transferSol } from "../utils/solanaWeb3/transferSol";
+import uploadCldImage from "../data/cloudinary/uploadCldImage";
+import { getTokenCldImageId } from "../utils/cloudinary/idParsing";
 
 export default function TestPage() {
   const [user] = useContext(UserContext);
   const wallet = useWallet();
-   
 
   const [imageBuffer, setImageBuffer] = useState(null);
+  const [imageFile, setImageFile] = useState(null)
   const [imageFileName, setImageFileName] = useState(null);
 
-  const [nftName, setNftName] = useState("MINTING TEST");
+  const [nftName, setNftName] = useState("MINTING TEST 5");
   const [description, setDescription] = useState("this is a test");
   const [attributes, setAttributes] = useState([]);
+  const [creators, setCreators] = useState();
   const [sellerFeeBasisPoints, setSellerFeeBasisPoints] = useState(10);
   
+  useEffect(() => {
+    if(!wallet.publicKey || creators?.length) return
+    setCreators([{
+      address: wallet.publicKey,
+      verified: true,
+      share: 100,
+    }])
+  }, [wallet, creators])
   return <NotFound />
   // const getListings = async () => {
   //   const auctionHouseAddress = "GV4TGS3iKnac5H4k9ShJk3FjPSvKZMVkJuUx5gcxkdmJ"
@@ -43,7 +57,7 @@ export default function TestPage() {
 
   const onDrop = (imageFile) => {
     setImageFileName(imageFile.name);
-
+    setImageFile(imageFile);
     const reader = new FileReader();
     reader.onloadend = () => setImageBuffer(Buffer.from(reader.result));
     reader.readAsDataURL(imageFile);
@@ -51,96 +65,110 @@ export default function TestPage() {
 
 
   const MintNft = async () => { 
+    const imgMetaplexFile = await toMetaplexFileFromBrowser(imageFile, imageFileName);
+ 
+    const bundlrFunderKeypair = Keypair.generate()
+    
+    const bundlrMetaplex = new Metaplex(connection)
+      .use(keypairIdentity(bundlrFunderKeypair))
+      .use(bundlrStorage())
+    
+    const bundlr = bundlrMetaplex.storage().driver()
 
-    // const CONFIG = {
-    //   // uploadPath: 'uploads/',
-    //   // imgFileName: fileName,
-    //   imgType: 'image/png',
-    //   imgName: 'QuickNode Pixel',
-    //   description: 'Pixel infrastructure for everyone!',
-    //   attributes: [
-    //     { trait_type: 'Speed', value: 'Quick' },
-    //     { trait_type: 'Type', value: 'Pixelated' },
-    //     { trait_type: 'Background', value: 'QuickNode Blue' }
-    //   ],
-    //   sellerFeeBasisPoints: 500,//500 bp = 5%
-    //   // symbol: 'QNPIX',
-    //   creators: [
-    //     { address: wallet.publicKey, share: 100 }
-    //   ]
-    // };
+    const uploadPrice = await bundlr.getUploadPriceForFiles([imgMetaplexFile]); // Get price for file size.
+    console.log("🚀 ~ file: test.js:82 ~ MintNft ~ uploadPrice:", uploadPrice.basisPoints.toString())
+    
+    const returnAddress = await axios.post("/api/curations/fundBundlr", {
+      addressToFund: bundlrFunderKeypair.publicKey.toString(),
+      lamportsRequested: uploadPrice.basisPoints.toString(),
+      apiKey: user.api_key
+    }).then(res => res.data?.returnAddress)
 
-    const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
-
-    const imgMetaplexFile = toMetaplexFile(imageBuffer, imageFileName);
-    console.log("🚀 ~ file: test.js:74 ~ MintNft ~ imgMetaplexFile:", imgMetaplexFile)
-
-    //TODO upload video if needed
-
-    //fund the storage based on file size
-    const bundlrStorage = metaplex.storage().driver()
-    try {
-      //tODO add video file here
-      const res = await bundlrStorage.fund([imgMetaplexFile]); // Fund using file size.
-      console.log("🚀 ~ file: test.js:81 ~ MintNft ~ res:", res)
-    } catch (e) {
+    if (!returnAddress) {
       console.error("Error funding storage: ", e);
       return;
     }
-    return
 
+    // const files = [{
+    //   type: metaplexFile.type,
+    //   uri:
+    // }]
+    
+    let newNft;
 
-    const imgUri = await metaplex.storage().upload(imgMetaplexFile);
-    console.log("Image URI: ", imgUri);
+    try {
+      const { uri } = await bundlrMetaplex
+        .nfts()
+        .uploadMetadata({
+          name: nftName,
+          description: description,
+          image: imgMetaplexFile,
+          seller_fee_basis_points: sellerFeeBasisPoints,
+          attributes: attributes,
+          external_url: "",
+          properties: {
+            // files,
+            creators
+          }
+        });
+      console.log('Metadata URI:', uri);
+      
+      const metaplex = new Metaplex(connection)
+        .use(walletAdapterIdentity(wallet))
+      
+      const res = await metaplex
+        .nfts()
+        .create({
+          uri: uri,
+          name: nftName,
+          sellerFeeBasisPoints: sellerFeeBasisPoints,
+          creators: creators,
+          // maxSupply: toBigNumber(0), //default of 0 is 1/1
+        });
+      console.log("🚀 ~ file: test.js:129 ~ MintNft ~ res:", res)
+      
+      newNft = res.nft
+      
+      console.log(`Minted NFT: https://solscan.io/token/${ newNft.address }`);
+    } catch (e) { 
+      console.error("Error minting NFT: ", e);
+    }
 
-    const videoUri = "...TODO"
-
-    const files = [
-      {
-        type: imgMetaplexFile.extension,
-        uri: imgUri,
-      },
-      //add video if needed
-    ]
-
-    const creators = [
-      {
-        address: wallet.publicKey,
-        share: 100
+    //Try and recover and remaining funds
+    try {
+      // Withdraw funds from bundlr
+      try {
+        await bundlr.withdrawAll()
+      } catch (e) {
+        console.error("Error withdrawing funds from bundlr: ", e);
       }
-      //extra creators if needed
-    ]
+  
+      // Withdraw funds from bundlrFunder
+      const balance = await connection.getBalance(bundlrFunderKeypair.publicKey);
 
-    const { uri } = await metaplex 
-      .nfts()
-      .uploadMetadata({
-        name: nftName,
-        description: description,
-        image: imgUri,
-        seller_fee_basis_points: sellerFeeBasisPoints,
-        attributes: attributes,
-        external_url: "",
-        properties: {
-          files,
-          creators
-        }
-      });
-    console.log('Metadata URI:', uri);
+      console.log("🚀 ~ file: test.js:131 ~ MintNft ~ balance:", balance)
 
-    const { nft } = await metaplex
-      .nfts()
-      .create({
-        uri: uri,
-        name: nftName,
-        sellerFeeBasisPoints: sellerFeeBasisPoints,
-        symbol: "",
-        creators: creators,
-        isMutable: false,
-        // maxSupply: toBigNumber(0), //default of 0 is 1/1
-      });
-    console.log(`   Success!🎉`);
-    console.log(`   Minted NFT: https://explorer.solana.com/address/${ nft.address }`);
+      if (refundAmount > 0) await transferSol({
+        fromKeypair: bundlrFunderKeypair,
+        toPubkey: new PublicKey(returnAddress),
+        lamportsToTransfer: balance
+      })
+    } catch (e) {
+      console.error("Error closing temporary account: ", e);
+    }
 
+    //Optimize newly minted NFT
+    try {
+      if (!newNft) return
+      console.log("newNft: ", newNft)
+      // const token = 
+      // const cldId = getTokenCldImageId(token)
+      // await uploadCldImage({
+
+      // })
+    } catch (e) {
+      console.error("Error optimizing NFT: ", e);
+    }
   }
   // return <NotFound />
   return (

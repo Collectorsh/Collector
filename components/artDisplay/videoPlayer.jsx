@@ -4,7 +4,6 @@ import useElementObserver from "../../hooks/useElementObserver";
 
 const VideoPlayer = ({
   id = "video-player",
-  toggleMuteOnMouseOver,
   videoUrl,
   videoLoaded,
   setVideoLoaded,
@@ -16,8 +15,9 @@ const VideoPlayer = ({
   const [userMuted, setUserMuted] = useState(true)
   const [userPaused, setUserPaused] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isBuffering, setIsBuffering] = useState(false)
 
-  const { isVisible } = useElementObserver(videoRef, "20px")  
+  const { isVisible } = useElementObserver(videoRef, "10px")  
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -25,13 +25,19 @@ const VideoPlayer = ({
 
     const handleIsPlaying = () => setIsPlaying(true)
     const handleIsPaused = () => setIsPlaying(false)
+    const handleBuffering = () => setIsBuffering(true)
+    const handleBufferEnded = () => setIsBuffering(false)
 
     videoElement.addEventListener('play', handleIsPlaying);
     videoElement.addEventListener('pause', handleIsPaused);
+    videoElement.addEventListener('waiting', handleBuffering);
+    videoElement.addEventListener('playing', handleBufferEnded);
 
     return () => {
       videoElement.removeEventListener('play', handleIsPlaying);
       videoElement.removeEventListener('pause', handleIsPaused);
+      videoElement.removeEventListener('waiting', handleBuffering);
+      videoElement.removeEventListener('playing', handleBufferEnded);
     };
   }, []);
 
@@ -42,7 +48,7 @@ const VideoPlayer = ({
     } else {
       videoRef.current.pause()
     }
-  }, [isVisible, videoLoaded, userPaused])
+  }, [isVisible, userPaused])
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();
@@ -71,25 +77,9 @@ const VideoPlayer = ({
     })
   }
 
-  const handleMute = (e) => {
-    preventPropAndDefault(e)
-    if (!videoRef.current || !userMuted) return;
-    videoRef.current.muted = true
-  }
-  const handleUnMute = (e) => {
-    preventPropAndDefault(e)
-    if (!videoRef.current || !userMuted) return;
-    videoRef.current.muted = false
-    if (videoRef.current.paused && !userPaused) {
-      videoRef.current.play().catch((e) => console.log(e))
-    }
-  }
-
   return (
     <div
       className={wrapperClass}
-      // onMouseEnter={toggleMuteOnMouseOver && handleUnMute}
-      // onMouseLeave={toggleMuteOnMouseOver && handleMute}
     >
       <PlayButton
         onClick={handlePlayToggle}
@@ -103,6 +93,10 @@ const VideoPlayer = ({
         isMuted={userMuted}
         className={controlsClass}
       />
+
+      <div className={clsx("absolute inset-0 h-full w-full flex items-center justify-center duration-1000", isBuffering ? "opacity-100" : "opacity-0")}>
+        <p className="px-4 py-1 bg-white/50 dark:bg-black/50 backdrop-blur-sm rounded animate-pulse">Buffering...</p>
+      </div>
 
       <video
         style={style}

@@ -8,6 +8,7 @@ import { XIcon } from "@heroicons/react/solid";
 import { Oval } from "react-loader-spinner";
 import SearchBar from "../SearchBar";
 import { truncate } from "../../utils/truncate";
+import useNftFiles from "../artDisplay/useNftFiles";
 
 const tabs = ["1/1", "Master Editions"]
 
@@ -226,6 +227,7 @@ const ArtChip = ({ name, onRemove, isMasterEdition }) => {
 
 const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedTokens}) => {
   const imageRef = useRef(null)
+  const {videoUrl} = useNftFiles(token)
   const [loadingArt, setLoadingArt] = useState(false)
   
   const index = selectedTokens.findIndex((t) => t.mint === token.mint);
@@ -235,27 +237,25 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
   const isMasterEdition = token.is_master_edition
 
   const getAspectRatio = (imageElement) => {
-
-    if (token.animation_url) {
-      try {
-        if (token.animation_url.split(".").pop().split("ext=").pop().includes("mp4")) {
-          //fetch video dimensions
-          const video = document.createElement("video")
-         
-          return new Promise((resolve, reject) => {
-            video.onloadedmetadata = () => resolve(Number(video.videoWidth / video.videoHeight))
-            video.onerror = (err) => reject(new Error(`Unable to load video - ${err}`));
-            video.src = token.animation_url
-            video.load()
-          });
-        } else {
-          //TODO handle HTML and GLB
-        }
-
-      } catch (err) {
-        console.log("Error fetching non-image dimensions: ", err)
+    try {
+      if (videoUrl) {
+        //fetch video dimensions
+        const video = document.createElement("video")
+        
+        return new Promise((resolve, reject) => {
+          video.onloadedmetadata = () => resolve(Number(video.videoWidth / video.videoHeight))
+          video.onerror = (err) => reject(new Error(`Unable to load video - ${err}`));
+          video.src = videoUrl
+          video.load()
+        });
+      } else if (false) {
+        //TODO handle HTML and GLB
       }
+
+    } catch (err) {
+      console.log("Error fetching non-image dimensions: ", err)
     }
+    
     return Number(imageElement.naturalWidth / imageElement.naturalHeight)
   }
 

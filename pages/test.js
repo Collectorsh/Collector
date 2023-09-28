@@ -11,7 +11,6 @@ import { Metaplex, bundlrStorage, keypairIdentity, storageModule, toMetaplexFile
 import FileDrop, { cleanFileName } from "../components/FileDrop";
 import apiClient from "../data/client/apiClient";
 import axios from "axios";
-import { nftStorage } from "@metaplex-foundation/js-plugin-nft-storage";
 import { transferSol } from "../utils/solanaWeb3/transferSol";
 import uploadCldImage from "../data/cloudinary/uploadCldImage";
 import { getTokenCldImageId } from "../utils/cloudinary/idParsing";

@@ -17,6 +17,7 @@ import { image } from "@cloudinary/url-gen/qualifiers/source";
 import { getImageSize } from "react-image-size";
 import { SpeakerphoneIcon } from "@heroicons/react/outline";
 import VideoPlayer from "../../components/artDisplay/videoPlayer";
+import useNftFiles from "../../components/artDisplay/useNftFiles";
 
 export default function DetailPage({token, curations}) {
   // return <NotFound />
@@ -24,9 +25,11 @@ export default function DetailPage({token, curations}) {
   // const { mint } = router.query;
   // const token = useTokenByMint(mint);
 
+  const {videoUrl} = useNftFiles(token)
+
   const [imgLoaded, setImgLoaded] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoUrl, setVideoUrl] = useState(null);
+  // const [videoUrl, setVideoUrl] = useState(null);
   const [imageExpanded, setImageExpanded] = useState(false);
   const [imageWidth, setImageWidth] = useState("70vw");
   const imageRef = useRef(null);

@@ -14,6 +14,7 @@ import "tippy.js/dist/tippy.css";
 import UserContext from '../../contexts/user';
 import VideoPlayer from '../artDisplay/videoPlayer';
 import debounce from 'lodash.debounce';
+import useNftFiles from '../artDisplay/useNftFiles';
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
@@ -139,8 +140,8 @@ export default ArtModule;
 
 export const ArtItem = ({ token, artist, handleCollect, height, width }) => {  
   const [user] = useContext(UserContext);
+  const { videoUrl } = useNftFiles(token)
 
-  const [videoUrl, setVideoUrl] = useState(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
 
@@ -159,20 +160,9 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
   const cacheWidth = useMemo(() => {
     //round up to bucket of 250 so we aren't caching too many sizes
     //then double for max perceivable quality (ends up with buckets of 500)
-    return Math.ceil(width / 250) * 250 * 2
+    return Math.ceil(width / 250) * 250 * 2;
   }, [width])
   
-  useEffect(() => {
-    if (!token) return;
-    if (token.animation_url) {
-      if (token.animation_url.split(".").pop().split("ext=").pop().includes("mp4")) {
-        setVideoUrl(token.animation_url);
-      } else {
-        //TODO handle HTML and GLB
-      }
-    }
-  }, [token]);
-
   const handleBuy = async (e) => {
     if (!handleCollect || !user) return;
 
@@ -196,7 +186,6 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
               videoUrl={videoUrl}
               videoLoaded={videoLoaded}
               setVideoLoaded={setVideoLoaded}
-              toggleMuteOnMouseOver
               controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
               wrapperClass='w-full h-full rounded-lg group/controls'
               style={{

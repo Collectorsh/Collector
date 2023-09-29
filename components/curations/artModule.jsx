@@ -205,7 +205,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
             className={clsx(
               "object-cover duration-300",
               "max-h-[75vh]",
-              videoUrl && "absolute inset-0",
+              videoUrl && "absolute inset-0 w-full h-full",
               videoLoaded && "hidden"
             )}
             width={cacheWidth}
@@ -217,11 +217,22 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
       <div
         className="w-full mt-4 px-4 mx-auto
           flex flex-wrap gap-x-6 gap-y-3 justify-between items-start"
+        style={{
+          maxWidth: width
+        }}
       >
+      
         <div
           className={clsx('flex gap-1', "flex-col items-start")}
         >
-          <p className='font-bold text-2xl leading-8'>{token.name}</p>
+          <p
+            className='font-bold text-2xl leading-8 truncate'
+            style={{
+              maxWidth: width
+            }}
+            >
+            {token.name}
+          </p>
 
           {artist ? (
             <p>by {artist.username}</p>

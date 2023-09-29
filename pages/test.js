@@ -89,28 +89,32 @@ export default function TestPage() {
       return;
     }
 
-    // const files = [{
-    //   type: metaplexFile.type,
-    //   uri:
-    // }]
-    
     let newNft;
 
     try {
+      const imageUri = await bundlr.upload(imgMetaplexFile);
+      console.log("🚀 ~ file: test.js:96 ~ MintNft ~ imageUri:", imageUri)
+
+      const files = [{
+        type: imgMetaplexFile.type,
+        uri: imageUri
+      }]
+
       const { uri } = await bundlrMetaplex
         .nfts()
         .uploadMetadata({
           name: nftName,
           description: description,
-          image: imgMetaplexFile,
+          image: imageUri,
           seller_fee_basis_points: sellerFeeBasisPoints,
           attributes: attributes,
           external_url: "",
           properties: {
-            // files,
+            files,
             creators
           }
         });
+      
       console.log('Metadata URI:', uri);
       
       const metaplex = new Metaplex(connection)
@@ -146,13 +150,16 @@ export default function TestPage() {
       // Withdraw funds from bundlrFunder
       const balance = await connection.getBalance(bundlrFunderKeypair.publicKey);
 
-      console.log("🚀 ~ file: test.js:131 ~ MintNft ~ balance:", balance)
+      const toRefund = balance - 5000
+      console.log("🚀 ~ file: test.js:131 ~ MintNft ~ balance:", toRefund)
 
-      if (refundAmount > 0) await transferSol({
+      if (toRefund > 0) await transferSol({
         fromKeypair: bundlrFunderKeypair,
         toPubkey: new PublicKey(returnAddress),
-        lamportsToTransfer: balance
+        lamportsToTransfer: toRefund,
+        debug: true
       })
+
     } catch (e) {
       console.error("Error closing temporary account: ", e);
     }

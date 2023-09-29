@@ -9,7 +9,7 @@ import { transferSol } from '../../../utils/solanaWeb3/transferSol'
 
 export default async function handler(req, res) {
   return res.status(404)
-  
+
   console.log("HIT Fund func")
 
   const { addressToFund, lamportsRequested, apiKey } = req.body;
@@ -42,7 +42,6 @@ export default async function handler(req, res) {
   const fundingKeypair = Keypair.fromSecretKey(fundingPrivateKey)
 
   const rentException = await connection.getMinimumBalanceForRentExemption(0)
-  console.log("🚀 ~ file: fundBundlr.js:43 ~ handler ~ rentException:", rentException)
 
   const fees = 10010
 

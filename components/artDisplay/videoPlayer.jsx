@@ -69,9 +69,6 @@ const VideoPlayer = ({
     preventPropAndDefault(e)
     if (!videoRef.current) return;
     setUserMuted(prev => {
-      // if (videoRef.current.paused) {
-      //   videoRef.current.play().catch((e) => console.log(e));
-      // }
       videoRef.current.muted = !prev
       return !prev
     })
@@ -86,16 +83,22 @@ const VideoPlayer = ({
         iconClassName="w-7 h-7"
         isPlaying={isPlaying}
         className={controlsClass}
+        // disabled={isBuffering}
       />
       <MuteButton
         onClick={handleMuteToggle}
         iconClassName="w-7 h-7"
         isMuted={userMuted}
         className={controlsClass}
+        // disabled={isBuffering}
       />
 
-      <div className={clsx("absolute inset-0 h-full w-full flex items-center justify-center duration-1000", isBuffering ? "opacity-100" : "opacity-0")}>
-        <p className="px-4 py-1 bg-white/50 dark:bg-black/50 backdrop-blur-sm rounded animate-pulse">Buffering...</p>
+      <div className={clsx("absolute inset-0 h-full w-full flex pb-6 items-end justify-center duration-1000",
+        isBuffering ? "opacity-100" : "opacity-0",
+      )}>
+        <p className="bg-neutral-500/50 animate-pulse backdrop-blur-sm rounded px-2">
+          Buffering...
+        </p>
       </div>
 
       <video
@@ -106,7 +109,7 @@ const VideoPlayer = ({
         loop
         playsInline
         id={id}
-        className="mx-auto w-full h-full object-center object-cover duration-200 opacity-0 rounded-lg"
+        className="mx-auto h-full object-center object-cover duration-200 opacity-0 rounded-lg"
         onCanPlayThrough={e => {
           e.target.classList.add("opacity-100")
           setVideoLoaded(true)
@@ -122,15 +125,17 @@ const VideoPlayer = ({
 
 export default VideoPlayer
 
-export const MuteButton = ({ isMuted, onClick, className, iconClassName }) => {
+export const MuteButton = ({ isMuted, onClick, className, iconClassName, disabled }) => {
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
       className={clsx("absolute z-[15] right-5 bottom-5 p-0.5",
         "bg-neutral-200 dark:bg-neutral-700 rounded shadow-lg dark:shadow-white/10",
         "duration-300",
         "md:opacity-50 hover:opacity-100 group-hover:opacity-100",
         "hover:scale-110 active:scale-100",
+        "disabled:blur-[1px]",
         className
       )}
     >
@@ -146,15 +151,17 @@ export const MuteButton = ({ isMuted, onClick, className, iconClassName }) => {
   )
 }
 
-export const PlayButton = ({ isPlaying, onClick, className, iconClassName }) => {
+export const PlayButton = ({ isPlaying, onClick, className, iconClassName, disabled }) => {
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
       className={clsx("absolute z-[15] left-5 bottom-5 p-0.5",
         "bg-neutral-200 dark:bg-neutral-700 rounded shadow-lg dark:shadow-white/10",
         "duration-300",
         "md:opacity-50 hover:opacity-100 group-hover:opacity-100",
         "hover:scale-110 active:scale-100",
+        "disabled:blur-[1px]",
         className
       )}
     >

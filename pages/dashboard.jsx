@@ -61,7 +61,7 @@ export default function Dashboard() {
         Curator_Address: curatorAddress,
       }
     })
-    downloadCSV(formattedRecords, `Curation_Sales-${dateRange.startDate?.toLocaleDateString()}_to_${dateRange.endDate?.toLocaleDateString()}`)
+    downloadCSV(formattedRecords, `Curation_Sales-${new Date(dateRange.startDate).toLocaleDateString()}_to_${new Date(dateRange.endDate).toLocaleDateString()}`)
   }
 
   const { totalSales, uniqueArtists, uniqueCollectors } = useMemo(() => {

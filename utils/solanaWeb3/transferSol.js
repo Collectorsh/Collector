@@ -1,7 +1,7 @@
-import { LAMPORTS_PER_SOL, SystemProgram, Transaction, sendAndConfirmTransaction } from "@solana/web3.js";
+import { Keypair, LAMPORTS_PER_SOL, SystemProgram, Transaction, sendAndConfirmTransaction } from "@solana/web3.js";
 import { connection } from "../../config/settings";
 
-export const transferSol = async ({ fromKeypair, toPubkey, lamportsToTransfer }) => {
+export const transferSol = async ({ fromKeypair, toPubkey, lamportsToTransfer, debug }) => {
   const transferTX = new Transaction().add(
     SystemProgram.transfer({
       fromPubkey: fromKeypair.publicKey,
@@ -9,6 +9,11 @@ export const transferSol = async ({ fromKeypair, toPubkey, lamportsToTransfer })
       lamports: lamportsToTransfer,
     }),
   );
+
+  if (debug) {
+    const sim = await connection.simulateTransaction(transferTX, [fromKeypair])
+    console.log("🚀 ~ file: transferSol.js:15 ~ transferSol ~ sim :", sim )
+  }
 
   // Sign transaction, broadcast, and confirm
   const signature = await sendAndConfirmTransaction(

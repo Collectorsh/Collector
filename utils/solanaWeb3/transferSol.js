@@ -7,7 +7,7 @@ export const transferSol = async ({ fromKeypair, toPubkey, lamportsToTransfer, d
       fromPubkey: fromKeypair.publicKey,
       toPubkey: toPubkey,
       lamports: lamportsToTransfer,
-    }),
+    })
   );
 
   if (debug) {
@@ -20,7 +20,9 @@ export const transferSol = async ({ fromKeypair, toPubkey, lamportsToTransfer, d
     connection,
     transferTX,
     [fromKeypair],
-    { commitment: 'finalized' }
+    {
+      commitment: 'finalized'
+    }
   );
   console.log(`Transferred ${ lamportsToTransfer / LAMPORTS_PER_SOL} SOl to ${ toPubkey.toString() }`);
   console.log(`TX hash: ${ signature }`);

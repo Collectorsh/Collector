@@ -37,7 +37,9 @@ export default function TestPage() {
       share: 100,
     }])
   }, [wallet, creators])
+  
   return <NotFound />
+
   // const getListings = async () => {
   //   const auctionHouseAddress = "GV4TGS3iKnac5H4k9ShJk3FjPSvKZMVkJuUx5gcxkdmJ"
   //   const auctionHouseSDK = new Metaplex(connection)
@@ -63,8 +65,68 @@ export default function TestPage() {
     reader.readAsDataURL(imageFile);
   }
 
+  const MintNft = async () => {
+    const imgMetaplexFile = await toMetaplexFileFromBrowser(imageFile, imageFileName);
 
-  const MintNft = async () => { 
+    const res = await apiClient.post("/script/upload_metadata", {
+      imageBuffer: imageBuffer,
+      nft: {
+        creators,
+        name: nftName,
+        description: description,
+        seller_fee_basis_points: sellerFeeBasisPoints,
+        attributes: attributes,
+      }
+    }).then(res => res.data)
+    console.log("🚀 ~ file: test.js:81 ~ MintNft ~ res:", res)
+
+    if (res.status !== "success") {
+      console.error("Error uploading metadata: ", res.error);
+      return;
+    }
+
+    const uri = res.uri
+
+    let newNft;
+
+    try {
+      const metaplex = new Metaplex(connection)
+        .use(walletAdapterIdentity(wallet))
+
+      const res = await metaplex
+        .nfts()
+        .create({
+          uri,
+          name: nftName,
+          sellerFeeBasisPoints: sellerFeeBasisPoints,
+          creators: creators,
+          // maxSupply: toBigNumber(0), //default of 0 is 1/1
+        });
+      console.log("🚀 ~ file: test.js:129 ~ MintNft ~ res:", res)
+
+      newNft = res.nft
+
+      console.log(`Minted NFT: https://solscan.io/token/${ newNft.address }`);
+    } catch (e) {
+      console.error("Error minting NFT: ", e);
+    }
+
+    //Optimize newly minted NFT
+    try {
+      if (!newNft) return
+      console.log("newNft: ", newNft)
+      // const token = 
+      // const cldId = getTokenCldImageId(token)
+      // await uploadCldImage({
+
+      // })
+    } catch (e) {
+      console.error("Error optimizing NFT: ", e);
+    }
+
+    return newNft
+  }
+  const MintNftWITH_TEMP_WALLET = async () => { 
     const imgMetaplexFile = await toMetaplexFileFromBrowser(imageFile, imageFileName);
  
     const bundlrFunderKeypair = Keypair.generate()
@@ -89,9 +151,16 @@ export default function TestPage() {
       return;
     }
 
+    //wait
+    await new Promise(resolve => setTimeout(resolve, 3000))
+    console.log("🚀 ~file: DoneWaiting")
+
     let newNft;
 
     try {
+      // await bundlr.fund(uploadPrice)
+      // console.log("🚀 ~ funded")
+
       const imageUri = await bundlr.upload(imgMetaplexFile);
       console.log("🚀 ~ file: test.js:96 ~ MintNft ~ imageUri:", imageUri)
 
@@ -150,15 +219,31 @@ export default function TestPage() {
       // Withdraw funds from bundlrFunder
       const balance = await connection.getBalance(bundlrFunderKeypair.publicKey);
 
-      const toRefund = balance - 5000
+      const toRefund = balance
       console.log("🚀 ~ file: test.js:131 ~ MintNft ~ balance:", toRefund)
 
-      if (toRefund > 0) await transferSol({
-        fromKeypair: bundlrFunderKeypair,
-        toPubkey: new PublicKey(returnAddress),
-        lamportsToTransfer: toRefund,
-        debug: true
-      })
+      if (toRefund > 0) {
+        const transferTX = new Transaction().add(
+          SystemProgram.transfer({
+            fromPubkey: bundlrFunderKeypair.publicKey,
+            toPubkey: new PublicKey(returnAddress),
+            lamports: toRefund,
+          })
+        );
+
+        transferTX.feePayer = wallet.publicKey
+        transferTX.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+        transferTX.partialSign(bundlrFunderKeypair)
+
+       
+        const signed = await wallet.signTransaction(transferTX)
+        const sim = await connection.simulateTransaction(signed)
+        console.log("🚀 ~ file: transferSol.js:15 ~ transferSol ~ sim :", sim)
+        
+
+        wallet.sendTransaction(transferTX, connection)
+
+      }
 
     } catch (e) {
       console.error("Error closing temporary account: ", e);

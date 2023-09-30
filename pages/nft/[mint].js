@@ -29,7 +29,6 @@ export default function DetailPage({token, curations}) {
 
   const [imgLoaded, setImgLoaded] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-  // const [videoUrl, setVideoUrl] = useState(null);
   const [imageExpanded, setImageExpanded] = useState(false);
   const [imageWidth, setImageWidth] = useState("70vw");
   const imageRef = useRef(null);
@@ -69,15 +68,6 @@ export default function DetailPage({token, curations}) {
     window.addEventListener("resize", getImageSize);
     return () => window.removeEventListener("resize", getImageSize);
   }, [imgLoaded])
-
-  useEffect(() => {
-    if (!token) return;
-    if (token.animation_url) {
-      if (token.animation_url.split(".").pop().split("ext=").pop().includes("mp4")) {
-        setVideoUrl(token.animation_url);
-      }
-    }
-  }, [token]);
 
   const expandImage = () => setImageExpanded(!imageExpanded)
 

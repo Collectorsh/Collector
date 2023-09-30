@@ -43,7 +43,7 @@ export default async function handler(req, res) {
 
   const rentException = await connection.getMinimumBalanceForRentExemption(0)
 
-  const fees = 10010
+  const fees = rentException
 
   await transferSol({
     fromKeypair: fundingKeypair,

@@ -332,19 +332,21 @@ function CurationPage({ curation }) {
           </EditWrapper>
         </div>
         <Link href={`/gallery/${ curation.curator.username }`} >
-          <a className="flex gap-2 items-center justify-center mb-8 hover:scale-105 duration-300 w-fit mx-auto">
+          <a className="flex gap-2 items-center justify-center mb-8 hover:scale-105 duration-300 w-fit mx-auto ">
             <p className="text-lg">Curated by {curation.curator.username}</p>
             {curation.curator.profile_image
-              ? (<CloudinaryImage
-                className={clsx(
-                  "w-14 h-14 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800",
-                )}
-                id={pfpImgId}
-                noLazyLoad
-                width={500}
-              />)
-              : null
-            }
+              ? (<div className="relative">
+                  <CloudinaryImage
+                    className={clsx(
+                      "w-14 h-14 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800",
+                    )}
+                    id={pfpImgId}
+                    noLazyLoad
+                    width={500}
+                  />
+                </div>)
+                : null
+              }
           </a>
         </Link>
   

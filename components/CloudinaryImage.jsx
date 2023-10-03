@@ -28,35 +28,23 @@ const CloudinaryImage = ({
   useUploadFallback = false,
   useMetadataFallback = false,
   noLazyLoad = false,
-  errorDisplay = {
-    type: "CDN",
-    content: (
-      <ContentLoader
-        speed={2}
-        className="w-full h-full rounded-lg"
-        backgroundColor="rgba(120,120,120,0.2)"
-        foregroundColor="rgba(120,120,120,0.1)"
-      >
-        <rect className="w-full h-full" />
-      </ContentLoader>
-    )
-  }
 }) => {
   const { uploadSingleToken } = useImageFallbackContext()
   const fallback = useFallbackImage(token)
-  const [error, setError] = useState(null) 
   const llRef = useRef()
   const { isVisible, hasBeenObserved } = useElementObserver(llRef, "100px")
   const [fallbackUrl, setFallbackUrl] = useState(null)
-  const [opacity, setOpacity] = useState(noLazyLoad ? 1 : 0)
-
-  // console.log("CLOUDINARY RENDER")
+  const [opacity, setOpacity] = useState(0)
+  
+  const [fallbackStage, setFallbackStage] = useState("MAIN_CDN")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null) 
 
   useEffect(() => {
-    if(noLazyLoad) return
+    if(noLazyLoad || error) return
     if (isVisible) setOpacity(1)
     else setOpacity(0)
-  }, [isVisible, noLazyLoad])
+  }, [isVisible, noLazyLoad, error])
 
   const buildCldImg = (id, overrideQuality) => {
     const cldImg = cloudinaryCloud.image(id)
@@ -74,59 +62,68 @@ const CloudinaryImage = ({
   const cldImg = buildCldImg(cldId)
 
   useEffect(() => {
-    if ((error === "CDN" || error === "Using Metadata Image") && Boolean(fallback)) {
+    //Don't set uploaded fallback if we are on the initial MAIN_CDN stage, or if we've already tried the fallback
+    const excludedStages = ["MAIN_CDN", "UPLOADED_FALLBACK", "UPLOADED_FALLBACK_FAILED"]
+    if (!excludedStages.includes(fallbackStage) && Boolean(fallback)) {
       if (fallback?.imageId) {
         //TODO figure out another way to image cache bust besides adding another transformation (it cost moneys)
         const cldImgFB = buildCldImg(fallback.imageId, "auto:eco")
         
-        setFallbackUrl(cldImgFB.toURL())
-        setOpacity(1)
-        
-        setError("Using CDN Return ID")
-      } else {
-        console.log("Error with fallback:", fallback)
-        setError("No Fallback")
-      }
+        setFallbackUrl(cldImgFB?.toURL())
+        setLoading(true)
+        setError(false)
+        setFallbackStage("UPLOADED_FALLBACK")
+      } 
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error, fallback])
+  }, [fallbackStage, fallback])
   
 
   const handleError = async (e) => {   
-    // console.log("IMAGE ERROR")
     setOpacity(0)
-    if (!cldId) {
-      console.log("No CDN ID provided")
+    setError(true)
+
+    if (!token) {
+      setFallbackStage("NO_FALLBACK")
+      console.log("Bad ID and No Token")
       return;
     }
 
-    if (!error) {
-      //assume a CDN error
-      setError("CDN")
+    let image;
 
-      if(!token) return
-
-      if (useUploadFallback) uploadSingleToken(token)
-      
-      if (useMetadataFallback) {
-        // USE METADATA URL (NOT OPTIMIZED)
-        const image = token?.image || await HandleNoUrl(token.mint)
-        if (image) {
-          setFallbackUrl(image)
-          setOpacity(1)
-          setError("Using Metadata Image")
-        }
+    //IF the MAIN CDN FAILS
+    if (fallbackStage === "MAIN_CDN") {
+      if (useUploadFallback) uploadSingleToken(token) //try to upload to MAIN CDN
+      image = token?.image_cdn
+      if (image) setFallbackStage("SECONDARY_CDN")
+    }
+    
+    //IF there is no secondary CDN image 
+    //OR if we are on the not on MAIN_CDN stage and the fallback image has errored
+    //AND metadata is allowed (not optimal for pages lots of images)
+    //AND we are not already on the METADATA/UPLOADED_FALLBACK_FAILED stage (meaning the metadata/uploaded fallback has errored too)
+    const excludedStages = ["METADATA", "UPLOADED_FALLBACK_FAILED"]
+    if (useMetadataFallback && !image && !excludedStages.includes(fallbackStage)) {
+      image = token?.image || await HandleNoUrl(token.mint) 
+      if (image) {
+        //if we've tried the uploaded fallback and it failed we leave the fallback image as metadata and dont try again
+        if (fallbackStage === "UPLOADED_FALLBACK") setFallbackStage("UPLOADED_FALLBACK_FAILED")
+        else setFallbackStage("METADATA")
       }
-      
+    }
+
+    if (image) {
+      setFallbackUrl(image)
+      setError(false)
+      setLoading(true)
     }
   }
 
 
   const handleLoad = (e) => {
-    if (noLazyLoad) setOpacity(1)
-    setError(null)
-    // console.log("IMAGE LOADED")
-    // setFullHeight(e.target.offsetHeight) //for maintaining layouts (currently not using)
+    setLoading(false)
+    setError(false)
+    if(noLazyLoad) setOpacity(1)
     if (onLoad) onLoad(e)
   }
 
@@ -135,21 +132,28 @@ const CloudinaryImage = ({
   return (
     <>
       {noLazyLoad ? null : <div ref={llRef} className='w-1 h-full opacity-0 absolute -z-10' />}
-      {(errorDisplay && error === errorDisplay.type)
-        ? (<div className={clsx("absolute top-0 left-0 w-full h-full", className)}>
-          {errorDisplay.content}
+      {(loading)
+        ? (<div className={clsx("absolute z-10 top-0 left-0 w-full h-full overflow-hidden", className)}>
+          <ContentLoader
+            speed={2}
+            className="w-full h-full rounded-lg"
+            backgroundColor="rgba(120,120,120,0.2)"
+            foregroundColor="rgba(120,120,120,0.1)"
+          >
+            <rect className="w-full h-full" />
+          </ContentLoader>
         </div>)
         : null
       }
       {
-        (hasBeenObserved || noLazyLoad) && (cldImg.toURL())//(isVisible || noLazyLoad) && //for true lazy load (if using ideally find a way to maintain images in memory so they dont need to be fetched everytime)
+        (hasBeenObserved || noLazyLoad) && (cldImg?.toURL())
         ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             ref={imageRef}
             style={{ ...style, opacity, ...lazyStyle }}
             className={className}
-            src={fallbackUrl || cldImg.toURL()}
+            src={fallbackUrl || cldImg?.toURL()}
             alt={token?.name || ""}
             onLoad={handleLoad}
             onError={handleError}

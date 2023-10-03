@@ -8,7 +8,7 @@ export default function EditGallery() {
   // const [tokens, setTokens] = useState();
   const tokens = useTokens(user?.public_keys, {
     justVisible: false,
-    useArtistDetails: false
+    useArtistDetails: false,
   });
 
   return (

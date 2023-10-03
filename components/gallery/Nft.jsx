@@ -94,13 +94,11 @@ export default function Nft({ user, token, onLoad, columns, onError }) {
             ) : null}
      
             <CloudinaryImage
-              // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ token.mint }`}
-              // mint={token.mint}
+              useMetadataFallback
               token={token}
               className={videoLoaded ? "invisible" : undefined}
               onLoad={onImageLoad}
               width={responsiveSteps()}
-              metadata={token}
               onError={onError}
             />            
           </a>

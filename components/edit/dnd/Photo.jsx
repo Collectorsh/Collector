@@ -55,10 +55,8 @@ export const Photo = forwardRef(
         >
           <CloudinaryImage
             className="w-full h-full cursor-pointer hover:origin-center object-center object-cover"
-            // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER}/${ mint }`}
-            // mint={mint}
+            useMetadataFallback
             token={token}
-            noLazyLoad
             onLoad={onImageLoad}
             width={500}
           />

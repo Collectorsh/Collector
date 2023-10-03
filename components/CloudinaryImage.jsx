@@ -16,6 +16,15 @@ import { getTokenCldImageId } from "../utils/cloudinary/idParsing";
 // Advanced Image plugins: https://cloudinary.com/documentation/react_image_transformations#plugins
 // Fetching/optimizations: https://cloudinary.com/documentation/image_optimization 
 
+const STAGES = {
+  MAIN_CDN: "MAIN_CDN",
+  SECONDARY_CDN: "SECONDARY_CDN",
+  METADATA: "METADATA",
+  UPLOADED_FALLBACK: "UPLOADED_FALLBACK",
+  UPLOADED_FALLBACK_FAILED: "UPLOADED_FALLBACK_FAILED",
+  NO_FALLBACK: "NO_FALLBACK",
+}
+
 const CloudinaryImage = ({
   id,
   token,
@@ -34,17 +43,17 @@ const CloudinaryImage = ({
   const llRef = useRef()
   const { isVisible, hasBeenObserved } = useElementObserver(llRef, "100px")
   const [fallbackUrl, setFallbackUrl] = useState(null)
-  const [opacity, setOpacity] = useState(0)
+  const [opacity, setOpacity] = useState(noLazyLoad ? 1 : 0)
   
-  const [fallbackStage, setFallbackStage] = useState("MAIN_CDN")
+  const [fallbackStage, setFallbackStage] = useState(STAGES.MAIN_CDN)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null) 
 
   useEffect(() => {
-    if(noLazyLoad || error) return
+    if(noLazyLoad || error || loading) return
     if (isVisible) setOpacity(1)
     else setOpacity(0)
-  }, [isVisible, noLazyLoad, error])
+  }, [isVisible, noLazyLoad, error, loading])
 
   const buildCldImg = (id, overrideQuality) => {
     const cldImg = cloudinaryCloud.image(id)
@@ -63,7 +72,7 @@ const CloudinaryImage = ({
 
   useEffect(() => {
     //Don't set uploaded fallback if we are on the initial MAIN_CDN stage, or if we've already tried the fallback
-    const excludedStages = ["MAIN_CDN", "UPLOADED_FALLBACK", "UPLOADED_FALLBACK_FAILED"]
+    const excludedStages = [STAGES.MAIN_CDN, STAGES.UPLOADED_FALLBACK, STAGES.UPLOADED_FALLBACK_FAILED]
     if (!excludedStages.includes(fallbackStage) && Boolean(fallback)) {
       if (fallback?.imageId) {
         //TODO figure out another way to image cache bust besides adding another transformation (it cost moneys)
@@ -72,7 +81,7 @@ const CloudinaryImage = ({
         setFallbackUrl(cldImgFB?.toURL())
         setLoading(true)
         setError(false)
-        setFallbackStage("UPLOADED_FALLBACK")
+        setFallbackStage(STAGES.UPLOADED_FALLBACK)
       } 
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,7 +93,7 @@ const CloudinaryImage = ({
     setError(true)
 
     if (!token) {
-      setFallbackStage("NO_FALLBACK")
+      setFallbackStage(STAGES.NO_FALLBACK)
       console.log("Bad ID and No Token")
       return;
     }
@@ -92,23 +101,23 @@ const CloudinaryImage = ({
     let image;
 
     //IF the MAIN CDN FAILS
-    if (fallbackStage === "MAIN_CDN") {
+    if (fallbackStage === STAGES.MAIN_CDN) {
       if (useUploadFallback) uploadSingleToken(token) //try to upload to MAIN CDN
       image = token?.image_cdn
-      if (image) setFallbackStage("SECONDARY_CDN")
+      if (image) setFallbackStage(STAGES.SECONDARY_CDN)
     }
     
     //IF there is no secondary CDN image 
     //OR if we are on the not on MAIN_CDN stage and the fallback image has errored
     //AND metadata is allowed (not optimal for pages lots of images)
     //AND we are not already on the METADATA/UPLOADED_FALLBACK_FAILED stage (meaning the metadata/uploaded fallback has errored too)
-    const excludedStages = ["METADATA", "UPLOADED_FALLBACK_FAILED"]
+    const excludedStages = [STAGES.METADATA, STAGES.UPLOADED_FALLBACK_FAILED]
     if (useMetadataFallback && !image && !excludedStages.includes(fallbackStage)) {
       image = token?.image || await HandleNoUrl(token.mint) 
       if (image) {
         //if we've tried the uploaded fallback and it failed we leave the fallback image as metadata and dont try again
-        if (fallbackStage === "UPLOADED_FALLBACK") setFallbackStage("UPLOADED_FALLBACK_FAILED")
-        else setFallbackStage("METADATA")
+        if (fallbackStage === STAGES.UPLOADED_FALLBACK) setFallbackStage(STAGES.UPLOADED_FALLBACK_FAILED)
+        else setFallbackStage(STAGES.METADATA)
       }
     }
 
@@ -123,11 +132,9 @@ const CloudinaryImage = ({
   const handleLoad = (e) => {
     setLoading(false)
     setError(false)
-    if(noLazyLoad) setOpacity(1)
+    if (noLazyLoad) setOpacity(1)
     if (onLoad) onLoad(e)
   }
-
-  const lazyStyle = noLazyLoad ? {} : { transitionDuration: "0.3s" }
 
   return (
     <>
@@ -151,7 +158,11 @@ const CloudinaryImage = ({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             ref={imageRef}
-            style={{ ...style, opacity, ...lazyStyle }}
+              style={{
+                transitionDuration: "0.3s",
+                ...style,
+                opacity,
+              }}
             className={className}
             src={fallbackUrl || cldImg?.toURL()}
             alt={token?.name || ""}

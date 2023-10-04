@@ -29,19 +29,18 @@ export default function Gallery({ tokens, user }) {
   const { waiting, completed, uploadAll, uploadAllCompleted, cloudinaryCompleted } = useImageFallbackContext()
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   
-  useEffect(() => {    
-    if (!waiting) {
-      uploadAll(tokens)//will optimized any images not optimized yet
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokens, waiting])
+
+  //Deprecated, now just uploading visible tokens on save
+  // useEffect(() => {    
+  //   if (!waiting) {
+  //     const visibleTokens = tokens.filter((t) => t.visible === true);
+  //     uploadAll(visibleTokens)//will optimized any visible images not optimized yet
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [tokens, waiting])
 
   
   useEffect(() => {
-    // const optimizedTokens = tokens.filter((t) => {
-    //   const cld_id = getTokenCldImageId(t)
-    //   return t.optimized === "True" || cloudinaryCompleted.some(cc => cc.cld_id === cld_id)
-    // })
     const tokenClone = cloneDeep(tokens);
     const vis = tokenClone.filter((t) => t.visible === true);
     const hid = tokenClone.filter((t) => t.visible === false);

@@ -5,7 +5,7 @@ import saveLayout from "/data/dashboard/saveLayout";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
-import { useCallback } from "react";
+import { useImageFallbackContext } from "../../../contexts/imageFallback";
 
 export default function Settings({
   items,
@@ -16,7 +16,8 @@ export default function Settings({
   showAll,
 }) {
   const [saving, setSaving] = useState(false);
-  
+  const { uploadAll } = useImageFallbackContext()
+
   const doSaveLayout = async () => {
     const { visible, hidden } = items
 
@@ -34,6 +35,7 @@ export default function Settings({
         visible: false
       }
     })
+
     const updatedItems = [...updatedVisible, ...updatedHidden]
 
     const check = {}
@@ -44,8 +46,10 @@ export default function Settings({
 
     setSaving(true);
     const res = await saveLayout(user.api_key, updatedItems, columns);
-    if (res.data.status === "success") success("Layout saved");
-    else error(res.msg);
+    if (res.data.status === "success") {
+      success("Layout saved");
+      await uploadAll(updatedVisible)//will optimized any visible images not optimized yet
+    } else error(res.msg);
     setSaving(false);
   }
 

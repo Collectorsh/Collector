@@ -197,6 +197,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
           ) : null}
 
           <CloudinaryImage
+            useMetadataFallback
             token={token}
             style={{
               height,

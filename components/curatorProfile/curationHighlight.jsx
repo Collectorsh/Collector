@@ -45,12 +45,14 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
                 <a className="flex gap-2 items-center justify-center mt-4 hover:scale-105 duration-300 w-fit mx-auto">
                   <p className="text-lg">Curated by {curator.username}</p>
                   {curator.profile_image
-                    ? (<CloudinaryImage
-                      className="w-14 h-14 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800"
-                      id={pfpImgId}
-                      noLazyLoad
-                      width={144}
-                    />)
+                  ? (<div className="relative">
+                      <CloudinaryImage
+                        className="w-14 h-14 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800"
+                        id={pfpImgId}
+                        noLazyLoad
+                        width={144}
+                      />
+                    </div>)
                     : null
                   }
                 </a>

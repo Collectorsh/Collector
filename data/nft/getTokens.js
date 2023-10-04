@@ -55,17 +55,8 @@ async function getTokens(publicKeys, options) {
 
       baseTokens.push(...res.items)
     }
-
-    //For now this gets picked up on detail pages seperately
-    // //associated token accounts
-    // let tokenAccountRes = await axios.post(rpcHost, data(publicKey));
-    // for (const account of tokenAccountRes.data.result.value) {
-    //   let associatedTokenAccountAddress = account.pubkey;
-    //   let mint = account.account.data.parsed.info.mint;
-    //   tokenAccounts[mint] = associatedTokenAccountAddress;
-    // }
   }
-
+  
   const creatorFilteredTokens = !justCreator
   ? baseTokens
   : baseTokens.filter((token) => { 
@@ -80,7 +71,8 @@ async function getTokens(publicKeys, options) {
       ...file,
       type: file.mime
     }))
-
+  
+    const image_cdn = content?.files?.find((file) => file.cdn_uri)?.cdn_uri
     return {
       creator: creators[0]?.address,
       description: content.metadata.description,
@@ -96,6 +88,7 @@ async function getTokens(publicKeys, options) {
       attributes: content.metadata.attributes,
       royalties: token.royalty,
       primary_sale_happened: token.royalty?.primary_sale_happened,
+      image_cdn
       //TODO Get from Helius when available and remove useTokenMetadata
       // is_edition: 
       // parent:
@@ -110,7 +103,6 @@ async function getTokens(publicKeys, options) {
 
   const visResults = await apiClient.post("/get_visibility_and_order", {
     public_key: publicKeys[0],
-    // mints: mungedTokens.map(token => token.mint),
     cld_ids: mungedTokens.map(token => getTokenCldImageId(token)),
   }).then(res => res.data)
 
@@ -152,36 +144,25 @@ async function getTokens(publicKeys, options) {
     })
     : { data: [] };
   
-    // const metaplex = Metaplex.make(connection);
-    for (const result of results) { 
+  for (const result of results) { 
       
+    if (useTokenMetadata) {
       //get onchain Metadata //TODO get this info from Helius once available
-      if (useTokenMetadata) {
-        //this works but takes a long time
-        // const metadata = await metaplex.nfts().findByMint({ mintAddress: new PublicKey(result.mint) });
-        // result.is_master_edition = metadata.edition.maxSupply && Number(metadata.edition.maxSupply?.toString()) > 0
-        // result.is_edition = !metadata.edition.isOriginal
-        // result.address = metadata.metadataAddress.toString()
-        try {
-          //TODO check if this is actually needed
-          // Add metadata PDA address
-          // const metadataPDA = await Metadata.getPDA(new PublicKey(result.mint));
-          // result.address = metadataPDA.toBase58(); 
-
-          const edition = await Metadata.getEdition(connection, result.mint)
-          const { data } = edition
-          
-          result.is_master_edition = data.maxSupply && Number(data.maxSupply?.toString()) > 0
-          result.supply = data.supply ? Number(data.supply.toString()) : undefined
-          result.max_supply = data.maxSupply ? Number(data.maxSupply.toString()) : undefined
-          
-          result.is_edition = Boolean(data.parent)
-          result.parent = data.parent?.toString()
-          result.edition_number = data.edition?.toString()
-        } catch (err) {
-          console.log("Error getting metadata for mint", result.mint)
-        }
-      }  
+      try {
+        const edition = await Metadata.getEdition(connection, result.mint)
+        const { data } = edition
+        
+        result.is_master_edition = Boolean(data.maxSupply && Number(data.maxSupply?.toString()) > 0)
+        result.supply = data.supply ? Number(data.supply.toString()) : undefined
+        result.max_supply = data.maxSupply ? Number(data.maxSupply.toString()) : undefined
+        
+        result.is_edition = Boolean(data.parent)
+        result.parent = data.parent?.toString()
+        result.edition_number = data.edition?.toString()
+      } catch (err) {
+        console.log("Error getting metadata for mint", result.mint)
+      }
+    }  
       
     // Loop through results and set artist name, twitter
     let tokens = creatorResp.data.filter((t) => t.public_key === result.creator);
@@ -196,10 +177,6 @@ async function getTokens(publicKeys, options) {
         if (toke) result.artist_twitter = toke.twitter;
       }
     }
-
-    //For now this gets picked up on detail pages seperately
-    //associated token account
-    // result.associatedTokenAccountAddress = tokenAccounts[result.mint];
   }
 
   results = results.sort((a, b) => {

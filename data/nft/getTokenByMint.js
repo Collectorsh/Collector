@@ -32,7 +32,7 @@ async function getTokenByMint(tokenMint) {
     ...file,
     type: file.mime
   }))
-
+  const image_cdn = content?.files?.find((file) => file.cdn_uri)?.cdn_uri
   const mungedToken = {
     creator: creators[0]?.address,
     description: content.metadata.description,
@@ -48,6 +48,7 @@ async function getTokenByMint(tokenMint) {
     attributes: content.metadata?.attributes,
     royalties: token.royalty,
     primary_sale_happened: token.royalty?.primary_sale_happened,
+    image_cdn,
     //TODO Get from Helius when available and remove seperate edition call
     // is_edition: 
     // parent:
@@ -62,7 +63,7 @@ async function getTokenByMint(tokenMint) {
   try {
     const edition = await Metadata.getEdition(connection, mungedToken.mint)
     const { data } = edition    
-    mungedToken.is_master_edition = data.maxSupply && Number(data.maxSupply?.toString()) > 0
+    mungedToken.is_master_edition = Boolean(data.maxSupply && Number(data.maxSupply?.toString()) > 0)
     mungedToken.supply = data.supply ? Number(data.supply.toString()) : undefined
     mungedToken.max_supply = data.maxSupply ? Number(data.maxSupply.toString()) : undefined
     

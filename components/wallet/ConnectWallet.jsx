@@ -28,11 +28,10 @@ export default function ConnectWallet() {
     let res = await getUserFromApiKey(apiKey);
     if (res?.data.status === "success") {
       setUser(res.data.user);
-    }
-    if (res?.data.status === "error" && res?.data.msg === "API Key not found") {
+    } else if (res?.data.status === "error" && res?.data.msg === "API Key not found") {
       localStorage.removeItem("api_key");
       if (publicKey && signMessage) await asyncGetApiKey(publicKey, signMessage);
-    }
+    } else setError(true);
   }
 
   useEffect(() => {

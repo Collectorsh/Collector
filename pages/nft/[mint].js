@@ -20,11 +20,6 @@ import VideoPlayer from "../../components/artDisplay/videoPlayer";
 import useNftFiles from "../../components/artDisplay/useNftFiles";
 
 export default function DetailPage({token, curations}) {
-  // return <NotFound />
-  // const router = useRouter();
-  // const { mint } = router.query;
-  // const token = useTokenByMint(mint);
-
   const {videoUrl} = useNftFiles(token)
 
   const [imgLoaded, setImgLoaded] = useState(false);

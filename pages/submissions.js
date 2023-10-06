@@ -16,6 +16,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useTokens } from "../data/nft/getTokens";
 import { parseCloudImageId } from "../utils/cloudinary/idParsing";
+import { curationListPlaceholderId } from "../components/curatorProfile/curationList";
 
 const Submissions = ({ }) => {
   const [user] = useContext(UserContext);
@@ -121,6 +122,11 @@ const Submissions = ({ }) => {
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Approved Curations</h2>
+          <Link href="/create" passHref>
+            <MainButton solid>
+              Create
+            </MainButton>
+          </Link>
         </div>
         
         <hr className="mt-6 mb-12 border-neutral-200 dark:border-neutral-800" />

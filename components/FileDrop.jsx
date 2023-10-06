@@ -1,7 +1,6 @@
 
 import { createRef, useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone'
-import MainButton from './MainButton';
 import clsx from 'clsx';
 
 const MaxCLDFileSize = 15000000; // 15MB (technically its a little under 20MB)
@@ -11,7 +10,11 @@ export const cleanFileName = (fileName) => {
   return fileName.split(".")[0].replaceAll(/[^a-zA-Z0-9_]/g, "-")
 }
 
-const FileDrop = ({ onDrop, acceptableFiles, helperText, imageClass, maxFileSize = MaxCLDFileSize }) => {
+const FileDrop = ({
+  onDrop, acceptableFiles, helperText,
+  imageClass = "object-cover",
+  maxFileSize = MaxCLDFileSize
+}) => {
   const dropzoneRef = createRef();
   const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
@@ -19,16 +22,16 @@ const FileDrop = ({ onDrop, acceptableFiles, helperText, imageClass, maxFileSize
   const [imgHeight, setImgHeight] = useState(0);
   const imgWrapperRef = useRef();
 
-  useEffect(() => {
-    if (!imgWrapperRef.current) return
-    const getHeight = () => {
-      setImgHeight(imgWrapperRef.current?.clientHeight)
-    }
+  // useEffect(() => {
+  //   if (!imgWrapperRef.current) return
+  //   const getHeight = () => {
+  //     setImgHeight(imgWrapperRef.current?.clientHeight)
+  //   }
 
-    getHeight()
-    window.addEventListener("resize", getHeight);
-    return () => window.removeEventListener("resize", getHeight);
-  }, [])
+  //   getHeight()
+  //   window.addEventListener("resize", getHeight);
+  //   return () => window.removeEventListener("resize", getHeight);
+  // }, [])
 
   const handleDrop = (acceptedFiles) => { 
     const file = acceptedFiles[0];
@@ -57,7 +60,6 @@ const FileDrop = ({ onDrop, acceptableFiles, helperText, imageClass, maxFileSize
       maxFiles={1}
       onDropAccepted={handleDrop}
       onDropRejected={handleRejected}
-      // onError={(err) => setError(err)}
       multiple={false}
       maxSize={maxFileSize}
     >
@@ -78,7 +80,7 @@ const FileDrop = ({ onDrop, acceptableFiles, helperText, imageClass, maxFileSize
 
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={image} alt="Preview"
-                  className={clsx('object-cover w-full h-full', imageClass)}
+                  className={clsx("w-full h-full", imageClass)}
                 />
              
               </div>

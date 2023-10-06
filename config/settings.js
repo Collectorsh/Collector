@@ -2,7 +2,7 @@ import { Connection } from "@solana/web3.js";
 import { baseCloudImageUrl } from "../utils/cloudinary/baseCldUrl";
 
 const dev = {
-  apiHost: "http://localhost:3001",
+  apiHost: "http://localhost:3333",
   host: "http://localhost:3000",
   dao21: "https://api.21dao.xyz",
 };

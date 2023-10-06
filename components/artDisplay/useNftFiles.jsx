@@ -6,12 +6,12 @@ const useNftFiles = (token) => {
   useEffect(() => {
     if (!token) return;
 
-    if (token.animation_url) {
-      const sections = token.animation_url.split(".");
-      const fileExtension = sections[sections.length - 1];
+    if (token.animation_url || token.files?.length > 1) {
+      const sections = token.animation_url?.split(".");
+      const fileExtension = sections ? sections[sections.length - 1] : null;
 
       const hasFileExtension = ["mp4", "html", "glb"].includes(fileExtension);
-      const hasQueryExtension = token.animation_url.includes("?ext=");
+      const hasQueryExtension = token.animation_url?.includes("?ext=");
 
       if (hasFileExtension || hasQueryExtension) {
         const extension = hasQueryExtension

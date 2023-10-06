@@ -16,6 +16,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useTokens } from "../data/nft/getTokens";
 import { parseCloudImageId } from "../utils/cloudinary/idParsing";
+import { curationListPlaceholderId } from "../components/curatorProfile/curationList";
 
 const Submissions = ({ }) => {
   const [user] = useContext(UserContext);

@@ -36,7 +36,6 @@ import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/c
 const descriptionPlaceholder = "Tell us about this curation."
 
 function CurationPage({ curation }) {
-  console.log("🚀 ~ file: [curation_name].js:39 ~ CurationPage ~ curation:", curation)
   const [user] = useContext(UserContext);
   const router = useRouter();
   const { handleCollect, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)

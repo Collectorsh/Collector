@@ -28,9 +28,6 @@ export default function MintPage() {
     if (!user.curator_approved || user.subscription_level !== "pro") router.replace("/");
   }, [user, router])
 
-  return < NotFound />
-
-
   const onDrop = (imageFile) => {
     setImageFile(imageFile);
   }

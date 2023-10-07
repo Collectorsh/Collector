@@ -9,17 +9,11 @@ import MainButton from "../components/MainButton";
 import FileDrop from "../components/FileDrop";
 import DescriptionInput from "../components/create/description";
 import NameInput from "../components/create/name";
-import NotFound from "../components/404";
 import RoyaltiesInput from "../components/create/royalties";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import { useWallet } from "@solana/wallet-adapter-react";
 import CreatorsInput from "../components/create/creators";
-import { apiNodeClient } from "../data/client/apiClient";
-import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
-import { connection } from "../config/settings";
-import { success } from "../utils/toast";
-import { shootConfetti } from "../utils/confetti";
 import MintModal from "../components/create/mintModal";
 
 export const REQUIRED = "required"

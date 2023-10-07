@@ -7,6 +7,7 @@ export default function Modal({
   title,
   isOpen,
   onClose,
+  closeDisabled,
   children,
   widthClass = "max-w-screen-xl",
   closeButtonPlacement = "absolute top-2 right-2"
@@ -47,7 +48,7 @@ export default function Modal({
               )}
             >
           
-              <button onClick={onClose} className={clsx("duration-200 hover:scale-105 active:scale-100", closeButtonPlacement)}>
+              <button onClick={onClose} className={clsx("duration-200 hover:scale-105 active:scale-100", closeButtonPlacement, closeDisabled && "hidden")}>
                 <XCircleIcon className="w-8 h-8" />
               </button>
               {title ? < Dialog.Title className="text-center font-bold text-3xl">{title}</Dialog.Title> : null}

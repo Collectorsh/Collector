@@ -22,8 +22,6 @@ const useCurationAuctionHouse = (curation) => {
     platformBalance: 0
   });
 
-  const [isPurchasing, setPurchasing] = useState(false);
-
   const auctionHouseAddress = curation?.auction_house_address
 
   const auctionHouseSDK = new Metaplex(connection)

@@ -61,13 +61,22 @@ export default function Gallery() {
               </Menu.Item>
             ) : null}
             {isCuratorApproved ? (
-              <Menu.Item>
-                <Link href={`/submissions`}>
-                  <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    Submissions
-                  </a>
-                </Link>
-              </Menu.Item>
+              <>
+                <Menu.Item>
+                  <Link href={`/submissions`}>
+                    <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Submissions
+                    </a>
+                  </Link>
+                </Menu.Item>
+                <Menu.Item>
+                  <Link href={`/create`}>
+                    <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Create
+                    </a>
+                  </Link>
+                </Menu.Item>
+              </>
             ) : null}
             
           </Menu.Items>

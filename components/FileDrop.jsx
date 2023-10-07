@@ -1,34 +1,30 @@
 
 import { createRef, useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone'
-import MainButton from './MainButton';
 import clsx from 'clsx';
 
-const MaxCLDFileSize = 15000000; // 15MB (technically its a little under 20MB)
+const MaxCLDFileSize = 15; 
 
 export const cleanFileName = (fileName) => { 
   //remove extension, replace non-alphanumeric characters with dashes
   return fileName.split(".")[0].replaceAll(/[^a-zA-Z0-9_]/g, "-")
 }
 
-const FileDrop = ({ onDrop, acceptableFiles, helperText, imageClass, maxFileSize = MaxCLDFileSize }) => {
+const FileDrop = ({
+  onDrop, acceptableFiles, helperText,
+  imageClass = "object-cover",
+  maxFileSize = MaxCLDFileSize
+}) => {
   const dropzoneRef = createRef();
   const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
 
-  const [imgHeight, setImgHeight] = useState(0);
-  const imgWrapperRef = useRef();
+  const maxFileSizeBytes = maxFileSize * 1000000
 
-  useEffect(() => {
-    if (!imgWrapperRef.current) return
-    const getHeight = () => {
-      setImgHeight(imgWrapperRef.current?.clientHeight)
-    }
-
-    getHeight()
-    window.addEventListener("resize", getHeight);
-    return () => window.removeEventListener("resize", getHeight);
-  }, [])
+  const reset = () => {
+    setImage(null);
+    setError(null);
+  }
 
   const handleDrop = (acceptedFiles) => { 
     const file = acceptedFiles[0];
@@ -57,19 +53,18 @@ const FileDrop = ({ onDrop, acceptableFiles, helperText, imageClass, maxFileSize
       maxFiles={1}
       onDropAccepted={handleDrop}
       onDropRejected={handleRejected}
-      // onError={(err) => setError(err)}
       multiple={false}
-      maxSize={maxFileSize}
+      maxSize={maxFileSizeBytes}
     >
     {({ getRootProps, getInputProps }) => (
       <section className='w-full h-full border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden '>
         <div {...getRootProps()} className='w-full h-full flex flex-col gap-2 justify-center items-center relative cursor-pointer'>
           <input {...getInputProps()} />
           <p className='text-red-500 capitalize'>{error}</p>  
-          <p className='font-bold'>Drag and drop your image file here, or click to select</p>
+          <p className='font-bold text-center'>Drag and drop your image file here, or click to select</p>
           {helperText ? <p className='opacity-50'>{helperText}</p> : null}
           <p className='opacity-50'>Supported formats { accept["image/*"].join(", ")}</p>
-            <p className='opacity-50'>Max file size {maxFileSize /1000000} MB</p>
+            <p className='opacity-50'>Max file size {maxFileSize} MB</p>
           
             {image ? (
               <div
@@ -78,7 +73,7 @@ const FileDrop = ({ onDrop, acceptableFiles, helperText, imageClass, maxFileSize
 
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={image} alt="Preview"
-                  className={clsx('object-cover w-full h-full', imageClass)}
+                  className={clsx("w-full h-full", imageClass)}
                 />
              
               </div>

@@ -1,19 +1,22 @@
 import clsx from "clsx"
+import { REQUIRED } from "../../pages/create"
 
-const NameForm = ({ name, setName, setError }) => {
+const NameInput = ({ name, setName, setError }) => {
   const limit = 32
 
   const handleChange = (e) => {
     setName(e.target.value)
-    if (e.target.value.length > limit) setError(prev => ({
+    const isUndefined = !e.target.value
+    if (isUndefined) setError(prev => ({ ...prev, name: REQUIRED }))
+    else if (e.target.value.length > limit) setError(prev => ({
       ...prev,
-      name: "Names can be no more than 32 characters."
+      name: `Names can be no more than ${limit} characters.`
     }))
     else setError(prev => ({ ...prev, name: null }))
   }
 
   return (
-    <div className="my-4">
+    <div>
       <p className="font-bold text-lg mb-1 ml-4">Name*</p>
       <input 
         type="text"
@@ -34,4 +37,4 @@ const NameForm = ({ name, setName, setError }) => {
   )
 }
 
-export default NameForm
+export default NameInput

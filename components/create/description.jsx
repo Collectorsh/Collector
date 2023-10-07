@@ -1,19 +1,22 @@
 import clsx from "clsx"
+import { REQUIRED } from "../../pages/create"
 
-const DescriptionForm = ({ description, setDescription, setError }) => { 
+const DescriptionInput = ({ description, setDescription, setError }) => { 
   const limit = 1000
 
   const handleChange = (e) => { 
     setDescription(e.target.value)
-    if (e.target.value.length > limit) setError(prev => ({
+    const isUndefined = !e.target.value
+    if (isUndefined) setError(prev => ({ ...prev, description: REQUIRED }))
+    else if (e.target.value.length > limit) setError(prev => ({
       ...prev,
-      description: "Descriptions can be no more than 1000 characters."
+      description: `Descriptions can be no more than ${limit} characters.`
     }))
     else setError(prev => ({ ...prev, description: null }))
   }
 
   return (
-    <div className="my-4">
+    <div>
       <p className="font-bold text-lg mb-1 ml-4">Description*</p>
       <textarea
         className="border-4 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
@@ -33,4 +36,4 @@ const DescriptionForm = ({ description, setDescription, setError }) => {
   )
 }
 
-export default DescriptionForm
+export default DescriptionInput

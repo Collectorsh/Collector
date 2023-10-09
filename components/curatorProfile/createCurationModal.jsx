@@ -7,7 +7,7 @@ import "tippy.js/dist/tippy.css";
 import { InformationCircleIcon } from "@heroicons/react/solid"
 import { useEditName } from "../curations/editNameModal"
 import createCuration from "../../data/curation/createCuration"
-import { MAX_CURATOR_FEE_POINTS } from "../../pages/api/curations/create"
+import { MAX_CURATOR_FEE_POINTS } from "../../pages/api/curations/createCuration"
 import UserContext from "../../contexts/user"
 import { error, success } from "../../utils/toast"
 import { shootConfetti } from "../../utils/confetti"

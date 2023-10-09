@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import MainNavigation from "../components/navigation/MainNavigation";
 import SubmitArtModal from "../components/artistSubmissions/submitArtModal";
 import getCurationsByApprovedArtist from "../data/curation/getCurationsByApprovedArtist";
-import { submitEditionTokens, submitSingleToken, submitTokens } from "../data/curationListings/submitToken";
+import { submitTokens } from "../data/curationListings/submitToken";
 import { error, success } from "../utils/toast";
 import EditListingsModal from "../components/artistSubmissions/editListingsModal";
 import { Toaster } from "react-hot-toast";

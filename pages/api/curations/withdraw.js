@@ -3,7 +3,7 @@ import { connection } from "/config/settings";
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, sendAndConfirmTransaction } from "@solana/web3.js";
 import crypto from 'crypto' 
 import { formatRSAPrivateKey } from "../../../utils/formatRSA";
-import { PLATFORM_FEE_POINTS, platformWithdrawalPubkey } from "./create";
+import { PLATFORM_FEE_POINTS, platformWithdrawalPubkey } from "./createCuration";
 
 export const getSplitBalance = async (connection, treasuryAccountAddress, curatorFee) => {
   const balanceLamports = await connection.getBalance(new PublicKey(treasuryAccountAddress));

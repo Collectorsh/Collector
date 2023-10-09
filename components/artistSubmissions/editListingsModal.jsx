@@ -13,8 +13,6 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { getListMasterEditionTX } from "../../utils/curations/listMasterEdition";
 import { connection } from "../../config/settings";
 import { getCloseAndWithdrawMarketTX } from "../../utils/curations/closeAndWithdrawMasterEdition";
-import { sendAndConfirmRawTransaction } from "@solana/web3.js";
-
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) => {
   const [user] = useContext(UserContext);

@@ -8,10 +8,8 @@ import fs from "fs"
 export default async function handler(req, res) {
   const { apiKey } = req.body;
   try {
-
-    const HASH_NAME = ""
-
-    const pathToMyKeypair = ""
+    const HASH_NAME = "";
+    const pathToMyKeypair = "";
     const keypairFile = fs.readFileSync(pathToMyKeypair);
     const secretKey = Buffer.from(JSON.parse(keypairFile.toString()));
     const keypair = Keypair.fromSecretKey(secretKey);

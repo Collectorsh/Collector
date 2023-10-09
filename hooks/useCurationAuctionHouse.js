@@ -3,7 +3,6 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL, PublicKey, ba } from "@solana/web3.js";
 import { useContext, useEffect, useState } from "react";
 import { connection } from "../config/settings";
-import { PLATFORM_FEE_POINTS } from "../pages/api/curations/create";
 import { getSplitBalance } from "../pages/api/curations/withdraw";
 import UserContext from "../contexts/user";
 import { getMintEditionTX } from "../utils/curations/mintEdition";

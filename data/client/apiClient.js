@@ -1,5 +1,6 @@
 import axios from "axios";
 import { apiHost } from "/config/settings";
+import { nodeApiHost } from "../../config/settings";
 
 const apiClient = axios.create({
   baseURL: apiHost,
@@ -9,7 +10,7 @@ const apiClient = axios.create({
 });
 
 export const apiNodeClient = axios.create({
-  baseURL: apiHost + "/node"
+  baseURL: nodeApiHost
 });
 
 export default apiClient;

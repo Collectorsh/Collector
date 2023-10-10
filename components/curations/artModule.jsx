@@ -15,6 +15,7 @@ import UserContext from '../../contexts/user';
 import VideoPlayer from '../artDisplay/videoPlayer';
 import debounce from 'lodash.debounce';
 import useNftFiles from '../artDisplay/useNftFiles';
+import ArtDisplay from '../artDisplay/artDisplay';
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
@@ -180,6 +181,12 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
           className={clsx(
             'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0'
           )}>
+          {/* <ArtDisplay
+            token={token}
+            cacheWidth={cacheWidth}
+            width={width}
+            height={height}
+          /> */}
           {videoUrl ? (
             <VideoPlayer
               id={`video-player-${ token.mint }`}

@@ -18,6 +18,7 @@ import { getImageSize } from "react-image-size";
 import { SpeakerphoneIcon } from "@heroicons/react/outline";
 import VideoPlayer from "../../components/artDisplay/videoPlayer";
 import useNftFiles from "../../components/artDisplay/useNftFiles";
+import ArtDisplay from "../../components/artDisplay/artDisplay";
 
 export default function DetailPage({token, curations}) {
   const {videoUrl} = useNftFiles(token)
@@ -41,8 +42,8 @@ export default function DetailPage({token, curations}) {
     : isEdition
       ? `Edition #${ editionNumber } ${maxSupply ? ` of ${ maxSupply }` :""}`
       : "1 of 1"
+  
   const solscanUrl = token?.mint ? `https://solscan.io/token/${ token?.mint }` : ""
-
 
   const activeCurations = curations?.filter(curation => {
     return curation.submitted_token_listings?.find(l => {
@@ -97,6 +98,7 @@ export default function DetailPage({token, curations}) {
           >
             <ArrowsExpandIcon className="w-7 h-7" />
           </button>
+          {/* <ArtDisplay token={token} /> */}
           {(videoUrl && !imageExpanded) ? (
             <VideoPlayer
               id={`video-player-${ token.mint }`}

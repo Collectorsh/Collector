@@ -28,8 +28,10 @@ const config = (function(environment) {
       return production;
     case "test":
       return test;
-    default:
+    case "dev":
       return dev;
+    default:
+      return production;
   }
 })(process.env.NEXT_PUBLIC_REACT_APP_STAGE);
 

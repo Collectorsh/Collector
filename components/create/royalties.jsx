@@ -1,4 +1,6 @@
+import Tippy from "@tippyjs/react"
 import { REQUIRED } from "../../pages/create"
+import { InformationCircleIcon } from "@heroicons/react/solid"
 
 const RoyaltiesInput = ({ royalties, setRoyalties, setError }) => { 
   const max = 90
@@ -15,10 +17,20 @@ const RoyaltiesInput = ({ royalties, setRoyalties, setError }) => {
     }))
     else setError(prev => ({ ...prev, royalties: null }))
   }
+
+  const info = (
+    <Tippy
+      content="The percentage of all secondary sales the creator(s) will get."
+      className="shadow-lg"
+    >
+      <InformationCircleIcon className="w-4" />
+    </Tippy>
+  )
+
   return (
     <div>
-      <p className="font-bold text-lg mb-1 ml-4">Royalties*</p>
-      <div className="flex w-full border-4 px-3 py-2 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
+      <p className="font-bold text-lg mb-1 ml-4 flex">Royalties* {info}</p>
+      <div className="flex w-full border-4 p-3 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
         <input
           type="number"
           min={0}

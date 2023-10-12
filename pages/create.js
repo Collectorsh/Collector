@@ -6,7 +6,7 @@ import UserContext from "../contexts/user";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import MainButton from "../components/MainButton";
-import FileDrop from "../components/FileDrop";
+import FileDrop, { CATEGORIES, imageFormats } from "../components/FileDrop";
 import DescriptionInput from "../components/create/description";
 import NameInput from "../components/create/name";
 import RoyaltiesInput from "../components/create/royalties";
@@ -15,17 +15,35 @@ import "tippy.js/dist/tippy.css";
 import { useWallet } from "@solana/wallet-adapter-react";
 import CreatorsInput from "../components/create/creators";
 import MintModal from "../components/create/mintModal";
+import clsx from "clsx";
+import NftTypeInput from "../components/create/nftType";
 
-export const REQUIRED = "required"
-const nonDisplayErrors = [REQUIRED]
+
+//TODO
+// Attributes: 
+// external_url: 
+// isMutable
+// Collection
 
 //NFT standard reference - https://docs.metaplex.com/programs/token-metadata/changelog/v1.0
+
+const maxUploadSize = 123 //MB
+
+export const REQUIRED = "required"
+
+const nonDisplayErrors = [REQUIRED]
+
+const MEDIA_KEYS = {
+  MAIN: "primary media",
+  THUMB: "thumbnail image",
+}
 
 export default function MintPage() {
   const [user] = useContext(UserContext);
   const router = useRouter()
   const wallet = useWallet();
 
+  const [altMediaFile, setAltMediaFile] = useState(null)
   const [imageFile, setImageFile] = useState(null)
   const [category, setCategory] = useState("image")
   const [name, setName] = useState("")
@@ -41,9 +59,10 @@ export default function MintPage() {
     name: REQUIRED,
     description: REQUIRED,
     royalties: REQUIRED,
-    "main asset": REQUIRED,
+    [MEDIA_KEYS.MAIN]: REQUIRED,
   })
 
+  const usingAltMedia = category !== CATEGORIES.IMAGE
   const isError = Object.values(error).some(v => v)
   const errors = Object.entries(error)
   const requiredError = errors.filter(e => nonDisplayErrors.includes(e[1]))[0]
@@ -54,28 +73,49 @@ export default function MintPage() {
   }, [user, router])
 
   useEffect(() => {
+    if (!wallet.publicKey) setError(prev => ({ ...prev, "Primary Creator": "Error Connecting Wallet" }))
     if (!wallet.publicKey || creators?.length) return
+
+    setError(prev => ({
+      ...prev,
+      "Primary Creator": null
+    }))
+
     setCreators([{
       address: wallet.publicKey,
+      verified: true,
       share: 100,
     }])
   }, [wallet, creators])
 
-  const onDrop = (imageFile) => {
-    let fileCategory = "image"
-    if (imageFile.type.includes("video")) fileCategory = "video"
-    if (imageFile.type.includes("html")) fileCategory = "html"
-    if (imageFile.type.includes("model")) fileCategory = "vr" //TODO does this need imageFile.type.includes("glb") ?
+  const onMainDrop = (file) => {
+    let fileCategory = CATEGORIES.IMAGE
+    if (file.type.includes("video")) fileCategory = CATEGORIES.VIDEO
+    if (file.type.includes("html")) fileCategory = CATEGORIES.HTML
+
+    //TODO does this need file.type.includes("glb") ?
+    if (file.type.includes("model")) fileCategory = CATEGORIES.VR
+
     setCategory(fileCategory)
 
-    setError(prev => ({ ...prev, "main asset": null }))
-    setImageFile(imageFile);
+    setError(prev => ({ ...prev, [MEDIA_KEYS.MAIN]: null }))
+
+    if (fileCategory === CATEGORIES.IMAGE) setImageFile(file);
+    else {
+      setAltMediaFile(file);
+      setError(prev => ({ ...prev, [MEDIA_KEYS.THUMB]: REQUIRED }))
+    }
+  }
+
+  const onThumbnailDrop = (file) => { 
+    setImageFile(file)
+    setError(prev => ({ ...prev, [MEDIA_KEYS.THUMB]: null }))
   }
 
   const onReset = () => { 
     setReseting(true)
     setImageFile(null)
-    setCategory("image")
+    setCategory(CATEGORIES.IMAGE)
     setName("")
     setDescription("")
     setRoyalties("")
@@ -107,6 +147,7 @@ export default function MintPage() {
         isOpen={mintModalOpen}
         onClose={closeMintModal}
         nftProps={{
+          altMediaFile,
           imageFile,
           category,
           creators,
@@ -130,17 +171,52 @@ export default function MintPage() {
 
         <hr className="mt-6 mb-12 border-neutral-200 dark:border-neutral-800" />
 
-        <div className="h-[50vh] relative px-4">
+        <div 
+          className={clsx(
+            "px-4 grid grid-cols-1 gap-6",
+            usingAltMedia ? "lg:grid-cols-3" : "",
+          )}
+        >
           {!reseting
-            ? <FileDrop onDrop={onDrop} imageClass="object-contain p-2" maxFileSize={100} />
+            ? (
+              <div className="flex flex-col gap-2 h-[50vh] lg:col-span-2">
+                {usingAltMedia ? <p className="text-center font-bold text-lg capitalize">{category}</p> : null}
+                <FileDrop
+                onDrop={onMainDrop}
+                imageClass="object-contain p-2"
+                maxFileSize={maxUploadSize}
+                acceptableFiles={{
+                  ...imageFormats,
+                  "video/mp4": [],
+                }}
+                />
+              </div>
+            )
+            : null
+          }
+          {(usingAltMedia && !reseting)
+            ? (
+              <div className="flex flex-col gap-2 h-[25vh] w-full">
+                <p className="text-center font-bold text-lg">Thumbnail Image</p>
+                <FileDrop
+                  onDrop={onThumbnailDrop}
+                  imageClass="object-contain p-2 mx-auto"
+                  maxFileSize={maxUploadSize}
+                />
+              </div>
+            )
             : null
           }
         </div>
 
+
         <div
           className="mt-5 px-4 mx-auto flex flex-col gap-1"
         >
-          <NameInput name={name} setName={setName} setError={setError} />
+          <div className="grid lg:grid-cols-2 gap-4">
+            <NameInput name={name} setName={setName} setError={setError} />
+            <NftTypeInput maxSupply={maxSupply} setMaxSupply={setMaxSupply} setError={setError} />
+          </div>
 
           <DescriptionInput description={description} setDescription={setDescription} setError={setError}/>
         
@@ -148,17 +224,12 @@ export default function MintPage() {
             <RoyaltiesInput royalties={royalties} setRoyalties={setRoyalties} setError={setError} />
             <CreatorsInput creators={creators} setCreators={setCreators} setError={setError} />
           </div>  
-          <p className="font-bold ">external_url: </p>  
-          <p className="font-bold ">Attributes: </p>  
-          <p className="font-bold ">isMutable</p>
-          <p className="font-bold ">Collection</p>
-          <p className="font-bold ">1/1 or editions</p>
-                  
+          
           <Tippy 
             disabled={!isError || !requiredError}
             content={<p className="capitalize">{requiredError?.[0]} is {requiredError?.[1]}</p>}
           >
-            <div>
+            <div className="mt-4">
               <MainButton
                 solid disabled={isError} className="w-full hover:scale-[102%]"
                 onClick={openMintModal}

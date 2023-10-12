@@ -1,8 +1,9 @@
 import MainButton from "../MainButton"
-import { PlusIcon, XIcon } from "@heroicons/react/solid"
+import { InformationCircleIcon, PlusIcon, XIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
 import { PublicKey } from "@solana/web3.js"
 import { REQUIRED } from "../../pages/create"
+import Tippy from "@tippyjs/react"
 
 const CreatorsInput = ({ creators, setCreators, setError }) => {
   
@@ -52,14 +53,24 @@ const CreatorsInput = ({ creators, setCreators, setError }) => {
   const addCreator = () => { 
     handleChange(prev => [...prev, {
       address: "",
+      verified: false,
       share: 0,
     }])
   }
 
+  const info = (
+    <Tippy
+      content="The wallet address and share of royalties for each creator."
+      className="shadow-lg"
+    >
+      <InformationCircleIcon className="w-4" />
+    </Tippy>
+  )
+
 
   return (
     <div>
-      <p className="font-bold text-lg mb-1 ml-4">Creators</p>
+      <p className="font-bold text-lg mb-1 ml-4 flex">Creators {info}</p>
       <div className=" border-4 px-3 py-2 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 min-h-[100px]">
         {creators.map((creator, i) => (<CreatorItem key={"creator"+i} index={i} handleChange={handleChange} creator={creator} />))}
         <button

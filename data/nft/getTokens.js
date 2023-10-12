@@ -56,7 +56,7 @@ async function getTokens(publicKeys, options) {
       baseTokens.push(...res.items)
     }
   }
-  
+
   const creatorFilteredTokens = !justCreator
   ? baseTokens
   : baseTokens.filter((token) => { 

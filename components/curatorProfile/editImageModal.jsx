@@ -38,7 +38,6 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
 
   const [imageBuffer, setImageBuffer] = useState(null);
   const [imageFileName, setImageFileName] = useState(null);
-  console.log("🚀 ~ file: editImageModal.jsx:41 ~ EditImageModal ~ imageFileName:", imageFileName)
   const [saving, setSaving] = useState(false);
 
   const saveDisabled = (tabs[activeTabIndex] === uploadTabTitle ? !imageBuffer : !selected) || saving

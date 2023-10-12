@@ -112,11 +112,11 @@ const VideoPlayer = ({
         className="mx-auto h-full object-center object-cover duration-200 opacity-0 rounded-lg"
         onCanPlayThrough={e => {
           e.target.classList.add("opacity-100")
-          setVideoLoaded(true)
+          if(setVideoLoaded) setVideoLoaded(true)
         }}
         onError={(e) => e.target.classList.add("hidden")}
       >
-        <source src={videoUrl} type="video/mp4" />
+        <source src={videoUrl} />
         Your browser does not support the video tag.
       </video>
     </div>

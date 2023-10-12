@@ -9,6 +9,8 @@ import Link from "next/link"
 import { Oval } from "react-loader-spinner"
 import { truncate } from "../../utils/truncate"
 import { shootConfetti } from "../../utils/confetti"
+import { AltMedia, CATEGORIES } from "../FileDrop"
+import clsx from "clsx"
 
 const MINT_STAGE = {
   INIT: "Init",
@@ -22,42 +24,57 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
   const wallet = useWallet();
   const [stage, setStage] = useState(MINT_STAGE.INIT)
   const [previewImage, setPreviewImage] = useState(null)
+  const [previewAlt, setPreviewAlt] = useState(null)
   const [mintedAddress, setMintedAddress] = useState(null)
 
   const preventClose = [MINT_STAGE.UPLOAD, MINT_STAGE.SIGN, MINT_STAGE.MINTING].includes(stage)
 
+  const usingAltMedia = nftProps.category !== CATEGORIES.IMAGE
+
   useEffect(() => {
-    const { imageFile } = nftProps
+    const { imageFile, altMediaFile } = nftProps
+
     if (!imageFile) return
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreviewImage(reader.result);
     };
     reader.readAsDataURL(imageFile);
+
+    if (altMediaFile) {
+      const altReader = new FileReader();
+      altReader.onloadend = () => {
+        setPreviewAlt(altReader.result);
+      };
+      altReader.readAsDataURL(altMediaFile);
+    }
   }, [nftProps])
   
   const resetLocally = () => {
     setMintedAddress(null)
     setPreviewImage(null)
+    setPreviewAlt(null)
     setStage(MINT_STAGE.INIT)
   }
 
   const handleClose = useCallback(() => {
     if (preventClose) return
     onClose()
-    resetLocally()
+    setTimeout(() => resetLocally(), 500) //wait for modal to close before resetting so the content doesn't change while closing
   }, [onClose, preventClose])
 
   const handleReset = useCallback(() => {
     onReset()
     onClose()
-    resetLocally()
+    setTimeout(() => resetLocally(), 500)
   }, [onClose, onReset])
 
   const onMint = useCallback(async () => {
     setStage(MINT_STAGE.UPLOAD)
+
     const {
       imageFile,
+      altMediaFile,
       category,
       creators,
       name,
@@ -72,6 +89,9 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
 
     const fileData = new FormData()
     fileData.append("imageFile", imageFile)
+
+    if (altMediaFile) fileData.append("altMediaFile", altMediaFile)
+
     fileData.append("nft", JSON.stringify({
       category,
       creators,
@@ -122,6 +142,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       description,
       royalties,
       maxSupply,
+      category,
       attributes,
       external_url
     } = nftProps
@@ -133,11 +154,29 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         <div>
           <p className="text-center text-xl font-bold">Does everything look correct?</p>
           <div className="grid gap-3 my-5">
-            {/*eslint-disable-next-line @next/next/no-img-element*/}
-            <img
-              className="w-full h-full object-contain rounded"
-              src={previewImage} alt=""
-            />
+            <div className={clsx(
+              "px-4 grid grid-cols-1 gap-6",
+              usingAltMedia ? "lg:grid-cols-3" : "",
+            )}>
+              {usingAltMedia
+                ? (
+                  <div className="flex flex-col gap-2 h-[50vh] lg:col-span-2 relative">
+                    <p className="text-center font-bold text-lg capitalize">{category}</p>
+                    {previewAlt ? <AltMedia mediaUrl={previewAlt} category={category} /> : null}
+                  </div>
+                )
+                : null
+              }
+
+              <div className={clsx("flex flex-col gap-2 w-full", usingAltMedia && "h-[25vh]")}>
+                {usingAltMedia ? <p className="text-center font-bold text-lg">Thumbnail Image</p> : null}
+                {/*eslint-disable-next-line @next/next/no-img-element*/}
+                <img
+                  className="w-full h-full object-contain rounded overflow-hidden"
+                  src={previewImage} alt=""
+                />
+              </div> 
+            </div>
             <div className="flex flex-col gap-2 px-4">
               <div className="grid sm:grid-cols-2 items-center">
                 
@@ -147,7 +186,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
                 {isOneOfOne ? (
                   <p className="font-bold"> 1 of 1</p>
                 ) : (
-                  <p className="font-bold">Editions: {maxSupply}</p>                
+                  <p className="font-bold">Editions: {maxSupply || "Open"}</p>                
                 )}
               </div>
               
@@ -182,7 +221,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       default: return (
         <div className="h-56 flex flex-col gap-2 justify-center">
           <p className="text-center text-2xl font-bold animate-pulse">{stage}</p>
-          {MINT_STAGE.MINTING ? (
+          {stage === MINT_STAGE.MINTING ? (
             <p className="text-center">Sign the transaction to mint your art onchain.</p>
           ): (
             <p className="text-center">This may take a few minutes.</p>
@@ -191,7 +230,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         </div>
       )
     }
-  }, [stage, nftProps, previewImage, mintedAddress])
+  }, [stage, nftProps, previewImage, mintedAddress, previewAlt, usingAltMedia])
 
   const secondaryButton = useMemo(() => { 
     switch (stage) {
@@ -244,7 +283,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       onClose={handleClose}
       closeDisabled={preventClose}
       title={`Minting ${ nftProps.name }`}
-      widthClass="max-w-screen-sm"
+      widthClass={usingAltMedia && stage === MINT_STAGE.INIT ? "max-w-screen-xl" : "max-w-screen-sm"}
     >
       <div className="h-full overflow-y-auto my-2">
         {content}

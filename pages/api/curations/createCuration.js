@@ -1,4 +1,4 @@
-import { Metaplex, keypairIdentity} from "@metaplex-foundation/js";
+import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
 import { connection } from "/config/settings";
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, Transaction, sendAndConfirmTransaction, SystemProgram, Connection, sendAndConfirmRawTransaction } from "@solana/web3.js";
 import { formatRSAPrivateKey, formatRSAPublicKey } from "../../../utils/formatRSA";
@@ -13,7 +13,7 @@ export const platformWithdrawalPubkey = "Emfvfxo51M7huTFgakJCwHvHFmBbQMwWUTgjJK6
 
 const AUTHORITY_INIT_FUNDS = 0.02 * LAMPORTS_PER_SOL
 
-const fundAccount = async (fundingKeypair, recipientPubkey, lamportsToFund = AUTHORITY_INIT_FUNDS) => {  
+const fundAccount = async (fundingKeypair, recipientPubkey, lamportsToFund = AUTHORITY_INIT_FUNDS) => {
   const fundingTX = new Transaction().add(
     SystemProgram.transfer({
       fromPubkey: fundingKeypair.publicKey,
@@ -27,7 +27,7 @@ const fundAccount = async (fundingKeypair, recipientPubkey, lamportsToFund = AUT
     connection,
     fundingTX,
     [fundingKeypair],
-    { commitment: 'finalized'}
+    { commitment: 'finalized' }
   );
   console.log(`Funds sent to ${ recipientPubkey.toString() }`);
   console.log(`tx hash: ${ signature }`);
@@ -67,16 +67,16 @@ export default async function handler(req, res) {
       Buffer.from(fundingHash, "base64")
     )
     fundingKeypair = Keypair.fromSecretKey(fundingPrivateKey)
-    
+
     await fundAccount(fundingKeypair, authorityKeypair.publicKey)
 
     //CREATE AUCTION HOUSE
     const metaplex = new Metaplex(connection).use(keypairIdentity(authorityKeypair));
-       
-    const {auctionHouse} = await metaplex
+
+    const { auctionHouse } = await metaplex
       .auctionHouse()
       .create({
-        sellerFeeBasisPoints: feePoints, 
+        sellerFeeBasisPoints: feePoints,
         authority: authorityKeypair,
         //withdrawals default to authority
 
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
         // hasAuctioneer: true, // to enable auctioneer
         // auctioneerAuthority: authorityKeypair???,
       });
-    
+
     console.log("Auction house created:", auctionHouse.address.toString())
 
     //TODO might need to add this back in when dealing with auctions
@@ -116,7 +116,7 @@ export default async function handler(req, res) {
 
       const refundAmount = balanceLamports// - feeCost
       if (refundAmount <= 0) throw new Error("Not enough balance to refund")
-      
+
       const recoverTX = new Transaction().add(
         SystemProgram.transfer({
           fromPubkey: authorityKeypair.publicKey,
@@ -124,7 +124,7 @@ export default async function handler(req, res) {
           lamports: refundAmount,
         }),
       );
-      
+
       // Sign transaction, broadcast, and confirm
       const signature = await sendAndConfirmTransaction(
         connection,
@@ -132,7 +132,7 @@ export default async function handler(req, res) {
         [authorityKeypair],
       );
       console.log('Recovered Funds', signature);
-    } catch (err) { 
+    } catch (err) {
       console.error("Funding recovery error: ", err);
     }
     return res.status(500).json({ error: err.message });

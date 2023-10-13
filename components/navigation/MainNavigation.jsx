@@ -243,13 +243,14 @@ export default function MainNavigation() {
                                       </p>
                                     ) : null}
                                     {isCuratorApproved ? (
-                                      <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                        <Link href={`/submissions`}>
-                                      
-                                          Submissions
-                                          
-                                        </Link>
-                                      </p>
+                                      <>
+                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                          <Link href={`/submissions`}>Submissions</Link>
+                                        </p>
+                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
+                                          <Link href={`/create`}>Create</Link>
+                                        </p>
+                                      </>
                                     ) : null}
                                   {/* {user.token_holder && (
                                     <>

@@ -1,6 +1,5 @@
 import axios from "axios";
-import hellomoonClient from "../data/client/helloMoonClient";
-import apiClient, { apiClientLong } from "../data/client/apiClient";
+import apiClient from "../data/client/apiClient";
 
 export default async function ImageFallback(mint) {
   try {

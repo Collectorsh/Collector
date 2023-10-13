@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import MainNavigation from "../components/navigation/MainNavigation";
 import SubmitArtModal from "../components/artistSubmissions/submitArtModal";
 import getCurationsByApprovedArtist from "../data/curation/getCurationsByApprovedArtist";
-import { submitEditionTokens, submitSingleToken, submitTokens } from "../data/curationListings/submitToken";
+import { submitTokens } from "../data/curationListings/submitToken";
 import { error, success } from "../utils/toast";
 import EditListingsModal from "../components/artistSubmissions/editListingsModal";
 import { Toaster } from "react-hot-toast";
@@ -122,6 +122,11 @@ const Submissions = ({ }) => {
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Approved Curations</h2>
+          <Link href="/create" passHref>
+            <MainButton solid>
+              Create
+            </MainButton>
+          </Link>
         </div>
         
         <hr className="mt-6 mb-12 border-neutral-200 dark:border-neutral-800" />

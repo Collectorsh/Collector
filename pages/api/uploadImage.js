@@ -3,7 +3,6 @@ import { v2 as cloudinary } from 'cloudinary'
 export default async function handler(req, res) {
   const { image_buffer , cld_id } = req.body;
   if (!image_buffer || !cld_id) return res.status(500).json({ error: "Missing required parameters" });
-  console.log("🚀 ~ file: uploadImage.js:5 ~ handler ~ image_buffer:", image_buffer)
   const buffer = Buffer.from(image_buffer, 'base64');
   if (!Buffer.isBuffer(buffer)) return res.status(500).json({ error: "Invalid image buffer" });
   try {

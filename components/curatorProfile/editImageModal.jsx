@@ -38,7 +38,6 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
 
   const [imageBuffer, setImageBuffer] = useState(null);
   const [imageFileName, setImageFileName] = useState(null);
-  console.log("🚀 ~ file: editImageModal.jsx:41 ~ EditImageModal ~ imageFileName:", imageFileName)
   const [saving, setSaving] = useState(false);
 
   const saveDisabled = (tabs[activeTabIndex] === uploadTabTitle ? !imageBuffer : !selected) || saving
@@ -168,7 +167,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
         </div>
       ) : null}
       <FileDrop
-        imageClass={isPfp ? "rounded-full max-h-[250px] max-w-[250px] md:max-h-[450px] md:max-w-[450px]" : undefined}
+        imageClass={isPfp ? "object-cover rounded-full max-h-[250px] max-w-[250px] md:max-h-[450px] md:max-w-[450px]" : undefined}
         onDrop={onDrop}
         helperText={isBanner ? "Recommended resolution 1500x500" : undefined}
       />

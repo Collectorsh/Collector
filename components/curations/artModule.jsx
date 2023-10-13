@@ -14,7 +14,9 @@ import "tippy.js/dist/tippy.css";
 import UserContext from '../../contexts/user';
 import VideoPlayer from '../artDisplay/videoPlayer';
 import debounce from 'lodash.debounce';
-import useNftFiles from '../artDisplay/useNftFiles';
+import ArtDisplay from '../artDisplay/artDisplay';
+import useNftFiles from '../../hooks/useNftFiles';
+import { CATEGORIES } from '../FileDrop';
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
@@ -145,6 +147,10 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
 
+  const [mediaType, setMediaType] = useState(CATEGORIES.IMAGE)
+
+  const disableLink = mediaType === CATEGORIES.HTML || mediaType === CATEGORIES.VR
+
   const isMasterEdition = token.is_master_edition
   const isEdition = token.is_edition
   const supply = token.supply
@@ -175,11 +181,21 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
     <div
       className={clsx("relative duration-300 w-fit mx-auto",)}
     >
-      <Link href={`/nft/${ token.mint }`} >
+      <Link href={`/nft/${ token.mint }`} disabled={disableLink}>
         <a  
+          disabled={disableLink}
           className={clsx(
-            'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg hover:-translate-y-2 active:translate-y-0'
+            'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg ',
+            "hover:-translate-y-2 active:translate-y-0",
+            disableLink && "hover:translate-y-0"
           )}>
+          {/* <ArtDisplay
+            setMediaType={setMediaType}
+            token={token}
+            cacheWidth={cacheWidth}
+            width={width}
+            height={height}
+          /> */}
           {videoUrl ? (
             <VideoPlayer
               id={`video-player-${ token.mint }`}
@@ -226,14 +242,16 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
         <div
           className={clsx('flex gap-1', "flex-col items-start")}
         >
-          <p
-            className='font-bold text-2xl leading-8 truncate'
-            style={{
-              maxWidth: width
-            }}
-            >
-            {token.name}
-          </p>
+          <Link href={`/nft/${ token.mint }`} disabled={disableLink} passHref>
+            <p
+              className='font-bold text-2xl leading-8 truncate cursor-pointer'
+              style={{
+                maxWidth: width
+              }}
+              >
+              {token.name}
+            </p>
+          </Link>
 
           {artist ? (
             <p>by {artist.username}</p>

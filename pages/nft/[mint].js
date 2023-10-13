@@ -17,14 +17,10 @@ import { image } from "@cloudinary/url-gen/qualifiers/source";
 import { getImageSize } from "react-image-size";
 import { SpeakerphoneIcon } from "@heroicons/react/outline";
 import VideoPlayer from "../../components/artDisplay/videoPlayer";
-import useNftFiles from "../../components/artDisplay/useNftFiles";
+import ArtDisplay from "../../components/artDisplay/artDisplay";
+import useNftFiles from "../../hooks/useNftFiles";
 
 export default function DetailPage({token, curations}) {
-  // return <NotFound />
-  // const router = useRouter();
-  // const { mint } = router.query;
-  // const token = useTokenByMint(mint);
-
   const {videoUrl} = useNftFiles(token)
 
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -46,8 +42,8 @@ export default function DetailPage({token, curations}) {
     : isEdition
       ? `Edition #${ editionNumber } ${maxSupply ? ` of ${ maxSupply }` :""}`
       : "1 of 1"
+  
   const solscanUrl = token?.mint ? `https://solscan.io/token/${ token?.mint }` : ""
-
 
   const activeCurations = curations?.filter(curation => {
     return curation.submitted_token_listings?.find(l => {
@@ -102,6 +98,7 @@ export default function DetailPage({token, curations}) {
           >
             <ArrowsExpandIcon className="w-7 h-7" />
           </button>
+          {/* <ArtDisplay token={token} onImageLoad={() => setImgLoaded(true)} /> */}
           {(videoUrl && !imageExpanded) ? (
             <VideoPlayer
               id={`video-player-${ token.mint }`}
@@ -145,7 +142,7 @@ export default function DetailPage({token, curations}) {
                 <h2 className="text-lg mt-5 mb-2 ">Listings</h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   {activeCurations?.map(curation => (
-                    <DetailListings key={token.mint} curation={curation} mint={token.mint} />
+                    <DetailListings key={token.mint+curation.name} curation={curation} mint={token.mint} />
                   ))}
                 </div>
 
@@ -158,7 +155,7 @@ export default function DetailPage({token, curations}) {
           
           <div className="flex flex-wrap gap-x-4 mt-4">
             <span className="font-bold">Mint Address: </span>
-            <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl}>
+            <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl} target="_blank" rel="noreferrer">
               {truncate(token?.mint)}
             </a>
           </div>
@@ -178,7 +175,7 @@ export default function DetailPage({token, curations}) {
 const AddressLink = ({ address}) => { 
   const solscanUrl = address ? `https://solscan.io/account/${ address }` : ""
   return (
-    <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl}>
+    <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl} target="_blank" rel="noreferrer">
       {truncate(address, 4)}
     </a>
   )

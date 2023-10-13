@@ -3,18 +3,21 @@ import { baseCloudImageUrl } from "../utils/cloudinary/baseCldUrl";
 
 const dev = {
   apiHost: "http://localhost:3001",
+  nodeApiHost: "http://localhost:3002",
   host: "http://localhost:3000",
   dao21: "https://api.21dao.xyz",
 };
 
 const production = {
-  apiHost: process.env.NEXT_PUBLIC_ALT_API || "https://collector.sh/collector-api",
+  apiHost: "https://collector.sh/collector-api",
+  nodeApiHost: "https://collector.sh/collector-node-api",
   host: "https://collector.sh",
   dao21: "https://api.21dao.xyz",
 }; 
 
 const test = {
   apiHost: "https://collector-testing-kvak9.ondigitalocean.app/collector-api",
+  nodeApiHost: "https://collector-testing-kvak9.ondigitalocean.app/collector-node-api", 
   host: "https://collector-testing-kvak9.ondigitalocean.app",
   dao21: "https://api.21dao.xyz",
 };
@@ -25,8 +28,10 @@ const config = (function(environment) {
       return production;
     case "test":
       return test;
-    default:
+    case "dev":
       return dev;
+    default:
+      return production;
   }
 })(process.env.NEXT_PUBLIC_REACT_APP_STAGE);
 
@@ -51,6 +56,7 @@ export const auctionHousesArray = [
 
 export const rpcHost = process.env.NEXT_PUBLIC_RPC;
 export const apiHost = config.apiHost;
+export const nodeApiHost = config.nodeApiHost;
 export const host = config.host;
 export const dao21 = config.dao21;
 export const loginMessage = "Welcome to Collector! Please sign this message to log-in. ";

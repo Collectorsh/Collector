@@ -8,7 +8,7 @@ import { XIcon } from "@heroicons/react/solid";
 import { Oval } from "react-loader-spinner";
 import SearchBar from "../SearchBar";
 import { truncate } from "../../utils/truncate";
-import useNftFiles from "../artDisplay/useNftFiles";
+import useNftFiles from "../../hooks/useNftFiles";
 
 const tabs = ["1/1", "Master Editions"]
 

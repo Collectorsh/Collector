@@ -1,6 +1,7 @@
 import clsx from "clsx"
+import { forwardRef } from "react"
 
-const MainButton = ({ children, solid = false, className, disabled, noPadding, warning, ...props }) => {
+const MainButton = forwardRef(({ children, solid = false, className, disabled, noPadding, warning, ...props }, ref) => {
 
   const bgClass = solid
     ? "bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-700"
@@ -13,6 +14,7 @@ const MainButton = ({ children, solid = false, className, disabled, noPadding, w
   
   return (
     <button
+      ref={ref}
       disabled={disabled}
       className={clsx("border-2 border-black dark:border-white",
         "dark:hover:bg-neutral-200 hover:border-neutral-700 dark:hover:border-neutral-200",
@@ -30,7 +32,9 @@ const MainButton = ({ children, solid = false, className, disabled, noPadding, w
     </button>
 
   )
-}
+})
+
+MainButton.displayName = "MainButton"
 
 export default MainButton
 

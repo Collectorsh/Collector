@@ -57,10 +57,6 @@ async function getTokens(publicKeys, options) {
     }
   }
 
-  const t = baseTokens.find(t => {
-    return t.id === "2b3uRVDqTTiyrDTZcDTGmnkdSDCG5uYBTj5nktUYhHs3"
-  })
-  console.log("🚀 ~ file: getTokens.js:61 ~ getTokens ~ t:", t)
   const creatorFilteredTokens = !justCreator
   ? baseTokens
   : baseTokens.filter((token) => { 

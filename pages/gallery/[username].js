@@ -194,7 +194,9 @@ function ProfilePage({ curator }) {
                   />
                   
                 ))
-                : <p>Link your socials</p>
+                : isOwner
+                  ? <p>Link your socials</p>
+                  : null
               }
             </div>
           </EditWrapper>

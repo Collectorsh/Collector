@@ -189,14 +189,14 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
             "hover:-translate-y-2 active:translate-y-0",
             disableLink && "hover:translate-y-0"
           )}>
-          <ArtDisplay
+          {/* <ArtDisplay
             setMediaType={setMediaType}
             token={token}
             cacheWidth={cacheWidth}
             width={width}
             height={height}
-          />
-          {/* {videoUrl ? (
+          /> */}
+          {videoUrl ? (
             <VideoPlayer
               id={`video-player-${ token.mint }`}
               videoUrl={videoUrl}
@@ -227,7 +227,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
             )}
             width={cacheWidth}
             noLazyLoad
-          /> */}
+          />
 
         </a>
       </Link>

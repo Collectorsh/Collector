@@ -103,7 +103,11 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
     }))
 
     try {
-      const res = await apiNodeClient.post("upload-metadata", fileData).then(res => res.data)
+      const res = await apiNodeClient.post(
+        "upload-metadata",
+        fileData,
+        {timeout: 0}
+      ).then(res => res.data)
 
       if (res.error || !res.uri) {
         throw new Error(`Error uploading metadata: ${ res?.error }`)

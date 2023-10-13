@@ -4,7 +4,7 @@ import apiClient from "../client/apiClient";
 async function createCuration({ curationName, apiKey, curatorFee, curatorWithdrawalPubkey }) {
   try {
 
-    const result = await axios.post("/api/curations/create",
+    const result = await axios.post("/api/curations/createCuration",
       {
         curationName,
         apiKey,

@@ -155,7 +155,7 @@ export default function DetailPage({token, curations}) {
           
           <div className="flex flex-wrap gap-x-4 mt-4">
             <span className="font-bold">Mint Address: </span>
-            <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl}>
+            <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl} target="_blank" rel="noreferrer">
               {truncate(token?.mint)}
             </a>
           </div>
@@ -175,7 +175,7 @@ export default function DetailPage({token, curations}) {
 const AddressLink = ({ address}) => { 
   const solscanUrl = address ? `https://solscan.io/account/${ address }` : ""
   return (
-    <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl}>
+    <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl} target="_blank" rel="noreferrer">
       {truncate(address, 4)}
     </a>
   )

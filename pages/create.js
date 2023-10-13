@@ -17,6 +17,7 @@ import CreatorsInput from "../components/create/creators";
 import MintModal from "../components/create/mintModal";
 import clsx from "clsx";
 import NftTypeInput from "../components/create/nftType";
+import { Oval } from "react-loader-spinner";
 
 
 //TODO
@@ -234,7 +235,14 @@ export default function MintPage() {
                 solid disabled={isError} className="w-full hover:scale-[102%]"
                 onClick={openMintModal}
               >
-                Mint!
+                {mintModalOpen
+                  ? (
+                    <span className="inline-block translate-y-0.5">
+                      <Oval color="#FFF" secondaryColor="#666" height={17} width={17} />
+                    </span>
+                  )
+                  : "Mint!"
+                }
               </MainButton>
             </div>
           </Tippy>

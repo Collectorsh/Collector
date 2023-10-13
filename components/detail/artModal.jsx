@@ -4,6 +4,7 @@ import clsx from "clsx";
 import Modal from "../Modal";
 import ContentLoader from "react-content-loader";
 import VideoPlayer from "../artDisplay/videoPlayer";
+import ArtDisplay from "../artDisplay/artDisplay";
 
 export default function ArtModal({ isOpen, onClose, token }) {
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -28,6 +29,9 @@ export default function ArtModal({ isOpen, onClose, token }) {
       closeButtonPlacement="absolute -right-3 -top-3"
     >
       <div className="relative w-fit max-w-full rounded mx-auto overflow-hidden">
+        {/* <ArtDisplay token={token} /> */}
+
+        
         {!imgLoaded ? (
           <ContentLoader
             speed={2}

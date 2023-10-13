@@ -1,8 +1,10 @@
 
-import { createRef, useEffect, useRef, useState } from 'react';
+import { createRef, useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone'
 import clsx from 'clsx';
 import VideoPlayer from './artDisplay/videoPlayer';
+import ContentLoader from 'react-content-loader';
+import { Oval } from 'react-loader-spinner';
 
 const MaxCLDFileSize = 20; 
 
@@ -38,6 +40,8 @@ const FileDrop = ({
   const handleDrop = (acceptedFiles) => { 
     const file = acceptedFiles[0];
     onDrop(file);
+    setImage(null);
+    setAltMedia(null);
     
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -116,20 +120,46 @@ const FileDrop = ({
 export default FileDrop;
 
 export const AltMedia = ({ category, mediaUrl }) => {
-  switch (category) {
-    case CATEGORIES.VIDEO:
-      return (
-        <VideoPlayer
-          videoUrl={mediaUrl}
-        />
-      )
-    // case CATEGORIES.HTML:
-    //   return (
-    //     <iframe
-    //       src={altMedia}
-    //       className="w-full h-full object-cover rounded-lg"
-    //     />
-    //   )
-    default: return null
-  }
+  const [loaded, setLoaded] = useState(false)
+  const [contentInUse, setContentInUse] = useState(null)
+
+  useEffect(() => {
+    setTimeout(() => setContentInUse(content), 50)
+    
+    return () => setContentInUse(null)
+  }, [content])
+
+  const content = useMemo(() => {
+    switch (category) {
+      case CATEGORIES.VIDEO:
+        return (
+          <VideoPlayer
+            setVideoLoaded={() => setLoaded(true)}
+            videoUrl={mediaUrl}
+          />
+        )
+      // case CATEGORIES.HTML:
+      //   return (
+      //     <iframe
+      //       src={altMedia}
+      //       className="w-full h-full object-cover rounded-lg"
+      //     />
+      //   )
+      default: return null
+    }
+
+  }, [category, mediaUrl])
+
+  return (
+    <div className='w-full h-full relative'>
+      {!loaded ? (
+        <div className='absolute inset-0 w-full h-full flex justify-center items-center'>
+          <span className="inline-block translate-y-0.5">
+            <Oval color="#FFF" secondaryColor="#666" height={36} width={36} />
+          </span>
+        </div>
+      ): null}
+      { contentInUse}
+    </div>
+  )
 } 

@@ -17,8 +17,8 @@ import { image } from "@cloudinary/url-gen/qualifiers/source";
 import { getImageSize } from "react-image-size";
 import { SpeakerphoneIcon } from "@heroicons/react/outline";
 import VideoPlayer from "../../components/artDisplay/videoPlayer";
-import useNftFiles from "../../components/artDisplay/useNftFiles";
 import ArtDisplay from "../../components/artDisplay/artDisplay";
+import useNftFiles from "../../hooks/useNftFiles";
 
 export default function DetailPage({token, curations}) {
   const {videoUrl} = useNftFiles(token)
@@ -98,7 +98,7 @@ export default function DetailPage({token, curations}) {
           >
             <ArrowsExpandIcon className="w-7 h-7" />
           </button>
-          {/* <ArtDisplay token={token} /> */}
+          {/* <ArtDisplay token={token} onImageLoad={() => setImgLoaded(true)} /> */}
           {(videoUrl && !imageExpanded) ? (
             <VideoPlayer
               id={`video-player-${ token.mint }`}
@@ -142,7 +142,7 @@ export default function DetailPage({token, curations}) {
                 <h2 className="text-lg mt-5 mb-2 ">Listings</h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   {activeCurations?.map(curation => (
-                    <DetailListings key={token.mint} curation={curation} mint={token.mint} />
+                    <DetailListings key={token.mint+curation.name} curation={curation} mint={token.mint} />
                   ))}
                 </div>
 

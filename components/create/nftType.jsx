@@ -1,7 +1,7 @@
 import { Listbox, Transition } from "@headlessui/react"
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
-import { Fragment, useState } from "react"
+import { useState } from "react"
 
 const types = [
   { type: "single", display: "1 of 1" },

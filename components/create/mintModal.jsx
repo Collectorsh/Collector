@@ -162,7 +162,9 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
                 ? (
                   <div className="flex flex-col gap-2 h-[50vh] lg:col-span-2 relative">
                     <p className="text-center font-bold text-lg capitalize">{category}</p>
-                    {previewAlt ? <AltMedia mediaUrl={previewAlt} category={category} /> : null}
+                    <div className="relative h-full">
+                      {previewAlt ? <AltMedia mediaUrl={previewAlt} category={category} /> : null}
+                    </div>
                   </div>
                 )
                 : null
@@ -240,12 +242,12 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         </MainButton>
       )
       default: return (
-        <MainButton onClick={handleClose} disabled={preventClose}>
-          Close
+        <MainButton onClick={handleClose}>
+          Cancel
         </MainButton>
       )
     }
-  }, [stage, preventClose, handleClose, handleReset])
+  }, [stage, handleClose, handleReset])
 
   const actionButton = useMemo(() => {
     switch (stage) { 

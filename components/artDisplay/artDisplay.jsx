@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CloudinaryImage from "../CloudinaryImage"
 import VideoPlayer from "./videoPlayer"
-import useNftFiles from "./useNftFiles";
 import clsx from "clsx";
+import useNftFiles from "../../hooks/useNftFiles";
+import MainButton from "../MainButton";
+import { CATEGORIES } from "../FileDrop";
 
-const ArtDisplay = ({ token, width, height, cacheWidth }) => {
-  const [imgLoaded, setImgLoaded] = useState(false);
+const ArtDisplay = ({ token, width, height, cacheWidth, setMediaType, onImageLoad }) => {
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [htmlLoaded, setHtmlLoaded] = useState(false);
 
   const { videoUrl, htmlUrl } = useNftFiles(token)
 
@@ -22,20 +24,31 @@ const ArtDisplay = ({ token, width, height, cacheWidth }) => {
     maxWidth: width,
   } : {}
 
+  useEffect(() => {
+    if (!setMediaType) return
+    if (htmlUrl) setMediaType(CATEGORIES.HTML)
+    else if (videoUrl) setMediaType(CATEGORIES.VIDEO)
+    else setMediaType(CATEGORIES.IMAGE)
+  }, [videoUrl, htmlUrl, setMediaType])
+
+
   return (
     <div className="relative">
-      {htmlUrl ? (
-        <iframe
-          onLoad={() => setVideoLoaded(true)}
-          src={htmlUrl}
-          className={clsx(
-            "w-full h-full",
-            "rounded-lg group/controls"
-          )}
-          style={videoStyle}
-        />
-      ) : null}
-
+      {
+        htmlUrl ? (
+          <div className="w-full h-full absolute inset-0">
+            <iframe
+              onLoad={() => setHtmlLoaded(true)}
+              src={htmlUrl}
+              className={clsx(
+                "w-full h-full",
+                "rounded-lg"
+              )}
+              style={videoStyle}
+            />
+            </div>
+        ) : null
+      }
       {videoUrl ? (
         <VideoPlayer
           id={`video-player-${ token.mint }`}
@@ -56,10 +69,12 @@ const ArtDisplay = ({ token, width, height, cacheWidth }) => {
           "object-cover duration-300",
           "max-h-[75vh]",
           videoUrl && "absolute inset-0 w-full h-full",
-          videoLoaded && "hidden"
+          videoLoaded && "hidden",
+          htmlLoaded && "invisible"
         )}
         width={cacheWidth}
         noLazyLoad
+        onLoad={onImageLoad}
       />
 
     </div>
@@ -67,3 +82,4 @@ const ArtDisplay = ({ token, width, height, cacheWidth }) => {
 }
 
 export default ArtDisplay
+

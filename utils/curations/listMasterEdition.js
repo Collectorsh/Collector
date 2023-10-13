@@ -1,7 +1,6 @@
 import { createTokenAccount } from "./createTokenAccount";
 import { Metaplex, toBigNumber } from "@metaplex-foundation/js";
 import { createCreateStoreInstruction, findVaultOwnerAddress, createSavePrimaryMetadataCreatorsInstruction, findPrimaryMetadataCreatorsAddress, createInitSellingResourceInstruction, findTreasuryOwnerAddress, createCreateMarketInstruction, createChangeMarketInstruction } from "@metaplex-foundation/mpl-fixed-price-sale";
-import { BN } from "@project-serum/anchor";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { Transaction, Keypair, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { truncate } from "../truncate";

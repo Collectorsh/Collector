@@ -3,7 +3,6 @@ import { createRef, useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone'
 import clsx from 'clsx';
 import VideoPlayer from './artDisplay/videoPlayer';
-import ContentLoader from 'react-content-loader';
 import { Oval } from 'react-loader-spinner';
 
 const MaxCLDFileSize = 20; 

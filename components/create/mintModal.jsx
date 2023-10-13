@@ -215,7 +215,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         <div className="h-56 flex flex-col gap-2 justify-center">
           <p className="text-center text-2xl font-bold">Congrats! {name} has been successfully minted!</p>
           <p className="text-center">View it on <a className="underline" href={`https://solscan.io/token/${ mintedAddress }`} target="_blank" rel="noreferrer">Solscan</a></p>
-          <p className="text-center">Freshly minted digital art may take a few minutes to load.</p>
+          <p className="text-center">Freshly minted art may take a few minutes to load.</p>
         </div>
       )
       case MINT_STAGE.ERROR: return (

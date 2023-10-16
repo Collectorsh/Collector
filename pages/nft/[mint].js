@@ -19,9 +19,10 @@ import { SpeakerphoneIcon } from "@heroicons/react/outline";
 import VideoPlayer from "../../components/artDisplay/videoPlayer";
 import ArtDisplay from "../../components/artDisplay/artDisplay";
 import useNftFiles from "../../hooks/useNftFiles";
+import HtmlViewer from "../../components/artDisplay/htmlViewer";
 
 export default function DetailPage({token, curations}) {
-  const {videoUrl} = useNftFiles(token)
+  const {videoUrl, htmlUrl} = useNftFiles(token)
 
   const [imgLoaded, setImgLoaded] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -63,9 +64,16 @@ export default function DetailPage({token, curations}) {
     getImageSize();
     window.addEventListener("resize", getImageSize);
     return () => window.removeEventListener("resize", getImageSize);
-  }, [imgLoaded])
+  }, [imgLoaded, videoUrl])
 
   const expandImage = () => setImageExpanded(!imageExpanded)
+
+  //TODO, figure out how to handle videos with width larger than the window 
+  //or that would mess up the aspect ratio when constraining the height
+  //add "|| videoUrl" back to the getImageSize useEffect condition 
+  const handleRefWidthChange = (width) => { 
+    setImageWidth(`${ width }px`)
+  }
 
 
   return (
@@ -98,9 +106,16 @@ export default function DetailPage({token, curations}) {
           >
             <ArrowsExpandIcon className="w-7 h-7" />
           </button>
-          {/* <ArtDisplay token={token} onImageLoad={() => setImgLoaded(true)} /> */}
+
+          {(htmlUrl && !imageExpanded) ? (
+            <HtmlViewer
+              htmlUrl={htmlUrl}
+            />
+          ) : null}
+          
           {(videoUrl && !imageExpanded) ? (
             <VideoPlayer
+              handleRefWidthChange={handleRefWidthChange}
               id={`video-player-${ token.mint }`}
               videoUrl={videoUrl}
               videoLoaded={videoLoaded}
@@ -110,7 +125,7 @@ export default function DetailPage({token, curations}) {
 
           <CloudinaryImage
             imageRef={imageRef}
-            className={clsx("max-h-[75vh]", videoLoaded && "invisible")}
+            className={clsx("max-h-[75vh] w-full", videoLoaded && "invisible")}
             token={token}
             useUploadFallback
             onLoad={() => setImgLoaded(true)}

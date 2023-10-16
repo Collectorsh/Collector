@@ -9,7 +9,8 @@ const VideoPlayer = ({
   setVideoLoaded,
   wrapperClass="absolute inset-0 z-10 w-full h-full group/controls",
   controlsClass,
-  style
+  style,
+  handleRefWidthChange
 }) => { 
   const videoRef = useRef(null);
   const [userMuted, setUserMuted] = useState(true)
@@ -33,13 +34,28 @@ const VideoPlayer = ({
     videoElement.addEventListener('waiting', handleBuffering);
     videoElement.addEventListener('playing', handleBufferEnded);
 
+    //TODO, figure out how to handle videos with width larger than the window 
+    //or that would mess up the aspect ratio when constraining the height
+    // const handleWidthChange = () => {
+    //   if (!handleRefWidthChange) return;
+
+    //   const width = videoElement.videoWidth
+    //   console.log("🚀 ~ file: videoPlayer.jsx:39 ~ handleWidthChange ~ width :", width )
+    //   handleRefWidthChange(width)
+    // }
+    // window.addEventListener('resize', handleWidthChange)
+    // handleWidthChange()
+      
+
     return () => {
       videoElement.removeEventListener('play', handleIsPlaying);
       videoElement.removeEventListener('pause', handleIsPaused);
       videoElement.removeEventListener('waiting', handleBuffering);
       videoElement.removeEventListener('playing', handleBufferEnded);
+
+      // window.removeEventListener('resize', handleWidthChange);
     };
-  }, []);
+  }, [handleRefWidthChange]);
 
   useEffect(() => {
     if (!videoRef.current || userPaused) return;

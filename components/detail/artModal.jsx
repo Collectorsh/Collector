@@ -5,20 +5,14 @@ import Modal from "../Modal";
 import ContentLoader from "react-content-loader";
 import VideoPlayer from "../artDisplay/videoPlayer";
 import ArtDisplay from "../artDisplay/artDisplay";
+import useNftFiles from "../../hooks/useNftFiles";
+import HtmlViewer from "../artDisplay/htmlViewer";
 
 export default function ArtModal({ isOpen, onClose, token }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoUrl, setVideoUrl] = useState(null);
-
-  useEffect(() => {
-    if (!token) return;
-    if (token.animation_url) {
-      if (token.animation_url.split(".").pop().includes("mp4")) {
-        setVideoUrl(token.animation_url);
-      }
-    }
-  }, [token]);
+  
+  const { videoUrl, htmlUrl } = useNftFiles(token)
 
   if (!token) return null
   
@@ -27,11 +21,9 @@ export default function ArtModal({ isOpen, onClose, token }) {
       isOpen={isOpen} onClose={onClose}
       widthClass="max-w-fit"
       closeButtonPlacement="absolute -right-3 -top-3"
+     
     >
-      <div className="relative w-fit max-w-full rounded mx-auto overflow-hidden">
-        {/* <ArtDisplay token={token} /> */}
-
-        
+      <div className="relative w-fit max-w-full rounded mx-auto overflow-hidden">        
         {!imgLoaded ? (
           <ContentLoader
             speed={2}
@@ -42,6 +34,12 @@ export default function ArtModal({ isOpen, onClose, token }) {
             <rect className="w-full h-full" />
           </ContentLoader>
         ) : null}
+
+        {htmlUrl ? (
+          <HtmlViewer
+            htmlUrl={htmlUrl}
+          />
+        ) :null }
 
         {videoUrl ? (
           <VideoPlayer

@@ -203,6 +203,7 @@ export default function MintPage() {
                   onDrop={onThumbnailDrop}
                   imageClass="object-contain p-2 mx-auto"
                   maxFileSize={maxUploadSize}
+                  helperText="Thumbnails should be the same aspect ratio and resolution you wish your main media file to be displayed in"
                 />
               </div>
             )

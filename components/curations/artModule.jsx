@@ -17,6 +17,7 @@ import debounce from 'lodash.debounce';
 import ArtDisplay from '../artDisplay/artDisplay';
 import useNftFiles from '../../hooks/useNftFiles';
 import { CATEGORIES } from '../FileDrop';
+import HtmlViewer from '../artDisplay/htmlViewer';
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
@@ -142,7 +143,7 @@ export default ArtModule;
 
 export const ArtItem = ({ token, artist, handleCollect, height, width }) => {  
   const [user] = useContext(UserContext);
-  const { videoUrl } = useNftFiles(token)
+  const { videoUrl, htmlUrl } = useNftFiles(token)
 
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
@@ -168,6 +169,13 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
     //then double for max perceivable quality (ends up with buckets of 500)
     return Math.ceil(width / 250) * 250 * 2;
   }, [width])
+
+  useEffect(() => {
+    if (htmlUrl) setMediaType(CATEGORIES.HTML)
+    else if (videoUrl) setMediaType(CATEGORIES.VIDEO)
+    else setMediaType(CATEGORIES.IMAGE)
+  }, [videoUrl, htmlUrl, setMediaType])
+
   
   const handleBuy = async (e) => {
     if (!handleCollect || !user) return;
@@ -189,13 +197,13 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
             "hover:-translate-y-2 active:translate-y-0",
             disableLink && "hover:translate-y-0"
           )}>
-          {/* <ArtDisplay
-            setMediaType={setMediaType}
-            token={token}
-            cacheWidth={cacheWidth}
-            width={width}
-            height={height}
-          /> */}
+
+          {htmlUrl ? (
+            <HtmlViewer
+              htmlUrl={htmlUrl}
+            />
+          ): null}
+
           {videoUrl ? (
             <VideoPlayer
               id={`video-player-${ token.mint }`}

@@ -23,8 +23,6 @@ const useNftFiles = (token) => {
         switch (extension) {
           case "mp4":
             setVideoUrl(token.animation_url);
-            // setHtmlUrl("https://arweave.net/bBUCfQQxhAGRXoiLeybWg4Zm6A5LdzzbO1004cRX5u0?ext=html")
-
             break;
           case "html":
             setHtmlUrl(token.animation_url);
@@ -36,7 +34,7 @@ const useNftFiles = (token) => {
             // TODO handle GLB
             break;
         }
-      } else {
+      } else {        
         token.files?.forEach(f => {
           if (f.type?.includes("video")) setVideoUrl(f.uri)
           if (f.type?.includes("html")) setHtmlUrl(f.uri)

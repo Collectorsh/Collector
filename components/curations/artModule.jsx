@@ -19,11 +19,10 @@ import useNftFiles, { getTokenAspectRatio } from '../../hooks/useNftFiles';
 import { CATEGORIES } from '../FileDrop';
 import HtmlViewer from '../artDisplay/htmlViewer';
 import dynamic from 'next/dynamic';
-import ModelViewer from '../artDisplay/modelDisplay';
 
-// const ModelViewer = dynamic(() => import('../artDisplay/modelDisplay'), {
-//   ssr: false
-// });
+const ModelViewer = dynamic(() => import('../artDisplay/modelDisplay'), {
+  ssr: false
+});
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
@@ -175,7 +174,6 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
 
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
-
   const [mediaType, setMediaType] = useState(CATEGORIES.IMAGE)
 
   const disableLink = mediaType === CATEGORIES.HTML || mediaType === CATEGORIES.VR
@@ -239,6 +237,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
                 height,
                 width,
               }}
+              loading="lazy"
             />
           ) : null}
 

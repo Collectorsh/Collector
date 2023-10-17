@@ -45,7 +45,7 @@ const HtmlViewer = ({
       {loading ? (
         <ContentLoader
           speed={2}
-          className={`absolute inset-0 rounded-xl z-50`}
+          className={`absolute inset-0 w-full h-full rounded-xl z-50`}
           style={style}
           backgroundColor="rgba(120,120,120,0.75)"
           foregroundColor="rgba(120,120,120,0.5)"

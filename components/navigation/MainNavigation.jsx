@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import React, { useState, useContext, useEffect, Fragment } from "react";
+import React, { useState, useContext, useEffect, Fragment, Suspense } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import UserContext from "/contexts/user";
 import { Dialog, Transition } from "@headlessui/react";
@@ -11,7 +11,8 @@ import Profile from "/components/navigation/Profile";
 import Gallery from "/components/navigation/Gallery";
 import CreateUsernameModal from "/components/CreateUsernameModal";
 import { truncate } from "../../utils/truncate";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import WalletButton from "./WalletButton";
+
 
 export default function MainNavigation() {
   const wallet = useWallet();
@@ -56,44 +57,22 @@ export default function MainNavigation() {
               </div>
             </div>
             <div className="hidden md:flex items-center justify-end w-full">
-              {/* <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                <Link href="/feed">Feed</Link>
-              </p>
-              <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                <Link href="/drops">Drops</Link>
-              </p> */}
-              {/* <p className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                <Link href="/shop">Shop</Link>
-              </p> */}
-                {/* {!user && <Premium />} */}
-
-
-                {/* 
-                <Link href="/discover">
-                  <a className="mr-8 font-bold">
-                    Discover
-                  </a>
-                </Link> */}
               <Link href="/about">
                 <a className="mr-8 font-bold">
                   About
                 </a>
               </Link>
-              {user && (
-                <>
-                  <Gallery />
-                  {/* {user.token_holder && <Activity />} */}
-                  {/* {!user.token_holder && <Premium />} */}
-                </>
-              )}
-                {user
-                  ? <Profile />
-                  : (
+              {user && <Gallery />}
+              {user
+                ? <Profile />
+                : (
                     <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                      <WalletMultiButton />
-                    </div>
-                  )
-                }
+                      
+                      <WalletButton />
+                      
+                  </div>
+                )
+              }
               <DarkMode />
             </div>
             {/* <!-- Mobile menu button --> */}
@@ -285,13 +264,15 @@ export default function MainNavigation() {
                                 </div>
                               </>
                             )}
-                            {!user && (
+                            {!user ? (
                               <div className="mt-8 md:mt-0">
                                   <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                                    <WalletMultiButton />
+                                    
+                                      <WalletButton />
+                                    
                                   </div>
                               </div>
-                            )}
+                            ) : null}
                           </div>
                         </div>
                         {/* /End replace */}

@@ -153,6 +153,8 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
 
     const isOneOfOne = maxSupply === 0
 
+    const categoryDisplay = category === CATEGORIES.VR ? "3D Model" : category
+
     switch (stage) {
       case MINT_STAGE.INIT: return (
         <div>
@@ -165,7 +167,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
               {usingAltMedia
                 ? (
                   <div className="flex flex-col gap-2 h-[50vh] lg:col-span-2 relative">
-                    <p className="text-center font-bold text-lg capitalize">{category}</p>
+                    <p className="text-center font-bold text-lg capitalize">{categoryDisplay}</p>
                     <div className="relative h-full">
                       {previewAlt ? <AltMedia mediaUrl={previewAlt} category={category} /> : null}
                     </div>

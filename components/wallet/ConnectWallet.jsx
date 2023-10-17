@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useCallback, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import getApiKey from "/data/user/getApiKey";
 import UserContext from "/contexts/user";
 import getUserFromApiKey from "/data/user/getUserFromApiKey";

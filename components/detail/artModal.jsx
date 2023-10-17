@@ -4,44 +4,63 @@ import clsx from "clsx";
 import Modal from "../Modal";
 import ContentLoader from "react-content-loader";
 import VideoPlayer from "../artDisplay/videoPlayer";
-import ArtDisplay from "../artDisplay/artDisplay";
+import useNftFiles from "../../hooks/useNftFiles";
+import HtmlViewer from "../artDisplay/htmlViewer";
+
+import dynamic from 'next/dynamic';
+
+const ModelViewer = dynamic(() => import("../artDisplay/modelDisplay"), {
+  ssr: false
+});
+
 
 export default function ArtModal({ isOpen, onClose, token }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoUrl, setVideoUrl] = useState(null);
+  
+  const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
-  useEffect(() => {
-    if (!token) return;
-    if (token.animation_url) {
-      if (token.animation_url.split(".").pop().includes("mp4")) {
-        setVideoUrl(token.animation_url);
-      }
-    }
-  }, [token]);
+  const useAltMediaAspectRatio = htmlUrl || vrUrl
 
-  if (!token) return null
+  if (!token) return null;
   
   return (
     <Modal
       isOpen={isOpen} onClose={onClose}
-      widthClass="max-w-fit"
+      widthClass={"max-w-fit"}
       closeButtonPlacement="absolute -right-3 -top-3"
+     
     >
-      <div className="relative w-fit max-w-full rounded mx-auto overflow-hidden">
-        {/* <ArtDisplay token={token} /> */}
-
-        
-        {!imgLoaded ? (
+      <div className={clsx(
+        "relative max-w-full rounded mx-auto overflow-hidden",
+        useAltMediaAspectRatio
+          ? "h-[calc(100svh-4rem)] h-[calc(100vh-4rem)] w-[calc(100svw-4rem)] w-[calc(100vw-4rem)]"
+          : "w-fit"
+      )}>        
+        {!imgLoaded && !useAltMediaAspectRatio ? (
           <ContentLoader
             speed={2}
-            className="w-full h-full rounded"
+            className="absolute inset-0 w-full h-full rounded"
             backgroundColor="rgba(120,120,120,0.2)"
             foregroundColor="rgba(120,120,120,0.1)"
           >
             <rect className="w-full h-full" />
           </ContentLoader>
         ) : null}
+
+     
+        {vrUrl ? (
+          <ModelViewer
+            vrUrl={vrUrl}
+          />
+        ) : null }
+
+        {htmlUrl ? (
+          <HtmlViewer
+            htmlUrl={htmlUrl}
+          />
+        ) : null }
+      
 
         {videoUrl ? (
           <VideoPlayer
@@ -53,7 +72,11 @@ export default function ArtModal({ isOpen, onClose, token }) {
         ) : null}
 
         <CloudinaryImage
-          className={clsx("max-h-[calc(100svh-5rem)] max-h-[calc(100vh-5rem)]", videoLoaded && "invisible")}
+          className={clsx(
+            "max-h-[calc(100svh-4rem)] max-h-[calc(100vh-4rem)]",
+            videoLoaded && "invisible",
+            useAltMediaAspectRatio && "hidden"
+          )}
           token={token}
           useUploadFallback
           onLoad={() => setImgLoaded(true)}

@@ -129,12 +129,18 @@ const CloudinaryImage = ({
   }
 
 
-  const handleLoad = (e) => {
+  const handleLoad = useCallback((e) => {
     setLoading(false)
     setError(false)
     if (noLazyLoad) setOpacity(1)
     if (onLoad) onLoad(e)
-  }
+  }, [noLazyLoad, onLoad])
+
+  useEffect(() => {
+    if (!imageRef) return
+    //handle race condition where load event fires before rendered
+    if (imageRef.current?.complete) handleLoad()
+  }, [imageRef, handleLoad])
 
   return (
     <>

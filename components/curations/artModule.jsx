@@ -259,25 +259,16 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
               setVideoLoaded={setVideoLoaded}
               controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
               wrapperClass='w-full h-full rounded-lg group/controls'
-              // style={{
-              //   height,
-              //   maxWidth: width,
-              //   maxHeight: "75vh"
-              // }}
             />
           ) : null}
 
           <CloudinaryImage
             useMetadataFallback
             token={token}
-            // style={{
-            //   height,
-            //   maxWidth: width,
-            // }}
             className={clsx(
               "object-cover duration-300",
               "w-full h-full",
-              videoUrl && "absolute inset-0",// w-full h-full",
+              videoUrl && "absolute inset-0",
               videoLoaded && "hidden",
               // htmlUrl && "invisible" //re-add if not using lazy loading for html
               vrUrl && "invisible"

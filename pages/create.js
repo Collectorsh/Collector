@@ -70,7 +70,7 @@ export default function MintPage() {
 
   useEffect(() => {
     if (!user) return
-    if (!user.curator_approved || user.subscription_level !== "pro") router.replace("/");
+    if (!user.curator_approved && user.subscription_level !== "pro") router.replace("/");
   }, [user, router])
 
   useEffect(() => {

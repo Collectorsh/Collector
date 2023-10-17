@@ -4,7 +4,6 @@ import clsx from "clsx";
 import Modal from "../Modal";
 import ContentLoader from "react-content-loader";
 import VideoPlayer from "../artDisplay/videoPlayer";
-import ArtDisplay from "../artDisplay/artDisplay";
 import useNftFiles from "../../hooks/useNftFiles";
 import HtmlViewer from "../artDisplay/htmlViewer";
 

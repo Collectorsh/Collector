@@ -125,7 +125,7 @@ const VideoPlayer = ({
         loop
         playsInline
         id={id}
-        className="mx-auto h-full object-center object-cover duration-200 opacity-0 rounded-lg"
+        className="mx-auto h-full object-center object-contain duration-200 opacity-0 rounded-lg"
         onCanPlayThrough={e => {
           e.target.classList.add("opacity-100")
           if(setVideoLoaded) setVideoLoaded(true)

@@ -14,7 +14,6 @@ import "tippy.js/dist/tippy.css";
 import UserContext from '../../contexts/user';
 import VideoPlayer from '../artDisplay/videoPlayer';
 import debounce from 'lodash.debounce';
-import ArtDisplay from '../artDisplay/artDisplay';
 import useNftFiles, { getTokenAspectRatio } from '../../hooks/useNftFiles';
 import { CATEGORIES } from '../FileDrop';
 import HtmlViewer from '../artDisplay/htmlViewer';

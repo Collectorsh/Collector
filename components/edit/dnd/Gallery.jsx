@@ -46,7 +46,7 @@ export default function Gallery({ tokens, user }) {
     const hid = tokenClone.filter((t) => t.visible === false);
     const itemz = { visible: vis, hidden: hid };
     setItems(itemz);
-  }, [tokens, cloudinaryCompleted]);
+  }, [tokens]);
 
   const progress = ((completed) / waiting) * 100
   const showProgress = Boolean(waiting && waiting > completed) && !uploadAllCompleted

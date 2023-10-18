@@ -21,6 +21,7 @@ const ModelViewer = dynamic(() => import("../../components/artDisplay/modelDispl
 });
 
 export default function DetailPage({token, curations}) {
+  console.log("🚀 ~ file: [mint].js:24 ~ DetailPage ~ token:", token)
   const {videoUrl, htmlUrl, vrUrl} = useNftFiles(token)
 
   const [imgLoaded, setImgLoaded] = useState(false);

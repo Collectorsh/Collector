@@ -40,6 +40,7 @@ const ModelViewer = ({
         src={vrUrl}
         camera-controls
         auto-rotate
+        autoplay
         rotation-per-second="45deg" 
         shadow-intensity="1"
         interaction-prompt="none"

@@ -40,11 +40,11 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
 
         <div className="my-8">
             <h2 className="font-bold text-4xl collector text-center">{name.replaceAll("_", " ")}</h2>
-            {withCurator && curator
-              ? (<Link href={`/gallery/${ curator.username }`} >
-                <a className="flex gap-2 items-center justify-center mt-4 hover:scale-105 duration-300 w-fit mx-auto">
+          {withCurator && curator          
+            ? (<Link href={`/gallery/${ curator.username }`} passHref>
+                <div className="flex gap-2 items-center justify-center mt-4 hover:scale-105 duration-300 w-fit mx-auto">
                   <p className="text-lg">Curated by {curator.username}</p>
-                  {curator.profile_image
+                {pfpImgId
                   ? (<div className="relative">
                       <CloudinaryImage
                         className="w-14 h-14 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800"
@@ -55,7 +55,7 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
                     </div>)
                     : null
                   }
-                </a>
+                </div>
               </Link>)
             : descriptionComponent
             }

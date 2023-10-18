@@ -23,7 +23,6 @@ async function getTokenByMint(tokenMint) {
   }).catch((err) => {
     console.log("Error Fetching Token Metadata by Mint:", err);
   });
-  console.log("🚀 ~ file: getTokenByMint.js:16 ~ getTokenByMint ~ token:", token)
 
   if (!token) return null;
     

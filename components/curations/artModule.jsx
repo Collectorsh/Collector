@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import EditWrapper from '../curatorProfile/editWrapper';
 import EditArtModuleModal from './editArtModuleModal';
 import CloudinaryImage from '../CloudinaryImage';
@@ -14,9 +14,14 @@ import "tippy.js/dist/tippy.css";
 import UserContext from '../../contexts/user';
 import VideoPlayer from '../artDisplay/videoPlayer';
 import debounce from 'lodash.debounce';
-import ArtDisplay from '../artDisplay/artDisplay';
-import useNftFiles from '../../hooks/useNftFiles';
+import useNftFiles, { getTokenAspectRatio } from '../../hooks/useNftFiles';
 import { CATEGORIES } from '../FileDrop';
+import HtmlViewer from '../artDisplay/htmlViewer';
+import dynamic from 'next/dynamic';
+
+const ModelViewer = dynamic(() => import('../artDisplay/modelDisplay'), {
+  ssr: false
+});
 
 const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
   const breakpoint = useBreakpoints()  
@@ -28,32 +33,51 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
   const { isVisible } = useElementObserver(wrapperRef, "400px")
 
   const [wrapperWidth, setWrapperWidth] = useState(0)
+  const [maxHeight, setMaxHeight] = useState(0)
 
   const gapSize = 24 //in pixels (must be inline styled so that row height calculations can take the exact number into account)
-
+  const maxHeightRatio = 0.75 //in percentage of window height
   useEffect(() => { 
-    const getWrapperWidth = () => { 
+    const getDimensions = () => { 
       if(!wrapperRef.current) return
       const rowWidth = wrapperRef.current.offsetWidth
       setWrapperWidth(rowWidth)
+
+      setMaxHeight(window.innerHeight * maxHeightRatio)
     }
 
-    getWrapperWidth()
+    getDimensions()
 
-    const debouncedGetWrapperWidth = debounce(getWrapperWidth, 200)
+    const debouncedGetDimensions = debounce(getDimensions, 250)
 
-    window.addEventListener('resize', debouncedGetWrapperWidth)
+    window.addEventListener('resize', debouncedGetDimensions)
     return () => {
-      debouncedGetWrapperWidth.cancel()
-      window.removeEventListener('resize', debouncedGetWrapperWidth)
+      debouncedGetDimensions.cancel()
+      window.removeEventListener('resize', debouncedGetDimensions)
     }
   }, [])
-  
-  const itemRows = useMemo(() => {
-    if (!approvedArtists || !submittedTokens || !wrapperWidth) return []
+
+  const { mappedTokens, mappedAspectRatios } = useMemo(() => { 
+    //Map out tokens and aspect ratio
+    const mappedTokens = {}
+    const mappedAspectRatios = {}
+
+    submittedTokens.forEach(token => { 
+      const mint = token.mint;
+      mappedAspectRatios[mint] = getTokenAspectRatio(token)
+      mappedTokens[mint] = token
+    })
+    return {
+      mappedTokens,
+      mappedAspectRatios
+    }
+  }, [submittedTokens])
+
+  const tokenRows = useMemo(() => { 
+    if (!Object.values(mappedTokens).length) return []
 
     const tokenMints = artModule.tokens
-  
+
     const useHalfRow = isTablet && tokenMints.length > 2
     const halfIndex = Math.floor(tokenMints.length / 2)
     const rows =
@@ -62,19 +86,22 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
         : useHalfRow
           ? [tokenMints.slice(0, halfIndex), tokenMints.slice(halfIndex)]
           : [tokenMints]
-       
+    
+    return rows.map(mints => mints.map(mint => mappedTokens?.[mint])).filter(t => Boolean(t))
+  }, [artModule.tokens, isMobile, isTablet, mappedTokens])
+  
 
-    return rows.map((tokenRow) => {
-      
-      const tokens = tokenRow.map(mint => submittedTokens.find(sT => sT.mint === mint)).filter(t => Boolean(t))
+  const itemRows = useMemo(() => {
+    if (!approvedArtists || !wrapperWidth || !tokenRows.length) return [];
 
-      const totalAspectRatio = tokens.reduce((acc, token) => acc + Number(token.aspect_ratio || 1), 0)
+    return tokenRows.map((tokens) => {
+      const totalAspectRatio = tokens.reduce((acc, token) => acc + mappedAspectRatios[token.mint], 0)
       const rowGapOffset = gapSize * (tokens.length - 1)
-      const rowHeight = (wrapperWidth - rowGapOffset) / totalAspectRatio
+      const rowHeight = Math.min((wrapperWidth - rowGapOffset) / totalAspectRatio, maxHeight)
 
       return tokens.map((token) => {
         const artist = approvedArtists.find(a => a.id === token.artist_id)
-        const tokenWidth = (Number(token.aspect_ratio) * rowHeight)
+        const tokenWidth = (mappedAspectRatios[token.mint] * rowHeight)
         const tokenHeight = rowHeight
         return (
           <ArtItem
@@ -88,7 +115,7 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
         )
       })
     })
-  }, [artModule.tokens, submittedTokens, approvedArtists, handleCollect, wrapperWidth, isMobile, isTablet])
+  }, [approvedArtists, handleCollect, mappedAspectRatios, tokenRows, wrapperWidth, maxHeight])
 
   return (
     <div
@@ -142,11 +169,10 @@ export default ArtModule;
 
 export const ArtItem = ({ token, artist, handleCollect, height, width }) => {  
   const [user] = useContext(UserContext);
-  const { videoUrl } = useNftFiles(token)
+  const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
-
   const [mediaType, setMediaType] = useState(CATEGORIES.IMAGE)
 
   const disableLink = mediaType === CATEGORIES.HTML || mediaType === CATEGORIES.VR
@@ -168,6 +194,14 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
     //then double for max perceivable quality (ends up with buckets of 500)
     return Math.ceil(width / 250) * 250 * 2;
   }, [width])
+
+  useEffect(() => {
+    if (htmlUrl) setMediaType(CATEGORIES.HTML)
+    else if (vrUrl) setMediaType(CATEGORIES.VR)
+    else if (videoUrl) setMediaType(CATEGORIES.VIDEO)
+    else setMediaType(CATEGORIES.IMAGE)
+  }, [videoUrl, htmlUrl, vrUrl, setMediaType])
+
   
   const handleBuy = async (e) => {
     if (!handleCollect || !user) return;
@@ -181,21 +215,41 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
     <div
       className={clsx("relative duration-300 w-fit mx-auto",)}
     >
-      <Link href={`/nft/${ token.mint }`} disabled={disableLink}>
+      <ToggleLink href={`/nft/${ token.mint }`} disabled={disableLink}>
         <a  
           disabled={disableLink}
           className={clsx(
             'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg ',
             "hover:-translate-y-2 active:translate-y-0",
             disableLink && "hover:translate-y-0"
-          )}>
-          {/* <ArtDisplay
-            setMediaType={setMediaType}
-            token={token}
-            cacheWidth={cacheWidth}
-            width={width}
-            height={height}
-          /> */}
+          )}
+          style={{
+            height,
+            width,
+          }}
+        >
+
+          {vrUrl ? (
+            <ModelViewer
+              vrUrl={vrUrl}
+              style={{
+                height,
+                width,
+              }}
+              loading="lazy"
+            />
+          ) : null}
+
+          {htmlUrl ? (
+            <HtmlViewer
+              htmlUrl={htmlUrl}
+              style={{
+                height,
+                width,
+              }}
+            />
+          ): null}
+
           {videoUrl ? (
             <VideoPlayer
               id={`video-player-${ token.mint }`}
@@ -204,33 +258,26 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
               setVideoLoaded={setVideoLoaded}
               controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
               wrapperClass='w-full h-full rounded-lg group/controls'
-              style={{
-                height,
-                maxWidth: width,
-                maxHeight: "75vh"
-              }}
             />
           ) : null}
 
           <CloudinaryImage
             useMetadataFallback
             token={token}
-            style={{
-              height,
-              maxWidth: width,
-            }}
             className={clsx(
               "object-cover duration-300",
-              "max-h-[75vh]",
-              videoUrl && "absolute inset-0 w-full h-full",
-              videoLoaded && "hidden"
+              "w-full h-full",
+              videoUrl && "absolute inset-0",
+              videoLoaded && "hidden",
+              // htmlUrl && "invisible" //re-add if not using lazy loading for html
+              vrUrl && "invisible"
             )}
             width={cacheWidth}
             noLazyLoad
           />
 
         </a>
-      </Link>
+      </ToggleLink>
       <div
         className="w-full mt-4 px-4 mx-auto
           flex flex-wrap gap-x-6 gap-y-3 justify-between items-start"
@@ -312,4 +359,9 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
 
     </div>
   )
+}
+
+const ToggleLink = ({ disabled, children, ...props }) => { 
+  if (disabled) return <Fragment>{children}</Fragment>
+  return <Link {...props}>{children}</Link>
 }

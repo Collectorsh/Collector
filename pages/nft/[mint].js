@@ -1,32 +1,32 @@
 import ContentLoader from "react-content-loader";
-import NotFound from "../../components/404";
 import CloudinaryImage from "../../components/CloudinaryImage";
 import MainNavigation from "../../components/navigation/MainNavigation"
 import getTokenByMint, { useTokenByMint } from "../../data/nft/getTokenByMint";
 import { nullifyUndefinedArr, nullifyUndefinedObj } from "../../utils/nullifyUndefined";
 import { useEffect, useRef, useState } from "react";
 import { truncate } from "../../utils/truncate";
-import { useRouter } from "next/router";
 import getCurationsByListingMint from "../../data/curation/getCurationsByListingMint";
 import { ArrowsExpandIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import ArtModal from "../../components/detail/artModal";
 import DetailListings from "../../components/detail/listings";
-import Link from "next/link";
-import { image } from "@cloudinary/url-gen/qualifiers/source";
-import { getImageSize } from "react-image-size";
-import { SpeakerphoneIcon } from "@heroicons/react/outline";
 import VideoPlayer from "../../components/artDisplay/videoPlayer";
-import ArtDisplay from "../../components/artDisplay/artDisplay";
-import useNftFiles from "../../hooks/useNftFiles";
+import useNftFiles, { altFileAspectRatio } from "../../hooks/useNftFiles";
+import HtmlViewer from "../../components/artDisplay/htmlViewer";
+
+import dynamic from 'next/dynamic';
+
+const ModelViewer = dynamic(() => import("../../components/artDisplay/modelDisplay"), {
+  ssr: false
+});
 
 export default function DetailPage({token, curations}) {
-  const {videoUrl} = useNftFiles(token)
+  const {videoUrl, htmlUrl, vrUrl} = useNftFiles(token)
 
   const [imgLoaded, setImgLoaded] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [imageExpanded, setImageExpanded] = useState(false);
-  const [imageWidth, setImageWidth] = useState("70vw");
+  const [assetWidth, setAssetWidth] = useState("70vw");
   const imageRef = useRef(null);
 
   const isMasterEdition = token?.is_master_edition
@@ -35,8 +35,14 @@ export default function DetailPage({token, curations}) {
   const maxSupply = token?.max_supply
   const editionNumber = token?.edition_number
 
+  const useAltMediaAspectRatio = htmlUrl || vrUrl
+  const altAssetHeight = useAltMediaAspectRatio
+    ? assetWidth * altFileAspectRatio
+    : assetWidth
+
   const artistName = token?.artist_name ? token.artist_name.replace("_", " ") : truncate(token?.creator, 4)
   const ownerName = token?.owner_name ? token.owner_name.replace("_", " ") : truncate(token?.owner, 4)
+
   const supplyText = isMasterEdition
     ? `${ maxSupply - supply }/${ maxSupply } Editions Available`
     : isEdition
@@ -54,35 +60,48 @@ export default function DetailPage({token, curations}) {
   })
   
   useEffect(() => {
-    if(!imgLoaded) return;
-    const getImageSize = () => {
-      if (!imageRef.current) return;
-      const width = imageRef.current.clientWidth
-      setImageWidth(`${width}px`);
+    if(!imgLoaded && !useAltMediaAspectRatio) return;
+    const getAssetSize = () => {
+      if (useAltMediaAspectRatio) {
+        //set width to max-height
+        const width = Math.min(window.innerHeight * 0.75, window.innerWidth * 0.9)
+        setAssetWidth(width)
+      } else {
+        if (!imageRef.current) return;
+        const width = imageRef.current.clientWidth
+        setAssetWidth(width);
+      }
     }
-    getImageSize();
-    window.addEventListener("resize", getImageSize);
-    return () => window.removeEventListener("resize", getImageSize);
-  }, [imgLoaded])
+    getAssetSize();
+    window.addEventListener("resize", getAssetSize);
+    return () => window.removeEventListener("resize", getAssetSize);
+  }, [imgLoaded, videoUrl, useAltMediaAspectRatio])
 
   const expandImage = () => setImageExpanded(!imageExpanded)
 
+
+  //TODO, figure out how to handle videos with width larger than the window 
+  //or that would mess up the aspect ratio when constraining the height
+  //add "|| videoUrl" back to the getImageSize useEffect condition 
+  const handleRefWidthChange = (width) => { 
+    setAssetWidth(`${ width }px`)
+  }
 
   return (
     <>
       <MainNavigation />
       <ArtModal isOpen={imageExpanded} onClose={() => setImageExpanded(false)} token={token} />
       <div className={clsx("max-w-screen-2xl mx-auto w-full px-2 py-5 duration-200", imgLoaded ? "opacity-100" : "opacity-0")}>
-          {!imgLoaded ? (
-              <ContentLoader
-                speed={2}
-                className={`mx-auto w-[70vw] h-[75vh] rounded-xl`}
-                backgroundColor="rgba(120,120,120,0.2)"
-                foregroundColor="rgba(120,120,120,0.1)"
-              >
-                <rect className="w-full h-full" />
-              </ContentLoader>
-            
+        {!imgLoaded ? (
+          <ContentLoader
+            speed={2}
+            className={`mx-auto w-[70vw] h-[75vh] rounded-xl`}
+            backgroundColor="rgba(120,120,120,0.2)"
+            foregroundColor="rgba(120,120,120,0.1)"
+          >
+            <rect className="w-full h-full" />
+          </ContentLoader>
+          
         ) : null}      
         <div
           className="relative shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg overflow-hidden w-fit h-fit mx-auto group"
@@ -98,9 +117,31 @@ export default function DetailPage({token, curations}) {
           >
             <ArrowsExpandIcon className="w-7 h-7" />
           </button>
-          {/* <ArtDisplay token={token} onImageLoad={() => setImgLoaded(true)} /> */}
+
+          {useAltMediaAspectRatio && !imageExpanded ? (
+            <div className="relative"
+              style={{
+                width: assetWidth,
+                height: altAssetHeight
+              }}>
+              {(vrUrl) ? (
+                <ModelViewer
+                  vrUrl={vrUrl}
+                />  
+              ): null}
+              
+              {(htmlUrl) ? (
+                <HtmlViewer
+                  htmlUrl={htmlUrl}
+                />
+              ) : null}
+            </div>
+          ):null}
+
+          
           {(videoUrl && !imageExpanded) ? (
             <VideoPlayer
+              handleRefWidthChange={handleRefWidthChange}
               id={`video-player-${ token.mint }`}
               videoUrl={videoUrl}
               videoLoaded={videoLoaded}
@@ -110,7 +151,10 @@ export default function DetailPage({token, curations}) {
 
           <CloudinaryImage
             imageRef={imageRef}
-            className={clsx("max-h-[75vh]", videoLoaded && "invisible")}
+            className={clsx("max-h-[75vh] w-full",
+              videoLoaded && "invisible",
+              useAltMediaAspectRatio && "hidden" 
+            )}
             token={token}
             useUploadFallback
             onLoad={() => setImgLoaded(true)}
@@ -119,7 +163,7 @@ export default function DetailPage({token, curations}) {
 
         <div
           className="mt-3 px-4 mx-auto"
-          style={{ maxWidth: imageWidth }}
+          style={{ maxWidth: assetWidth }}
         >
           <div className="flex flex-col gap-1">
             <h1 className="collector text-4xl">{token?.name}</h1>

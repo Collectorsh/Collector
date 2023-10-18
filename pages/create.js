@@ -6,7 +6,7 @@ import UserContext from "../contexts/user";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import MainButton from "../components/MainButton";
-import FileDrop, { CATEGORIES, imageFormats } from "../components/FileDrop";
+import FileDrop, { CATEGORIES, imageFormats, isGLB } from "../components/FileDrop";
 import DescriptionInput from "../components/create/description";
 import NameInput from "../components/create/name";
 import RoyaltiesInput from "../components/create/royalties";
@@ -66,7 +66,8 @@ export default function MintPage() {
   const usingAltMedia = category !== CATEGORIES.IMAGE
   const isError = Object.values(error).some(v => v)
   const errors = Object.entries(error)
-  const requiredError = errors.filter(e => nonDisplayErrors.includes(e[1]))[0]
+  const requiredError = errors.filter(e => nonDisplayErrors.includes(e[1]))[0];
+  const categoryDisplay = category === CATEGORIES.VR ? "3D Model" : category
 
   useEffect(() => {
     if (!user) return
@@ -93,9 +94,7 @@ export default function MintPage() {
     let fileCategory = CATEGORIES.IMAGE
     if (file.type.includes("video")) fileCategory = CATEGORIES.VIDEO
     if (file.type.includes("html")) fileCategory = CATEGORIES.HTML
-
-    //TODO does this need file.type.includes("glb") ?
-    if (file.type.includes("model")) fileCategory = CATEGORIES.VR
+    if (isGLB(file)) fileCategory = CATEGORIES.VR
 
     setCategory(fileCategory)
 
@@ -181,7 +180,10 @@ export default function MintPage() {
           {!reseting
             ? (
               <div className="flex flex-col gap-2 h-[50vh] lg:col-span-2">
-                {usingAltMedia ? <p className="text-center font-bold text-lg capitalize">{category}</p> : null}
+                {usingAltMedia
+                  ? <p className="text-center font-bold text-lg capitalize">{categoryDisplay}</p>
+                  : null
+                }
                 <FileDrop
                 onDrop={onMainDrop}
                 imageClass="object-contain p-2"
@@ -189,6 +191,8 @@ export default function MintPage() {
                 acceptableFiles={{
                   ...imageFormats,
                   "video/mp4": [],
+                  "text/html": [],
+                  "model/gltf-binary": [".glb"],
                 }}
                 />
               </div>
@@ -197,7 +201,7 @@ export default function MintPage() {
           }
           {(usingAltMedia && !reseting)
             ? (
-              <div className="flex flex-col gap-2 h-[25vh] w-full">
+              <div className="flex flex-col gap-2 h-[33vh] w-full">
                 <p className="text-center font-bold text-lg">Thumbnail Image</p>
                 <FileDrop
                   onDrop={onThumbnailDrop}

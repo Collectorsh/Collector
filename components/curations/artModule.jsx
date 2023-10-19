@@ -247,6 +247,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
                 height,
                 width,
               }}
+              useLazyLoading
             />
           ): null}
 

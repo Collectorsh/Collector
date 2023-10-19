@@ -41,7 +41,7 @@ const ModelViewer = ({
         camera-controls
         auto-rotate
         autoplay
-        rotation-per-second="45deg" 
+        rotation-per-second="10deg" 
         shadow-intensity="1"
         interaction-prompt="none"
         loading={loading}

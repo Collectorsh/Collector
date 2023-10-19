@@ -209,7 +209,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
         <div className="text-center mt-4">
           <p className="font-bold">Please be aware: </p>
           <p>
-            For listings to be valid on Collector, your artwork cannot be listed on custodial marketplaces like Exchange Art or Mallow
+            &bull; For listings to be valid on Collector, your artwork cannot be listed on custodial marketplaces like Exchange Art or Mallow
           </p>
           <p>
             &bull; To receive funds from edition sales you will need to close the sale. This will also return the master edition to your wallet.

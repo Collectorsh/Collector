@@ -25,6 +25,7 @@ async function getTokenByMint(tokenMint) {
   });
 
   if (!token) return null;
+    console.log("🚀 ~ file: getTokenByMint.js:28 ~ getTokenByMint ~ token:", token)
     
   const { content, creators, ownership, id } = token
 

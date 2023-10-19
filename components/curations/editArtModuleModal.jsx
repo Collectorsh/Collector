@@ -8,6 +8,7 @@ import { RoundedCurve } from "./roundedCurveSVG";
 import { XCircleIcon } from "@heroicons/react/solid";
 import { ArtItem } from "./artModule";
 import useBreakpoints from "../../hooks/useBreakpoints";
+import { truncate } from "../../utils/truncate";
 
 const tabs = ["submitted"]
 
@@ -116,6 +117,43 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
   //     </div>
   //   )
 
+  const submissions = submittedTokens?.map((token, i) => {
+    const alreadyInModule = newArtModule?.tokens.findIndex(arrayTokenMint => arrayTokenMint === token.mint) >= 0
+    const handleAdd = ({ target }) => {
+      if (alreadyInModule || moduleFull) return
+
+      setNewArtModule(prev => ({
+        ...prev,
+        tokens: [...(prev?.tokens || []), token.mint]
+      }))
+    }
+    return (
+      <button className="relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden duration-300 hover:scale-[102%] disabled:scale-100 disabled:opacity-50 disabled:blur-[2px]" key={token.mint}
+        onClick={handleAdd}
+        disabled={alreadyInModule || moduleFull}
+      >
+        <CloudinaryImage
+          className={clsx("flex-shrink-0 object-cover shadow-lg dark:shadow-white/5",
+            "w-full h-[250px]",
+          )}
+          useMetadataFallback
+          token={token}
+          width={500}
+        />
+
+        <div
+          className="absolute text-center top-0 left-0 p-8 w-full h-full overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50 
+                transition-opacity duration-300 opacity-0 hover:opacity-100
+                backdrop-blur-sm flex flex-col justify-center items-center rounded-lg 
+                "
+        >
+          <p className="font-bold">{token.name}</p>
+          <p>{truncate(token.mint)}</p>
+        </div>
+      </button>
+    )
+  })
+
   const submittedContent = (
     <div className="relative border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
       {moduleFull ?
@@ -134,32 +172,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
               There are currently no submissions
             </p>
           </div>)
-          : submittedTokens?.map((token, i) => {
-          const alreadyInModule = newArtModule?.tokens.findIndex(arrayTokenMint => arrayTokenMint === token.mint) >= 0
-          const handleAdd = ({ target }) => {
-            if (alreadyInModule || moduleFull) return             
-            
-            setNewArtModule(prev => ({
-              ...prev,
-              tokens: [...(prev?.tokens || []), token.mint]
-            }))
-          }
-          return (
-            <button className="relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden duration-300 hover:scale-[102%] disabled:scale-100 disabled:opacity-50 disabled:blur-[2px]" key={token.mint}
-              onClick={handleAdd}
-              disabled={alreadyInModule || moduleFull}
-            >
-              <CloudinaryImage
-                className={clsx("flex-shrink-0 object-cover shadow-lg dark:shadow-white/5",
-                  "w-full h-[250px]",
-                )}
-                useMetadataFallback
-                token={token}
-                width={500}
-              />
-            </button>
-          )
-        })}
+          : submissions}
       </div>
     </div>
   )

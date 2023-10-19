@@ -34,7 +34,7 @@ const DisplayModules = ({
       modules={modules}
       submittedTokens={submittedTokens}
       approvedArtists={approvedArtists}
-      moduleComponents={modules.map((module, i) => (
+      moduleComponents={modules?.map((module, i) => (
         <SortableModule
           key={module.id}
           id = {module.id}

@@ -9,6 +9,7 @@ const HtmlViewer = ({
   onLoad,
   style,
   wrapperClass = "w-full h-full absolute inset-0",
+  useLazyLoading = false
 }) => { 
   const [reloadedUrl, setReloadedUrl] = useState(htmlUrl)
   const [loading, setLoading] = useState(false)
@@ -19,6 +20,7 @@ const HtmlViewer = ({
   
   //Lazing load the iframe + reload when size changes
   useEffect(() => {
+    if(!useLazyLoading) return
     setLoading(true)
     setReloadedUrl("")
 
@@ -28,7 +30,7 @@ const HtmlViewer = ({
       setReloadedUrl(htmlUrl)
     }, 50)
     return () => clearTimeout(timeout)
-  }, [style, htmlUrl, isVisible])
+  }, [style, htmlUrl, isVisible, useLazyLoading])
 
   const handleLoad = (e) => {
     if(onLoad) onLoad(e)
@@ -37,7 +39,7 @@ const HtmlViewer = ({
 
   return (
     <div
-      ref={htmlRef}
+      ref={ useLazyLoading ? htmlRef : undefined}
       className={clsx(
       wrapperClass
       )}

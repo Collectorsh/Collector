@@ -35,13 +35,13 @@ export default function DetailPage({token, curations}) {
   const maxSupply = token?.max_supply
   const editionNumber = token?.edition_number
 
-  const useAltMediaAspectRatio = htmlUrl || vrUrl
-  const altAssetHeight = useAltMediaAspectRatio
+  const useAltMediaAspectRatio = Boolean(htmlUrl || vrUrl)
+  const altAssetHeight = (useAltMediaAspectRatio && typeof assetWidth === "number")
     ? assetWidth * altFileAspectRatio
     : assetWidth
-
-  const artistName = token?.artist_name ? token.artist_name.replace("_", " ") : truncate(token?.creator, 4)
-  const ownerName = token?.owner_name ? token.owner_name.replace("_", " ") : truncate(token?.owner, 4)
+  
+  const artistName = token?.artist_name ? token.artist_name.replace("_", " ") : truncate(token?.artist_address, 4)
+  const ownerName = token?.owner_name ? token.owner_name.replace("_", " ") : truncate(token?.owner_address, 4)
 
   const supplyText = isMasterEdition
     ? `${ maxSupply - supply }/${ maxSupply } Editions Available`
@@ -91,18 +91,11 @@ export default function DetailPage({token, curations}) {
     <>
       <MainNavigation />
       <ArtModal isOpen={imageExpanded} onClose={() => setImageExpanded(false)} token={token} />
-      <div className={clsx("max-w-screen-2xl mx-auto w-full px-2 py-5 duration-200", imgLoaded ? "opacity-100" : "opacity-0")}>
-        {!imgLoaded ? (
-          <ContentLoader
-            speed={2}
-            className={`mx-auto w-[70vw] h-[75vh] rounded-xl`}
-            backgroundColor="rgba(120,120,120,0.2)"
-            foregroundColor="rgba(120,120,120,0.1)"
-          >
-            <rect className="w-full h-full" />
-          </ContentLoader>
-          
-        ) : null}      
+      <div className={clsx(
+        "max-w-screen-2xl mx-auto w-full px-2 py-5 duration-300",
+        imgLoaded || useAltMediaAspectRatio ? "opacity-100" : "opacity-0"
+      )}>
+         
         <div
           className="relative shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg overflow-hidden w-fit h-fit mx-auto group"
         >
@@ -118,8 +111,8 @@ export default function DetailPage({token, curations}) {
             <ArrowsExpandIcon className="w-7 h-7" />
           </button>
 
-          {useAltMediaAspectRatio && !imageExpanded ? (
-            <div className="relative"
+         
+          <div className={clsx(useAltMediaAspectRatio && !imageExpanded ? "relative" : "hidden")}
               style={{
                 width: assetWidth,
                 height: altAssetHeight
@@ -136,7 +129,7 @@ export default function DetailPage({token, curations}) {
                 />
               ) : null}
             </div>
-          ):null}
+        
 
           
           {(videoUrl && !imageExpanded) ? (

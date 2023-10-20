@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useContext, useEffect, useMemo, useState } from "react"
 import MainButton from "../MainButton"
 import Modal from "../Modal"
-import { apiNodeClient } from "../../data/client/apiClient"
-import { Metaplex, toBigNumber, walletAdapterIdentity } from "@metaplex-foundation/js"
+import apiClient, { apiNodeClient } from "../../data/client/apiClient"
+import { Metaplex, PublicKey, toBigNumber, walletAdapterIdentity } from "@metaplex-foundation/js"
 import { connection } from "../../config/settings"
 import { useWallet } from "@solana/wallet-adapter-react"
 import Link from "next/link"
@@ -11,6 +11,9 @@ import { truncate } from "../../utils/truncate"
 import { shootConfetti } from "../../utils/confetti"
 import { AltMedia, CATEGORIES } from "../FileDrop"
 import clsx from "clsx"
+import UserContext from "../../contexts/user"
+import { Keypair } from "@solana/web3.js"
+import createMintedIndex from "../../data/minted_indexer/create"
 
 const MINT_STAGE = {
   INIT: "Init",
@@ -22,6 +25,8 @@ const MINT_STAGE = {
 
 const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
   const wallet = useWallet();
+  const [user] = useContext(UserContext);
+
   const [stage, setStage] = useState(MINT_STAGE.INIT)
   const [previewImage, setPreviewImage] = useState(null)
   const [previewAlt, setPreviewAlt] = useState(null)
@@ -128,16 +133,47 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
           creators,
           sellerFeeBasisPoints: sellerFeeBasisPoints,
           maxSupply: toBigNumber(maxSupply), //default of 0 is a 1/1
-        }).then(res => res.nft)
+        },
+          {
+            commitment: "finalized"
+          }
+        ).then(res => res.nft)
+      
+      const {
+        animation_url,
+        image,
+        description,
+        properties,
+      } = newNft.json;
 
-      shootConfetti(3)
+      const token = {
+        mint: newNft.address.toString(),
+        owner_address: wallet.publicKey.toString(),
+        artist_address: wallet.publicKey.toString(),
+        name,
+        animation_url,
+        image,
+        description,
+        primary_sale_happened: newNft.primarySaleHappened,
+        is_master_edition: Boolean(maxSupply > 0),
+        supply: 0,
+        max_supply: maxSupply,
+        creators: properties.creators,
+        files: properties.files,
+        royalties: sellerFeeBasisPoints,
+      }
+
+      //Don't throw a full error for the user if the item is already minted
+      await createMintedIndex(user, token)
+
       setMintedAddress(newNft.address.toString())
       setStage(MINT_STAGE.SUCCESS)
+      shootConfetti(3)
     } catch (e) {
       console.error("Error minting NFT: ", e);
       setStage(MINT_STAGE.ERROR)
     }
-  },[nftProps, wallet])
+  },[nftProps, wallet, user])
 
   const content = useMemo(() => {
     const {

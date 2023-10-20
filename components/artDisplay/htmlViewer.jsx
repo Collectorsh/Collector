@@ -12,7 +12,7 @@ const HtmlViewer = ({
   useLazyLoading = false
 }) => { 
   const [reloadedUrl, setReloadedUrl] = useState(htmlUrl)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const htmlRef = useRef(null);
 
   usePreventTouchNavigation(htmlRef)
@@ -40,21 +40,21 @@ const HtmlViewer = ({
   return (
     <div
       ref={ useLazyLoading ? htmlRef : undefined}
-      className={clsx(
-      wrapperClass
-      )}
+      className={clsx(wrapperClass)}
     >
-      {loading ? (
-        <ContentLoader
-          speed={2}
-          className={`absolute inset-0 w-full h-full rounded-xl z-50`}
-          style={style}
-          backgroundColor="rgba(120,120,120,0.75)"
-          foregroundColor="rgba(120,120,120,0.5)"
-        >
-          <rect className="w-full h-full" />
-        </ContentLoader>
-      ): null}
+
+      <ContentLoader
+        
+        title=""
+        speed={2}
+        className={clsx(`inset-0 w-full h-full rounded-xl z-50`, loading ? "absolute" : "hidden")}
+        style={style}
+        backgroundColor="rgba(120,120,120,0.5)"
+        foregroundColor="rgba(120,120,120,0.25)"
+      >
+        <rect className="w-full h-full" />
+      </ContentLoader>
+   
       <iframe
         onLoad={handleLoad}
         src={reloadedUrl}

@@ -98,7 +98,11 @@ export default function MintPage() {
 
     setCategory(fileCategory)
 
-    setError(prev => ({ ...prev, [MEDIA_KEYS.MAIN]: null }))
+    setError(prev => ({
+      ...prev,
+      [MEDIA_KEYS.MAIN]: null,
+      [MEDIA_KEYS.THUMB]: null
+    }))
 
     if (fileCategory === CATEGORIES.IMAGE) setImageFile(file);
     else {
@@ -126,7 +130,7 @@ export default function MintPage() {
       name: REQUIRED,
       description: REQUIRED,
       royalties: REQUIRED,
-      "main asset": REQUIRED,
+      [MEDIA_KEYS.MAIN]: REQUIRED,
     })
     
     //wait till lifecycle completes so it triggers a new FileDrop

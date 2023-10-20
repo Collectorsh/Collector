@@ -358,7 +358,6 @@ function CurationPage({ curation }) {
             groupHoverClass="group-hover/description:opacity-100"
           // icon={<PencilAltIcon className="w-6 h-6" />}
           >
-            {/* <p className="whitespace-pre-wrap text-center">{description}</p> */}
             <QuillContent textDelta={description} />
           </EditWrapper>
         </div>

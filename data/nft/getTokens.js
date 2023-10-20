@@ -6,6 +6,7 @@ import useSWR from 'swr'
 import { connection } from "../../config/settings";
 import { Metaplex } from "@metaplex-foundation/js";
 import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
+import getMintedIndexerByOwner from "../minted_indexer/getByOwner";
 
 export function coalesce(val, def) {
   if (val === null || typeof val === "undefined") return def;
@@ -24,7 +25,7 @@ async function getTokens(publicKeys, options) {
   const useTokenMetadata = options.useTokenMetadata ?? false
 
   const baseTokens = []
-  const tokenAccounts = {}
+  const mintedIndexerTokens = []
  
   const maxBatch = 1000
   for (const publicKey of publicKeys) {
@@ -55,6 +56,11 @@ async function getTokens(publicKeys, options) {
 
       baseTokens.push(...res.items)
     }
+    //get items from minted_indexer in case helius is missing some
+    const indexerRes = await getMintedIndexerByOwner(publicKey)
+    if (indexerRes?.mints?.length) {
+      mintedIndexerTokens.push(...indexerRes.mints)
+    }
   }
 
   const creatorFilteredTokens = !justCreator
@@ -74,19 +80,19 @@ async function getTokens(publicKeys, options) {
   
     const image_cdn = content?.files?.find((file) => file.cdn_uri)?.cdn_uri
     return {
-      creator: creators[0]?.address,
+      artist_address: creators[0]?.address,
+      owner_address: ownership.owner,
       description: content.metadata.description,
       animation_url: content.links.animation_url,
       image: content.links.image,
       mint: id,
       name: content.metadata.name,
-      owner: ownership.owner,
       files: files,
       creators: creators,
       symbol: content.metadata.symbol,
       uri: content.json_uri,
       attributes: content.metadata.attributes,
-      royalties: token.royalty,
+      royalties: token.royalty.basis_points,
       primary_sale_happened: token.royalty?.primary_sale_happened,
       image_cdn
       //TODO Get from Helius when available and remove useTokenMetadata
@@ -97,9 +103,20 @@ async function getTokens(publicKeys, options) {
       // max_supply:
     }
   }).filter((item) => {
-    const notUsable = !item.uri || !item.creator || !item.mint || !item.image
+    const notUsable = !item.uri || !item.artist_address || !item.mint || !item.image
     return !notUsable
   });
+
+  //Insert items from minted_indexer if missing from helius 
+  //or if helius doesnt include off chain metadata (image, etc) in which case we've filtered them out above
+  for (const mintedIndexerToken of mintedIndexerTokens) {
+    const alreadyExists = mungedTokens.some((token) => token.mint === mintedIndexerToken.mint)
+    console.log("🚀 ~ file: getTokens.js:114 ~ getTokens ~ mintedIndexerToken.mint:", mintedIndexerToken.mint)
+    console.log("🚀 ~ file: getTokens.js:114 ~ getTokens ~ alreadyExists:", alreadyExists)
+    if (!alreadyExists) {
+      mungedTokens.unshift(mintedIndexerToken) //insert to beginning of array so it shows up first
+    }
+  }
 
   const visResults = await apiClient.post("/get_visibility_and_order", {
     public_key: publicKeys[0],
@@ -165,14 +182,14 @@ async function getTokens(publicKeys, options) {
     }  
       
     // Loop through results and set artist name, twitter
-    let tokens = creatorResp.data.filter((t) => t.public_key === result.creator);
+    let tokens = creatorResp.data.filter((t) => t.public_key === result.artist_address);
     if (tokens.length > 0) {
       let token = tokens[tokens.length - 1];
       result.artist_name = token.name;
       result.artist_twitter = token.twitter;
       if (result.artist_twitter === null) {
         let toke = creatorResp.data.find(
-          (t) => t.public_key === result.creator && t.twitter !== null
+          (t) => t.public_key === result.artist_address && t.twitter !== null
         );
         if (toke) result.artist_twitter = toke.twitter;
       }

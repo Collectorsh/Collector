@@ -205,15 +205,29 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
       onClose={onClose}
       title={`Edit ${ curation?.name.replaceAll("_", " ") } Submission Listings`}
     >
-      <div className="mt-4 p-4 overflow-auto grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {submissions?.map((token) => (
-          <Submission
-            key={token.mint}
-            token={token}
-            onList={onList}
-            onDelist={onDelist}
-          />
-        ))}
+      <div className="overflow-auto ">
+        <div className="text-center mt-4">
+          <p className="font-bold">Please be aware: </p>
+          <p>
+            &bull; For listings to be valid on Collector, your artwork cannot be listed on custodial marketplaces like Exchange Art or Mallow
+          </p>
+          <p>
+            &bull; To receive funds from edition sales you will need to close the sale. This will also return the master edition to your wallet.
+          </p>
+
+        </div>
+
+        <div className="mt-4 p-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {submissions?.map((token) => (
+            <Submission
+              key={token.mint}
+              token={token}
+              onList={onList}
+              onDelist={onDelist}
+            />
+          ))}
+        </div>
+
       </div>
 
       <div className="w-full flex justify-end gap-4 mt-4 relative">

@@ -4,6 +4,12 @@ import Dropzone from 'react-dropzone'
 import clsx from 'clsx';
 import VideoPlayer from './artDisplay/videoPlayer';
 import { Oval } from 'react-loader-spinner';
+import HtmlViewer from './artDisplay/htmlViewer';
+import dynamic from 'next/dynamic';
+
+const ModelViewer = dynamic(() => import("./artDisplay/modelDisplay"), {
+  ssr: false
+})
 
 const MaxCLDFileSize = 20; 
 
@@ -12,7 +18,14 @@ export const cleanFileName = (fileName) => {
   return fileName.split(".")[0].replaceAll(/[^a-zA-Z0-9_]/g, "-")
 }
 
-export const imageFormats = {"image/png": [], "image/jpeg": [], "image/gif": [], "image/webp": []}
+export const imageFormats = { "image/png": [], "image/jpeg": [], "image/gif": [], "image/webp": [] }
+
+export const isGLB = (file) => { 
+  const mimeType = file.type.includes("model")
+  const splits = file.name.split(".")
+  const extension = splits[splits.length-1].includes("glb")
+  return  mimeType || extension
+}
 
 export const CATEGORIES = {
   IMAGE: "image",
@@ -38,6 +51,7 @@ const FileDrop = ({
 
   const handleDrop = (acceptedFiles) => { 
     const file = acceptedFiles[0];
+
     onDrop(file);
     setImage(null);
     setAltMedia(null);
@@ -47,9 +61,7 @@ const FileDrop = ({
       let fileCategory = CATEGORIES.IMAGE
       if (file.type.includes("video")) fileCategory = CATEGORIES.VIDEO
       if (file.type.includes("html")) fileCategory = CATEGORIES.HTML
-
-      //TODO does this need file.type.includes("glb") ?
-      if (file.type.includes("model")) fileCategory = CATEGORIES.VR
+      if (isGLB(file)) fileCategory = CATEGORIES.VR
 
       setCategory(fileCategory)
       if (fileCategory === CATEGORIES.IMAGE) setImage(reader.result);
@@ -70,17 +82,21 @@ const FileDrop = ({
   const accept = acceptableFiles || imageFormats
 
   //TODO: add vr format here
-  const formatDisplay = Object.keys(accept).join(", ").replaceAll("image/", "").replaceAll("video/", "").replaceAll("html/", "")
+  const formatDisplay = Object.keys(accept).join(", ")
+    .replaceAll("image/", "")
+    .replaceAll("video/", "")
+    .replaceAll("text/", "")
+    .replaceAll("model/gltf-binary", "glb")
   
 
   const textDisplay = (
-    <>
+    <div className='p-3 text-center flex flex-col gap-2 justify-center items-center'>
       <p className='text-red-500 capitalize'>{error}</p>  
       <p className='font-bold text-center'>Drag and drop your media file here, or click to select</p>
       { helperText ? <p className='opacity-50'>{helperText}</p> : null }
       <p className='opacity-50'>Supported formats: {formatDisplay}</p>
       <p className='opacity-50'>Max file size {maxFileSize} MB</p>
-    </>
+    </div>
   )
   return (
     <Dropzone
@@ -133,32 +149,54 @@ export const AltMedia = ({ category, mediaUrl }) => {
       case CATEGORIES.VIDEO:
         return (
           <VideoPlayer
+            wrapperClass='w-full h-full'
             setVideoLoaded={() => setLoaded(true)}
             videoUrl={mediaUrl}
           />
         )
-      // case CATEGORIES.HTML:
-      //   return (
-      //     <iframe
-      //       src={altMedia}
-      //       className="w-full h-full object-cover rounded-lg"
-      //     />
-      //   )
+      case CATEGORIES.HTML:
+        return (
+          <HtmlViewer
+            wrapperClass='w-full h-full'
+            onLoad={() => setLoaded(true)}
+            htmlUrl={mediaUrl}
+          />
+        )
+      case CATEGORIES.VR:
+        return (
+          <ModelViewer
+            wrapperClass='w-full h-full'
+            onLoad={() => setLoaded(true)}
+            vrUrl={mediaUrl}
+          />
+        )
       default: return null
     }
 
   }, [category, mediaUrl])
+  const preventPropAndDefault = (e) => {
+    e.preventDefault();
+    e.stopPropagation()
+  }
 
   return (
-    <div className='w-full h-full relative'>
-      {!loaded ? (
-        <div className='absolute inset-0 w-full h-full flex justify-center items-center'>
-          <span className="inline-block translate-y-0.5">
-            <Oval color="#FFF" secondaryColor="#666" height={36} width={36} />
-          </span>
-        </div>
-      ): null}
-      { contentInUse}
+    // Give the user room to click in the filedrop space but prevent clicks in the media
+    <div className='p-5 w-full h-full'> 
+      <div
+        onClick={preventPropAndDefault}
+        className={clsx(
+          'w-full h-full relative',
+        )}
+      >
+        {!loaded ? (
+          <div className='absolute inset-0 w-full h-full flex justify-center items-center'>
+            <span className="inline-block translate-y-0.5">
+              <Oval color="#FFF" secondaryColor="#666" height={36} width={36} />
+            </span>
+          </div>
+        ): null}
+        { contentInUse}
+      </div>
     </div>
   )
 } 

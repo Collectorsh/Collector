@@ -1,7 +1,9 @@
-import TextModule from './textModule'
-import ArtModule from './artModule'
+import { Suspense } from 'react';
 import SortableModule from './sortableModule'
 import SortableModulesWrapper from './sortableModulesWrapper'
+import TextModule from './textModule'
+import ArtModule from './artModule'
+
 
 const DisplayModules = ({
   modules,
@@ -32,7 +34,7 @@ const DisplayModules = ({
       modules={modules}
       submittedTokens={submittedTokens}
       approvedArtists={approvedArtists}
-      moduleComponents={modules.map((module, i) => (
+      moduleComponents={modules?.map((module, i) => (
         <SortableModule
           key={module.id}
           id = {module.id}

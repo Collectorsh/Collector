@@ -3,6 +3,7 @@ import apiClient from "/data/client/apiClient";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import useSWR from 'swr'
 import { connection } from "../../config/settings";
+import getMintedIndexerByMint from "../minted_indexer/getByMint";
 
 
 const DEBUG = false
@@ -11,71 +12,89 @@ const DEBUG = false
 async function getTokenByMint(tokenMint) {
   DEBUG && console.time("getTokenByMint Time")
 
-  const token = await axios.post(`https://mainnet.helius-rpc.com/?api-key=${ process.env.NEXT_PUBLIC_HELIUS_API_KEY }`, {
-    "jsonrpc": "2.0",
-    "id": `collector token ${ tokenMint }`,
-    "method": "getAsset",
-    "params": {
-      "id": tokenMint
+  let mungedToken
+
+  try {
+    const token = await axios.post(`https://mainnet.helius-rpc.com/?api-key=${ process.env.NEXT_PUBLIC_HELIUS_API_KEY }`, {
+      "jsonrpc": "2.0",
+      "id": `collector token ${ tokenMint }`,
+      "method": "getAsset",
+      "params": {
+        "id": tokenMint
+      }
+    }).then((res) => {
+      return res.data.result;
+    }).catch((err) => {
+      console.log("Error Fetching Token Metadata by Mint:", err);
+    });  
+    if (!token) throw new Error("No token found");
+      
+    const { content, creators, ownership, id } = token
+  
+    const files = content?.files?.map((file) => ({
+      ...file,
+      type: file.mime
+    }))
+  
+    const image_cdn = content?.files?.find((file) => file.cdn_uri)?.cdn_uri
+  
+    mungedToken = {
+      artist_address: creators[0]?.address,
+      owner_address: ownership.owner,
+      description: content.metadata.description,
+      animation_url: content.links?.animation_url,
+      image: content.links.image,
+      mint: id,
+      name: content.metadata.name,
+      files: files,
+      creators: creators,
+      symbol: content.metadata.symbol,
+      uri: content.json_uri,
+      attributes: content.metadata?.attributes,
+      royalties: token.royalty.basis_points,
+      primary_sale_happened: token.royalty?.primary_sale_happened,
+      image_cdn,
+      //TODO Get from Helius when available and remove seperate edition call
+      // is_edition: 
+      // parent:
+      // is_master_edition:
+      // supply:
+      // max_supply:
     }
-  }).then((res) => {
-    return res.data.result;
-  }).catch((err) => {
-    console.log("Error Fetching Token Metadata by Mint:", err);
-  });
-
-  if (!token) return null;
-    
-  const { content, creators, ownership, id } = token
-
-  const files = content?.files?.map((file) => ({
-    ...file,
-    type: file.mime
-  }))
-  const image_cdn = content?.files?.find((file) => file.cdn_uri)?.cdn_uri
-  const mungedToken = {
-    creator: creators[0]?.address,
-    description: content.metadata.description,
-    animation_url: content.links?.animation_url,
-    image: content.links.image,
-    mint: id,
-    name: content.metadata.name,
-    owner: ownership.owner,
-    files: files,
-    creators: creators,
-    symbol: content.metadata.symbol,
-    uri: content.json_uri,
-    attributes: content.metadata?.attributes,
-    royalties: token.royalty,
-    primary_sale_happened: token.royalty?.primary_sale_happened,
-    image_cdn,
-    //TODO Get from Helius when available and remove seperate edition call
-    // is_edition: 
-    // parent:
-    // is_master_edition:
-    // supply:
-    // max_supply:
+  } catch (e) {
+    console.error("Error getting token by mint: ", e);
   }
  
+  let hasEditionData = false
+  //get item from minted_indexer if missing from helius (or if missing ofchain metadata like image)
+  if (!mungedToken || !mungedToken.image) {
+    const indexerRes = await getMintedIndexerByMint(tokenMint)
+    if (indexerRes?.mint) {
+      mungedToken = indexerRes.mint
+      hasEditionData = true //minted_indexer includes edition data
+    }
+    else return null
+  }
 
-  if (!mungedToken.mint || !mungedToken.image) return null
-  
-  try {
-    const edition = await Metadata.getEdition(connection, mungedToken.mint)
-    const { data } = edition    
-    mungedToken.is_master_edition = Boolean(data.maxSupply && Number(data.maxSupply?.toString()) > 0)
-    mungedToken.supply = data.supply ? Number(data.supply.toString()) : undefined
-    mungedToken.max_supply = data.maxSupply ? Number(data.maxSupply.toString()) : undefined
-    
-    mungedToken.is_edition = Boolean(data.parent)
-    mungedToken.parent = data.parent?.toString()
-    mungedToken.edition_number = data.edition?.toString()
-  } catch (err) {
-    console.log("Error getting metadata for mint", mungedToken.mint)
+  //once helius provides edition data this can be deleted
+  if (!hasEditionData) {
+    try {
+      const edition = await Metadata.getEdition(connection, mungedToken.mint)
+      const { data } = edition    
+      mungedToken.is_master_edition = Boolean(data.maxSupply && Number(data.maxSupply?.toString()) > 0)
+      mungedToken.supply = data.supply ? Number(data.supply.toString()) : undefined
+      mungedToken.max_supply = data.maxSupply ? Number(data.maxSupply.toString()) : undefined
+      
+      mungedToken.is_edition = Boolean(data.parent)
+      mungedToken.parent = data.parent?.toString()
+      mungedToken.edition_number = data.edition?.toString()
+    } catch (err) {
+      console.log("Error getting metadata for mint", mungedToken.mint)
+    }
   }
 
   const artist_res = await apiClient.post("/user/get_user_by_address",
-    { address: mungedToken.creator }
+    { address: mungedToken.artist_address }
   ).then((res) => res.data)
 
   if (artist_res?.status === "success") {
@@ -95,7 +114,7 @@ async function getTokenByMint(tokenMint) {
   }
 
   const owner_res = await apiClient.post("/user/get_user_by_address",
-    { address: mungedToken.owner }
+    { address: mungedToken.owner_address }
   ).then((res) => res.data)
 
   if (owner_res?.status === "success") {

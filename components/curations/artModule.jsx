@@ -73,6 +73,7 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
     }
   }, [submittedTokens])
 
+
   const tokenRows = useMemo(() => { 
     if (!Object.values(mappedTokens).length) return []
 
@@ -87,15 +88,18 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
           ? [tokenMints.slice(0, halfIndex), tokenMints.slice(halfIndex)]
           : [tokenMints]
     
-    return rows.map(mints => mints.map(mint => mappedTokens?.[mint])).filter(t => Boolean(t))
+    const fullTokens = rows.map(mints => mints.map(mint => mappedTokens?.[mint]))
+    const filteredTokens = fullTokens.map(tokens => tokens.filter(t => Boolean(t)))
+    return filteredTokens
   }, [artModule.tokens, isMobile, isTablet, mappedTokens])
-  
 
   const itemRows = useMemo(() => {
     if (!approvedArtists || !wrapperWidth || !tokenRows.length) return [];
 
     return tokenRows.map((tokens) => {
-      const totalAspectRatio = tokens.reduce((acc, token) => acc + mappedAspectRatios[token.mint], 0)
+      const totalAspectRatio = tokens.reduce((acc, token) => {
+        return acc + mappedAspectRatios[token.mint]
+      }, 0)
       const rowGapOffset = gapSize * (tokens.length - 1)
       const rowHeight = Math.min((wrapperWidth - rowGapOffset) / totalAspectRatio, maxHeight)
 

@@ -87,7 +87,9 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
           ? [tokenMints.slice(0, halfIndex), tokenMints.slice(halfIndex)]
           : [tokenMints]
     
-    return rows.map(mints => mints.map(mint => mappedTokens?.[mint])).filter(t => Boolean(t))
+    const fullTokens = rows.map(mints => mints.map(mint => mappedTokens?.[mint]))
+    const filteredTokens = fullTokens.map(tokens => tokens.filter(t => Boolean(t)))
+    return filteredTokens
   }, [artModule.tokens, isMobile, isTablet, mappedTokens])
   
 

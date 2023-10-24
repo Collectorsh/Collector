@@ -94,7 +94,7 @@ function CurationPage({ curation }) {
     switch (message) {
       case "Listing Update": {
         setSubmittedTokens((prev) => prev.map((token) => { 
-          return token.mint === data.mint
+          return token.mint === data?.mint
             ? { ...token, ...data }
             : token
           })

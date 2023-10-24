@@ -108,9 +108,7 @@ function CurationPage({ curation }) {
   useActionCable(socketId, { received: handleWebsocketMessages })
 
   useEffect(() => {
-    
     if ((isOwner || viewerPasscodeQuery && user?.api_key) && curation?.name) {
-
       (async () => {
         if (isOwner) {
           const { draft_content, private_key_hash, viewer_passcode } = await getPrivateContent({
@@ -135,7 +133,7 @@ function CurationPage({ curation }) {
   }, [isOwner, curation?.name, user?.api_key, viewerPasscodeQuery])
 
   useEffect(() => {
-    if (!useDraftContent || !publishContent.banner_image) return
+    if (!useDraftContent || !publishContent.banner_image) return;
     //set loaded to false when the banner changes
     if (banner !== publishedContent.banner_image) setBannerLoaded(false);
   }, [banner, publishedContent?.banner_image, useDraftContent])

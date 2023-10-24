@@ -124,20 +124,32 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       const metaplex = new Metaplex(connection)
         .use(walletAdapterIdentity(wallet))
 
-      const newNft = await metaplex
-        .nfts()
-        .create({
-          uri,
-          name,
-          creators,
-          sellerFeeBasisPoints: sellerFeeBasisPoints,
-          maxSupply: toBigNumber(maxSupply), //default of 0 is a 1/1
-        },
-          {
-            commitment: "finalized"
-          }
-        ).then(res => res.nft)
-      
+      const transactionBuilder = await metaplex.nfts().builders().create({ 
+        uri,
+        name,
+        creators,
+        sellerFeeBasisPoints: sellerFeeBasisPoints,
+        maxSupply: toBigNumber(maxSupply), //default of 0 is a 1/1
+      });
+
+      const { mintAddress } = transactionBuilder.getContext();
+      const { signature, confirmResponse } = await metaplex.rpc().sendAndConfirmTransaction(
+        transactionBuilder,
+        { commitment: "finalized" }
+      )
+
+      if (!signature || Boolean(confirmResponse?.value?.err)) {
+        throw new Error("Error minting NFT")
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 2000)) //give the tx time to settle before fetching
+
+      const newNft = await metaplex.nfts().findByMint({ mintAddress });
+
+      if (!newNft) {
+        throw new Error("Error getting minted NFT")
+      }
+     
       const {
         animation_url,
         image,

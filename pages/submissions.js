@@ -209,7 +209,7 @@ const Submissions = ({ }) => {
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Approved Curations</h2>
           <Link href="/create" passHref>
-            <MainButton solid disabled={!user?.curator_approved}>
+            <MainButton solid disabled={!approvedCurations?.length}>
               Create
             </MainButton>
           </Link>

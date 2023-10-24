@@ -122,12 +122,12 @@ function CurationPage({ curation }) {
           setViewerPasscode(viewer_passcode)
         } else {
           //is authorized viewer
-          const { draft_content } = await getViewerPrivateContent({
+          const res = await getViewerPrivateContent({
             name: curation.name,
             apiKey: user.api_key,
             viewerPasscode: viewerPasscodeQuery
           })
-          setDraftContent(draft_content)
+          if (res?.draft_content) setDraftContent(res.draft_content)
         }
         setGlobalEditOpen(true)
       })();
@@ -198,7 +198,6 @@ function CurationPage({ curation }) {
   const handleInviteSelf = async () => { 
     const res = await addSelfApprovedArtists({
       apiKey: user.api_key,
-      name: curation.name,
       viewerPasscode: viewerPasscodeQuery
     })
 

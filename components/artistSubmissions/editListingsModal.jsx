@@ -13,6 +13,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { getListMasterEditionTX } from "../../utils/curations/listMasterEdition";
 import { connection } from "../../config/settings";
 import { getCloseAndWithdrawMarketTX } from "../../utils/curations/closeAndWithdrawMasterEdition";
+import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) => {
   const [user] = useContext(UserContext);
@@ -48,11 +49,16 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
         listMasterEditionTX,
         editionMarketAddress
       } = builder
- 
-      const signature = await wallet.sendTransaction(listMasterEditionTX, connection)
-      const confirmation = await connection.confirmTransaction(signature);
 
-      if (!signature || Boolean(confirmation.value.err)) {
+      const signedTx = await wallet.signTransaction(listMasterEditionTX)
+ 
+      const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet))
+      const { signature, confirmResponse } = await metaplex.rpc().sendAndConfirmTransaction(
+        signedTx,
+        { commitment: "finalized" }
+      )
+
+      if (!signature || Boolean(confirmResponse.value.err)) {
         error(`Error Listing ${ token.name } Editions Onchain`)
         return
       }

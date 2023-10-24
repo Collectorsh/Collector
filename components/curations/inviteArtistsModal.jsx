@@ -64,7 +64,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
 
   const getUrl = () => {
     if (typeof window !== "undefined") {
-      return `${ host }/curations/${ name }?passcode=${ passcode }`;
+      return `${ host }/submissions/?passcode=${ passcode }`;
     } else return ""
   }
 

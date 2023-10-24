@@ -111,8 +111,6 @@ async function getTokens(publicKeys, options) {
   //or if helius doesnt include off chain metadata (image, etc) in which case we've filtered them out above
   for (const mintedIndexerToken of mintedIndexerTokens) {
     const alreadyExists = mungedTokens.some((token) => token.mint === mintedIndexerToken.mint)
-    console.log("🚀 ~ file: getTokens.js:114 ~ getTokens ~ mintedIndexerToken.mint:", mintedIndexerToken.mint)
-    console.log("🚀 ~ file: getTokens.js:114 ~ getTokens ~ alreadyExists:", alreadyExists)
     if (!alreadyExists) {
       mungedTokens.unshift(mintedIndexerToken) //insert to beginning of array so it shows up first
     }

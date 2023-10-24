@@ -12,7 +12,6 @@ import { shootConfetti } from "../../utils/confetti"
 import { AltMedia, CATEGORIES } from "../FileDrop"
 import clsx from "clsx"
 import UserContext from "../../contexts/user"
-import { Keypair } from "@solana/web3.js"
 import createMintedIndex from "../../data/minted_indexer/create"
 
 const MINT_STAGE = {

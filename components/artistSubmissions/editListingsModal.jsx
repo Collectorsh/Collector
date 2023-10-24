@@ -30,6 +30,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
     let newToken
 
     if (token.is_master_edition) {
+      
       //Handle master edition market creation and update to the curation_listing
       const builder = await getListMasterEditionTX({
         connection: connection,

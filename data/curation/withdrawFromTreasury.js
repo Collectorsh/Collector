@@ -3,6 +3,8 @@ import apiClient from "../client/apiClient";
 
 async function withdrawFromTreasury({ privateKeyHash, curation }) {
   try {
+
+    //TODO just get the full curation in the API handler (user either curator api_key or admin api_key + curation id )
     const result = await axios.post("/api/curations/withdraw",
       {
         privateKeyHash,

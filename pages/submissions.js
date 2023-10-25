@@ -163,7 +163,7 @@ const Submissions = ({ }) => {
       const artistSubmissions = curation.submitted_token_listings.filter(listing => {
         const creatorsAddresses = listing.creators?.map((creator) => creator.address)
         const userKeys = user?.public_keys || []
-        const isArtist = userKeys.includes(listing.artist_address) || Boolean(creatorsAddresses?.find(address => userKeys.includes(address)))
+        const isArtist = userKeys.includes(listing.artist_address) || creatorsAddresses?.some(address => userKeys.includes(address))
         const isMasterEdition = listing.is_master_edition
         const notSold = isMasterEdition
           ? listing.listed_status !== "master-edition-closed"

@@ -46,6 +46,7 @@ const CloudinaryImage = ({
   const [opacity, setOpacity] = useState(noLazyLoad ? 1 : 0)
   
   const [fallbackStage, setFallbackStage] = useState(STAGES.MAIN_CDN)
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null) 
 

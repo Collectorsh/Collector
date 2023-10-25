@@ -18,6 +18,8 @@ import { useTokens } from "../data/nft/getTokens";
 import { parseCloudImageId } from "../utils/cloudinary/idParsing";
 import { curationListPlaceholderId } from "../components/curatorProfile/curationList";
 import { addSelfApprovedArtists } from "../data/curation/updateApprovedArtists";
+import "tippy.js/dist/tippy.css";
+
 
 const Submissions = ({ }) => {
   const [user] = useContext(UserContext);
@@ -137,6 +139,21 @@ const Submissions = ({ }) => {
     }))
   }
 
+  const handleRemoveListing = (token, curation) => {
+    setApprovedCurations(prev => prev.map(g => { 
+      if (g.id !== curation.id) return g
+      const newCuration = { ...g }
+      const oldSubmitted = newCuration.submitted_token_listings || []
+      const newSubmittedTokens = oldSubmitted.filter(t => {
+        return token.mint !== t.mint
+      })
+      newCuration.submitted_token_listings = newSubmittedTokens
+
+      setCurationToEdit(newCuration)
+      return newCuration
+    }))
+  }
+
   const curationElements = useMemo(() => {
     return approvedCurations.map(curation => {
       const { banner_image, name, id, curator, is_published } = curation
@@ -247,6 +264,7 @@ const Submissions = ({ }) => {
               // onClose={handleCloseModal}
               onClose={() => setEditListingsOpen(false)}
               handleEditListings={handleEditListings}
+              handleRemoveListing={handleRemoveListing}
               curation={curationToEdit}
             />
           </>

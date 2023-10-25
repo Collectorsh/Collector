@@ -79,18 +79,22 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
 
     const tokenMints = artModule.tokens
 
-    const useHalfRow = isTablet && tokenMints.length > 2
-    const halfIndex = Math.floor(tokenMints.length / 2)
+    const tokens = tokenMints.map(mint => mappedTokens?.[mint]).filter(t => Boolean(t))
+
+    const useHalfRow = isTablet && tokens.length > 2
+    const halfIndex = Math.floor(tokens.length / 2)
     const rows =
       isMobile
-        ? tokenMints.map(mint => [mint])
+        ? tokens.map(mint => [mint])
         : useHalfRow
-          ? [tokenMints.slice(0, halfIndex), tokenMints.slice(halfIndex)]
-          : [tokenMints]
+          ? [tokens.slice(0, halfIndex), tokens.slice(halfIndex)]
+          : [tokens]
     
-    const fullTokens = rows.map(mints => mints.map(mint => mappedTokens?.[mint]))
-    const filteredTokens = fullTokens.map(tokens => tokens.filter(t => Boolean(t)))
-    return filteredTokens;
+    return rows
+    
+    // const fullTokens = rows.map(mints => mints.map(mint => mappedTokens?.[mint]))
+    // const filteredTokens = fullTokens.map(tokens => tokens.filter(t => Boolean(t)))
+    // return filteredTokens;
     
   }, [artModule.tokens, isMobile, isTablet, mappedTokens])
 

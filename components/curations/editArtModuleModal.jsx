@@ -26,7 +26,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
 
   const [search, setSearch] = useState("");
 
-  const moduleFull = newArtModule?.tokens.length >= 4
+
 
   useEffect(() => {
     function setTabPosition() {
@@ -41,6 +41,14 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
     return () => window.removeEventListener("resize", setTabPosition);
   }, [activeTabIndex]);
 
+  const tokens = useMemo(() => {
+    return newArtModule.tokens
+      .map((tokenMint, i) => submittedTokens.find(token => token.mint === tokenMint))
+      .filter(token => Boolean(token))
+  }, [newArtModule.tokens, submittedTokens])
+  
+  const moduleFull = tokens.length >= 4
+  
   const handleSave = () => {
     onEditArtModule(newArtModule);
     onClose();
@@ -54,13 +62,10 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
   }
   
   const items = useMemo(() => {
-    if (!newArtModule?.tokens || !submittedTokens) return []
+    if (!tokens.length) return []
     const isMobile = ["", "sm", "md"].includes(breakpoint)
-    const cols = isMobile ? 1 : newArtModule.tokens.length
+    const cols = isMobile ? 1 : tokens.length
 
-    const tokens = newArtModule.tokens
-      .map((tokenMint, i) => submittedTokens.find(token => token.mint === tokenMint))
-      .filter(token => Boolean(token))
     const totalWidthRatio = tokens.reduce((acc, token) => acc + token.aspect_ratio, 0)
 
     return tokens.map((token, i) => {
@@ -82,7 +87,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
 
       return <EditArtItem key={token.mint} token={token} widthPercent={widthPercent} columns={cols} onRemove={handleRemove} />
     })
-  }, [newArtModule?.tokens, breakpoint, submittedTokens])
+  }, [tokens, breakpoint ])
 
   //Will need to add listing somewhere with owned tokens
   // const ownedContent = orderedTokens
@@ -118,7 +123,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
   //   )
 
   const submissions = submittedTokens?.map((token, i) => {
-    const alreadyInModule = newArtModule?.tokens.findIndex(arrayTokenMint => arrayTokenMint === token.mint) >= 0
+    const alreadyInModule = tokens.findIndex(t => t.mint === token.mint) >= 0
     const handleAdd = ({ target }) => {
       if (alreadyInModule || moduleFull) return
 

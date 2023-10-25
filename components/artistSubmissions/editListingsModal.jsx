@@ -31,7 +31,6 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
     return owned && !closedMaster
   }) || []
 
-
   const onList = async (token, listingPrice) => {
     let newToken
 

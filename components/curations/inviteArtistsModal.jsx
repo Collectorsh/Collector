@@ -18,7 +18,6 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
   const [search, setSearch] = useState('')
   const [error, setError] = useState('')
   const [passcode, setPasscode] = useState(viewerPasscode)
-  console.log("🚀 ~ file: inviteArtistsModal.jsx:20 ~ InviteArtistsModal ~ passcode:", passcode)
 
   useEffect(() => {
     if (!passcode) setPasscode(viewerPasscode)

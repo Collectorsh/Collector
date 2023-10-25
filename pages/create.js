@@ -184,9 +184,10 @@ export default function MintPage() {
           {!reseting
             ? (
               <div className="flex flex-col gap-2 h-[50vh] lg:col-span-2">
-                {usingAltMedia
-                  ? <p className="text-center font-bold text-lg capitalize">{categoryDisplay}</p>
-                  : null
+                {
+                  usingAltMedia
+                    ? <p className="text-center font-bold text-lg capitalize">{categoryDisplay}</p>
+                    : null
                 }
                 <FileDrop
                 onDrop={onMainDrop}

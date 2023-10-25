@@ -13,15 +13,20 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { getListMasterEditionTX } from "../../utils/curations/listMasterEdition";
 import { connection } from "../../config/settings";
 import { getCloseAndWithdrawMarketTX } from "../../utils/curations/closeAndWithdrawMasterEdition";
+import { Metaplex, token, walletAdapterIdentity } from "@metaplex-foundation/js";
+import { XCircleIcon } from "@heroicons/react/solid";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
+import deleteSubmission from "../../data/curationListings/deleteSubmission";
 
-const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) => {
+const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
   const wallet = useWallet()
 
   const { handleBuyNowList, handleDelist, auctionHouse } = useCurationAuctionHouse(curation)
-
+  
   const submissions = curation?.submitted_token_listings.filter(listing => {
-    const owned = user?.public_keys.includes(listing.owner_address)
+    const owned = listing.creators.some(creator => user?.public_keys.includes(creator.address));
     const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
     return owned && !closedMaster
   }) || []
@@ -30,6 +35,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
     let newToken
 
     if (token.is_master_edition) {
+      
       //Handle master edition market creation and update to the curation_listing
       const builder = await getListMasterEditionTX({
         connection: connection,
@@ -47,11 +53,16 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
         listMasterEditionTX,
         editionMarketAddress
       } = builder
- 
-      const signature = await wallet.sendTransaction(listMasterEditionTX, connection)
-      const confirmation = await connection.confirmTransaction(signature);
 
-      if (!signature || Boolean(confirmation.value.err)) {
+      const signedTx = await wallet.signTransaction(listMasterEditionTX)
+ 
+      const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet))
+      const { signature, confirmResponse } = await metaplex.rpc().sendAndConfirmTransaction(
+        signedTx,
+        { commitment: "finalized" }
+      )
+
+      if (!signature || Boolean(confirmResponse.value.err)) {
         error(`Error Listing ${ token.name } Editions Onchain`)
         return
       }
@@ -199,6 +210,23 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
     if (newToken) handleEditListings(newToken, curation)
   }
 
+  const onDelete = async (token) => {
+    if (token.listed_status === "listed") return
+    
+    const res = await deleteSubmission({
+      curationId: curation.id,
+      tokenMint: token.mint,
+      apiKey: user.api_key,
+    })
+
+    if (res.status === "success") {
+      success(`${ token.name } has been removed!`)
+      handleRemoveListing(token, curation)
+    } else {
+      error(`Error Removing ${ token.name }`)
+    } 
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -224,6 +252,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
               token={token}
               onList={onList}
               onDelist={onDelist}
+              onDelete={onDelete}
             />
           ))}
         </div>
@@ -241,7 +270,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, curation }) =>
 
 export default EditListingsModal;
 
-const Submission = ({ token, onList, onDelist }) => { 
+const Submission = ({ token, onList, onDelist, onDelete }) => { 
   const [listing, setListing] = useState(false)
   const [listingPrice, setListingPrice] = useState(token.buy_now_price || "")
   
@@ -276,6 +305,16 @@ const Submission = ({ token, onList, onDelist }) => {
     setListing(false)
   }
 
+  const handleDelete = async () => {
+    try {
+      setListing(true)
+      await onDelete(token)
+    } catch (err) {
+      console.log("handleDelete error: ", err)
+    }
+    setListing(false)
+  }
+
   const delistText = isMasterEdition
     ? (isSoldOut ? "Withdraw" : "End Sale")
     : "Delist"
@@ -284,6 +323,28 @@ const Submission = ({ token, onList, onDelist }) => {
     <div className="relative h-fit shadow-md shadow-black/10 dark:shadow-white/5 rounded-lg
       bg-neutral-100 dark:bg-neutral-700
     ">
+      <Tippy
+        className="shadow-lg"
+        content={token.listed_status === "listed"
+          ? "You must close the listing before removing the submission"
+          : "This will remove your submission from the curation"
+        }
+      >
+        <div>
+          <button
+            className={clsx(
+              "absolute -top-2 -right-2",
+              "bg-neutral-200/50 dark:bg-neutral-700/50 rounded-full shadow-lg dark:shadow-white/10",
+              "duration-300 hover:scale-110 active:scale-100 disabled:hover:scale-100",
+            )}
+            onClick={handleDelete}
+            disabled={token.listed_status === "listed"}
+          >
+            <XCircleIcon className="w-8 h-8" />
+          </button>
+        </div>
+      </Tippy>
+
       <CloudinaryImage
         className={clsx("flex-shrink-0 overflow-hidden object-cover",
           "w-full h-[250px] rounded-t-lg p-1",

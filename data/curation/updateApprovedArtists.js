@@ -14,3 +14,16 @@ async function updateApprovedArtists({ artistIds, name, apiKey }) {
 }
 
 export default updateApprovedArtists;
+
+
+export async function addSelfApprovedArtists({ apiKey, viewerPasscode }) {
+  try {
+    let res = await apiClient.post("/curation/update_self_as_approved_artists", {
+      api_key: apiKey,
+      viewer_passcode: viewerPasscode
+    });
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}

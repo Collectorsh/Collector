@@ -17,6 +17,9 @@ import clsx from "clsx";
 import { useTokens } from "../data/nft/getTokens";
 import { parseCloudImageId } from "../utils/cloudinary/idParsing";
 import { curationListPlaceholderId } from "../components/curatorProfile/curationList";
+import { addSelfApprovedArtists } from "../data/curation/updateApprovedArtists";
+import "tippy.js/dist/tippy.css";
+
 
 const Submissions = ({ }) => {
   const [user] = useContext(UserContext);
@@ -36,6 +39,8 @@ const Submissions = ({ }) => {
 
   const [loadingCurations, setLoadingCurations] = useState(true)
 
+  const viewerPasscodeQuery = router.query?.passcode;
+
   const submissionMints = useMemo(() => { 
     const mints = new Set()
     approvedCurations?.forEach(curation => { 
@@ -47,9 +52,17 @@ const Submissions = ({ }) => {
   }, [approvedCurations])
 
   useEffect(() => {
+    if (!user) {
+      setApprovedCurations([])
+      setLoadingCurations(true)
+      setEditSubmissionsOpen(false)
+      setEditListingsOpen(false)
+      setCurationToEdit(null)
+    }
+  }, [user])
+
+  useEffect(() => {
     if(!user) return
-    if (!user.curator_approved) router.replace("/");
-      
     (async () => {
       const curations = await getCurationsByApprovedArtist(user.id)
       setApprovedCurations(curations || [])
@@ -57,11 +70,23 @@ const Submissions = ({ }) => {
     })()
   }, [user, router])
 
-  // const handleCloseModal = () => { 
-  //   setEditSubmissionsOpen(false)
-  //   setEditListingsOpen(false)
-  //   setCurationToEdit(null)
-  // }
+  useEffect(() => {
+    if (!user || !viewerPasscodeQuery) return;
+
+    (async () => {
+      const res = await addSelfApprovedArtists({
+        apiKey: user.api_key,
+        viewerPasscode: viewerPasscodeQuery
+      })
+
+      if (res?.status !== "success") {
+        error("Failed to approve new curation")
+      } else if(res.curation) {
+        success(`Successfully approved for ${ res.curation.name }`)
+        setApprovedCurations(prev => [res.curation, ...prev])
+      }
+    })();
+  }, [user, viewerPasscodeQuery])
 
   const handleOpenSubmitModal = (curation) => { 
     setCurationToEdit(curation)
@@ -114,16 +139,94 @@ const Submissions = ({ }) => {
     }))
   }
 
+  const handleRemoveListing = (token, curation) => {
+    setApprovedCurations(prev => prev.map(g => { 
+      if (g.id !== curation.id) return g
+      const newCuration = { ...g }
+      const oldSubmitted = newCuration.submitted_token_listings || []
+      const newSubmittedTokens = oldSubmitted.filter(t => {
+        return token.mint !== t.mint
+      })
+      newCuration.submitted_token_listings = newSubmittedTokens
+
+      setCurationToEdit(newCuration)
+      return newCuration
+    }))
+  }
+
+  const curationElements = useMemo(() => {
+    return approvedCurations.map(curation => {
+      const { banner_image, name, id, curator, is_published } = curation
+
+      const bannerImgId = parseCloudImageId(banner_image)
+
+      const artistSubmissions = curation.submitted_token_listings.filter(listing => {
+        const creatorsAddresses = listing.creators?.map((creator) => creator.address)
+        const userKeys = user?.public_keys || []
+        const isArtist = userKeys.includes(listing.artist_address) || creatorsAddresses?.some(address => userKeys.includes(address))
+        const isMasterEdition = listing.is_master_edition
+        const notSold = isMasterEdition
+          ? listing.listed_status !== "master-edition-closed"
+          : listing.listed_status !== "sold"
+        return isArtist && notSold
+      })
+
+      const passcodeQuery = curation.viewer_passcode ? `?passcode=${ curation.viewer_passcode }` : ""
+      return (
+        <div key={id} className="relative">
+          <Link href={`/curations/${ name }${ passcodeQuery }`} >
+            <a className={clsx(
+
+              "relative shadow-lg shadow-black/25 dark:shadow-neutral-500/25 rounded-xl overflow-hidden hover:-translate-y-3 duration-300 block"
+            )}>
+              <CloudinaryImage
+                className="w-full h-[300px] object-cover"
+                id={bannerImgId || curationListPlaceholderId}
+                noLazyLoad
+                width={1400}
+              />
+            </a>
+          </Link>
+          <div className="my-2 px-3 gap-3 flex justify-between flex-wrap">
+            <div>
+              <h3 className="font-bold collector text-2xl">{name.replaceAll("_", " ")}</h3>
+              <p>Curated by {curator.username}</p>
+            </div>
+            <div className="flex gap-2 items-center flex-wrap">
+              {artistSubmissions.length
+                ? (
+                  <MainButton
+                    noPadding
+                    className="px-3 py-1 flex gap-1 items-center"
+                    disabled={!artistSubmissions.length}
+                    onClick={() => handleOpenListingsModal(curation)}
+                  >
+                    Edit Listings
+                  </MainButton>
+                )
+                : null}
+              <MainButton
+                solid noPadding className="px-3 py-1"
+                onClick={() => handleOpenSubmitModal(curation)}
+              >
+                Submit Art
+              </MainButton>
+            </div>
+          </div>
+        </div>
+      )
+    })
+  }, [approvedCurations, user?.public_keys])
+
   return (
     <>
-      <CheckLoggedIn />
       <MainNavigation />
       <Toaster />
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Approved Curations</h2>
           <Link href="/create" passHref>
-            <MainButton solid>
+            <MainButton solid disabled={!approvedCurations?.length}>
               Create
             </MainButton>
           </Link>
@@ -131,88 +234,42 @@ const Submissions = ({ }) => {
         
         <hr className="mt-6 mb-12 border-neutral-200 dark:border-neutral-800" />
 
-        {loadingCurations ? <p className="text-center text-lg animate-pulse mt-20">Loading Curations...</p> : null}
-        {!loadingCurations && !approvedCurations.length ? <p className="text-center text-lg mt-20">Sorry, No Curations Found</p> : null}
+        {!user ? <p className="text-center text-lg mt-20">Please connect wallet to continue</p> : null}
+
+        {user && loadingCurations ? <p className="text-center text-lg animate-pulse mt-20">Loading Curations...</p> : null}
+        {user && !loadingCurations && !approvedCurations.length ? <p className="text-center text-lg mt-20">Sorry, No Curations Found</p> : null}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 px-4">
-          {approvedCurations.map(curation => {
-            const { banner_image, name, id, curator, is_published } = curation
-
-            const bannerImgId = parseCloudImageId(banner_image)
-
-            const artistSubmissions = curation.submitted_token_listings.filter(listing => {
-              const creatorsAddresses = listing.creators?.map((creator) => creator.address)
-              const userKeys = user?.public_keys || []
-              const isArtist = userKeys.includes(listing.artist_address) || Boolean(creatorsAddresses?.find(address => userKeys.includes(address)))
-              const isMasterEdition = listing.is_master_edition
-              const notSold = isMasterEdition
-                ? listing.listed_status !== "master-edition-closed"
-                : listing.listed_status !== "sold" 
-              return isArtist && notSold
-            })
-            return (
-              <div key={id} className="relative">
-                <Link href={`/curations/${ name }`} >
-                  <a className={clsx(
-                    !is_published && "pointer-events-none",
-                    "relative shadow-lg shadow-black/25 dark:shadow-neutral-500/25 rounded-xl overflow-hidden hover:-translate-y-3 duration-300 block"
-                  )}>
-                    <CloudinaryImage
-                      className="w-full h-[300px] object-cover"
-                      id={bannerImgId || curationListPlaceholderId}
-                      noLazyLoad
-                      width={1400}
-                    />
-                  </a>
-                </Link>
-                <div className="my-2 px-3 gap-3 flex justify-between flex-wrap">
-                  <div>
-                    <h3 className="font-bold collector text-2xl">{name.replaceAll("_", " ")}</h3>
-                    <p>Curated by {curator.username}</p>
-                  </div>
-                  <div className="flex gap-2 items-center flex-wrap">
-                    {artistSubmissions.length
-                      ? (
-                        <MainButton
-                          noPadding
-                          className="px-3 py-1 flex gap-1 items-center"
-                          disabled={!artistSubmissions.length}
-                          onClick={() => handleOpenListingsModal(curation)}
-                        >
-                          Edit Listings
-                        </MainButton>
-                      )
-                      : null}
-                    <MainButton
-                      solid noPadding className="px-3 py-1"
-                      onClick={() => handleOpenSubmitModal(curation)}
-                    >
-                      Submit Art
-                    </MainButton>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
+          {user
+            ? curationElements
+            : null
+          }
 
         </div>
       </div>
-      <SubmitArtModal
-        isOpen={editSubmissionsOpen}
-        // onClose={handleCloseModal}
-        onClose={() => setEditSubmissionsOpen(false)}
-        onSubmit={handleSubmit}
-        curation={curationToEdit}
-        tokens={userTokens}
-        submissionMints={submissionMints}
-      />
-      <EditListingsModal
-        isOpen={editListingsOpen}
-        // onClose={handleCloseModal}
-        onClose={() => setEditListingsOpen(false)}
-        handleEditListings={handleEditListings}
-        curation={curationToEdit}
-      />
+      {user && user.curator_approved
+        ? (
+          <>
+            <SubmitArtModal
+              isOpen={editSubmissionsOpen}
+              // onClose={handleCloseModal}
+              onClose={() => setEditSubmissionsOpen(false)}
+              onSubmit={handleSubmit}
+              curation={curationToEdit}
+              tokens={userTokens}
+              submissionMints={submissionMints}
+            />
+            <EditListingsModal
+              isOpen={editListingsOpen}
+              // onClose={handleCloseModal}
+              onClose={() => setEditListingsOpen(false)}
+              handleEditListings={handleEditListings}
+              handleRemoveListing={handleRemoveListing}
+              curation={curationToEdit}
+            />
+          </>
+        )
+        : null}
     </>
   )
 }

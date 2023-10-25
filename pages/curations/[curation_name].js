@@ -15,10 +15,10 @@ import PublishConfirmationModal from "../../components/curations/publishConfirma
 import UnpublishConfirmationModal from "../../components/curations/unpublishConfirmationModal";
 import InviteArtistsModal from "../../components/curations/inviteArtistsModal";
 import getCurationByName from "../../data/curation/getCurationByName";
-import getPrivateContent from "../../data/curation/getPrivateContent";
+import getPrivateContent, { getViewerPrivateContent } from "../../data/curation/getPrivateContent";
 import publishContent, { unpublishContent } from "../../data/curation/publishContent";
 import { success, error } from "../../utils/toast";
-import updateApprovedArtists from "../../data/curation/updateApprovedArtists";
+import updateApprovedArtists, { addSelfApprovedArtists } from "../../data/curation/updateApprovedArtists";
 import updateCurationName from "../../data/curation/updateCurationName";
 import useActionCable from "../../hooks/useWebsocket";
 import saveDraftContent from "../../data/curation/saveDraftContent";
@@ -31,6 +31,7 @@ import Head from "next/head";
 import { metaPreviewImage } from "../../config/settings";
 import { baseCloudImageUrl } from "../../utils/cloudinary/baseCldUrl";
 import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/cloudinary/idParsing";
+import AuthorizedViewerBar from "../../components/curations/authorizedViewerBar";
 
 
 const descriptionPlaceholder = "Tell us about this curation."
@@ -57,10 +58,14 @@ function CurationPage({ curation }) {
   const [publishedContent, setPublishedContent] = useState(curation?.published_content);
   const [draftContent, setDraftContent] = useState(null);
   const [privateKeyHash, setPrivateKeyHash] = useState(null);
+  const [viewerPasscode, setViewerPasscode] = useState(null);
+
+  const viewerPasscodeQuery = router.query?.passcode;
 
   const isOwner = Boolean(user && user.api_key && user.public_keys.includes(curation?.curator.public_keys[0]));
+  const isAuthorizedViewer = Boolean(!isOwner && user && viewerPasscodeQuery && draftContent)
  
-  const useDraftContent = isEditingDraft && isOwner;
+  const useDraftContent = isEditingDraft && (isOwner || isAuthorizedViewer);
   const banner = useDraftContent ? draftContent?.banner_image : publishedContent?.banner_image;
 
   const draftDescriptionDelta = draftContent?.description_delta || JSON.stringify({ ops: [{ insert: draftContent?.description || descriptionPlaceholder }] })
@@ -70,8 +75,8 @@ function CurationPage({ curation }) {
   const modules = useDraftContent ? draftContent?.modules : publishedContent?.modules;
 
   const displayPublishedEdit = globalEditOpen && isOwner;
-  const displayDraftEdit = globalEditOpen && useDraftContent;
-  const displayCuration = Boolean(curation?.is_published || isOwner);
+  const displayDraftEdit = globalEditOpen && useDraftContent && isOwner;
+  const displayCuration = Boolean(curation?.is_published || isOwner || isAuthorizedViewer);
 
   const hasChanges = JSON.stringify(draftContent) !== JSON.stringify(publishedContent);
 
@@ -103,21 +108,32 @@ function CurationPage({ curation }) {
   useActionCable(socketId, { received: handleWebsocketMessages })
 
   useEffect(() => {
-    if (isOwner && curation?.name) {
+    if ((isOwner || viewerPasscodeQuery && user?.api_key) && curation?.name) {
       (async () => {
-        const { draft_content, private_key_hash } = await getPrivateContent({
-          name: curation.name,
-          apiKey: user.api_key
-        })
-        setDraftContent(draft_content)
-        setPrivateKeyHash(private_key_hash)
+        if (isOwner) {
+          const { draft_content, private_key_hash, viewer_passcode } = await getPrivateContent({
+            name: curation.name,
+            apiKey: user.api_key,
+          })
+          setDraftContent(draft_content)
+          setPrivateKeyHash(private_key_hash)
+          setViewerPasscode(viewer_passcode)
+        } else {
+          //is authorized viewer
+          const res = await getViewerPrivateContent({
+            name: curation.name,
+            apiKey: user.api_key,
+            viewerPasscode: viewerPasscodeQuery
+          })
+          if (res?.draft_content) setDraftContent(res.draft_content)
+        }
         setGlobalEditOpen(true)
-      })()
+      })();
     }
-  }, [isOwner, curation?.name, user?.api_key])
+  }, [isOwner, curation?.name, user?.api_key, viewerPasscodeQuery])
 
   useEffect(() => {
-    if (!useDraftContent || !publishContent.banner_image) return
+    if (!useDraftContent || !publishContent.banner_image) return;
     //set loaded to false when the banner changes
     if (banner !== publishedContent.banner_image) setBannerLoaded(false);
   }, [banner, publishedContent?.banner_image, useDraftContent])
@@ -167,15 +183,24 @@ function CurationPage({ curation }) {
   }
 
   const handleInviteArtists = async (newArtists) => { 
-    setApprovedArtists(newArtists)
-
     const res = await updateApprovedArtists({
       artistIds: newArtists.map((artist) => artist.id),
       apiKey: user.api_key,
       name: curation.name
     })
 
+    if (res?.status !== "success") error("Artist invitation failed");
+    else setApprovedArtists(newArtists)
+  }
+
+  const handleInviteSelf = async () => { 
+    const res = await addSelfApprovedArtists({
+      apiKey: user.api_key,
+      viewerPasscode: viewerPasscodeQuery
+    })
+
     if (res?.status !== "success") error("Artist invitation failed")
+    else setApprovedArtists(prev => [...prev, user])
   }
 
   const handleEditName = async (newName) => {
@@ -393,6 +418,21 @@ function CurationPage({ curation }) {
           )
           : null
         }
+        {isAuthorizedViewer
+          ? (
+            <AuthorizedViewerBar
+              isOpen={globalEditOpen}
+              setOpen={setGlobalEditOpen}
+            
+              handleInviteSelf={handleInviteSelf}
+              isEditingDraft={isEditingDraft}
+              setIsEditingDraft={setIsEditingDraft}
+              isPublished={isPublished}
+              isApproved={approvedArtists.some(a => a.id === user.id)}
+            />
+          )
+          : null
+        }
       </div>
       {isOwner
         ? (
@@ -435,6 +475,8 @@ function CurationPage({ curation }) {
               onClose={() => setInviteArtistsModalOpen(false)}
               onInvite={handleInviteArtists}
               approvedArtists={approvedArtists}
+              viewerPasscode={viewerPasscode}
+              name={curation.name}
             />
           </>
         )

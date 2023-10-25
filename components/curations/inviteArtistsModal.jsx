@@ -1,15 +1,27 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import MainButton from "../MainButton"
 import Modal from "../Modal"
-import { XIcon } from "@heroicons/react/solid"
+import { InformationCircleIcon, XIcon } from "@heroicons/react/solid"
 import { RoundedCurve } from "./roundedCurveSVG"
 import SearchBar from "../SearchBar"
 import getUserFromUsername from "../../data/user/getUserFromUsername"
+import CopyButton from "../CopyToClipboard"
+import Tippy from "@tippyjs/react"
+import generateViewerPasscode from "../../data/curation/generateViewerPasscode"
+import UserContext from "../../contexts/user"
+import { host } from "../../config/settings"
 
-const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
+const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewerPasscode, name }) => {
+  const [user] = useContext(UserContext);
+
   const [newApproveArtists, setNewApprovedArtists] = useState(approvedArtists || [])
   const [search, setSearch] = useState('')
   const [error, setError] = useState('')
+  const [passcode, setPasscode] = useState(viewerPasscode)
+
+  useEffect(() => {
+    if (!passcode) setPasscode(viewerPasscode)
+  }, [viewerPasscode, passcode])
   
   const handleInvite = () => {
     onInvite(newApproveArtists)
@@ -30,7 +42,6 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
   const handleSearch = async () => {
     if (addDisabled) return
     setError('')
-    let artist;
     try {
       const artist = await getUserFromUsername(search).then(res => res?.user)
       if (!artist?.username) {
@@ -45,12 +56,52 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
     }
   }
 
+  const handleGeneratePasscode = async () => {
+    const passcode = await generateViewerPasscode({ apiKey: user.api_key, name });
+    if (passcode) setPasscode(passcode)
+  }
+
+  const getUrl = () => {
+    if (typeof window !== "undefined") {
+      return `${ host }/submissions/?passcode=${ passcode }`;
+    } else return ""
+  }
+
+  const info = (
+    <Tippy
+      content="Share this link to invite artists to your curation."
+      className="shadow-lg"
+    >
+      <InformationCircleIcon className="w-4" />
+    </Tippy>
+  )
+
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Invite Artists" widthClass="max-w-screen-md">
 
-      <p className="text-center mt-6">Artists must have a Collector account</p>
+      <div className="flex flex-col items-center mt-4">
+        <p className="text-lg flex gap-1">
+          Viewer Passcode
+          {info}
+        </p>
+        {passcode && (
+          <div className="flex items-center gap-2">
+            <p className="text-sm">{getUrl()}</p>
+            <CopyButton textToCopy={getUrl()} />
+          </div>
+        )}
+        <MainButton
+          onClick={handleGeneratePasscode}
+          className="mt-1 px-3"
+          noPadding
+        >
+          Generate New
+        </MainButton>
+      </div>
+
+      <hr className="my-5 border-neutral-200 dark:border-neutral-700" />
  
-      <div className="flex items-center justify-center gap-2 mt-3">
+      <div className="flex items-center justify-center gap-2">
         <SearchBar
           search={search}
           setSearch={setSearch}
@@ -68,8 +119,9 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose }) => {
         </MainButton>
       </div>
 
-      <p className="text-center text-sm mb-4 italic text-red-500 h-4 ">{error}</p>
+      <p className="text-center text-sm italic text-red-500 h-4 ">{error}</p>
 
+      <p className="text-center mb-4">Artists must have a Collector account</p>
 
       <div className="relative mx-auto w-fit">
         <p className="bg-neutral-200 dark:bg-neutral-700 h-6 font-bold">Approved Artists</p>

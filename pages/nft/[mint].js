@@ -150,6 +150,7 @@ export default function DetailPage({token, curations}) {
             )}
             token={token}
             useUploadFallback
+            useMetadataFallback
             onLoad={() => setImgLoaded(true)}
           />
         </div>

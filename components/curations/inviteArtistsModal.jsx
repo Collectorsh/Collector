@@ -69,7 +69,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
 
   const info = (
     <Tippy
-      content="Share this link to invite artists to your curation."
+      content="When an artist uses this link they will be automatically added to your curation"
       className="shadow-lg"
     >
       <InformationCircleIcon className="w-4" />
@@ -81,7 +81,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
 
       <div className="flex flex-col items-center mt-4">
         <p className="text-lg flex gap-1">
-          Viewer Passcode
+          Invite Link
           {info}
         </p>
         {passcode && (

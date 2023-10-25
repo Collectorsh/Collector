@@ -24,12 +24,13 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
   const wallet = useWallet()
 
   const { handleBuyNowList, handleDelist, auctionHouse } = useCurationAuctionHouse(curation)
-
+  
   const submissions = curation?.submitted_token_listings.filter(listing => {
-    const owned = user?.public_keys.includes(listing.owner_address)
+    const owned = listing.creators.some(creator => user?.public_keys.includes(creator.address));
     const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
     return owned && !closedMaster
   }) || []
+
 
   const onList = async (token, listingPrice) => {
     let newToken

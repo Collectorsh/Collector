@@ -18,6 +18,7 @@ import MintModal from "../components/create/mintModal";
 import clsx from "clsx";
 import NftTypeInput from "../components/create/nftType";
 import { Oval } from "react-loader-spinner";
+import CollectionDropDown from "../components/create/collectionDropDown";
 
 
 //TODO
@@ -53,6 +54,8 @@ export default function MintPage() {
   const [creators, setCreators] = useState([]);
   const [maxSupply, setMaxSupply] = useState(0);
 
+  const [collection, setCollection] = useState(null)
+
   const [mintModalOpen, setMintModalOpen] = useState(false)
   const [reseting, setReseting] = useState(false)
 
@@ -60,6 +63,7 @@ export default function MintPage() {
     name: REQUIRED,
     description: REQUIRED,
     royalties: REQUIRED,
+    collection: REQUIRED,
     [MEDIA_KEYS.MAIN]: REQUIRED,
   })
 
@@ -130,6 +134,7 @@ export default function MintPage() {
       name: REQUIRED,
       description: REQUIRED,
       royalties: REQUIRED,
+      collection: REQUIRED,
       [MEDIA_KEYS.MAIN]: REQUIRED,
     })
     
@@ -223,6 +228,9 @@ export default function MintPage() {
         <div
           className="mt-5 px-4 mx-auto flex flex-col gap-1"
         >
+          <div className="flex justify-center lg:w-[calc(50%-8px)] mx-auto">
+            <CollectionDropDown selectedCollection={collection} setCollection={setCollection} setError={setError} />
+          </div>
           <div className="grid lg:grid-cols-2 gap-4">
             <NameInput name={name} setName={setName} setError={setError} />
             <NftTypeInput maxSupply={maxSupply} setMaxSupply={setMaxSupply} setError={setError} />

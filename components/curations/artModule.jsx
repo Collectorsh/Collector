@@ -246,7 +246,6 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
           {!isVisible ? null : (<>
             {vrUrl ? (
               <ModelViewer
-                id={`model-viewer-${ token.mint }`}
                 vrUrl={vrUrl}
                 style={{
                   height,

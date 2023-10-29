@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { CATEGORIES } from "../components/FileDrop";
-import useBreakpoints from "./useBreakpoints";
 
 export const altFileAspectRatio = 1;
 
@@ -9,17 +8,13 @@ const useNftFiles = (token) => {
   const [htmlUrl, setHtmlUrl] = useState();
   const [vrUrl, setVrUrl] = useState();
 
-  const breakpoint = useBreakpoints()//temporarily disable VR on mobile
-  const isMobile = ["", "sm"].includes(breakpoint)
-
   useEffect(() => {
-    if (isMobile) setVrUrl(null)//temporarily disable VR on mobile
     if (!token) return;
     const { videoUrl, htmlUrl, vrUrl } = getAltFileTypes(token)
     setVideoUrl(videoUrl)
     setHtmlUrl(htmlUrl)
-    if (!isMobile) setVrUrl(vrUrl) //temporarily disable VR on mobile
-  }, [token, isMobile]);
+    setVrUrl(vrUrl) 
+  }, [token ]);
 
   return {
     videoUrl,
@@ -51,8 +46,6 @@ export const getAltFileTypes = (token) => {
         switch (extension) {
           case "mp4":
             videoUrl = token.animation_url;
-            // htmlUrl = "https://arweave.net/bBUCfQQxhAGRXoiLeybWg4Zm6A5LdzzbO1004cRX5u0?ext=html";
-            // vrUrl = "https://arweave.net/xqDT37dkwDAQolSWOs8F6DOKA3-SaZWgVSI-i-2Ujqs?ext=glb"
             break;
           case "html":
             htmlUrl = token.animation_url;

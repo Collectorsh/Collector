@@ -9,6 +9,7 @@ import { getMintEditionTX } from "../utils/curations/mintEdition";
 import recordSale from "../data/salesHistory/recordSale";
 import { error, success } from "../utils/toast";
 import { shootConfetti } from "../utils/confetti";
+import retryFetches from "../utils/curations/retryFetches";
 
 const DEBUG = false
 
@@ -23,9 +24,10 @@ const useCurationAuctionHouse = (curation) => {
 
   const auctionHouseAddress = curation?.auction_house_address
 
-  const auctionHouseSDK = new Metaplex(connection)
+  const metaplex = new Metaplex(connection)
     .use(walletAdapterIdentity(wallet))
-    .auctionHouse()
+    
+  const auctionHouseSDK = metaplex.auctionHouse()
 
   //set auction house
   useEffect(() => {
@@ -51,15 +53,34 @@ const useCurationAuctionHouse = (curation) => {
 
   const handleBuyNowList = async (mint, price) => { 
     try {
-      const listing = await auctionHouseSDK
-        .list({
-          auctionHouse,         // A model of the Auction House related to this listing
-          seller: wallet,       // Creator of a listing
-          mintAccount: new PublicKey(mint),    // The mint account to create a listing for, used to find the metadata
-          price: sol(price),    // The listing price (in SOL)
-          // tokens: 1          // The number of tokens to list, for an NFT listing it must be 1 token
-        });
-      return listing.receipt.toString()
+
+      const listingTxBuilder = auctionHouseSDK.builders().list({
+        auctionHouse,         // A model of the Auction House related to this listing
+        seller: wallet,       // Creator of a listing
+        mintAccount: new PublicKey(mint),    // The mint account to create a listing for, used to find the metadata
+        price: sol(price),    // The listing price (in SOL)
+        // tokens: 1          // The number of tokens to list, for an NFT listing it must be 1 token
+      })
+
+      const { receipt } = listingTxBuilder.getContext();
+
+      await metaplex.rpc().sendAndConfirmTransaction(
+        listingTxBuilder,
+        { commitment: "finalized" }
+      )
+
+      const listing = await retryFetches(async () => {
+        const listing = await auctionHouseSDK.findListingByReceipt({
+          auctionHouse,
+          receiptAddress: new PublicKey(receipt),
+          loadJsonMetadata: false
+        })
+        return listing.receiptAddress.toString();
+      })
+
+      if(!listing) throw new Error("Onchain listing not confirmed")      
+
+      return listing
     } catch (error) {
       console.log(error)
     }

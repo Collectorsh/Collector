@@ -39,7 +39,12 @@ async function getTokens(publicKeys, options) {
           "params": {
             "ownerAddress": publicKey,
             "page": page,
-            "limit": maxBatch
+            "limit": maxBatch,
+            // "displayOptions": {
+            //   "showUnverifiedCollections": true,
+            //   "showCollectionMetadata": true
+
+            // },
           }
         }).then((res) => {
           return res.data.result;
@@ -65,14 +70,16 @@ async function getTokens(publicKeys, options) {
 
   const creatorFilteredTokens = !justCreator
   ? baseTokens
-  : baseTokens.filter((token) => { 
+    : baseTokens.filter((token) => { 
+      
+      // if (token.id === "E12dj4cncTHpf4nKynKRkJfhFvqGHDKCU5jLb2MbkH9w") console.log("🚀 ~ file: create.js:77 ~ MintPage ~ tokens:", token)
+
     const creatorsAddresses = token.creators.map((creator) => creator.address)
     return Boolean(creatorsAddresses.find(address => publicKeys.includes(address)))
   })
 
   const mungedTokens = creatorFilteredTokens.map((token) => { 
     const { content, creators, ownership, id } = token
-
     const files = content?.files?.map((file) => ({
       ...file,
       type: file.mime

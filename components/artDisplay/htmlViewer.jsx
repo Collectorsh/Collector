@@ -15,7 +15,6 @@ const HtmlViewer = ({
   const [loading, setLoading] = useState(true)
   const htmlRef = useRef(null);
 
-  usePreventTouchNavigation(htmlRef)
   const { isVisible } = useElementObserver(htmlRef, "10px")  
   
   //Lazing load the iframe + reload when size changes

@@ -1,19 +1,18 @@
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/solid'
 import clsx from 'clsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import MainButton from '../MainButton'
+import CreateCollectionModal from './createCollectionModal'
+import { Oval } from 'react-loader-spinner'
 
-const CollectionDropDown = ({ selectedCollection, setCollection, setError }) => {
+const CollectionDropDown = ({ selectedCollection, setCollection, setError, existingCollections }) => {
   const [collectionModalOpen, setCollectionModalOpen] = useState(false)
-  const collections = [
-    { name: "test", mint: "12345", image: "https://arweave.net/QBm89KHKmJGw4fk35UeTiCnsUrBQy6emNe5FlNiS5ic?ext=png" },
-    { name: "test2", mint: "123456", image: "https://arweave.net/QBm89KHKmJGw4fk35UeTiCnsUrBQy6emNe5FlNiS5ic?ext=png" },
-    { name: "test3", mint: "1234567", image: "https://arweave.net/QBm89KHKmJGw4fk35UeTiCnsUrBQy6emNe5FlNiS5ic?ext=png" },
-    { name: "test", mint: "12345", image: "https://arweave.net/QBm89KHKmJGw4fk35UeTiCnsUrBQy6emNe5FlNiS5ic?ext=png" },
-    { name: "test2", mint: "123456", image: "https://arweave.net/QBm89KHKmJGw4fk35UeTiCnsUrBQy6emNe5FlNiS5ic?ext=png" },
-    { name: "test3", mint: "1234567", image: "https://arweave.net/QBm89KHKmJGw4fk35UeTiCnsUrBQy6emNe5FlNiS5ic?ext=png" },
-  ]
+  const [collections, setCollections] = useState(undefined)
+
+  useEffect(() => {
+    if (existingCollections) setCollections(existingCollections)
+  }, [existingCollections])
 
   const openCollectionModal = () => setCollectionModalOpen(true)
 
@@ -24,6 +23,7 @@ const CollectionDropDown = ({ selectedCollection, setCollection, setError }) => 
 
   return (
     <div className="relative mb-4 w-full">
+      <CreateCollectionModal isOpen={collectionModalOpen} onClose={() => setCollectionModalOpen(false)} setCollections={setCollections} />
       <p className="font-bold text-lg mb-1 ml-3">Collection*</p>
       <Listbox value={selectedCollection} onChange={handleChange}>
         <Listbox.Button className="text-current border-4 
@@ -54,10 +54,10 @@ const CollectionDropDown = ({ selectedCollection, setCollection, setError }) => 
         >
           <Listbox.Options className="absolute top-0 left-0 w-full bg-white dark:bg-black p-2 rounded-lg shadow z-30">
             <div className='h-fit max-h-[10rem] overflow-auto'>
-              {collections.map((collection) => (
+              {collections
+                ? collections?.map((collection) => (
                 <Listbox.Option key={collection.mint} value={collection}>
-                 
-                    <li
+                    <div
                       className={clsx(
                         "p-2 flex gap-1 items-center justify-between w-full cursor-pointer rounded",
                         'hover:bg-neutral-500/25' 
@@ -68,13 +68,16 @@ const CollectionDropDown = ({ selectedCollection, setCollection, setError }) => 
                         <img src={collection.image} alt="" className="w-10 h-10" />
                         {collection.name}
                       </div>
-                  
                       {selectedCollection?.mint === collection.mint ? <CheckIcon className="w-6 h-6 float-right" /> : null}
-                      
-                    </li>
-             
+                    </div>
                 </Listbox.Option>
-              ))}
+                ))
+                : (
+                  <div className="flex w-full justify-center">
+                    <Oval color="#FFF" secondaryColor="#666" height={24} width={24} />
+                  </div>
+                )
+            }
             </div>
             <MainButton
               noPadding

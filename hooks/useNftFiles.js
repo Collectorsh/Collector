@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { CATEGORIES } from "../components/FileDrop";
+import useBreakpoints from "./useBreakpoints";
 
 export const altFileAspectRatio = 1;
 
@@ -8,13 +9,17 @@ const useNftFiles = (token) => {
   const [htmlUrl, setHtmlUrl] = useState();
   const [vrUrl, setVrUrl] = useState();
 
+  const breakpoint = useBreakpoints()//temporarily disable VR on mobile
+  const isMobile = ["", "sm"].includes(breakpoint)
+
   useEffect(() => {
+    if (isMobile) setVrUrl(null)//temporarily disable VR on mobile
     if (!token) return;
     const { videoUrl, htmlUrl, vrUrl } = getAltFileTypes(token)
     setVideoUrl(videoUrl)
     setHtmlUrl(htmlUrl)
-    setVrUrl(vrUrl)
-  }, [token]);
+    if (!isMobile) setVrUrl(vrUrl) //temporarily disable VR on mobile
+  }, [token, isMobile]);
 
   return {
     videoUrl,

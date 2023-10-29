@@ -1,7 +1,10 @@
 import clsx from "clsx"
 import { REQUIRED } from "../../pages/create"
 
-const NameInput = ({ name, setName, setError }) => {
+const NameInput = ({
+  name, setName, setError,
+  placeholder = "What is the title of your artwork."
+}) => {
   const limit = 32
 
   const handleChange = (e) => {
@@ -25,7 +28,7 @@ const NameInput = ({ name, setName, setError }) => {
         "
         onChange={handleChange}
         value={name}
-        placeholder="What is the title of your artwork."
+        placeholder={placeholder}
       />
       <p className={clsx(
         "float-right text-sm mr-4",

@@ -33,11 +33,11 @@ const NftTypeInput = ({ maxSupply, setMaxSupply, setError }) => {
 
   return (
 
-      <div className={clsx("grid", isEditions ? "grid-cols-2 gap-2" : "")}>
-        <div className="relative">
+    <div className={clsx("grid" , isEditions ? "grid-cols-2 gap-2" : "")}>
+        <div>
           <p className="font-bold text-lg mb-1 ml-4">Type</p>
           <Listbox value={nftType} onChange={handleChange}>
-            <Listbox.Button className="text-current border-4 
+            <Listbox.Button className="text-current border-4
                 rounded-xl border-neutral-200 dark:border-neutral-700 
                 bg-neutral-100 dark:bg-neutral-900
                 w-full h-fit p-3 flex items-center
@@ -53,7 +53,7 @@ const NftTypeInput = ({ maxSupply, setMaxSupply, setError }) => {
               leaveFrom="transform scale-100 opacity-100"
               leaveTo="transform scale-95 opacity-0"
             >
-              <Listbox.Options className="absolute top-0 left-0 w-full bg-white dark:bg-black p-2 rounded-lg shadow">
+              <Listbox.Options className="absolute top-0 left-0 w-full bg-white dark:bg-black p-2 rounded-lg shadow ">
                 {types.map((type) => (
                   <Listbox.Option key={type.type} value={type}>
                     {({ active, selected }) => (

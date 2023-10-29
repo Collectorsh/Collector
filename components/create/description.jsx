@@ -1,7 +1,11 @@
 import clsx from "clsx"
 import { REQUIRED } from "../../pages/create"
+import { placeholder } from "@cloudinary/react"
 
-const DescriptionInput = ({ description, setDescription, setError }) => { 
+const DescriptionInput = ({
+  description, setDescription, setError,
+  placeholder = "Describe your artwork."
+}) => { 
   const limit = 1000
 
   const handleChange = (e) => { 
@@ -17,14 +21,14 @@ const DescriptionInput = ({ description, setDescription, setError }) => {
 
   return (
     <div>
-      <p className="font-bold text-lg mb-1 ml-4">Description*</p>
+      <p className="font-bold text-lg mb-1 ml-4">Description</p>
       <textarea
         className="border-4 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
           w-full h-32 p-3
         "
         onChange={handleChange}
         value={description}
-        placeholder="Describe your artwork."
+        placeholder={placeholder}
       />
       <p className={clsx(
         "float-right text-sm mr-4",

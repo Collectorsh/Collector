@@ -18,17 +18,26 @@ import MintModal from "../components/create/mintModal";
 import clsx from "clsx";
 import NftTypeInput from "../components/create/nftType";
 import { Oval } from "react-loader-spinner";
+import CollectionDropDown from "../components/create/collectionDropDown";
+import { connection } from "../config/settings";
+import { PublicKey } from "@solana/web3.js";
+import { useTokens } from "../data/nft/getTokens";
+import { Token } from "@solana/spl-token";
+import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
+import { Metaplex } from "@metaplex-foundation/js";
+import axios from "axios";
 
 
 //TODO
+//extras pull down menu
 // Attributes: 
 // external_url: 
 // isMutable
-// Collection
+
 
 //NFT standard reference - https://docs.metaplex.com/programs/token-metadata/changelog/v1.0
 
-const maxUploadSize = 123 //MB
+export const maxUploadSize = 123 //MB
 
 export const REQUIRED = "required"
 
@@ -39,10 +48,53 @@ const MEDIA_KEYS = {
   THUMB: "thumbnail image",
 }
 
+const initError = {
+  name: REQUIRED,
+  royalties: REQUIRED,
+  // collection: REQUIRED,
+  [MEDIA_KEYS.MAIN]: REQUIRED,
+}
+
+async function getCollectionNFTs(userPublicKey) {
+  try {
+    const metaplex = Metaplex.make(connection);
+    const nfts = await metaplex.nfts().findAllByOwner({ owner: userPublicKey })
+      
+    const collections = nfts.filter((nft) => nft.collectionDetails)
+      
+    return await Promise.all(collections
+      .map(async (nft) => {
+        let image = undefined;
+        try {
+          image = await axios(nft.uri).then(res => res.data.image)
+        } catch (e) {
+          console.log("failed to load collection image", e);
+        }
+  
+        return {
+          mint: nft.address.toString(),
+          name: nft.name,
+          image
+        }
+      }))
+  } catch (e) {
+    console.log("failed to load collection nfts", e);
+    return []
+  }
+}
+
 export default function MintPage() {
   const [user] = useContext(UserContext);
   const router = useRouter()
   const wallet = useWallet();
+
+  // const tokens = useTokens(user?.public_keys, {
+  //   useArtistDetails: false,
+  //   justVisible: false,
+  //   justCreator: true,
+  //   useTokenMetadata: false
+  // });
+  // console.log("🚀 ~ file: create.js:77 ~ MintPage ~ tokens:", tokens?.find(token => token.mint === "E12dj4cncTHpf4nKynKRkJfhFvqGHDKCU5jLb2MbkH9w"))
 
   const [altMediaFile, setAltMediaFile] = useState(null)
   const [imageFile, setImageFile] = useState(null)
@@ -53,15 +105,13 @@ export default function MintPage() {
   const [creators, setCreators] = useState([]);
   const [maxSupply, setMaxSupply] = useState(0);
 
+  const [existingCollections, setExistingCollections] = useState()
+  const [collection, setCollection] = useState(null)
+
   const [mintModalOpen, setMintModalOpen] = useState(false)
   const [reseting, setReseting] = useState(false)
 
-  const [error, setError] = useState({
-    name: REQUIRED,
-    description: REQUIRED,
-    royalties: REQUIRED,
-    [MEDIA_KEYS.MAIN]: REQUIRED,
-  })
+  const [error, setError] = useState(initError)
 
   const usingAltMedia = category !== CATEGORIES.IMAGE
   const isError = Object.values(error).some(v => v)
@@ -89,6 +139,15 @@ export default function MintPage() {
       share: 100,
     }])
   }, [wallet, creators])
+
+  useEffect(() => {
+    if (!wallet.publicKey) return
+
+    (async () => {
+      const nfts = await getCollectionNFTs(wallet.publicKey)
+      setExistingCollections(nfts)
+    })();
+  }, [wallet.publicKey])
 
   const onMainDrop = (file) => {
     let fileCategory = CATEGORIES.IMAGE
@@ -126,12 +185,7 @@ export default function MintPage() {
     setCreators([])
     setMaxSupply(0)
 
-    setError({
-      name: REQUIRED,
-      description: REQUIRED,
-      royalties: REQUIRED,
-      [MEDIA_KEYS.MAIN]: REQUIRED,
-    })
+    setError(initError)
     
     //wait till lifecycle completes so it triggers a new FileDrop
     setTimeout(() => setReseting(false), 500)
@@ -159,6 +213,8 @@ export default function MintPage() {
           description,
           royalties,
           maxSupply,
+          collection,
+          // is_mutable,
           // attributes,
           // external_url
         }}
@@ -223,6 +279,9 @@ export default function MintPage() {
         <div
           className="mt-5 px-4 mx-auto flex flex-col gap-1"
         >
+          {/* <div className="flex justify-center w-full lg:w-[calc(50%-8px)] mx-auto">
+            <CollectionDropDown selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError} />
+          </div> */}
           <div className="grid lg:grid-cols-2 gap-4">
             <NameInput name={name} setName={setName} setError={setError} />
             <NftTypeInput maxSupply={maxSupply} setMaxSupply={setMaxSupply} setError={setError} />
@@ -234,7 +293,11 @@ export default function MintPage() {
             <RoyaltiesInput royalties={royalties} setRoyalties={setRoyalties} setError={setError} />
             <CreatorsInput creators={creators} setCreators={setCreators} setError={setError} />
           </div>  
-          
+
+          {/* <div className="text-center">
+            EXTRA MENU DROP DOWN PLACEHOLDER (attributes, external url, isMutable)
+          </div>
+           */}
           <Tippy 
             disabled={!isError || !requiredError}
             content={<p className="capitalize">{requiredError?.[0]} is {requiredError?.[1]}</p>}

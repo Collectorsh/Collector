@@ -30,7 +30,7 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
   const [editArtOpen, setEditArtOpen] = useState(false)
 
   const wrapperRef = useRef(null)
-  const { isVisible } = useElementObserver(wrapperRef, "400px")
+  // const { isVisible } = useElementObserver(wrapperRef, "400px")
 
   const [wrapperWidth, setWrapperWidth] = useState(0)
   const [maxHeight, setMaxHeight] = useState(0)
@@ -129,7 +129,9 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
   return (
     <div
       ref={wrapperRef}
-      className={clsx("relative group w-full group/artRow min-h-[4rem] duration-300", isVisible ? "opacity-100" : "opacity-0")}
+      className={clsx("relative group w-full group/artRow min-h-[4rem] duration-300",
+        // isVisible ? "opacity-100" : "opacity-0"
+      )}
     >
       <EditWrapper
         isOwner={isOwner}
@@ -180,6 +182,9 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
   const [user] = useContext(UserContext);
   const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
+  const itemRef = useRef(null)
+  const { isVisible } = useElementObserver(itemRef, "400px")
+
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
   const [mediaType, setMediaType] = useState(CATEGORIES.IMAGE)
@@ -222,6 +227,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
   
   return (
     <div
+      ref={itemRef}
       className={clsx("relative duration-300 w-fit mx-auto",)}
     >
       <ToggleLink href={`/nft/${ token.mint }`} disabled={disableLink}>
@@ -237,55 +243,57 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
             width,
           }}
         >
+          {!isVisible ? null : (<>
+            {vrUrl ? (
+              <ModelViewer
+                id={`model-viewer-${ token.mint }`}
+                vrUrl={vrUrl}
+                style={{
+                  height,
+                  width,
+                }}
+                loading="lazy"
+              />
+            ) : null}
 
-          {vrUrl ? (
-            <ModelViewer
-              vrUrl={vrUrl}
-              style={{
-                height,
-                width,
-              }}
-              loading="lazy"
+            {htmlUrl ? (
+              <HtmlViewer
+                htmlUrl={htmlUrl}
+                style={{
+                  height,
+                  width,
+                }}
+                useLazyLoading
+              />
+            ): null}
+
+            {videoUrl ? (
+              <VideoPlayer
+                id={`video-player-${ token.mint }`}
+                videoUrl={videoUrl}
+                videoLoaded={videoLoaded}
+                setVideoLoaded={setVideoLoaded}
+                controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
+                wrapperClass='w-full h-full rounded-lg group/controls'
+              />
+            ) : null}
+
+            <CloudinaryImage
+              useMetadataFallback
+              token={token}
+              className={clsx(
+                "object-cover duration-300",
+                "w-full h-full",
+                videoUrl && "absolute inset-0",
+                videoLoaded && "hidden",
+                // htmlUrl && "invisible" //re-add if not using lazy loading for html
+                // vrUrl && "invisible"
+                vrUrl && "absolute inset-0"
+              )}
+              width={cacheWidth}
+              noLazyLoad
             />
-          ) : null}
-
-          {htmlUrl ? (
-            <HtmlViewer
-              htmlUrl={htmlUrl}
-              style={{
-                height,
-                width,
-              }}
-              useLazyLoading
-            />
-          ): null}
-
-          {videoUrl ? (
-            <VideoPlayer
-              id={`video-player-${ token.mint }`}
-              videoUrl={videoUrl}
-              videoLoaded={videoLoaded}
-              setVideoLoaded={setVideoLoaded}
-              controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
-              wrapperClass='w-full h-full rounded-lg group/controls'
-            />
-          ) : null}
-
-          <CloudinaryImage
-            useMetadataFallback
-            token={token}
-            className={clsx(
-              "object-cover duration-300",
-              "w-full h-full",
-              videoUrl && "absolute inset-0",
-              videoLoaded && "hidden",
-              // htmlUrl && "invisible" //re-add if not using lazy loading for html
-              vrUrl && "invisible"
-            )}
-            width={cacheWidth}
-            noLazyLoad
-          />
-
+          </>)})
         </a>
       </ToggleLink>
       <div

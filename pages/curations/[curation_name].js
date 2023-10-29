@@ -14,7 +14,7 @@ import GlobalEditBar from "../../components/curations/globalEditBar";;
 import PublishConfirmationModal from "../../components/curations/publishConfirmationModal";
 import UnpublishConfirmationModal from "../../components/curations/unpublishConfirmationModal";
 import InviteArtistsModal from "../../components/curations/inviteArtistsModal";
-import getCurationByName from "../../data/curation/getCurationByName";
+import getCurationByName, { useCuration } from "../../data/curation/getCurationByName";
 import getPrivateContent, { getViewerPrivateContent } from "../../data/curation/getPrivateContent";
 import publishContent, { unpublishContent } from "../../data/curation/publishContent";
 import { success, error } from "../../utils/toast";
@@ -36,10 +36,14 @@ import AuthorizedViewerBar from "../../components/curations/authorizedViewerBar"
 
 const descriptionPlaceholder = "Tell us about this curation."
 
-function CurationPage({ curation }) {
+function CurationPage() {
   const [user] = useContext(UserContext);
   const router = useRouter();
+  const curation = useCuration(router.query?.curation_name)
+
   const { handleCollect, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
+
+  const [curationLoaded, setCurationLoaded] = useState(false);
 
   const [editNameOpen, setEditNameOpen] = useState(false);
   const [editBannerOpen, setEditBannerOpen] = useState(false);
@@ -105,7 +109,18 @@ function CurationPage({ curation }) {
   }, [])
 
   const socketId = curation?.name ? `listings_${ curation.name }` : null
-  useActionCable(socketId, { received: handleWebsocketMessages })
+  // useActionCable(socketId, { received: handleWebsocketMessages })
+
+  useEffect(() => {
+    if (!curation || curationLoaded) return
+    setIsEditingDraft(!curation?.is_published)
+    setIsPublished(curation?.is_published)
+    setSubmittedTokens(curation?.submitted_token_listings || [])
+    setApprovedArtists(curation?.approved_artists || [])
+    setName(curation?.name)
+    setPublishedContent(curation?.published_content)
+    setCurationLoaded(true)
+  }, [curation, curationLoaded])
 
   useEffect(() => {
     if ((isOwner || viewerPasscodeQuery && user?.api_key) && curation?.name) {
@@ -283,11 +298,12 @@ function CurationPage({ curation }) {
     }
   }
 
-  if (isOwner && !draftContent && !publishedContent) return (
+  if (!curationLoaded || isOwner && !draftContent && !publishedContent) return (
     <>
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <p className="dark:text-gray-100 pt-20 text-center animate-pulse">Loading...</p>
+        {/* <p className="dark:text-gray-100 pt-20 text-center animate-pulse">Loading...</p> */}
+        <h1 className="animate-pulse font-bold text-4xl text-center mt-[25%]">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
       </div>
     </>
   )
@@ -488,20 +504,20 @@ function CurationPage({ curation }) {
 
 
 
-export async function getServerSideProps(context) {
-  try {
-    const name = context.params.curation_name;
-    const curation = await getCurationByName(name)
+// export async function getServerSideProps(context) {
+//   try {
+//     const name = context.params.curation_name;
+//     const curation = await getCurationByName(name)
 
-    if (curation) {
-      return { props: { curation } };
-    } else {
-      return { props: {} };
-    }
-  } catch (err) {
-    console.log(err);
-    return { props: {} };
-  }
-}
+//     if (curation) {
+//       return { props: { curation } };
+//     } else {
+//       return { props: {} };
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     return { props: {} };
+//   }
+// }
 
 export default CurationPage;

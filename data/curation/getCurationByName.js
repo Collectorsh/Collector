@@ -1,4 +1,5 @@
 import apiClient from "../client/apiClient";
+import useSWR from 'swr'
 
 async function getCurationByName(name) {
   try {
@@ -12,3 +13,11 @@ async function getCurationByName(name) {
 }
 
 export default getCurationByName;
+
+const fetcher = async (name) => {
+  return getCurationByName(name)
+}
+export const useCuration = (name) => {
+  const { data: curation, error } = useSWR(name, fetcher)
+  return curation
+}

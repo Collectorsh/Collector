@@ -69,7 +69,6 @@ export default function MyApp({ Component, pageProps }) {
             type="text/css"
             href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
           />
-         
         </Head>
       </div>
       <ApolloProvider client={client}>
@@ -110,6 +109,7 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import Router from "next/router";
 import { metaDescription, metaPreviewImage } from "../config/settings";
+import Script from "next/script";
 
 
 NProgress.configure({

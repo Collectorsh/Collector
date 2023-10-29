@@ -1,6 +1,7 @@
 import "@google/model-viewer";
 import clsx from "clsx";
-import { memo, useEffect, useRef, useState } from "react";
+import { set } from "ramda";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 
 // ref: https://modelviewer.dev/docs/index.html#augmentedreality-attributes
 
@@ -9,19 +10,23 @@ const ModelViewer = ({
   onLoad,
   style,
   wrapperClass = "w-full h-full absolute inset-0",
-  loading = "eager"
+  loading = "eager",
+  id = "model-viewer"
 }) => {
-  const modelRef = useRef(null);
+  const [error, setError] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {   
-    const modelElement = modelRef.current;
+    const modelElement = document.getElementById(id);
     if (!modelElement) return;
 
     const handleLoad = (e) => {
+      setLoaded(true);  
       if (onLoad) onLoad(e);
     };
     const handleError = (e) => {
       console.log("Error loading model: ", e);
+      setError(e);
     }
 
     modelElement.addEventListener("load", handleLoad);
@@ -31,30 +36,46 @@ const ModelViewer = ({
       modelElement.removeEventListener("load", handleLoad);
       modelElement.removeEventListener("error", handleError);
     };
-  },[onLoad])   
+  }, [onLoad, id])   
+  
+  const opacity = error
+    ? "opacity-0"
+    : loaded
+      ? "opacity-100"
+      : "opacity-50"
 
   return (
-    <div className={clsx("bg-neutral-100 dark:bg-neutral-800 rounded-lg", wrapperClass)}>
-      <model-viewer
-        ref={modelRef}
-        alt=""
-        style={style}
-        class="w-full h-full z-10"
-        src={vrUrl}
-        camera-controls
-        auto-rotate
-        autoplay
-        rotation-per-second="10deg"
-        shadow-intensity="1"
-        interaction-prompt="none"
-        loading={loading}
+    <div
+      style={style}
+      className={clsx("bg-neutral-100 dark:bg-neutral-800 rounded-lg duration-300 z-10",
+      opacity,
+      wrapperClass,
+      )}
+    >
+      
+      {!error ?
+        <model-viewer
+          id={id}
+          alt=""
+          
+          class={clsx("w-full h-full")}
+          src={vrUrl}
+          camera-controls
+          auto-rotate
+          autoplay
+          rotation-per-second="10deg"
+          shadow-intensity="1"
+          interaction-prompt="none"
+          loading={loading}
         // ar
         // disable-zoom
-      ></model-viewer>
+        ></model-viewer>
+      : null}
+
     </div>
   );
 
 };
 
 
-export default ModelViewer;
+export default memo(ModelViewer);

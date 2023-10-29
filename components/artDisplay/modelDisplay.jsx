@@ -16,8 +16,10 @@ const ModelViewer = ({
   const [error, setError] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
+  const modelRef = useRef(null);
+
   useEffect(() => {   
-    const modelElement = document.getElementById(id);
+    const modelElement = modelRef.current;
     if (!modelElement) return;
 
     const handleLoad = (e) => {
@@ -55,9 +57,8 @@ const ModelViewer = ({
       
       {!error ?
         <model-viewer
-          id={id}
+          ref={modelRef}
           alt=""
-          
           class={clsx("w-full h-full")}
           src={vrUrl}
           camera-controls
@@ -67,6 +68,7 @@ const ModelViewer = ({
           shadow-intensity="1"
           interaction-prompt="none"
           loading={loading}
+          modelCacheSize="0"
         // ar
         // disable-zoom
         ></model-viewer>

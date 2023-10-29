@@ -14,10 +14,22 @@ async function getCurationByName(name) {
 
 export default getCurationByName;
 
+
+async function getCurationDetailsByName(name) {
+  try {
+    let res = await apiClient.post("/curation/get_listings_and_artists_by_name", {
+      name: name,
+    });
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+} 
+
 const fetcher = async (name) => {
-  return getCurationByName(name)
+  return getCurationDetailsByName(name)
 }
-export const useCuration = (name) => {
+export const useCurationDetails = (name) => {
   const { data: curation, error } = useSWR(name, fetcher)
   return curation
 }

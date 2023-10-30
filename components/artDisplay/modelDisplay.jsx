@@ -24,8 +24,7 @@ const ModelViewer = ({
   const dontLoad = lowMemory && !userLoading
 
   useEffect(() => {
-    console.log("🚀 ~ file: modelDisplay.jsx:40 ~ useEffect ~ navigator.userAgent:", navigator.userAgent)
-    //currently not available on safari or firefox
+    //check memory first (currently not available on safari or firefox)
     if (navigator.deviceMemory) { 
       const totalMemory = navigator.deviceMemory; 
       //3gb is the generalized divide between mobile devices and desktops
@@ -36,7 +35,7 @@ const ModelViewer = ({
         // Considered as a high-memory device
         setLowMemory(false);
       }
-    } else if (navigator.hardwareConcurrency) { //backup, makes assumptions about the devices memory based on # of cores 
+    } else if (navigator.hardwareConcurrency) { //backup, makes assumptions about the devices memory based on # of cores (not available on safari)
       
       const totalCores = navigator.hardwareConcurrency;
 
@@ -48,8 +47,9 @@ const ModelViewer = ({
         setLowMemory(false);
       }
     } else {
+      //final backup, makes assumptions about the devices memory based on screen size
       const deviceWidth = window.innerWidth
-      if (deviceWidth <= 768) {
+      if (deviceWidth <= 768) { //tablet width
         // Considered as a low-memory device
         setLowMemory(true);
       } else {

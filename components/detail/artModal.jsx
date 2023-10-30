@@ -22,6 +22,8 @@ export default function ArtModal({ isOpen, onClose, token }) {
 
   const useAltMediaAspectRatio = htmlUrl || vrUrl
 
+
+
   if (!token) return null;
   
   return (

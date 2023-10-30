@@ -146,7 +146,8 @@ export default function DetailPage({token, curations}) {
             imageRef={imageRef}
             className={clsx("max-h-[75vh] w-full",
               videoLoaded && "invisible",
-              useAltMediaAspectRatio && "hidden" 
+              // useAltMediaAspectRatio && "hidden" 
+              useAltMediaAspectRatio && "absolute inset-0"
             )}
             token={token}
             useUploadFallback

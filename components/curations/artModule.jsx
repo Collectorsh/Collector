@@ -292,7 +292,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
               width={cacheWidth}
               noLazyLoad
             />
-          </>)})
+          </>)}
         </a>
       </ToggleLink>
       <div

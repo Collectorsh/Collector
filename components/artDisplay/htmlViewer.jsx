@@ -39,11 +39,10 @@ const HtmlViewer = ({
   return (
     <div
       ref={ useLazyLoading ? htmlRef : undefined}
-      className={clsx(wrapperClass)}
+      className={clsx(wrapperClass, "z-10")}
     >
 
       <ContentLoader
-        
         title=""
         speed={2}
         className={clsx(`inset-0 w-full h-full rounded-xl z-50`, loading ? "absolute" : "hidden")}

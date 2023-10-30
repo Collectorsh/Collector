@@ -188,8 +188,9 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
   const [mediaType, setMediaType] = useState(CATEGORIES.IMAGE)
+  const [lowMemory, setLowMemory] = useState(false)
 
-  const disableLink = mediaType === CATEGORIES.HTML || mediaType === CATEGORIES.VR
+  const disableLink = (mediaType === CATEGORIES.HTML || mediaType === CATEGORIES.VR) && !lowMemory
 
   const isMasterEdition = token.is_master_edition
   const isEdition = token.is_edition
@@ -224,6 +225,10 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
     await handleCollect(token)
     setPurchasing(false)
   }
+  const handleModelLoad = ({ lowMemory }) => {
+    console.log("🚀 ~ file: artModule.jsx:229 ~ handleModelLoad ~ lowMemory:", lowMemory)
+    setLowMemory(lowMemory)
+  }
   
   return (
     <div
@@ -246,6 +251,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
 
             {vrUrl ? (
             <ModelViewer
+              onLoad={handleModelLoad}
               allowUserLoading={false}
                 vrUrl={vrUrl}
                 style={{

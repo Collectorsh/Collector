@@ -112,7 +112,7 @@ export default function DetailPage({token, curations}) {
           </button>
 
          
-          <div className={clsx(useAltMediaAspectRatio && !imageExpanded ? "relative" : "hidden")}
+          <div className={clsx((useAltMediaAspectRatio && !imageExpanded) ? "relative" : "hidden")}
               style={{
                 width: assetWidth,
                 height: altAssetHeight
@@ -147,7 +147,7 @@ export default function DetailPage({token, curations}) {
             className={clsx("max-h-[75vh] w-full",
               videoLoaded && "invisible",
               // useAltMediaAspectRatio && "hidden" 
-              useAltMediaAspectRatio && "absolute inset-0"
+              useAltMediaAspectRatio && "absolute inset-0 object-contain"
             )}
             token={token}
             useUploadFallback

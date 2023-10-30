@@ -12,7 +12,8 @@ const ModelViewer = ({
   style,
   wrapperClass = "w-full h-full absolute inset-0",
   loading = "eager",
-  id = "model-viewer"
+  id = "model-viewer",
+  allowUserLoading = true
 }) => {
   const [error, setError] = useState(null);
   const [loaded, setLoaded] = useState(false);
@@ -101,14 +102,19 @@ const ModelViewer = ({
       {(error || dontLoad)
         ? (
           <div className="h-full w-full flex items-end justify-center p-6">
-            <div className="text-center bg-neutral-500/50 backdrop-blur-sm rounded p-2 text-black dark:text-white">
-              <p className="text-sm" >This device may not support hi-res models</p>
-              <MainButton
-                className="px-2 mx-auto my-2 text-sm" noPadding
-                onClick={() => setUserLoading(true)}
-              >
-                Try Loading 
-              </MainButton>
+            <div className="text-center bg-neutral-500/50 backdrop-blur-sm rounded px-2 py-1 text-black dark:text-white">
+              {allowUserLoading
+                ? (<>
+                  <p className="text-sm" >This device may not support hi-res models</p>
+                  <MainButton
+                    className="px-2 mx-auto mt-2 mb-1 text-sm" noPadding
+                    onClick={() => setUserLoading(true)}
+                  >
+                    Try Loading
+                  </MainButton>
+                </>)
+                : <p className="text-sm" >This device does not support hi-res models</p>
+              }
             </div>
           </div>
         )

@@ -243,9 +243,10 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
             width,
           }}
         >
-          {false ? null : (<>
+
             {vrUrl ? (
-              <ModelViewer
+            <ModelViewer
+              allowUserLoading={false}
                 vrUrl={vrUrl}
                 style={{
                   height,
@@ -292,7 +293,6 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
               width={cacheWidth}
               noLazyLoad
             />
-          </>)}
         </a>
       </ToggleLink>
       <div

@@ -26,15 +26,16 @@ const ModelViewer = ({
 
   useEffect(() => {
     //check memory first (currently not available on safari or firefox)
+    let lowMemory = true;
     if (navigator.deviceMemory) { 
       const totalMemory = navigator.deviceMemory; 
       //3gb is the generalized divide between mobile devices and desktops
-      if (totalMemory < 4) {
+      if (totalMemory < 40) {
         // Considered as a low-memory device
-        setLowMemory(true);
+        lowMemory = true;
       } else {
         // Considered as a high-memory device
-        setLowMemory(false);
+        lowMemory = false;
       }
     } else if (navigator.hardwareConcurrency) { //backup, makes assumptions about the devices memory based on # of cores (not available on safari)
       
@@ -42,23 +43,26 @@ const ModelViewer = ({
 
       if (totalCores <= 6) {
         // Considered as a low-memory device
-        setLowMemory(true);
+        lowMemory = true;
       } else {
         // Considered as a high-memory device
-        setLowMemory(false);
+        lowMemory = false;
       }
     } else {
       //final backup, makes assumptions about the devices memory based on screen size
       const deviceWidth = window.innerWidth
       if (deviceWidth <= 768) { //tablet width
         // Considered as a low-memory device
-        setLowMemory(true);
+        lowMemory = true;
       } else {
         // Considered as a high-memory device
-        setLowMemory(false);
+        lowMemory = false;
       }
     }
-  }, [])
+
+    if (lowMemory) onLoad && onLoad({lowMemory})
+    setLowMemory(lowMemory);
+  }, [onLoad])
 
   useEffect(() => {   
     const modelElement = modelRef.current;
@@ -102,20 +106,20 @@ const ModelViewer = ({
       {(error || dontLoad)
         ? (
           <div className="h-full w-full flex items-end justify-center p-6">
-            <div className="text-center bg-neutral-500/50 backdrop-blur-sm rounded px-2 py-1 text-black dark:text-white">
+            {/* <div className="text-center bg-neutral-500/50 backdrop-blur-sm rounded px-2 py-1 text-black dark:text-white"> */}
               {allowUserLoading
                 ? (<>
-                  <p className="text-sm" >This device may not support hi-res models</p>
                   <MainButton
-                    className="px-2 mx-auto mt-2 mb-1 text-sm" noPadding
+                    solid
+                    className="px-2 py-0.5 mx-auto shadow text-sm text-center" noPadding
                     onClick={() => setUserLoading(true)}
                   >
-                    Try Loading
+                    Load high-res model
                   </MainButton>
                 </>)
-                : <p className="text-sm" >This device does not support hi-res models</p>
+              : <p className="text-sm text-center bg-neutral-500/50 backdrop-blur-sm rounded px-2 py-1" >Click to view high-res model</p>
               }
-            </div>
+            {/* </div> */}
           </div>
         )
         : (

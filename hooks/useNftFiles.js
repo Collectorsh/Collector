@@ -13,8 +13,8 @@ const useNftFiles = (token) => {
     const { videoUrl, htmlUrl, vrUrl } = getAltFileTypes(token)
     setVideoUrl(videoUrl)
     setHtmlUrl(htmlUrl)
-    setVrUrl(vrUrl)
-  }, [token]);
+    setVrUrl(vrUrl) 
+  }, [token ]);
 
   return {
     videoUrl,
@@ -46,8 +46,6 @@ export const getAltFileTypes = (token) => {
         switch (extension) {
           case "mp4":
             videoUrl = token.animation_url;
-            // htmlUrl = "https://arweave.net/bBUCfQQxhAGRXoiLeybWg4Zm6A5LdzzbO1004cRX5u0?ext=html";
-            // vrUrl = "https://arweave.net/xqDT37dkwDAQolSWOs8F6DOKA3-SaZWgVSI-i-2Ujqs?ext=glb"
             break;
           case "html":
             htmlUrl = token.animation_url;

@@ -166,6 +166,7 @@ const CloudinaryImage = ({
           <img
             ref={imageRef}
               style={{
+                color: "transparent",
                 transitionDuration: "0.3s",
                 ...style,
                 opacity,

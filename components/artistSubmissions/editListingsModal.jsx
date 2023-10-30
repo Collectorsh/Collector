@@ -13,11 +13,13 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { getListMasterEditionTX } from "../../utils/curations/listMasterEdition";
 import { connection } from "../../config/settings";
 import { getCloseAndWithdrawMarketTX } from "../../utils/curations/closeAndWithdrawMasterEdition";
-import { Metaplex, token, walletAdapterIdentity } from "@metaplex-foundation/js";
+import { Metaplex, PublicKey, token, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { XCircleIcon } from "@heroicons/react/solid";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import deleteSubmission from "../../data/curationListings/deleteSubmission";
+import retryFetches from "../../utils/curations/retryFetches";
+import { Market } from "@metaplex-foundation/mpl-fixed-price-sale";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
@@ -57,14 +59,27 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       const signedTx = await wallet.signTransaction(listMasterEditionTX)
  
       const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet))
-      const { signature, confirmResponse } = await metaplex.rpc().sendAndConfirmTransaction(
+
+      //const { signature, confirmResponse } = 
+      await metaplex.rpc().sendAndConfirmTransaction(
         signedTx,
         { commitment: "finalized" }
       )
+      // if (!signature || Boolean(confirmResponse.value.err)) {
+      //   error(`Error Listing ${ token.name } Editions Onchain`)
+      //   return
+      // }
 
-      if (!signature || Boolean(confirmResponse.value.err)) {
-        error(`Error Listing ${ token.name } Editions Onchain`)
-        return
+      //using onchain marketdata as a confirmation strategy because the rpc confirmation response was unreliable
+      const marketData = await retryFetches(async () => {
+        const marketPubkey = new PublicKey(editionMarketAddress)
+        const marketAccount = await connection.getAccountInfo(marketPubkey);
+        const [marketData] = Market.deserialize(marketAccount?.data);
+        return marketData
+      })
+
+      if (!marketData) {
+        throw new Error("Error confirming onchain listing")
       }
 
       const res = await updateListing({

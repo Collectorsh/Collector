@@ -13,8 +13,10 @@ import { AltMedia, CATEGORIES } from "../FileDrop"
 import clsx from "clsx"
 import UserContext from "../../contexts/user"
 import createMintedIndex from "../../data/minted_indexer/create"
+import { Transaction } from "@solana/web3.js"
+import retryFetches from "../../utils/curations/retryFetches"
 
-const MINT_STAGE = {
+export const MINT_STAGE = {
   INIT: "Init",
   UPLOAD: "Uploading...",
   MINTING: "Minting...",
@@ -85,8 +87,10 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       description,
       royalties,
       maxSupply,
+      collection,
       attributes,
-      external_url
+      external_url,
+      is_mutable
     } = nftProps
 
     const sellerFeeBasisPoints = royalties * 100 //convert to basis points
@@ -120,6 +124,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       setStage(MINT_STAGE.MINTING)
 
       const uri = res.uri
+      // const collectionPubkey = new PublicKey(collection.mint)
 
       const metaplex = new Metaplex(connection)
         .use(walletAdapterIdentity(wallet))
@@ -130,24 +135,29 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         creators,
         sellerFeeBasisPoints: sellerFeeBasisPoints,
         maxSupply: toBigNumber(maxSupply), //default of 0 is a 1/1
+        // collection: collectionPubkey,
       });
 
       const { mintAddress } = transactionBuilder.getContext();
-      const { signature, confirmResponse } = await metaplex.rpc().sendAndConfirmTransaction(
+
+      // const collectionBuilder = metaplex.nfts().builders().verifyCollection({
+      //   mintAddress,
+      //   collectionMintAddress: collectionPubkey
+      // })
+      // console.log("🚀 ~ file: mintModal.jsx:146 ~ collectionBuilder ~ collectionBuilder:", collectionBuilder)
+
+      // transactionBuilder.add(collectionBuilder)
+
+      //const { signature, confirmResponse } = 
+      await metaplex.rpc().sendAndConfirmTransaction(
         transactionBuilder,
         { commitment: "finalized" }
       )
-
-      if (!signature || Boolean(confirmResponse?.value?.err)) {
-        throw new Error("Error minting NFT")
-      }
-
-      await new Promise(resolve => setTimeout(resolve, 2000)) //give the tx time to settle before fetching
-
-      const newNft = await metaplex.nfts().findByMint({ mintAddress });
+      
+      const newNft = await retryFetches(() => metaplex.nfts().findByMint({ mintAddress }));
 
       if (!newNft) {
-        throw new Error("Error getting minted NFT")
+        throw new Error("Error confirming NFT mint onchain")
       }
      
       const {

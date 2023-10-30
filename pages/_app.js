@@ -34,6 +34,7 @@ export default function MyApp({ Component, pageProps }) {
           <meta name="author" content="Collector" />
           <meta name="keywords" content="Collect, Collector.sh, Collector, Curate, Discover, Art, Beautiful" />
           <meta key="view" name="viewport" content="width=device-width, initial-scale=1" />
+
           <link key="icon" rel="icon" href="/favicon.ico" />
           <meta name="twitter:site" content="@collector_sh" />
           <meta name="twitter:card" content="summary_large_image" />
@@ -68,7 +69,6 @@ export default function MyApp({ Component, pageProps }) {
             type="text/css"
             href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
           />
-         
         </Head>
       </div>
       <ApolloProvider client={client}>
@@ -109,6 +109,7 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import Router from "next/router";
 import { metaDescription, metaPreviewImage } from "../config/settings";
+import Script from "next/script";
 
 
 NProgress.configure({

@@ -121,6 +121,7 @@ const VideoPlayer = ({
         style={style}
         ref={videoRef}
         preload="metadata"
+        autoPlay
         muted
         loop
         playsInline

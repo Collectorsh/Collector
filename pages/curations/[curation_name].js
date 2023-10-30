@@ -14,7 +14,7 @@ import GlobalEditBar from "../../components/curations/globalEditBar";;
 import PublishConfirmationModal from "../../components/curations/publishConfirmationModal";
 import UnpublishConfirmationModal from "../../components/curations/unpublishConfirmationModal";
 import InviteArtistsModal from "../../components/curations/inviteArtistsModal";
-import getCurationByName from "../../data/curation/getCurationByName";
+import getCurationByName, { useCurationDetails } from "../../data/curation/getCurationByName";
 import getPrivateContent, { getViewerPrivateContent } from "../../data/curation/getPrivateContent";
 import publishContent, { unpublishContent } from "../../data/curation/publishContent";
 import { success, error } from "../../utils/toast";
@@ -36,10 +36,14 @@ import AuthorizedViewerBar from "../../components/curations/authorizedViewerBar"
 
 const descriptionPlaceholder = "Tell us about this curation."
 
-function CurationPage({ curation }) {
+function CurationPage({curation}) {
   const [user] = useContext(UserContext);
   const router = useRouter();
+  const curationDetails = useCurationDetails(router.query?.curation_name)
+
   const { handleCollect, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
+
+  const [curationLoaded, setCurationLoaded] = useState(false);
 
   const [editNameOpen, setEditNameOpen] = useState(false);
   const [editBannerOpen, setEditBannerOpen] = useState(false);
@@ -54,6 +58,7 @@ function CurationPage({ curation }) {
 
   const [submittedTokens, setSubmittedTokens] = useState(curation?.submitted_token_listings || []);
   const [approvedArtists, setApprovedArtists] = useState(curation?.approved_artists || []);
+
   const [name, setName] = useState(curation?.name);
   const [publishedContent, setPublishedContent] = useState(curation?.published_content);
   const [draftContent, setDraftContent] = useState(null);
@@ -106,6 +111,12 @@ function CurationPage({ curation }) {
 
   const socketId = curation?.name ? `listings_${ curation.name }` : null
   useActionCable(socketId, { received: handleWebsocketMessages })
+
+  useEffect(() => {
+    if (!curationDetails) return
+    setSubmittedTokens(curationDetails?.submitted_token_listings || [])
+    setApprovedArtists(curationDetails?.approved_artists || [])
+  }, [curationDetails])
 
   useEffect(() => {
     if ((isOwner || viewerPasscodeQuery && user?.api_key) && curation?.name) {
@@ -287,7 +298,8 @@ function CurationPage({ curation }) {
     <>
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <p className="dark:text-gray-100 pt-20 text-center animate-pulse">Loading...</p>
+        {/* <p className="dark:text-gray-100 pt-20 text-center animate-pulse">Loading...</p> */}
+        <h1 className="animate-pulse font-bold text-4xl text-center mt-[25%]">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
       </div>
     </>
   )
@@ -353,7 +365,7 @@ function CurationPage({ curation }) {
             groupHoverClass="group-hover/name:opacity-100"
           // icon={<PencilAltIcon className="w-6 h-6" />}
           >
-            <h1 className="font-bold text-5xl">{name.replaceAll("_", " ")}</h1>
+            <h1 className="font-bold text-5xl text-center">{name.replaceAll("_", " ")}</h1>
           </EditWrapper>
         </div>
         <Link href={`/gallery/${ curation.curator.username }`} >
@@ -389,14 +401,19 @@ function CurationPage({ curation }) {
 
         <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
 
-        <DisplayModules
-          modules={modules}
-          isOwner={displayDraftEdit}
-          setModules={handleEditModules}
-          submittedTokens={submittedTokens}
-          approvedArtists={approvedArtists}
-          handleCollect={handleCollect}
-        />
+        {curationDetails ? (
+          <DisplayModules
+            modules={modules}
+            isOwner={displayDraftEdit}
+            setModules={handleEditModules}
+            submittedTokens={submittedTokens}
+            approvedArtists={approvedArtists}
+            handleCollect={handleCollect}
+          />
+
+        )
+          : <h1 className="animate-pulse font-bold text-4xl text-center mt-10">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
+        }
 
         {isOwner
           ? (

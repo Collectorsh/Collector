@@ -75,7 +75,8 @@ export default function ArtModal({ isOpen, onClose, token }) {
           className={clsx(
             "max-h-[calc(100svh-4rem)] max-h-[calc(100vh-4rem)]",
             videoLoaded && "invisible",
-            useAltMediaAspectRatio && "hidden"
+            // useAltMediaAspectRatio && "hidden"
+            useAltMediaAspectRatio && "absolute inset-0 w-full h-full object-contain"
           )}
           token={token}
           useUploadFallback

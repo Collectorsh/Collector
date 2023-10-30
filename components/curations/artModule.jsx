@@ -226,7 +226,6 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
     setPurchasing(false)
   }
   const handleModelLoad = ({ lowMemory }) => {
-    console.log("🚀 ~ file: artModule.jsx:229 ~ handleModelLoad ~ lowMemory:", lowMemory)
     setLowMemory(lowMemory)
   }
   

@@ -243,7 +243,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
             width,
           }}
         >
-          {!isVisible ? null : (<>
+          {false ? null : (<>
             {vrUrl ? (
               <ModelViewer
                 vrUrl={vrUrl}

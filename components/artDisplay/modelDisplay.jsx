@@ -30,7 +30,7 @@ const ModelViewer = ({
     if (navigator.deviceMemory) { 
       const totalMemory = navigator.deviceMemory; 
       //3gb is the generalized divide between mobile devices and desktops
-      if (totalMemory < 40) {
+      if (totalMemory < 4) {
         // Considered as a low-memory device
         lowMemory = true;
       } else {

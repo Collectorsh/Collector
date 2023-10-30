@@ -2,6 +2,7 @@ import "@google/model-viewer";
 import clsx from "clsx";
 import { set } from "ramda";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
+import MainButton from "../MainButton";
 
 // ref: https://modelviewer.dev/docs/index.html#augmentedreality-attributes
 
@@ -15,8 +16,26 @@ const ModelViewer = ({
 }) => {
   const [error, setError] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [lowMemory, setLowMemory] = useState(true);
+  const [userLoading, setUserLoading] = useState(false);
 
   const modelRef = useRef(null);
+
+  const dontLoad = lowMemory && !userLoading
+
+  useEffect(() => {
+    if (navigator.deviceMemory) {
+      const totalMemory = navigator.deviceMemory; 
+      //3gb is the generalized divide between mobile devices and desktops
+      if (totalMemory < 4) {
+        // Considered as a low-memory device
+        setLowMemory(true);
+      } else {
+        // Considered as a high-memory device
+        setLowMemory(false);
+      }
+    }
+  }, [])
 
   useEffect(() => {   
     const modelElement = modelRef.current;
@@ -33,47 +52,63 @@ const ModelViewer = ({
 
     modelElement.addEventListener("load", handleLoad);
     modelElement.addEventListener("error", handleError);
+    // modelElement.maxPixelRatio = 1
 
     return () => {
       modelElement.removeEventListener("load", handleLoad);
       modelElement.removeEventListener("error", handleError);
     };
-  }, [onLoad, id])   
+  }, [onLoad, id, dontLoad])   
   
   const opacity = error
     ? "opacity-0"
-    : loaded
+    : loaded || dontLoad
       ? "opacity-100"
       : "opacity-50"
 
   return (
     <div
       style={style}
-      className={clsx("bg-neutral-100 dark:bg-neutral-800 rounded-lg duration-300 z-10",
+      className={clsx("rounded-lg duration-300 z-10",
       opacity,
-      wrapperClass,
+        wrapperClass,
+        dontLoad ? "bg-transparent" : "bg-neutral-100 dark:bg-neutral-800"
       )}
     >
       
-      {!error ?
-        <model-viewer
-          ref={modelRef}
-          alt=""
-          class={clsx("w-full h-full")}
-          src={vrUrl}
-          camera-controls
-          auto-rotate
-          autoplay
-          rotation-per-second="10deg"
-          shadow-intensity="1"
-          interaction-prompt="none"
-          loading={loading}
-          modelCacheSize="0"
-        // ar
-        // disable-zoom
-        ></model-viewer>
-      : null}
-
+      {(error || dontLoad)
+        ? (
+          <div className="h-full w-full flex items-end justify-center p-6">
+            <div className="text-center bg-neutral-500/50 backdrop-blur-sm rounded p-2 text-black dark:text-white">
+              <p className="text-sm" >This device may not support hi-res models</p>
+              <MainButton
+                className="px-2 mx-auto my-2 text-sm" noPadding
+                onClick={() => setUserLoading(true)}
+              >
+                Try Loading 
+              </MainButton>
+            </div>
+          </div>
+        )
+        : (
+          <model-viewer
+            ref={modelRef}
+            alt=""
+            class={clsx("w-full h-full")}
+            src={vrUrl}
+            camera-controls
+            auto-rotate
+            autoplay
+            rotation-per-second="10deg"
+            shadow-intensity="1"
+            interaction-prompt="none"
+            loading={loading}
+            environment-image="null"
+          // ar
+          // disable-zoom
+          ></model-viewer>
+        )
+      }
     </div>
   );
 

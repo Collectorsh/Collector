@@ -57,14 +57,14 @@ const VideoPlayer = ({
     };
   }, [handleRefWidthChange]);
 
-  // useEffect(() => {
-  //   if (!videoRef.current || userPaused) return;
-  //   if (isVisible) {
-  //     videoRef.current.play()
-  //   } else {
-  //     videoRef.current.pause()
-  //   }
-  // }, [isVisible, userPaused])
+  useEffect(() => {
+    if (!videoRef.current || userPaused) return;
+    if (isVisible) {
+      videoRef.current.play()
+    } else {
+      videoRef.current.pause()
+    }
+  }, [isVisible, userPaused])
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();

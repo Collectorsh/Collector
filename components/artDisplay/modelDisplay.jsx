@@ -1,7 +1,6 @@
 import "@google/model-viewer";
 import clsx from "clsx";
-import { set } from "ramda";
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MainButton from "../MainButton";
 
 // ref: https://modelviewer.dev/docs/index.html#augmentedreality-attributes
@@ -12,7 +11,6 @@ const ModelViewer = ({
   style,
   wrapperClass = "w-full h-full absolute inset-0",
   loading = "eager",
-  id = "model-viewer",
   allowUserLoading = true
 }) => {
   const [error, setError] = useState(null);
@@ -79,13 +77,12 @@ const ModelViewer = ({
 
     modelElement.addEventListener("load", handleLoad);
     modelElement.addEventListener("error", handleError);
-    // modelElement.maxPixelRatio = 1
 
     return () => {
       modelElement.removeEventListener("load", handleLoad);
       modelElement.removeEventListener("error", handleError);
     };
-  }, [onLoad, id, dontLoad])   
+  }, [onLoad, dontLoad])   
   
   const opacity = error
     ? "opacity-0"
@@ -106,21 +103,19 @@ const ModelViewer = ({
       {(error || dontLoad)
         ? (
           <div className="h-full w-full flex flex-col items-center justify-end gap-3 p-6">
-            {/* <div className="text-center bg-neutral-500/50 backdrop-blur-sm rounded px-2 py-1 text-black dark:text-white"> */}
               {allowUserLoading
               ? (<>
-                  <p className="text-sm text-center bg-neutral-500/50 backdrop-blur-sm rounded px-2 py-1">*This device may not be able to handle some high-res models</p>
+                  <p className="text-sm text-center bg-neutral-500/50 backdrop-blur-sm rounded px-2 py-1">*This device may not be able to handle complex models</p>
                   <MainButton
                     solid
                     className="px-2 py-0.5 mx-auto shadow text-sm text-center" noPadding
                     onClick={() => setUserLoading(true)}
                   >
-                    Load high-res model
+                    Load model
                   </MainButton>
                 </>)
-              : <p className="text-sm text-center bg-neutral-500/50 backdrop-blur-sm rounded px-2 py-1">Click to view high-res model</p>
+              : <p className="text-sm text-center bg-neutral-500/50 backdrop-blur-sm rounded px-2 py-1">Click to view model</p>
               }
-            {/* </div> */}
           </div>
         )
         : (
@@ -137,6 +132,7 @@ const ModelViewer = ({
             interaction-prompt="none"
             loading={loading}
             environment-image="null"
+            modelCacheSize={lowMemory ? 0 : 4}
           // ar
           // disable-zoom
           ></model-viewer>
@@ -147,5 +143,4 @@ const ModelViewer = ({
 
 };
 
-
-export default memo(ModelViewer);
+export default ModelViewer;

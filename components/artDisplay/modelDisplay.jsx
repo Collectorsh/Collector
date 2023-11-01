@@ -28,32 +28,25 @@ const ModelViewer = ({
     if (navigator.deviceMemory) { 
       const totalMemory = navigator.deviceMemory; 
       //3gb is the generalized divide between mobile devices and desktops
-      if (totalMemory < 4) {
-        // Considered as a low-memory device
+      if (totalMemory < 4) { // Considered as a low-memory device
         lowMemory = true;
       } else {
-        // Considered as a high-memory device
         lowMemory = false;
       }
     } else if (navigator.hardwareConcurrency) { //backup, makes assumptions about the devices memory based on # of cores (not available on safari)
-      
       const totalCores = navigator.hardwareConcurrency;
 
-      if (totalCores <= 6) {
-        // Considered as a low-memory device
+      if (totalCores <= 6) { // Considered as a low-memory device
         lowMemory = true;
       } else {
-        // Considered as a high-memory device
         lowMemory = false;
       }
     } else {
       //final backup, makes assumptions about the devices memory based on screen size
       const deviceWidth = window.innerWidth
-      if (deviceWidth <= 768) { //tablet width
-        // Considered as a low-memory device
+      if (deviceWidth <= 768) { //tablet width, considered as a low-memory device
         lowMemory = true;
       } else {
-        // Considered as a high-memory device
         lowMemory = false;
       }
     }

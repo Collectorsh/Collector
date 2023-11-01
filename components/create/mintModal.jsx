@@ -13,7 +13,7 @@ import { AltMedia, CATEGORIES } from "../FileDrop"
 import clsx from "clsx"
 import UserContext from "../../contexts/user"
 import createMintedIndex from "../../data/minted_indexer/create"
-import { Transaction } from "@solana/web3.js"
+import { Transaction, VersionedTransaction } from "@solana/web3.js"
 import retryFetches from "../../utils/curations/retryFetches"
 
 export const MINT_STAGE = {
@@ -89,8 +89,8 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       maxSupply,
       collection,
       attributes,
-      external_url,
-      is_mutable
+      externalUrl,
+      isMutable
     } = nftProps
 
     const sellerFeeBasisPoints = royalties * 100 //convert to basis points
@@ -106,8 +106,8 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       name,
       description,
       seller_fee_basis_points: sellerFeeBasisPoints,
-      // attributes: attributes,
-      // external_url: "collector.sh"
+      external_url: externalUrl,
+      attributes,
     }))
 
     try {
@@ -124,7 +124,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       setStage(MINT_STAGE.MINTING)
 
       const uri = res.uri
-      // const collectionPubkey = new PublicKey(collection.mint)
+      const collectionPubkey = new PublicKey(collection.mint)
 
       const metaplex = new Metaplex(connection)
         .use(walletAdapterIdentity(wallet))
@@ -135,18 +135,18 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         creators,
         sellerFeeBasisPoints: sellerFeeBasisPoints,
         maxSupply: toBigNumber(maxSupply), //default of 0 is a 1/1
-        // collection: collectionPubkey,
+        collection: collectionPubkey,
+        isMutable,
       });
 
       const { mintAddress } = transactionBuilder.getContext();
 
-      // const collectionBuilder = metaplex.nfts().builders().verifyCollection({
-      //   mintAddress,
-      //   collectionMintAddress: collectionPubkey
-      // })
-      // console.log("🚀 ~ file: mintModal.jsx:146 ~ collectionBuilder ~ collectionBuilder:", collectionBuilder)
+      const collectionBuilder = metaplex.nfts().builders().verifyCollection({
+        mintAddress,
+        collectionMintAddress: collectionPubkey
+      })
 
-      // transactionBuilder.add(collectionBuilder)
+      transactionBuilder.add(collectionBuilder)
 
       //const { signature, confirmResponse } = 
       await metaplex.rpc().sendAndConfirmTransaction(
@@ -204,8 +204,9 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       royalties,
       maxSupply,
       category,
+      externalUrl,
+      isMutable,
       attributes,
-      external_url
     } = nftProps
 
     const isOneOfOne = maxSupply === 0

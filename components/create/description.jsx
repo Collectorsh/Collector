@@ -1,6 +1,4 @@
 import clsx from "clsx"
-import { REQUIRED } from "../../pages/create"
-import { placeholder } from "@cloudinary/react"
 
 const DescriptionInput = ({
   description, setDescription, setError,
@@ -10,9 +8,7 @@ const DescriptionInput = ({
 
   const handleChange = (e) => { 
     setDescription(e.target.value)
-    const isUndefined = !e.target.value
-    if (isUndefined) setError(prev => ({ ...prev, description: REQUIRED }))
-    else if (e.target.value.length > limit) setError(prev => ({
+    if (e.target.value.length > limit) setError(prev => ({
       ...prev,
       description: `Descriptions can be no more than ${limit} characters.`
     }))

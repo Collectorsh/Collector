@@ -11,7 +11,7 @@ const ModelViewer = dynamic(() => import("./artDisplay/modelDisplay"), {
   ssr: false
 })
 
-const MaxCLDFileSize = 20; 
+const MaxCLDFileSize = 30; //MB
 
 export const cleanFileName = (fileName) => { 
   //remove extension, replace non-alphanumeric characters with dashes

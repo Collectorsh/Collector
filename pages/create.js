@@ -20,12 +20,12 @@ import NftTypeInput from "../components/create/nftType";
 import { Oval } from "react-loader-spinner";
 import CollectionDropDown from "../components/create/collectionDropDown";
 import { connection } from "../config/settings";
-import { PublicKey } from "@solana/web3.js";
-import { useTokens } from "../data/nft/getTokens";
-import { Token } from "@solana/spl-token";
-import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { Metaplex } from "@metaplex-foundation/js";
 import axios from "axios";
+import Drawer from "../components/Drawer";
+import IsMutableSwitch from "../components/create/isMutableSwitch";
+import ExternalUrlInput from "../components/create/externalUrl";
+import AttributesInput from "../components/create/attributes";
 
 
 //TODO
@@ -51,7 +51,7 @@ const MEDIA_KEYS = {
 const initError = {
   name: REQUIRED,
   royalties: REQUIRED,
-  // collection: REQUIRED,
+  collection: REQUIRED,
   [MEDIA_KEYS.MAIN]: REQUIRED,
 }
 
@@ -70,9 +70,9 @@ async function getCollectionNFTs(userPublicKey) {
         } catch (e) {
           console.log("failed to load collection image", e);
         }
-  
+
         return {
-          mint: nft.address.toString(),
+          mint: nft.mintAddress.toString(),
           name: nft.name,
           image
         }
@@ -88,14 +88,6 @@ export default function MintPage() {
   const router = useRouter()
   const wallet = useWallet();
 
-  // const tokens = useTokens(user?.public_keys, {
-  //   useArtistDetails: false,
-  //   justVisible: false,
-  //   justCreator: true,
-  //   useTokenMetadata: false
-  // });
-  // console.log("🚀 ~ file: create.js:77 ~ MintPage ~ tokens:", tokens?.find(token => token.mint === "E12dj4cncTHpf4nKynKRkJfhFvqGHDKCU5jLb2MbkH9w"))
-
   const [altMediaFile, setAltMediaFile] = useState(null)
   const [imageFile, setImageFile] = useState(null)
   const [category, setCategory] = useState("image")
@@ -107,6 +99,10 @@ export default function MintPage() {
 
   const [existingCollections, setExistingCollections] = useState()
   const [collection, setCollection] = useState(null)
+
+  const [isMutable, setIsMutable] = useState(true)
+  const [externalUrl, setExternalUrl] = useState("")
+  const [attributes, setAttributes] = useState([])
 
   const [mintModalOpen, setMintModalOpen] = useState(false)
   const [reseting, setReseting] = useState(false)
@@ -149,6 +145,24 @@ export default function MintPage() {
     })();
   }, [wallet.publicKey])
 
+  const onReset = () => {
+    setReseting(true)
+    setImageFile(null)
+    setCategory(CATEGORIES.IMAGE)
+    setName("")
+    setDescription("")
+    setRoyalties("")
+    setCreators([])
+    setMaxSupply(0)
+    setIsMutable(true)
+
+    setError(initError)
+
+    //wait till lifecycle completes so it triggers a new FileDrop
+    setTimeout(() => setReseting(false), 500)
+  }
+
+
   const onMainDrop = (file) => {
     let fileCategory = CATEGORIES.IMAGE
     if (file.type.includes("video")) fileCategory = CATEGORIES.VIDEO
@@ -175,21 +189,6 @@ export default function MintPage() {
     setError(prev => ({ ...prev, [MEDIA_KEYS.THUMB]: null }))
   }
 
-  const onReset = () => { 
-    setReseting(true)
-    setImageFile(null)
-    setCategory(CATEGORIES.IMAGE)
-    setName("")
-    setDescription("")
-    setRoyalties("")
-    setCreators([])
-    setMaxSupply(0)
-
-    setError(initError)
-    
-    //wait till lifecycle completes so it triggers a new FileDrop
-    setTimeout(() => setReseting(false), 500)
-  }
 
   const openMintModal = () => setMintModalOpen(true)
   const closeMintModal = () => setMintModalOpen(false)
@@ -214,9 +213,9 @@ export default function MintPage() {
           royalties,
           maxSupply,
           collection,
-          // is_mutable,
-          // attributes,
-          // external_url
+          isMutable,
+          attributes,
+          externalUrl
         }}
       />
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
@@ -267,7 +266,6 @@ export default function MintPage() {
                 <FileDrop
                   onDrop={onThumbnailDrop}
                   imageClass="object-contain p-2 mx-auto"
-                  maxFileSize={maxUploadSize}
                 />
               </div>
             )
@@ -279,9 +277,9 @@ export default function MintPage() {
         <div
           className="mt-5 px-4 mx-auto flex flex-col gap-1"
         >
-          {/* <div className="flex justify-center w-full lg:w-[calc(50%-8px)] mx-auto">
+          <div className="flex justify-center w-full lg:w-[calc(50%-8px)] mx-auto">
             <CollectionDropDown selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError} />
-          </div> */}
+          </div>
           <div className="grid lg:grid-cols-2 gap-4">
             <NameInput name={name} setName={setName} setError={setError} />
             <NftTypeInput maxSupply={maxSupply} setMaxSupply={setMaxSupply} setError={setError} />
@@ -294,10 +292,14 @@ export default function MintPage() {
             <CreatorsInput creators={creators} setCreators={setCreators} setError={setError} />
           </div>  
 
-          {/* <div className="text-center">
-            EXTRA MENU DROP DOWN PLACEHOLDER (attributes, external url, isMutable)
-          </div>
-           */}
+          <Drawer title="Extras">
+            <div className="flex flex-col gap-4">
+              <IsMutableSwitch isMutable={isMutable} setIsMutable={setIsMutable} />
+              <ExternalUrlInput externalUrl={externalUrl} setExternalUrl={setExternalUrl} />
+              <AttributesInput attributes={attributes} setAttributes={setAttributes} />
+            </div>
+          </Drawer>
+          
           <Tippy 
             disabled={!isError || !requiredError}
             content={<p className="capitalize">{requiredError?.[0]} is {requiredError?.[1]}</p>}

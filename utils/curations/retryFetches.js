@@ -5,7 +5,6 @@ export default function retryFetches(cb, maxAttempts = 10) {
       try {
         attempts++;
         const result = await cb();
-        console.log(`🚀 ~ attempt${attempts} :`, result )
         if (!result) throw new Error("No result returned");
         resolve(result);
       } catch (err) {

@@ -54,6 +54,10 @@ async function getTokenByMint(tokenMint) {
       royalties: token.royalty.basis_points,
       primary_sale_happened: token.royalty?.primary_sale_happened,
       image_cdn,
+      isMutable: token?.mutable,
+      attributes: content.metadata?.attributes,
+      externalUrl: content.links?.external_url,
+      
       //TODO Get from Helius when available and remove seperate edition call
       // is_edition: 
       // parent:

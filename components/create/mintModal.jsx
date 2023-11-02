@@ -302,9 +302,11 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
   const secondaryButton = useMemo(() => { 
     switch (stage) {
       case MINT_STAGE.SUCCESS: return (
-        <MainButton onClick={handleReset}>
-          Create Another
-        </MainButton>
+        <Link href="/submissions" passHref>
+          <MainButton >
+            Submissions
+          </MainButton>
+        </Link>
       )
       default: return (
         <MainButton onClick={handleClose}>
@@ -312,7 +314,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         </MainButton>
       )
     }
-  }, [stage, handleClose, handleReset])
+  }, [stage, handleClose])
 
   const actionButton = useMemo(() => {
     switch (stage) { 
@@ -323,9 +325,9 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       )
       {/* TODO if artist with curations show profile page button instead */}
       case MINT_STAGE.SUCCESS: return (
-        <Link href="/submissions" passHref>
+        <Link href={`/nft/${ mintedAddress}`} passHref>
           <MainButton solid>
-            Submissions
+            Detail Page
           </MainButton>
         </Link>
       )
@@ -342,7 +344,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         </MainButton>
       )
     }
-  }, [stage, onMint])
+  }, [stage, onMint, mintedAddress])
 
   return (
     <Modal
@@ -357,6 +359,11 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       </div>
     
       <div className="w-full grid grid-cols-2 gap-4">
+        {stage === MINT_STAGE.SUCCESS ? (
+          <MainButton onClick={handleReset} noPadding className="px-2 col-span-2 justify-self-center">
+            Create Another
+          </MainButton>
+        ) : null}
         <div className="justify-self-end">
           {secondaryButton}
         </div>

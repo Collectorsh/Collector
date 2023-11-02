@@ -4,13 +4,6 @@ import Tippy from "@tippyjs/react"
 
 const AttributesInput = ({ attributes, setAttributes }) => {
   
-  // const handleChange = (callback) => {
-  //   setCreators(prev => {
-  //     const newCreators = typeof callback === "function" ? callback(prev) : callback //mimic setState functionality
-  //     return newCreators
-  //   })
-  // }
-
   const addAttribute = () => { 
     setAttributes(prev => [
       ...prev,

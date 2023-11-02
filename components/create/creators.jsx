@@ -115,9 +115,9 @@ const CreatorItem = ({ creator, index, handleChange }) => {
 
   return (
     <div className="flex justify-between items-center mb-2">
-      <div className="flex justify-between items-center gap-2 w-full border-b-2 bg-neutral-100 dark:bg-neutral-900">
+      <div className="flex justify-between items-center gap-2 w-full border-b-2 border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
         <input
-          className={clsx("bg-transparent outline-none  dark:border-neutral-700 w-full pl-1",
+          className={clsx("bg-transparent outline-none w-full pl-1",
             isPrimaryCreator && "font-bold"
           )}
           disabled={isPrimaryCreator}

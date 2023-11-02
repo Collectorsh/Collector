@@ -184,8 +184,6 @@ export default function DetailPage({token, curations}) {
                     <DetailListings key={token.mint+curation.name} curation={curation} mint={token.mint} />
                   ))}
                 </div>
-
-              
               </div>
             )
             : null

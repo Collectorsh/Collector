@@ -69,7 +69,7 @@ export default function MyApp({ Component, pageProps }) {
             type="text/css"
             href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
           />
-        </Head>
+        </Head>      
       </div>
       <ApolloProvider client={client}>
         <WalletContextProvider>
@@ -84,10 +84,12 @@ export default function MyApp({ Component, pageProps }) {
                           <ThemeProvider enableSystem={true} attribute="class">
                             <PlausibleProvider domain="collector.sh">
                               <CartProvider>
-                                <div className="min-h-[100vh] dark:bg-black dark:text-white">
-                                  <Component {...pageProps} />
-                                </div>
-                                <Footer />
+        
+                                  <div className="min-h-[100vh] dark:bg-black dark:text-white">
+                                    <Component {...pageProps} />
+                                  </div>
+                                  <Footer />
+                              
                               </CartProvider>
                             </PlausibleProvider>
                           </ThemeProvider>
@@ -109,8 +111,6 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import Router from "next/router";
 import { metaDescription, metaPreviewImage } from "../config/settings";
-import Script from "next/script";
-
 
 NProgress.configure({
   minimum: 0.3,

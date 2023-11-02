@@ -2,12 +2,12 @@ import { ChevronDownIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
 import { useState } from "react"
 
-const Drawer = ({ children, title, wrapperClass }) => { 
+const Drawer = ({ children, title, wrapperClass, drawerClass, buttonClass }) => { 
   const [open, setOpen] = useState(false)
   return (
     <div className={wrapperClass}>
       <button
-        className="mx-auto flex items-center font-bold text-lg my-2"
+        className={clsx("flex items-center duration-300 hover:scale-105 active:scale-100 ", buttonClass)}
         onClick={() => setOpen(prev => !prev)}
       >
         {title}
@@ -16,7 +16,7 @@ const Drawer = ({ children, title, wrapperClass }) => {
 
       <div
         className={clsx("duration-500 overflow-hidden",
-          "border-4 rounded-xl border-neutral-200 dark:border-neutral-700",
+          drawerClass,
           open ? "h-auto  p-4" : "h-0  py-0 px-4"
         )}
       >

@@ -292,7 +292,11 @@ export default function MintPage() {
             <CreatorsInput creators={creators} setCreators={setCreators} setError={setError} />
           </div>  
 
-          <Drawer title="Extras">
+          <Drawer
+            title="Extras"
+            drawerClass="border-4 rounded-xl border-neutral-200 dark:border-neutral-700"
+            buttonClass="font-bold text-lg my-2 mx-auto"
+          >
             <div className="flex flex-col gap-4">
               <IsMutableSwitch isMutable={isMutable} setIsMutable={setIsMutable} />
               <ExternalUrlInput externalUrl={externalUrl} setExternalUrl={setExternalUrl} />

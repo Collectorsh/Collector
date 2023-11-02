@@ -28,7 +28,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
   const wallet = useWallet();
   const [user] = useContext(UserContext);
 
-  const [stage, setStage] = useState(MINT_STAGE.SUCCESS)
+  const [stage, setStage] = useState(MINT_STAGE.INIT)
   const [previewImage, setPreviewImage] = useState(null)
   const [previewAlt, setPreviewAlt] = useState(null)
   const [mintedAddress, setMintedAddress] = useState(null)
@@ -348,7 +348,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
 
   return (
     <Modal
-      isOpen={true}//isOpen}
+      isOpen={isOpen}
       onClose={handleClose}
       closeDisabled={preventClose}
       title={`Minting ${ nftProps.name }`}

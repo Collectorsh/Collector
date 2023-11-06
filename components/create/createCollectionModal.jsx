@@ -12,6 +12,8 @@ import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { apiNodeClient } from "../../data/client/apiClient";
 import { connection } from "../../config/settings";
 import { shootConfetti } from "../../utils/confetti";
+import retryFetches from "../../utils/curations/retryFetches";
+import clsx from "clsx";
 
 const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
   const wallet = useWallet();
@@ -74,18 +76,13 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
       });
 
       const { mintAddress } = transactionBuilder.getContext();
-      const { signature, confirmResponse } = await metaplex.rpc().sendAndConfirmTransaction(
+
+      // const { signature, confirmResponse } =
+      await metaplex.rpc().sendAndConfirmTransaction(
         transactionBuilder,
         { commitment: "finalized" }
       )
-
-      if (!signature || Boolean(confirmResponse?.value?.err)) {
-        throw new Error("Error minting NFT")
-      }
-
-      await new Promise(resolve => setTimeout(resolve, 2000)) //give the tx time to settle before fetching
-
-      const newNft = await metaplex.nfts().findByMint({ mintAddress });
+      const newNft = await retryFetches(() => metaplex.nfts().findByMint({ mintAddress }));
 
       if (!newNft) {
         throw new Error("Error getting minted NFT")
@@ -174,7 +171,8 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
         <MainButton onClick={onMint} solid disabled={disableCreate}>
           Retry
         </MainButton>
-      )
+      ) 
+      case MINT_STAGE.SUCCESS: return () => null;
       default: return (
         <MainButton solid disabled>
           <span className="inline-block translate-y-0.5">
@@ -198,9 +196,16 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
       </div>
 
       <div className="w-full grid grid-cols-2 gap-4">
-        <div className="justify-self-end">
-          <MainButton onClick={handleClose}>
-            Cancel
+        <div className={clsx(
+            "justify-self-end",
+          MINT_STAGE.SUCCESS === stage && "col-span-2 w-full flex justify-center"
+          )}
+        >
+          <MainButton
+            onClick={handleClose}
+         
+          >
+            {MINT_STAGE.SUCCESS === stage ? "Return" : "Cancel"}
           </MainButton>
         </div>
         <div>

@@ -15,6 +15,8 @@ import useNftFiles, { altFileAspectRatio } from "../../hooks/useNftFiles";
 import HtmlViewer from "../../components/artDisplay/htmlViewer";
 
 import dynamic from 'next/dynamic';
+import Drawer from "../../components/Drawer";
+import { parseExternalLink } from "../../utils/parseExternalLink";
 
 const ModelViewer = dynamic(() => import("../../components/artDisplay/modelDisplay"), {
   ssr: false
@@ -34,6 +36,10 @@ export default function DetailPage({token, curations}) {
   const supply = token?.supply
   const maxSupply = token?.max_supply
   const editionNumber = token?.edition_number
+
+  const externalUrl = token.externalUrl
+    ? parseExternalLink(token.externalUrl)
+    : null
 
   const useAltMediaAspectRatio = Boolean(htmlUrl || vrUrl)
   const altAssetHeight = (useAltMediaAspectRatio && typeof assetWidth === "number")
@@ -160,25 +166,25 @@ export default function DetailPage({token, curations}) {
           className="mt-3 px-4 mx-auto"
           style={{ maxWidth: assetWidth }}
         >
-          <div className="flex flex-col gap-1">
-            <h1 className="collector text-4xl">{token?.name}</h1>
+          <h1 className="collector text-4xl mb-2">{token?.name}</h1>
+          <div className="flex flex gap-1">
             {artistName
-              ? <p>by {artistName}</p>
+              ? <p> by {artistName}</p>
               : null
             }
-            <p className=''>{supplyText}</p>
             {!isMasterEdition
-              ? <p className="">Owned by {ownerName}</p>
+              ? <p className="">- owned by {ownerName}</p>
               : null
             }
           </div>
+          <p className='mt-2'>{supplyText}</p>
         
           <p className="text-xs my-4 whitespace-pre-wrap">{token?.description}</p>
           {activeCurations.length > 0
             ? (
               <div className="my-4">
                 <hr className="border-neutral-200 dark:border-neutral-800" />
-                <h2 className="text-lg mt-5 mb-2 ">Listings</h2>
+                <h2 className="font-bold mt-5 mb-2 ">Listings:</h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   {activeCurations?.map(curation => (
                     <DetailListings key={token.mint+curation.name} curation={curation} mint={token.mint} />
@@ -197,12 +203,44 @@ export default function DetailPage({token, curations}) {
             </a>
           </div>
 
-          <div className="flex flex-wrap gap-x-4 mt-2">
-            <p className="font-bold ">Creators: </p>
-            {token.creators?.map(creator => (
-              <AddressLink key={creator.address} address={creator.address} />
-            ))}
-          </div>      
+          <Drawer
+            title="See More"
+            wrapperClass="my-2"
+            buttonClass="font-bold"
+          >
+
+            <div className="flex flex-wrap gap-x-4 mb-2">
+              <p className="font-bold ">Creators: </p>
+              {token.creators?.map(creator => (
+                <AddressLink key={creator.address} address={creator.address} />
+              ))}
+            </div>    
+            {typeof token?.isMutable !== "undefined" ? (
+              <div className="flex gap-4 mb-2">
+                <p className="font-bold">Mutable: </p>
+                <p>{token.isMutable.toString()}</p>
+              </div>
+            ) : null}
+            {externalUrl ? (
+              <div className="flex gap-4">
+                <p className="font-bold">External Url: </p>
+                <a href={externalUrl} target="_blank" rel="noreferrer">{token.externalUrl}</a>
+              </div>
+            ) : null}
+
+
+            {token.attributes?.length > 0 ? (
+              <>
+                <hr className="border-neutral-200 dark:border-neutral-800 my-2" />
+                <p className="font-bold mb-2">Attributes:</p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  {token.attributes.map(attribute => (<Attribute key={attribute.trait_type} attribute={attribute} />))}
+                </div>
+              </>
+            ) : null}
+
+
+          </Drawer>
         </div>
       </div>
     </>
@@ -215,6 +253,15 @@ const AddressLink = ({ address}) => {
     <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl} target="_blank" rel="noreferrer">
       {truncate(address, 4)}
     </a>
+  )
+}
+
+const Attribute = ({ attribute }) => {
+  return (
+    <div className="grid grid-cols-[1fr_3fr] w-full text-sm">
+      <p className="font-bold truncate">{attribute.trait_type}:</p>
+      <p className="truncate opacity-70">{attribute.value}</p>
+    </div>
   )
 }
 

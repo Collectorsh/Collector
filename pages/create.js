@@ -76,7 +76,8 @@ async function getCollectionNFTs(userPublicKey) {
           name: nft.name,
           image
         }
-      }))
+      })
+    )
   } catch (e) {
     console.log("failed to load collection nfts", e);
     return []
@@ -141,7 +142,8 @@ export default function MintPage() {
 
     (async () => {
       const nfts = await getCollectionNFTs(wallet.publicKey)
-      setExistingCollections(nfts)
+      const sortedNfts = nfts.sort((a, b) => a.name.localeCompare(b.name))
+      setExistingCollections(sortedNfts)
     })();
   }, [wallet.publicKey])
 
@@ -292,7 +294,11 @@ export default function MintPage() {
             <CreatorsInput creators={creators} setCreators={setCreators} setError={setError} />
           </div>  
 
-          <Drawer title="Extras">
+          <Drawer
+            title="Extras"
+            drawerClass="border-4 rounded-xl border-neutral-200 dark:border-neutral-700"
+            buttonClass="font-bold text-lg my-2 mx-auto"
+          >
             <div className="flex flex-col gap-4">
               <IsMutableSwitch isMutable={isMutable} setIsMutable={setIsMutable} />
               <ExternalUrlInput externalUrl={externalUrl} setExternalUrl={setExternalUrl} />

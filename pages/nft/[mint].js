@@ -259,7 +259,7 @@ const AddressLink = ({ address}) => {
 const Attribute = ({ attribute }) => {
   return (
     <div className="grid grid-cols-[1fr_3fr] w-full text-sm">
-      <p className="font-bold truncate">{attribute.trait_type}:</p>
+      <p className="font-bold truncate">{attribute.trait_type ?? attribute.traitType}:</p>
       <p className="truncate opacity-70">{attribute.value}</p>
     </div>
   )

@@ -76,7 +76,8 @@ async function getCollectionNFTs(userPublicKey) {
           name: nft.name,
           image
         }
-      }))
+      })
+    )
   } catch (e) {
     console.log("failed to load collection nfts", e);
     return []
@@ -141,7 +142,8 @@ export default function MintPage() {
 
     (async () => {
       const nfts = await getCollectionNFTs(wallet.publicKey)
-      setExistingCollections(nfts)
+      const sortedNfts = nfts.sort((a, b) => a.name.localeCompare(b.name))
+      setExistingCollections(sortedNfts)
     })();
   }, [wallet.publicKey])
 

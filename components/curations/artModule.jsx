@@ -23,7 +23,7 @@ const ModelViewer = dynamic(() => import('../artDisplay/modelDisplay'), {
   ssr: false
 });
 
-const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
+const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect, tokenMintsInUse }) => {
   const breakpoint = useBreakpoints()  
   const isMobile = ["", "sm", "md"].includes(breakpoint)
   const isTablet = ["lg", "xl"].includes(breakpoint)
@@ -168,6 +168,8 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
             isOpen={editArtOpen}
             onClose={() => setEditArtOpen(false)}
             submittedTokens={submittedTokens}
+            approvedArtists={approvedArtists}
+            tokenMintsInUse={tokenMintsInUse}
           />
         )
         : null

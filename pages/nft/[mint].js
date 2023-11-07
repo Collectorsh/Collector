@@ -172,7 +172,7 @@ export default function DetailPage({token, curations}) {
               ? <p> by {artistName}</p>
               : null
             }
-            {!isMasterEdition
+            {(!isMasterEdition && ownerName !== artistName)
               ? <p className="">- owned by {ownerName}</p>
               : null
             }
@@ -194,20 +194,20 @@ export default function DetailPage({token, curations}) {
             )
             : null
           }
-          <hr className="border-neutral-200 dark:border-neutral-800" />
+          <hr className="border-neutral-200 dark:border-neutral-800 my-2" />
           
-          <div className="flex flex-wrap gap-x-4 mt-4">
-            <span className="font-bold">Mint Address: </span>
-            <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl} target="_blank" rel="noreferrer">
-              {truncate(token?.mint)}
-            </a>
-          </div>
 
           <Drawer
             title="See More"
             wrapperClass="my-2"
             buttonClass="font-bold"
           >
+            <div className="flex flex-wrap gap-x-4 mb-2">
+              <span className="font-bold">Mint Address: </span>
+              <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl} target="_blank" rel="noreferrer">
+                {truncate(token?.mint)}
+              </a>
+            </div>
 
             <div className="flex flex-wrap gap-x-4 mb-2">
               <p className="font-bold ">Creators: </p>

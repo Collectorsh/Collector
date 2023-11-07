@@ -23,7 +23,7 @@ const ModelViewer = dynamic(() => import('../artDisplay/modelDisplay'), {
   ssr: false
 });
 
-const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect }) => {
+const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDeleteModule, approvedArtists, handleCollect, tokenMintsInUse }) => {
   const breakpoint = useBreakpoints()  
   const isMobile = ["", "sm", "md"].includes(breakpoint)
   const isTablet = ["lg", "xl"].includes(breakpoint)
@@ -168,6 +168,8 @@ const ArtModule = ({ artModule, onEditArtModule, isOwner, submittedTokens, onDel
             isOpen={editArtOpen}
             onClose={() => setEditArtOpen(false)}
             submittedTokens={submittedTokens}
+            approvedArtists={approvedArtists}
+            tokenMintsInUse={tokenMintsInUse}
           />
         )
         : null
@@ -238,7 +240,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
         <a  
           disabled={disableLink}
           className={clsx(
-            'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg ',
+            'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg',
             "hover:-translate-y-2 active:translate-y-0",
             disableLink && "hover:translate-y-0"
           )}

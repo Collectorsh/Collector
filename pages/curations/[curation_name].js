@@ -43,8 +43,6 @@ function CurationPage({curation}) {
 
   const { handleCollect, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
 
-  const [curationLoaded, setCurationLoaded] = useState(false);
-
   const [editNameOpen, setEditNameOpen] = useState(false);
   const [editBannerOpen, setEditBannerOpen] = useState(false);
   const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);

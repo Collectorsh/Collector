@@ -29,7 +29,7 @@ const Submissions = ({ }) => {
     useArtistDetails: false,
     justVisible: false,
     justCreator: true,
-    useTokenMetadata: true
+    useTokenMetadata: true,
   });
 
   const [approvedCurations, setApprovedCurations] = useState([])

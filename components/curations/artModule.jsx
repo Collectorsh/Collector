@@ -240,7 +240,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
         <a  
           disabled={disableLink}
           className={clsx(
-            'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg ',
+            'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg',
             "hover:-translate-y-2 active:translate-y-0",
             disableLink && "hover:translate-y-0"
           )}

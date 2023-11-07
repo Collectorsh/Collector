@@ -155,7 +155,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
       const inUseElseWhere = false;
       Object.entries(tokenMintsInUse).forEach(([moduleId, mints]) => { //used in other modules
         if (moduleId === newArtModule.id) return;
-        if (mints.includes(token.mint)) otherModulesMint = true;
+        if (mints.includes(token.mint)) inUseElseWhere = true;
       });
 
       const alreadyInUse = inUseHere || inUseElseWhere;

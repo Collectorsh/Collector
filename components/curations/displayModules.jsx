@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 import SortableModule from './sortableModule'
 import SortableModulesWrapper from './sortableModulesWrapper'
 import TextModule from './textModule'
@@ -27,6 +27,14 @@ const DisplayModules = ({
     setModules(newModules);
   }
 
+  const tokenMintsInUse = useMemo(() => {
+    return modules.reduce((acc, module) => {
+      if (module.type === "art") acc[module.id] = module.tokens
+      return acc
+    }, {})
+  }, [modules])
+
+
   if (isOwner) return (
     <SortableModulesWrapper
       className="grid grid-cols-1 gap-4 p-4"
@@ -46,6 +54,7 @@ const DisplayModules = ({
             submittedTokens={submittedTokens}
             onDeleteModule={() => handleDeleteModule(module.id)}
             approvedArtists={approvedArtists}
+            tokenMintsInUse={tokenMintsInUse}
           />
         </SortableModule>
       ))}
@@ -78,6 +87,7 @@ export const Module = ({
   onDeleteModule,
   approvedArtists,
   handleCollect,
+  tokenMintsInUse
 }) => {
   switch (module.type) {
     case "text": {
@@ -100,6 +110,7 @@ export const Module = ({
           submittedTokens={submittedTokens}
           approvedArtists={approvedArtists}
           handleCollect={handleCollect}
+          tokenMintsInUse={tokenMintsInUse}
         />
       )
     }

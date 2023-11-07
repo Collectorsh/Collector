@@ -190,17 +190,18 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
             useMetadataFallback
             token={token}
             width={500}
+            noLazyLoad
           />
 
           {alreadyInUse ? (
             <div className="absolute inset-0 flex justify-center items-center">
-              <p className="backdrop-blur-sm bg-neutral-200/50 dark:bg-neutral-800/50 px-2 rounded-md">Already Being Used</p>
+              <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">Already Being Used</p>
             </div>
           ) : null}
           <div
-            className="absolute text-center top-0 left-0 p-8 w-full h-full overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50 
+            className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90 
             transition-opacity duration-300 opacity-0 hover:opacity-100
-            backdrop-blur-sm flex flex-col justify-center items-center rounded-lg 
+             flex flex-col justify-center items-center rounded-lg
           "
           >
             <p className="font-bold">{token.name}</p>

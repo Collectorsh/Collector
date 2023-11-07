@@ -23,6 +23,7 @@ async function getTokens(publicKeys, options) {
   const useArtistDetails = options.useArtistDetails ?? true
   const justCreator = options.justCreator ?? false
   const useTokenMetadata = options.useTokenMetadata ?? false
+  const filterOutCollections = options.filterOutCollections ?? false
 
   const baseTokens = []
   const mintedIndexerTokens = []
@@ -166,25 +167,29 @@ async function getTokens(publicKeys, options) {
     })
     : { data: [] };
   
+  const metaplex = Metaplex.make(connection);
   for (const result of results) { 
-      
-    if (useTokenMetadata) {
-      //get onchain Metadata //TODO get this info from Helius once available
+    if (useTokenMetadata) { 
       try {
-        const edition = await Metadata.getEdition(connection, result.mint)
-        const { data } = edition
+        const metadata = await metaplex.nfts().findByMint({
+          mintAddress: new PublicKey(result.mint)
+        })
+        const edition = metadata.edition
+
+        result.collectionDetails = metadata.collectionDetails;
+
+        result.is_master_edition = Boolean(edition.maxSupply && Number(edition.maxSupply?.toString()) > 0)
+        result.supply = edition.supply ? Number(edition.supply.toString()) : undefined
+        result.max_supply = edition.maxSupply ? Number(edition.maxSupply.toString()) : undefined
         
-        result.is_master_edition = Boolean(data.maxSupply && Number(data.maxSupply?.toString()) > 0)
-        result.supply = data.supply ? Number(data.supply.toString()) : undefined
-        result.max_supply = data.maxSupply ? Number(data.maxSupply.toString()) : undefined
-        
-        result.is_edition = Boolean(data.parent)
-        result.parent = data.parent?.toString()
-        result.edition_number = data.edition?.toString()
+        result.is_edition = !edition.isOriginal
+        result.parent = edition.parent?.toString()
+        result.edition_number = edition.number?.toString()
+
       } catch (err) {
         console.log("Error getting metadata for mint", result.mint)
       }
-    }  
+    }
       
     // Loop through results and set artist name, twitter
     let tokens = creatorResp.data.filter((t) => t.public_key === result.artist_address);
@@ -199,6 +204,13 @@ async function getTokens(publicKeys, options) {
         if (toke) result.artist_twitter = toke.twitter;
       }
     }
+  }
+
+  if (useTokenMetadata) {
+    results = results.filter((item) => {
+      if (item.collectionDetails) console.log(item)
+      return !item.collectionDetails
+    })
   }
 
   results = results.sort((a, b) => {

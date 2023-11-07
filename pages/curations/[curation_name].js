@@ -509,6 +509,7 @@ export async function getServerSideProps(context) {
     const curation = await getCurationByName(name)
 
     if (curation) {
+      curation.curation_type = "artist"
       return { props: { curation } };
     } else {
       return { props: {} };

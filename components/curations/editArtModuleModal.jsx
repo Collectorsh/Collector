@@ -11,19 +11,31 @@ import useBreakpoints from "../../hooks/useBreakpoints";
 import { truncate } from "../../utils/truncate";
 import { getTokenAspectRatio } from "../../hooks/useNftFiles";
 import debounce from "lodash.debounce";
+import { useTokens } from "../../data/nft/getTokens";
+import UserContext from "../../contexts/user";
 
 const tabs = ["submitted"]
 
 export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, artModule, submittedTokens, approvedArtists, onDeleteModule, tokenMintsInUse, curationType }) {
   const breakpoint = useBreakpoints()
   const isMobile = ["", "sm"].includes(breakpoint)
-  const [newArtModule, setNewArtModule] = useState(artModule)
-  
+  const [user] = useContext(UserContext);
   const wrapperRef = useRef();
-
+  
+  const [newArtModule, setNewArtModule] = useState(artModule)
   const [wrapperWidth, setWrapperWidth] = useState(0);
-
   const [search, setSearch] = useState("");
+  
+  //Dont fetch user tokens if this is a curator curation
+  const useUserTokens = curationType === "curator" ? false : true;
+  // if collector curation, fetch owned tokens like normal;
+  // if artist curation, fetch with created query;
+  const userTokens = useTokens(useUserTokens ? user?.public_keys : null, {
+    queryByCreator: curationType === "artist",
+    useArtistDetails: false,
+    justVisible: false,
+    useTokenMetadata: true,
+  });
 
   const gapSize = 24
 
@@ -124,7 +136,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
 
   const contentTitle = useMemo(() => {
     switch (curationType) {
-      // case "artist": return "My Art"
+      case "artist": return "My Art"
       // case "collector": return "My Collection"
 
       case "curator":
@@ -134,13 +146,13 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
 
   const availableTokens = useMemo(() => {
     switch (curationType) {
-      // case "artist": return createdTokens
-      // case "collector": return ownedTokens
+      case "artist": 
+      case "collector": return userTokens
 
       case "curator":
       default: return submittedTokens || []
     }
-  }, [curationType, submittedTokens])
+  }, [curationType, submittedTokens, userTokens])
   
   const availableTokenButtons = useMemo(() => availableTokens
     .filter((token) => {

@@ -23,31 +23,50 @@ async function getTokens(publicKeys, options) {
   const useArtistDetails = options.useArtistDetails ?? true
   const justCreator = options.justCreator ?? false
   const useTokenMetadata = options.useTokenMetadata ?? false
-  const filterOutCollections = options.filterOutCollections ?? false
+  const queryByCreator = options.queryByCreator ?? false
+
+ 
 
   const baseTokens = []
   const mintedIndexerTokens = []
  
   const maxBatch = 1000
   for (const publicKey of publicKeys) {
-    let page = 1
-    let continueFetching = true
-    while (continueFetching) {
-      const res = await axios.post(`https://mainnet.helius-rpc.com/?api-key=${ process.env.NEXT_PUBLIC_HELIUS_API_KEY }`, {
-          "jsonrpc": "2.0",
-          "id": `collector-tokens-${publicKey}-${page}`,
-          "method": "getAssetsByOwner",
-          "params": {
-            "ownerAddress": publicKey,
-            "page": page,
-            "limit": maxBatch,
-            // "displayOptions": {
-            //   "showUnverifiedCollections": true,
-            //   "showCollectionMetadata": true
+    let page = 1 // Starts at 1
+    let continueFetching = true;
 
-            // },
-          }
-        }).then((res) => {
+    const fetchParams = queryByCreator
+      ? {
+        jsonrpc: '2.0',
+        id: `creator-tokens-${ publicKey }-${ page }`,
+        method: 'getAssetsByCreator',
+        params: {
+          creatorAddress: publicKey,
+          onlyVerified: true,
+          page: page, 
+          limit: maxBatch
+        },
+      }
+      : {
+        jsonrpc: "2.0",
+        id: `collector-tokens-${ publicKey }-${ page }`,
+        method: "getAssetsByOwner",
+        params: {
+          ownerAddress: publicKey,
+          page: page,
+          limit: maxBatch,
+          // "displayOptions": {
+          //   "showUnverifiedCollections": true,
+          //   "showCollectionMetadata": true
+          // },
+        }
+      }
+    
+    while (continueFetching) {
+      const res = await axios.post(
+          `https://mainnet.helius-rpc.com/?api-key=${ process.env.NEXT_PUBLIC_HELIUS_API_KEY }`,
+          fetchParams
+        ).then((res) => {
           return res.data.result;
         }).catch((err) => {
           console.log("Error Fetching Metadata By Owner:", err);

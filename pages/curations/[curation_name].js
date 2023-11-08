@@ -296,7 +296,6 @@ function CurationPage({curation}) {
     <>
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        {/* <p className="dark:text-gray-100 pt-20 text-center animate-pulse">Loading...</p> */}
         <h1 className="animate-pulse font-bold text-4xl text-center mt-[25%]">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
       </div>
     </>
@@ -407,6 +406,7 @@ function CurationPage({curation}) {
             submittedTokens={submittedTokens}
             approvedArtists={approvedArtists}
             handleCollect={handleCollect}
+            curationType={curation.curation_type}
           />
 
         )
@@ -509,7 +509,8 @@ export async function getServerSideProps(context) {
     const curation = await getCurationByName(name)
 
     if (curation) {
-      curation.curation_type = "artist"
+      // //TODO remove this placeholder
+      curation.curation_type = "curator" //"artist"
       return { props: { curation } };
     } else {
       return { props: {} };

@@ -13,8 +13,12 @@ import { getTokenAspectRatio } from "../../hooks/useNftFiles";
 import debounce from "lodash.debounce";
 import { useTokens } from "../../data/nft/getTokens";
 import UserContext from "../../contexts/user";
+import { Switch } from "@headlessui/react";
+import SortableArt from "./sortableArt";
+import SortableArtWrapper from "./sortableArtWrapper";
+import { roundToPrecision } from "../../utils/maths";
 
-const tabs = ["submitted"]
+const tabs = ["1/1", "Master Editions"]
 
 export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, artModule, submittedTokens, approvedArtists, onDeleteModule, tokenMintsInUse, curationType }) {
   const breakpoint = useBreakpoints()
@@ -25,16 +29,28 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
   const [newArtModule, setNewArtModule] = useState(artModule)
   const [wrapperWidth, setWrapperWidth] = useState(0);
   const [search, setSearch] = useState("");
+  const [useAllCreated, setUseAllCreated] = useState(false);
+
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [tabUnderlineWidth, setTabUnderlineWidth] = useState(49);
+  const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
+  const tabsRef = useRef([]);
   
   //Dont fetch user tokens if this is a curator curation
   const useUserTokens = curationType === "curator" ? false : true;
+
   // if collector curation, fetch owned tokens like normal;
-  // if artist curation, fetch with created query;
+  // if artist curation, start with owned & created;
+  // give option to fetch all created
+  const useCreatorQuery = curationType === "artist" && useAllCreated
+  const useJustCreator = curationType === "artist" && !useAllCreated //only needs to filter owned tokens, can skip if using createdQuery
+  const useArtistDetails = curationType === "collector"//can assume artist details are already fetched for artist curation (auto added as approved artist)
   const userTokens = useTokens(useUserTokens ? user?.public_keys : null, {
-    queryByCreator: curationType === "artist",
-    useArtistDetails: false,
-    justVisible: false,
+    queryByCreator: useCreatorQuery,
+    justCreator: useJustCreator,
+    useArtistDetails: useArtistDetails,
     useTokenMetadata: true,
+    justVisible: false,
   });
 
   const gapSize = 24
@@ -42,8 +58,13 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
   useEffect(() => {
     const handleResize = () => {
       if (!wrapperRef.current) return;
-      const width = wrapperRef.current.offsetWidth
+      const width = wrapperRef.current.clientWidth
       setWrapperWidth(width)
+
+      const currentTab = tabsRef.current[activeTabIndex];
+      if (!currentTab) return
+      setTabUnderlineLeft(currentTab.offsetLeft);
+      setTabUnderlineWidth(currentTab.clientWidth);
     }
     setTimeout(handleResize, 500)
 
@@ -54,7 +75,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
       debouncedResize.cancel()
       window.removeEventListener("resize", debouncedResize)
     }
-  }, [isOpen])
+  }, [isOpen, activeTabIndex])
 
   const tokens = useMemo(() => {
     return newArtModule.tokens
@@ -75,6 +96,24 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
       setSearch("")
     }, 500);
   }
+
+  const userTokensSplit = useMemo(() => {
+    const masterEditions = []
+    const editions = []
+    const artTokens = []
+
+    userTokens?.forEach(token => {
+      const soldOut = token.is_master_edition ? token.supply >= token.max_supply : false
+      if (token.is_master_edition && !soldOut) masterEditions.push(token)
+      else if (token.is_edition) editions.push(token)
+      else if (!token.is_master_edition && !token.is_edition) artTokens.push(token)
+    })
+    return {
+      masterEditions,
+      editions,
+      artTokens
+    }
+  }, [userTokens])
   
   const itemsInModule = useMemo(() => {
     if (!tokens.length || !wrapperWidth) return []
@@ -86,27 +125,28 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
     
     tokens.forEach(token => {
       const mint = token.mint;
-      totalAspectRatio += Number(token.aspect_ratio);
-      mappedAspectRatios[mint] = getTokenAspectRatio(token)
+      const aspect = getTokenAspectRatio(token)
+      totalAspectRatio += aspect
+      mappedAspectRatios[mint] = aspect
     })
-    
+
     const maxHeight = 333;
     const rowGapOffset = gapSize * (tokens.length - 1);
     const rowHeight = Math.min((wrapperWidth - rowGapOffset) / totalAspectRatio, maxHeight);
-    
-    return tokens.map((token, i) => {
-      // const tokenWidth = mappedAspectRatios[token.mint] * rowHeight;
-      // const tokenHeight = rowHeight;
 
+    return tokens.map((token, i) => {
       const tokenWidth = cols > 1
         ? mappedAspectRatios[token.mint] * rowHeight
-        : Math.min(wrapperWidth, maxHeight * mappedAspectRatios[token.mint]);
+        : Math.min(wrapperWidth, mappedAspectRatios[token.mint] * maxHeight);
       
       const tokenHeight = cols > 1
         ? rowHeight
         : tokenWidth / mappedAspectRatios[token.mint];
 
-      const handleRemove = () => {
+      const handleRemove = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        
         if (curationType !== "curator") {//"artist" || "collector" 
           //TODO: handle auto delete submission (API should only delete if its not in published or draft)
         }
@@ -123,14 +163,18 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
           }
         })
       }
-
-      return <EditArtItem key={token.mint}
-        token={token}
-        width={tokenWidth}
-        height={tokenHeight}
-        columns={cols}
-        onRemove={handleRemove}
-      />
+      return (
+        <SortableArt id={token.mint} key={token.mint}>
+          <EditArtItem
+           
+            token={token}
+            width={tokenWidth}
+            height={tokenHeight}
+            columns={cols}
+            onRemove={handleRemove}
+          />
+        </SortableArt>
+      )
     })
   }, [tokens, isMobile, curationType, wrapperWidth])
 
@@ -147,19 +191,30 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
   const availableTokens = useMemo(() => {
     switch (curationType) {
       case "artist": 
-      case "collector": return userTokens
+      case "collector": {
+        const { masterEditions, editions, artTokens } = userTokensSplit;
+        switch (activeTabIndex) {
+          case 0: return artTokens
+          case 1: return masterEditions
+          case 2: return editions
+          default: return []
+        }
+      }
 
       case "curator":
       default: return submittedTokens || []
     }
-  }, [curationType, submittedTokens, userTokens])
-  
+  }, [curationType, submittedTokens, userTokensSplit, activeTabIndex])
+
   const availableTokenButtons = useMemo(() => availableTokens
     .filter((token) => {
       if (!search) return true;
-      const artist = approvedArtists.find(artist => artist.id === token.artist_id)
+      const artistUsername = useUserTokens
+        ? token.artist_name
+        : approvedArtists.find(artist => artist.id === token.artist_id).username;
+      
       return token.name.toLowerCase().includes(search.toLowerCase())
-        || artist.username.toLowerCase().includes(search.toLowerCase())
+        || artistUsername?.toLowerCase().includes(search.toLowerCase())
         // || token.mint.toLowerCase().includes(search.toLowerCase())
     })
     .map((token, i) => {
@@ -172,7 +227,9 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
 
       const alreadyInUse = inUseHere || inUseElseWhere;
 
-      const artist = approvedArtists.find(artist => artist.id === token.artist_id)
+      const artistUsername = useUserTokens
+        ? token.artist_name
+        : approvedArtists.find(artist => artist.id === token.artist_id).username;
       const handleAdd = ({ target }) => {
         if (alreadyInUse || moduleFull) return
 
@@ -202,7 +259,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
             useMetadataFallback
             token={token}
             width={500}
-            noLazyLoad
+            // noLazyLoad
           />
 
           {alreadyInUse ? (
@@ -217,37 +274,87 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
           "
           >
             <p className="font-bold">{token.name}</p>
-            <p>by {artist.username}</p>
+            {artistUsername ? <p>by {artistUsername}</p> : null}
             <p className="text-xs">{truncate(token.mint)}</p>
           </div>
         </button>
       )
     })
-  , [approvedArtists, availableTokens, curationType, moduleFull, newArtModule.id, tokenMintsInUse, tokens, search])
+  , [approvedArtists, availableTokens, curationType, moduleFull, newArtModule.id, tokenMintsInUse, tokens, search, useUserTokens])
 
   const content = (
     <div className="relative h-full min-h-[200px] max-h-[333px] min border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
       {moduleFull ?
         <p
           className="absolute top-[50%] right-[50%] translate-x-[50%] -translate-y-[50%] z-50 shadow-lg
-          bg-neutral-200/50 dark:bg-neutral-800/50 px-5 py-2 rounded-lg font-bold"
+          bg-neutral-200 dark:bg-neutral-800 px-5 py-2 rounded-lg font-bold"
         >Module Full</p>
         : null
       }
       <div className={clsx("w-full h-full p-2 overflow-auto grid gap-4 rounded-lg",
         "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
       )}>
-        {availableTokens?.length === 0
-          ? (<div className="col-span-3 flex justify-center items-center">
-            <p>
-              There are currently no available artworks
-            </p>
-          </div>)
+        {!availableTokens?.length
+          ? (
+            <div className="col-span-5 flex justify-center items-center">
+              {useUserTokens && !userTokens
+                ? <p className="animate-pulse">Gathering your digital assets...</p>
+                : <p>There are currently no available artworks</p>
+              }
+            </div>
+          )
           : availableTokenButtons}
       </div>
     </div>
   )
 
+  const tokensLabel = useUserTokens ? (
+    <>
+      
+      <div className="relative mx-auto w-fit">
+        <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
+          {tabs.map((tab, i) => {
+            const handleClick = () => {
+              setActiveTabIndex(i);
+            }
+            const isSelected = activeTabIndex === i;
+
+            // if(i === 0 && !activeTabIndex) setActiveTabIndex(0)
+
+            return (
+              <button
+                key={tab}
+                ref={(el) => (tabsRef.current[i] = el)}
+                className={clsx(
+                  "px-3 py-1 capitalize hover:opacity-100 hover:scale-[102%] font-bold duration-300",
+                  isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
+                onClick={handleClick}
+              >
+                {tab}
+              </button>
+            )
+          })}
+
+        </div>
+        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
+        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700" />
+        <span
+          className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner shadow-black/10 dark:shadow-white/10"
+        />
+        <span
+          className="absolute rounded-full bottom-0 block h-1 bg-black dark:bg-white transition-all duration-300"
+          style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
+        />
+      </div>
+    </>
+  )
+    : (
+      <div className="relative mx-auto w-fit">
+        <p className="font-bold bg-neutral-200 dark:bg-neutral-700 h-5">{contentTitle}</p>
+        <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
+        <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-neutral-200 dark:fill-neutral-700" />
+      </div>
+    )
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Edit Art Module">
@@ -255,17 +362,37 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
         className="overflow-y-auto grid h-screen max-h-full grid-rows-[1fr,auto,1fr] mt-4 relative"
       >
         <div className="relative flex flex-col">
-          <SearchBar
-            className="ml-2 pl-4 w-full max-w-[20rem] mb-2"
-            search={search}
-            setSearch={setSearch}
-            placeholder="Search By Artwork"
-          />
-          <div className="relative mx-auto w-fit">
-            <p className="font-bold bg-neutral-200 dark:bg-neutral-700 h-5">{contentTitle}</p>
-            <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
-            <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-neutral-200 dark:fill-neutral-700" />
+          <div className="flex items-center justify-between flex-wrap px-4 gap-2">
+            <SearchBar
+              className="w-full max-w-[20rem]"
+              search={search}
+              setSearch={setSearch}
+              placeholder="Search By Artwork"
+            />
+            {curationType === "artist" ? (
+              <div className="flex items-center gap-2 justify-center">
+                <p>Currently Owned</p>
+                <Switch
+                  checked={useAllCreated}
+                  onChange={setUseAllCreated}
+                  className={clsx(
+                    'bg-neutral-100 dark:bg-neutral-900',
+                    "border-neutral-200 dark:border-neutral-700 border-2",
+                    "relative inline-flex h-8 w-14 items-center rounded-full flex-shrink-0"
+                  )}
+                >
+                  <span className="sr-only">Toggle use all created</span>
+                  <span
+                    className={clsx(useAllCreated ? 'translate-x-7' : 'translate-x-1',
+                      "inline-block h-5 w-5 transform rounded-full   transition bg-neutral-900 dark:bg-neutral-100"
+                    )}
+                  />
+                </Switch>
+                <p>All Created</p>
+              </div>
+            ) : null}
           </div>
+          {tokensLabel}
           {content}
         </div>
 
@@ -276,18 +403,21 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
           )} 
             ref={wrapperRef}
           >
-            <div
-              style={{ gap: gapSize }}
-              className={clsx(
-                "flex flex-col sm:flex-row w-full h-full",
-                "justify-center items-center"
-              )}
-            >
-            {itemsInModule.length
-              ? itemsInModule      
-              : <p className="text-center">Click an artwork above to add it to this module</p>
-            } 
-            </div>
+           
+            <SortableArtWrapper artModule={newArtModule} setArtModule={setNewArtModule}>
+              <div
+                style={{ gap: gapSize }}
+                className={clsx(
+                  "flex flex-col sm:flex-row w-full h-full",
+                  "justify-center items-center"
+                )}
+              >
+                {itemsInModule.length
+                  ? itemsInModule      
+                  : <p className="text-center">Click an artwork above to add it to this module</p>
+                } 
+              </div>
+            </SortableArtWrapper>
           </div>
         </div>
       </div>
@@ -311,50 +441,51 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
 }
 
 const EditArtItem = ({
-  columns,
-  // widthPercent,
   width, height,
   token,
   onRemove
 }) => {
+  console.log("🚀 ~ file: editArtModuleModal.jsx:451 ~ width, height,:", width, height,)
 
   const [loaded, setLoaded] = useState(false);
   return (
-    <div
-      className="relative duration-300 w-fit mx-auto"
-    >
+  
       <div
-        className='relative block w-fit duration-300'
-        style={{
-          height,
-          width,
-        }}
+        className="relative duration-300 w-fit mx-auto"
       >
-        <button
-          className={clsx(
-            "absolute -top-2 -right-2",
-            "bg-neutral-200/50 dark:bg-neutral-700/50 rounded-full shadow-lg dark:shadow-white/10",
-            "duration-300 hover:scale-110 active:scale-100",
-          )}
-          onClick={onRemove}
+        <div
+          className='relative block w-fit duration-300'
+          style={{
+            height,
+            width,
+          }}
         >
-          <XCircleIcon className="w-8 h-8" />
-        </button>
-        <CloudinaryImage
-          className={clsx(
-            "object-cover",
-            "shadow-lg rounded-lg",
-            "w-full h-full"
-            // "max-h-[333px]"
-          )}
-          width={500}
-          useUploadFallback
-          token={token}
-          noLazyLoad
-          onLoad={() => setLoaded(true)}
-        />
-        {!loaded ? <p className="animate-pulse p-4">Loading...</p> : null}
+          <button
+            className={clsx(
+              "absolute -top-2 -right-2 z-50",
+              "bg-neutral-200/50 dark:bg-neutral-700/50 rounded-full shadow-lg dark:shadow-white/10",
+              "duration-300 hover:scale-110 active:scale-100",
+            )}
+            onClick={onRemove}
+          >
+            <XCircleIcon className="w-8 h-8" />
+          </button>
+          <CloudinaryImage
+            className={clsx(
+              "object-cover",
+              "shadow-lg rounded-lg",
+              "w-full h-full"
+              // "max-h-[333px]"
+            )}
+            width={500}
+            useUploadFallback
+            token={token}
+            noLazyLoad
+            onLoad={() => setLoaded(true)}
+          />
+          {!loaded ? <p className="animate-pulse p-4">Loading...</p> : null}
+        </div>
       </div>
-    </div>
+
   )
 }

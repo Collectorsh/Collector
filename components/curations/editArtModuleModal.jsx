@@ -16,7 +16,6 @@ import UserContext from "../../contexts/user";
 import { Switch } from "@headlessui/react";
 import SortableArt from "./sortableArt";
 import SortableArtWrapper from "./sortableArtWrapper";
-import { roundToPrecision } from "../../utils/maths";
 
 const tabs = ["1/1", "Master Editions"]
 
@@ -166,11 +165,9 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
       return (
         <SortableArt id={token.mint} key={token.mint}>
           <EditArtItem
-           
             token={token}
             width={tokenWidth}
             height={tokenHeight}
-            columns={cols}
             onRemove={handleRemove}
           />
         </SortableArt>
@@ -371,7 +368,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
             />
             {curationType === "artist" ? (
               <div className="flex items-center gap-2 justify-center">
-                <p>Currently Owned</p>
+                <p>Owned</p>
                 <Switch
                   checked={useAllCreated}
                   onChange={setUseAllCreated}
@@ -388,7 +385,7 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
                     )}
                   />
                 </Switch>
-                <p>All Created</p>
+                <p>All</p>
               </div>
             ) : null}
           </div>
@@ -404,7 +401,11 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
             ref={wrapperRef}
           >
            
-            <SortableArtWrapper artModule={newArtModule} setArtModule={setNewArtModule}>
+            <SortableArtWrapper
+              artModule={newArtModule} 
+              setArtModule={setNewArtModule}
+              itemsInModule={itemsInModule}
+            >
               <div
                 style={{ gap: gapSize }}
                 className={clsx(
@@ -445,11 +446,8 @@ const EditArtItem = ({
   token,
   onRemove
 }) => {
-  console.log("🚀 ~ file: editArtModuleModal.jsx:451 ~ width, height,:", width, height,)
-
   const [loaded, setLoaded] = useState(false);
   return (
-  
       <div
         className="relative duration-300 w-fit mx-auto"
       >

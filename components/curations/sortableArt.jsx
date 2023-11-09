@@ -27,13 +27,12 @@ const SortableArt = ({ id, children }) => {
     <div ref={setNodeRef} style={style} {...attributes}
       {...listeners}
       className={clsx("relative inline",
-        "cursor-grab active:cursor-grabbing",
-        isActive && "opacity-80 blur-[1px]",
+        "",
+        active && "pointer-events-none",
+        isActive ? "opacity-50 blur-[2px] cursor-grabbing" : "cursor-grab",
       )}
     >
-      <GrabHandle
-        // setActivatorNodeRef={setActivatorNodeRef}
-        grabbing={isActive} />
+      <ArtGrabHandle grabbing={isActive} />
       {children}
 
     </div>
@@ -42,9 +41,8 @@ const SortableArt = ({ id, children }) => {
 
 export default SortableArt;
 
-export const GrabHandle = ({ listeners, setActivatorNodeRef, grabbing }) => (
+export const ArtGrabHandle = ({ grabbing }) => (
   <button
-    ref={setActivatorNodeRef} {...listeners}
     className={clsx("absolute bg-neutral-200 dark:bg-neutral-700 -left-4 w-4 top-[50%] -translate-y-[50%] py-2 rounded-l-lg duration-200 hover:scale-110 origin-right",
       grabbing ? "cursor-grabbing " : "cursor-grab",
     )}

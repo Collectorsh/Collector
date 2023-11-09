@@ -13,7 +13,7 @@ export function coalesce(val, def) {
   return val;
 }
 
-const DEBUG = true
+const DEBUG = false
 
 //HELIUS METADATA BY OWNER
 async function getTokens(publicKeys, options) { 
@@ -92,8 +92,6 @@ async function getTokens(publicKeys, options) {
     ? baseTokens
     : baseTokens.filter((token) => { 
       
-      // if (token.id === "E12dj4cncTHpf4nKynKRkJfhFvqGHDKCU5jLb2MbkH9w") console.log("🚀 ~ file: create.js:77 ~ MintPage ~ tokens:", token)
-
     const creatorsAddresses = token.creators.map((creator) => creator.address)
     return Boolean(creatorsAddresses.find(address => publicKeys.includes(address)))
   })

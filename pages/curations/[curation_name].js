@@ -429,6 +429,7 @@ function CurationPage({curation}) {
               noContent={hasNoContent}
               collectedFees={collectedFees}
               handleWithdrawFees={handleWithdrawFees}
+              curationType={curation.curation_type}
             />
           )
           : null
@@ -510,7 +511,6 @@ export async function getServerSideProps(context) {
 
     if (curation) {
       // //TODO remove this placeholder
-      curation.curation_type = "curator" //"artist"
       return { props: { curation } };
     } else {
       return { props: {} };

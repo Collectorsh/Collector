@@ -20,10 +20,11 @@ import {
   restrictToParentElement,
   restrictToHorizontalAxis
 } from '@dnd-kit/modifiers';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { GrabHandle } from './sortableModule';
+import { ArtGrabHandle } from './sortableArt';
 
-const SortableArtWrapper = ({ children, artModule, setArtModule, className }) => {
+const SortableArtWrapper = ({ children, artModule, setArtModule, itemsInModule }) => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -57,22 +58,19 @@ const SortableArtWrapper = ({ children, artModule, setArtModule, className }) =>
       });
     }
   }
-  // const renderItem = (id) => {
-  //   const module = modules.find(module => module.id === id);
-  //   if (!module) return null
-  //   return (
-  //     <div className="relative rounded-lg ring-4 ring-neutral-200 dark:ring-neutral-700 cursor-grabbing bg-white dark:bg-black w-full">
-  //       <GrabHandle grabbing />
-  //       <div className='pointer-events-none w-full'>
-  //         <Module
-  //           module={module}
-  //           submittedTokens={submittedTokens}
-  //           approvedArtists={approvedArtists}
-  //         />
-  //       </div>
-  //     </div>
-  //   )
-  // }
+
+  const overlay = useMemo(() => {
+    if (!activeId) return null;
+    return (
+      <div className='cursor-grabbing'>
+        {/* <ArtGrabHandle grabbing /> */}
+        <div className='pointer-events-none'>
+          {itemsInModule.find(element => element.key === activeId)}
+        </div>
+      </div>
+    )
+  }, [activeId, itemsInModule])
+
   return (
     <DndContext
       modifiers={[restrictToParentElement]}
@@ -85,13 +83,13 @@ const SortableArtWrapper = ({ children, artModule, setArtModule, className }) =>
         items={artModule.tokens}
         // strategy={horizontalListSortingStrategy}
       >
-        {/* <div className={className}> */}
-          {children}
-        {/* </div> */}
+       
+        {children}
+
       </SortableContext>
-      {/* <DragOverlay modifiers={[restrictToParentElement]}>
-        {activeId ? renderItem(activeId) : null}
-      </DragOverlay> */}
+      <DragOverlay modifiers={[restrictToParentElement]}>
+        {overlay}
+      </DragOverlay>
     </DndContext>
   );
 }

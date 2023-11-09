@@ -21,7 +21,8 @@ const GlobalEditBar = ({
   openUnpublish,
   noContent,
   collectedFees,
-  handleWithdrawFees
+  handleWithdrawFees,
+  curationType //"curator", "artist", "collector
 }) => {
   const [withdrawing, setWithdrawing] = useState(false)
   
@@ -51,6 +52,28 @@ const GlobalEditBar = ({
     setWithdrawing(false)
   }
 
+  const handleEditListings = () => { }
+
+  const centralButton = curationType === "curator"
+    ? (
+      <MainButton
+        onClick={handleInviteArtists}
+        className="flex gap-2 items-center "
+        solid
+      >
+        Invite Artists <UserAddIcon className="w-5 h-5" />
+      </MainButton>
+    )
+    : (
+      <MainButton
+        onClick={handleEditListings}
+        className="flex gap-2 items-center "
+        solid
+      >
+        Edit Listings
+      </MainButton>
+    )
+
   const draftButtons = (
     <>
       <div className='flex gap-4 flex-wrap justify-center md:place-self-start'>
@@ -69,13 +92,8 @@ const GlobalEditBar = ({
         </MainButton>
       </div>
 
-      <MainButton
-        onClick={handleInviteArtists}
-        className="flex gap-2 items-center "
-        solid
-      >
-        Invite Artists <UserAddIcon className="w-5 h-5" />
-      </MainButton>
+      {centralButton}
+      
       
       <div className='flex gap-4 flex-wrap justify-center  md:place-self-end'>
         <MainButton
@@ -106,44 +124,39 @@ const GlobalEditBar = ({
 
   const publishedButtons = (
     <>
-      <div className='flex gap-4 flex-wrap justify-center md:place-self-start'>
+      <div className='flex gap-4 flex-wrap justify-center md:place-self-start w-full'>
         <WarningButton
           onClick={openUnpublish}
         >
           Unpublish
         </WarningButton>
-        <MainButton
-          onClick={handleWithdraw}
-          disabled={withdrawing || !curatorBalance} 
-          className="min-w-[250px]"
-        >
-          {withdrawing
-            ? (
-              <span className="inline-block translate-y-0.5">
-                <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
-              </span>
-            )
-            : (
-              <>
-                <span>Withdraw Fees</span>
-                <Tippy
-                  content="Minus Solana transaction fees"
-                >
-                  <span> ({fees})</span>
-                </Tippy>
-              </>
-            )
-          }
-        </MainButton>
-          
+        {curationType === "curator" ? (
+          <MainButton
+            onClick={handleWithdraw}
+            disabled={withdrawing || !curatorBalance}
+            className="min-w-[250px]"
+          >
+            {withdrawing
+              ? (
+                <span className="inline-block translate-y-0.5">
+                  <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+                </span>
+              )
+              : (
+                <>
+                  <span>Withdraw Fees</span>
+                  <Tippy
+                    content="Minus Solana transaction fees"
+                  >
+                    <span> ({fees})</span>
+                  </Tippy>
+                </>
+              )
+            }
+          </MainButton>
+        ): null}
       </div>
-      <MainButton
-        onClick={handleInviteArtists}
-        className="flex gap-2 items-center"
-        solid
-        >
-        Invite Artists <UserAddIcon className="w-5 h-5" />
-      </MainButton>
+      {centralButton}
       <MainButton
         onClick={() => setIsEditingDraft(true)}
       >

@@ -32,26 +32,6 @@ export default function TestPage() {
     console.log("PRICE", marketData.price.toNumber()/LAMPORTS_PER_SOL)
 
   }
-
-  async function createPlatformMarketPlace() {
-  
-  
-    const secretKey = Buffer.from()
-    const authorityKeypair = Keypair.fromSecretKey(secretKey);
-    console.log("🚀 ~ file: test.js:51 ~ createPlatformMarketPlace ~ authorityKeypair:", authorityKeypair.publicKey.toString())
-    const metaplex = new Metaplex(connection).use(keypairIdentity(authorityKeypair));
-
-    const { auctionHouse } = await metaplex
-      .auctionHouse()
-      .create({
-        sellerFeeBasisPoints: PLATFORM_FEE_POINTS,
-        authority: authorityKeypair,
-      });
-    
-    console.log("🚀 ~ file: test.js:51 ~ createPlatformMarketPlace ~ auctionHouse :", auctionHouse)
-    console.log("🚀 ~ file: test.js:51 ~ createPlatformMarketPlace ~ auctionHouse :", auctionHouse.address.toString())
-
-  }
   
   return <NotFound />
   return (
@@ -59,7 +39,7 @@ export default function TestPage() {
       <MainNavigation />
       <h1 className="text-center my-20 ">Test Page</h1>
       {/* <MainButton onClick={getEditionMarket} className="mx-auto block">Get Market</MainButton> */}
-      <MainButton onClick={createPlatformMarketPlace} className="mx-auto block">Create Platform Market Place</MainButton>
+
     </div>
   )
 }

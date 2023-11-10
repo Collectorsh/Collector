@@ -110,6 +110,10 @@ const Submissions = ({ }) => {
     } else {
       const listings = res.listings
       success(`Successfully submitted ${ listings.length } piece(s) to ${ curation.name }`)
+      
+      //display errors for tokens not successfully submitted
+      res.errors.forEach(err => error(err.message))
+      
       setApprovedCurations(prev => {
         const newCuration = prev.find(g => g.id === curation.id)
         if (!newCuration) return prev

@@ -1,12 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 import MainButton, { WarningButton } from '../MainButton';
-import {  ChevronDownIcon, PlusIcon, UserAddIcon } from '@heroicons/react/solid';
+import { ChevronDownIcon, PlusIcon, UserAddIcon, TagIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import { RoundedCurve } from './roundedCurveSVG';
 import { roundToPrecision } from '../../utils/maths';
 import { useState } from 'react';
 import Tippy from '@tippyjs/react';
 import { Oval } from 'react-loader-spinner';
+import EditListingsModal from '../artistSubmissions/editListingsModal';
+// import { TagIcon } from '@heroicons/react/outline';
 
 const GlobalEditBar = ({
   setModules,
@@ -21,9 +23,19 @@ const GlobalEditBar = ({
   openUnpublish,
   noContent,
   collectedFees,
-  handleWithdrawFees
+  handleWithdrawFees,
+  curation,
+  submittedTokens,
+  // curationType //"curator", "artist", "collector
 }) => {
   const [withdrawing, setWithdrawing] = useState(false)
+  const [editListingsOpen, setEditListingsOpen] = useState(false)
+
+  const curationType = curation?.curation_type
+  const curationWithSubmissions = {
+    ...curation,
+    submitted_token_listings: submittedTokens
+  }
   
   const addArtModule = () => {
     setModules((prev) => [...prev, { type: "art", id: uuidv4(), tokens: [] }])
@@ -51,6 +63,29 @@ const GlobalEditBar = ({
     setWithdrawing(false)
   }
 
+  const handleEditListings = () => { }
+  const handleRemoveListing = () => { }
+
+  const centralButton = curationType === "curator"
+    ? (
+      <MainButton
+        onClick={handleInviteArtists}
+        className="flex gap-2 items-center "
+        solid
+      >
+        Invite Artists <UserAddIcon className="w-5 h-5" />
+      </MainButton>
+    )
+    : (
+      <MainButton
+        onClick={() => setEditListingsOpen(true)}
+        className="flex gap-2 items-center "
+        solid
+      >
+        Edit Listings <TagIcon className="w-5 h-5" />
+      </MainButton>
+    )
+
   const draftButtons = (
     <>
       <div className='flex gap-4 flex-wrap justify-center md:place-self-start'>
@@ -69,13 +104,8 @@ const GlobalEditBar = ({
         </MainButton>
       </div>
 
-      <MainButton
-        onClick={handleInviteArtists}
-        className="flex gap-2 items-center "
-        solid
-      >
-        Invite Artists <UserAddIcon className="w-5 h-5" />
-      </MainButton>
+      {centralButton}
+      
       
       <div className='flex gap-4 flex-wrap justify-center  md:place-self-end'>
         <MainButton
@@ -106,44 +136,39 @@ const GlobalEditBar = ({
 
   const publishedButtons = (
     <>
-      <div className='flex gap-4 flex-wrap justify-center md:place-self-start'>
+      <div className='flex gap-4 flex-wrap justify-center md:place-self-start w-full'>
         <WarningButton
           onClick={openUnpublish}
         >
           Unpublish
         </WarningButton>
-        <MainButton
-          onClick={handleWithdraw}
-          disabled={withdrawing || !curatorBalance} 
-          className="min-w-[250px]"
-        >
-          {withdrawing
-            ? (
-              <span className="inline-block translate-y-0.5">
-                <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
-              </span>
-            )
-            : (
-              <>
-                <span>Withdraw Fees</span>
-                <Tippy
-                  content="Minus Solana transaction fees"
-                >
-                  <span> ({fees})</span>
-                </Tippy>
-              </>
-            )
-          }
-        </MainButton>
-          
+        {curationType === "curator" ? (
+          <MainButton
+            onClick={handleWithdraw}
+            disabled={withdrawing || !curatorBalance}
+            className="min-w-[250px]"
+          >
+            {withdrawing
+              ? (
+                <span className="inline-block translate-y-0.5">
+                  <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+                </span>
+              )
+              : (
+                <>
+                  <span>Withdraw Fees</span>
+                  <Tippy
+                    content="Minus Solana transaction fees"
+                  >
+                    <span> ({fees})</span>
+                  </Tippy>
+                </>
+              )
+            }
+          </MainButton>
+        ): null}
       </div>
-      <MainButton
-        onClick={handleInviteArtists}
-        className="flex gap-2 items-center"
-        solid
-        >
-        Invite Artists <UserAddIcon className="w-5 h-5" />
-      </MainButton>
+      {centralButton}
       <MainButton
         onClick={() => setIsEditingDraft(true)}
       >
@@ -161,6 +186,13 @@ const GlobalEditBar = ({
       "drop-shadow-[0px_-2px_6px_var(--tw-shadow-color)]",
       "z-[1000]"
     )}>
+      <EditListingsModal
+        isOpen={editListingsOpen}
+        onClose={() => setEditListingsOpen(false)}
+        handleEditListings={handleEditListings}
+        handleRemoveListing={handleRemoveListing}
+        curation={curationWithSubmissions}
+      />
       <div className={clsx(
         'w-full p-2',
         "shadow-neutral-300 dark:shadow-neutral-700",

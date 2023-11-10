@@ -32,6 +32,7 @@ import { metaPreviewImage } from "../../config/settings";
 import { baseCloudImageUrl } from "../../utils/cloudinary/baseCldUrl";
 import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/cloudinary/idParsing";
 import AuthorizedViewerBar from "../../components/curations/authorizedViewerBar";
+import { deleteMultipleSubmissions } from "../../data/curationListings/deleteSubmission";
 
 
 const descriptionPlaceholder = "Tell us about this curation."
@@ -156,6 +157,28 @@ function CurationPage({curation}) {
       name: curation.name
     })
     if (res?.status === "success") { 
+
+      // delete any submissions no longer being used
+      if (curation.curation_type !== "curator") {//"artist" || "collector" 
+        const unusedTokenMints = [];
+        //"modules" will be draft modules
+        //if token doesn't exist there it can be removed for the submission list
+        const filteredSubmissions = submittedTokens.filter((token) => {
+          const existsInModules = modules.some((module) => module.type === "art" && module.tokens.includes(token.mint))
+          if (!existsInModules) unusedTokenMints.push(token.mint)
+          return existsInModules
+        })
+        setSubmittedTokens(filteredSubmissions)
+        
+        //No need to handle errors here, failing to delete unused submissions wont have any impact on publishing
+        await deleteMultipleSubmissions({
+          curationId: curation.id,
+          tokenMints: unusedTokenMints,
+          apiKey: user.api_key,
+        })
+      }
+
+
       setPublishedContent(draftContent)
       setIsPublished(true)
       return true
@@ -165,7 +188,6 @@ function CurationPage({curation}) {
 
   const handleUnpublish = async () => { 
     if (!isOwner) return;
-
     const res = await unpublishContent({
       apiKey: user.api_key,
       name: curation.name
@@ -407,6 +429,8 @@ function CurationPage({curation}) {
             approvedArtists={approvedArtists}
             handleCollect={handleCollect}
             curationType={curation.curation_type}
+            curationId={curation.id}
+            setSubmittedTokens={setSubmittedTokens}
           />
 
         )
@@ -429,7 +453,9 @@ function CurationPage({curation}) {
               noContent={hasNoContent}
               collectedFees={collectedFees}
               handleWithdrawFees={handleWithdrawFees}
-              curationType={curation.curation_type}
+              // curationType={curation.curation_type}
+              curation={curation}
+              submittedTokens={submittedTokens}
             />
           )
           : null

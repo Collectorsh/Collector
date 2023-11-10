@@ -9,17 +9,32 @@ import { XCircleIcon } from "@heroicons/react/solid";
 import { ArtItem } from "./artModule";
 import useBreakpoints from "../../hooks/useBreakpoints";
 import { truncate } from "../../utils/truncate";
-import { getTokenAspectRatio } from "../../hooks/useNftFiles";
+import useNftFiles, { getTokenAspectRatio } from "../../hooks/useNftFiles";
 import debounce from "lodash.debounce";
 import { useTokens } from "../../data/nft/getTokens";
 import UserContext from "../../contexts/user";
 import { Switch } from "@headlessui/react";
 import SortableArt from "./sortableArt";
 import SortableArtWrapper from "./sortableArtWrapper";
+import { submitTokens } from "../../data/curationListings/submitToken";
+import { Token } from "@solana/spl-token";
+import { error } from "../../utils/toast";
+import { Oval } from "react-loader-spinner";
 
 const tabs = ["1/1", "Master Editions"]
 
-export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, artModule, submittedTokens, approvedArtists, onDeleteModule, tokenMintsInUse, curationType }) {
+export default function EditArtModuleModal({
+  isOpen, onClose,
+  onEditArtModule,
+  artModule,
+  onDeleteModule,
+  curationId,
+  setSubmittedTokens,
+  submittedTokens,
+  approvedArtists,
+  tokenMintsInUse,
+  curationType
+}) {
   const breakpoint = useBreakpoints()
   const isMobile = ["", "sm"].includes(breakpoint)
   const [user] = useContext(UserContext);
@@ -30,10 +45,14 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
   const [search, setSearch] = useState("");
   const [useAllCreated, setUseAllCreated] = useState(false);
 
+  const [tokensToSubmit, setTokensToSubmit] = useState([]);//only used for personal curations
+  const [saving, setSaving] = useState(false);
+
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(49);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
   const tabsRef = useRef([]);
+
   
   //Dont fetch user tokens if this is a curator curation
   const useUserTokens = curationType === "curator" ? false : true;
@@ -84,8 +103,32 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
   
   const moduleFull = tokens.length >= 4
   
-  const handleSave = () => {
-    onEditArtModule(newArtModule);
+  const handleSave = async () => {
+    const newArtModuleCopy = {...newArtModule}
+    
+    if (curationType !== "curator" && tokensToSubmit.length) {//"artist" || "collector" 
+      setSaving(true)
+      const res = await submitTokens({
+        tokens: tokensToSubmit,
+        apiKey: user.api_key,
+        curationId: curationId,
+        ownerId: user.id,
+      })
+  
+      if (res?.status !== "success") {
+        error(`Failed to submit tokens`)
+      }
+      if (res.errors.length) {
+        newArtModuleCopy.tokens = newArtModuleCopy.tokens.filter(tokenMint => !res.errors.find(err => err.mint === tokenMint))
+        setNewArtModule(newArtModuleCopy)
+        setSubmittedTokens(prev => prev.filter(token => !res.errors.find(err => err.mint === token.mint)))
+        res.errors.forEach(err => error(err.message))
+      }
+      setSaving(false)
+    }
+
+    onEditArtModule(newArtModuleCopy);
+    setTokensToSubmit([]);
     onClose();
     setTimeout(() => setSearch(""), 500);
   }
@@ -95,6 +138,12 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
       setSearch("")
     }, 500);
   }
+
+  const handleTokenToSubmit = useCallback((token) => { 
+    if (submittedTokens.find(t => t.mint === token.mint)) return;
+    setTokensToSubmit(prev => [...prev, token])
+    setSubmittedTokens(prev => [...prev, token]) //optimistic update for displaying tokens
+  },[submittedTokens, setSubmittedTokens])
 
   const userTokensSplit = useMemo(() => {
     const masterEditions = []
@@ -147,7 +196,16 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
         e.preventDefault();
         
         if (curationType !== "curator") {//"artist" || "collector" 
-          //TODO: handle auto delete submission (API should only delete if its not in published or draft)
+          //remove from the to submit list if there
+          setTokensToSubmit(prev => { 
+            const index = prev.findIndex(t => t.mint === token.mint)
+            
+            if (index < 0) return prev;
+
+            const newTokens = [...prev]
+            newTokens.splice(index, 1)
+            return newTokens
+          })
         }
 
         setNewArtModule(prev => {
@@ -227,57 +285,21 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
       const artistUsername = useUserTokens
         ? token.artist_name
         : approvedArtists.find(artist => artist.id === token.artist_id).username;
-      const handleAdd = ({ target }) => {
-        if (alreadyInUse || moduleFull) return
 
-        if (curationType !== "curator") {//"artist" || "collector" 
-          //TODO: handle auto submit
-        }
-
-        setNewArtModule(prev => ({
-          ...prev,
-          tokens: [...(prev?.tokens || []), token.mint]
-        }))
-      }
       return (
-        <button className="
-        relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden
-        duration-300 hover:scale-[102%] disabled:scale-100
-        inset-0 w-full pb-[100%]
-        "
-          key={token.mint}
-          onClick={handleAdd}
-          disabled={alreadyInUse || moduleFull}
-        >
-          <CloudinaryImage
-            className={clsx("flex-shrink-0 object-contain shadow-lg dark:shadow-white/5",
-              "w-full h-full absolute left-0 top-0",
-            )}
-            useMetadataFallback
-            token={token}
-            width={500}
-            // noLazyLoad
-          />
-
-          {alreadyInUse ? (
-            <div className="absolute inset-0 flex justify-center items-center">
-              <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">Already Being Used</p>
-            </div>
-          ) : null}
-          <div
-            className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90 
-            transition-opacity duration-300 opacity-0 hover:opacity-100
-             flex flex-col justify-center items-center rounded-lg
-          "
-          >
-            <p className="font-bold">{token.name}</p>
-            {artistUsername ? <p>by {artistUsername}</p> : null}
-            <p className="text-xs">{truncate(token.mint)}</p>
-          </div>
-        </button>
+        <TokenButton
+          key={`token-${token.mint}`} 
+          token={token}
+          alreadyInUse={alreadyInUse}
+          artistUsername={artistUsername}
+          moduleFull={moduleFull}
+          handleTokenToSubmit={handleTokenToSubmit}
+          setNewArtModule={setNewArtModule}
+          curationType={curationType}
+        />
       )
     })
-  , [approvedArtists, availableTokens, curationType, moduleFull, newArtModule.id, tokenMintsInUse, tokens, search, useUserTokens])
+  , [availableTokens, search, useUserTokens, approvedArtists, tokens, tokenMintsInUse, moduleFull, handleTokenToSubmit, curationType, newArtModule.id])
 
   const content = (
     <div className="relative h-full min-h-[200px] max-h-[333px] min border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
@@ -315,9 +337,6 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
               setActiveTabIndex(i);
             }
             const isSelected = activeTabIndex === i;
-
-            // if(i === 0 && !activeTabIndex) setActiveTabIndex(0)
-
             return (
               <button
                 key={tab}
@@ -431,8 +450,19 @@ export default function EditArtModuleModal({ isOpen, onClose, onEditArtModule, a
           <MainButton onClick={handleClose}>
             Cancel
           </MainButton>
-          <MainButton onClick={handleSave} solid>
-            Save
+          <MainButton
+            onClick={handleSave}
+            solid
+            disabled={saving}
+          >
+            {saving
+              ? (
+                <span className="inline-block">
+                  <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+                </span>
+              )
+              : "Save"
+              }
           </MainButton>
         </div>
       </div>
@@ -485,5 +515,102 @@ const EditArtItem = ({
         </div>
       </div>
 
+  )
+}
+
+const TokenButton = ({
+  token,
+  alreadyInUse,
+  artistUsername,
+  moduleFull,
+  setNewArtModule,
+  handleTokenToSubmit,
+  curationType
+}) => {
+  
+  const imageRef = useRef(null)
+  const { videoUrl } = useNftFiles(token)
+  const [loadingArt, setLoadingArt] = useState(false)
+
+  const handleAdd = async () => {
+    if (alreadyInUse || moduleFull) return
+    const newToken = {...token}
+
+    if (curationType !== "curator") {//"artist" || "collector" 
+      // needs to add aspect ratio to token for when it gets auto submitted
+      setLoadingArt(true)
+      const aspectRatio = await getAspectRatio(imageRef.current)
+      setLoadingArt(false)
+
+      if (!aspectRatio) return console.log("Error getting aspect ratio")
+
+      newToken.aspect_ratio = aspectRatio
+
+      handleTokenToSubmit(newToken)
+    }
+
+
+    setNewArtModule(prev => ({
+      ...prev,
+      tokens: [...(prev?.tokens || []), token.mint]
+    }))
+  }
+
+  const getAspectRatio = async (imageElement) => {
+    try {
+      if (videoUrl) {
+        //fetch video dimensions
+        const video = document.createElement("video")
+
+        return new Promise((resolve, reject) => {
+          video.onloadedmetadata = () => resolve(Number(video.videoWidth / video.videoHeight))
+          video.onerror = (err) => reject(new Error(`Unable to load video - ${ err }`));
+          video.src = videoUrl
+          video.load()
+        });
+      }
+    } catch (err) {
+      console.log("Error fetching non-image dimensions: ", err)
+    }
+
+    return Number(imageElement.naturalWidth / imageElement.naturalHeight)
+  }
+  return (
+    <button className="
+        relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden
+        duration-300 hover:scale-[102%] disabled:scale-100
+        inset-0 w-full pb-[100%]
+        "
+      key={token.mint}
+      onClick={handleAdd}
+      disabled={alreadyInUse || moduleFull || loadingArt}
+    >
+      <CloudinaryImage
+        imageRef={imageRef}
+        className={clsx("flex-shrink-0 object-contain shadow-lg dark:shadow-white/5",
+          "w-full h-full absolute left-0 top-0",
+        )}
+        useMetadataFallback
+        token={token}
+        width={500}
+      // noLazyLoad
+      />
+
+      {alreadyInUse ? (
+        <div className="absolute inset-0 flex justify-center items-center">
+          <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">Already Being Used</p>
+        </div>
+      ) : null}
+      <div
+        className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90 
+            transition-opacity duration-300 opacity-0 hover:opacity-100
+             flex flex-col justify-center items-center rounded-lg
+          "
+      >
+        <p className="font-bold">{token.name}</p>
+        {artistUsername ? <p>by {artistUsername}</p> : null}
+        <p className="text-xs">{truncate(token.mint)}</p>
+      </div>
+    </button>
   )
 }

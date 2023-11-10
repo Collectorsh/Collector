@@ -116,12 +116,24 @@ const useCurationAuctionHouse = (curation) => {
           loadJsonMetadata: false
         });
   
-      const bought = await auctionHouseSDK
-        .buy({
-          auctionHouse,
-          listing,
-        })
-      return bought?.response?.signature
+      // const bought = await auctionHouseSDK
+      //   .buy({
+      //     auctionHouse,
+      //     listing,
+      //   })
+      // return bought?.response?.signature
+
+      const buyBuilder = await auctionHouseSDK.builders().buy({
+        auctionHouse,
+        listing,
+      })
+
+      const txRes = await metaplex.rpc().sendAndConfirmTransaction(
+        buyBuilder,
+        { commitment: "finalized" }
+      )
+      
+      return txRes?.signature
     } catch(error) {
       console.log(error)
     }

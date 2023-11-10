@@ -32,7 +32,9 @@ const ArtModule = ({
   approvedArtists, 
   handleCollect, 
   tokenMintsInUse, 
-  curationType
+  curationType,
+  curationId,
+  setSubmittedTokens,
 }) => {
   const breakpoint = useBreakpoints()  
   const isMobile = ["", "sm", "md"].includes(breakpoint)
@@ -181,6 +183,8 @@ const ArtModule = ({
             approvedArtists={approvedArtists}
             tokenMintsInUse={tokenMintsInUse}
             curationType={curationType}
+            curationId={curationId}
+            setSubmittedTokens={setSubmittedTokens}
           />
         )
         : null

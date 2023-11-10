@@ -236,7 +236,7 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
   const isEdition = token.is_edition
   const isMasterEdition = token.is_master_edition
 
-  const getAspectRatio = (imageElement) => {
+  const getAspectRatio = async (imageElement) => {
     try {
       if (videoUrl) {
         //fetch video dimensions
@@ -248,10 +248,7 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
           video.src = videoUrl
           video.load()
         });
-      } else if (false) {
-        //TODO handle HTML and GLB
-      }
-
+      } 
     } catch (err) {
       console.log("Error fetching non-image dimensions: ", err)
     }

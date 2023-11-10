@@ -1,12 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 import MainButton, { WarningButton } from '../MainButton';
-import {  ChevronDownIcon, PlusIcon, UserAddIcon } from '@heroicons/react/solid';
+import { ChevronDownIcon, PlusIcon, UserAddIcon, TagIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import { RoundedCurve } from './roundedCurveSVG';
 import { roundToPrecision } from '../../utils/maths';
 import { useState } from 'react';
 import Tippy from '@tippyjs/react';
 import { Oval } from 'react-loader-spinner';
+import EditListingsModal from '../artistSubmissions/editListingsModal';
+// import { TagIcon } from '@heroicons/react/outline';
 
 const GlobalEditBar = ({
   setModules,
@@ -22,9 +24,18 @@ const GlobalEditBar = ({
   noContent,
   collectedFees,
   handleWithdrawFees,
-  curationType //"curator", "artist", "collector
+  curation,
+  submittedTokens,
+  // curationType //"curator", "artist", "collector
 }) => {
   const [withdrawing, setWithdrawing] = useState(false)
+  const [editListingsOpen, setEditListingsOpen] = useState(false)
+
+  const curationType = curation?.curation_type
+  const curationWithSubmissions = {
+    ...curation,
+    submitted_token_listings: submittedTokens
+  }
   
   const addArtModule = () => {
     setModules((prev) => [...prev, { type: "art", id: uuidv4(), tokens: [] }])
@@ -53,6 +64,7 @@ const GlobalEditBar = ({
   }
 
   const handleEditListings = () => { }
+  const handleRemoveListing = () => { }
 
   const centralButton = curationType === "curator"
     ? (
@@ -66,11 +78,11 @@ const GlobalEditBar = ({
     )
     : (
       <MainButton
-        onClick={handleEditListings}
+        onClick={() => setEditListingsOpen(true)}
         className="flex gap-2 items-center "
         solid
       >
-        Edit Listings
+        Edit Listings <TagIcon className="w-5 h-5" />
       </MainButton>
     )
 
@@ -174,6 +186,13 @@ const GlobalEditBar = ({
       "drop-shadow-[0px_-2px_6px_var(--tw-shadow-color)]",
       "z-[1000]"
     )}>
+      <EditListingsModal
+        isOpen={editListingsOpen}
+        onClose={() => setEditListingsOpen(false)}
+        handleEditListings={handleEditListings}
+        handleRemoveListing={handleRemoveListing}
+        curation={curationWithSubmissions}
+      />
       <div className={clsx(
         'w-full p-2',
         "shadow-neutral-300 dark:shadow-neutral-700",

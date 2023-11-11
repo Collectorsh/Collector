@@ -1,5 +1,6 @@
 import axios from "axios";
 import apiClient from "../client/apiClient";
+import { PLATFORM_AUCTION_HOUSE_1_ADDRESS } from "../../config/settings";
 
 async function withdrawFromTreasury({ privateKeyHash, curation }) {
   try {
@@ -21,3 +22,20 @@ async function withdrawFromTreasury({ privateKeyHash, curation }) {
 }
 
 export default withdrawFromTreasury;
+
+export async function withdrawFromPlatformTreasury() {
+  try {
+    const auctionHouseAddress = PLATFORM_AUCTION_HOUSE_1_ADDRESS;
+    const keyHashName = "platform_auction_house_1"
+    const result = await axios.post("/api/curations/platformWithdraw",
+      {
+        auctionHouseAddress,
+        keyHashName
+      },
+    ).then(res => res.data)
+
+    return result
+  } catch (err) {
+    console.log(err);
+  }
+}

@@ -84,7 +84,7 @@ export const adminIDs = [
 export const metaPreviewImage = baseCloudImageUrl("global/Collector_Hero_btrh4t")
 export const metaDescription = "Collect, Curate, and Discover Beautiful Art" 
 
-export const PLATFORM_AUCTION_HOUSE_ADDRESS = "Cin5enJN3ZJfwJzdvBs4UJYRS7azTtjxxk8BErcX6Z1k"
+export const PLATFORM_AUCTION_HOUSE_1_ADDRESS = "Cin5enJN3ZJfwJzdvBs4UJYRS7azTtjxxk8BErcX6Z1k"
 
 //HELLO MOON rpc deprecated
   // ,{

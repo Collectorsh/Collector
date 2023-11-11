@@ -14,9 +14,10 @@ import uploadCldImage from "../../data/cloudinary/uploadCldImage";
 import { error } from "../../utils/toast";
 
 const uploadTabTitle = "Upload"
+const submittedTabTitle = "Submitted Art"
 const tabs = [
   uploadTabTitle,
-  "Submitted Art",
+  submittedTabTitle,
   "Owned Art"
 ]
 
@@ -42,6 +43,8 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
 
   const saveDisabled = (tabs[activeTabIndex] === uploadTabTitle ? !imageBuffer : !selected) || saving
 
+  const isPersonalCuration = curation?.type !== "curator" //"artist" || "collector"
+
   useEffect(() => {
     function setTabPosition() {
       const currentTab = tabsRef.current[activeTabIndex];
@@ -49,7 +52,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
       setTabUnderlineLeft(currentTab.offsetLeft);
       setTabUnderlineWidth(currentTab.clientWidth);
     }
-    setTabPosition()
+    setTimeout(setTabPosition, 0); //wait for DOM to render before setting tab position
     window.addEventListener("resize", setTabPosition);
 
     return () => window.removeEventListener("resize", setTabPosition);
@@ -211,6 +214,8 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
               setActiveTabIndex(i);
             }
             const isSelected = activeTabIndex === i;
+
+            if (isPersonalCuration && tab === submittedTabTitle) return null;
 
             return (
               <button

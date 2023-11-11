@@ -137,6 +137,9 @@ async function getTokens(publicKeys, options) {
   for (const mintedIndexerToken of mintedIndexerTokens) {
     const alreadyExists = mungedTokens.some((token) => token.mint === mintedIndexerToken.mint)
     if (!alreadyExists) {
+      // if filtering by creator, skip indexed tokens that arent by the creator 
+      if (justCreator && !publicKeys.includes(mintedIndexerToken.artist_address)) continue; 
+      
       mungedTokens.unshift(mintedIndexerToken) //insert to beginning of array so it shows up first
     }
   }

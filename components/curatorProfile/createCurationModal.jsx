@@ -13,13 +13,11 @@ import { error, success } from "../../utils/toast"
 import { shootConfetti } from "../../utils/confetti"
 import { Switch } from "@headlessui/react"
 import clsx from "clsx"
-import { PLATFORM_AUCTION_HOUSE_ADDRESS } from "../../config/settings"
+import { PLATFORM_AUCTION_HOUSE_1_ADDRESS } from "../../config/settings"
 
 const decimalRegex = /^\d+(\.\d+)?$/;
 
 const maxCuratorFee = MAX_CURATOR_FEE_POINTS / 100;
-
-
 
 const CreateCurationModal = ({ isOpen, onClose }) => {
   const [user] = useContext(UserContext);
@@ -62,7 +60,7 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
         curationName: curationName,
         apiKey: user.api_key,
         curationType: curationType,
-        auctionHouseAddress: PLATFORM_AUCTION_HOUSE_ADDRESS
+        auctionHouseAddress: PLATFORM_AUCTION_HOUSE_1_ADDRESS
       })
     }
 
@@ -156,7 +154,7 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
           <div className="relative flex items-center gap-1 mb-1">
             <p className="font-bold">Curator Fee* <i className="text-sm">(Cannot be changed later)</i>:</p>
             <Tippy
-              content="Collector also takes a 5% platform fee. Max curator fee is 50%."
+              content="Percentage of sales allocated to the curator, in addition to Collector's 5% platform fee."
               className="shadow-lg"
             >
               <InformationCircleIcon className="w-4" />

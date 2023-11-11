@@ -7,7 +7,7 @@ import apiClient from "../../../data/client/apiClient";
 import crypto from 'crypto'
 
 export const PLATFORM_FEE_POINTS = 500 //5%
-export const MAX_CURATOR_FEE_POINTS = 5000 //50%
+export const MAX_CURATOR_FEE_POINTS = 7500 //75%
 
 export const platformWithdrawalPubkey = "Emfvfxo51M7huTFgakJCwHvHFmBbQMwWUTgjJK6grcF9"
 

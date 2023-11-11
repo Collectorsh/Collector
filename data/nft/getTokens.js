@@ -139,7 +139,7 @@ async function getTokens(publicKeys, options) {
     if (!alreadyExists) {
       // if filtering by creator, skip indexed tokens that arent by the creator 
       if (justCreator && !publicKeys.includes(mintedIndexerToken.artist_address)) continue; 
-      
+
       mungedTokens.unshift(mintedIndexerToken) //insert to beginning of array so it shows up first
     }
   }
@@ -228,7 +228,6 @@ async function getTokens(publicKeys, options) {
 
   if (useTokenMetadata) {
     results = results.filter((item) => {
-      if (item.collectionDetails) console.log(item)
       return !item.collectionDetails
     })
   }

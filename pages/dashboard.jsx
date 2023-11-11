@@ -1,6 +1,6 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import UserContext from "../contexts/user";
-import { adminIDs } from "../config/settings";
+import { PLATFORM_AUCTION_HOUSE_1_ADDRESS, adminIDs, connection } from "../config/settings";
 import NotFound from "../components/404";
 import MainNavigation from "../components/navigation/MainNavigation";
 import Datepicker from "react-tailwindcss-datepicker";
@@ -12,8 +12,17 @@ import { roundToPrecision } from "../utils/maths";
 import { downloadCSV } from "../utils/csv";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
+import { withdrawFromPlatformTreasury } from "../data/curation/withdrawFromTreasury";
+import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { error, success } from "../utils/toast";
+import { Toaster } from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
+
 export default function Dashboard() { 
   const [user] = useContext(UserContext);
+  const wallet = useWallet();
 
   const currentDate = new Date();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -21,11 +30,31 @@ export default function Dashboard() {
     startDate: firstDayOfMonth,
     endDate: currentDate,
   })
+
   const [records, setRecords] = useState([]);
   const [fetching, setFetching] = useState(false);
+
+  const [collectedFees, setCollectedFees] = useState(0)
+  const [withdrawing, setWithdrawing] = useState(false)
   
 
   const isAdmin = adminIDs.includes(user?.id)
+
+  useEffect(() => { 
+    (async () => {
+      if (!wallet) return;
+
+      const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet));
+  
+      const auctionHouse = await metaplex
+        .auctionHouse()
+        .findByAddress({ address: new PublicKey(PLATFORM_AUCTION_HOUSE_1_ADDRESS) });
+  
+      const balanceLamports = await connection.getBalance(new PublicKey(auctionHouse.treasuryAccountAddress));
+      const balance = balanceLamports / LAMPORTS_PER_SOL;
+      setCollectedFees(balance)
+    })()
+  }, [wallet])
 
   const handleFetch = async () => { 
     if(!isAdmin) return
@@ -64,6 +93,19 @@ export default function Dashboard() {
     downloadCSV(formattedRecords, `Curation_Sales-${new Date(dateRange.startDate).toLocaleDateString()}_to_${new Date(dateRange.endDate).toLocaleDateString()}`)
   }
 
+  const handleWithdrawFees = async () => {
+    setWithdrawing(true)
+    const res = await withdrawFromPlatformTreasury()
+
+    if (res?.status === "success") {
+      success(`Successfully withdrew ${ roundToPrecision(collectedFees, 3) } SOL!`)
+      setCollectedFees(0)
+    } else {
+      error(`Withdrawal failed`)
+    }
+    setWithdrawing(false)
+  }
+
   const { totalSales, uniqueArtists, uniqueCollectors } = useMemo(() => {
     let totalSales = 0;
     const uniqueArtistNames = new Set();
@@ -86,8 +128,24 @@ export default function Dashboard() {
   return (
     <>
       <MainNavigation />
+      <Toaster />
       <div className="max-w-screen-2xl mx-auto p-5 min-w-[1210px]">
         <h1 className="text-4xl text-center">Admin Dashboard</h1>
+        <div className="mx-auto text-center mt-2">
+          <p>Platform Fees (Artist & Collector Curations): {collectedFees} SOL</p>
+          <MainButton
+            solid
+            onClick={handleWithdrawFees}
+            className="mt-2"
+            disabled={withdrawing || !collectedFees}
+          >
+            {withdrawing ? (
+                <Oval color="#FFF" secondaryColor="#666" height={20} width={20} />
+            ): "Withdraw Fees"}
+            
+          </MainButton>
+        </div>
+        <hr className="border-neutral-200 dark:border-neutral-800 my-4" />
         <div className="flex justify-center items-center gap-5 w-fit mx-auto m-4">
           <div className="border-2 rounded-md min-w-[18rem] ">
             <Datepicker
@@ -114,7 +172,6 @@ export default function Dashboard() {
           </MainButton>
 
         </div>
-        <hr className="border-neutral-200 dark:border-neutral-800" />
 
         <div className="flex justify-center gap-5 items-center my-5">
           <Stat title="Total Sales (SOL)" stat={roundToPrecision(totalSales, 2)} />

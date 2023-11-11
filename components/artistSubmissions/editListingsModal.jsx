@@ -28,10 +28,12 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
   const { handleBuyNowList, handleDelist, auctionHouse } = useCurationAuctionHouse(curation)
   
   const submissions = curation?.submitted_token_listings.filter(listing => {
-    const owned = listing.creators.some(creator => user?.public_keys.includes(creator.address));
+    const owned = listing.owner_address === wallet.publicKey.toString()
     const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
     return owned && !closedMaster
-  }) || []
+  }) || [];
+
+  const isPersonalCuration = curation.curation_type !== "curator" //"artist" || "collector"
 
   const onList = async (token, listingPrice) => {
     let newToken
@@ -226,7 +228,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
   }
 
   const onDelete = async (token) => {
-    if (token.listed_status === "listed") return
+    if (token.listed_status === "listed" || isPersonalCuration) return //personal curations need to delete from the art module
     
     const res = await deleteSubmission({
       curationId: curation.id,
@@ -268,6 +270,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
               onList={onList}
               onDelist={onDelist}
               onDelete={onDelete}
+              isPersonalCuration={isPersonalCuration}
             />
           ))}
         </div>
@@ -285,7 +288,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
 
 export default EditListingsModal;
 
-const Submission = ({ token, onList, onDelist, onDelete }) => { 
+const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) => { 
   const [listing, setListing] = useState(false)
   const [listingPrice, setListingPrice] = useState(token.buy_now_price || "")
   
@@ -351,6 +354,7 @@ const Submission = ({ token, onList, onDelist, onDelete }) => {
               "absolute -top-2 -right-2",
               "bg-neutral-200/50 dark:bg-neutral-700/50 rounded-full shadow-lg dark:shadow-white/10",
               "duration-300 hover:scale-110 active:scale-100 disabled:hover:scale-100",
+              isPersonalCuration && "hidden"
             )}
             onClick={handleDelete}
             disabled={token.listed_status === "listed"}
@@ -365,7 +369,7 @@ const Submission = ({ token, onList, onDelist, onDelete }) => {
           "w-full h-[250px] rounded-t-lg p-1",
         )}
         token={token}
-        width={800}
+        width={500}
         useMetadataFallback
         useUploadFallback
       />

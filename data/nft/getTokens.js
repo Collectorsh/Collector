@@ -23,31 +23,50 @@ async function getTokens(publicKeys, options) {
   const useArtistDetails = options.useArtistDetails ?? true
   const justCreator = options.justCreator ?? false
   const useTokenMetadata = options.useTokenMetadata ?? false
-  const filterOutCollections = options.filterOutCollections ?? false
+  const queryByCreator = options.queryByCreator ?? false
+
+ 
 
   const baseTokens = []
   const mintedIndexerTokens = []
  
   const maxBatch = 1000
   for (const publicKey of publicKeys) {
-    let page = 1
-    let continueFetching = true
-    while (continueFetching) {
-      const res = await axios.post(`https://mainnet.helius-rpc.com/?api-key=${ process.env.NEXT_PUBLIC_HELIUS_API_KEY }`, {
-          "jsonrpc": "2.0",
-          "id": `collector-tokens-${publicKey}-${page}`,
-          "method": "getAssetsByOwner",
-          "params": {
-            "ownerAddress": publicKey,
-            "page": page,
-            "limit": maxBatch,
-            // "displayOptions": {
-            //   "showUnverifiedCollections": true,
-            //   "showCollectionMetadata": true
+    let page = 1 // Starts at 1
+    let continueFetching = true;
 
-            // },
-          }
-        }).then((res) => {
+    const fetchParams = queryByCreator
+      ? {
+        jsonrpc: '2.0',
+        id: `creator-tokens-${ publicKey }-${ page }`,
+        method: 'getAssetsByCreator',
+        params: {
+          creatorAddress: publicKey,
+          onlyVerified: true,
+          page: page, 
+          limit: maxBatch
+        },
+      }
+      : {
+        jsonrpc: "2.0",
+        id: `collector-tokens-${ publicKey }-${ page }`,
+        method: "getAssetsByOwner",
+        params: {
+          ownerAddress: publicKey,
+          page: page,
+          limit: maxBatch,
+          // "displayOptions": {
+          //   "showUnverifiedCollections": true,
+          //   "showCollectionMetadata": true
+          // },
+        }
+      }
+    
+    while (continueFetching) {
+      const res = await axios.post(
+          `https://mainnet.helius-rpc.com/?api-key=${ process.env.NEXT_PUBLIC_HELIUS_API_KEY }`,
+          fetchParams
+        ).then((res) => {
           return res.data.result;
         }).catch((err) => {
           console.log("Error Fetching Metadata By Owner:", err);
@@ -70,11 +89,9 @@ async function getTokens(publicKeys, options) {
   }
 
   const creatorFilteredTokens = !justCreator
-  ? baseTokens
+    ? baseTokens
     : baseTokens.filter((token) => { 
       
-      // if (token.id === "E12dj4cncTHpf4nKynKRkJfhFvqGHDKCU5jLb2MbkH9w") console.log("🚀 ~ file: create.js:77 ~ MintPage ~ tokens:", token)
-
     const creatorsAddresses = token.creators.map((creator) => creator.address)
     return Boolean(creatorsAddresses.find(address => publicKeys.includes(address)))
   })
@@ -120,6 +137,9 @@ async function getTokens(publicKeys, options) {
   for (const mintedIndexerToken of mintedIndexerTokens) {
     const alreadyExists = mungedTokens.some((token) => token.mint === mintedIndexerToken.mint)
     if (!alreadyExists) {
+      // if filtering by creator, skip indexed tokens that arent by the creator 
+      if (justCreator && !publicKeys.includes(mintedIndexerToken.artist_address)) continue; 
+
       mungedTokens.unshift(mintedIndexerToken) //insert to beginning of array so it shows up first
     }
   }
@@ -208,7 +228,6 @@ async function getTokens(publicKeys, options) {
 
   if (useTokenMetadata) {
     results = results.filter((item) => {
-      if (item.collectionDetails) console.log(item)
       return !item.collectionDetails
     })
   }

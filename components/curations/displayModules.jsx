@@ -11,7 +11,10 @@ const DisplayModules = ({
   isOwner,
   submittedTokens,
   approvedArtists,
-  handleCollect
+  handleCollect,
+  curationType,
+  curationId,
+  setSubmittedTokens,
 }) => {
   const handleEditModule = (newModule) => {
     const newModules = [...modules];
@@ -55,6 +58,9 @@ const DisplayModules = ({
             onDeleteModule={() => handleDeleteModule(module.id)}
             approvedArtists={approvedArtists}
             tokenMintsInUse={tokenMintsInUse}
+            curationType={curationType}
+            curationId={curationId}
+            setSubmittedTokens={setSubmittedTokens}
           />
         </SortableModule>
       ))}
@@ -87,7 +93,10 @@ export const Module = ({
   onDeleteModule,
   approvedArtists,
   handleCollect,
-  tokenMintsInUse
+  tokenMintsInUse,
+  curationType,
+  curationId,
+  setSubmittedTokens,
 }) => {
   switch (module.type) {
     case "text": {
@@ -111,6 +120,9 @@ export const Module = ({
           approvedArtists={approvedArtists}
           handleCollect={handleCollect}
           tokenMintsInUse={tokenMintsInUse}
+          curationType={curationType}
+          curationId={curationId}
+          setSubmittedTokens={setSubmittedTokens}
         />
       )
     }

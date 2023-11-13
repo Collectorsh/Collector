@@ -113,6 +113,7 @@ function CurationPage({curation}) {
 
   useEffect(() => {
     if (!curationDetails) return
+    console.log("🚀 ~ file: [curation_name].js:116 ~ useEffect ~ curationDetails:", curationDetails)
     setSubmittedTokens(curationDetails?.submitted_token_listings || [])
     setApprovedArtists(curationDetails?.approved_artists || [])
   }, [curationDetails])

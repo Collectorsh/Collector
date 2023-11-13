@@ -33,7 +33,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
     return owned && !closedMaster
   }) || [];
 
-  const isPersonalCuration = curation.curation_type !== "curator" //"artist" || "collector"
+  const isPersonalCuration = curation?.curation_type !== "curator" //"artist" || "collector"
 
   const onList = async (token, listingPrice) => {
     let newToken

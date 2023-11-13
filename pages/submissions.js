@@ -65,7 +65,7 @@ const Submissions = ({ }) => {
     if(!user) return
     (async () => {
       const curations = await getCurationsByApprovedArtist(user.id)
-      setApprovedCurations(curations || [])
+      setApprovedCurations(curations?.filter(curation => curation.curation_type === "curator") || [])
       setLoadingCurations(false)
     })()
   }, [user, router])

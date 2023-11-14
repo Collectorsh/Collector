@@ -3,10 +3,7 @@ import apiClient from "../client/apiClient";
 import { PLATFORM_AUCTION_HOUSE_1_ADDRESS } from "../../config/settings";
 
 async function withdrawFromTreasury({ privateKeyHash, curation }) {
-  try {
-
-    console.log("🚀 ~ file: withdrawFromTreasury.js:13 ~ withdrawFromTreasury ~ curation.payout_address:", curation.payout_address)
- 
+  try { 
     const result = await axios.post("/api/curations/withdraw",
       {
         privateKeyHash,

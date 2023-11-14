@@ -304,11 +304,11 @@ function CurationPage({curation}) {
     })
 
     if (res?.status === "success") {
+      success(`Successfully withdrew ${ roundToPrecision(collectedFees.curatorBalance, 3) } SOL!`)
       setCollectedFees({
         curatorBalance: 0,
         platformBalance: 0
       })
-      success(`Successfully withdrew ${ roundToPrecision(collectedFees.curatorBalance, 3) } SOL!`)
     } else {
       error(`Withdrawal failed`)
     }

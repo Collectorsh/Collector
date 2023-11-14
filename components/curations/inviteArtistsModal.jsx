@@ -12,6 +12,7 @@ import UserContext from "../../contexts/user"
 import { host } from "../../config/settings"
 
 const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewerPasscode, name }) => {
+
   const [user] = useContext(UserContext);
 
   const [newApproveArtists, setNewApprovedArtists] = useState(approvedArtists || [])

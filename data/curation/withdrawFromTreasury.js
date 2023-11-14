@@ -5,7 +5,8 @@ import { PLATFORM_AUCTION_HOUSE_1_ADDRESS } from "../../config/settings";
 async function withdrawFromTreasury({ privateKeyHash, curation }) {
   try {
 
-    //TODO just get the full curation in the API handler (user either curator api_key or admin api_key + curation id )
+    console.log("🚀 ~ file: withdrawFromTreasury.js:13 ~ withdrawFromTreasury ~ curation.payout_address:", curation.payout_address)
+ 
     const result = await axios.post("/api/curations/withdraw",
       {
         privateKeyHash,

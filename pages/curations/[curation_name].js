@@ -113,7 +113,6 @@ function CurationPage({curation}) {
 
   useEffect(() => {
     if (!curationDetails) return
-    console.log("🚀 ~ file: [curation_name].js:116 ~ useEffect ~ curationDetails:", curationDetails)
     setSubmittedTokens(curationDetails?.submitted_token_listings || [])
     setApprovedArtists(curationDetails?.approved_artists || [])
   }, [curationDetails])
@@ -305,11 +304,11 @@ function CurationPage({curation}) {
     })
 
     if (res?.status === "success") {
+      success(`Successfully withdrew ${ roundToPrecision(collectedFees.curatorBalance, 3) } SOL!`)
       setCollectedFees({
         curatorBalance: 0,
         platformBalance: 0
       })
-      success(`Successfully withdrew ${ roundToPrecision(collectedFees.curatorBalance, 3) } SOL!`)
     } else {
       error(`Withdrawal failed`)
     }

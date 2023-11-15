@@ -55,7 +55,6 @@ export const initialDeltaContent = JSON.stringify({
 })
 
 export const QuillEditor = ({ textDelta, onChange }) => {
-  const ref= useRef(null)
   const handleChange = (content, delta, source, editor) => {
     const newContent = editor.getContents()
 
@@ -70,7 +69,6 @@ export const QuillEditor = ({ textDelta, onChange }) => {
 
   return (
     <ReactQuill
-      ref={ref}
       theme="snow"
       modules={modules}
       value={JSON.parse(textDelta || initialDeltaContent)}

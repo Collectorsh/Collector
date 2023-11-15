@@ -27,9 +27,6 @@ import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 import withdrawFromTreasury from "../../data/curation/withdrawFromTreasury";
 import { roundToPrecision } from "../../utils/maths";
 
-import dynamic from 'next/dynamic';
-const QuillContent = dynamic(() => import('../../components/Quill').then(mod => mod.QuillContent), { ssr: false })
-const deltaToPlainText = dynamic(() => import('../../components/Quill').then(mod => mod.deltaToPlainText), { ssr: false })
 
 import Head from "next/head";
 import { metaPreviewImage } from "../../config/settings";
@@ -38,6 +35,9 @@ import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/c
 import AuthorizedViewerBar from "../../components/curations/authorizedViewerBar";
 import { deleteMultipleSubmissions } from "../../data/curationListings/deleteSubmission";
 
+import dynamic from 'next/dynamic';
+import { deltaToPlainText } from "../../utils/Quill";
+const QuillContent = dynamic(() => import('../../components/Quill').then(mod => mod.QuillContent), { ssr: false })
 
 const descriptionPlaceholder = "Tell us about this curation."
 
@@ -76,8 +76,30 @@ function CurationPage({curation}) {
   const useDraftContent = isEditingDraft && (isOwner || isAuthorizedViewer);
   const banner = useDraftContent ? draftContent?.banner_image : publishedContent?.banner_image;
 
-  const draftDescriptionDelta = draftContent?.description_delta || JSON.stringify({ ops: [{ insert: draftContent?.description || descriptionPlaceholder }] })
-  const publishedDescriptionDelta = publishedContent?.description_delta || JSON.stringify({ ops: [{ insert: publishedContent?.description || "" }] })
+  const draftDescriptionDelta = draftContent?.description_delta || JSON.stringify({
+    ops: [
+      {
+        attributes: { size: 'large' },
+        insert: draftContent?.description || descriptionPlaceholder,
+      },
+      {
+        attributes: { align: 'center' },
+        insert: "\n"
+      },
+    ]
+  })
+  const publishedDescriptionDelta = publishedContent?.description_delta || JSON.stringify({
+    ops: [
+      {
+        attributes: { size: 'large' },
+        insert: publishedContent?.description || ""
+      },
+      {
+        attributes: { align: 'center' },
+        insert: "\n"
+      },
+    ]
+  })
   const description = useDraftContent ? draftDescriptionDelta : publishedDescriptionDelta;
   
   const modules = useDraftContent ? draftContent?.modules : publishedContent?.modules;
@@ -457,7 +479,6 @@ function CurationPage({curation}) {
               noContent={hasNoContent}
               collectedFees={collectedFees}
               handleWithdrawFees={handleWithdrawFees}
-              // curationType={curation.curation_type}
               curation={curation}
               submittedTokens={submittedTokens}
             />

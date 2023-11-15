@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import MainButton from "../MainButton"
 import Modal from "../Modal"
 
@@ -16,6 +16,11 @@ const EditDescriptionModal = ({ description, onSave, isOpen, onClose }) => {
   const onChange = (newDelta) => { 
     setNewDescription(newDelta)
   }
+
+  useEffect(() => {
+    // needs to reset when switching from published to draft
+    setNewDescription(description)
+  }, [description])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Edit The Gallery Description">

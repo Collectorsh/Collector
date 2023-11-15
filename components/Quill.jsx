@@ -16,7 +16,7 @@ const modules = {
     [{ 'align': [] }],
     ['blockquote', 'code-block'],
     ['link'],
-    ['clean'],
+    // ['clean'],
     // [{ 'header': 1 }, { 'header': 2 }],
     // [{ 'list': 'ordered' }, { 'list': 'bullet' }],
     // [{ 'script': 'sub' }, { 'script': 'super' }],
@@ -87,15 +87,3 @@ export const QuillContent = ({ textDelta }) => {
   )
 }
 
-export function deltaToPlainText(delta) {
-  if (!delta || !delta.ops) {
-    return '';
-  }
-
-  return delta.ops
-    .map(op => {
-      if (op.insert) return op.insert
-      return '';
-    })
-    .join('');
-}

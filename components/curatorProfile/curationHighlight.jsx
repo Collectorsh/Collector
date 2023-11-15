@@ -1,8 +1,11 @@
 import CloudinaryImage from "../CloudinaryImage";
 import Link from "next/link";
 import { PublishedTag } from "./curationList";
-import { QuillContent } from "../Quill";
 import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
+
+import dynamic from 'next/dynamic';
+const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillContent), { ssr: false })
+
 
 const CurationHighlight = ({ curation, isOwner, withCurator }) => { 
   const { banner_image, name, description, description_delta, is_published, curator } = curation

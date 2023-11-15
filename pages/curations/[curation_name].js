@@ -26,7 +26,6 @@ import { useRouter } from "next/router";
 import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 import withdrawFromTreasury from "../../data/curation/withdrawFromTreasury";
 import { roundToPrecision } from "../../utils/maths";
-// import { QuillContent, deltaToPlainText } from "../../components/Quill";
 
 import dynamic from 'next/dynamic';
 const QuillContent = dynamic(() => import('../../components/Quill').then(mod => mod.QuillContent), { ssr: false })

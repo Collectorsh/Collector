@@ -19,8 +19,11 @@ import { Toaster } from "react-hot-toast";
 import MainButton from "../../components/MainButton";
 import CreateCurationModal from "../../components/curatorProfile/createCurationModal";
 import getCuratorFromUsername from "../../data/user/getCuratorByUsername";
-import { QuillContent } from "../../components/Quill";
 import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/cloudinary/idParsing";
+
+import dynamic from 'next/dynamic';
+const QuillContent = dynamic(() => import('../../components/Quill').then(mod => mod.QuillContent), { ssr: false })
+
 
 const bioPlaceholder = "Tell us about yourself!";
 const getBioDelta = (curator, isOwner) => {

@@ -1,9 +1,8 @@
 import React, { useState } from "react"
 import MainButton, { WarningButton } from "../MainButton"
 import Modal from "../Modal"
-// import { QuillEditor } from "../Quill"
-import dynamic from "next/dynamic"
 
+import dynamic from "next/dynamic"
 const QuillEditor = dynamic(() => import("../Quill").then(mod => mod.QuillEditor), { ssr: false })
 
 const EditTextModuleModal = ({ textModule, onEditTextModule, isOpen, onClose, onDeleteModule }) => {

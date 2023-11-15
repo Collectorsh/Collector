@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import UserContext from "../contexts/user";
 import { PLATFORM_AUCTION_HOUSE_1_ADDRESS, adminIDs, connection } from "../config/settings";
 import NotFound from "../components/404";
@@ -12,13 +12,19 @@ import { roundToPrecision } from "../utils/maths";
 import { downloadCSV } from "../utils/csv";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import { withdrawFromPlatformTreasury } from "../data/curation/withdrawFromTreasury";
+import withdrawFromTreasury, { withdrawFromPlatformTreasury } from "../data/curation/withdrawFromTreasury";
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { error, success } from "../utils/toast";
 import { Toaster } from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
+import { RoundedCurve } from "../components/curations/roundedCurveSVG";
+import { adminGetAllCuratorCurations } from "../data/curation/adminGetAllCurations";
+import useCurationAuctionHouse from "../hooks/useCurationAuctionHouse";
+import { shootConfetti } from "../utils/confetti";
+
+const tabs = ["Stats", "Fees"]
 
 export default function Dashboard() { 
   const [user] = useContext(UserContext);
@@ -33,9 +39,32 @@ export default function Dashboard() {
 
   const [records, setRecords] = useState([]);
   const [fetching, setFetching] = useState(false);
+  const [artistUsername, setArtistUsername] = useState("");
+  const [collectorUsername, setCollectorUsername] = useState("");
+  const [curationName, setCurationName] = useState("");
+
+  const [curations, setCurations] = useState([]);
 
   const [collectedFees, setCollectedFees] = useState(0)
   const [withdrawing, setWithdrawing] = useState(false)
+
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [tabUnderlineWidth, setTabUnderlineWidth] = useState(49);
+  const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
+  const tabsRef = useRef([]);
+
+  useEffect(() => {
+    function setTabPosition() {
+      const currentTab = tabsRef.current[activeTabIndex];
+      if (!currentTab) return
+      setTabUnderlineLeft(currentTab.offsetLeft);
+      setTabUnderlineWidth(currentTab.clientWidth);
+    }
+    setTimeout(setTabPosition(), 100)
+    window.addEventListener("resize", setTabPosition);
+
+    return () => window.removeEventListener("resize", setTabPosition);
+  }, [activeTabIndex]);
   
 
   const isAdmin = adminIDs.includes(user?.id)
@@ -55,6 +84,13 @@ export default function Dashboard() {
       setCollectedFees(balance)
     })()
   }, [wallet])
+  useEffect(() => {
+    if (!isAdmin) return;
+    (async () => {
+      const curations = await adminGetAllCuratorCurations(user.api_key)
+      setCurations(curations)
+    })();
+  }, [isAdmin, user])
 
   const handleFetch = async () => { 
     if(!isAdmin) return
@@ -64,6 +100,9 @@ export default function Dashboard() {
       apiKey: user.api_key,
       startDate: dateRange.startDate,
       endDate: dateRange.endDate,
+      artistUsername,
+      collectorUsername,
+      curationName,
     })
     if (records) setRecords(records);
     setFetching(false);
@@ -125,81 +164,162 @@ export default function Dashboard() {
 
   if (!isAdmin) return <NotFound />
 
+  const stats = (
+    <>
+      <div className="flex justify-center items-center gap-5 w-fit mx-auto m-4">
+        <div className="border-2 rounded-md min-w-[18rem] ">
+          <Datepicker
+            inputClassName={(cl) => clsx("font-[bold_!important]", cl)}
+            separator={"to"} 
+            displayFormat={"MM/DD/YYYY"} 
+            value={dateRange}
+            onChange={(newValue) => setDateRange(newValue)}
+          />
+        </div>
+        <MainButton
+          className="flex-shrink-0"
+          onClick={handleFetch}
+          disabled={fetching}
+        >
+          Get them stats!
+        </MainButton>
+        <MainButton
+          className="flex-shrink-0"
+          onClick={handleDownload}
+          disabled={!records.length}
+        >
+          Download them stats! (CSV)
+        </MainButton>
+
+      </div>
+      <div className="flex flex-wrap justify-center gap-3">
+        
+          <input
+            placeholder="Artist Username"
+            value={artistUsername}
+            onChange={(e) => setArtistUsername(e.target.value)}
+            className="my-0 border-2 rounded
+        border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 
+        px-3"
+          />
+          <input
+            placeholder="Collector Username"
+            value={collectorUsername}
+            onChange={(e) => setCollectorUsername(e.target.value)}
+            className="my-0 border-2 rounded
+        border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 
+        px-3"
+          />
+          <input
+            placeholder="Curation Name"
+            value={curationName}
+            onChange={(e) => setCurationName(e.target.value)}
+            className="my-0 border-2 rounded
+        border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 
+        px-3"
+          />
+      
+
+      </div>
+
+      <div className="flex justify-center gap-5 items-center my-5">
+        <Stat title="Total Sales (SOL)" stat={roundToPrecision(totalSales, 2)} />
+        |
+        <Stat title="# of Unique Artists" stat={uniqueArtists} />
+        |
+        <Stat title="# of Unique Collectors" stat={uniqueCollectors} />
+      </div>
+
+
+      <div className="sticky grid grid-cols-9 top-20 bg-white dark:bg-black">
+        <TableHeader>Date</TableHeader>
+        <TableHeader>Title</TableHeader>
+        <TableHeader>Sale Amount</TableHeader>
+        <TableHeader>Type</TableHeader>
+        <TableHeader>Curation</TableHeader>
+        <TableHeader>Artist</TableHeader>
+        <TableHeader>Seller</TableHeader>
+        <TableHeader>Collector</TableHeader>
+        <TableHeader>Curator</TableHeader>
+      </div>
+      <div className="grid grid-cols-9">
+        
+        {
+          records.length
+            ? records.map((record) => <RecordRow key={record.id} record={record} />)
+            : null
+        }
+      </div>
+    </>
+  )
+
+  const fees = (
+    <>
+      <div className="mx-auto text-center mt-2">
+        <p>Platform Fees (Artist & Collector Curations): {collectedFees} SOL</p>
+        <MainButton
+          solid
+          onClick={handleWithdrawFees}
+          className="mt-2"
+          disabled={withdrawing || !collectedFees}
+        >
+          {withdrawing ? (
+            <Oval color="#FFF" secondaryColor="#666" height={20} width={20} />
+          ) : "Withdraw Fees"}
+
+        </MainButton>
+
+        {curations.map(curation => <CurationItem key={curation.id} curation={curation} />)}
+      </div>
+    </>
+  )
+
+  const content = [stats, fees]
+
   return (
     <>
       <MainNavigation />
       <Toaster />
       <div className="max-w-screen-2xl mx-auto p-5 min-w-[1210px]">
         <h1 className="text-4xl text-center">Admin Dashboard</h1>
-        <div className="mx-auto text-center mt-2">
-          <p>Platform Fees (Artist & Collector Curations): {collectedFees} SOL</p>
-          <MainButton
-            solid
-            onClick={handleWithdrawFees}
-            className="mt-2"
-            disabled={withdrawing || !collectedFees}
-          >
-            {withdrawing ? (
-                <Oval color="#FFF" secondaryColor="#666" height={20} width={20} />
-            ): "Withdraw Fees"}
-            
-          </MainButton>
-        </div>
-        <hr className="border-neutral-200 dark:border-neutral-800 my-4" />
-        <div className="flex justify-center items-center gap-5 w-fit mx-auto m-4">
-          <div className="border-2 rounded-md min-w-[18rem] ">
-            <Datepicker
-              inputClassName={(cl) => clsx("font-[bold_!important]", cl)}
-              separator={"to"} 
-              displayFormat={"MM/DD/YYYY"} 
-              value={dateRange}
-              onChange={(newValue) => setDateRange(newValue)}
-            />
+       
+        <div className="relative mx-auto w-fit">
+          <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
+            {tabs.map((tab, i) => {
+              const handleClick = () => {
+                setActiveTabIndex(i);
+              }
+              const isSelected = activeTabIndex === i;
+
+              // if(i === 0 && !activeTabIndex) setActiveTabIndex(0)
+
+              return (
+                <button
+                  key={tab}
+                  ref={(el) => (tabsRef.current[i] = el)}
+                  className={clsx(
+                    "px-3 py-1 capitalize hover:opacity-100 hover:scale-[102%] font-bold duration-300",
+                    isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
+                  onClick={handleClick}
+                >
+                  {tab}
+                </button>
+              )
+            })}
+
           </div>
-          <MainButton
-            className="flex-shrink-0"
-            onClick={handleFetch}
-            disabled={fetching}
-          >
-            Get them stats!
-          </MainButton>
-          <MainButton
-            className="flex-shrink-0"
-            onClick={handleDownload}
-            disabled={!records.length}
-          >
-            Download them stats! (CSV)
-          </MainButton>
-
+          <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
+          <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700" />
+          <span
+            className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner shadow-black/10 dark:shadow-white/10"
+          />
+          <span
+            className="absolute rounded-full bottom-0 block h-1 bg-black dark:bg-white transition-all duration-300"
+            style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
+          />
         </div>
-
-        <div className="flex justify-center gap-5 items-center my-5">
-          <Stat title="Total Sales (SOL)" stat={roundToPrecision(totalSales, 2)} />
-          |
-          <Stat title="# of Unique Artists" stat={uniqueArtists} />
-          |
-          <Stat title="# of Unique Collectors" stat={uniqueCollectors} />
-        </div>
-
-
-        <div className="sticky grid grid-cols-9 top-20 bg-white dark:bg-black">
-          <TableHeader>Date</TableHeader>
-          <TableHeader>Title</TableHeader>
-          <TableHeader>Sale Amount</TableHeader>
-          <TableHeader>Type</TableHeader>
-          <TableHeader>Curation</TableHeader>
-          <TableHeader>Artist</TableHeader>
-          <TableHeader>Seller</TableHeader>
-          <TableHeader>Collector</TableHeader>
-          <TableHeader>Curator</TableHeader>
-        </div>
-        <div className="grid grid-cols-9">
-          
-          {records.length
-            ? records.map((record) => <RecordRow key={record.id} record={record} />)
-            : null
-          }
-        </div>
+        <hr className="border-neutral-200 dark:border-neutral-800 mb-4" />
+        {content[activeTabIndex]}
 
       </div>
     </>
@@ -259,5 +379,50 @@ const RecordRow = ({ record }) => {
       <TableCell tippyContent={record.buyer_address}>{collectorName}</TableCell>
       <TableCell tippyContent={curatorAddress}>{curatorName}</TableCell>
     </>
+  )
+}
+
+const CurationItem = ({ curation }) => {
+  const { collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
+  const [withdrawing, setWithdrawing] = useState(false)
+
+  const handleWithdraw = async () => {
+    setWithdrawing(true)
+    const res = await withdrawFromTreasury({
+      privateKeyHash: curation.private_key_hash,
+      curation,
+    })
+
+    if (res?.status === "success") {
+      success(`Successfully withdrew ${ roundToPrecision(collectedFees.curatorBalance, 3) } SOL!`)
+      setCollectedFees({
+        curatorBalance: 0,
+        platformBalance: 0
+      })
+      shootConfetti(2)
+    } else {
+      error(`Withdrawal failed`)
+    }
+    setWithdrawing(false)
+  }
+  return (
+    <div className="flex items-center gap-5 border-b py-2">
+      <p className="text-lg font-bold">{curation.name.replaceAll("_", " ")}</p>
+      <p>by {curation.curator.username}</p>
+      {/* <p className="text-sm">({curation.curator_fee}%)</p> */}
+      <p>{roundToPrecision(collectedFees.platformBalance, 3)} SOL</p>
+
+      <MainButton
+        disabled={withdrawing}
+        noPadding
+        className="px-2"
+        onClick={handleWithdraw}
+      >
+        {withdrawing ? (
+          <Oval color="#FFF" secondaryColor="#666" height={20} width={20} />
+        ): "Withdraw"}
+   
+      </MainButton>
+    </div>
   )
 }

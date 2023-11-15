@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import EditWrapper from '../curatorProfile/editWrapper';
 import EditTextModuleModal from './editTextModuleModal';
-import { QuillContent } from '../Quill';
+
+import dynamic from 'next/dynamic';
+const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillContent), { ssr: false })
 
 const TextModule = ({ textModule, onEditTextModule, isOwner, onDeleteModule }) => { 
   const [editTextOpen, setEditTextOpen] = useState(false)

@@ -3,9 +3,7 @@ import apiClient from "../client/apiClient";
 import { PLATFORM_AUCTION_HOUSE_1_ADDRESS } from "../../config/settings";
 
 async function withdrawFromTreasury({ privateKeyHash, curation }) {
-  try {
-
-    //TODO just get the full curation in the API handler (user either curator api_key or admin api_key + curation id )
+  try { 
     const result = await axios.post("/api/curations/withdraw",
       {
         privateKeyHash,

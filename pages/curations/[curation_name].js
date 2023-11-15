@@ -26,7 +26,11 @@ import { useRouter } from "next/router";
 import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 import withdrawFromTreasury from "../../data/curation/withdrawFromTreasury";
 import { roundToPrecision } from "../../utils/maths";
-import { QuillContent, deltaToPlainText } from "../../components/Quill";
+
+import dynamic from 'next/dynamic';
+const QuillContent = dynamic(() => import('../../components/Quill').then(mod => mod.QuillContent), { ssr: false })
+const deltaToPlainText = dynamic(() => import('../../components/Quill').then(mod => mod.deltaToPlainText), { ssr: false })
+
 import Head from "next/head";
 import { metaPreviewImage } from "../../config/settings";
 import { baseCloudImageUrl } from "../../utils/cloudinary/baseCldUrl";
@@ -304,11 +308,11 @@ function CurationPage({curation}) {
     })
 
     if (res?.status === "success") {
+      success(`Successfully withdrew ${ roundToPrecision(collectedFees.curatorBalance, 3) } SOL!`)
       setCollectedFees({
         curatorBalance: 0,
         platformBalance: 0
       })
-      success(`Successfully withdrew ${ roundToPrecision(collectedFees.curatorBalance, 3) } SOL!`)
     } else {
       error(`Withdrawal failed`)
     }

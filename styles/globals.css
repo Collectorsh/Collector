@@ -511,6 +511,14 @@ code {
 .ql-snow.ql-snow .ql-picker{
   @apply text-current
 }
+.ql-snow.ql-snow a {
+  @apply text-current
+}
+
+.ql-snow.ql-snow .ql-tooltip input[type=text] {
+  @apply bg-white text-black
+  /* @apply bg-current */
+}
 
 .ql-snow.ql-snow .ql-stroke {
   @apply stroke-current;
@@ -524,6 +532,8 @@ code {
 .ql-snow.ql-snow.ql-toolbar button:hover {
   @apply scale-110;
 }
+
+
 
 .ql-snow.ql-snow.ql-toolbar .ql-picker .ql-picker-options {
   @apply bg-white dark:bg-neutral-800 rounded shadow border-neutral-200 dark:border-neutral-700;

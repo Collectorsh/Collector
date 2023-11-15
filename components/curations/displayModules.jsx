@@ -31,7 +31,7 @@ const DisplayModules = ({
   }
 
   const tokenMintsInUse = useMemo(() => {
-    return modules.reduce((acc, module) => {
+    return modules?.reduce((acc, module) => {
       if (module.type === "art") acc[module.id] = module.tokens
       return acc
     }, {})

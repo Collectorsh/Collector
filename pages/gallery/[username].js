@@ -26,9 +26,21 @@ const QuillContent = dynamic(() => import('../../components/Quill').then(mod => 
 
 
 const bioPlaceholder = "Tell us about yourself!";
+
 const getBioDelta = (curator, isOwner) => {
   if (curator?.bio_delta) return curator.bio_delta
-  else if (isOwner) return JSON.stringify({ ops: [{ insert: curator?.bio || bioPlaceholder }] })
+  else if (isOwner) return JSON.stringify({
+    ops: [
+      {
+        attributes: { size: 'large' },
+        insert: curator?.bio || bioPlaceholder
+      },
+      {
+        attributes: { align: 'center' },
+        insert: "\n"
+      },
+    ]
+  })
   else return JSON.stringify({ ops: [{ insert: "" }] })
 }
 

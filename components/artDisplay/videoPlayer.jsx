@@ -126,6 +126,7 @@ const VideoPlayer = ({
       </div>
 
       <video
+        onClick={handlePlayToggle}
         style={style}
         ref={videoRef}
         preload="metadata"

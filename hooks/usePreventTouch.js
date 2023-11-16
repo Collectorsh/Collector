@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 const  usePreventTouchNavigation = (ref) => {
   useEffect(() => {
-    const element = ref.current.contentWindow.document;
+    const element = ref.current;
 ;
 
     const handleTouchStart = (e) => {

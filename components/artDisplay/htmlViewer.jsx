@@ -14,8 +14,8 @@ const HtmlViewer = ({
   const [reloadedUrl, setReloadedUrl] = useState(htmlUrl)
   const [loading, setLoading] = useState(true)
 
-  const htmlRef = useRef(null);
-  usePreventTouchNavigation(htmlRef)
+  // const htmlRef = useRef(null);
+  // usePreventTouchNavigation(htmlRef)
   // const { isVisible } = useElementObserver(htmlRef, "10px")  
   
   //Lazing load the iframe + reload when size changes
@@ -55,8 +55,6 @@ const HtmlViewer = ({
       </ContentLoader>
    
       <iframe
-
-        ref={htmlRef}
         onLoad={handleLoad}
         src={reloadedUrl}
         className={clsx(

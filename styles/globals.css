@@ -551,3 +551,14 @@ code {
   @apply scale-105
 }
 
+video::-webkit-media-controls {
+    display: none;
+}
+
+video::--moz-media-controls {
+    display: none;
+}
+
+video::-ms-media-controls {
+    display: none;
+}

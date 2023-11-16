@@ -17,8 +17,9 @@ const VideoPlayer = ({
   const [userPaused, setUserPaused] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isBuffering, setIsBuffering] = useState(false)
+  const [error, setError] = useState(false)
 
-  const { isVisible } = useElementObserver(videoRef, "10px")  
+  // const { isVisible } = useElementObserver(videoRef, "10px")  
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -57,14 +58,14 @@ const VideoPlayer = ({
     };
   }, [handleRefWidthChange]);
 
-  useEffect(() => {
-    if (!videoRef.current || userPaused) return;
-    if (isVisible) {
-      videoRef.current.play()
-    } else {
-      videoRef.current.pause()
-    }
-  }, [isVisible, userPaused])
+  // useEffect(() => {
+  //   if (!videoRef.current || userPaused) return;
+  //   if (isVisible) {
+  //     videoRef.current.play()
+  //   } else {
+  //     videoRef.current.pause()
+  //   }
+  // }, [isVisible, userPaused])
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();
@@ -116,6 +117,13 @@ const VideoPlayer = ({
           Buffering...
         </p>
       </div>
+      <div className={clsx("absolute inset-0 h-full w-full flex pb-6 items-end justify-center duration-1000",
+        error ? "opacity-100" : "opacity-0",
+      )}>
+        <p className="bg-red-500/50 backdrop-blur-sm rounded px-2">
+          Error loading video
+        </p>
+      </div>
 
       <video
         style={style}
@@ -129,9 +137,13 @@ const VideoPlayer = ({
         className="mx-auto h-full object-center object-contain duration-200 opacity-0 rounded-lg"
         onCanPlayThrough={e => {
           e.target.classList.add("opacity-100")
-          if(setVideoLoaded) setVideoLoaded(true)
+          if (setVideoLoaded) setVideoLoaded(true)
+          setError(false)
         }}
-        onError={(e) => e.target.classList.add("hidden")}
+        onError={(e) => {
+          e.target.classList.add("hidden")
+          setError(true)
+        }}
       >
         <source src={videoUrl} />
         Your browser does not support the video tag.

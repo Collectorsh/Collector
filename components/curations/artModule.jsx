@@ -200,14 +200,13 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
   const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
   const itemRef = useRef(null)
-  const { isVisible } = useElementObserver(itemRef, "400px")
 
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
   const [mediaType, setMediaType] = useState(CATEGORIES.IMAGE)
   const [lowMemory, setLowMemory] = useState(false)
 
-  const disableLink = (mediaType === CATEGORIES.HTML || mediaType === CATEGORIES.VR) && !lowMemory
+  const disableLink = (mediaType !== "image") && !lowMemory
 
   const isMasterEdition = token.is_master_edition
   const isEdition = token.is_edition
@@ -295,7 +294,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
                 videoUrl={videoUrl}
                 videoLoaded={videoLoaded}
                 setVideoLoaded={setVideoLoaded}
-                controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
+                // controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
                 wrapperClass='w-full h-full rounded-lg group/controls'
               />
             ) : null}

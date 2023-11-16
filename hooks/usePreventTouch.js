@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 
 const  usePreventTouchNavigation = (ref) => {
   useEffect(() => {
-    const element = ref.current;
+    const element = ref.current.contentWindow.document;
+;
 
     const handleTouchStart = (e) => {
       e.preventDefault();
@@ -10,11 +11,12 @@ const  usePreventTouchNavigation = (ref) => {
 
     if (element) {
       element.addEventListener('touchstart', handleTouchStart, { passive: false });
+      element.addEventListener('touchmove', handleTouchStart, { passive: false });
     }
 
     return () => {
       if (element) {
-        element.removeEventListener('touchstart', handleTouchStart);
+        element.removeEventListener('touchmove', handleTouchStart);
       }
     };
   }, [ref]);

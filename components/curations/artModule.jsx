@@ -295,7 +295,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
                 videoLoaded={videoLoaded}
                 setVideoLoaded={setVideoLoaded}
                 // controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
-                wrapperClass='w-full h-full rounded-lg group/controls'
+                // wrapperClass='w-full h-full rounded-lg group/controls'
               />
             ) : null}
 

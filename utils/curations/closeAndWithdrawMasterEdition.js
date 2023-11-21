@@ -35,6 +35,7 @@ export const getCloseAndWithdrawMarketTX = async ({
   const mainTX = new Transaction();
   const signers = []
 
+  // return
   if (!marketData.endDate) {
     //CLOSE MARKET
     const closeMarketInstruction = createCloseMarketInstruction({
@@ -71,6 +72,7 @@ export const getCloseAndWithdrawMarketTX = async ({
   // const [creatorsAccountData] = PrimaryMetadataCreators.deserialize(creatorsAccount?.data);
   const primaryMetadataCreators = [primaryMetadataCreatorsPubkey]//creatorsAccountData.creators
   const remainingAccounts = [];
+  
   for (const creator of primaryMetadataCreators) {
     remainingAccounts.push({ pubkey: creator, isWritable: true, isSigner: false });
   }

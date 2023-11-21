@@ -27,14 +27,6 @@ import IsMutableSwitch from "../components/create/isMutableSwitch";
 import ExternalUrlInput from "../components/create/externalUrl";
 import AttributesInput from "../components/create/attributes";
 
-
-//TODO
-//extras pull down menu
-// Attributes: 
-// external_url: 
-// isMutable
-
-
 //NFT standard reference - https://docs.metaplex.com/programs/token-metadata/changelog/v1.0
 
 export const maxUploadSize = 123 //MB
@@ -51,7 +43,7 @@ const MEDIA_KEYS = {
 const initError = {
   name: REQUIRED,
   royalties: REQUIRED,
-  collection: REQUIRED,
+  // collection: REQUIRED,
   [MEDIA_KEYS.MAIN]: REQUIRED,
 }
 

@@ -126,7 +126,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       setStage(MINT_STAGE.MINTING)
 
       const uri = res.uri
-      const collectionPubkey = new PublicKey(collection.mint)
+      const collectionPubkey = collection ? new PublicKey(collection.mint) : null
 
       const metaplex = new Metaplex(connection)
         .use(walletAdapterIdentity(wallet))
@@ -143,12 +143,14 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
 
       const { mintAddress } = transactionBuilder.getContext();
 
-      const collectionBuilder = metaplex.nfts().builders().verifyCollection({
-        mintAddress,
-        collectionMintAddress: collectionPubkey
-      })
-
-      transactionBuilder.add(collectionBuilder)
+      if (collection) {
+        const collectionBuilder = metaplex.nfts().builders().verifyCollection({
+          mintAddress,
+          collectionMintAddress: collectionPubkey
+        })
+  
+        transactionBuilder.add(collectionBuilder)
+      }
 
       //const { signature, confirmResponse } = 
       await metaplex.rpc().sendAndConfirmTransaction(

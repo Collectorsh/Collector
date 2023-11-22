@@ -1,6 +1,7 @@
 import clsx from "clsx"
 import { useEffect, useRef, useState } from "react";
 import useElementObserver from "../../hooks/useElementObserver";
+import useBreakpoints from "../../hooks/useBreakpoints";
 
 const VideoPlayer = ({
   id = "video-player",
@@ -19,7 +20,9 @@ const VideoPlayer = ({
   const [isBuffering, setIsBuffering] = useState(false)
   const [error, setError] = useState(false)
 
-  // const { isVisible } = useElementObserver(videoRef, "10px")  
+  const breakpoint = useBreakpoints()
+  const isMobile = ["", "sm", "md"].includes(breakpoint)
+  const { isVisible } = useElementObserver(videoRef, "10px")  
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -58,14 +61,14 @@ const VideoPlayer = ({
     };
   }, [handleRefWidthChange]);
 
-  // useEffect(() => {
-  //   if (!videoRef.current || userPaused) return;
-  //   if (isVisible) {
-  //     videoRef.current.play()
-  //   } else {
-  //     videoRef.current.pause()
-  //   }
-  // }, [isVisible, userPaused])
+  useEffect(() => {
+    if (!videoRef.current || userPaused) return;
+    if (isVisible) {
+      if (!isMobile) videoRef.current.play()
+    } else {
+      videoRef.current.pause()
+    }
+  }, [isVisible, userPaused, isMobile])
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();
@@ -94,6 +97,7 @@ const VideoPlayer = ({
   return (
     <div
       className={wrapperClass}
+      onClick={handlePlayToggle}
     >
       <PlayButton
         onClick={handlePlayToggle}
@@ -126,11 +130,11 @@ const VideoPlayer = ({
       </div>
 
       <video
-        onClick={handlePlayToggle}
+        
         style={style}
         ref={videoRef}
-        preload="metadata"
-        autoPlay
+        // preload="metadata"
+        autoPlay={!isMobile}
         muted
         loop
         playsInline

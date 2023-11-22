@@ -1,10 +1,11 @@
 import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/solid'
+import { CheckIcon, ChevronDownIcon, InformationCircleIcon, PlusIcon } from '@heroicons/react/solid'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import MainButton from '../MainButton'
 import CreateCollectionModal from './createCollectionModal'
 import { Oval } from 'react-loader-spinner'
+import Tippy from '@tippyjs/react'
 
 const CollectionDropDown = ({ selectedCollection, setCollection, setError, existingCollections }) => {
   const [collectionModalOpen, setCollectionModalOpen] = useState(false)
@@ -18,13 +19,25 @@ const CollectionDropDown = ({ selectedCollection, setCollection, setError, exist
 
   const handleChange = (collection) => {
     setCollection(collection)
-    setError(prev => ({ ...prev, collection: null }))
+    // setError(prev => ({ ...prev, collection: null }))
   }
+
+  const info = (
+    <Tippy
+      content="Onchain collections help organize your art into series with provenance."
+      className="shadow-lg"
+    >
+      <InformationCircleIcon className="w-4" />
+    </Tippy>
+  )
 
   return (
     <div className="relative mb-4 w-full">
       <CreateCollectionModal isOpen={collectionModalOpen} onClose={() => setCollectionModalOpen(false)} setCollections={setCollections} />
-      <p className="font-bold text-lg mb-1 ml-3">Collection*</p>
+      <p className="font-bold text-lg mb-1 ml-3 flex gap-1">
+        Collection
+        {info}
+      </p>
       <Listbox value={selectedCollection} onChange={handleChange}>
         <Listbox.Button className="text-current border-4 
                 rounded-xl border-neutral-200 dark:border-neutral-700 
@@ -54,6 +67,12 @@ const CollectionDropDown = ({ selectedCollection, setCollection, setError, exist
         >
           <Listbox.Options className="absolute top-0 left-0 w-full bg-white dark:bg-black p-2 rounded-lg shadow z-30">
             <div className='h-fit max-h-[10rem] overflow-auto'>
+              <Listbox.Option key="none" value={null}>
+                <div className={clsx(
+                  "p-2 flex gap-1 items-center justify-between w-full cursor-pointer rounded",
+                  'hover:bg-neutral-500/25'
+                )}>No Associated Collection</div>
+              </Listbox.Option>
               {collections
                 ? collections?.map((collection) => (
                 <Listbox.Option key={collection.mint} value={collection}>

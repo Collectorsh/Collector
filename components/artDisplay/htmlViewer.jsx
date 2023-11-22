@@ -15,6 +15,7 @@ const HtmlViewer = ({
   const [loading, setLoading] = useState(true)
 
   // const htmlRef = useRef(null);
+  // usePreventTouchNavigation(htmlRef)
   // const { isVisible } = useElementObserver(htmlRef, "10px")  
   
   //Lazing load the iframe + reload when size changes
@@ -39,7 +40,7 @@ const HtmlViewer = ({
   return (
     <div
       // ref={ useLazyLoading ? htmlRef : undefined}
-      className={clsx(wrapperClass, "z-10")}
+      className={clsx(wrapperClass, "z-10 touch-none")}
     >
 
       <ContentLoader
@@ -58,7 +59,8 @@ const HtmlViewer = ({
         src={reloadedUrl}
         className={clsx(
           "w-full h-full",
-          "rounded-lg"
+          "rounded-lg",
+          "touch-none block"
         )}
         style={style}
       />

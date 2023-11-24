@@ -25,8 +25,6 @@ async function getTokens(publicKeys, options) {
   const useTokenMetadata = options.useTokenMetadata ?? false
   const queryByCreator = options.queryByCreator ?? false
 
- 
-
   const baseTokens = []
   const mintedIndexerTokens = []
  
@@ -73,7 +71,7 @@ async function getTokens(publicKeys, options) {
           continueFetching = false
         });
 
-      if (res?.total < maxBatch) {
+      if (res?.total <= maxBatch) {
         continueFetching = false
       } else {
         page++
@@ -195,7 +193,6 @@ async function getTokens(publicKeys, options) {
           mintAddress: new PublicKey(result.mint)
         })
         const edition = metadata.edition
-
         result.collectionDetails = metadata.collectionDetails;
 
         result.is_master_edition = Boolean(edition.maxSupply && Number(edition.maxSupply?.toString()) > 0)
@@ -205,7 +202,6 @@ async function getTokens(publicKeys, options) {
         result.is_edition = !edition.isOriginal
         result.parent = edition.parent?.toString()
         result.edition_number = edition.number?.toString()
-
       } catch (err) {
         console.log("Error getting metadata for mint", result.mint)
       }

@@ -15,6 +15,7 @@ const DisplayModules = ({
   curationType,
   curationId,
   setSubmittedTokens,
+  owners
 }) => {
   const handleEditModule = (newModule) => {
     const newModules = [...modules];
@@ -61,6 +62,7 @@ const DisplayModules = ({
             curationType={curationType}
             curationId={curationId}
             setSubmittedTokens={setSubmittedTokens}
+            owners={owners}
           />
         </SortableModule>
       ))}
@@ -76,6 +78,7 @@ const DisplayModules = ({
             submittedTokens={submittedTokens}
             approvedArtists={approvedArtists}
             handleCollect={handleCollect}
+            owners={owners}
           />
         </div>
       ))}
@@ -97,6 +100,7 @@ export const Module = ({
   curationType,
   curationId,
   setSubmittedTokens,
+  owners
 }) => {
   switch (module.type) {
     case "text": {
@@ -123,6 +127,7 @@ export const Module = ({
           curationType={curationType}
           curationId={curationId}
           setSubmittedTokens={setSubmittedTokens}
+          owners={owners}
         />
       )
     }

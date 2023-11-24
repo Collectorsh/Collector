@@ -112,7 +112,6 @@ export default function EditArtModuleModal({
         tokens: tokensToSubmit,
         apiKey: user.api_key,
         curationId: curationId,
-        ownerId: user.id,
       })
   
       if (res?.status !== "success") {
@@ -129,13 +128,13 @@ export default function EditArtModuleModal({
 
     onEditArtModule(newArtModuleCopy);
     setTokensToSubmit([]);
-    onClose();
-    setTimeout(() => setSearch(""), 500);
+    handleClose();
   }
   const handleClose = () => {
     onClose();
     setTimeout(() => {
       setSearch("")
+      setSaving(false)
     }, 500);
   }
 
@@ -150,11 +149,12 @@ export default function EditArtModuleModal({
     const editions = []
     const artTokens = []
 
-    userTokens?.forEach(token => {
+    if(userTokens?.length) userTokens.forEach(token => {
       const soldOut = token.is_master_edition ? token.supply >= token.max_supply : false
+      const isOneOfOne = token.is_one_of_one //!token.is_master_edition && !token.is_edition
       if (token.is_master_edition && !soldOut) masterEditions.push(token)
       else if (token.is_edition) editions.push(token)
-      else if (!token.is_master_edition && !token.is_edition) artTokens.push(token)
+      else if (isOneOfOne) artTokens.push(token)
     })
     return {
       masterEditions,
@@ -162,6 +162,7 @@ export default function EditArtModuleModal({
       artTokens
     }
   }, [userTokens])
+
   
   const itemsInModule = useMemo(() => {
     if (!tokens.length || !wrapperWidth) return []
@@ -304,10 +305,14 @@ export default function EditArtModuleModal({
   const content = (
     <div className="relative h-full min-h-[200px] max-h-[333px] min border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
       {moduleFull ?
-        <p
-          className="absolute top-[50%] right-[50%] translate-x-[50%] -translate-y-[50%] z-50 shadow-lg
-          bg-neutral-200 dark:bg-neutral-800 px-5 py-2 rounded-lg font-bold"
-        >Module Full</p>
+        (
+          <div className="absolute inset-0 z-50 h-full flex justify-center items-center backdrop-blur-sm">
+            <p
+              className="shadow-lg
+              bg-neutral-200 dark:bg-neutral-800 px-5 py-2 rounded-lg font-bold"
+            >Module Full (max 4 pieces)</p>
+           </div> 
+        )
         : null
       }
       <div className={clsx("w-full h-full p-2 overflow-auto grid gap-4 rounded-lg",

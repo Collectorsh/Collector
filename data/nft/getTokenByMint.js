@@ -27,6 +27,7 @@ async function getTokenByMint(tokenMint) {
     }).catch((err) => {
       console.log("Error Fetching Token Metadata by Mint:", err);
     });  
+   
     if (!token) throw new Error("No token found");
       
     const { content, creators, ownership, id } = token

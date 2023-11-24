@@ -7,6 +7,9 @@ import { connection } from "../../config/settings";
 import { Metaplex } from "@metaplex-foundation/js";
 import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
 import getMintedIndexerByOwner from "../minted_indexer/getByOwner";
+import { useEffect, useMemo, useState } from "react";
+import { set } from "nprogress";
+import { of } from "ramda";
 
 export function coalesce(val, def) {
   if (val === null || typeof val === "undefined") return def;
@@ -187,29 +190,29 @@ async function getTokens(publicKeys, options) {
     })
     : { data: [] };
   
-  const metaplex = Metaplex.make(connection);
+  // const metaplex = Metaplex.make(connection);
   for (const result of results) { 
-    if (useTokenMetadata) { 
-      try {
-        const metadata = await metaplex.nfts().findByMint({
-          mintAddress: new PublicKey(result.mint)
-        })
-        const edition = metadata.edition
+    // if (useTokenMetadata) { 
+    //   try {
+    //     const metadata = await metaplex.nfts().findByMint({
+    //       mintAddress: new PublicKey(result.mint)
+    //     })
+    //     const edition = metadata.edition
 
-        result.collectionDetails = metadata.collectionDetails;
+    //     result.collectionDetails = metadata.collectionDetails;
 
-        result.is_master_edition = Boolean(edition.maxSupply && Number(edition.maxSupply?.toString()) > 0)
-        result.supply = edition.supply ? Number(edition.supply.toString()) : undefined
-        result.max_supply = edition.maxSupply ? Number(edition.maxSupply.toString()) : undefined
+    //     result.is_master_edition = Boolean(edition.maxSupply && Number(edition.maxSupply?.toString()) > 0)
+    //     result.supply = edition.supply ? Number(edition.supply.toString()) : undefined
+    //     result.max_supply = edition.maxSupply ? Number(edition.maxSupply.toString()) : undefined
         
-        result.is_edition = !edition.isOriginal
-        result.parent = edition.parent?.toString()
-        result.edition_number = edition.number?.toString()
+    //     result.is_edition = !edition.isOriginal
+    //     result.parent = edition.parent?.toString()
+    //     result.edition_number = edition.number?.toString()
 
-      } catch (err) {
-        console.log("Error getting metadata for mint", result.mint)
-      }
-    }
+    //   } catch (err) {
+    //     console.log("Error getting metadata for mint", result.mint)
+    //   }
+    // }
       
     // Loop through results and set artist name, twitter
     let tokens = creatorResp.data.filter((t) => t.public_key === result.artist_address);
@@ -226,11 +229,11 @@ async function getTokens(publicKeys, options) {
     }
   }
 
-  if (useTokenMetadata) {
-    results = results.filter((item) => {
-      return !item.collectionDetails
-    })
-  }
+  // if (useTokenMetadata) {
+  //   results = results.filter((item) => {
+  //     return !item.collectionDetails
+  //   })
+  // }
 
   results = results.sort((a, b) => {
     const aOrderId = coalesce(a.order_id, +Infinity);
@@ -250,8 +253,75 @@ const fetcher = async ({ publicKeys, options }) => {
   return await getTokens(publicKeys, options)
 }
 export function useTokens(publicKeys, options) {
-  const { data: tokens, error } = useSWR({ publicKeys, options }, fetcher)
+  const { data, error, mutate} = useSWR({ publicKeys, options }, fetcher)
+
+  const [tokens, setTokens] = useState(undefined)
+
+  //TODO need to figure out how to memoize completed results and not refetch when SWR is called again
+
+  useEffect(() => {
+    if (!data) setTokens(undefined)
+    if (data) {
+      if (!options?.useTokenMetadata) {
+        setTokens(data)
+      } else {
+        const nameSorted = data.sort((a, b) => a.name.localeCompare(b.name))
+        setTokens(undefined)
+
+        const metaplex = Metaplex.make(connection);
+        //if using token metadata, set the tokens as they are fetched
+        (async () => {
+          for (const t of nameSorted) {
+            const metadata = await getMetadata(metaplex, t.mint)
+      
+            //dont add collection nfts
+            if (!metadata.collectionDetails) {
+              setTokens((prevTokens) => {
+
+                //match metadata to data to prevent mix ups in the async process
+                const token = nameSorted.find((t) => t.mint === metadata.mint)
+        
+                let newTokens = prevTokens?.length ? prevTokens : []
+                newTokens = [...newTokens, { ...token, ...metadata }]
+               
+                const sorted = newTokens.sort((a, b) => a.name.localeCompare(b.name))
+                return sorted;
+              })
+            }
+          }
+        })();
+      }
+    }
+  }, [data, options?.useTokenMetadata])
+
   return tokens
+}
+
+const getMetadata = async (metaplex, mint) => { 
+  const result = { mint }
+  try {
+    const metadata = await metaplex.nfts().findByMint({
+      mintAddress: new PublicKey(mint)
+    })
+
+    const edition = metadata.edition
+
+    result.collectionDetails = metadata.collectionDetails;
+
+    result.is_master_edition = Boolean(edition.maxSupply && Number(edition.maxSupply?.toString()) > 0)
+    result.supply = edition.supply ? Number(edition.supply.toString()) : undefined
+    result.max_supply = edition.maxSupply ? Number(edition.maxSupply.toString()) : undefined
+
+    result.is_edition = !edition.isOriginal
+    result.parent = edition.parent?.toString()
+    result.edition_number = edition.number?.toString()
+
+    result.is_one_of_one = !result.is_edition && !result.is_master_edition;
+
+  } catch (err) {
+    console.log("Error getting metadata for mint", mint)
+  }
+  return result
 }
 
 //COLLECTOR TOKEN

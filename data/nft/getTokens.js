@@ -76,7 +76,7 @@ async function getTokens(publicKeys, options) {
           continueFetching = false
         });
 
-      if (res?.total < maxBatch) {
+      if (res?.total <= maxBatch) {
         continueFetching = false
       } else {
         page++

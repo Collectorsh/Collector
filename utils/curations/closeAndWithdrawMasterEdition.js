@@ -111,7 +111,7 @@ export const getCloseAndWithdrawMarketTX = async ({
     mint: masterEditionPubkey,
     connection,
   });
-  claimTokenPubkey = claimToken.publicKey
+  const claimTokenPubkey = claimToken.publicKey
   mainTX.add(createTokenTx)
   signers.push(claimToken)
   

@@ -56,8 +56,8 @@ export default function TestPage() {
 
   const getClaimToken = async () => {
     //I SEE YOU (57tzCD6hDw77HhRNtvrmBWx87t98Vwio6iUfwDZRErqx)
-    const masterEditionPubkey = new PublicKey("6PUHxwLorN6NEHHCGyfbhQNdj2tXSpN6kAWmXxZXKJNv"); //I see you
-    const ownerPubkey = new PublicKey("7cyDb4uJkik2vDHxVCyEkdVtQxYmRQAzEriJyv4FKNkT"); //I see you
+    const masterEditionPubkey = new PublicKey("6PUHxwLorN6NEHHCGyfbhQNdj2tXSpN6kAWmXxZXKJNv"); 
+    const ownerPubkey = new PublicKey("7cyDb4uJkik2vDHxVCyEkdVtQxYmRQAzEriJyv4FKNkT"); 
 
     //DAY LABOR (GauCAemm57jT22hZwAV9GugyZ5zS7uJYyq5c2Dnq4tyD)
     // const masterEditionPubkey = new PublicKey("7DcS1obiB5CKDnGgMrZfVPSP47f8LUCzXoQGorZ7cN5N")

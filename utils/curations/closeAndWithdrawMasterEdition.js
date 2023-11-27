@@ -8,6 +8,7 @@ import {
 
 import { MetadataProgram } from '@metaplex-foundation/mpl-token-metadata';
 import { findVaultOwnerAddress, findPrimaryMetadataCreatorsAddress, findTreasuryOwnerAddress, Market, SellingResource, createCloseMarketInstruction, createClaimResourceInstruction, findPayoutTicketAddress, createWithdrawInstruction } from "@metaplex-foundation/mpl-fixed-price-sale";
+import { createTokenAccount } from "./createTokenAccount";
 
 export const getCloseAndWithdrawMarketTX = async ({
   connection,
@@ -101,18 +102,19 @@ export const getCloseAndWithdrawMarketTX = async ({
   mainTX.add(withdrawInstruction)
 
 
-  //If its not the owner withdrawing, make a new Associated Token
-  // const { tokenAccount: claimToken, createTokenTx } = await createTokenAccount({
-  //   payer: ownerPubkey,
-  //   mint: masterEditionPubkey,
-  //   connection,
-  // });
-  // const claimTokenPubkey = claimToken.publicKey
-  // mainTX.add(createTokenTx)
-  // signers.push(claimToken)
-
+  //TODO: find if getAssaciated always returns an address, if it does then we need to check if its active or see if creating a new one works every time
   //JUST FIND THE ASSOCIATED TOKEN ADDRESS, then if it doesn't exist, create it
-  const claimTokenPubkey = await getAssociatedTokenAddress(masterEditionPubkey, ownerPubkey)
+  // let claimTokenPubkey = await getAssociatedTokenAddress(masterEditionPubkey, ownerPubkey)
+
+  const { tokenAccount: claimToken, createTokenTx } = await createTokenAccount({
+    payer: ownerPubkey,
+    mint: masterEditionPubkey,
+    connection,
+  });
+  claimTokenPubkey = claimToken.publicKey
+  mainTX.add(createTokenTx)
+  signers.push(claimToken)
+  
 
   const claimResourceInstruction = createClaimResourceInstruction(
     {

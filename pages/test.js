@@ -16,6 +16,7 @@ import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
 import crypto from 'crypto'
 import { formatRSAPrivateKey } from "../utils/formatRSA";
 import { PLATFORM_FEE_POINTS } from "./api/curations/createCuration";
+import { getAssociatedTokenAddress } from "@solana/spl-token";
 
 
 
@@ -38,7 +39,7 @@ export default function TestPage() {
     const [sellingResourceData] = SellingResource.deserialize(sellingResourceAccount?.data);
     console.log("🚀 ~ file: test.js:36 ~ getEditionMarket ~ sellingResourceData resource:", sellingResourceData.resource.toString())
 
-    const marketPubkey2 = new PublicKey("EZmDKrAeuyER2fgfnb1U1JAyyDoDqQKLhMTgPcD4hRLa")
+    const marketPubkey2 = new PublicKey("J2p9wWrXSpt2vpbZB1oEVbpdAzaX6uu5Yzcna5Mb88hU")
     const marketAccount2 = await connection.getAccountInfo(marketPubkey2);
     const [marketData2] = Market.deserialize(marketAccount2?.data);
     console.log("🚀 ~ file: test.js:36 ~ getEditionMarket ~ marketData2:", marketData2)
@@ -53,6 +54,23 @@ export default function TestPage() {
     console.log("🚀 ~ file: test.js:36 ~ getEditionMarket ~ sellingResourceData2 REsource:", sellingResourceData2.resource.toString())
   }
 
+  const getClaimToken = async () => {
+    //I SEE YOU (57tzCD6hDw77HhRNtvrmBWx87t98Vwio6iUfwDZRErqx)
+    const masterEditionPubkey = new PublicKey("6PUHxwLorN6NEHHCGyfbhQNdj2tXSpN6kAWmXxZXKJNv"); //I see you
+    const ownerPubkey = new PublicKey("7cyDb4uJkik2vDHxVCyEkdVtQxYmRQAzEriJyv4FKNkT"); //I see you
+
+    //DAY LABOR (GauCAemm57jT22hZwAV9GugyZ5zS7uJYyq5c2Dnq4tyD)
+    // const masterEditionPubkey = new PublicKey("7DcS1obiB5CKDnGgMrZfVPSP47f8LUCzXoQGorZ7cN5N")
+    // const ownerPubkey = new PublicKey("3vqxS1USgnjLtaH6mzp6v9nVG4dY4o18zxykzntSmvLz")
+
+    //DREAM (C4pCYusk8ieN9v7d4XFQ1wUfdTGeQy2tmiNsoZGZDiFi)
+    // const masterEditionPubkey = new PublicKey("E7LdHvp4jyxMyWmeRUxDQifaCVqrgPuF3fjUPp4RmyzQ")
+    // const ownerPubkey = new PublicKey("euTEr84UAYVC7xQ7K2AGdwL6wJ72ffjS22ftG7SAMe2")
+
+    let claimTokenPubkey = await getAssociatedTokenAddress(masterEditionPubkey, ownerPubkey)
+    console.log("🚀 ~ file: test.js:59 ~ getClaimToken ~ claimTokenPubkey:", claimTokenPubkey.toString())
+
+  }
   
   return <NotFound />
   return (
@@ -60,6 +78,7 @@ export default function TestPage() {
       <MainNavigation />
       <h1 className="text-center my-20 ">Test Page</h1>
       <MainButton onClick={getEditionMarket} className="mx-auto block">Get Market</MainButton>
+      <MainButton onClick={getClaimToken} className="mx-auto block">Get Claim Token</MainButton>
 
     </div>
   )

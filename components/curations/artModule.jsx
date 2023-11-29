@@ -35,6 +35,7 @@ const ArtModule = ({
   curationType,
   curationId,
   setSubmittedTokens,
+  owners
 }) => {
   const breakpoint = useBreakpoints()  
   const isMobile = ["", "sm", "md"].includes(breakpoint)
@@ -49,6 +50,7 @@ const ArtModule = ({
 
   const gapSize = 24 //in pixels (must be inline styled so that row height calculations can take the exact number into account)
   const maxHeightRatio = 0.75 //in percentage of window height
+
   useEffect(() => { 
     const getDimensions = () => { 
       if(!wrapperRef.current) return
@@ -122,6 +124,7 @@ const ArtModule = ({
 
       return tokens.map((token) => {
         const artist = approvedArtists.find(a => a.id === token.artist_id)
+        const owner = owners.find(o => o.id === token.owner_id)
         const tokenWidth = (mappedAspectRatios[token.mint] * rowHeight)
         const tokenHeight = rowHeight
         return (
@@ -132,11 +135,13 @@ const ArtModule = ({
             handleCollect={handleCollect}
             height={tokenHeight}
             width={tokenWidth}
+            curationType={curationType}
+            owner={owner}
           />
         )
       })
     })
-  }, [approvedArtists, handleCollect, mappedAspectRatios, tokenRows, wrapperWidth, maxHeight])
+  }, [approvedArtists, handleCollect, mappedAspectRatios, tokenRows, wrapperWidth, maxHeight, curationType, owners])
 
   return (
     <div
@@ -195,7 +200,7 @@ const ArtModule = ({
 
 export default ArtModule;
 
-export const ArtItem = ({ token, artist, handleCollect, height, width }) => {  
+export const ArtItem = ({ token, artist, handleCollect, height, width, curationType, owner }) => {  
   const [user] = useContext(UserContext);
   const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
@@ -244,6 +249,18 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
   const handleModelLoad = ({ lowMemory }) => {
     setLowMemory(lowMemory)
   }
+
+  const userText = useMemo(() => { 
+    if (curationType === "artist") {
+      return (owner && owner.username !== artist?.username) ?
+        <p>Owned by {owner.username}</p>
+        : null
+    } else {
+      return artist ?
+        <p>by {artist.username}</p>
+        : null
+    }
+  },[curationType, artist, owner])
   
   return (
     <div
@@ -338,9 +355,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width }) => {
             </p>
           </Link>
 
-          {artist ? (
-            <p>by {artist.username}</p>
-          ) : null}
+          {userText}
 
           <div className='flex items-center gap-2 '>
             {(token?.buy_now_price)

@@ -23,7 +23,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
   const [user] = useContext(UserContext);
   const { uploadSingleToken } = useImageFallbackContext()
   
-  const tokens = useTokens(user?.public_keys, {
+  const { tokens, loading } = useTokens(user?.public_keys, {
     useArtistDetails: false,
     justVisible: false
   });

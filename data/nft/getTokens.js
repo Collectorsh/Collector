@@ -7,9 +7,10 @@ import { connection } from "../../config/settings";
 import { Metaplex } from "@metaplex-foundation/js";
 import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
 import getMintedIndexerByOwner from "../minted_indexer/getByOwner";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { set } from "nprogress";
 import { of } from "ramda";
+import UserTokensContext from "../../contexts/userTokens";
 
 export function coalesce(val, def) {
   if (val === null || typeof val === "undefined") return def;
@@ -253,46 +254,73 @@ const fetcher = async ({ publicKeys, options }) => {
   return await getTokens(publicKeys, options)
 }
 export function useTokens(publicKeys, options) {
-  const { data, error, mutate} = useSWR({ publicKeys, options }, fetcher)
+  const { data, error } = useSWR({ publicKeys, options }, fetcher)
 
-  const [tokens, setTokens] = useState(undefined)
+  const { allTokens, setAllTokens } = useContext(UserTokensContext)
+  const [fetched, setFetched] = useState(0)
+  const metadataRef = useRef([]);
 
-  //TODO need to figure out how to memoize completed results and not refetch when SWR is called again
+  const useTokenMetadata = useMemo(() => options?.useTokenMetadata ?? false, [options])
 
+  const tokenKey = useMemo(() => {
+    const keys = publicKeys?.join("-")
+    const optionKey = Object.entries(options ?? {}).reduce((acc, curr) => { 
+      const [key, value] = curr
+      if(value) acc += key + "-"
+      return acc
+    }, "")
+    return `${keys}_${optionKey}`
+  }, [publicKeys, options])
+
+  const alreadySet= useMemo(() => Object.keys(allTokens ?? {}).includes(tokenKey), [allTokens, tokenKey])
+
+  const tokens = useMemo(() => allTokens?.[tokenKey], [allTokens, tokenKey])
+  
+  //update state when "fetched" is updated (used to prevent rerender loop)
   useEffect(() => {
-    if (!data) setTokens(undefined)
-    if (data) {
-      if (!options?.useTokenMetadata) {
-        setTokens(data)
+    if(!useTokenMetadata) return //only use this for metadata fetches
+    if (fetched && metadataRef.current.length) {
+      setAllTokens((prevTokens) => {
+        const newTokens = { ...prevTokens, [tokenKey]: metadataRef.current }
+        return newTokens
+      })
+    }
+  },[fetched, setAllTokens, metadataRef, tokenKey, useTokenMetadata])
+
+  useEffect(() => {    
+
+    if (data && !alreadySet) {
+      if (!useTokenMetadata) {
+        setAllTokens((prevTokens) => {
+          const newTokens = { ...prevTokens, [tokenKey]: data }
+          return newTokens
+        })
       } else {
+        metadataRef.current = []
         const nameSorted = data.sort((a, b) => a.name.localeCompare(b.name))
-        setTokens(undefined)
 
         const metaplex = Metaplex.make(connection);
         //if using token metadata, set the tokens as they are fetched
+        let fetchedLocal = 0;
+
         (async () => {
           for (const t of nameSorted) {
             const metadata = await getMetadata(metaplex, t.mint)
-      
+            fetchedLocal++
             //dont add collection nfts
             if (!metadata.collectionDetails) {
-              setTokens((prevTokens) => {
+              const token = nameSorted.find((t) => t.mint === metadata.mint)
+              const newTokens = [...metadataRef.current, { ...token, ...metadata }]
+              metadataRef.current = newTokens
 
-                //match metadata to data to prevent mix ups in the async process
-                const token = nameSorted.find((t) => t.mint === metadata.mint)
-        
-                let newTokens = prevTokens?.length ? prevTokens : []
-                newTokens = [...newTokens, { ...token, ...metadata }]
-               
-                const sorted = newTokens.sort((a, b) => a.name.localeCompare(b.name))
-                return sorted;
-              })
+              if (fetchedLocal % 10 === 0) setFetched(fetchedLocal)
             }
           }
         })();
       }
     }
-  }, [data, options?.useTokenMetadata])
+
+  }, [data, tokenKey, useTokenMetadata, alreadySet, setAllTokens])
 
   return tokens
 }

@@ -81,18 +81,20 @@ export default function MyApp({ Component, pageProps }) {
                     <FollowingProvider>
                       <OffersProvider>
                         <SingleNftProvider>
-                          <ThemeProvider enableSystem={true} attribute="class">
-                            <PlausibleProvider domain="collector.sh">
-                              <CartProvider>
-        
-                                  <div className="min-h-[100vh] dark:bg-black dark:text-white">
-                                    <Component {...pageProps} />
-                                  </div>
-                                  <Footer />
-                              
-                              </CartProvider>
-                            </PlausibleProvider>
-                          </ThemeProvider>
+                          <UserTokensProvider>
+                            <ThemeProvider enableSystem={true} attribute="class">
+                              <PlausibleProvider domain="collector.sh">
+                                <CartProvider>
+          
+                                    <div className="min-h-[100vh] dark:bg-black dark:text-white">
+                                      <Component {...pageProps} />
+                                    </div>
+                                    <Footer />
+                                
+                                </CartProvider>
+                              </PlausibleProvider>
+                            </ThemeProvider>
+                          </UserTokensProvider>
                         </SingleNftProvider>
                       </OffersProvider>
                     </FollowingProvider>
@@ -111,6 +113,7 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import Router from "next/router";
 import { metaDescription, metaPreviewImage } from "../config/settings";
+import { UserTokensProvider } from "../contexts/userTokens";
 
 NProgress.configure({
   minimum: 0.3,

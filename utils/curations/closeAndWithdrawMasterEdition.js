@@ -102,18 +102,18 @@ export const getCloseAndWithdrawMarketTX = async ({
   mainTX.add(withdrawInstruction)
 
 
-  //TODO: find if getAssaciated always returns an address, if it does then we need to check if its active or see if creating a new one works every time
-  //JUST FIND THE ASSOCIATED TOKEN ADDRESS, then if it doesn't exist, create it
-  // let claimTokenPubkey = await getAssociatedTokenAddress(masterEditionPubkey, ownerPubkey)
+  //TODO should make sure the account is active somehow (may need to reactivate in some cases)
+  const claimTokenPubkey = await getAssociatedTokenAddress(masterEditionPubkey, ownerPubkey)
 
-  const { tokenAccount: claimToken, createTokenTx } = await createTokenAccount({
-    payer: ownerPubkey,
-    mint: masterEditionPubkey,
-    connection,
-  });
-  const claimTokenPubkey = claimToken.publicKey
-  mainTX.add(createTokenTx)
-  signers.push(claimToken)
+  //seems to cause problems when relisting (probably shouldnt be creating a new cliam token?)
+  // const { tokenAccount: claimToken, createTokenTx } = await createTokenAccount({
+  //   payer: ownerPubkey,
+  //   mint: masterEditionPubkey,
+  //   connection,
+  // });
+  // const claimTokenPubkey = claimToken.publicKey
+  // mainTX.add(createTokenTx)
+  // signers.push(claimToken)
   
 
   const claimResourceInstruction = createClaimResourceInstruction(

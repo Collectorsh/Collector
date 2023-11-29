@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import MainButton, { WarningButton } from "../MainButton";
-import CloudinaryImage from "../CloudinaryImage";
+import CloudinaryImage, { IMAGE_FALLBACK_STAGES } from "../CloudinaryImage";
 import clsx from "clsx";
 import Modal from "../Modal";
 import SearchBar from "../SearchBar";
@@ -63,7 +63,7 @@ export default function EditArtModuleModal({
   const useCreatorQuery = curationType === "artist" && useAllCreated
   const useJustCreator = curationType === "artist" && !useAllCreated //only needs to filter owned tokens, can skip if using createdQuery
   const useArtistDetails = curationType === "collector"//can assume artist details are already fetched for artist curation (auto added as approved artist)
-  const userTokens = useTokens(useUserTokens ? user?.public_keys : null, {
+  const { tokens: userTokens, loading } = useTokens(useUserTokens ? user?.public_keys : null, {
     queryByCreator: useCreatorQuery,
     justCreator: useJustCreator,
     useArtistDetails: useArtistDetails,
@@ -328,6 +328,11 @@ export default function EditArtModuleModal({
             </div>
           )
           : availableTokenButtons}
+        {loading && useUserTokens ? (
+          <div className="flex justify-center col-span-5">
+            <Oval color="#000" secondaryColor="#666" height={24} width={24} />
+          </div>
+        ): null}
       </div>
     </div>
   )
@@ -536,10 +541,11 @@ const TokenButton = ({
   const imageRef = useRef(null)
   const { videoUrl } = useNftFiles(token)
   const [loadingArt, setLoadingArt] = useState(false)
+  const [error, setError] = useState(false)
 
   const handleAdd = async () => {
     if (alreadyInUse || moduleFull) return
-    const newToken = {...token}
+    const newToken = { ...token }
 
     if (curationType !== "curator") {//"artist" || "collector" 
       // needs to add aspect ratio to token for when it gets auto submitted
@@ -580,6 +586,12 @@ const TokenButton = ({
 
     return Number(imageElement.naturalWidth / imageElement.naturalHeight)
   }
+  const handleError = (e) => {
+    if (e === IMAGE_FALLBACK_STAGES.METADATA) {
+      setError(true)
+    }
+  }
+
   return (
     <button className="
         relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden
@@ -598,18 +610,29 @@ const TokenButton = ({
         useMetadataFallback
         token={token}
         width={500}
-      // noLazyLoad
+        onError={handleError}
+        // noLazyLoad
       />
 
+      {error ? (
+        <div
+          className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90  
+             flex flex-col justify-center items-center rounded-lg z-[15]
+          "
+        >
+          <p>Error loading Metadata</p>
+        </div>
+      ) : null}
+
       {alreadyInUse ? (
-        <div className="absolute inset-0 flex justify-center items-center">
+        <div className="absolute inset-0 flex justify-center items-center z-20">
           <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">Already Being Used</p>
         </div>
       ) : null}
       <div
         className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90 
             transition-opacity duration-300 opacity-0 hover:opacity-100
-             flex flex-col justify-center items-center rounded-lg
+             flex flex-col justify-center items-center rounded-lg z-20
           "
       >
         <p className="font-bold">{token.name}</p>

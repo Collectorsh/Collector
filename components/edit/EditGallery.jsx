@@ -6,8 +6,8 @@ import { useTokens } from "/data/nft/getTokens";
 export default function EditGallery() {
   const [user] = useContext(UserContext);
   // const [tokens, setTokens] = useState();
-  const tokens = useTokens(user?.public_keys, {
-    justVisible: false,
+  const { tokens, loading } = useTokens(user?.public_keys, {
+  justVisible: false,
     useArtistDetails: false,
   });
 

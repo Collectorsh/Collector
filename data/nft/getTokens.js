@@ -29,8 +29,6 @@ async function getTokens(publicKeys, options) {
   const useTokenMetadata = options.useTokenMetadata ?? false
   const queryByCreator = options.queryByCreator ?? false
 
- 
-
   const baseTokens = []
   const mintedIndexerTokens = []
  
@@ -260,6 +258,8 @@ export function useTokens(publicKeys, options) {
   const [fetched, setFetched] = useState(0)
   const metadataRef = useRef([]);
 
+  const loading = !data && !error || fetched > 0
+
   const useTokenMetadata = useMemo(() => options?.useTokenMetadata ?? false, [options])
 
   const tokenKey = useMemo(() => {
@@ -272,7 +272,8 @@ export function useTokens(publicKeys, options) {
     return `${keys}_${optionKey}`
   }, [publicKeys, options])
 
-  const alreadySet= useMemo(() => Object.keys(allTokens ?? {}).includes(tokenKey), [allTokens, tokenKey])
+  const alreadySet = useMemo(() => Object.keys(allTokens ?? {}).includes(tokenKey), [allTokens, tokenKey])
+
 
   const tokens = useMemo(() => allTokens?.[tokenKey], [allTokens, tokenKey])
   
@@ -286,9 +287,9 @@ export function useTokens(publicKeys, options) {
       })
     }
   },[fetched, setAllTokens, metadataRef, tokenKey, useTokenMetadata])
-
+  
   useEffect(() => {    
-
+    
     if (data && !alreadySet) {
       if (!useTokenMetadata) {
         setAllTokens((prevTokens) => {
@@ -302,6 +303,7 @@ export function useTokens(publicKeys, options) {
         const metaplex = Metaplex.make(connection);
         //if using token metadata, set the tokens as they are fetched
         let fetchedLocal = 0;
+        
 
         (async () => {
           for (const t of nameSorted) {
@@ -313,16 +315,18 @@ export function useTokens(publicKeys, options) {
               const newTokens = [...metadataRef.current, { ...token, ...metadata }]
               metadataRef.current = newTokens
 
-              if (fetchedLocal % 10 === 0) setFetched(fetchedLocal)
+              if (fetchedLocal % 5 === 0) setFetched(fetchedLocal) //only update state every 4 fetches
             }
           }
+          setFetched(fetchedLocal) //update state at the end again
+          setTimeout(() => setFetched(0), 100) //reset state after 0.1 second (for future fetches)
         })();
       }
     }
 
   }, [data, tokenKey, useTokenMetadata, alreadySet, setAllTokens])
 
-  return tokens
+  return { tokens, loading }
 }
 
 const getMetadata = async (metaplex, mint) => { 

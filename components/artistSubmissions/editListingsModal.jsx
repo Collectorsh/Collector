@@ -163,11 +163,11 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
 
       const { closeAndWithdrawMarketTX } = builder
 
-//       const signed = await wallet.signTransaction(closeAndWithdrawMarketTX)
-//       const sim = await connection.simulateTransaction(signed)
-//       console.log("🚀 ~ file: editListingsModal.jsx:168 ~ onDelist ~ sim:", sim)
-// return
+      // const signed = await wallet.signTransaction(closeAndWithdrawMarketTX)
+      // const sim = await connection.simulateTransaction(signed)
+      // console.log("🚀 ~ file: editListingsModal.jsx:168 ~ onDelist ~ sim:", sim)
 
+      // return
       const delistTXSignature = await wallet.sendTransaction(closeAndWithdrawMarketTX, connection)
       const confirmation = await connection.confirmTransaction(delistTXSignature);
 
@@ -348,7 +348,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
     ">
       <Tippy
         className="shadow-lg"
-        content={token.listed_status === "listed"
+        content={token.listed_status !== "unlisted"
           ? "You must close the listing before removing the submission"
           : "This will remove your submission from the curation"
         }
@@ -362,7 +362,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
               isPersonalCuration && "hidden"
             )}
             onClick={handleDelete}
-            disabled={token.listed_status === "listed"}
+            disabled={token.listed_status !== "unlisted"}
           >
             <XCircleIcon className="w-8 h-8" />
           </button>

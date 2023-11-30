@@ -17,7 +17,7 @@ import { getTokenCldImageId } from "../utils/cloudinary/idParsing";
 
 
 function Gallery({user}) {
-  const tokens = useTokens(user?.public_keys, {
+  const { tokens } = useTokens(user?.public_keys, {
     justVisible: true,
     useArtistDetails: true
   });

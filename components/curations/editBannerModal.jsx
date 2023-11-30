@@ -24,7 +24,7 @@ const tabs = [
 export default function EditBannerModal({ isOpen, onClose, onSave, submittedTokens, curation }) {
   const [user] = useContext(UserContext);
   const { uploadSingleToken } = useImageFallbackContext()
-  const tokens = useTokens(user?.public_keys, {
+  const { tokens, loading } = useTokens(user?.public_keys, {
     useArtistDetails: false,
     justVisible: false
   });
@@ -43,7 +43,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
 
   const saveDisabled = (tabs[activeTabIndex] === uploadTabTitle ? !imageBuffer : !selected) || saving
 
-  const isPersonalCuration = curation?.type !== "curator" //"artist" || "collector"
+  const isPersonalCuration = curation?.curation_type !== "curator" //"artist" || "collector"
 
   useEffect(() => {
     function setTabPosition() {

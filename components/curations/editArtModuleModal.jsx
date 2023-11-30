@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import MainButton, { WarningButton } from "../MainButton";
-import CloudinaryImage from "../CloudinaryImage";
+import CloudinaryImage, { IMAGE_FALLBACK_STAGES } from "../CloudinaryImage";
 import clsx from "clsx";
 import Modal from "../Modal";
 import SearchBar from "../SearchBar";
@@ -63,7 +63,7 @@ export default function EditArtModuleModal({
   const useCreatorQuery = curationType === "artist" && useAllCreated
   const useJustCreator = curationType === "artist" && !useAllCreated //only needs to filter owned tokens, can skip if using createdQuery
   const useArtistDetails = curationType === "collector"//can assume artist details are already fetched for artist curation (auto added as approved artist)
-  const userTokens = useTokens(useUserTokens ? user?.public_keys : null, {
+  const { tokens: userTokens, loading } = useTokens(useUserTokens ? user?.public_keys : null, {
     queryByCreator: useCreatorQuery,
     justCreator: useJustCreator,
     useArtistDetails: useArtistDetails,
@@ -112,7 +112,6 @@ export default function EditArtModuleModal({
         tokens: tokensToSubmit,
         apiKey: user.api_key,
         curationId: curationId,
-        ownerId: user.id,
       })
   
       if (res?.status !== "success") {
@@ -129,13 +128,13 @@ export default function EditArtModuleModal({
 
     onEditArtModule(newArtModuleCopy);
     setTokensToSubmit([]);
-    onClose();
-    setTimeout(() => setSearch(""), 500);
+    handleClose();
   }
   const handleClose = () => {
     onClose();
     setTimeout(() => {
       setSearch("")
+      setSaving(false)
     }, 500);
   }
 
@@ -150,11 +149,12 @@ export default function EditArtModuleModal({
     const editions = []
     const artTokens = []
 
-    userTokens?.forEach(token => {
+    if(userTokens?.length) userTokens.forEach(token => {
       const soldOut = token.is_master_edition ? token.supply >= token.max_supply : false
+      const isOneOfOne = token.is_one_of_one //!token.is_master_edition && !token.is_edition
       if (token.is_master_edition && !soldOut) masterEditions.push(token)
       else if (token.is_edition) editions.push(token)
-      else if (!token.is_master_edition && !token.is_edition) artTokens.push(token)
+      else if (isOneOfOne) artTokens.push(token)
     })
     return {
       masterEditions,
@@ -162,6 +162,7 @@ export default function EditArtModuleModal({
       artTokens
     }
   }, [userTokens])
+
   
   const itemsInModule = useMemo(() => {
     if (!tokens.length || !wrapperWidth) return []
@@ -304,10 +305,14 @@ export default function EditArtModuleModal({
   const content = (
     <div className="relative h-full min-h-[200px] max-h-[333px] min border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
       {moduleFull ?
-        <p
-          className="absolute top-[50%] right-[50%] translate-x-[50%] -translate-y-[50%] z-50 shadow-lg
-          bg-neutral-200 dark:bg-neutral-800 px-5 py-2 rounded-lg font-bold"
-        >Module Full</p>
+        (
+          <div className="absolute inset-0 z-50 h-full flex justify-center items-center backdrop-blur-sm">
+            <p
+              className="shadow-lg
+              bg-neutral-200 dark:bg-neutral-800 px-5 py-2 rounded-lg font-bold"
+            >Module Full (max 4 pieces)</p>
+           </div> 
+        )
         : null
       }
       <div className={clsx("w-full h-full p-2 overflow-auto grid gap-4 rounded-lg",
@@ -323,6 +328,11 @@ export default function EditArtModuleModal({
             </div>
           )
           : availableTokenButtons}
+        {loading && useUserTokens ? (
+          <div className="flex justify-center col-span-5">
+            <Oval color="#000" secondaryColor="#666" height={24} width={24} />
+          </div>
+        ): null}
       </div>
     </div>
   )
@@ -531,10 +541,11 @@ const TokenButton = ({
   const imageRef = useRef(null)
   const { videoUrl } = useNftFiles(token)
   const [loadingArt, setLoadingArt] = useState(false)
+  const [error, setError] = useState(false)
 
   const handleAdd = async () => {
     if (alreadyInUse || moduleFull) return
-    const newToken = {...token}
+    const newToken = { ...token }
 
     if (curationType !== "curator") {//"artist" || "collector" 
       // needs to add aspect ratio to token for when it gets auto submitted
@@ -575,6 +586,12 @@ const TokenButton = ({
 
     return Number(imageElement.naturalWidth / imageElement.naturalHeight)
   }
+  const handleError = (e) => {
+    if (e === IMAGE_FALLBACK_STAGES.METADATA) {
+      setError(true)
+    }
+  }
+
   return (
     <button className="
         relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden
@@ -593,18 +610,29 @@ const TokenButton = ({
         useMetadataFallback
         token={token}
         width={500}
-      // noLazyLoad
+        onError={handleError}
+        // noLazyLoad
       />
 
+      {error ? (
+        <div
+          className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90  
+             flex flex-col justify-center items-center rounded-lg z-[15]
+          "
+        >
+          <p>Error loading Metadata</p>
+        </div>
+      ) : null}
+
       {alreadyInUse ? (
-        <div className="absolute inset-0 flex justify-center items-center">
+        <div className="absolute inset-0 flex justify-center items-center z-20">
           <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">Already Being Used</p>
         </div>
       ) : null}
       <div
         className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90 
             transition-opacity duration-300 opacity-0 hover:opacity-100
-             flex flex-col justify-center items-center rounded-lg
+             flex flex-col justify-center items-center rounded-lg z-20
           "
       >
         <p className="font-bold">{token.name}</p>

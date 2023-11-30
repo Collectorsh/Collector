@@ -16,7 +16,7 @@ import { getTokenCldImageId } from "../utils/cloudinary/idParsing";
 // Advanced Image plugins: https://cloudinary.com/documentation/react_image_transformations#plugins
 // Fetching/optimizations: https://cloudinary.com/documentation/image_optimization 
 
-const STAGES = {
+export const IMAGE_FALLBACK_STAGES = {
   MAIN_CDN: "MAIN_CDN",
   SECONDARY_CDN: "SECONDARY_CDN",
   METADATA: "METADATA",
@@ -37,6 +37,7 @@ const CloudinaryImage = ({
   useUploadFallback = false,
   useMetadataFallback = false,
   noLazyLoad = false,
+  onError
 }) => {
   const { uploadSingleToken } = useImageFallbackContext()
   const fallback = useFallbackImage(token)
@@ -45,7 +46,7 @@ const CloudinaryImage = ({
   const [fallbackUrl, setFallbackUrl] = useState(null)
   const [opacity, setOpacity] = useState(noLazyLoad ? 1 : 0)
   
-  const [fallbackStage, setFallbackStage] = useState(STAGES.MAIN_CDN)
+  const [fallbackStage, setFallbackStage] = useState(IMAGE_FALLBACK_STAGES.MAIN_CDN)
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null) 
@@ -73,7 +74,7 @@ const CloudinaryImage = ({
 
   useEffect(() => {
     //Don't set uploaded fallback if we are on the initial MAIN_CDN stage, or if we've already tried the fallback
-    const excludedStages = [STAGES.MAIN_CDN, STAGES.UPLOADED_FALLBACK, STAGES.UPLOADED_FALLBACK_FAILED]
+    const excludedStages = [IMAGE_FALLBACK_STAGES.MAIN_CDN, IMAGE_FALLBACK_STAGES.UPLOADED_FALLBACK, IMAGE_FALLBACK_STAGES.UPLOADED_FALLBACK_FAILED]
     if (!excludedStages.includes(fallbackStage) && Boolean(fallback)) {
       if (fallback?.imageId) {
         //TODO figure out another way to image cache bust besides adding another transformation (it cost moneys)
@@ -82,7 +83,7 @@ const CloudinaryImage = ({
         setFallbackUrl(cldImgFB?.toURL())
         setLoading(true)
         setError(false)
-        setFallbackStage(STAGES.UPLOADED_FALLBACK)
+        setFallbackStage(IMAGE_FALLBACK_STAGES.UPLOADED_FALLBACK)
       } 
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,8 +94,10 @@ const CloudinaryImage = ({
     setOpacity(0)
     setError(true)
 
+    if(onError) onError(fallbackStage)
+
     if (!token) {
-      setFallbackStage(STAGES.NO_FALLBACK)
+      setFallbackStage(IMAGE_FALLBACK_STAGES.NO_FALLBACK)
       console.log("Bad ID and No Token")
       return;
     }
@@ -102,23 +105,23 @@ const CloudinaryImage = ({
     let image;
 
     //IF the MAIN CDN FAILS
-    if (fallbackStage === STAGES.MAIN_CDN) {
+    if (fallbackStage === IMAGE_FALLBACK_STAGES.MAIN_CDN) {
       if (useUploadFallback) uploadSingleToken(token) //try to upload to MAIN CDN
       image = token?.image_cdn
-      if (image) setFallbackStage(STAGES.SECONDARY_CDN)
+      if (image) setFallbackStage(IMAGE_FALLBACK_STAGES.SECONDARY_CDN)
     }
     
     //IF there is no secondary CDN image 
     //OR if we are on the not on MAIN_CDN stage and the fallback image has errored
     //AND metadata is allowed (not optimal for pages lots of images)
     //AND we are not already on the METADATA/UPLOADED_FALLBACK_FAILED stage (meaning the metadata/uploaded fallback has errored too)
-    const excludedStages = [STAGES.METADATA, STAGES.UPLOADED_FALLBACK_FAILED]
+    const excludedStages = [IMAGE_FALLBACK_STAGES.METADATA, IMAGE_FALLBACK_STAGES.UPLOADED_FALLBACK_FAILED]
     if (useMetadataFallback && !image && !excludedStages.includes(fallbackStage)) {
       image = token?.image || await HandleNoUrl(token.mint) 
       if (image) {
         //if we've tried the uploaded fallback and it failed we leave the fallback image as metadata and dont try again
-        if (fallbackStage === STAGES.UPLOADED_FALLBACK) setFallbackStage(STAGES.UPLOADED_FALLBACK_FAILED)
-        else setFallbackStage(STAGES.METADATA)
+        if (fallbackStage === IMAGE_FALLBACK_STAGES.UPLOADED_FALLBACK) setFallbackStage(IMAGE_FALLBACK_STAGES.UPLOADED_FALLBACK_FAILED)
+        else setFallbackStage(IMAGE_FALLBACK_STAGES.METADATA)
       }
     }
 

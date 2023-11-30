@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import UserContext from "../../contexts/user";
 import MainNavigation from "../../components/navigation/MainNavigation";
 import { Toaster } from "react-hot-toast";
@@ -61,6 +61,7 @@ function CurationPage({curation}) {
 
   const [submittedTokens, setSubmittedTokens] = useState(curation?.submitted_token_listings || []);
   const [approvedArtists, setApprovedArtists] = useState(curation?.approved_artists || []);
+  const [owners, setOwners] = useState([]);
 
   const [name, setName] = useState(curation?.name);
   const [publishedContent, setPublishedContent] = useState(curation?.published_content);
@@ -141,6 +142,7 @@ function CurationPage({curation}) {
     if (!curationDetails) return
     setSubmittedTokens(curationDetails?.submitted_token_listings || [])
     setApprovedArtists(curationDetails?.approved_artists || [])
+    setOwners(curationDetails?.owners || [])
   }, [curationDetails])
 
   useEffect(() => {
@@ -340,6 +342,15 @@ function CurationPage({curation}) {
     }
   }
 
+  const curatorText = useMemo(() => {
+    switch (curation.curation_type) {
+      case "artist": return "Art by"
+      case "collector": return "Collected by"
+      case "curator": return "Curated by"
+    }
+  }, [curation.curation_type])
+
+
   if (isOwner && !draftContent && !publishedContent) return (
     <>
       <MainNavigation />
@@ -358,6 +369,7 @@ function CurationPage({curation}) {
   )
 
   const curationMetaDescription = `${ curation.name.replaceAll("_", " ") } by ${ curation.curator.username }`
+
 
   return (
     <>
@@ -415,7 +427,7 @@ function CurationPage({curation}) {
         </div>
         <Link href={`/gallery/${ curation.curator.username }`} >
           <a className="flex gap-2 items-center justify-center mb-8 hover:scale-105 duration-300 w-fit mx-auto ">
-            <p className="text-lg">Curated by {curation.curator.username}</p>
+            <p className="text-lg">{curatorText} {curation.curator.username}</p>
             {curation.curator.profile_image
               ? (<div className="relative">
                   <CloudinaryImage
@@ -457,6 +469,7 @@ function CurationPage({curation}) {
             curationType={curation.curation_type}
             curationId={curation.id}
             setSubmittedTokens={setSubmittedTokens}
+            owners={owners}
           />
 
         )

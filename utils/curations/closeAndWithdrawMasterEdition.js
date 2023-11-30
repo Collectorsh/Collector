@@ -8,6 +8,7 @@ import {
 
 import { MetadataProgram } from '@metaplex-foundation/mpl-token-metadata';
 import { findVaultOwnerAddress, findPrimaryMetadataCreatorsAddress, findTreasuryOwnerAddress, Market, SellingResource, createCloseMarketInstruction, createClaimResourceInstruction, findPayoutTicketAddress, createWithdrawInstruction } from "@metaplex-foundation/mpl-fixed-price-sale";
+import { createTokenAccount } from "./createTokenAccount";
 
 export const getCloseAndWithdrawMarketTX = async ({
   connection,
@@ -101,7 +102,10 @@ export const getCloseAndWithdrawMarketTX = async ({
   mainTX.add(withdrawInstruction)
 
 
-  //If its not the owner withdrawing, make a new Associated Token
+  //TODO should make sure the account is active somehow (may need to reactivate in some cases)
+  const claimTokenPubkey = await getAssociatedTokenAddress(masterEditionPubkey, ownerPubkey)
+
+  //seems to cause problems when relisting (probably shouldnt be creating a new cliam token?)
   // const { tokenAccount: claimToken, createTokenTx } = await createTokenAccount({
   //   payer: ownerPubkey,
   //   mint: masterEditionPubkey,
@@ -110,9 +114,7 @@ export const getCloseAndWithdrawMarketTX = async ({
   // const claimTokenPubkey = claimToken.publicKey
   // mainTX.add(createTokenTx)
   // signers.push(claimToken)
-
-  //JUST FIND THE ASSOCIATED TOKEN ADDRESS, then if it doesn't exist, create it
-  const claimTokenPubkey = await getAssociatedTokenAddress(masterEditionPubkey, ownerPubkey)
+  
 
   const claimResourceInstruction = createClaimResourceInstruction(
     {

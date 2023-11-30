@@ -25,8 +25,8 @@ const Submissions = ({ }) => {
   const [user] = useContext(UserContext);
   const router = useRouter()
 
-  const userTokens = useTokens(user?.public_keys, {
-    useArtistDetails: false,
+  const { tokens: userTokens } = useTokens(user?.public_keys, {
+  useArtistDetails: false,
     justVisible: false,
     justCreator: true,
     useTokenMetadata: true,

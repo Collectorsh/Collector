@@ -101,7 +101,7 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
     <Modal isOpen={isOpen} onClose={handleClose} title={`Submit Artworks`}>
       <div className="overflow-y-auto">
         <p className="mt-4 text-lg font-bold text-center">Choose the pieces you would like to submit to {curationName}</p>
-        <p className="text-center mb-4">Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price</p>
+        {/* <p className="text-center mb-4">Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price</p> */}
 
         
         <SearchBar

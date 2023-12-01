@@ -20,10 +20,12 @@ import "tippy.js/dist/tippy.css";
 import deleteSubmission from "../../data/curationListings/deleteSubmission";
 import retryFetches from "../../utils/curations/retryFetches";
 import { Market } from "@metaplex-foundation/mpl-fixed-price-sale";
+import { useRouter } from "next/router";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
   const wallet = useWallet()
+  const router = useRouter()
 
   const { handleBuyNowList, handleDelist, auctionHouse } = useCurationAuctionHouse(curation)
   
@@ -163,11 +165,13 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
 
       const { closeAndWithdrawMarketTX } = builder
 
-      // const signed = await wallet.signTransaction(closeAndWithdrawMarketTX)
-      // const sim = await connection.simulateTransaction(signed)
-      // console.log("🚀 ~ file: editListingsModal.jsx:168 ~ onDelist ~ sim:", sim)
+      if (router.query.simulate) {
+        const signed = await wallet.signTransaction(closeAndWithdrawMarketTX)
+        const sim = await connection.simulateTransaction(signed)
+        console.log("🚀 ~ file: editListingsModal.jsx:168 ~ onDelist ~ sim:", sim)
 
-      // return
+        return
+      }
       const delistTXSignature = await wallet.sendTransaction(closeAndWithdrawMarketTX, connection)
       const confirmation = await connection.confirmTransaction(delistTXSignature);
 
@@ -258,6 +262,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       <div className="overflow-auto ">
         <div className="text-center mt-4">
           <p className="font-bold">Please be aware: </p>
+          <p>
+            &bull; Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price
+          </p>
           <p>
             &bull; For listings to be valid on Collector, your artwork cannot be listed on custodial marketplaces like Exchange Art or Mallow
           </p>

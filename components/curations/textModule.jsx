@@ -20,7 +20,7 @@ const TextModule = ({ textModule, onEditTextModule, isOwner, onDeleteModule }) =
       {isOwner && !textModule.textDelta
         ? (
           <div className='absolute inset-0 w-full h-full flex justify-center items-center p-2'>
-            <p>Click the gear icon in the top left to edit this Text Module</p>
+            <p>Click the gear icon in the top right to edit this Text Module</p>
           </div>
         )
         : null

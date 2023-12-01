@@ -8,8 +8,6 @@ import { Metaplex } from "@metaplex-foundation/js";
 import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
 import getMintedIndexerByOwner from "../minted_indexer/getByOwner";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { set } from "nprogress";
-import { of } from "ramda";
 import UserTokensContext from "../../contexts/userTokens";
 
 export function coalesce(val, def) {

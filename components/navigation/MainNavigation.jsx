@@ -62,9 +62,9 @@ export default function MainNavigation() {
                   About
                 </a>
               </Link>
-              {user && <Gallery />}
+              {/* {user && <Gallery />} */}
               {user
-                ? <Profile />
+                  ? <Gallery />//<Profile />
                 : (
                     <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
                       

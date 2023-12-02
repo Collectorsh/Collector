@@ -43,6 +43,8 @@ const SortableModulesWrapper = ({ moduleComponents, modules, setModules, classNa
         const oldIndex = modules.findIndex(module => module.id === active.id);
         const newIndex = modules.findIndex(module => module.id === over.id);
 
+        if (oldIndex < 0 || newIndex < 0) return modules;
+
         return arrayMove(modules, oldIndex, newIndex);
       });
     }

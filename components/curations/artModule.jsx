@@ -171,7 +171,7 @@ const ArtModule = ({
       {isOwner && !artModule.tokens.length
         ? (
           <div className='absolute inset-0 w-full h-full flex justify-center items-center p-2'>
-            <p>Click the gear icon in the top left to edit this Art Module</p>
+            <p>Click the gear icon in the top right to edit this Art Module</p>
           </div>
         )
         : null

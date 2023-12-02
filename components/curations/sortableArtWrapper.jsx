@@ -21,8 +21,6 @@ import {
   restrictToHorizontalAxis
 } from '@dnd-kit/modifiers';
 import { useMemo, useState } from 'react';
-import { GrabHandle } from './sortableModule';
-import { ArtGrabHandle } from './sortableArt';
 
 const SortableArtWrapper = ({ children, artModule, setArtModule, itemsInModule }) => {
   const sensors = useSensors(
@@ -44,13 +42,18 @@ const SortableArtWrapper = ({ children, artModule, setArtModule, itemsInModule }
 
   function handleDragEnd({ active, over }) {
     setActiveId(null);
-    if (active.id !== over.id) {
+    if (active?.id !== over?.id) {
       setArtModule((module) => {
         const tokens = module.tokens;
-        const oldIndex = tokens.findIndex(tokenMint => tokenMint === active.id);
-        const newIndex = tokens.findIndex(tokenMint => tokenMint === over.id);
+        const oldIndex = tokens.findIndex(tokenMint => tokenMint === active?.id);
+        const newIndex = tokens.findIndex(tokenMint => tokenMint === over?.id);
 
-        const newTokens = arrayMove(tokens, oldIndex, newIndex);
+        let newTokens = tokens;
+        
+        if (oldIndex >= 0 && newIndex >= 0) { 
+          newTokens = arrayMove(tokens, oldIndex, newIndex);
+        }
+
         return {
           ...module,
           tokens: newTokens

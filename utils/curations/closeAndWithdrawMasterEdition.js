@@ -7,7 +7,7 @@ import {
 } from '@solana/spl-token';
 
 import { MetadataProgram } from '@metaplex-foundation/mpl-token-metadata';
-import { findVaultOwnerAddress, findPrimaryMetadataCreatorsAddress, findTreasuryOwnerAddress, Market, SellingResource, createCloseMarketInstruction, createClaimResourceInstruction, findPayoutTicketAddress, createWithdrawInstruction } from "@metaplex-foundation/mpl-fixed-price-sale";
+import { findVaultOwnerAddress, findPrimaryMetadataCreatorsAddress, findTreasuryOwnerAddress, Market, SellingResource, createCloseMarketInstruction, createClaimResourceInstruction, findPayoutTicketAddress, createWithdrawInstruction, PrimaryMetadataCreators } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { createTokenAccount } from "./createTokenAccount";
 
 export const getCloseAndWithdrawMarketTX = async ({
@@ -69,9 +69,14 @@ export const getCloseAndWithdrawMarketTX = async ({
   const metadata = pdas.metadata({ mint: masterEditionPubkey });
 
   const [primaryMetadataCreatorsPubkey, primaryMetadataCreatorsBump] = await findPrimaryMetadataCreatorsAddress(metadata);
-  // const creatorsAccount = await connection.getAccountInfo(primaryMetadataCreatorsPubkey);
-  // const [creatorsAccountData] = PrimaryMetadataCreators.deserialize(creatorsAccount?.data);
-  const primaryMetadataCreators = [primaryMetadataCreatorsPubkey]//creatorsAccountData.creators
+  // const primaryMetadataCreators = [primaryMetadataCreatorsPubkey]
+
+  //multiple creators
+  const creatorsAccount = await connection.getAccountInfo(primaryMetadataCreatorsPubkey);
+  const [creatorsAccountData] = PrimaryMetadataCreators.deserialize(creatorsAccount?.data);
+  const primaryMetadataCreators = creatorsAccountData.creators
+
+
   const remainingAccounts = [];
   
   for (const creator of primaryMetadataCreators) {

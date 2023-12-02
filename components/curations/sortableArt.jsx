@@ -16,7 +16,7 @@ const SortableArt = ({ id, children }) => {
 
   } = useSortable({ id: id });
 
-  const isActive = active && active.id === id;
+  const isActive = active && active?.id === id;
 
   const style = {
     transform: CSS.Transform.toString(transform),

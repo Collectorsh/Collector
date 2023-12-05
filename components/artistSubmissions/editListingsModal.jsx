@@ -174,7 +174,6 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       }
       
       const delistTXSignature = await wallet.sendTransaction(closeAndWithdrawMarketTX, connection)
-      console.log("🚀 ~ file: editListingsModal.jsx:177 ~ onDelist ~ delistTXSignature:", delistTXSignature)
       const confirmation = await connection.confirmTransaction(delistTXSignature);
 
       if (!delistTXSignature || Boolean(confirmation.value.err)) {

@@ -134,7 +134,7 @@ export const getCloseAndWithdrawMarketTX = async ({
       destination: claimTokenPubkey,
       tokenMetadataProgram: MetadataProgram.PUBKEY,
       clock: SYSVAR_CLOCK_PUBKEY,
-      anchorRemainingAccounts: remainingAccounts,
+      // anchorRemainingAccounts: remainingAccounts,
     },
     {
       vaultOwnerBump,

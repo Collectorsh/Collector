@@ -69,18 +69,19 @@ export const getCloseAndWithdrawMarketTX = async ({
   const metadata = pdas.metadata({ mint: masterEditionPubkey });
 
   const [primaryMetadataCreatorsPubkey, primaryMetadataCreatorsBump] = await findPrimaryMetadataCreatorsAddress(metadata);
-  // const primaryMetadataCreators = [primaryMetadataCreatorsPubkey]
+  console.log("🚀 ~ file: closeAndWithdrawMasterEdition.js:72 ~ primaryMetadataCreatorsPubkey:", primaryMetadataCreatorsPubkey.toString())
+  const primaryMetadataCreators = [primaryMetadataCreatorsPubkey]
 
-  //multiple creators
-  const creatorsAccount = await connection.getAccountInfo(primaryMetadataCreatorsPubkey);
-  const [creatorsAccountData] = PrimaryMetadataCreators.deserialize(creatorsAccount?.data);
-  const primaryMetadataCreators = creatorsAccountData.creators
+  // const creatorsAccount = await connection.getAccountInfo(primaryMetadataCreatorsPubkey);
+  // const [creatorsAccountData] = PrimaryMetadataCreators.deserialize(creatorsAccount?.data);
+  // const primaryMetadataCreators = creatorsAccountData.creators.map(creator => creator.address)
+  // console.log("🚀 ~ file: closeAndWithdrawMasterEdition.js:78 ~ primaryMetadataCreators:", primaryMetadataCreators.map(p => p.toString()))
 
-
-  const remainingAccounts = [];
+  const remainingAccounts = []//[{ pubkey: primaryMetadataCreatorsPubkey, isSigner: true, isWritable: true}]
   
   for (const creator of primaryMetadataCreators) {
-    remainingAccounts.push({ pubkey: creator, isWritable: true, isSigner: false });
+    const isSigner = creator.equals(ownerPubkey);
+    remainingAccounts.push({ pubkey: new PublicKey(creator), isSigner: isSigner, isWritable: true });
   }
 
   const withdrawInstruction = createWithdrawInstruction(
@@ -133,7 +134,7 @@ export const getCloseAndWithdrawMarketTX = async ({
       destination: claimTokenPubkey,
       tokenMetadataProgram: MetadataProgram.PUBKEY,
       clock: SYSVAR_CLOCK_PUBKEY,
-      // anchorRemainingAccounts: remainingAccounts,
+      anchorRemainingAccounts: remainingAccounts,
     },
     {
       vaultOwnerBump,

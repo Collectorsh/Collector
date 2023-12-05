@@ -69,7 +69,7 @@ export const getCloseAndWithdrawMarketTX = async ({
   const metadata = pdas.metadata({ mint: masterEditionPubkey });
 
   const [primaryMetadataCreatorsPubkey, primaryMetadataCreatorsBump] = await findPrimaryMetadataCreatorsAddress(metadata);
-  console.log("🚀 ~ file: closeAndWithdrawMasterEdition.js:72 ~ primaryMetadataCreatorsPubkey:", primaryMetadataCreatorsPubkey.toString())
+  // console.log("🚀 ~ file: closeAndWithdrawMasterEdition.js:72 ~ primaryMetadataCreatorsPubkey:", primaryMetadataCreatorsPubkey.toString())
   const primaryMetadataCreators = [primaryMetadataCreatorsPubkey]
 
   // const creatorsAccount = await connection.getAccountInfo(primaryMetadataCreatorsPubkey);

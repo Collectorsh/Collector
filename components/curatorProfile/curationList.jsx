@@ -2,22 +2,30 @@ import Link from "next/link";
 import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
 import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
+import SortableCurationPreview from "../curations/sortableCurationPreview";
 
 export const curationListPlaceholderId = "global/Collector_Hero_btrh4t"
 
-const CurationList = ({ curations, isOwner, withCurator }) => {
+const CurationList = ({ curations, isOwner, withCurator, asSortable }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      {curations?.map(curation => (
-        <CurationListItem key={curation.id} curation={curation} isOwner={isOwner} withCurator={withCurator} />
-      ))}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      {asSortable
+        ? curations?.map(curation => (
+          <SortableCurationPreview key={curation.id} id={curation.id}>
+            <CurationListItem key={curation.id} curation={curation} isOwner={isOwner} withCurator={withCurator} />
+          </SortableCurationPreview>
+        ))
+        : curations?.map(curation => (
+          <CurationListItem key={curation.id} curation={curation} isOwner={isOwner} withCurator={withCurator} />
+        ))
+    }
     </div>
   )
 }
 
 export default CurationList;
 
-const CurationListItem = ({ curation, isOwner, withCurator }) => { 
+export const CurationListItem = ({ curation, isOwner, withCurator }) => { 
   const { banner_image, name, description, is_published, curator } = curation
   const bannerImgId = parseCloudImageId(banner_image)
   return (

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import CloudinaryImage from "../../components/CloudinaryImage";
 import MainNavigation from "../../components/navigation/MainNavigation";
 import UserContext from "../../contexts/user";
@@ -22,6 +22,10 @@ import getCuratorFromUsername from "../../data/user/getCuratorByUsername";
 import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/cloudinary/idParsing";
 
 import dynamic from 'next/dynamic';
+import SortableCurationPreviewWrapper from "../../components/curations/sortableCurationPreviewWrapper";
+import SortableCurationPreview from "../../components/curations/sortableCurationPreview";
+import { type } from "ramda";
+import saveCurationsOrder from "../../data/user/saveCurationsOrder";
 const QuillContent = dynamic(() => import('../../components/Quill').then(mod => mod.QuillContent), { ssr: false })
 
 
@@ -63,9 +67,21 @@ function ProfilePage({ curator }) {
   const [pfpLoaded, setPfpLoaded] = useState(true);
   
 
-  const curations = isOwner
-    ? curator?.curations.sort(curation => curation.is_published ? -1 : 1)
-    : curator?.curations.filter(curation => curation.is_published);
+  const curationsInit = useMemo(() => {
+    const curations = isOwner
+      ? curator?.curations
+      : curator?.curations.filter(curation => curation.is_published)
+    
+    if (curator.curations_order?.length) { 
+      const curationIds = curator.curations_order
+      return curationIds.map(id => curations?.find(curation => curation.id === id))
+        .filter(curation => curation)
+    } else {
+      return curations?.sort(curation => curation.is_published ? -1 : 1)
+    }
+  }, [curator, isOwner])
+  
+  const [curations, setCurations] = useState(curationsInit);
   
   const bannerImgId = parseCloudImageId(banner)
   const pfpImgId = parseCloudImageId(pfp)
@@ -77,8 +93,9 @@ function ProfilePage({ curator }) {
       setPfp(curator.profile_image);
       setBio(getBioDelta(curator, isOwner));
       setSocials(curator.socials || []);
+      setCurations(curationsInit);
     }
-  },[curator])
+  },[curator, isOwner, curationsInit])
 
   useEffect(() => {
     //set loaded to false when the banner changes
@@ -89,6 +106,25 @@ function ProfilePage({ curator }) {
     //set loaded to false when the pfp changes
     if (pfp !== curator?.profile_image) setPfpLoaded(false);
   }, [pfp, curator?.profile_image])
+
+  const handleSaveCurationOrder = async (curationIds) => {
+    if (!isOwner || !curationIds) return
+
+    const res = await saveCurationsOrder(user.api_key, curationIds) 
+
+    if (res?.status !== "success") error("Failed to save curation order")
+  }
+
+  const handleCurationOrderChange = (setCurationsCB) => {
+    if (!isOwner) return;
+    setCurations(prev => {
+      const newCurations = typeof setCurationsCB === "function"
+        ? setCurationsCB(prev)
+        : setCurationsCB;
+      handleSaveCurationOrder(newCurations.map(curation => curation.id))
+      return newCurations
+    })
+  }
 
   const handleEditBanner = async (selectedToken) => {
     if (!isOwner) return;
@@ -229,19 +265,43 @@ function ProfilePage({ curator }) {
         </div>
 
         <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
-        
-        {curations?.length
+
+        {isOwner
           ? (
-            <>
-              <CurationHighlight curation={curations[0]} isOwner={isOwner} />
-      
-              <hr className="my-12 border-neutral-200 dark:border-neutral-800" />  
-              
-              <CurationList curations={curations.slice(1)} isOwner={isOwner}/>
-            </>
+            <SortableCurationPreviewWrapper
+              curations={curations}
+              setCurations={handleCurationOrderChange}
+            >
+              {curations?.length
+                ? (
+                  <>
+                    <SortableCurationPreview id={curations[0].id}>
+                      <CurationHighlight curation={curations[0]} isOwner={isOwner} />
+                    </SortableCurationPreview>
+            
+                    <hr className="my-12 border-neutral-200 dark:border-neutral-800" />  
+                    
+                    <CurationList asSortable curations={curations.slice(1)} isOwner={isOwner}/>
+                  </>
+                )
+                : null
+              }
+            </SortableCurationPreviewWrapper>
+
           )
-          : null
+          : curations?.length
+            ? (
+              <>
+                <CurationHighlight curation={curations[0]} isOwner={isOwner} />
+          
+                <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
+
+                <CurationList curations={curations.slice(1)} isOwner={isOwner} />
+              </>
+            )
+            : null
         }
+        
 
         {isOwner
           ? (

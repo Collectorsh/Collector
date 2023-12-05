@@ -1,6 +1,6 @@
 import CloudinaryImage from "../CloudinaryImage";
 import Link from "next/link";
-import { PublishedTag } from "./curationList";
+import { PublishedTag, curationListPlaceholderId } from "./curationList";
 import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
 
 import dynamic from 'next/dynamic';
@@ -27,18 +27,13 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
       <a className="block w-full my-4">
         <div className="w-full pb-[50%] md:pb-[33%] relative duration-300 hover:scale-[102%] active:scale-100"> 
           <PublishedTag isPublished={is_published} isOwner={isOwner} />
-          {banner_image 
-            ? (
-              <CloudinaryImage
-                className=" absolute inset-0 w-full h-full object-cover rounded-xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25"
-                id={bannerImgId}
-                noLazyLoad
-                width={2000}
-              />
-            )
-            :
-            <div className="absolute inset-0 w-full h-full object-cover rounded-xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25" />
-            }
+
+          <CloudinaryImage
+            className=" absolute inset-0 w-full h-full object-cover rounded-xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25"
+            id={bannerImgId || curationListPlaceholderId}
+            noLazyLoad
+            width={2000}
+          />
         </div>
 
         <div className="my-8">

@@ -7,7 +7,7 @@ import {
 } from '@solana/spl-token';
 
 import { MetadataProgram } from '@metaplex-foundation/mpl-token-metadata';
-import { findVaultOwnerAddress, findPrimaryMetadataCreatorsAddress, findTreasuryOwnerAddress, Market, SellingResource, createCloseMarketInstruction, createClaimResourceInstruction, findPayoutTicketAddress, createWithdrawInstruction } from "@metaplex-foundation/mpl-fixed-price-sale";
+import { findVaultOwnerAddress, findPrimaryMetadataCreatorsAddress, findTreasuryOwnerAddress, Market, SellingResource, createCloseMarketInstruction, createClaimResourceInstruction, findPayoutTicketAddress, createWithdrawInstruction, PrimaryMetadataCreators } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { createTokenAccount } from "./createTokenAccount";
 
 export const getCloseAndWithdrawMarketTX = async ({
@@ -69,13 +69,19 @@ export const getCloseAndWithdrawMarketTX = async ({
   const metadata = pdas.metadata({ mint: masterEditionPubkey });
 
   const [primaryMetadataCreatorsPubkey, primaryMetadataCreatorsBump] = await findPrimaryMetadataCreatorsAddress(metadata);
+  // console.log("🚀 ~ file: closeAndWithdrawMasterEdition.js:72 ~ primaryMetadataCreatorsPubkey:", primaryMetadataCreatorsPubkey.toString())
+  const primaryMetadataCreators = [primaryMetadataCreatorsPubkey]
+
   // const creatorsAccount = await connection.getAccountInfo(primaryMetadataCreatorsPubkey);
   // const [creatorsAccountData] = PrimaryMetadataCreators.deserialize(creatorsAccount?.data);
-  const primaryMetadataCreators = [primaryMetadataCreatorsPubkey]//creatorsAccountData.creators
-  const remainingAccounts = [];
+  // const primaryMetadataCreators = creatorsAccountData.creators.map(creator => creator.address)
+  // console.log("🚀 ~ file: closeAndWithdrawMasterEdition.js:78 ~ primaryMetadataCreators:", primaryMetadataCreators.map(p => p.toString()))
+
+  const remainingAccounts = []//[{ pubkey: primaryMetadataCreatorsPubkey, isSigner: true, isWritable: true}]
   
   for (const creator of primaryMetadataCreators) {
-    remainingAccounts.push({ pubkey: creator, isWritable: true, isSigner: false });
+    const isSigner = creator.equals(ownerPubkey);
+    remainingAccounts.push({ pubkey: new PublicKey(creator), isSigner: isSigner, isWritable: true });
   }
 
   const withdrawInstruction = createWithdrawInstruction(

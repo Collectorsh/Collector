@@ -124,7 +124,7 @@ const ArtModule = ({
 
       return tokens.map((token) => {
         const artist = approvedArtists.find(a => a.id === token.artist_id)
-        const owner = owners.find(o => o.id === token.owner_id)
+        const owner = owners?.find(o => o.id === token.owner_id)
         const tokenWidth = (mappedAspectRatios[token.mint] * rowHeight)
         const tokenHeight = rowHeight
         return (

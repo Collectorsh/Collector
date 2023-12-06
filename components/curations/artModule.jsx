@@ -149,6 +149,7 @@ const ArtModule = ({
       className={clsx("relative group w-full group/artRow min-h-[4rem] duration-300",
         // isVisible ? "opacity-100" : "opacity-0"
       )}
+     
     >
       <EditWrapper
         isOwner={isOwner}

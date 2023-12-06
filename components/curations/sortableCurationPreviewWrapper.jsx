@@ -54,9 +54,9 @@ const SortableCurationPreviewWrapper = ({ children, curations, setCurations, cla
     const curation = curations.find(curation => curation.id === id)
     if(!curation) return null
     return (
-      <div className="relative rounded-lg ring-4 ring-neutral-200 dark:ring-neutral-700 cursor-grabbing bg-white dark:bg-black w-full">
+      <div className="relative rounded-lg ring-4 ring-neutral-200 dark:ring-neutral-700 cursor-grabbing bg-white dark:bg-black w-full scale-50 origin-left">
         <GrabHandle grabbing/>
-        <div className='pointer-events-none w-full'>
+        <div className='pointer-events-none w-full '>
           <CurationListItem curation={curation} isOwner/>
         </div>
       </div>

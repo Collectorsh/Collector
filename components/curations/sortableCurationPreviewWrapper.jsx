@@ -19,9 +19,10 @@ import {
   restrictToParentElement,
 } from '@dnd-kit/modifiers';
 import { useState } from 'react';
-import { Module } from './displayModules';
 import { GrabHandle } from './sortableModule';
-const SortableModulesWrapper = ({ moduleComponents, modules, setModules, className, submittedTokens, approvedArtists }) => {
+import { CurationListItem } from '../curatorProfile/curationList';
+
+const SortableCurationPreviewWrapper = ({ children, curations, setCurations, className }) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -39,53 +40,51 @@ const SortableModulesWrapper = ({ moduleComponents, modules, setModules, classNa
     setActiveId(null);
 
     if (active.id !== over.id) {
-      setModules((modules) => {
-        const oldIndex = modules.findIndex(module => module.id === active.id);
-        const newIndex = modules.findIndex(module => module.id === over.id);
+      setCurations((curations) => {
+        const oldIndex = curations.findIndex(curation => curation.id === active.id);
+        const newIndex = curations.findIndex(curation => curation.id === over.id);
 
-        if (oldIndex < 0 || newIndex < 0) return modules;
+        if (oldIndex < 0 || newIndex < 0) return curations;
 
-        return arrayMove(modules, oldIndex, newIndex);
+        return arrayMove(curations, oldIndex, newIndex);
       });
     }
   }
   const renderItem = (id) => { 
-    const module = modules.find(module => module.id === id);
-    if (!module) return null
+    const curation = curations.find(curation => curation.id === id)
+    if(!curation) return null
     return (
       <div className="relative rounded-lg ring-4 ring-neutral-200 dark:ring-neutral-700 cursor-grabbing bg-white dark:bg-black w-full scale-50 origin-left">
         <GrabHandle grabbing/>
-        <div className='pointer-events-none w-full'>
-          <Module
-            module={module} 
-            submittedTokens={submittedTokens}
-            approvedArtists={approvedArtists}
-          />
+        <div className='pointer-events-none w-full '>
+          <CurationListItem curation={curation} isOwner/>
         </div>
       </div>
     )
   }
   return (
     <DndContext
-      modifiers={[restrictToVerticalAxis]}
+      // modifiers={[restrictToParentElement]}
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
       <SortableContext
-        items={modules.map(module => module.id)}
-        strategy={verticalListSortingStrategy}
+        items={curations.map(curation => curation.id)}
+        // strategy={verticalListSortingStrategy}
       >
         <div className={className}>
-            {moduleComponents}
+            {children}
         </div>
       </SortableContext>
-      <DragOverlay modifiers={[restrictToParentElement]}>
+      <DragOverlay
+        // modifiers={[restrictToParentElement]}
+      >
         {activeId ? renderItem(activeId) : null}
       </DragOverlay>
     </DndContext>
   );
 }
 
-export default SortableModulesWrapper;
+export default SortableCurationPreviewWrapper;

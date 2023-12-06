@@ -75,7 +75,6 @@ export const getCloseAndWithdrawMarketTX = async ({
   // const creatorsAccount = await connection.getAccountInfo(primaryMetadataCreatorsPubkey);
   // const [creatorsAccountData] = PrimaryMetadataCreators.deserialize(creatorsAccount?.data);
   // const primaryMetadataCreators = creatorsAccountData.creators.map(creator => creator.address)
-  // console.log("🚀 ~ file: closeAndWithdrawMasterEdition.js:78 ~ primaryMetadataCreators:", primaryMetadataCreators.map(p => p.toString()))
 
   const remainingAccounts = []//[{ pubkey: primaryMetadataCreatorsPubkey, isSigner: true, isWritable: true}]
   

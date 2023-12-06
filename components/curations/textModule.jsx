@@ -8,7 +8,9 @@ const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillConte
 const TextModule = ({ textModule, onEditTextModule, isOwner, onDeleteModule }) => { 
   const [editTextOpen, setEditTextOpen] = useState(false)
   return (
-    <div className="relative group w-full h-fit min-h-[4rem]">
+    <div className="relative group w-full h-fit min-h-[4rem]"
+      onClick={()=> setEditTextOpen(true)}
+    >
       <EditWrapper
         isOwner={isOwner}
         onEdit={() => setEditTextOpen(true)}

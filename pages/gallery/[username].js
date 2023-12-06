@@ -264,8 +264,20 @@ function ProfilePage({ curator }) {
           </EditWrapper>
         </div>
 
-        <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
-
+        <hr className="mt-12 border-neutral-200 dark:border-neutral-800" />
+        {isOwner
+          ? (
+            <div className="flex justify-end my-4">
+              <MainButton
+                className="flex items-center"
+                onClick={() => setCreateCurationOpen(true)}
+              >
+                Create New Curation <PlusIcon className="w-6 h-6 ml-2" />
+              </MainButton>
+            </div> 
+          )
+          : null
+        }
         {isOwner
           ? (
             <SortableCurationPreviewWrapper
@@ -302,19 +314,6 @@ function ProfilePage({ curator }) {
             : null
         }
         
-
-        {isOwner
-          ? (
-            <MainButton
-              className="mx-auto flex items-center"
-              onClick={() => setCreateCurationOpen(true)}
-            >
-              Create New Curation <PlusIcon className="w-6 h-6 ml-2" />
-            </MainButton>
-          )
-          : null
-        }
-
 
       </div>
       {isOwner

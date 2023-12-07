@@ -107,6 +107,7 @@ export default function MintPage() {
   const errors = Object.entries(error)
   const requiredError = errors.filter(e => nonDisplayErrors.includes(e[1]))[0];
   const categoryDisplay = category === CATEGORIES.VR ? "3D Model" : category
+  const isEditions = maxSupply > 1
 
   useEffect(() => {
     if (!user) return
@@ -276,7 +277,12 @@ export default function MintPage() {
           </div>
           <div className="grid lg:grid-cols-2 gap-4">
             <NameInput name={name} setName={setName} setError={setError} />
-            <NftTypeInput maxSupply={maxSupply} setMaxSupply={setMaxSupply} setError={setError} />
+            <NftTypeInput
+              maxSupply={maxSupply}
+              setMaxSupply={setMaxSupply}
+              setError={setError}
+              setIsMutable={setIsMutable}
+            />
           </div>
 
           <DescriptionInput description={description} setDescription={setDescription} setError={setError}/>
@@ -292,7 +298,9 @@ export default function MintPage() {
             buttonClass="font-bold text-lg my-2 mx-auto"
           >
             <div className="flex flex-col gap-4">
-              <IsMutableSwitch isMutable={isMutable} setIsMutable={setIsMutable} />
+              {!isEditions ? (
+                <IsMutableSwitch isMutable={isMutable} setIsMutable={setIsMutable} />
+              ): null}
               <ExternalUrlInput externalUrl={externalUrl} setExternalUrl={setExternalUrl} />
               <AttributesInput attributes={attributes} setAttributes={setAttributes} />
             </div>

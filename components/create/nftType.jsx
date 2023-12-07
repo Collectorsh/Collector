@@ -9,7 +9,7 @@ const types = [
   // { type: "open", display: "Open Editions" },
 ]
 
-const NftTypeInput = ({ maxSupply, setMaxSupply, setError }) => { 
+const NftTypeInput = ({ maxSupply, setMaxSupply, setError, setIsMutable }) => { 
 
   const [nftType, setNftType] = useState(types[0])
 
@@ -18,8 +18,10 @@ const NftTypeInput = ({ maxSupply, setMaxSupply, setError }) => {
   const handleChange = (type) => {
     setNftType(type)
     if (type.type === "single") setMaxSupply(0)
-    else setMaxSupply(2)
-
+    else {
+      setMaxSupply(2)
+      setIsMutable(true) //master editions must be mutable
+    }
     setError(prev => ({ ...prev, maxSupply: null }))
   }
 

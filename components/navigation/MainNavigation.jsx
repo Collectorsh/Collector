@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import React, { useState, useContext, useEffect, Fragment, Suspense } from "react";
+import React, { useState, useContext, useEffect, Fragment, Suspense, useCallback } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import UserContext from "/contexts/user";
 import { Dialog, Transition } from "@headlessui/react";
@@ -26,14 +26,18 @@ export default function MainNavigation() {
   function toggleMenu() {
     setOpen(!open);
   }
-
-  function signOut() {
+  const signOut = useCallback(() => {
     wallet.disconnect().then(() => {
       localStorage.removeItem("api_key");
       setUser(null);
       router.push("/");
     });
-  }
+  },[router, setUser, wallet])
+
+  useEffect(() => {
+    //if no wallet connected but stale user sign out
+    if (user && !wallet.publicKey) signOut();
+  }, [user])
 
   return (
     <div className="pb-[76px]">

@@ -63,7 +63,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       if (router.query.simulate) {
         const signed = await wallet.signTransaction(listMasterEditionTX)
         const sim = await connection.simulateTransaction(signed)
-        console.log("🚀 ~ file: editListingsModal.jsx:168 ~ onDelist ~ sim:", sim)
+        console.log("🚀 ~ file: editListingsModal.jsx:65 ~ onList ~ sim:", sim)
 
         return;
       }

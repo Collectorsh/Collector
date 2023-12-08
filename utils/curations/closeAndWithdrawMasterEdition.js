@@ -49,10 +49,10 @@ export const getCloseAndWithdrawMarketTX = async ({
 
 
   //WITHDRAW MARKET
-  const [payoutTicket, payoutTicketBump] = await findPayoutTicketAddress(
-    marketPubkey,
-    ownerPubkey,
-  );
+  // const [payoutTicket, payoutTicketBump] = await findPayoutTicketAddress(
+  //   marketPubkey,
+  //   ownerPubkey,
+  // );
 
   const [treasuryOwner, treasuryOwnerBump] = await findTreasuryOwnerAddress(
     treasuryMintPubkey,
@@ -69,44 +69,47 @@ export const getCloseAndWithdrawMarketTX = async ({
   const metadata = pdas.metadata({ mint: masterEditionPubkey });
 
   const [primaryMetadataCreatorsPubkey, primaryMetadataCreatorsBump] = await findPrimaryMetadataCreatorsAddress(metadata);
-  // console.log("🚀 ~ file: closeAndWithdrawMasterEdition.js:72 ~ primaryMetadataCreatorsPubkey:", primaryMetadataCreatorsPubkey.toString())
-  const primaryMetadataCreators = [primaryMetadataCreatorsPubkey]
 
-  // const creatorsAccount = await connection.getAccountInfo(primaryMetadataCreatorsPubkey);
-  // const [creatorsAccountData] = PrimaryMetadataCreators.deserialize(creatorsAccount?.data);
-  // const primaryMetadataCreators = creatorsAccountData.creators.map(creator => creator.address)
+  const creatorsAccount = await connection.getAccountInfo(primaryMetadataCreatorsPubkey);
+  const [creatorsAccountData] = PrimaryMetadataCreators.deserialize(creatorsAccount?.data);
+  const primaryMetadataCreators = creatorsAccountData.creators.map(creator => creator.address)
 
-  const remainingAccounts = []//[{ pubkey: primaryMetadataCreatorsPubkey, isSigner: true, isWritable: true}]
+  const remainingAccounts = [{ pubkey: primaryMetadataCreatorsPubkey, isSigner: false, isWritable: true}]
   
   for (const creator of primaryMetadataCreators) {
     const isSigner = creator.equals(ownerPubkey);
     remainingAccounts.push({ pubkey: new PublicKey(creator), isSigner: isSigner, isWritable: true });
   }
 
-  const withdrawInstruction = createWithdrawInstruction(
-    {
-      market: marketPubkey,
-      sellingResource: sellingResourcePubkey,
-      metadata,
-      treasuryHolder: treasuryHolderPubkey,
-      treasuryMint: treasuryMintPubkey,
-      owner: treasuryOwner,
-      destination: treasuryDestination,
-      funder: ownerPubkey,
-      payer: ownerPubkey,
-      payoutTicket: payoutTicket,
-      associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-      anchorRemainingAccounts: remainingAccounts,
-      clock: SYSVAR_CLOCK_PUBKEY,
-    },
-    {
-      treasuryOwnerBump,
-      payoutTicketBump,
-    },
-  );
-  mainTX.add(withdrawInstruction)
-
-
+  for (const creator of primaryMetadataCreators) {
+    const [payoutTicket, payoutTicketBump] = await findPayoutTicketAddress(
+      marketPubkey,
+      creator,
+    );
+    const withdrawInstruction = createWithdrawInstruction(
+      {
+        market: marketPubkey,
+        sellingResource: sellingResourcePubkey,
+        metadata,
+        treasuryHolder: treasuryHolderPubkey,
+        treasuryMint: treasuryMintPubkey,
+        owner: treasuryOwner,
+        destination: creator,//treasuryDestination,
+        funder: creator,//ownerPubkey,
+        payer: ownerPubkey,
+        payoutTicket: payoutTicket,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        anchorRemainingAccounts: remainingAccounts,
+        clock: SYSVAR_CLOCK_PUBKEY,
+      },
+      {
+        treasuryOwnerBump,
+        payoutTicketBump,
+      },
+    );
+    mainTX.add(withdrawInstruction)
+  }
+  
   //TODO should make sure the account is active somehow (may need to reactivate in some cases)
   const claimTokenPubkey = await getAssociatedTokenAddress(masterEditionPubkey, ownerPubkey)
 

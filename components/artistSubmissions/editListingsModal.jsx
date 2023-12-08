@@ -60,6 +60,14 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         editionMarketAddress
       } = builder
 
+      if (router.query.simulate) {
+        const signed = await wallet.signTransaction(listMasterEditionTX)
+        const sim = await connection.simulateTransaction(signed)
+        console.log("🚀 ~ file: editListingsModal.jsx:65 ~ onList ~ sim:", sim)
+
+        return;
+      }
+
       const signedTx = await wallet.signTransaction(listMasterEditionTX)
  
       const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet))
@@ -170,9 +178,15 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         const sim = await connection.simulateTransaction(signed)
         console.log("🚀 ~ file: editListingsModal.jsx:168 ~ onDelist ~ sim:", sim)
 
-        return
+        return;
       }
-      
+
+      // const signed = await wallet.signTransaction(closeAndWithdrawMarketTX)
+      // const delistTXSignature = await connection.sendRawTransaction(signed.serialize({
+      //   // requireAllSignatures: false,
+      //   // verifySignatures: false,
+      // }))
+
       const delistTXSignature = await wallet.sendTransaction(closeAndWithdrawMarketTX, connection)
       const confirmation = await connection.confirmTransaction(delistTXSignature);
 

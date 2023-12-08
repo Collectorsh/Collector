@@ -540,8 +540,9 @@ const TokenButton = ({
   
   const imageRef = useRef(null)
   const { videoUrl } = useNftFiles(token)
-  const [loadingArt, setLoadingArt] = useState(false)
+  const [loadingAspectRatio, setLoadingAspectRatio] = useState(false)
   const [error, setError] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
 
   const handleAdd = async () => {
     if (alreadyInUse || moduleFull) return
@@ -549,9 +550,9 @@ const TokenButton = ({
 
     if (curationType !== "curator") {//"artist" || "collector" 
       // needs to add aspect ratio to token for when it gets auto submitted
-      setLoadingArt(true)
+      setLoadingAspectRatio(true)
       const aspectRatio = await getAspectRatio(imageRef.current)
-      setLoadingArt(false)
+      setLoadingAspectRatio(false)
 
       if (!aspectRatio) return console.log("Error getting aspect ratio")
 
@@ -600,7 +601,7 @@ const TokenButton = ({
         "
       key={token.mint}
       onClick={handleAdd}
-      disabled={alreadyInUse || moduleFull || loadingArt}
+      disabled={alreadyInUse || moduleFull || loadingAspectRatio || !imageLoaded}
     >
       <CloudinaryImage
         imageRef={imageRef}
@@ -611,6 +612,7 @@ const TokenButton = ({
         token={token}
         width={500}
         onError={handleError}
+        onLoad={() => setImageLoaded(true)}
         // noLazyLoad
       />
 

@@ -171,7 +171,9 @@ const ArtModule = ({
       </EditWrapper>
       {isOwner && !artModule.tokens.length
         ? (
-          <div className='absolute inset-0 w-full h-full flex justify-center items-center p-2'>
+          <div className='absolute inset-0 w-full h-full flex justify-center items-center p-2'
+            onClick={() => setEditArtOpen(true)}
+          >
             <p>Click the gear icon in the top right to edit this Art Module</p>
           </div>
         )

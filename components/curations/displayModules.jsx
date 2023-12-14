@@ -75,6 +75,7 @@ const DisplayModules = ({
         <div key={module.id}>
           <Module
             module={module}
+            curationType={curationType}
             submittedTokens={submittedTokens}
             approvedArtists={approvedArtists}
             handleCollect={handleCollect}

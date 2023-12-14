@@ -85,19 +85,21 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
           Invite Link
           {info}
         </p>
-        {passcode && (
+        {passcode ? (
           <div className="flex items-center gap-2">
             <p className="text-sm">{getUrl()}</p>
             <CopyButton textToCopy={getUrl()} />
           </div>
+        ) : (
+          <MainButton
+            onClick={handleGeneratePasscode}
+            className="mt-1 px-3"
+            noPadding
+          >
+            Generate Link
+          </MainButton>
         )}
-        <MainButton
-          onClick={handleGeneratePasscode}
-          className="mt-1 px-3"
-          noPadding
-        >
-          Generate New
-        </MainButton>
+        
       </div>
 
       <hr className="my-5 border-neutral-200 dark:border-neutral-700" />

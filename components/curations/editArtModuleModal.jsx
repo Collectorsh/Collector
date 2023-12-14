@@ -43,7 +43,6 @@ export default function EditArtModuleModal({
   const [newArtModule, setNewArtModule] = useState(artModule)
   const [wrapperWidth, setWrapperWidth] = useState(0);
   const [search, setSearch] = useState("");
-  const [useAllCreated, setUseAllCreated] = useState(false);
 
   const [tokensToSubmit, setTokensToSubmit] = useState([]);//only used for personal curations
   const [saving, setSaving] = useState(false);
@@ -55,21 +54,20 @@ export default function EditArtModuleModal({
 
   
   //Dont fetch user tokens if this is a curator curation
-  const useUserTokens = curationType === "curator" ? false : true;
+  const useUserTokens = curationType !== "curator"
 
-  // if collector curation, fetch owned tokens like normal;
-  // if artist curation, start with owned & created;
-  // give option to fetch all created
-  const useCreatorQuery = curationType === "artist" && useAllCreated
-  const useJustCreator = curationType === "artist" && !useAllCreated //only needs to filter owned tokens, can skip if using createdQuery
-  const useArtistDetails = curationType === "collector"//can assume artist details are already fetched for artist curation (auto added as approved artist)
-  const { tokens: userTokens, loading } = useTokens(useUserTokens ? user?.public_keys : null, {
+  // if collector curation, fetch all owned tokens like normal;
+  // if artist curation, user creator query
+  const useCreatorQuery = curationType === "artist" 
+  const useArtistDetails = curationType === "collector"//probably dont need for artist curations
+  const { tokens: userTokens, loading, total, current } = useTokens(useUserTokens ? user?.public_keys : null, {
     queryByCreator: useCreatorQuery,
-    justCreator: useJustCreator,
     useArtistDetails: useArtistDetails,
     useTokenMetadata: true,
     justVisible: false,
   });
+
+  const loadingCounter = total ? ` (${ current }/${ total })` : "..."
 
   const gapSize = 24
 
@@ -151,7 +149,7 @@ export default function EditArtModuleModal({
 
     if(userTokens?.length) userTokens.forEach(token => {
       const soldOut = token.is_master_edition ? token.supply >= token.max_supply : false
-      const isOneOfOne = token.is_one_of_one //!token.is_master_edition && !token.is_edition
+      const isOneOfOne = !token.is_master_edition && !token.is_edition
       if (token.is_master_edition && !soldOut) masterEditions.push(token)
       else if (token.is_edition) editions.push(token)
       else if (isOneOfOne) artTokens.push(token)
@@ -318,21 +316,23 @@ export default function EditArtModuleModal({
       <div className={clsx("w-full h-full p-2 overflow-auto grid gap-4 rounded-lg",
         "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
       )}>
-        {!availableTokens?.length
+        {!availableTokens?.length 
           ? (
             <div className="col-span-5 flex justify-center items-center">
-              {useUserTokens && !userTokens
-                ? <p className="animate-pulse">Gathering your digital assets...</p>
+              {useUserTokens 
+                ? <p className="animate-pulse">Gathering your digital assets{loadingCounter}</p>
                 : <p>There are currently no available artworks</p>
               }
             </div>
           )
-          : availableTokenButtons}
-        {loading && useUserTokens ? (
+          : availableTokenButtons
+        }
+        
+        {/* {loading && useUserTokens && availableTokens?.length ? (
           <div className="flex justify-center col-span-5">
             <Oval color="#000" secondaryColor="#666" height={24} width={24} />
           </div>
-        ): null}
+        ): null} */}
       </div>
     </div>
   )
@@ -395,7 +395,7 @@ export default function EditArtModuleModal({
               setSearch={setSearch}
               placeholder="Search By Artwork"
             />
-            {curationType === "artist" ? (
+            {/* {curationType === "artist" ? (
               <div className="flex items-center gap-2 justify-center">
                 <p>Owned</p>
                 <Switch
@@ -416,7 +416,7 @@ export default function EditArtModuleModal({
                 </Switch>
                 <p>All</p>
               </div>
-            ) : null}
+            ) : null} */}
           </div>
           {tokensLabel}
           {content}
@@ -622,7 +622,7 @@ const TokenButton = ({
              flex flex-col justify-center items-center rounded-lg z-[15]
           "
         >
-          <p>Error loading Metadata</p>
+          <p>Error loading metadata image</p>
         </div>
       ) : null}
 

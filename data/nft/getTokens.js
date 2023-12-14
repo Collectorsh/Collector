@@ -346,7 +346,7 @@ export function useTokens(publicKeys, options) {
             const newTokens = { ...prevTokens, [tokenKey]: metadataRef.current }
             return newTokens
           })
-          
+
           setFetched(fetchedLocal) //update state at the end again just in case
           setTimeout(() => setFetched(0), 100) //reset state after 0.1 second (for future fetches)
         })();

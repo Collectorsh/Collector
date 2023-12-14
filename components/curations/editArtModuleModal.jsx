@@ -43,7 +43,6 @@ export default function EditArtModuleModal({
   const [newArtModule, setNewArtModule] = useState(artModule)
   const [wrapperWidth, setWrapperWidth] = useState(0);
   const [search, setSearch] = useState("");
-  const [useAllCreated, setUseAllCreated] = useState(false);
 
   const [tokensToSubmit, setTokensToSubmit] = useState([]);//only used for personal curations
   const [saving, setSaving] = useState(false);
@@ -61,12 +60,14 @@ export default function EditArtModuleModal({
   // if artist curation, user creator query
   const useCreatorQuery = curationType === "artist" 
   const useArtistDetails = curationType === "collector"//probably dont need for artist curations
-  const { tokens: userTokens, loading } = useTokens(useUserTokens ? user?.public_keys : null, {
+  const { tokens: userTokens, loading, total, current } = useTokens(useUserTokens ? user?.public_keys : null, {
     queryByCreator: useCreatorQuery,
     useArtistDetails: useArtistDetails,
     useTokenMetadata: true,
     justVisible: false,
   });
+
+  const loadingCounter = total ? ` (${ current }/${ total })` : "..."
 
   const gapSize = 24
 
@@ -315,11 +316,11 @@ export default function EditArtModuleModal({
       <div className={clsx("w-full h-full p-2 overflow-auto grid gap-4 rounded-lg",
         "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
       )}>
-        {!availableTokens?.length
+        {!availableTokens?.length 
           ? (
             <div className="col-span-5 flex justify-center items-center">
-              {useUserTokens && !userTokens
-                ? <p className="animate-pulse">Gathering your digital assets...</p>
+              {useUserTokens 
+                ? <p className="animate-pulse">Gathering your digital assets{loadingCounter}</p>
                 : <p>There are currently no available artworks</p>
               }
             </div>
@@ -327,11 +328,11 @@ export default function EditArtModuleModal({
           : availableTokenButtons
         }
         
-        {loading && useUserTokens && availableTokens?.length ? (
+        {/* {loading && useUserTokens && availableTokens?.length ? (
           <div className="flex justify-center col-span-5">
             <Oval color="#000" secondaryColor="#666" height={24} width={24} />
           </div>
-        ): null}
+        ): null} */}
       </div>
     </div>
   )

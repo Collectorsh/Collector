@@ -263,15 +263,15 @@ export function useTokens(publicKeys, options) {
   const tokens = useMemo(() => allTokens?.[tokenKey], [allTokens, tokenKey])
   
   //update state when "fetched" is updated (used to prevent rerender loop)
-  useEffect(() => {
-    if(!useTokenMetadata) return //only use this for metadata fetches
-    if (fetched && metadataRef.current.length) {
-      setAllTokens((prevTokens) => {
-        const newTokens = { ...prevTokens, [tokenKey]: metadataRef.current }
-        return newTokens
-      })
-    }
-  },[fetched, setAllTokens, metadataRef, tokenKey, useTokenMetadata])
+  // useEffect(() => {
+  //   if(!useTokenMetadata) return //only use this for metadata fetches
+  //   if (fetched && metadataRef.current.length) {
+  //     setAllTokens((prevTokens) => {
+  //       const newTokens = { ...prevTokens, [tokenKey]: metadataRef.current }
+  //       return newTokens
+  //     })
+  //   }
+  // },[fetched, setAllTokens, metadataRef, tokenKey, useTokenMetadata])
   
   useEffect(() => {    
     if (data && !alreadySet) {
@@ -328,16 +328,23 @@ export function useTokens(publicKeys, options) {
               continue;
             }
         
-            //dont add collection nfts
+        
+            // //dont add collection nfts
             if (!metadata.is_collection_nft) {
               const newTokens = [...metadataRef.current, fullToken]
               metadataRef.current = newTokens.sort((a, b) => a.name.localeCompare(b.name))
               
               fetchedLocal++;
-              if (fetchedLocal % 5 === 0) setFetched(fetchedLocal) //only update state every 5 fetches
+              // if (fetchedLocal % 5 === 0) setFetched(fetchedLocal) //only update state every 5 fetches
+              setFetched(fetchedLocal)
             }
           }
-          
+
+          //update state once done
+          setAllTokens((prevTokens) => {
+            const newTokens = { ...prevTokens, [tokenKey]: metadataRef.current }
+            return newTokens
+          })
           setFetched(fetchedLocal) //update state at the end again
           setTimeout(() => setFetched(0), 100) //reset state after 0.1 second (for future fetches)
         })();
@@ -346,7 +353,12 @@ export function useTokens(publicKeys, options) {
 
   }, [data, tokenKey, useTokenMetadata, alreadySet, setAllTokens, user])
 
-  return { tokens, loading }
+  return {
+    tokens,
+    loading,
+    total: data?.length ?? 0,
+    current: fetched,
+  }
 }
 
 const getMetadata = async (metaplex, mint) => { 

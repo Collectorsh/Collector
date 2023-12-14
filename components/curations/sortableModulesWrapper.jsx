@@ -74,7 +74,7 @@ const SortableModulesWrapper = ({ moduleComponents, modules, setModules, classNa
       onDragEnd={handleDragEnd}
     >
       <SortableContext
-        items={modules.map(module => module.id)}
+        items={modules?.map(module => module.id)}
         strategy={verticalListSortingStrategy}
       >
         <div className={className}>

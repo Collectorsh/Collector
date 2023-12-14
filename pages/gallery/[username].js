@@ -74,15 +74,18 @@ function ProfilePage({ curator }) {
     
     if (curator.curations_order?.length) { 
       const curationIds = curator.curations_order
-      return curationIds.map(id => curations?.find(curation => curation.id === id))
+      const ordered = curationIds.map(id => curations?.find(curation => curation.id === id))
         .filter(curation => curation)
+      
+      const remaining = curations?.filter(curation => !curationIds.includes(curation.id))
+      return [...ordered, ...remaining]
     } else {
       return curations?.sort(curation => curation.is_published ? -1 : 1)
     }
   }, [curator, isOwner])
-  
+ 
   const [curations, setCurations] = useState(curationsInit);
-  
+
   const bannerImgId = parseCloudImageId(banner)
   const pfpImgId = parseCloudImageId(pfp)
 

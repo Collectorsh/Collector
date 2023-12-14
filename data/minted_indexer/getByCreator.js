@@ -1,5 +1,3 @@
-getMintedIndexerByCreator
-
 import apiClient from "../client/apiClient";
 
 const getMintedIndexerByCreator = async (artistAddress) => {

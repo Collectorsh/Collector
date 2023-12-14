@@ -9,6 +9,9 @@ import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
 import getMintedIndexerByOwner from "../minted_indexer/getByOwner";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import UserTokensContext from "../../contexts/userTokens";
+import getMintedIndexerByCreator from "../minted_indexer/getByCreator";
+import UserContext from "../../contexts/user";
+import { createIndex } from "../minted_indexer/create";
 
 export function coalesce(val, def) {
   if (val === null || typeof val === "undefined") return def;
@@ -81,8 +84,14 @@ async function getTokens(publicKeys, options) {
 
       baseTokens.push(...res.items)
     }
-    //get items from minted_indexer in case helius is missing some
-    const indexerRes = await getMintedIndexerByOwner(publicKey)
+
+    //get items from minted_indexer to suppliment edition data, or in case helius missed them entirely
+    let indexerRes
+    if (queryByCreator) {
+      indexerRes = await getMintedIndexerByCreator(publicKey)
+    } else {
+      indexerRes = await getMintedIndexerByOwner(publicKey)
+    }
     if (indexerRes?.mints?.length) {
       mintedIndexerTokens.push(...indexerRes.mints)
     }
@@ -135,13 +144,13 @@ async function getTokens(publicKeys, options) {
   //Insert items from minted_indexer if missing from helius 
   //or if helius doesnt include off chain metadata (image, etc) in which case we've filtered them out above
   for (const mintedIndexerToken of mintedIndexerTokens) {
-    const alreadyExists = mungedTokens.some((token) => token.mint === mintedIndexerToken.mint)
-    if (!alreadyExists) {
+    const tokenExists = mungedTokens.some((token) => token.mint === mintedIndexerToken.mint)
+    if (!tokenExists){
       // if filtering by creator, skip indexed tokens that arent by the creator 
       if (justCreator && !publicKeys.includes(mintedIndexerToken.artist_address)) continue; 
 
       mungedTokens.unshift(mintedIndexerToken) //insert to beginning of array so it shows up first
-    }
+    } 
   }
 
   const visResults = await apiClient.post("/get_visibility_and_order", {
@@ -158,6 +167,12 @@ async function getTokens(publicKeys, options) {
     const cld_id = getTokenCldImageId(token)
     const visibility = visibilities[token.mint]
     const optimization = optimizations[cld_id]
+
+    const metadata = mintedIndexerTokens.find((t) => t.mint === token.mint)
+
+    if (metadata) { 
+      result = { ...result, ...metadata }
+    }
 
     if (!visibility) {
       result.order_id = null;
@@ -187,30 +202,7 @@ async function getTokens(publicKeys, options) {
     })
     : { data: [] };
   
-  // const metaplex = Metaplex.make(connection);
-  for (const result of results) { 
-    // if (useTokenMetadata) { 
-    //   try {
-    //     const metadata = await metaplex.nfts().findByMint({
-    //       mintAddress: new PublicKey(result.mint)
-    //     })
-    //     const edition = metadata.edition
-
-    //     result.collectionDetails = metadata.collectionDetails;
-
-    //     result.is_master_edition = Boolean(edition.maxSupply && Number(edition.maxSupply?.toString()) > 0)
-    //     result.supply = edition.supply ? Number(edition.supply.toString()) : undefined
-    //     result.max_supply = edition.maxSupply ? Number(edition.maxSupply.toString()) : undefined
-        
-    //     result.is_edition = !edition.isOriginal
-    //     result.parent = edition.parent?.toString()
-    //     result.edition_number = edition.number?.toString()
-
-    //   } catch (err) {
-    //     console.log("Error getting metadata for mint", result.mint)
-    //   }
-    // }
-      
+  for (const result of results) {       
     // Loop through results and set artist name, twitter
     let tokens = creatorResp.data.filter((t) => t.public_key === result.artist_address);
     if (tokens.length > 0) {
@@ -225,12 +217,6 @@ async function getTokens(publicKeys, options) {
       }
     }
   }
-
-  // if (useTokenMetadata) {
-  //   results = results.filter((item) => {
-  //     return !item.collectionDetails
-  //   })
-  // }
 
   results = results.sort((a, b) => {
     const aOrderId = coalesce(a.order_id, +Infinity);
@@ -251,6 +237,7 @@ const fetcher = async ({ publicKeys, options }) => {
 }
 export function useTokens(publicKeys, options) {
   const { data, error } = useSWR({ publicKeys, options }, fetcher)
+  const [user] = useContext(UserContext);
 
   const { allTokens, setAllTokens } = useContext(UserTokensContext)
   const [fetched, setFetched] = useState(0)
@@ -287,7 +274,6 @@ export function useTokens(publicKeys, options) {
   },[fetched, setAllTokens, metadataRef, tokenKey, useTokenMetadata])
   
   useEffect(() => {    
-    
     if (data && !alreadySet) {
       if (!useTokenMetadata) {
         setAllTokens((prevTokens) => {
@@ -295,34 +281,70 @@ export function useTokens(publicKeys, options) {
           return newTokens
         })
       } else {
-        metadataRef.current = []
-        const nameSorted = data.sort((a, b) => a.name.localeCompare(b.name))
-
-        const metaplex = Metaplex.make(connection);
         //if using token metadata, set the tokens as they are fetched
+        const metaplex = Metaplex.make(connection);
+
+        metadataRef.current = []
         let fetchedLocal = 0;
-        
+        const nameSorted = data.sort((a, b) => a.name.localeCompare(b.name));
 
         (async () => {
-          for (const t of nameSorted) {
-            const metadata = await getMetadata(metaplex, t.mint)
-            fetchedLocal++
-            //dont add collection nfts
-            if (!metadata.collectionDetails) {
-              const token = nameSorted.find((t) => t.mint === metadata.mint)
-              const newTokens = [...metadataRef.current, { ...token, ...metadata }]
-              metadataRef.current = newTokens
+          const withMetadata = [];
+          const remaining = [];
+          nameSorted.forEach((token) => {
+            if(token?.id !== undefined) {
+              withMetadata.push(token)
+            } else {
+              remaining.push(token)
+            }
+          })
 
-              if (fetchedLocal % 5 === 0) setFetched(fetchedLocal) //only update state every 4 fetches
+          // update ref with metadata tokens (but not collection nfts)
+          metadataRef.current = withMetadata.filter((item) => { 
+            return !item.is_collection_nft
+          })
+          fetchedLocal += withMetadata.length
+          setFetched(fetchedLocal) //update state
+          
+          //fetch metadata from tokens missing edition info
+          for (const t of remaining) {
+            const metadata = await getMetadata(metaplex, t.mint)
+            const token = remaining.find((t) => t.mint === metadata.mint)
+            const fullToken = { ...token, ...metadata }
+
+            //update indexer with full token
+            try {
+              const artistId = user?.public_keys.includes(fullToken.artist_address) ? user.id : null
+              const ownerId = user?.public_keys.includes(fullToken.owner_address) ? user.id : null
+              await createIndex({
+                apiKey: user?.api_key,
+                artistId,
+                ownerId,
+                token: fullToken
+              })
+
+            } catch (err) { 
+              console.log(`Error creating minted_indexer record mint: ${ fullToken.mint }`, err)
+              continue;
+            }
+        
+            //dont add collection nfts
+            if (!metadata.is_collection_nft) {
+              const newTokens = [...metadataRef.current, fullToken]
+              metadataRef.current = newTokens.sort((a, b) => a.name.localeCompare(b.name))
+              
+              fetchedLocal++;
+              if (fetchedLocal % 5 === 0) setFetched(fetchedLocal) //only update state every 5 fetches
             }
           }
+          
           setFetched(fetchedLocal) //update state at the end again
           setTimeout(() => setFetched(0), 100) //reset state after 0.1 second (for future fetches)
         })();
       }
     }
 
-  }, [data, tokenKey, useTokenMetadata, alreadySet, setAllTokens])
+  }, [data, tokenKey, useTokenMetadata, alreadySet, setAllTokens, user])
 
   return { tokens, loading }
 }
@@ -336,7 +358,7 @@ const getMetadata = async (metaplex, mint) => {
 
     const edition = metadata.edition
 
-    result.collectionDetails = metadata.collectionDetails;
+    result.is_collection_nft = Boolean(metadata.collectionDetails);
 
     result.is_master_edition = Boolean(edition.maxSupply && Number(edition.maxSupply?.toString()) > 0)
     result.supply = edition.supply ? Number(edition.supply.toString()) : undefined

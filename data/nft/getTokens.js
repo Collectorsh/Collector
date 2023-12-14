@@ -285,10 +285,11 @@ export function useTokens(publicKeys, options) {
         const metaplex = Metaplex.make(connection);
 
         metadataRef.current = []
-        let fetchedLocal = 0;
         const nameSorted = data.sort((a, b) => a.name.localeCompare(b.name));
-
+        
         (async () => {
+          let fetchedLocal = 0;
+
           const withMetadata = [];
           const remaining = [];
           nameSorted.forEach((token) => {
@@ -329,15 +330,15 @@ export function useTokens(publicKeys, options) {
             }
         
         
-            // //dont add collection nfts
+            // //dont add collection nfts to metadataRef
             if (!metadata.is_collection_nft) {
               const newTokens = [...metadataRef.current, fullToken]
               metadataRef.current = newTokens.sort((a, b) => a.name.localeCompare(b.name))
-              
-              fetchedLocal++;
               // if (fetchedLocal % 5 === 0) setFetched(fetchedLocal) //only update state every 5 fetches
-              setFetched(fetchedLocal)
             }
+
+            fetchedLocal++;
+            setFetched(fetchedLocal)
           }
 
           //update state once done
@@ -345,7 +346,8 @@ export function useTokens(publicKeys, options) {
             const newTokens = { ...prevTokens, [tokenKey]: metadataRef.current }
             return newTokens
           })
-          setFetched(fetchedLocal) //update state at the end again
+          
+          setFetched(fetchedLocal) //update state at the end again just in case
           setTimeout(() => setFetched(0), 100) //reset state after 0.1 second (for future fetches)
         })();
       }

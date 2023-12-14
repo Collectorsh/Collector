@@ -259,8 +259,6 @@ export default function EditArtModuleModal({
     }
   }, [curationType, submittedTokens, userTokensSplit, activeTabIndex])
 
-  console.log("🚀 ~ file: editArtModuleModal.jsx:264 ~ availableTokens ~ availableTokens:", availableTokens.length)
-
   const availableTokenButtons = useMemo(() => availableTokens
     .filter((token) => {
       if (!search) return true;

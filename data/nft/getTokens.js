@@ -144,8 +144,8 @@ async function getTokens(publicKeys, options) {
   //Insert items from minted_indexer if missing from helius 
   //or if helius doesnt include off chain metadata (image, etc) in which case we've filtered them out above
   for (const mintedIndexerToken of mintedIndexerTokens) {
-    const token = mungedTokens.find((token) => token.mint === mintedIndexerToken.mint)
-    if (!token){
+    const tokenExists = mungedTokens.some((token) => token.mint === mintedIndexerToken.mint)
+    if (!tokenExists){
       // if filtering by creator, skip indexed tokens that arent by the creator 
       if (justCreator && !publicKeys.includes(mintedIndexerToken.artist_address)) continue; 
 
@@ -218,12 +218,6 @@ async function getTokens(publicKeys, options) {
     }
   }
 
-  if (useTokenMetadata) {
-    results = results.filter((item) => {
-      return !item.collectionDetails
-    })
-  }
-
   results = results.sort((a, b) => {
     const aOrderId = coalesce(a.order_id, +Infinity);
     const bOrderId = coalesce(b.order_id, +Infinity);
@@ -280,7 +274,6 @@ export function useTokens(publicKeys, options) {
   },[fetched, setAllTokens, metadataRef, tokenKey, useTokenMetadata])
   
   useEffect(() => {    
-    
     if (data && !alreadySet) {
       if (!useTokenMetadata) {
         setAllTokens((prevTokens) => {
@@ -305,9 +298,7 @@ export function useTokens(publicKeys, options) {
               remaining.push(token)
             }
           })
-          
-          console.log("🚀 ~ file: getTokens.js:297 ~ remaining:", remaining.length)
-          console.log("🚀 ~ file: getTokens.js:296 ~ withMetadata:", withMetadata.length)
+
           // update ref with metadata tokens (but not collection nfts)
           metadataRef.current = withMetadata.filter((item) => { 
             return !item.is_collection_nft

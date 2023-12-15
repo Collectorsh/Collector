@@ -21,7 +21,7 @@ import { Provider, ErrorBoundary } from '@rollbar/react'; // Provider imports 'r
 
 const rollbarConfig = {
   accessToken: '3a85e746b40741d2908329451d953da0',
-  environment: process.env.NEXT_PUBLIC_REACT_APP_STAGE,
+  environment: 'testenv',
 };
 
 import LogRocket from 'logrocket';

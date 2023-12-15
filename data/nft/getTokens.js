@@ -317,12 +317,12 @@ export function useTokens(publicKeys, options) {
             try {
               const artistId = user?.public_keys.includes(fullToken.artist_address) ? user.id : null
               const ownerId = user?.public_keys.includes(fullToken.owner_address) ? user.id : null
-              await createIndex({
-                apiKey: user?.api_key,
-                artistId,
-                ownerId,
-                token: fullToken
-              })
+              // await createIndex({
+              //   apiKey: user?.api_key,
+              //   artistId,
+              //   ownerId,
+              //   token: fullToken
+              // })
 
             } catch (err) { 
               console.log(`Error creating minted_indexer record mint: ${ fullToken.mint }`, err)

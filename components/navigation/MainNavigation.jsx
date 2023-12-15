@@ -70,7 +70,7 @@ export default function MainNavigation() {
                   <span className="mt-2 collector tracking-wide">Beta</span>
               </div>
               </div>
-             
+          
             <div className="hidden md:flex items-center justify-end w-full">
               <Link href="/about">
                 <a className="mr-8 font-bold">

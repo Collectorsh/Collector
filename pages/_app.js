@@ -17,12 +17,6 @@ import PlausibleProvider from "next-plausible";
 import Footer from "/components/Footer";
 import { ImageFallbackProvider } from "../contexts/imageFallback";
 import { ActionCableProvider } from "../contexts/webSocket";
-import { Provider, ErrorBoundary } from '@rollbar/react'; // Provider imports 'rollbar'
-
-const rollbarConfig = {
-  accessToken: '3a85e746b40741d2908329451d953da0',
-  environment: 'testenv',
-};
 
 import LogRocket from 'logrocket';
 LogRocket.init('dnqy5r/collector');
@@ -97,9 +91,6 @@ export default function MyApp({ Component, pageProps }) {
           />
         </Head>      
       </div>
-      <Provider config={rollbarConfig}>
-        <ErrorBoundary>
-      
           <ApolloProvider client={client}>
             <WalletContextProvider>
               <UserProvider>
@@ -134,9 +125,6 @@ export default function MyApp({ Component, pageProps }) {
               </UserProvider>
             </WalletContextProvider>
           </ApolloProvider>
-
-        </ErrorBoundary>
-      </Provider>
     </>
   );
 }

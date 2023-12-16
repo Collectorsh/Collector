@@ -598,11 +598,12 @@ const TokenButton = ({
   }
 
   return (
-    <button className="
-        relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden
-        duration-300 hover:scale-[102%] disabled:scale-100
-        inset-0 w-full pb-[100%]
-        "
+    <button className={clsx(
+      "relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden",
+      "duration-300 hover:scale-[102%] disabled:scale-100",
+      "inset-0 w-full pb-[100%]",
+      error && "hidden"
+      )}
       key={token.mint}
       onClick={handleAdd}
       disabled={alreadyInUse || moduleFull || loadingAspectRatio || !imageLoaded}

@@ -254,7 +254,9 @@ const TokenItem = ({ token , isSelected, setSelected}) => {
     }
   }
   return (
-    <button className="relative flex justify-center flex-shrink-0" key={token.mint}
+    <button
+      className={clsx("relative flex justify-center flex-shrink-0", error && "hidden")}
+      key={token.mint}
       onClick={() => setSelected(isSelected ? null : token)}
       disabled={error}
     >
@@ -273,9 +275,6 @@ const TokenItem = ({ token , isSelected, setSelected}) => {
           >
             {truncate(token.mint)}
           </a>
-
-           
-           
         </div>
       ) : null}
 

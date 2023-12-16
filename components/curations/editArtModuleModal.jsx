@@ -146,20 +146,24 @@ export default function EditArtModuleModal({
     const masterEditions = []
     const editions = []
     const artTokens = []
+    const remainingTokens = []
 
     if(userTokens?.length) userTokens.forEach(token => {
       const soldOut = token.is_master_edition ? token.supply >= token.max_supply : false
       const isOneOfOne = !token.is_master_edition && !token.is_edition
-      if (token.is_master_edition && !soldOut) masterEditions.push(token)
+      const useMasterEdition = token.is_master_edition && (curationType === "artist" || !soldOut)
+      if (useMasterEdition) masterEditions.push(token)
       else if (token.is_edition) editions.push(token)
       else if (isOneOfOne) artTokens.push(token)
+      else remainingTokens.push(token)
     })
     return {
       masterEditions,
       editions,
-      artTokens
+      artTokens,
+      remainingTokens
     }
-  }, [userTokens])
+  }, [userTokens, curationType])
 
   
   const itemsInModule = useMemo(() => {

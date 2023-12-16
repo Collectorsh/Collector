@@ -24,7 +24,10 @@ const tabs = [
 export default function EditBannerModal({ isOpen, onClose, onSave, submittedTokens, curation }) {
   const [user] = useContext(UserContext);
   const { uploadSingleToken } = useImageFallbackContext()
-  const { tokens, loading } = useTokens(user?.public_keys, {
+  const isArtistCuration = curation.curation_type === "artist"
+  const { tokens, loading, current, total } = useTokens(user?.public_keys, {
+    queryByCreator: isArtistCuration,
+    useTokenMetadata: isArtistCuration,
     useArtistDetails: false,
     justVisible: false
   });
@@ -44,6 +47,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
   const saveDisabled = (tabs[activeTabIndex] === uploadTabTitle ? !imageBuffer : !selected) || saving
 
   const isPersonalCuration = curation?.curation_type !== "curator" //"artist" || "collector"
+  const loadingCounter = total ? ` (${ current }/${ total })` : "..."
 
   useEffect(() => {
     function setTabPosition() {
@@ -112,14 +116,8 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
 
   const orderedTokens = useMemo(() => {
     if (!tokens) return null;
-    
-    const visible = tokens.filter((token) => {
-      return token.visible && searchFilter(token);
-    });
-    const hidden = tokens.filter((token) => {
-      return !token.visible && searchFilter(token);
-    });
-    return [...visible, ...hidden];
+
+    return tokens.filter(searchFilter).filter(token => !token.is_edition)
   }, [tokens, searchFilter])
 
   const gridColumns = "grid-cols-1 md:grid-cols-2";
@@ -149,7 +147,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
     )
     : (
       <div className="h-full flex items-center justify-center">
-        <p className="animate-pulse">Gathering your digital assets...</p>
+        <p className="animate-pulse">Gathering your digital assets {loadingCounter}</p>
       </div>
     )
 
@@ -217,6 +215,8 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
 
             if (isPersonalCuration && tab === submittedTabTitle) return null;
 
+            const tabTitle = isArtistCuration && tab === "Owned Art" ? "Created Art" : tab
+
             return (
               <button
                 key={tab}
@@ -226,7 +226,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
                   isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
                 onClick={handleClick}
               >
-                {tab}
+                {tabTitle}
               </button>
             )
           })}

@@ -12,6 +12,7 @@ import Gallery from "/components/navigation/Gallery";
 import CreateUsernameModal from "/components/CreateUsernameModal";
 import { truncate } from "../../utils/truncate";
 import WalletButton from "./WalletButton";
+import LogRocket from "logrocket";
 
 
 export default function MainNavigation() {
@@ -22,6 +23,8 @@ export default function MainNavigation() {
   const [open, setOpen] = useState(false);
 
   const isCuratorApproved = user?.curator_approved
+
+
 
   function toggleMenu() {
     setOpen(!open);
@@ -35,6 +38,13 @@ export default function MainNavigation() {
   },[router, setUser, wallet])
 
   useEffect(() => {
+    if (user) {
+      LogRocket.identify(user.id, {
+        name: user.username,
+        wallet_address: wallet.publicKey?.toString(),
+        public_keys: user.public_keys,
+      });
+    }
     //if no wallet connected but stale user sign out
     if (user && !wallet.publicKey) signOut();
   }, [user])
@@ -59,7 +69,8 @@ export default function MainNavigation() {
                   {/* <span className="mt-2 collector">-</span> */}
                   <span className="mt-2 collector tracking-wide">Beta</span>
               </div>
-            </div>
+              </div>
+          
             <div className="hidden md:flex items-center justify-end w-full">
               <Link href="/about">
                 <a className="mr-8 font-bold">

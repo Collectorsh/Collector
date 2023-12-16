@@ -6,9 +6,11 @@ import UserContext from "/contexts/user";
 import HighlightedCurations from "../components/home/HighlightedCurations";
 import getHighlightedCurations from "../data/curation/getHighlightedCurations";
 import ContentLoader from "react-content-loader";
+import LogRocket from "logrocket";
 
 export default function Home({highlightedCurations}) {
   const [user] = useContext(UserContext);
+
   return (
     <div className="dark:bg-black">
       <MainNavigation />

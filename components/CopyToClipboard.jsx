@@ -1,7 +1,8 @@
 import { ClipboardCopyIcon, CheckIcon } from "@heroicons/react/solid";
+import clsx from "clsx";
 import { useState, useEffect } from "react";
 
-const CopyButton = ({ textToCopy }) => {
+const CopyButton = ({ textToCopy, className }) => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = async (text) => {
@@ -21,7 +22,7 @@ const CopyButton = ({ textToCopy }) => {
 
   return (
     <button
-      className="p-2 rounded flex items-center space-x-2 hover:scale-110 active:scale-100 duration-300"
+      className={clsx("p-2 rounded flex items-center space-x-2 hover:scale-110 active:scale-100 duration-300", className)}
       onClick={() => copyToClipboard(textToCopy)}
     >
       {copied ? (

@@ -2,7 +2,7 @@ import {useCallback, useContext, useEffect, useMemo, useRef, useState } from "re
 import MainButton from "../MainButton";
 import UserContext from "../../contexts/user";
 import { useTokens } from "../../data/nft/getTokens";
-import CloudinaryImage from "../CloudinaryImage";
+import CloudinaryImage, { IMAGE_FALLBACK_STAGES } from "../CloudinaryImage";
 import clsx from "clsx";
 import Modal from "../Modal";
 import SearchBar from "../SearchBar";
@@ -12,6 +12,8 @@ import FileDrop, { cleanFileName } from "../FileDrop";
 import { customIdPrefix } from "../../utils/cloudinary/idParsing";
 import uploadCldImage from "../../data/cloudinary/uploadCldImage";
 import { error } from "../../utils/toast";
+import { truncate } from "../../utils/truncate";
+import CopyButton from "../CopyToClipboard";
 
 const uploadTabTitle = "Upload"
 const submittedTabTitle = "Submitted Art"
@@ -127,21 +129,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
       <div className={clsx("w-full h-full p-2 overflow-auto grid gap-4 rounded-lg", gridColumns)}>
         {orderedTokens.map((token, i) => {
           const isSelected = selected?.mint === token.mint;
-          return (
-            <button className="relative flex justify-center flex-shrink-0" key={token.mint}
-              onClick={() => setSelected(isSelected ? null : token)}
-            >
-              <CloudinaryImage
-                className={clsx("flex-shrink-0 overflow-hidden object-cover shadow-lg dark:shadow-white/5",
-                  "w-full h-[250px] rounded-lg",
-                  isSelected && "ring-4 ring-black dark:ring-white"
-                )}
-                useMetadataFallback
-                token={token}
-                width={800}
-              />
-            </button>
-          )
+          return <TokenItem key={token.mint} token={token} isSelected={isSelected} setSelected={setSelected}/>
         })}
       </div>
     )
@@ -255,5 +243,54 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
       </div>
 
     </Modal>
+  )
+}
+
+const TokenItem = ({ token , isSelected, setSelected}) => {
+  const [error, setError] = useState(false)
+  const handleError = (e) => {
+    if (e === IMAGE_FALLBACK_STAGES.METADATA) {
+      setError(true)
+    }
+  }
+  return (
+    <button
+      className={clsx("relative flex justify-center flex-shrink-0", error && "hidden")}
+      key={token.mint}
+      onClick={() => setSelected(isSelected ? null : token)}
+      disabled={error}
+    >
+      {error ? (
+        <div
+          className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90  
+             flex flex-col justify-center items-center rounded-lg z-20
+          "
+        >
+          <p>Error loading metadata image</p>
+          <a
+            className="hover:scale-105 duration-300"
+            href={`https://solscan.io/token/${ token.mint }`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {truncate(token.mint)}
+          </a>
+        </div>
+      ) : null}
+
+      <CloudinaryImage
+        className={clsx("flex-shrink-0 overflow-hidden object-cover shadow-lg dark:shadow-white/5",
+          "w-full h-[250px] rounded-lg",
+          isSelected && "ring-4 ring-black dark:ring-white",
+          error && "z-0"
+        )}
+        useMetadataFallback
+        token={token}
+        width={800}
+        onError={handleError}
+      />
+
+      
+    </button>
   )
 }

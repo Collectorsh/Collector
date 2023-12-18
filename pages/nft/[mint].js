@@ -3,7 +3,7 @@ import CloudinaryImage from "../../components/CloudinaryImage";
 import MainNavigation from "../../components/navigation/MainNavigation"
 import getTokenByMint, { useTokenByMint } from "../../data/nft/getTokenByMint";
 import { nullifyUndefinedArr, nullifyUndefinedObj } from "../../utils/nullifyUndefined";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { truncate } from "../../utils/truncate";
 import getCurationsByListingMint from "../../data/curation/getCurationsByListingMint";
 import { ArrowsExpandIcon } from "@heroicons/react/solid";
@@ -17,19 +17,34 @@ import HtmlViewer from "../../components/artDisplay/htmlViewer";
 import dynamic from 'next/dynamic';
 import Drawer from "../../components/Drawer";
 import { parseExternalLink } from "../../utils/parseExternalLink";
+import MainButton from "../../components/MainButton";
+import { UpdateMetadata } from "../../data/nft/updateMetadata";
+import { Oval } from "react-loader-spinner";
+import { error, success } from "../../utils/toast";
+import { Toaster } from "react-hot-toast";
+import { useRouter } from "next/router";
+import UserContext from "../../contexts/user";
+import { adminIDs } from "../../config/settings";
 
 const ModelViewer = dynamic(() => import("../../components/artDisplay/modelDisplay"), {
   ssr: false
 });
 
 export default function DetailPage({token, curations}) {
-  const {videoUrl, htmlUrl, vrUrl} = useNftFiles(token)
+  const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
+  
+  const [user] = useContext(UserContext);
 
   const [imgLoaded, setImgLoaded] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [imageExpanded, setImageExpanded] = useState(false);
+  const [updating, setUpdating] = useState(false);
   const [assetWidth, setAssetWidth] = useState("70vw");
   const imageRef = useRef(null);
+
+  const isAdmin = adminIDs.includes(user?.id)
+  const userIsArtist = token.creators?.some(creator => user?.public_keys.includes(creator.address))
+  const showUpdateButton = isAdmin || userIsArtist
 
   const isMasterEdition = token?.is_master_edition
   const isEdition = token?.is_edition
@@ -93,8 +108,20 @@ export default function DetailPage({token, curations}) {
     setAssetWidth(`${ width }px`)
   }
 
+  const handleUpdateMetadata = async () => { 
+    setUpdating(true)
+    const updatedToken = await UpdateMetadata(token.mint)
+    if (updatedToken) {
+      success("Metadata Updated")
+    } else {
+      error("Error updating metadata")
+    }
+    setUpdating(false)
+  }
+
   return (
     <>
+      <Toaster />
       <MainNavigation />
       <ArtModal isOpen={imageExpanded} onClose={() => setImageExpanded(false)} token={token} />
       <div className={clsx(
@@ -150,7 +177,7 @@ export default function DetailPage({token, curations}) {
 
           <CloudinaryImage
             imageRef={imageRef}
-            className={clsx("max-h-[75vh] w-full",
+            className={clsx("max-h-[75vh] w-full object-contain",
               videoLoaded && "invisible",
               // useAltMediaAspectRatio && "hidden" 
               useAltMediaAspectRatio && "absolute inset-0 object-contain"
@@ -166,8 +193,23 @@ export default function DetailPage({token, curations}) {
           className="mt-3 px-4 mx-auto"
           style={{ maxWidth: assetWidth }}
         >
-          <h1 className="collector text-4xl mb-2">{token?.name}</h1>
-          <div className="flex flex gap-1">
+          <div className="flex justify-between items-center">
+            <h1 className="collector text-4xl mb-2">{token?.name}</h1>
+            
+            {showUpdateButton ? (
+              <MainButton
+                noPadding className="px-2 py-0 w-44 flex justify-center items-center"
+                onClick={handleUpdateMetadata}
+                disabled={updating}
+              >
+                {updating ? (
+                  <Oval color="#FFF" secondaryColor="#666" height={26} width={26} />
+                ): "Update Metadata"}
+              </MainButton>
+            ) : null}
+          </div>
+
+          <div className="flex gap-1">
             {artistName
               ? <p> by {artistName}</p>
               : null
@@ -272,9 +314,9 @@ export async function getServerSideProps(context) {
     .then(res => res?.curations);
 
   const curations = nullifyUndefinedArr(baseCurations);
-
+  const onlyPublished = curations?.filter(curation => curation.is_published)
   const baseToken = await getTokenByMint(mint);
   const token = nullifyUndefinedObj(baseToken);
-  return { props: { token, curations } };
+  return { props: { token, curations: onlyPublished } };
 }
 

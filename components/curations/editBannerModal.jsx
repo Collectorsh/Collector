@@ -27,7 +27,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
   const [user] = useContext(UserContext);
   const { uploadSingleToken } = useImageFallbackContext()
   const isArtistCuration = curation.curation_type === "artist"
-  const { tokens, loading, current, total } = useTokens(user?.public_keys, {
+  const { tokens, loading, current, total } = useTokens(["Dkdb43N8xZP3HxyApbufP7jptJSy8BW8BDH2giTx6MG5"], {
     queryByCreator: isArtistCuration,
     useTokenMetadata: isArtistCuration,
     useArtistDetails: false,

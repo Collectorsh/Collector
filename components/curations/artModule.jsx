@@ -43,7 +43,6 @@ const ArtModule = ({
   const [editArtOpen, setEditArtOpen] = useState(false)
 
   const wrapperRef = useRef(null)
-  // const { isVisible } = useElementObserver(wrapperRef, "400px")
 
   const [wrapperWidth, setWrapperWidth] = useState(0)
   const [maxHeight, setMaxHeight] = useState(0)
@@ -208,6 +207,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
   const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
   const itemRef = useRef(null)
+  const { isVisible } = useElementObserver(itemRef, "400px")
 
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
@@ -270,20 +270,23 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
       ref={itemRef}
       className={clsx("relative duration-300 w-fit mx-auto",)}
     >
-      <ToggleLink href={`/nft/${ token.mint }`} disabled={disableLink}>
+      <ToggleLink
+        href={`/nft/${ token.mint }`}
+        disabled={disableLink}
+      >
         <a  
           disabled={disableLink}
           className={clsx(
             'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg',
             "hover:-translate-y-2 active:translate-y-0",
-            disableLink && "hover:translate-y-0"
+            disableLink && "hover:translate-y-0",
           )}
           style={{
             height,
             width,
           }}
         >
-
+          {isVisible ? (<>
             {vrUrl ? (
             <ModelViewer
               onLoad={handleModelLoad}
@@ -334,6 +337,8 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
               width={cacheWidth}
               noLazyLoad
             />
+            
+          </>) : null}
         </a>
       </ToggleLink>
       <div

@@ -382,8 +382,6 @@ const getMetadata = async (metaplex, mint) => {
     result.parent = edition.parent?.toString()
     result.edition_number = edition.number?.toString()
 
-    result.is_one_of_one = !result.is_edition && !result.is_master_edition;
-
   } catch (err) {
     console.log("Error getting metadata for mint", mint)
   }

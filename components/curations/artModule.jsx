@@ -210,6 +210,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
   const itemRef = useRef(null)
   const { isVisible } = useElementObserver(itemRef, "800px")
 
+
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
   const [mediaType, setMediaType] = useState(CATEGORIES.IMAGE)
@@ -343,8 +344,9 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
               noLazyLoad
             />
 
+
           </Transition>
-  
+
         </a>
       </ToggleLink>
       <div

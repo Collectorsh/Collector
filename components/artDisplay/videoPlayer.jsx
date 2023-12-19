@@ -2,6 +2,7 @@ import clsx from "clsx"
 import { useEffect, useRef, useState } from "react";
 import useElementObserver from "../../hooks/useElementObserver";
 import useBreakpoints from "../../hooks/useBreakpoints";
+import ContentLoader from "react-content-loader";
 
 const VideoPlayer = ({
   id = "video-player",
@@ -19,6 +20,7 @@ const VideoPlayer = ({
   const [isPlaying, setIsPlaying] = useState(false)
   const [isBuffering, setIsBuffering] = useState(false)
   const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const breakpoint = useBreakpoints()
   const isMobile = ["", "sm", "md"].includes(breakpoint)
@@ -28,7 +30,7 @@ const VideoPlayer = ({
 
   useEffect(() => {
     const videoElement = videoRef.current;
-    if (!videoElement) return;
+    if (!videoElement || loading) return;
 
     const handleIsPlaying = () => setIsPlaying(true)
     const handleIsPaused = () => setIsPlaying(false)
@@ -36,7 +38,7 @@ const VideoPlayer = ({
       if (!videoLoaded) return; 
       const timerId = setTimeout(() => { 
         setIsBuffering(true)
-      }, 1000)
+      }, 3000)
       bufferTimerIdRef.current = timerId
     }
     const handleBufferEnded = () => {
@@ -63,6 +65,7 @@ const VideoPlayer = ({
       
 
     return () => {
+      clearTimeout(bufferTimerIdRef.current)
       videoElement.removeEventListener('play', handleIsPlaying);
       videoElement.removeEventListener('pause', handleIsPaused);
       videoElement.removeEventListener('waiting', handleBuffering);
@@ -70,16 +73,16 @@ const VideoPlayer = ({
 
       // window.removeEventListener('resize', handleWidthChange);
     };
-  }, [handleRefWidthChange, videoLoaded]);
+  }, [handleRefWidthChange, videoLoaded, loading]);
 
   useEffect(() => {
-    if (!videoRef.current || userPaused) return;
+    if (!videoRef.current || userPaused || loading) return;
     if (isVisible) {
       if (!isMobile) videoRef.current.play()
     } else {
       videoRef.current.pause()
     }
-  }, [isVisible, userPaused, isMobile])
+  }, [isVisible, userPaused, isMobile, loading])
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();
@@ -87,7 +90,7 @@ const VideoPlayer = ({
   }
   const handlePlayToggle = (e) => {
     preventPropAndDefault(e)
-    if (!videoRef.current) return;
+    if (!videoRef.current || loading) return;
     if (videoRef.current.paused) {
       videoRef.current.play()
       setUserPaused(false)
@@ -140,6 +143,17 @@ const VideoPlayer = ({
         </p>
       </div>
 
+      <ContentLoader
+        title=""
+        speed={2}
+        className={clsx(`inset-0 w-full h-full rounded-xl z-50 duration-500`, loading ? "opacity-75 absolute" : "opacity-0 hidden")}
+        style={style}
+        backgroundColor="rgba(120,120,120,0.5)"
+        foregroundColor="rgba(120,120,120,0.25)"
+      >
+        <rect className="w-full h-full" />
+      </ContentLoader>
+
       <video
         
         style={style}
@@ -154,6 +168,7 @@ const VideoPlayer = ({
       
         onCanPlay={e => {
           e.target.classList.add("opacity-100")
+          setLoading(false)
           if (setVideoLoaded) setVideoLoaded(true)
           setError(false)
         }}

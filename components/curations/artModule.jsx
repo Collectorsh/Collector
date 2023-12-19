@@ -208,7 +208,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
   const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
   const itemRef = useRef(null)
-  const { isVisible } = useElementObserver(itemRef, "200px")
+  const { isVisible } = useElementObserver(itemRef, "800px")
 
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
@@ -280,7 +280,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
           className={clsx(
             'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg',
             "hover:-translate-y-2 active:translate-y-0",
-            disableLink && "hover:translate-y-0",
+            disableLink && "hover:translate-y-0 duration",
           )}
           style={{
             height,
@@ -289,10 +289,10 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
         >
           <Transition
             show={isVisible}
-            enter="transition-opacity duration-500"
+            enter="transition-opacity duration-700"
             enterFrom="opacity-0"
             enterTo="opacity-100"
-            leave="transition-opacity duration-500"
+            leave="transition-opacity duration-700"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
@@ -372,7 +372,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
           {userText}
 
           <div className='flex items-center gap-2 '>
-            {(token?.buy_now_price)
+            {(token?.buy_now_price && (isListed || isSold))
               ? <>
                 <p className=''>{roundToPrecision(token.buy_now_price, 2)}◎</p>
                 <span>-</span>

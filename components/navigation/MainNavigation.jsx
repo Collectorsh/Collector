@@ -176,57 +176,23 @@ export default function MainNavigation() {
                             <p
                             className={`text-xl cursor-pointer border-b-2 py-2 border-gray-100 dark:border-dark3 ${ path === "/" ? "font-bold" : ""
                               }`}
-                          >
-                            <Link href="/">Home</Link>
-                              </p>
-                              {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                <Link href="/discover">Discover</Link>
-                              </p> */}
+                            >
+                              <Link href="/">Home</Link>
+                            </p>
+                            
                               <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                 <Link href="/about">About</Link>
                               </p>
-                            {/* {!user && (
-                              <>
-                                <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                  <Link href="/feed">Feed</Link>
-                                </p>
-                                <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                  <Link href="/drops">Drops</Link>
-                                </p>
-                                <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                  <Link href="/shop">Shop</Link>
-                                </p>
-                                <div className="mt-4">
-                                  <Premium />
-                                </div>
-                              </>
-                            )} */}
+                           
 
                             {user && (
                               <>
                                 <div className="">
-                                  
-                                  {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/feed">Feed</Link>
-                                  </p>
-                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/drops">Drops</Link>
-                                  </p> */}
-                                  {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/shop">Shop</Link>
-                                  </p> */}
-                                  {/* <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href={`/${user.username}/profile`}>
-                                      Profile
-                                    </Link>
-                                  </p> */}
-           
+                                
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                     <Link href="/settings">Settings</Link>
                                   </p>
-                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/edit">Edit Gallery</Link>
-                                    </p>
+                            
                                     {user.subscription_level === "pro" ? (
                                       <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                         <Link href={`/gallery/${ user.username }`}>
@@ -246,30 +212,7 @@ export default function MainNavigation() {
                                         </p>
                                       </>
                                     ) : null}
-                                  {/* {user.token_holder && (
-                                    <>
-                                      <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                        <Link href="/activity?id=buynow">
-                                          Buy Now
-                                        </Link>
-                                      </p>
-                                      <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                        <Link href="/activity?id=following">
-                                          Auctions
-                                        </Link>
-                                      </p>
-                                      <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                        <Link href="/activity?id=bids">
-                                          My Bids
-                                        </Link>
-                                      </p>
-                                      <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                        <Link href="/activity?id=follow">
-                                          Follow Artists
-                                        </Link>
-                                      </p>
-                                    </>
-                                  )} */}
+                                
                                   <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                       <a onClick={signOut}>
                                         Sign Out

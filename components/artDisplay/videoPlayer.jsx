@@ -24,14 +24,25 @@ const VideoPlayer = ({
   const isMobile = ["", "sm", "md"].includes(breakpoint)
   const { isVisible } = useElementObserver(videoRef, "10px")  
 
+  const bufferTimerIdRef = useRef(null)
+
   useEffect(() => {
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
     const handleIsPlaying = () => setIsPlaying(true)
     const handleIsPaused = () => setIsPlaying(false)
-    const handleBuffering = () => setIsBuffering(true)
-    const handleBufferEnded = () => setIsBuffering(false)
+    const handleBuffering = () => {
+      if (!videoLoaded) return; 
+      const timerId = setTimeout(() => { 
+        setIsBuffering(true)
+      }, 1000)
+      bufferTimerIdRef.current = timerId
+    }
+    const handleBufferEnded = () => {
+      clearTimeout(bufferTimerIdRef.current)
+      setIsBuffering(false)
+    }
 
     videoElement.addEventListener('play', handleIsPlaying);
     videoElement.addEventListener('pause', handleIsPaused);
@@ -59,7 +70,7 @@ const VideoPlayer = ({
 
       // window.removeEventListener('resize', handleWidthChange);
     };
-  }, [handleRefWidthChange]);
+  }, [handleRefWidthChange, videoLoaded]);
 
   useEffect(() => {
     if (!videoRef.current || userPaused) return;
@@ -139,8 +150,9 @@ const VideoPlayer = ({
         loop
         playsInline
         id={id}
-        className="mx-auto h-full object-center object-contain duration-200 opacity-0 rounded-lg"
-        onCanPlayThrough={e => {
+        className={clsx("mx-auto h-full object-center object-contain duration-300 opacity-0 rounded-lg")}
+      
+        onCanPlay={e => {
           e.target.classList.add("opacity-100")
           if (setVideoLoaded) setVideoLoaded(true)
           setError(false)

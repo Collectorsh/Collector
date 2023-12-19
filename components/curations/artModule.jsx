@@ -18,6 +18,7 @@ import useNftFiles, { getTokenAspectRatio } from '../../hooks/useNftFiles';
 import { CATEGORIES } from '../FileDrop';
 import HtmlViewer from '../artDisplay/htmlViewer';
 import dynamic from 'next/dynamic';
+import { Transition } from '@headlessui/react';
 
 const ModelViewer = dynamic(() => import('../artDisplay/modelDisplay'), {
   ssr: false
@@ -207,7 +208,9 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
   const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
   const itemRef = useRef(null)
-  const { isVisible } = useElementObserver(itemRef, "400px")
+
+  const { isVisible } = useElementObserver(itemRef, "200px")
+
 
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
@@ -286,7 +289,15 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
             width,
           }}
         >
-          {isVisible ? (<>
+          <Transition
+            show={isVisible}
+            enter="transition-opacity duration-500"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity duration-500"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
             {vrUrl ? (
             <ModelViewer
               onLoad={handleModelLoad}
@@ -328,17 +339,15 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
               className={clsx(
                 "object-cover duration-300",
                 "w-full h-full",
-                videoUrl && "absolute inset-0",
-                videoLoaded && "hidden",
-                // htmlUrl && "invisible" //re-add if not using lazy loading for html
-                // vrUrl && "invisible"
-                vrUrl && "absolute inset-0"
+                (mediaType !== CATEGORIES.IMAGE) && "absolute inset-0"
               )}
               width={cacheWidth}
               noLazyLoad
             />
-            
-          </>) : null}
+
+
+          </Transition>
+
         </a>
       </ToggleLink>
       <div

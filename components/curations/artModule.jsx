@@ -208,7 +208,9 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
   const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
   const itemRef = useRef(null)
+
   const { isVisible } = useElementObserver(itemRef, "200px")
+
 
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
@@ -343,8 +345,9 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
               noLazyLoad
             />
 
+
           </Transition>
-  
+
         </a>
       </ToggleLink>
       <div

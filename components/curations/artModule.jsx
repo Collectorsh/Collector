@@ -208,7 +208,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
   const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
   const itemRef = useRef(null)
-  const { isVisible } = useElementObserver(itemRef, "100px")
+  const { isVisible } = useElementObserver(itemRef, "200px")
 
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
@@ -337,11 +337,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
               className={clsx(
                 "object-cover duration-300",
                 "w-full h-full",
-                videoUrl && "absolute inset-0",
-                videoLoaded && "hidden",
-                // htmlUrl && "invisible" //re-add if not using lazy loading for html
-                // vrUrl && "invisible"
-                vrUrl && "absolute inset-0"
+                (mediaType !== CATEGORIES.IMAGE) && "absolute inset-0"
               )}
               width={cacheWidth}
               noLazyLoad

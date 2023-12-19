@@ -77,24 +77,7 @@ export default function Gallery() {
                 </Menu.Item>
               </>
             ) : null}
-           
-            <Menu.Item>
-              <Link href="/edit">
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Edit Gallery
-                </a>
-              </Link>
-            </Menu.Item>
           
-            <Menu.Item>
-              <Link href={`/${user.username}`} >
-                <a
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  View Gallery
-                </a>
-              </Link>
-            </Menu.Item>
             <Menu.Item>
               <Link href="/settings">
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -111,26 +94,7 @@ export default function Gallery() {
             </Menu.Item>
             
 
-            {/* <Menu.Item>
-              
-              <div className="bg-gray-500/10 rounded-xl mx-2 my-1 px-3 py-2 text-sm text-gray-700 flex gap-1 flex-wrap items-center cursor-pointer"
-                onClick={signOut}
-              >
-                <p
-                  
-                  className=""
-                >
-                  Sign out:
-                </p>
-
-                <p className="">
-                  {publicKey.toBase58().substr(0, 4)}...
-                  {publicKey.toBase58().slice(-4)}
-                </p>
-              </div>
-              
-           
-            </Menu.Item> */}
+         
             
           </Menu.Items>
         </Transition>

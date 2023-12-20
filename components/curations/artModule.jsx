@@ -208,7 +208,10 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
   const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
   const itemRef = useRef(null)
-  const { isVisible } = useElementObserver(itemRef, "1000px")
+
+  const [lazyLoadBuffer, setLazyLoadBuffer] = useState("1000px")
+
+  const { isVisible } = useElementObserver(itemRef, lazyLoadBuffer)
 
 
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -235,6 +238,12 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
     //then double for max perceivable quality (ends up with buckets of 500)
     return Math.ceil(width / 250) * 250 * 2;
   }, [width])
+
+  useEffect(() => {
+    //check screen hieght and set lazy load buffer to screen height
+    const windowHeight = window.innerHeight
+    setLazyLoadBuffer(`${ windowHeight }px`)
+  }, [])
 
   useEffect(() => {
     if (htmlUrl) setMediaType(CATEGORIES.HTML)

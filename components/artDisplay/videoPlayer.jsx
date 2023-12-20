@@ -1,7 +1,6 @@
 import clsx from "clsx"
 import { useEffect, useRef, useState } from "react";
 import ContentLoader from "react-content-loader";
-import ReactPlayer from 'react-player'
 
 const VideoPlayer = ({
   id = "video-player",

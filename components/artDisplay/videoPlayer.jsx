@@ -153,7 +153,7 @@ const VideoPlayer = ({
         }}
       >
         <source
-          src={"https://res.cloudinary.com/dukxp13zq/video/upload/v1703112376/user-uploaded/Ritual_jidhs2.mp4"}
+          src={videoUrl}
           type="video/mp4"
         />
         Your browser does not support the video tag.

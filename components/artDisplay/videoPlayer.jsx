@@ -1,7 +1,5 @@
 import clsx from "clsx"
 import { useEffect, useRef, useState } from "react";
-import useElementObserver from "../../hooks/useElementObserver";
-import useBreakpoints from "../../hooks/useBreakpoints";
 import ContentLoader from "react-content-loader";
 
 const VideoPlayer = ({
@@ -95,7 +93,6 @@ const VideoPlayer = ({
         onClick={handlePlayToggle}
         iconClassName="w-7 h-7"
         isPlaying={isPlaying}
-        // className={clsx(controlsClass, isBuffering || loading ? "opacity-25" : "opacity-100")}
         className={controlsClass}
         disabled={isBuffering || loading}
       />
@@ -103,7 +100,6 @@ const VideoPlayer = ({
         onClick={handleMuteToggle}
         iconClassName="w-7 h-7"
         isMuted={userMuted}
-        // className={clsx(controlsClass, isBuffering || loading ? "opacity-25" : "opacity-100")}
         className={controlsClass}
         disabled={isBuffering || loading}
       />
@@ -118,15 +114,15 @@ const VideoPlayer = ({
       <div className={clsx("absolute inset-0 h-full w-full flex pb-6 items-end justify-center duration-1000",
         error ? "opacity-100" : "opacity-0",
       )}>
-        <p className="bg-red-500/50 backdrop-blur-sm rounded px-2">
-          Error loading video
+        <p className="bg-neutral-500/50 backdrop-blur-sm rounded px-2 z-20">
+          Video not available on this device
         </p>
       </div>
 
       <ContentLoader
         title=""
         speed={2}
-        className={clsx(`inset-0 w-full h-full rounded-xl z-50 duration-500`, loading ? "opacity-75 absolute" : "opacity-0 hidden")}
+        className={clsx(`inset-0 w-full h-full rounded-xl z-50 duration-500`, (loading && !error) ? "opacity-75 absolute" : "opacity-0 hidden")}
         style={style}
         backgroundColor="rgba(120,120,120,0.5)"
         foregroundColor="rgba(120,120,120,0.25)"
@@ -138,8 +134,7 @@ const VideoPlayer = ({
         
         style={style}
         ref={videoRef}
-        // preload="metadata"
-        autoPlay//={!isMobile}
+        autoPlay
         muted
         loop
         playsInline
@@ -157,9 +152,15 @@ const VideoPlayer = ({
           setError(true)
         }}
       >
-        <source src={videoUrl} />
+        <source
+          src={videoUrl}
+          type="video/mp4"
+        />
         Your browser does not support the video tag.
       </video>
+    
+        
+  
     </div>
   )
 }

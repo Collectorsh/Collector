@@ -146,7 +146,6 @@ const CloudinaryImage = ({
     if (!internalRef) return
     //handle race condition where load event fires before rendered
     const id = setTimeout(() => {
-      console.log("🚀 ~ file: CloudinaryImage.jsx:149 ~ id ~ internalRef.current?.complete:", internalRef.current?.complete)
       if (internalRef.current?.complete) handleLoad()
     }, 100)
     

@@ -208,7 +208,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
   const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
   const itemRef = useRef(null)
-  const { isVisible } = useElementObserver(itemRef, "800px")
+  const { isVisible } = useElementObserver(itemRef, "1000px")
 
 
   const [videoLoaded, setVideoLoaded] = useState(false);

@@ -16,21 +16,16 @@ const VideoPlayer = ({
 }) => { 
   const videoRef = useRef(null);
   const [userMuted, setUserMuted] = useState(true)
-  const [userPaused, setUserPaused] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isBuffering, setIsBuffering] = useState(false)
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  const breakpoint = useBreakpoints()
-  const isMobile = ["", "sm", "md"].includes(breakpoint)
-  const { isVisible } = useElementObserver(videoRef, "10px")  
-
   const bufferTimerIdRef = useRef(null)
 
   useEffect(() => {
     const videoElement = videoRef.current;
-    if (!videoElement || loading) return;
+    if (!videoElement) return;
 
     const handleIsPlaying = () => setIsPlaying(true)
     const handleIsPaused = () => setIsPlaying(false)
@@ -51,38 +46,14 @@ const VideoPlayer = ({
     videoElement.addEventListener('waiting', handleBuffering);
     videoElement.addEventListener('playing', handleBufferEnded);
 
-    //TODO, figure out how to handle videos with width larger than the window 
-    //or that would mess up the aspect ratio when constraining the height
-    // const handleWidthChange = () => {
-    //   if (!handleRefWidthChange) return;
-
-    //   const width = videoElement.videoWidth
-    //   console.log("🚀 ~ file: videoPlayer.jsx:39 ~ handleWidthChange ~ width :", width )
-    //   handleRefWidthChange(width)
-    // }
-    // window.addEventListener('resize', handleWidthChange)
-    // handleWidthChange()
-      
-
     return () => {
       clearTimeout(bufferTimerIdRef.current)
       videoElement.removeEventListener('play', handleIsPlaying);
       videoElement.removeEventListener('pause', handleIsPaused);
       videoElement.removeEventListener('waiting', handleBuffering);
       videoElement.removeEventListener('playing', handleBufferEnded);
-
-      // window.removeEventListener('resize', handleWidthChange);
     };
-  }, [handleRefWidthChange, videoLoaded, loading]);
-
-  useEffect(() => {
-    if (!videoRef.current || userPaused || loading) return;
-    if (isVisible) {
-      if (!isMobile) videoRef.current.play()
-    } else {
-      videoRef.current.pause()
-    }
-  }, [isVisible, userPaused, isMobile, loading])
+  }, [handleRefWidthChange, videoLoaded]);
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();
@@ -93,10 +64,8 @@ const VideoPlayer = ({
     if (!videoRef.current || loading) return;
     if (videoRef.current.paused) {
       videoRef.current.play()
-      setUserPaused(false)
     } else {
       videoRef.current.pause()
-      setUserPaused(true)
     }
   }
   const handleMuteToggle = (e) => {
@@ -159,15 +128,15 @@ const VideoPlayer = ({
         style={style}
         ref={videoRef}
         // preload="metadata"
-        autoPlay={!isMobile}
+        autoPlay//={!isMobile}
         muted
         loop
         playsInline
         id={id}
-        className={clsx("mx-auto h-full object-center object-contain duration-300 opacity-0 rounded-lg")}
+        className={clsx("mx-auto h-full object-center object-contain duration-300 rounded-lg", loading ? "opacity-0" : "opacity-100")}
       
         onCanPlay={e => {
-          e.target.classList.add("opacity-100")
+          // e.target.classList.add("opacity-100")
           setLoading(false)
           if (setVideoLoaded) setVideoLoaded(true)
           setError(false)

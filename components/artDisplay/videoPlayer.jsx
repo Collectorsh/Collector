@@ -27,10 +27,12 @@ const VideoPlayer = ({
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
+    
+
     const handleIsPlaying = () => setIsPlaying(true)
     const handleIsPaused = () => setIsPlaying(false)
     const handleBuffering = () => {
-      if (!videoLoaded) return; 
+      if (loading) return; 
       const timerId = setTimeout(() => { 
         setIsBuffering(true)
       }, 3000)
@@ -53,7 +55,14 @@ const VideoPlayer = ({
       videoElement.removeEventListener('waiting', handleBuffering);
       videoElement.removeEventListener('playing', handleBufferEnded);
     };
-  }, [handleRefWidthChange, videoLoaded]);
+  }, [handleRefWidthChange, loading]);
+
+  useEffect(() => {
+    if (!videoRef.current) return;
+    if (!loading && !isPlaying) videoRef.current.play().catch((e) => {
+      console.log("autoplay error:",e)
+    })
+  },[loading, isPlaying])
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();

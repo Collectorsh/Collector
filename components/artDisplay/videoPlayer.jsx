@@ -59,10 +59,10 @@ const VideoPlayer = ({
 
   useEffect(() => {
     if (!videoRef.current) return;
-    if (!loading && !isPlaying) videoRef.current.play().catch((e) => {
+    if (!loading) videoRef.current.play().catch((e) => {
       console.log("autoplay error:",e)
     })
-  },[loading, isPlaying])
+  },[loading])
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();

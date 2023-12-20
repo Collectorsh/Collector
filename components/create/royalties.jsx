@@ -29,7 +29,7 @@ const RoyaltiesInput = ({ royalties, setRoyalties, setError }) => {
 
   return (
     <div>
-      <p className="font-bold text-lg mb-1 ml-4 flex">Royalties* {info}</p>
+      <p className="font-bold text-lg mb-1 ml-4 flex items-center">Royalties* {info}</p>
       <div className="flex w-full border-4 p-3 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
         <input
           type="number"

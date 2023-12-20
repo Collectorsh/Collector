@@ -70,7 +70,7 @@ const CreatorsInput = ({ creators, setCreators, setError }) => {
 
   return (
     <div>
-      <p className="font-bold text-lg mb-1 ml-4 flex">Creators {info}</p>
+      <p className="font-bold text-lg mb-1 ml-4 flex items-center">Creators {info}</p>
       <div className=" border-4 px-3 py-2 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 min-h-[100px]">
         {creators.map((creator, i) => (<CreatorItem key={"creator"+i} index={i} handleChange={handleChange} creator={creator} />))}
         <button

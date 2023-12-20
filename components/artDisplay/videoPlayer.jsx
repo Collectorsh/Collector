@@ -154,6 +154,7 @@ const VideoPlayer = ({
         }}
         onError={(e) => {
           e.target.classList.add("hidden")
+          console.error("video error:", e)
           setError(true)
         }}
       >

@@ -57,12 +57,12 @@ const VideoPlayer = ({
     };
   }, [handleRefWidthChange, loading]);
 
-  useEffect(() => {
-    if (!videoRef.current) return;
-    if (!loading) videoRef.current.play().catch((e) => {
-      console.log("autoplay error:",e)
-    })
-  },[loading])
+  // useEffect(() => {
+  //   if (!videoRef.current) return;
+  //   if (!loading) videoRef.current.play().catch((e) => {
+  //     console.log("autoplay error:",e)
+  //   })
+  // },[loading])
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();
@@ -95,15 +95,17 @@ const VideoPlayer = ({
         onClick={handlePlayToggle}
         iconClassName="w-7 h-7"
         isPlaying={isPlaying}
+        // className={clsx(controlsClass, isBuffering || loading ? "opacity-25" : "opacity-100")}
         className={controlsClass}
-        // disabled={isBuffering}
+        disabled={isBuffering || loading}
       />
       <MuteButton
         onClick={handleMuteToggle}
         iconClassName="w-7 h-7"
         isMuted={userMuted}
+        // className={clsx(controlsClass, isBuffering || loading ? "opacity-25" : "opacity-100")}
         className={controlsClass}
-        // disabled={isBuffering}
+        disabled={isBuffering || loading}
       />
 
       <div className={clsx("absolute inset-0 h-full w-full flex pb-6 items-end justify-center duration-1000",

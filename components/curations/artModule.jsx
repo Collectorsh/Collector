@@ -18,6 +18,7 @@ import useNftFiles, { getTokenAspectRatio } from '../../hooks/useNftFiles';
 import { CATEGORIES } from '../FileDrop';
 import HtmlViewer from '../artDisplay/htmlViewer';
 import dynamic from 'next/dynamic';
+import { Transition } from '@headlessui/react';
 
 const ModelViewer = dynamic(() => import('../artDisplay/modelDisplay'), {
   ssr: false
@@ -43,7 +44,6 @@ const ArtModule = ({
   const [editArtOpen, setEditArtOpen] = useState(false)
 
   const wrapperRef = useRef(null)
-  // const { isVisible } = useElementObserver(wrapperRef, "400px")
 
   const [wrapperWidth, setWrapperWidth] = useState(0)
   const [maxHeight, setMaxHeight] = useState(0)
@@ -209,6 +209,11 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
 
   const itemRef = useRef(null)
 
+  const [lazyLoadBuffer, setLazyLoadBuffer] = useState("1000px")
+
+  const { isVisible } = useElementObserver(itemRef, lazyLoadBuffer)
+
+
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
   const [mediaType, setMediaType] = useState(CATEGORIES.IMAGE)
@@ -233,6 +238,12 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
     //then double for max perceivable quality (ends up with buckets of 500)
     return Math.ceil(width / 250) * 250 * 2;
   }, [width])
+
+  useEffect(() => {
+    //check screen hieght and set lazy load buffer to screen height
+    const windowHeight = window.innerHeight
+    setLazyLoadBuffer(`${ windowHeight }px`)
+  }, [])
 
   useEffect(() => {
     if (htmlUrl) setMediaType(CATEGORIES.HTML)
@@ -270,20 +281,31 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
       ref={itemRef}
       className={clsx("relative duration-300 w-fit mx-auto",)}
     >
-      <ToggleLink href={`/nft/${ token.mint }`} disabled={disableLink}>
+      <ToggleLink
+        href={`/nft/${ token.mint }`}
+        disabled={disableLink}
+      >
         <a  
           disabled={disableLink}
           className={clsx(
             'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg',
             "hover:-translate-y-2 active:translate-y-0",
-            disableLink && "hover:translate-y-0"
+            disableLink && "hover:translate-y-0",
           )}
           style={{
             height,
             width,
           }}
         >
-
+          <Transition
+            show={isVisible}
+            enter="transition-opacity duration-700"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity duration-700"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
             {vrUrl ? (
             <ModelViewer
               onLoad={handleModelLoad}
@@ -325,15 +347,15 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
               className={clsx(
                 "object-cover duration-300",
                 "w-full h-full",
-                videoUrl && "absolute inset-0",
-                videoLoaded && "hidden",
-                // htmlUrl && "invisible" //re-add if not using lazy loading for html
-                // vrUrl && "invisible"
-                vrUrl && "absolute inset-0"
+                (mediaType !== CATEGORIES.IMAGE) && "absolute inset-0"
               )}
               width={cacheWidth}
               noLazyLoad
             />
+
+
+          </Transition>
+
         </a>
       </ToggleLink>
       <div
@@ -361,7 +383,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
           {userText}
 
           <div className='flex items-center gap-2 '>
-            {(token?.buy_now_price)
+            {(token?.buy_now_price && (isListed || isSold))
               ? <>
                 <p className=''>{roundToPrecision(token.buy_now_price, 2)}◎</p>
                 <span>-</span>

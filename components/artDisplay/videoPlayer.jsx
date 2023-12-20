@@ -2,6 +2,7 @@ import clsx from "clsx"
 import { useEffect, useRef, useState } from "react";
 import useElementObserver from "../../hooks/useElementObserver";
 import useBreakpoints from "../../hooks/useBreakpoints";
+import ContentLoader from "react-content-loader";
 
 const VideoPlayer = ({
   id = "video-player",
@@ -15,60 +16,53 @@ const VideoPlayer = ({
 }) => { 
   const videoRef = useRef(null);
   const [userMuted, setUserMuted] = useState(true)
-  const [userPaused, setUserPaused] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isBuffering, setIsBuffering] = useState(false)
   const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  const breakpoint = useBreakpoints()
-  const isMobile = ["", "sm", "md"].includes(breakpoint)
-  const { isVisible } = useElementObserver(videoRef, "10px")  
+  const bufferTimerIdRef = useRef(null)
 
   useEffect(() => {
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
+    
+
     const handleIsPlaying = () => setIsPlaying(true)
     const handleIsPaused = () => setIsPlaying(false)
-    const handleBuffering = () => setIsBuffering(true)
-    const handleBufferEnded = () => setIsBuffering(false)
+    const handleBuffering = () => {
+      if (loading) return; 
+      const timerId = setTimeout(() => { 
+        setIsBuffering(true)
+      }, 3000)
+      bufferTimerIdRef.current = timerId
+    }
+    const handleBufferEnded = () => {
+      clearTimeout(bufferTimerIdRef.current)
+      setIsBuffering(false)
+    }
 
     videoElement.addEventListener('play', handleIsPlaying);
     videoElement.addEventListener('pause', handleIsPaused);
     videoElement.addEventListener('waiting', handleBuffering);
     videoElement.addEventListener('playing', handleBufferEnded);
 
-    //TODO, figure out how to handle videos with width larger than the window 
-    //or that would mess up the aspect ratio when constraining the height
-    // const handleWidthChange = () => {
-    //   if (!handleRefWidthChange) return;
-
-    //   const width = videoElement.videoWidth
-    //   console.log("🚀 ~ file: videoPlayer.jsx:39 ~ handleWidthChange ~ width :", width )
-    //   handleRefWidthChange(width)
-    // }
-    // window.addEventListener('resize', handleWidthChange)
-    // handleWidthChange()
-      
-
     return () => {
+      clearTimeout(bufferTimerIdRef.current)
       videoElement.removeEventListener('play', handleIsPlaying);
       videoElement.removeEventListener('pause', handleIsPaused);
       videoElement.removeEventListener('waiting', handleBuffering);
       videoElement.removeEventListener('playing', handleBufferEnded);
-
-      // window.removeEventListener('resize', handleWidthChange);
     };
-  }, [handleRefWidthChange]);
+  }, [handleRefWidthChange, loading]);
 
-  useEffect(() => {
-    if (!videoRef.current || userPaused) return;
-    if (isVisible) {
-      if (!isMobile) videoRef.current.play()
-    } else {
-      videoRef.current.pause()
-    }
-  }, [isVisible, userPaused, isMobile])
+  // useEffect(() => {
+  //   if (!videoRef.current) return;
+  //   if (!loading) videoRef.current.play().catch((e) => {
+  //     console.log("autoplay error:",e)
+  //   })
+  // },[loading])
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();
@@ -76,13 +70,11 @@ const VideoPlayer = ({
   }
   const handlePlayToggle = (e) => {
     preventPropAndDefault(e)
-    if (!videoRef.current) return;
+    if (!videoRef.current || loading) return;
     if (videoRef.current.paused) {
       videoRef.current.play()
-      setUserPaused(false)
     } else {
       videoRef.current.pause()
-      setUserPaused(true)
     }
   }
   const handleMuteToggle = (e) => {
@@ -103,15 +95,17 @@ const VideoPlayer = ({
         onClick={handlePlayToggle}
         iconClassName="w-7 h-7"
         isPlaying={isPlaying}
+        // className={clsx(controlsClass, isBuffering || loading ? "opacity-25" : "opacity-100")}
         className={controlsClass}
-        // disabled={isBuffering}
+        disabled={isBuffering || loading}
       />
       <MuteButton
         onClick={handleMuteToggle}
         iconClassName="w-7 h-7"
         isMuted={userMuted}
+        // className={clsx(controlsClass, isBuffering || loading ? "opacity-25" : "opacity-100")}
         className={controlsClass}
-        // disabled={isBuffering}
+        disabled={isBuffering || loading}
       />
 
       <div className={clsx("absolute inset-0 h-full w-full flex pb-6 items-end justify-center duration-1000",
@@ -129,19 +123,32 @@ const VideoPlayer = ({
         </p>
       </div>
 
+      <ContentLoader
+        title=""
+        speed={2}
+        className={clsx(`inset-0 w-full h-full rounded-xl z-50 duration-500`, loading ? "opacity-75 absolute" : "opacity-0 hidden")}
+        style={style}
+        backgroundColor="rgba(120,120,120,0.5)"
+        foregroundColor="rgba(120,120,120,0.25)"
+      >
+        <rect className="w-full h-full" />
+      </ContentLoader>
+
       <video
         
         style={style}
         ref={videoRef}
         // preload="metadata"
-        autoPlay={!isMobile}
+        autoPlay//={!isMobile}
         muted
         loop
         playsInline
         id={id}
-        className="mx-auto h-full object-center object-contain duration-200 opacity-0 rounded-lg"
-        onCanPlayThrough={e => {
-          e.target.classList.add("opacity-100")
+        className={clsx("mx-auto h-full object-center object-contain duration-300 rounded-lg", loading ? "opacity-0" : "opacity-100")}
+      
+        onCanPlay={e => {
+          // e.target.classList.add("opacity-100")
+          setLoading(false)
           if (setVideoLoaded) setVideoLoaded(true)
           setError(false)
         }}

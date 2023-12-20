@@ -48,8 +48,10 @@ const CloudinaryImage = ({
   
   const [fallbackStage, setFallbackStage] = useState(IMAGE_FALLBACK_STAGES.MAIN_CDN)
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null) 
+
+  const internalRef = useRef(null)
 
   useEffect(() => {
     if(noLazyLoad || error || loading) return
@@ -141,10 +143,14 @@ const CloudinaryImage = ({
   }, [noLazyLoad, onLoad])
 
   useEffect(() => {
-    if (!imageRef) return
+    if (!internalRef) return
     //handle race condition where load event fires before rendered
-    if (imageRef.current?.complete) handleLoad()
-  }, [imageRef, handleLoad])
+    const id = setTimeout(() => {
+      if (internalRef.current?.complete) handleLoad()
+    }, 100)
+    
+    return () => clearTimeout(id)
+  }, [internalRef, handleLoad])
 
   return (
     <>
@@ -167,7 +173,10 @@ const CloudinaryImage = ({
         ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            ref={imageRef}
+              ref={(el) => { 
+                internalRef.current = el
+                if (imageRef) imageRef.current = el
+              }}
               style={{
                 color: "transparent",
                 transitionDuration: "0.3s",

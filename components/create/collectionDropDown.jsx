@@ -34,7 +34,7 @@ const CollectionDropDown = ({ selectedCollection, setCollection, setError, exist
   return (
     <div className="relative mb-4 w-full">
       <CreateCollectionModal isOpen={collectionModalOpen} onClose={() => setCollectionModalOpen(false)} setCollections={setCollections} />
-      <p className="font-bold text-lg mb-1 ml-3 flex gap-1">
+      <p className="font-bold text-lg mb-1 ml-3 flex gap-1 items-center">
         Collection
         {info}
       </p>

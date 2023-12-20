@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 const useElementObserver = (element, rootMargin) => {
   const [isVisible, setState] = useState(false);
   const [hasBeenObserved, setHasBeenObserved] = useState(false);
-
+  
   useEffect(() => {
     const current = element.current;
     const observer = new IntersectionObserver(

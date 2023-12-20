@@ -114,7 +114,7 @@ const VideoPlayer = ({
       <div className={clsx("absolute inset-0 h-full w-full flex pb-6 items-end justify-center duration-1000",
         error ? "opacity-100" : "opacity-0",
       )}>
-        <p className="bg-neutral-500/50 backdrop-blur-sm rounded px-2">
+        <p className="bg-neutral-500/50 backdrop-blur-sm rounded px-2 z-20">
           Video not available on this device
         </p>
       </div>
@@ -152,7 +152,10 @@ const VideoPlayer = ({
           setError(true)
         }}
       >
-        <source src={videoUrl} type="video/mp4"/>
+        <source
+          src={videoUrl}
+          type="video/mp4"
+        />
         Your browser does not support the video tag.
       </video>
     

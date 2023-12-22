@@ -96,30 +96,32 @@ export default function MyApp({ Component, pageProps }) {
               <UserProvider>
                 <ActionCableProvider>
                   <ImageFallbackProvider>
-                    <ListingsProvider>
-                      <ActivitiesProvider>
-                        <FollowingProvider>
-                          <OffersProvider>
-                            <SingleNftProvider>
-                              <UserTokensProvider>
-                                <ThemeProvider enableSystem={true} attribute="class">
-                                  <PlausibleProvider domain="collector.sh">
-                                    <CartProvider>
-              
-                                        <div className="min-h-[100vh] dark:bg-black dark:text-white">
-                                          <Component {...pageProps} />
-                                        </div>
-                                        <Footer />
-                                    
-                                    </CartProvider>
-                                  </PlausibleProvider>
-                                </ThemeProvider>
-                              </UserTokensProvider>
-                            </SingleNftProvider>
-                          </OffersProvider>
-                        </FollowingProvider>
-                      </ActivitiesProvider>
-                    </ListingsProvider>
+                    <VideoFallbackProvider>
+                      <ListingsProvider>
+                        <ActivitiesProvider>
+                          <FollowingProvider>
+                            <OffersProvider>
+                              <SingleNftProvider>
+                                <UserTokensProvider>
+                                  <ThemeProvider enableSystem={true} attribute="class">
+                                    <PlausibleProvider domain="collector.sh">
+                                      <CartProvider>
+                
+                                          <div className="min-h-[100vh] dark:bg-black dark:text-white">
+                                            <Component {...pageProps} />
+                                          </div>
+                                          <Footer />
+                                      
+                                      </CartProvider>
+                                    </PlausibleProvider>
+                                  </ThemeProvider>
+                                </UserTokensProvider>
+                              </SingleNftProvider>
+                            </OffersProvider>
+                          </FollowingProvider>
+                        </ActivitiesProvider>
+                      </ListingsProvider>
+                    </VideoFallbackProvider>
                   </ImageFallbackProvider>
                 </ActionCableProvider>
               </UserProvider>
@@ -134,6 +136,7 @@ import "nprogress/nprogress.css";
 import Router from "next/router";
 import { metaDescription, metaPreviewImage } from "../config/settings";
 import { UserTokensProvider } from "../contexts/userTokens";
+import { VideoFallbackProvider } from "../contexts/videoFallback";
 
 NProgress.configure({
   minimum: 0.3,

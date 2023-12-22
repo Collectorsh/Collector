@@ -4,6 +4,7 @@ import { PublishedTag, curationListPlaceholderId } from "./curationList";
 import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
 
 import dynamic from 'next/dynamic';
+import { useMemo } from "react";
 const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillContent), { ssr: false })
 
 
@@ -12,6 +13,17 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
   
   const bannerImgId = parseCloudImageId(banner_image)
   const pfpImgId = parseCloudImageId(curator?.profile_image)
+
+  const curationTypeText = useMemo(() => {
+    switch (curation.curation_type) { 
+      case "curator":
+        return "Curated by"
+      case "artist":
+        return "Art by"
+      case "collector":
+        return "Collection by"
+    }
+  }, [curation.curation_type])
 
   const descriptionComponent = (
     <div className="px-4 md:px-10 mt-4">
@@ -37,11 +49,12 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
         </div>
 
         <div className="my-8">
-            <h2 className="font-bold text-4xl collector text-center">{name.replaceAll("_", " ")}</h2>
+          <h2 className="font-bold text-4xl collector text-center">{name.replaceAll("_", " ")}</h2>
+          
           {withCurator && curator          
             ? (<Link href={`/gallery/${ curator.username }`} passHref>
                 <div className="flex gap-2 items-center justify-center mt-4 hover:scale-105 duration-300 w-fit mx-auto">
-                  <p className="text-lg">Curated by {curator.username}</p>
+                <p className="text-lg">{curationTypeText} {curator.username}</p>
                 {pfpImgId
                   ? (<div className="relative">
                       <CloudinaryImage
@@ -56,8 +69,7 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
                 </div>
               </Link>)
             : descriptionComponent
-            }
-         
+            }       
         </div>
       </a>
     </Link>

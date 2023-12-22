@@ -332,12 +332,11 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
 
             {videoUrl ? (
               <VideoPlayer
-                id={`video-player-${ token.mint }`}
                 videoUrl={videoUrl}
-                videoLoaded={videoLoaded}
                 setVideoLoaded={setVideoLoaded}
-                // controlsClass="group-hover/controls:translate-y-2 group-active/controls:translate-y-0"
-                // wrapperClass='w-full h-full rounded-lg group/controls'
+               
+                token={token}
+                cacheWidth={cacheWidth}
               />
             ) : null}
 

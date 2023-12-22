@@ -12,15 +12,15 @@ export const VideoFallbackProvider = ({ children }) => {
 
   const uploadVideo = async (token, videoUrl) => { 
     if (uploadSentRef.current.includes(token.mint)) {
-      console.log("ALREADY UPLADING VIDEO")
+      console.log("ALREADY UPLOADING VIDEO")
       return;
     }
-    console.log("UPLADING VIDEO")
+    console.log("UPLOADING VIDEO")
 
     uploadSentRef.current.push(token.mint)
 
     const cldResponse = await UploadVideo(token, videoUrl)
-    
+
     const videoId = cldResponse.public_id
     setCloudinaryCompleted(prev => ({...prev, [token.mint]: videoId}))
   }

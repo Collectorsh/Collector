@@ -46,7 +46,6 @@ const VideoPlayer = ({
 
   const initVideoUrl = tokenID ? buildCldVideo(tokenID, cacheWidth, quality).toURL() : videoUrl
   const [videoSource, setVideoSource] = useState(initVideoUrl)
-  console.log("🚀 ~ file: videoPlayer.jsx:48 ~ videoSource:", videoSource)
   const [fallbackStage, setFallbackStage] = useState(initStage)
 
   const { uploadVideo } = useVideoFallbackContext()

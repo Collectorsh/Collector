@@ -172,6 +172,8 @@ export default function DetailPage({token, curations}) {
               videoUrl={videoUrl}
               videoLoaded={videoLoaded}
               setVideoLoaded={setVideoLoaded}
+
+              token={token}
             />
           ) : null}
 
@@ -204,7 +206,7 @@ export default function DetailPage({token, curations}) {
               >
                 {updating ? (
                   <Oval color="#FFF" secondaryColor="#666" height={26} width={26} />
-                ): "Update Metadata"}
+                ): "Refresh Metadata"}
               </MainButton>
             ) : null}
           </div>

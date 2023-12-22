@@ -414,7 +414,7 @@ function CurationPage({curation}) {
       </div>
       <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-10">
        
-        <div className="group/name w-fit mb-3 mx-auto">
+        <div className="group/name w-fit mb-3 mx-auto max-w-full">
           <EditWrapper
             isOwner={displayPublishedEdit}
             onEdit={() => setEditNameOpen(true)}
@@ -422,7 +422,7 @@ function CurationPage({curation}) {
             groupHoverClass="group-hover/name:opacity-100"
           // icon={<PencilAltIcon className="w-6 h-6" />}
           >
-            <h1 className="font-bold text-5xl text-center">{name.replaceAll("_", " ")}</h1>
+            <h1 className="font-bold text-5xl text-center w-full break-words">{name.replaceAll("_", " ")}</h1>
           </EditWrapper>
         </div>
         <Link href={`/gallery/${ curation.curator.username }`} >

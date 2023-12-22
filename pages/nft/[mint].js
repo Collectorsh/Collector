@@ -172,6 +172,8 @@ export default function DetailPage({token, curations}) {
               videoUrl={videoUrl}
               videoLoaded={videoLoaded}
               setVideoLoaded={setVideoLoaded}
+
+              token={token}
             />
           ) : null}
 

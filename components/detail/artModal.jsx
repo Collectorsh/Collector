@@ -70,6 +70,7 @@ export default function ArtModal({ isOpen, onClose, token }) {
             videoUrl={videoUrl}
             videoLoaded={videoLoaded}
             setVideoLoaded={setVideoLoaded}
+            token={token}
           />
         ) : null}
 

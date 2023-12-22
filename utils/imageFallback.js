@@ -84,3 +84,17 @@ export async function HandleUpload(content, mint) {
     console.log("Error uploading image", error);
   }
 }
+
+
+export async function UploadVideo(token, videoUrl) {
+  try {
+    const response = await apiClient.post("images/upload_video", {
+      token,
+      video_url: videoUrl
+    }).then(res => res.data)
+
+    return response;
+  } catch (error) {
+    console.log("Error uploading video", error);
+  }
+}

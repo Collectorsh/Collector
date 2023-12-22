@@ -1,16 +1,38 @@
 import clsx from "clsx"
 import { useEffect, useRef, useState } from "react";
 import ContentLoader from "react-content-loader";
+import cloudinaryCloud from "../../data/client/cloudinary";
+import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
+import { useVideoFallbackContext } from "../../contexts/videoFallback";
+import { limitFill, scale } from "@cloudinary/url-gen/actions/resize";
+import { dpr } from "@cloudinary/url-gen/actions/delivery";
+
+const VIDEO_FALLBACK_STAGES = {
+  MAIN_CDN: "MAIN_CDN",
+  METADATA: "METADATA",
+  UPLOADED_FALLBACK_FAILED: "UPLOADED_FALLBACK_FAILED",
+}
+
+const buildCldVideo = (id, cacheWidth, quality) => {
+  const cldVideo = cloudinaryCloud.video(id)
+  cldVideo
+    .quality(quality || "auto:best")
+    .delivery(dpr("auto"));
+  
+  // if (cacheWidth) cldVideo.resize(limitFill().width(cacheWidth))
+  if (cacheWidth) cldVideo.resize(scale().width(cacheWidth))
+  return cldVideo
+}
 
 const VideoPlayer = ({
-  id = "video-player",
   videoUrl,
-  videoLoaded,
   setVideoLoaded,
   wrapperClass="absolute inset-0 z-10 w-full h-full group/controls",
   controlsClass,
   style,
-  handleRefWidthChange
+  token,
+  cacheWidth, //number | "auto"
+  quality = 'auto', //auto:best | auto:good | auto:eco | auto:low
 }) => { 
   const videoRef = useRef(null);
   const [userMuted, setUserMuted] = useState(true)
@@ -19,13 +41,21 @@ const VideoPlayer = ({
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
 
+  const initStage = token ? VIDEO_FALLBACK_STAGES.MAIN_CDN : VIDEO_FALLBACK_STAGES.METADATA
+  const tokenID = Boolean(token) ? `video/${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ getTokenCldImageId(token) }` : null
+
+  const initVideoUrl = tokenID ? buildCldVideo(tokenID, cacheWidth, quality).toURL() : videoUrl
+  const [videoSource, setVideoSource] = useState(initVideoUrl)
+  console.log("🚀 ~ file: videoPlayer.jsx:48 ~ videoSource:", videoSource)
+  const [fallbackStage, setFallbackStage] = useState(initStage)
+
+  const { uploadVideo } = useVideoFallbackContext()
+
   const bufferTimerIdRef = useRef(null)
 
   useEffect(() => {
     const videoElement = videoRef.current;
     if (!videoElement) return;
-
-    
 
     const handleIsPlaying = () => setIsPlaying(true)
     const handleIsPaused = () => setIsPlaying(false)
@@ -53,14 +83,7 @@ const VideoPlayer = ({
       videoElement.removeEventListener('waiting', handleBuffering);
       videoElement.removeEventListener('playing', handleBufferEnded);
     };
-  }, [handleRefWidthChange, loading]);
-
-  // useEffect(() => {
-  //   if (!videoRef.current) return;
-  //   if (!loading) videoRef.current.play().catch((e) => {
-  //     console.log("autoplay error:",e)
-  //   })
-  // },[loading])
+  }, [loading]);
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();
@@ -82,6 +105,18 @@ const VideoPlayer = ({
       videoRef.current.muted = !prev
       return !prev
     })
+  }
+
+  const handleError = (e) => {
+    //if theres an error with the fallback metadata url
+    if (fallbackStage === VIDEO_FALLBACK_STAGES.METADATA) {
+      setError(true)
+    } else if (fallbackStage === VIDEO_FALLBACK_STAGES.MAIN_CDN) {
+      //error here means there is no video in the cdn
+      setFallbackStage(VIDEO_FALLBACK_STAGES.METADATA)
+      setVideoSource(videoUrl) //set to metadata url for now (once uploaded fallbackVideo should kick in)
+      uploadVideo(token, videoUrl) //upload to cdn
+    } 
   }
 
   return (
@@ -115,7 +150,7 @@ const VideoPlayer = ({
         error ? "opacity-100" : "opacity-0",
       )}>
         <p className="bg-neutral-500/50 backdrop-blur-sm rounded px-2 z-20">
-          Video not available on this device
+          Error playing video
         </p>
       </div>
 
@@ -129,38 +164,28 @@ const VideoPlayer = ({
       >
         <rect className="w-full h-full" />
       </ContentLoader>
-
+            
       <video
-        
         style={style}
         ref={videoRef}
         autoPlay
         muted
         loop
         playsInline
-        id={id}
-        className={clsx("mx-auto h-full object-center object-contain duration-300 rounded-lg", loading ? "opacity-0" : "opacity-100")}
+        className={clsx(
+          "mx-auto h-full object-center object-contain duration-300 rounded-lg",
+          loading ? "opacity-0" : "opacity-100",
+          error && "hidden",
+        )}
       
         onCanPlay={e => {
-          // e.target.classList.add("opacity-100")
           setLoading(false)
           if (setVideoLoaded) setVideoLoaded(true)
           setError(false)
         }}
-        onError={(e) => {
-          e.target.classList.add("hidden")
-          setError(true)
-        }}
-      >
-        <source
-          src={videoUrl}
-          type="video/mp4"
-        />
-        Your browser does not support the video tag.
-      </video>
-    
-        
-  
+        onError={handleError}
+        src={videoSource}
+      />
     </div>
   )
 }

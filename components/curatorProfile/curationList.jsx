@@ -3,6 +3,7 @@ import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
 import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
 import SortableCurationPreview from "../curations/sortableCurationPreview";
+import { useMemo } from "react";
 
 export const curationListPlaceholderId = "global/Collector_Hero_btrh4t"
 
@@ -28,6 +29,19 @@ export default CurationList;
 export const CurationListItem = ({ curation, isOwner, withCurator }) => { 
   const { banner_image, name, description, is_published, curator } = curation
   const bannerImgId = parseCloudImageId(banner_image)
+
+  const curationTypeText = useMemo(() => {
+    switch (curation.curation_type) {
+      case "curator":
+        return "Curated by"
+      case "artist":
+        return "Art by"
+      case "collector":
+        return "Collection by"
+    }
+  }, [curation.curation_type])
+
+  const simpleCurationTypeText = curation.curation_type === "curator" ? "Curation" : "Solo Exhibition"
   return (
     <Link href={`/curations/${ name }`} >
       <a className="w-full duration-300 hover:scale-[102%] active:scale-100 relative
@@ -45,11 +59,11 @@ export const CurationListItem = ({ curation, isOwner, withCurator }) => {
         </div>
         <h3 className="font-bold collector text-2xl text-center my-2">
           {name.replaceAll("_", " ")}
-        
         </h3>
-          {withCurator && curator ? (
-            <p className="text-center"> Curated by {curator.username}</p>
-            ): null}
+        {withCurator && curator
+          ? <p className="text-center">{curationTypeText} {curator.username}</p>
+          : null
+        }
       </a>
     </Link>
   )

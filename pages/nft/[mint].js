@@ -25,6 +25,7 @@ import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import UserContext from "../../contexts/user";
 import { adminIDs } from "../../config/settings";
+import debounce from "lodash.debounce";
 
 const ModelViewer = dynamic(() => import("../../components/artDisplay/modelDisplay"), {
   ssr: false
@@ -39,7 +40,11 @@ export default function DetailPage({token, curations}) {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [imageExpanded, setImageExpanded] = useState(false);
   const [updating, setUpdating] = useState(false);
-  const [assetWidth, setAssetWidth] = useState("70vw");
+  const [assetWidth, setAssetWidth] = useState(786);
+  const [wrapperWidth, setWrapperWidth] = useState(0);
+  const [videoAspectRatio, setVideoAspectRatio] = useState(1);
+  const [maxHeight, setMaxHeight] = useState(0);
+  const wrapperRef = useRef(null);
   const imageRef = useRef(null);
 
   const isAdmin = adminIDs.includes(user?.id)
@@ -52,14 +57,16 @@ export default function DetailPage({token, curations}) {
   const maxSupply = token?.max_supply
   const editionNumber = token?.edition_number
 
+
+
   const externalUrl = token.externalUrl
     ? parseExternalLink(token.externalUrl)
     : null
 
   const useAltMediaAspectRatio = Boolean(htmlUrl || vrUrl)
   const altAssetHeight = (useAltMediaAspectRatio && typeof assetWidth === "number")
-    ? assetWidth * altFileAspectRatio
-    : assetWidth
+    ? assetWidth / altFileAspectRatio
+    : assetWidth / videoAspectRatio
   
   const artistName = token?.artist_name ? token.artist_name.replace("_", " ") : truncate(token?.artist_address, 4)
   const ownerName = token?.owner_name ? token.owner_name.replace("_", " ") : truncate(token?.owner_address, 4)
@@ -72,6 +79,8 @@ export default function DetailPage({token, curations}) {
   
   const solscanUrl = token?.mint ? `https://solscan.io/token/${ token?.mint }` : ""
 
+  const showDetails = (imgLoaded || useAltMediaAspectRatio || videoLoaded)
+
   const activeCurations = curations?.filter(curation => {
     return curation.submitted_token_listings?.find(l => {
       const isToken = l.mint === token.mint
@@ -79,14 +88,33 @@ export default function DetailPage({token, curations}) {
       return isToken && isListed
     })
   })
+
+  useEffect(() => { 
+    const getDimensions = () => { 
+      if(!wrapperRef.current) return;
+      setWrapperWidth(wrapperRef.current.offsetWidth - 16)
+      setMaxHeight(window.innerHeight * 0.75)
+    }
+    getDimensions();
+    const debouncedGetDimensions = debounce(getDimensions, 250)
+    window.addEventListener("resize", debouncedGetDimensions);
+    return () => window.removeEventListener("resize", debouncedGetDimensions);
+  }, [wrapperRef])
   
   useEffect(() => {
     if(!imgLoaded && !useAltMediaAspectRatio) return;
     const getAssetSize = () => {
-      if (useAltMediaAspectRatio) {
+      if (useAltMediaAspectRatio && wrapperWidth) {
         //set width to max-height
-        const width = Math.min(window.innerHeight * 0.75, window.innerWidth * 0.9)
+        const height = Math.min(wrapperWidth / altFileAspectRatio, maxHeight)
+        const width = height * altFileAspectRatio;
+        // const width = Math.min(maxHeight, window.innerWidth * 0.9)
         setAssetWidth(width)
+      } else if (videoUrl && wrapperWidth) {
+        //max height is window height * 0.75;
+        const height = Math.min(wrapperWidth / videoAspectRatio, maxHeight)
+        const width = height * videoAspectRatio;
+        setAssetWidth(width);
       } else {
         if (!imageRef.current) return;
         const width = imageRef.current.clientWidth
@@ -94,19 +122,14 @@ export default function DetailPage({token, curations}) {
       }
     }
     getAssetSize();
-    window.addEventListener("resize", getAssetSize);
-    return () => window.removeEventListener("resize", getAssetSize);
-  }, [imgLoaded, videoUrl, useAltMediaAspectRatio])
+    const debouncedGetAssetSize = debounce(getAssetSize, 250)
+    window.addEventListener("resize", debouncedGetAssetSize);
+
+    return () => window.removeEventListener("resize", debouncedGetAssetSize);
+  }, [imgLoaded, videoUrl, useAltMediaAspectRatio, wrapperWidth, videoAspectRatio, maxHeight])
 
   const expandImage = () => setImageExpanded(!imageExpanded)
 
-
-  //TODO, figure out how to handle videos with width larger than the window 
-  //or that would mess up the aspect ratio when constraining the height
-  //add "|| videoUrl" back to the getImageSize useEffect condition 
-  const handleRefWidthChange = (width) => { 
-    setAssetWidth(`${ width }px`)
-  }
 
   const handleUpdateMetadata = async () => { 
     setUpdating(true)
@@ -123,14 +146,30 @@ export default function DetailPage({token, curations}) {
     <>
       <Toaster />
       <MainNavigation />
-      <ArtModal isOpen={imageExpanded} onClose={() => setImageExpanded(false)} token={token} />
-      <div className={clsx(
-        "max-w-screen-2xl mx-auto w-full px-2 py-5 duration-300",
-        imgLoaded || useAltMediaAspectRatio ? "opacity-100" : "opacity-0"
+      <ArtModal
+        isOpen={imageExpanded}
+        onClose={() => setImageExpanded(false)}
+        token={token}
+      />
+
+      {!showDetails ? (
+        <div className="absolute w-full h-screen">
+          <h1 className="animate-pulse font-bold text-4xl text-center mt-10">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
+        </div>
+      ) : null}
+
+      <div
+        ref={wrapperRef}
+        className={clsx(
+          "max-w-screen-md mx-auto w-full px-2 py-5 duration-300",
+          showDetails ? "opacity-100" : "opacity-0"
       )}>
          
         <div
-          className="relative shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg overflow-hidden w-fit h-fit mx-auto group"
+          className={clsx(
+            "relative shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg overflow-hidden mx-auto group w-fit max-w-full max-h-[75vh]",
+            showDetails ? "h-fit" : "h-screen",
+          )}
         >
           <button
             onClick={expandImage}
@@ -144,56 +183,57 @@ export default function DetailPage({token, curations}) {
             <ArrowsExpandIcon className="w-7 h-7" />
           </button>
 
-         
-          <div className={clsx((useAltMediaAspectRatio && !imageExpanded) ? "relative" : "hidden")}
-              style={{
-                width: assetWidth,
-                height: altAssetHeight
-              }}>
-              {(vrUrl) ? (
-                <ModelViewer
-                  vrUrl={vrUrl}
-                />  
-              ): null}
-              
-              {(htmlUrl) ? (
-                <HtmlViewer
-                  htmlUrl={htmlUrl}
-                />
-              ) : null}
-            </div>
-        
-
-          
-          {(videoUrl && !imageExpanded) ? (
-            <VideoPlayer
-              handleRefWidthChange={handleRefWidthChange}
-              id={`video-player-${ token.mint }`}
-              videoUrl={videoUrl}
-              videoLoaded={videoLoaded}
-              setVideoLoaded={setVideoLoaded}
-
-              token={token}
-            />
-          ) : null}
-
           <CloudinaryImage
             imageRef={imageRef}
-            className={clsx("max-h-[75vh] w-full object-contain",
-              videoLoaded && "invisible",
-              // useAltMediaAspectRatio && "hidden" 
-              useAltMediaAspectRatio && "absolute inset-0 object-contain"
+            className={clsx("max-h-[75vh] w-full h-full object-contain",
+              videoLoaded && "hidden",
+              (useAltMediaAspectRatio || videoUrl) && "absolute inset-0 object-contain z-0"
             )}
             token={token}
             useUploadFallback
             useMetadataFallback
             onLoad={() => setImgLoaded(true)}
           />
+
+          <div
+            className={clsx((useAltMediaAspectRatio || videoUrl) ? "relative max-w-full max-h-fit z-10 duration-300" : "hidden")}
+            style={{
+              width: assetWidth,
+              height: altAssetHeight
+            }}
+          >
+            {!imageExpanded ? (
+              <>
+                {(vrUrl) ? (
+                  <ModelViewer
+                    vrUrl={vrUrl}
+                  />  
+                ): null}
+                
+                {(htmlUrl) ? (
+                  <HtmlViewer
+                    htmlUrl={htmlUrl}
+                  />
+                ) : null}
+
+                {(videoUrl) ? (
+                  <VideoPlayer
+                    id={`video-player-${ token.mint }`}
+                    videoUrl={videoUrl}
+                    videoLoaded={videoLoaded}
+                    setVideoLoaded={setVideoLoaded}
+                    token={token}
+                    getAspectRatio={setVideoAspectRatio}
+                    wrapperClass={clsx("w-full duration-100 z-20")}
+                  />
+                ) : null}
+              </>
+            ) : null}
+          </div>      
         </div>
 
         <div
-          className="mt-3 px-4 mx-auto"
-          style={{ maxWidth: assetWidth }}
+          className={clsx("mt-3 px-4 mx-auto")}
         >
           <div className="flex justify-between items-center">
             <h1 className="collector text-4xl mb-2">{token?.name}</h1>

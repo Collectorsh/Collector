@@ -1,7 +1,7 @@
 import ContentLoader from "react-content-loader";
 import CloudinaryImage from "../../components/CloudinaryImage";
 import MainNavigation from "../../components/navigation/MainNavigation"
-import getTokenByMint, { useTokenByMint } from "../../data/nft/getTokenByMint";
+import getTokenByMint from "../../data/nft/getTokenByMint";
 import { nullifyUndefinedArr, nullifyUndefinedObj } from "../../utils/nullifyUndefined";
 import { useContext, useEffect, useRef, useState } from "react";
 import { truncate } from "../../utils/truncate";

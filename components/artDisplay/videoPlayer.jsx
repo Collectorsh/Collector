@@ -4,9 +4,8 @@ import ContentLoader from "react-content-loader";
 import cloudinaryCloud from "../../data/client/cloudinary";
 import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
 import { useVideoFallbackContext } from "../../contexts/videoFallback";
-import { limitFill, scale } from "@cloudinary/url-gen/actions/resize";
+import { scale } from "@cloudinary/url-gen/actions/resize";
 import { dpr } from "@cloudinary/url-gen/actions/delivery";
-import debounce from "lodash.debounce";
 
 const VIDEO_FALLBACK_STAGES = {
   MAIN_CDN: "MAIN_CDN",

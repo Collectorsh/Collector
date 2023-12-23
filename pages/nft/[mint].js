@@ -225,10 +225,6 @@ export default function DetailPage({token, curations}) {
                     token={token}
                     getAspectRatio={setVideoAspectRatio}
                     wrapperClass={clsx("w-full duration-100 z-20")}
-                    // style={{
-                    //   width: assetWidth,
-                    //   maxHeight: altAssetHeight
-                    // }}
                   />
                 ) : null}
               </>

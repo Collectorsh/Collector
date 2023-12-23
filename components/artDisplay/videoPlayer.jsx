@@ -6,6 +6,7 @@ import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
 import { useVideoFallbackContext } from "../../contexts/videoFallback";
 import { limitFill, scale } from "@cloudinary/url-gen/actions/resize";
 import { dpr } from "@cloudinary/url-gen/actions/delivery";
+import debounce from "lodash.debounce";
 
 const VIDEO_FALLBACK_STAGES = {
   MAIN_CDN: "MAIN_CDN",
@@ -33,6 +34,7 @@ const VideoPlayer = ({
   token,
   cacheWidth, //number | "auto"
   quality = 'auto', //auto:best | auto:good | auto:eco | auto:low
+  getAspectRatio,
 }) => { 
   const videoRef = useRef(null);
   const [userMuted, setUserMuted] = useState(true)
@@ -56,20 +58,25 @@ const VideoPlayer = ({
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
+    if (getAspectRatio) {
+      const width = videoElement.videoWidth
+      const height = videoElement.videoHeight
+      getAspectRatio(width / height)
+    }
     const handleIsPlaying = () => setIsPlaying(true)
     const handleIsPaused = () => setIsPlaying(false)
     const handleBuffering = () => {
       if (loading) return; 
       const timerId = setTimeout(() => { 
         setIsBuffering(true)
-      }, 3000)
+      }, 2000)
       bufferTimerIdRef.current = timerId
     }
     const handleBufferEnded = () => {
       clearTimeout(bufferTimerIdRef.current)
       setIsBuffering(false)
     }
-
+      
     videoElement.addEventListener('play', handleIsPlaying);
     videoElement.addEventListener('pause', handleIsPaused);
     videoElement.addEventListener('waiting', handleBuffering);
@@ -82,7 +89,7 @@ const VideoPlayer = ({
       videoElement.removeEventListener('waiting', handleBuffering);
       videoElement.removeEventListener('playing', handleBufferEnded);
     };
-  }, [loading]);
+  }, [loading, getAspectRatio]);
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();

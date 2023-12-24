@@ -14,24 +14,6 @@ const HtmlViewer = ({
   const [reloadedUrl, setReloadedUrl] = useState(htmlUrl)
   const [loading, setLoading] = useState(true)
 
-  // const htmlRef = useRef(null);
-  // usePreventTouchNavigation(htmlRef)
-  // const { isVisible } = useElementObserver(htmlRef, "10px")  
-  
-  //Lazing load the iframe + reload when size changes
-  // useEffect(() => {
-  //   // if (!useLazyLoading) return
-  //   setLoading(true)
-  //   setReloadedUrl("")
-
-  //   // if(!isVisible) return
-
-  //   const timeout = setTimeout(() => {
-  //     setReloadedUrl(htmlUrl)
-  //   }, 50)
-  //   return () => clearTimeout(timeout)
-  // }, [style, htmlUrl])
-
   const handleLoad = (e) => {
     if(onLoad) onLoad(e)
     setLoading(false)
@@ -39,7 +21,6 @@ const HtmlViewer = ({
 
   return (
     <div
-      // ref={ useLazyLoading ? htmlRef : undefined}
       className={clsx(wrapperClass, "z-10 touch-none")}
     >
 

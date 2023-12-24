@@ -1,4 +1,3 @@
-import ContentLoader from "react-content-loader";
 import CloudinaryImage from "../../components/CloudinaryImage";
 import MainNavigation from "../../components/navigation/MainNavigation"
 import getTokenByMint from "../../data/nft/getTokenByMint";

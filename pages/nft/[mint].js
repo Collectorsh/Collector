@@ -63,9 +63,11 @@ export default function DetailPage({token, curations}) {
     : null
 
   const useAltMediaAspectRatio = Boolean(htmlUrl || vrUrl)
-  const altAssetHeight = (useAltMediaAspectRatio && typeof assetWidth === "number")
+  const altAssetHeight = (useAltMediaAspectRatio)
     ? assetWidth / altFileAspectRatio
     : assetWidth / videoAspectRatio
+  
+
   
   const artistName = token?.artist_name ? token.artist_name.replace("_", " ") : truncate(token?.artist_address, 4)
   const ownerName = token?.owner_name ? token.owner_name.replace("_", " ") : truncate(token?.owner_address, 4)
@@ -206,12 +208,22 @@ export default function DetailPage({token, curations}) {
                 {(vrUrl) ? (
                   <ModelViewer
                     vrUrl={vrUrl}
+                    wrapperClass="w-full duration-100 z-20"
+                    style={{
+                      width: assetWidth,
+                      height: altAssetHeight
+                    }}
                   />  
                 ): null}
                 
                 {(htmlUrl) ? (
                   <HtmlViewer
                     htmlUrl={htmlUrl}
+                    wrapperClass="w-full duration-100 z-20"
+                    style={{
+                      width: assetWidth,
+                      height: altAssetHeight
+                    }}
                   />
                 ) : null}
 
@@ -224,6 +236,10 @@ export default function DetailPage({token, curations}) {
                     token={token}
                     getAspectRatio={setVideoAspectRatio}
                     wrapperClass={clsx("w-full duration-100 z-20")}
+                    style={{
+                      width: "100%",
+                      maxHeight: "75vh"
+                    }}
                   />
                 ) : null}
               </>

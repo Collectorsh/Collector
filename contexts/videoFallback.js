@@ -21,7 +21,8 @@ export const VideoFallbackProvider = ({ children }) => {
 
     const cldResponse = await UploadVideo(token, videoUrl)
 
-    const videoId = cldResponse.public_id
+    const videoId = cldResponse?.public_id
+    if (!videoId) return;
     setCloudinaryCompleted(prev => ({...prev, [token.mint]: videoId}))
   }
 

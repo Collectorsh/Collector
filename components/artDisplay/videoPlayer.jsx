@@ -88,7 +88,7 @@ const VideoPlayer = ({
       videoElement.removeEventListener('waiting', handleBuffering);
       videoElement.removeEventListener('playing', handleBufferEnded);
     };
-  }, [loading, getAspectRatio]);
+  }, [loading, getAspectRatio, videoRef]);
   
   const preventPropAndDefault = (e) => {
     e.preventDefault();

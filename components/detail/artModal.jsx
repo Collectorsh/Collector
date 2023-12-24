@@ -27,7 +27,7 @@ export default function ArtModal({ isOpen, onClose, token,  }) {
   return (
     <Modal
       isOpen={isOpen} onClose={onClose}
-      widthClass="w-auto"
+      widthClass="w-[auto_!important]"
       closeButtonPlacement="absolute -right-3 -top-3"
      
     >

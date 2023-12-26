@@ -56,8 +56,6 @@ export default function DetailPage({token, curations}) {
   const maxSupply = token?.max_supply
   const editionNumber = token?.edition_number
 
-
-
   const externalUrl = token.externalUrl
     ? parseExternalLink(token.externalUrl)
     : null
@@ -66,8 +64,6 @@ export default function DetailPage({token, curations}) {
   const altAssetHeight = (useAltMediaAspectRatio)
     ? assetWidth / altFileAspectRatio
     : assetWidth / videoAspectRatio
-  
-
   
   const artistName = token?.artist_name ? token.artist_name.replace("_", " ") : truncate(token?.artist_address, 4)
   const ownerName = token?.owner_name ? token.owner_name.replace("_", " ") : truncate(token?.owner_address, 4)

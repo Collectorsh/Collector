@@ -12,18 +12,6 @@ export const UpdateMetadata = async (tokenMint) => {
   }
   const mintPublicKey = new PublicKey(tokenMint)
 
-  try {
-    const largestAccounts = await connection.getTokenLargestAccounts(mintPublicKey);
-    const metadataAccountInfo = await connection.getParsedAccountInfo(largestAccounts.value[0].address);
-    const owner = metadataAccountInfo.value.data.parsed.info.owner
-  
-    token.owner_address = owner;
-
-  } catch (err) { 
-    console.log("Error fetching owner", err)
-    return 
-  }
-
   const metaplex = new Metaplex(connection)
   const metadata = await metaplex.nfts().findByMint({
     mintAddress: mintPublicKey
@@ -52,6 +40,23 @@ export const UpdateMetadata = async (tokenMint) => {
   token.is_edition = !edition.isOriginal
   token.parent = edition.parent?.toString()
   token.edition_number = edition.number?.toString()
+
+  //master editions that are listed have a different owner on chain, but we want to keep the artist as the owner in our system
+  if (token.is_master_edition) {
+    token.owner_address = token.artist_address
+  } else {
+    try {
+      const largestAccounts = await connection.getTokenLargestAccounts(mintPublicKey);
+      const metadataAccountInfo = await connection.getParsedAccountInfo(largestAccounts.value[0].address);
+      const owner = metadataAccountInfo.value.data.parsed.info.owner
+  
+      token.owner_address = owner;
+  
+    } catch (err) {
+      console.log("Error fetching owner", err)
+      return
+    }
+  }
 
 
   const aspectRatio = await getAspectRatio(token)

@@ -21,6 +21,8 @@ import deleteSubmission from "../../data/curationListings/deleteSubmission";
 import retryFetches from "../../utils/curations/retryFetches";
 import { Market } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { useRouter } from "next/router";
+import LogRocket from "logrocket";
+import getListedItem from "../../data/curationListings/getListedItem";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
@@ -40,7 +42,20 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
   const onList = async (token, listingPrice) => {
     let newToken
 
+    if (!user.api_key) {
+      error("Error connecting. Please refresh and reconnect your wallet to finish listing")
+      return
+    }
+
     if (token.is_master_edition) {
+
+      const listingRes = await getListedItem(token.mint)
+
+      if (listingRes.status === "success") {
+        const curationName = listingRes.curationName.replaceAll("_", " ")
+        error(`${ token.name } is already listed in ${ curationName}`)
+        return
+      }
       
       //Handle master edition market creation and update to the curation_listing
       const builder = await getListMasterEditionTX({
@@ -103,8 +118,8 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       })
 
       if (res?.status !== "success") {
-        error(`Error Saving Listing For ${ token.name }: ${ res?.message }`)
-        return
+        error(`Error Saving Listing For ${ token.name }`)
+        throw new Error(`Error saving listing for ${ token.name } : ${ res?.message }`)
       }
 
       success(`${ token.name } has been listed!`)
@@ -335,7 +350,13 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
       setListing(true)
       await onList(token, listingPrice)
     } catch (err) {
-      console.log("handleList error: ", err)
+      console.log("Handle List error: ", err)
+      LogRocket.captureException(err, {
+        extra: {
+          tokenMint: token.mint,
+          listingPrice,
+        }
+      })
     }
     setListing(false)
   }
@@ -346,6 +367,11 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
       await onDelist(token)
     } catch (err) {
       console.log("handleDelist error: ", err)
+      LogRocket.captureException(err, {
+        extra: {
+          tokenMint: token.mint,
+        }
+      })
     }
     setListing(false)
   }

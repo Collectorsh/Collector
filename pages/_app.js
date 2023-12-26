@@ -19,24 +19,12 @@ import { ImageFallbackProvider } from "../contexts/imageFallback";
 import { ActionCableProvider } from "../contexts/webSocket";
 
 import LogRocket from 'logrocket';
-LogRocket.init('dnqy5r/collector');
+import setupLogRocketReact from 'logrocket-react';
 
-import * as Sentry from "@sentry/react";
-Sentry.init({
-  dsn: "https://b72da4ba37cb647f278b6fa0a8d3c93d@o4506401383645184.ingest.sentry.io/4506401389150208",
-  integrations: [
-    new Sentry.BrowserTracing({
-      // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-      tracePropagationTargets: ["localhost", /^https:\/\/collector\.sh\/collector-api/, /^https:\/\/collector\.sh\/collector-node-api/], 
-    }),
-    new Sentry.Replay(),
-  ],
-  // Performance Monitoring
-  tracesSampleRate: 1.0, //  Capture 100% of the transactions
-  // Session Replay
-  replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-});
+if (typeof window !== "undefined") { 
+  LogRocket.init('dnqy5r/collector');
+  setupLogRocketReact(LogRocket);
+}
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,

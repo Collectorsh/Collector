@@ -1,4 +1,4 @@
-export default function retryFetches(cb, maxAttempts = 16) {
+export default function retryFetches(cb, maxAttempts = 10) {
   let attempts = 0;
   return new Promise((resolve, reject) => {
     const attempt = async () => {

@@ -9,7 +9,7 @@ import DarkMode from "/components/navigation/DarkMode";
 import ConnectWallet from "/components/wallet/ConnectWallet";
 import Profile from "/components/navigation/Profile";
 import Gallery from "/components/navigation/Gallery";
-import CreateUsernameModal from "/components/CreateUsernameModal";
+import CreateUsernameModal from "/components/onboarding/CreateUsernameModal";
 import { truncate } from "../../utils/truncate";
 import WalletButton from "./WalletButton";
 import LogRocket from "logrocket";

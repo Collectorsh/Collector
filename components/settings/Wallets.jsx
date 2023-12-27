@@ -6,6 +6,10 @@ import deleteWalletAddress from "/data/dashboard/deleteWalletAddress.js";
 import verifyAddress from "/data/user/verifyAddress.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import MainButton from "../MainButton";
+import { Switch } from "@headlessui/react";
+import clsx from "clsx";
+import { PlusIcon, XIcon } from "@heroicons/react/solid";
 
 export default function Wallets() {
   const wallet = useWallet();
@@ -13,23 +17,6 @@ export default function Wallets() {
   const [user, setUser] = useContext(UserContext);
   const [addingWallet, setAddingWallet] = useState(false);
   const [usingLedger, setUsingLedger] = useState(false);
-
-  function deleteWallet(event) {
-    let pubKey = event.target.getAttribute("id");
-    deleteWalletAddress(pubKey, user.api_key)
-      .then((res) => {
-        if (res.data.status === "success") {
-          success("Wallet removed");
-          setUser(res.data.user);
-        } else {
-          error(res.data.msg);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        error("An error has occurred");
-      });
-  }
 
   // Detect publicKey change and add wallet
   useEffect(() => {
@@ -56,79 +43,99 @@ export default function Wallets() {
         }
       });      
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet?.connected, user]);
 
-  async function addWallet() {
+  const addWallet = () => {
     wallet.disconnect().then(() => {
       setAddingWallet(true);
       setVisible(true);
     });
   }
 
+  const deleteWallet = (pubKey) => {
+    
+    deleteWalletAddress(pubKey, user.api_key)
+      .then((res) => {
+        if (res.data.status === "success") {
+          success("Wallet removed");
+          setUser(res.data.user);
+        } else {
+          error(res.data.msg);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        error("An error has occurred");
+      });
+  }
+
   return (
-    <>
-      <Toaster />
-      <div>
-        <div className="mt-8 lg:mt-16">
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg dark:border-dark2 dark:bg-dark2 clear-both mt-10">
-            <div className="px-4 py-5 sm:px-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
-                Your Wallets
-              </h3>
-            </div>
-            {user &&
-              user.public_keys &&
-              user.public_keys.map((publicKey, index) => {
-                return (
-                  <div
-                    className="border-t border-gray-200 dark:border-dark1"
-                    key={index}
-                  >
-                    <dl>
-                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark3">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-200">
-                          {publicKey}
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {user.public_keys.length > 1 && (
-                            <svg
-                              onClick={deleteWallet}
-                              id={publicKey}
-                              className="w-4 h-4 cursor-pointer dark:fill-gray-100"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 512 512"
-                            >
-                              <path d="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z" />
-                            </svg>
-                          )}
-                        </dd>
-                      </div>
-                    </dl>
-                  </div>
-                );
-              })}
-            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-dark2">
-              <dt className="text-sm font-medium text-gray-500">
-                <button
-                  className="py-3 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold"
-                  onClick={addWallet}
-                >
-                  Add Wallet
-                </button>
-                <div className="inline">
-                  <input
-                    type="checkbox"
-                    className="inline ml-6"
-                    onClick={() => setUsingLedger(!usingLedger)}
-                  />
-                  <p className="inline ml-2">I&apos;m using a ledger</p>
-                </div>
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
-            </div>
-          </div>
-        </div>
+    <div>
+      <p className="text-2xl font-bold mb-4">Wallets</p>
+
+      <div className="p-1 flex flex-col gap-2">
+        {user
+          ? (user.public_keys.map((pubKey, index) => { 
+            return <AddressCard
+              key={pubKey}
+              pubKey={pubKey}
+              isPrimary={index === 0}
+              onRemove={() => deleteWallet(pubKey)}
+            />
+          }))
+        : null}
+
       </div>
-    </>
-  );
+
+      <div className="flex justify-start items-center gap-4 pl-1 mt-2">
+        <MainButton
+          solid
+          onClick={addWallet}
+          className="flex gap-2 items-center"
+        >
+          Link New Wallet
+          <PlusIcon className="w-5 h-5" />
+        </MainButton>
+        
+        <Switch
+          checked={usingLedger}
+          onChange={setUsingLedger}
+          className={clsx(
+            'bg-neutral-100 dark:bg-neutral-900',
+            "border-neutral-200 dark:border-neutral-700 border-2",
+            "relative inline-flex h-8 w-14 items-center rounded-full flex-shrink-0"
+          )}
+        >
+          <span className="sr-only">Toggle Ledger</span>
+          <span
+            className={clsx(usingLedger ? 'translate-x-7' : 'translate-x-1',
+              "inline-block h-5 w-5 transform rounded-full   transition bg-neutral-900 dark:bg-neutral-100"
+            )}
+          />
+        </Switch>
+        <p>I am {!usingLedger ? "not" : ""} using a Ledger</p>
+      </div>
+    </div>
+  )
+
+}
+
+const AddressCard = ({ pubKey, isPrimary, onRemove }) => { 
+  return (
+    <div className={clsx(
+      "flex justify-between items-center gap-2 w-full border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 px-4 py-2 rounded-lg",
+      "border-b-2"
+    )}>
+      <p>
+        <span className={clsx(!isPrimary && "hidden", "font-bold")}>Primary: </span>
+        {pubKey}
+      </p>
+     
+      <button onClick={onRemove} className={clsx("duration-200 hover:scale-105 active:scale-100 opacity-50 hover:opacity-100", isPrimary && "hidden")}>
+        <XIcon className="w-5 h-5" />
+      </button>
+    </div>
+
+  )
 }

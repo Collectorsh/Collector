@@ -3,70 +3,29 @@ import CheckLoggedIn from "/components/CheckLoggedIn";
 import MainNavigation from "/components/navigation/MainNavigation";
 import Settings from "/components/settings/Settings";
 import Wallets from "/components/settings/Wallets";
-import Notifications from "/components/settings/Notifications";
-import UserContext from "/contexts/user";
+import { Toaster } from "react-hot-toast";
 
 function SettingsPage() {
-  const [user] = useContext(UserContext);
-  const [selected, setSelected] = useState("settings");
-
-  const changeSelected = (sel) => {
-    setSelected(sel);
-  };
 
   return (
     <div>
       <CheckLoggedIn />
       <MainNavigation />
-      <div className="relative max-w-screen-2xl mx-auto p-4 sm:p-8">
-        <div className="mx-auto clear-both">
-          <div className="mx-auto pt-3 md:px-0">
-            <h2 className="mt-8 mb-12 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-whitish">
-              Edit Profile
-            </h2>
-            <div className="w-full border-b border-gray-200 dark:border-dark3 pb-3">
-              <ul className="font-bold">
-                <li
-                  className={`cursor-pointer hover:opacity-100 duration-300 inline px-2 mr-3 pb-3.5 ${
-                    selected === "settings"
-                    ? "border-b-2 border-black dark:border-white opacity-100"
-                    : "opacity-50"
-                  }`}
-                  onClick={() => changeSelected("settings")}
-                >
-                  Settings
-                </li>
-                {/* {user && user.token_holder && (
-                  <li
-                    className={`cursor-pointer inline px-2 mx-3 pb-3.5 ${
-                      selected === "notifications" &&
-                      "border-b border-b-2 border-greeny"
-                    }`}
-                    onClick={() => changeSelected("notifications")}
-                  >
-                    Notifications
-                  </li>
-                )} */}
-                <li
-                  className={`cursor-pointer hover:opacity-100 duration-300 inline px-2 mx-3 pb-3.5 ${
-                    selected === "wallets"
-                      ? "border-b-2 border-black dark:border-white opacity-100"
-                      : "opacity-50"
-                  }`}
-                  onClick={() => changeSelected("wallets")}
-                >
-                  Wallets
-                </li>
-              </ul>
-            </div>
-            {selected === "settings" && <Settings />}
-            {/* {selected === "notifications" && user && user.token_holder && (
-              <Notifications />
-            )} */}
-            {selected === "wallets" && <Wallets />}
-          </div>
+      <Toaster />
+      <div className="relative max-w-screen-md mx-auto p-4 sm:p-8">
+  
+        <div className="mx-auto pt-3 md:px-0">
+          <h2 className="mt-8 mb-12 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-whitish">
+            Account Settings
+          </h2>
+          
+          <Settings />
+    
+          <hr className="mt-8 mb-4" />
+          <Wallets />
         </div>
       </div>
+   
     </div>
   );
 }

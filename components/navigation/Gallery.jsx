@@ -54,7 +54,7 @@ export default function Gallery() {
               <Menu.Item>
                 <Link href={`/gallery/${ user.username }`}>
                   <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    Profile
+                    Gallery
                   </a>
                 </Link>
               </Menu.Item>

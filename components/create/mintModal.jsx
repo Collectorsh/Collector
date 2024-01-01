@@ -13,7 +13,6 @@ import { AltMedia, CATEGORIES } from "../FileDrop"
 import clsx from "clsx"
 import UserContext from "../../contexts/user"
 import createMintedIndex from "../../data/minted_indexer/create"
-import { Transaction, VersionedTransaction } from "@solana/web3.js"
 import retryFetches from "../../utils/curations/retryFetches"
 
 
@@ -306,11 +305,22 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
   const secondaryButton = useMemo(() => { 
     switch (stage) {
       case MINT_STAGE.SUCCESS: return (
-        <Link href="/submissions" passHref>
-          <MainButton >
-            Submissions
-          </MainButton>
-        </Link>
+        <MainButton onClick={handleReset} >
+          Create Another
+        </MainButton>
+        // <div className="flex flex-wrap gap-4">
+        //   <Link href={`/gallery/${ user?.username }`} passHref>
+        //     <MainButton>
+        //       Gallery
+        //     </MainButton>
+        //   </Link>
+
+        //   <Link href="/submissions" passHref>
+        //     <MainButton solid>
+        //       Submissions
+        //     </MainButton>
+        //   </Link>
+        // </div>
       )
       default: return (
         <MainButton onClick={handleClose}>
@@ -318,7 +328,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         </MainButton>
       )
     }
-  }, [stage, handleClose])
+  }, [stage, handleClose, user])
 
   const actionButton = useMemo(() => {
     switch (stage) { 
@@ -363,11 +373,11 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       </div>
     
       <div className="w-full grid grid-cols-2 gap-4">
-        {stage === MINT_STAGE.SUCCESS ? (
+        {/* {stage === MINT_STAGE.SUCCESS ? (
           <MainButton onClick={handleReset} noPadding className="px-2 col-span-2 justify-self-center">
             Create Another
           </MainButton>
-        ) : null}
+        ) : null} */}
         <div className="justify-self-end">
           {secondaryButton}
         </div>

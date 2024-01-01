@@ -216,11 +216,19 @@ export default function MintPage() {
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Create</h2>
-          <Link href="/submissions" passHref>
-            <MainButton solid>
-              Submissions
-            </MainButton>
-          </Link>
+          <div className="flex flex-wrap gap-4">
+            <Link href={`/gallery/${user?.username}`} passHref>
+              <MainButton>
+                Gallery
+              </MainButton>
+            </Link>
+
+            <Link href="/submissions" passHref>
+              <MainButton solid>
+                Submissions
+              </MainButton>
+            </Link>
+          </div>
         </div>
 
         <hr className="mt-6 mb-12 border-neutral-200 dark:border-neutral-800" />

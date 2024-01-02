@@ -216,19 +216,7 @@ export default function MintPage() {
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Create</h2>
-          <div className="flex flex-wrap gap-4">
-            <Link href={`/gallery/${user?.username}`} passHref>
-              <MainButton>
-                Gallery
-              </MainButton>
-            </Link>
-
-            <Link href="/submissions" passHref>
-              <MainButton solid>
-                Submissions
-              </MainButton>
-            </Link>
-          </div>
+         
         </div>
 
         <hr className="mt-6 mb-12 border-neutral-200 dark:border-neutral-800" />
@@ -280,9 +268,7 @@ export default function MintPage() {
         <div
           className="mt-5 px-4 mx-auto flex flex-col gap-1"
         >
-          <div className="flex justify-center w-full lg:w-[calc(50%-8px)] mx-auto">
-            <CollectionDropDown selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError} />
-          </div>
+         
           <div className="grid lg:grid-cols-2 gap-4">
             <NameInput name={name} setName={setName} setError={setError} />
             <NftTypeInput
@@ -299,6 +285,10 @@ export default function MintPage() {
             <RoyaltiesInput royalties={royalties} setRoyalties={setRoyalties} setError={setError} />
             <CreatorsInput creators={creators} setCreators={setCreators} setError={setError} />
           </div>  
+
+          <div className="flex justify-center w-full lg:w-[calc(50%-8px)] mx-auto">
+            <CollectionDropDown selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError} />
+          </div>
 
           <Drawer
             title="Extras"

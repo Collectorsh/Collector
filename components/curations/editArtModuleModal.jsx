@@ -520,7 +520,7 @@ const EditArtItem = ({
               // "max-h-[333px]"
             )}
             width={500}
-            useUploadFallback
+            useMetadataFallback
             token={token}
             noLazyLoad
             onLoad={() => setLoaded(true)}

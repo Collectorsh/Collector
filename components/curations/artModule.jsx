@@ -342,6 +342,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
 
             <CloudinaryImage
               useMetadataFallback
+              useUploadFallback
               token={token}
               className={clsx(
                 "object-cover duration-300",

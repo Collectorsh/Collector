@@ -82,13 +82,13 @@ export default function CreateUsernameModal() {
   }
 
   const handleClose = () => {
-    if (!usernameSaved) {
-      //sign out user if they havent saved their username
-      wallet.disconnect().then(() => {
-        localStorage.removeItem("api_key");
-        setUser(null);
-      });
-    } 
+    // if (!usernameSaved) {
+    //   //sign out user if they havent saved their username
+    //   wallet.disconnect().then(() => {
+    //     localStorage.removeItem("api_key");
+    //     setUser(null);
+    //   });
+    // } 
 
     setShowModal(false)
   }
@@ -98,7 +98,7 @@ export default function CreateUsernameModal() {
       case 0: return (
         <>
           <p className="text-center my-4">
-            Finish setting up your account. You can always change this info later in your profile settings.
+            Enter your username to finish setting up your account. You can always change this later in your profile settings.
           </p>
           <UsernameAndEmail
             username={username}

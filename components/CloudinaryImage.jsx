@@ -1,5 +1,5 @@
 
-import { limitFill } from "@cloudinary/url-gen/actions/resize";
+import { limitFill, scale } from "@cloudinary/url-gen/actions/resize";
 import { dpr } from "@cloudinary/url-gen/actions/delivery";
 
 import cloudinaryCloud from "../data/client/cloudinary";

@@ -17,9 +17,9 @@ export const RpcHealthProvider = ({ children }) => {
 
   useEffect(() => {
 
-    setTimeout(() => {
-      setRpcStatus(RPC_HEALTH.ERROR);
-    }, 500)
+    // setTimeout(() => {
+    //   setRpcStatus(RPC_HEALTH.ERROR);
+    // }, 500)
 
     const setStatus = async () => { 
       const health = await getHealth();

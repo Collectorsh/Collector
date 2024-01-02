@@ -13,7 +13,7 @@ import CreateUsernameModal from "/components/onboarding/CreateUsernameModal";
 import { truncate } from "../../utils/truncate";
 import WalletButton from "./WalletButton";
 import LogRocket from "logrocket";
-
+import RpcHealthFeedback from "./RpcHeathFeedback";
 
 export default function MainNavigation() {
   const wallet = useWallet();
@@ -23,8 +23,6 @@ export default function MainNavigation() {
   const [open, setOpen] = useState(false);
 
   const isCuratorApproved = user?.curator_approved
-
-
 
   function toggleMenu() {
     setOpen(!open);
@@ -45,18 +43,20 @@ export default function MainNavigation() {
         public_keys: user.public_keys,
       });
     }
-    //if no wallet connected but stale user sign out
+    //if no wallet connected but stale user, sign out
     if (user && !wallet.publicKey) signOut();
+
+  //only check for stale user on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   return (
-    <div className="pb-[76px]">
+    <div className="pb-[76px] relative">
       <ConnectWallet />
       <CreateUsernameModal />
-      <nav className="bg-white dark:bg-black shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
+      <nav className="bg-white dark:bg-neutral-900 shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
+        <RpcHealthFeedback />
         <div className="max-w-screen-2xl mx-auto">
-
-
         <div>
           <div className="flex">
             <div className="flex items-center col-span-1">
@@ -69,7 +69,7 @@ export default function MainNavigation() {
                   {/* <span className="mt-2 collector">-</span> */}
                   <span className="mt-2 collector tracking-wide">Beta</span>
               </div>
-              </div>
+            </div>
           
             <div className="hidden md:flex items-center justify-end w-full">
               <Link href="/about">

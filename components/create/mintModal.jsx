@@ -308,19 +308,6 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         <MainButton onClick={handleReset} >
           Create Another
         </MainButton>
-        // <div className="flex flex-wrap gap-4">
-        //   <Link href={`/gallery/${ user?.username }`} passHref>
-        //     <MainButton>
-        //       Gallery
-        //     </MainButton>
-        //   </Link>
-
-        //   <Link href="/submissions" passHref>
-        //     <MainButton solid>
-        //       Submissions
-        //     </MainButton>
-        //   </Link>
-        // </div>
       )
       default: return (
         <MainButton onClick={handleClose}>
@@ -328,7 +315,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         </MainButton>
       )
     }
-  }, [stage, handleClose, user])
+  }, [stage, handleClose, handleReset])
 
   const actionButton = useMemo(() => {
     switch (stage) { 
@@ -373,11 +360,6 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       </div>
     
       <div className="w-full grid grid-cols-2 gap-4">
-        {/* {stage === MINT_STAGE.SUCCESS ? (
-          <MainButton onClick={handleReset} noPadding className="px-2 col-span-2 justify-self-center">
-            Create Another
-          </MainButton>
-        ) : null} */}
         <div className="justify-self-end">
           {secondaryButton}
         </div>

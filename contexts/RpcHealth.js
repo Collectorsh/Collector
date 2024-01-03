@@ -46,6 +46,7 @@ const getHealth = async () => {
       case "ok":
         return RPC_HEALTH.OK;
       default: //right now helius just returns "ok" or "error
+        console.log("Unknown RPC Health:", res.data.result);
         return RPC_HEALTH.ERROR;
     }
   }).catch((err) => {

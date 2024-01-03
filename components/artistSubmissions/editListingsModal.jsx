@@ -23,11 +23,14 @@ import { Market } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { useRouter } from "next/router";
 import LogRocket from "logrocket";
 import getListedItem from "../../data/curationListings/getListedItem";
+import LogRocketContext from "../../contexts/logRocket";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
   const wallet = useWallet()
   const router = useRouter()
+
+  const { setAlwaysRecord } = useContext(LogRocketContext)
 
   const { handleBuyNowList, handleDelist, auctionHouse } = useCurationAuctionHouse(curation)
   
@@ -38,6 +41,11 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
   }) || [];
 
   const isPersonalCuration = curation?.curation_type !== "curator" //"artist" || "collector"
+
+  useEffect(() => { 
+    setAlwaysRecord(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const onList = async (token, listingPrice) => {
     let newToken

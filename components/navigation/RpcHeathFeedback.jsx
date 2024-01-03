@@ -20,7 +20,7 @@ const RpcHealthFeedback = () => {
     >
       <div className="relative bg-amber-400 p-1.5 px-2 sm:px-0 w-full sm:w-fit">
         <p className="text-center text-sm text-neutral-800">
-          RPC health unstable. On-chain transactions may not work right now.
+          Transactions may be delayed or fail due to network issues. We appreciate your understanding.
         </p>
         <RoundedCurve className="absolute top-0 -left-8 w-8 h-full fill-amber-400  transform scale-x-[-1] scale-y-[-1]" />
         <RoundedCurve className="absolute top-0 -right-8 w-8 h-full fill-amber-400 transform scale-y-[-1]" />

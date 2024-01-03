@@ -24,10 +24,10 @@ export const WalletContextProvider = ({ children }) => {
   const wallets = useMemo(
     () => [
       new LedgerWalletAdapter(),
-      new GlowWalletAdapter(),
-      new SolflareWalletAdapter({ network }),
+      // new GlowWalletAdapter(),
+      // new SolflareWalletAdapter({ network }),
     ],
-    [network]
+    []
   );
 
   const onError = useCallback((error) => {

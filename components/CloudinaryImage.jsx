@@ -8,9 +8,9 @@ import clsx from 'clsx';
 import useElementObserver from '../hooks/useElementObserver';
 
 import { useFallbackImage, useImageFallbackContext } from '../contexts/imageFallback';
-import ContentLoader from 'react-content-loader';
 import { HandleNoUrl } from "../utils/imageFallback";
 import { getTokenCldImageId } from "../utils/cloudinary/idParsing";
+import ContentLoader from 'react-content-loader';
 
 //ref 
 // Advanced Image plugins: https://cloudinary.com/documentation/react_image_transformations#plugins
@@ -158,6 +158,8 @@ const CloudinaryImage = ({
       {(loading)
         ? (<div className={clsx("absolute z-10 top-0 left-0 w-full h-full overflow-hidden", className)}>
           <ContentLoader
+            title=""
+            id={token?.mint || id}
             speed={2}
             className="w-full h-full rounded-lg"
             backgroundColor="rgba(120,120,120,0.2)"

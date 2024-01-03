@@ -26,6 +26,7 @@ import Drawer from "../components/Drawer";
 import IsMutableSwitch from "../components/create/isMutableSwitch";
 import ExternalUrlInput from "../components/create/externalUrl";
 import AttributesInput from "../components/create/attributes";
+import LogRocketContext from "../contexts/logRocket";
 
 //NFT standard reference - https://docs.metaplex.com/programs/token-metadata/changelog/v1.0
 
@@ -80,6 +81,7 @@ export default function MintPage() {
   const [user] = useContext(UserContext);
   const router = useRouter()
   const wallet = useWallet();
+  const { setAlwaysRecord } = useContext(LogRocketContext)
 
   const [altMediaFile, setAltMediaFile] = useState(null)
   const [imageFile, setImageFile] = useState(null)
@@ -108,6 +110,12 @@ export default function MintPage() {
   const requiredError = errors.filter(e => nonDisplayErrors.includes(e[1]))[0];
   const categoryDisplay = category === CATEGORIES.VR ? "3D Model" : category
   const isEditions = maxSupply > 1
+
+  useEffect(() => {
+    setAlwaysRecord(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
 
   useEffect(() => {
     if (!user) return
@@ -216,11 +224,7 @@ export default function MintPage() {
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Create</h2>
-          <Link href="/submissions" passHref>
-            <MainButton solid>
-              Submissions
-            </MainButton>
-          </Link>
+         
         </div>
 
         <hr className="mt-6 mb-12 border-neutral-200 dark:border-neutral-800" />
@@ -272,9 +276,7 @@ export default function MintPage() {
         <div
           className="mt-5 px-4 mx-auto flex flex-col gap-1"
         >
-          <div className="flex justify-center w-full lg:w-[calc(50%-8px)] mx-auto">
-            <CollectionDropDown selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError} />
-          </div>
+         
           <div className="grid lg:grid-cols-2 gap-4">
             <NameInput name={name} setName={setName} setError={setError} />
             <NftTypeInput
@@ -291,6 +293,10 @@ export default function MintPage() {
             <RoyaltiesInput royalties={royalties} setRoyalties={setRoyalties} setError={setError} />
             <CreatorsInput creators={creators} setCreators={setCreators} setError={setError} />
           </div>  
+
+          <div className="flex justify-center w-full lg:w-[calc(50%-8px)] mx-auto">
+            <CollectionDropDown selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError} />
+          </div>
 
           <Drawer
             title="Extras"

@@ -7,13 +7,11 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon, BellIcon } from "@heroicons/react/outline";
 import DarkMode from "/components/navigation/DarkMode";
 import ConnectWallet from "/components/wallet/ConnectWallet";
-import Profile from "/components/navigation/Profile";
 import Gallery from "/components/navigation/Gallery";
 import CreateUsernameModal from "/components/onboarding/CreateUsernameModal";
 import { truncate } from "../../utils/truncate";
 import WalletButton from "./WalletButton";
-import LogRocket from "logrocket";
-
+import RpcHealthFeedback from "./RpcHeathFeedback";
 
 export default function MainNavigation() {
   const wallet = useWallet();
@@ -23,8 +21,6 @@ export default function MainNavigation() {
   const [open, setOpen] = useState(false);
 
   const isCuratorApproved = user?.curator_approved
-
-
 
   function toggleMenu() {
     setOpen(!open);
@@ -38,25 +34,21 @@ export default function MainNavigation() {
   },[router, setUser, wallet])
 
   useEffect(() => {
-    if (user) {
-      LogRocket.identify(user.id, {
-        name: user.username,
-        wallet_address: wallet.publicKey?.toString(),
-        public_keys: user.public_keys,
-      });
-    }
-    //if no wallet connected but stale user sign out
+    
+    //if no wallet connected but stale user, sign out
     if (user && !wallet.publicKey) signOut();
+
+  //only check for stale user on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   return (
-    <div className="pb-[76px]">
+    <div className="pb-[76px] relative">
       <ConnectWallet />
       <CreateUsernameModal />
-      <nav className="bg-white dark:bg-black shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
+      <nav className="bg-white dark:bg-neutral-900 shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
+        <RpcHealthFeedback />
         <div className="max-w-screen-2xl mx-auto">
-
-
         <div>
           <div className="flex">
             <div className="flex items-center col-span-1">
@@ -197,7 +189,7 @@ export default function MainNavigation() {
                                       <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
                                         <Link href={`/gallery/${ user.username }`}>
                                       
-                                          Profile
+                                          Gallery
                                           
                                         </Link>
                                       </p>

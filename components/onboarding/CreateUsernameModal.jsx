@@ -10,12 +10,12 @@ import { urlRegex } from "../curations/editNameModal";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import UsernameAndEmail from "./UsernameAndEmail";
-import AdditionalAddresses from "./AdditionalAddresses";
 import { success } from "../../utils/toast";
 import { Toaster } from "react-hot-toast";
+import Link from "next/link";
+import { emailRegex, usernameError } from "../settings/Settings";
 
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const usernameError = 'Must be 2 to 31 characters and only contain letters, numbers, "_" and "-"'
+
 
 export default function CreateUsernameModal() {
   const [user, setUser] = useContext(UserContext);
@@ -26,21 +26,13 @@ export default function CreateUsernameModal() {
   const [saving, setSaving] = useState(false);
   const [username, setUsername] = useState(user?.username || "")
   const [email, setEmail] = useState(user?.email || "")
-  const [addresses, setAddresses] = useState(user?.public_keys || [])
+  const [usernameSaved, setUsernameSaved] = useState(false) 
 
   const [stage, setStage] = useState(0);//0 - username/email, 1 - addresses
 
   const disableSave = error || username?.length < 2 || saving;
   
   useEffect(() => {
-    // if (user) {
-    //   setUsername(user.username);
-    //   setEmail(user.email);
-    //   setAddresses(user.public_keys);
-    //   setShowModal(true);
-    // }
-    // return
-
     if (!user) setShowModal(false);
     else setShowModal(!user.username)
   }, [user]);
@@ -52,24 +44,18 @@ export default function CreateUsernameModal() {
 
     if (!isUrlValid) setError(usernameError);
     else setError(null)
+    //keep email here so errors reset when retyping email
   }, [username, email])
 
-  const handlePrev = () => { 
-    if (stage === 1) setStage(prev => prev - 1)
-  }
-
   const handleSave = async () => {
-    // if (stage === 0) { 
-    //   //check email
-    //   //no email is also valid
-    //   const isEmailValid = email ? emailRegex.test(email) : true;
-    //   if (!isEmailValid) setError('Must be a valid email address');
-    //   else setStage(prev => prev + 1);
 
-    //   return
-    // }
-
-    //stage 1, no next stage so save
+    //check email
+    //no email is also valid
+    const isEmailValid = email ? emailRegex.test(email) : true;
+    if (!isEmailValid) {
+      setError('Must be a valid email address');
+      return
+    }
 
     if (disableSave) return;
     setSaving(true)
@@ -82,6 +68,11 @@ export default function CreateUsernameModal() {
     if (res.data && res.data.status === "success") {
       setUser({ ...user, ...res.data.user });
       success("User settings saved!");
+
+      setUsernameSaved(true)
+      
+      //until public access just leave off at username and email
+      // setStage(prev => prev + 1);
       setShowModal(false);
     } else {
       setError(res?.data?.msg || "An error occurred while saving user settings");
@@ -91,30 +82,54 @@ export default function CreateUsernameModal() {
   }
 
   const handleClose = () => {
-    wallet.disconnect().then(() => {
-      localStorage.removeItem("api_key");
-      setUser(null);
-    });
+    // if (!usernameSaved) {
+    //   //sign out user if they havent saved their username
+    //   wallet.disconnect().then(() => {
+    //     localStorage.removeItem("api_key");
+    //     setUser(null);
+    //   });
+    // } 
+
     setShowModal(false)
   }
-
-  const nextText = "Save"//stage === 1 ? "Save" : "Next";
 
   const content = () => {
     switch (stage) {
       case 0: return (
-        <UsernameAndEmail
-          username={username}
-          setUsername={setUsername}
-          email={email}
-          setEmail={setEmail}
-        />
+        <>
+          <p className="text-center my-4">
+            Enter your username to finish setting up your account. You can always change this later in your profile settings.
+          </p>
+          <UsernameAndEmail
+            username={username}
+            setUsername={setUsername}
+            email={email}
+            setEmail={setEmail}
+          />
+        </>
       )
       case 1: return (
-        <AdditionalAddresses
-          addresses={addresses}
-          setAddresses={setAddresses}
-        />
+        <>
+          <p className="text-center my-4">
+            Congrats! you are all set to go.
+          </p>
+          <p className="text-center my-4">
+            Start building your gallery or add more wallets to begin!
+          </p>
+
+          <div className="w-full flex justify-center gap-4">
+            <Link href={`/gallery/${ username }`} passHref>
+              <MainButton solid>
+                View Gallery
+              </MainButton>
+            </Link>
+            <Link href="/settings?tab=wallets" passHref>
+              <MainButton>
+                Add Wallets
+              </MainButton>
+            </Link>
+          </div>
+        </>
       )
     }
   }
@@ -128,26 +143,22 @@ export default function CreateUsernameModal() {
         title={"Welcome to Collector!"}
         widthClass="max-w-screen-sm"
       >
-        <p className="text-center my-4">
-          Finish setting up your account. You can always change this info later in your profile settings.
-        </p>
 
         {content()}
         
         <p className="text-sm pl-4 italic text-red-500 h-4 w-full mt-3 text-center">{error}</p>
         <div className="w-full flex justify-center gap-4 relative mt-2">
           <MainButton
-            onClick={handlePrev}
-            disabled={stage === 0}
+            onClick={handleClose}
           >
-            Previous
+            Close
           </MainButton>
           <Tippy
             className="shadow"
             disabled={username}
             content={<p className="">Username is required</p>}
           >
-            <div>
+            <div className={stage === 1 ? "hidden" : ""}>
               <MainButton
                 className="w-24"
                 onClick={handleSave}
@@ -160,7 +171,7 @@ export default function CreateUsernameModal() {
                       <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
                     </span>
                   )
-                  : nextText
+                  : "Save"
                 }
               </MainButton>
             </div>

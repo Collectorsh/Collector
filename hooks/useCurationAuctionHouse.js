@@ -171,7 +171,7 @@ const useCurationAuctionHouse = (curation) => {
         curationId: token.curation_id,
         token: token,
         buyerId: user.id,
-        buyerAddress: user.public_keys[0],
+        buyerAddress: wallet.publicKey.toString(),
         saleType: "edition_mint",
         txHash: txHash,
         editionsMinted: 1
@@ -195,7 +195,7 @@ const useCurationAuctionHouse = (curation) => {
         curationId: token.curation_id,
         token: token,
         buyerId: user.id,
-        buyerAddress: user.public_keys[0],
+        buyerAddress: wallet.publicKey.toString(),
         saleType: "buy_now",
         txHash: txHash,
       })

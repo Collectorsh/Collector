@@ -16,11 +16,6 @@ export const RpcHealthProvider = ({ children }) => {
   const [rpcStatus, setRpcStatus] = useState(RPC_HEALTH.UNKNOWN);
 
   useEffect(() => {
-
-    // setTimeout(() => {
-    //   setRpcStatus(RPC_HEALTH.ERROR);
-    // }, 500)
-
     const setStatus = async () => { 
       const health = await getHealth();
       setRpcStatus(health);
@@ -51,6 +46,7 @@ const getHealth = async () => {
       case "ok":
         return RPC_HEALTH.OK;
       default: //right now helius just returns "ok" or "error
+        console.log("Unknown RPC Health:", res.data.result);
         return RPC_HEALTH.ERROR;
     }
   }).catch((err) => {

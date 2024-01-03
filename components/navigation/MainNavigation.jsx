@@ -7,12 +7,10 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon, BellIcon } from "@heroicons/react/outline";
 import DarkMode from "/components/navigation/DarkMode";
 import ConnectWallet from "/components/wallet/ConnectWallet";
-import Profile from "/components/navigation/Profile";
 import Gallery from "/components/navigation/Gallery";
 import CreateUsernameModal from "/components/onboarding/CreateUsernameModal";
 import { truncate } from "../../utils/truncate";
 import WalletButton from "./WalletButton";
-import LogRocket from "logrocket";
 import RpcHealthFeedback from "./RpcHeathFeedback";
 
 export default function MainNavigation() {
@@ -36,13 +34,7 @@ export default function MainNavigation() {
   },[router, setUser, wallet])
 
   useEffect(() => {
-    if (user) {
-      LogRocket.identify(user.id, {
-        name: user.username,
-        wallet_address: wallet.publicKey?.toString(),
-        public_keys: user.public_keys,
-      });
-    }
+    
     //if no wallet connected but stale user, sign out
     if (user && !wallet.publicKey) signOut();
 
@@ -69,7 +61,7 @@ export default function MainNavigation() {
                   {/* <span className="mt-2 collector">-</span> */}
                   <span className="mt-2 collector tracking-wide">Beta</span>
               </div>
-            </div>
+              </div>
           
             <div className="hidden md:flex items-center justify-end w-full">
               <Link href="/about">

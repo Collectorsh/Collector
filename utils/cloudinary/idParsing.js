@@ -17,11 +17,11 @@ const clean = (text) => text.replace(/[^\w]/g, '').replace("https", "").replace(
 export const getTokenCldImageId = (token) => {
   if (!token || !token.mint) return null
 
-  //TODO if parent of edition is available from helius then use that instead of image, 
-  //and add is_master_edition to the check(they would be the parent)
+  //If changing - MAKE SURE TO CHANGE THIS IN THE API AS WELL in image service
+  if (token.is_edition) {
+    if (token.parent) return token.parent;
+    if (token.image) return `edition-${ clean(token.image) }`
+  }
 
-  //MAKE SURE TO CHANGE THIS IN THE API AS WELL in image service
-  return ((token.is_edition) && token.image)
-    ? `edition-${ clean(token.image) }`
-    : token.mint
+  return token.mint
 }

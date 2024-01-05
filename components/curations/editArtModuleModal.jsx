@@ -6,22 +6,19 @@ import Modal from "../Modal";
 import SearchBar from "../SearchBar";
 import { RoundedCurve } from "./roundedCurveSVG";
 import { XCircleIcon } from "@heroicons/react/solid";
-import { ArtItem } from "./artModule";
 import useBreakpoints from "../../hooks/useBreakpoints";
 import { truncate } from "../../utils/truncate";
 import useNftFiles, { getTokenAspectRatio } from "../../hooks/useNftFiles";
 import debounce from "lodash.debounce";
 import { useTokens } from "../../data/nft/getTokens";
 import UserContext from "../../contexts/user";
-import { Switch } from "@headlessui/react";
 import SortableArt from "./sortableArt";
 import SortableArtWrapper from "./sortableArtWrapper";
 import { submitTokens } from "../../data/curationListings/submitToken";
-import { Token } from "@solana/spl-token";
 import { error } from "../../utils/toast";
 import { Oval } from "react-loader-spinner";
+import { groupEditions } from "../../utils/groupEditions";
 
-const tabs = ["1/1", "Master Editions"]
 
 export default function EditArtModuleModal({
   isOpen, onClose,
@@ -51,6 +48,8 @@ export default function EditArtModuleModal({
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(49);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
   const tabsRef = useRef([]);
+
+  const tabs = curationType === "collector" ? ["1/1", "Editions"] : ["1/1", "Master Editions"]
 
   
   //Dont fetch user tokens if this is a curator curation
@@ -106,12 +105,13 @@ export default function EditArtModuleModal({
     
     if (curationType !== "curator" && tokensToSubmit.length) {//"artist" || "collector" 
       setSaving(true)
+
       const res = await submitTokens({
         tokens: tokensToSubmit,
         apiKey: user.api_key,
         curationId: curationId,
       })
-  
+
       if (res?.status !== "success") {
         error(`Failed to submit tokens`)
       }
@@ -138,8 +138,14 @@ export default function EditArtModuleModal({
 
   const handleTokenToSubmit = useCallback((token) => { 
     if (submittedTokens.find(t => t.mint === token.mint)) return;
-    setTokensToSubmit(prev => [...prev, token])
-    setSubmittedTokens(prev => [...prev, token]) //optimistic update for displaying tokens
+    if (token?.editions?.length) { 
+      //submit all owned editions  for potential listings
+      setTokensToSubmit(prev => [...prev, ...token.editions])
+      setSubmittedTokens(prev => [...prev, ...token.editions]) //optimistic update for displaying tokens
+    } else {
+      setTokensToSubmit(prev => [...prev, token])
+      setSubmittedTokens(prev => [...prev, token])
+    }
   },[submittedTokens, setSubmittedTokens])
 
   const userTokensSplit = useMemo(() => {
@@ -147,6 +153,7 @@ export default function EditArtModuleModal({
     const editions = []
     const artTokens = []
     const remainingTokens = []
+
 
     if(userTokens?.length) userTokens.forEach(token => {
       const soldOut = token.is_master_edition ? token.supply >= token.max_supply : false
@@ -157,9 +164,11 @@ export default function EditArtModuleModal({
       else if (isOneOfOne) artTokens.push(token)
       else remainingTokens.push(token)
     })
+
+    const groupedEditions = groupEditions(editions)
     return {
       masterEditions,
-      editions,
+      editions: groupedEditions,
       artTokens,
       remainingTokens
     }
@@ -247,18 +256,22 @@ export default function EditArtModuleModal({
   }, [curationType])
 
   const availableTokens = useMemo(() => {
+    const { masterEditions, editions, artTokens } = userTokensSplit;
     switch (curationType) {
-      case "artist": 
-      case "collector": {
-        const { masterEditions, editions, artTokens } = userTokensSplit;
+      case "artist": {
         switch (activeTabIndex) {
           case 0: return artTokens
           case 1: return masterEditions
-          case 2: return editions
           default: return []
         }
       }
-
+      case "collector": {
+        switch (activeTabIndex) {
+          case 0: return artTokens
+          case 1: return editions
+          default: return []
+        }
+      }
       case "curator":
       default: return submittedTokens || []
     }
@@ -399,28 +412,6 @@ export default function EditArtModuleModal({
               setSearch={setSearch}
               placeholder="Search By Artwork"
             />
-            {/* {curationType === "artist" ? (
-              <div className="flex items-center gap-2 justify-center">
-                <p>Owned</p>
-                <Switch
-                  checked={useAllCreated}
-                  onChange={setUseAllCreated}
-                  className={clsx(
-                    'bg-neutral-100 dark:bg-neutral-900',
-                    "border-neutral-200 dark:border-neutral-700 border-2",
-                    "relative inline-flex h-8 w-14 items-center rounded-full flex-shrink-0"
-                  )}
-                >
-                  <span className="sr-only">Toggle use all created</span>
-                  <span
-                    className={clsx(useAllCreated ? 'translate-x-7' : 'translate-x-1',
-                      "inline-block h-5 w-5 transform rounded-full   transition bg-neutral-900 dark:bg-neutral-100"
-                    )}
-                  />
-                </Switch>
-                <p>All</p>
-              </div>
-            ) : null} */}
           </div>
           {tokensLabel}
           {content}
@@ -562,9 +553,15 @@ const TokenButton = ({
 
       newToken.aspect_ratio = aspectRatio
 
+      if (newToken.editions?.length) {
+        newToken.editions = newToken.editions.map(edition => ({
+          ...edition,
+          aspect_ratio: aspectRatio
+        }))
+      }
+
       handleTokenToSubmit(newToken)
     }
-
 
     setNewArtModule(prev => ({
       ...prev,
@@ -597,6 +594,7 @@ const TokenButton = ({
     }
   }
 
+  const editionCount = token.editions?.length
   return (
     <button className={clsx(
       "relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden",
@@ -608,6 +606,15 @@ const TokenButton = ({
       onClick={handleAdd}
       disabled={alreadyInUse || moduleFull || loadingAspectRatio || !imageLoaded}
     >
+      <div className={clsx(
+        !editionCount && "hidden",
+        "bg-white dark:bg-neutral-900",
+        "rounded-full ring-2 ring-neutral-200 dark:ring-neutral-700",
+        "min-w-fit w-5 h-5 absolute top-2 right-2 z-10 flex justify-center items-center",
+        "text-leading-none font-bold"
+      )}>
+        {editionCount}
+      </div>
       <CloudinaryImage
         imageRef={imageRef}
         className={clsx("flex-shrink-0 object-contain shadow-lg dark:shadow-white/5",

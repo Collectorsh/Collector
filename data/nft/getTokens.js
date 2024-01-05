@@ -242,6 +242,7 @@ export function useTokens(publicKeys, options) {
   const { allTokens, setAllTokens } = useContext(UserTokensContext)
   const [fetched, setFetched] = useState(0)
   const metadataRef = useRef([]);
+  const indexedRef = useRef([]);
 
   const loading = !data && !error || fetched > 0
 
@@ -318,12 +319,16 @@ export function useTokens(publicKeys, options) {
               const artistId = user?.public_keys.includes(fullToken.artist_address) ? user.id : null;
               const ownerId = user?.public_keys.includes(fullToken.owner_address) ? user.id : null;
 
-              await createIndex({
-                apiKey: user?.api_key,
-                artistId,
-                ownerId,
-                token: fullToken
-              })
+              if (!indexedRef.current.includes(fullToken.mint)) {
+                indexedRef.current.push(fullToken.mint)
+
+                await createIndex({
+                  apiKey: user?.api_key,
+                  artistId,
+                  ownerId,
+                  token: fullToken
+                })
+              }
               
             } catch (err) { 
               console.log(`Error creating minted_indexer record mint: ${ fullToken.mint }`, err)
@@ -335,7 +340,6 @@ export function useTokens(publicKeys, options) {
             if (!metadata.is_collection_nft) {
               const newTokens = [...metadataRef.current, fullToken]
               metadataRef.current = newTokens.sort((a, b) => a.name.localeCompare(b.name))
-              // if (fetchedLocal % 5 === 0) setFetched(fetchedLocal) //only update state every 5 fetches
             }
 
             fetchedLocal++;
@@ -382,6 +386,15 @@ const getMetadata = async (metaplex, mint) => {
     result.is_edition = !edition.isOriginal
     result.parent = edition.parent?.toString()
     result.edition_number = edition.number?.toString()
+
+    //TODO "parent" isnt the mint address, need to figure out how to get it
+    // //add total supply to editions
+    // if (result.parent && !result.max_supply) {
+    //   const parentMetadata = await metaplex.nfts().findByMint({
+    //     mintAddress: new PublicKey(result.parent)
+    //   })
+    //   result.max_supply = parentMetadata.edition?.maxSupply ? Number(parentMetadata.edition.maxSupply.toString()) : undefined
+    // }
 
   } catch (err) {
     console.log("Error getting metadata for mint", mint)

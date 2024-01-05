@@ -116,13 +116,6 @@ const useCurationAuctionHouse = (curation) => {
           loadJsonMetadata: false
         });
   
-      // const bought = await auctionHouseSDK
-      //   .buy({
-      //     auctionHouse,
-      //     listing,
-      //   })
-      // return bought?.response?.signature
-
       const buyBuilder = await auctionHouseSDK.builders().buy({
         auctionHouse,
         listing,

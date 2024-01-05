@@ -105,7 +105,7 @@ export default function EditArtModuleModal({
     
     if (curationType !== "curator" && tokensToSubmit.length) {//"artist" || "collector" 
       setSaving(true)
-      console.log("🚀 ~ file: editArtModuleModal.jsx:113 ~ handleSave ~ tokensToSubmit:", tokensToSubmit)
+
       const res = await submitTokens({
         tokens: tokensToSubmit,
         apiKey: user.api_key,

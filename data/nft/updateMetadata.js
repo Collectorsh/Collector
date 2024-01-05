@@ -41,6 +41,16 @@ export const UpdateMetadata = async (tokenMint) => {
   token.parent = edition.parent?.toString()
   token.edition_number = edition.number?.toString()
 
+  //add total supply to editions
+
+  //TODO "parent" isnt the mint address, need to figure out how to get it
+  // if (token.parent && !token.max_supply) {
+  //   const parentMetadata = await metaplex.nfts().findByMint({
+  //     mintAddress: new PublicKey(token.parent)
+  //   })
+  //   token.max_supply = parentMetadata.edition?.maxSupply ? Number(parentMetadata.edition.maxSupply.toString()) : undefined
+  // }
+
   //master editions that are listed have a different owner on chain, but we want to keep the artist as the owner in our system
   if (token.is_master_edition) {
     token.owner_address = token.artist_address

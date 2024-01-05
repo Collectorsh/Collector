@@ -14,6 +14,7 @@ import uploadCldImage from "../../data/cloudinary/uploadCldImage";
 import { error } from "../../utils/toast";
 import { truncate } from "../../utils/truncate";
 import CopyButton from "../CopyToClipboard";
+import { groupEditions } from "../../utils/groupEditions";
 
 const uploadTabTitle = "Upload"
 const submittedTabTitle = "Submitted Art"
@@ -118,8 +119,9 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
 
   const orderedTokens = useMemo(() => {
     if (!tokens) return null;
-
-    return tokens.filter(searchFilter).filter(token => !token.is_edition)
+    const editions = groupEditions(tokens.filter(searchFilter).filter(token => token.is_edition))
+    const others = tokens.filter(searchFilter).filter(token => !token.is_edition)
+    return [...others, ...editions]
   }, [tokens, searchFilter])
 
   const gridColumns = "grid-cols-1 md:grid-cols-2";

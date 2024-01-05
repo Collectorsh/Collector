@@ -230,30 +230,44 @@ function ProfilePage({ curator }) {
         </div>
       </div>
       <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-16">
-        <div className="flex flex-wrap items-center gap-2 mb-8">
-          <h1 className="font-bold text-5xl mr-3">{curator.username}</h1>
-          <EditWrapper
-            className="max-w-fit"
-            isOwner={isOwner}
-            onEdit={() => setEditSocialsOpen(true)}
-            placement="outside-tr"
-            // icon={<PencilAltIcon className="w-6 h-6" />}
-          >
-            <div className="flex items-center gap-2">
-              {socials.length
-                ? socials.map((social, index) => (
-                  <SocialLink
-                    key={social.type + index}
-                    link={social.link} type={social.type}
-                  />
-                  
-                ))
-                : isOwner
-                  ? <p>Link your socials</p>
-                  : null
-              }
-            </div>
-          </EditWrapper>
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-8">
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="font-bold text-5xl mr-3">{curator.username}</h1>
+            <EditWrapper
+              className="max-w-fit"
+              isOwner={isOwner}
+              onEdit={() => setEditSocialsOpen(true)}
+              placement="outside-tr"
+              // icon={<PencilAltIcon className="w-6 h-6" />}
+            >
+              <div className="flex items-center gap-2">
+                {socials.length
+                  ? socials.map((social, index) => (
+                    <SocialLink
+                      key={social.type + index}
+                      link={social.link} type={social.type}
+                    />
+                    
+                  ))
+                  : isOwner
+                    ? <p>Link your socials</p>
+                    : null
+                }
+              </div>
+            </EditWrapper>
+          </div>
+          {isOwner
+            ? (
+              <MainButton
+                noPadding
+                className="flex items-center px-4 py-2"
+                onClick={() => setCreateCurationOpen(true)}
+              >
+                Create New Curation <PlusIcon className="w-6 h-6 ml-2" />
+              </MainButton>
+            )
+            : null
+          }
         </div>
         <div className="group/bio w-full">
           <EditWrapper
@@ -268,19 +282,6 @@ function ProfilePage({ curator }) {
         </div>
 
         <hr className="mt-12 border-neutral-200 dark:border-neutral-800" />
-        {isOwner
-          ? (
-            <div className="flex justify-end my-4">
-              <MainButton
-                className="flex items-center"
-                onClick={() => setCreateCurationOpen(true)}
-              >
-                Create New Curation <PlusIcon className="w-6 h-6 ml-2" />
-              </MainButton>
-            </div> 
-          )
-          : null
-        }
         {isOwner
           ? (
             <SortableCurationPreviewWrapper

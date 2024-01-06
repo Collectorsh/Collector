@@ -99,6 +99,8 @@ const useCurationAuctionHouse = (curation) => {
         .cancelListing({
           auctionHouse,
           listing,
+        }, {
+          commitment: "finalized",
         })
       
       return canceled.response.signature

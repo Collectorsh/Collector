@@ -46,7 +46,7 @@ export default function MainNavigation() {
     <div className="pb-[76px] relative">
       <ConnectWallet />
       <CreateUsernameModal />
-      <nav className="bg-white dark:bg-neutral-900 shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
+      <nav className="bg-white dark:bg-black shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
         <RpcHealthFeedback />
         <div className="max-w-screen-2xl mx-auto">
         <div>

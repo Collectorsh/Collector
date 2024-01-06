@@ -18,6 +18,8 @@ import { submitTokens } from "../../data/curationListings/submitToken";
 import { error } from "../../utils/toast";
 import { Oval } from "react-loader-spinner";
 import { groupEditions } from "../../utils/groupEditions";
+import GroupedCollection from "./groupedCollection";
+import AddTokenButton from "./addTokenButton";
 
 
 export default function EditArtModuleModal({
@@ -40,9 +42,11 @@ export default function EditArtModuleModal({
   const [newArtModule, setNewArtModule] = useState(artModule)
   const [wrapperWidth, setWrapperWidth] = useState(0);
   const [search, setSearch] = useState("");
+  const [groupByCollection, setGroupByCollection] = useState(true);
 
   const [tokensToSubmit, setTokensToSubmit] = useState([]);//only used for personal curations
   const [saving, setSaving] = useState(false);
+
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(49);
@@ -152,10 +156,10 @@ export default function EditArtModuleModal({
     const masterEditions = []
     const editions = []
     const artTokens = []
-    const remainingTokens = []
-
-
-    if(userTokens?.length) userTokens.forEach(token => {
+    const remainingTokens = []    
+    
+    if (userTokens?.length) userTokens.forEach(token => {
+          
       const soldOut = token.is_master_edition ? token.supply >= token.max_supply : false
       const isOneOfOne = !token.is_master_edition && !token.is_edition
       const useMasterEdition = token.is_master_edition && (curationType === "artist" || !soldOut)
@@ -173,8 +177,7 @@ export default function EditArtModuleModal({
       remainingTokens
     }
   }, [userTokens, curationType])
-
-  
+ 
   const itemsInModule = useMemo(() => {
     if (!tokens.length || !wrapperWidth) return []
 
@@ -277,45 +280,86 @@ export default function EditArtModuleModal({
     }
   }, [curationType, submittedTokens, userTokensSplit, activeTabIndex])
 
-  const availableTokenButtons = useMemo(() => availableTokens
-    .filter((token) => {
-      if (!search) return true;
-      const artistUsername = useUserTokens
-        ? token.artist_name
-        : approvedArtists.find(artist => artist.id === token.artist_id).username;
+  const availableTokenButtons = useMemo(() => {
+    if (groupByCollection && !search) {
+      const collections = {}
+      const fallbackName = "No On-Chain Collection"
+      availableTokens.forEach(token => {
+        const cName = token.collection?.name || fallbackName;
+
+        const tokenNoColleciton = { ...token }
+        delete tokenNoColleciton.collection //remove circular reference
+        
+        if (!collections[cName]) {
+          collections[cName] = { ...token.collection }
+          collections[cName].tokens = [tokenNoColleciton]
+        } else collections[cName].tokens.push(tokenNoColleciton);
+
+      })
       
-      return token.name.toLowerCase().includes(search.toLowerCase())
-        || artistUsername?.toLowerCase().includes(search.toLowerCase())
-        // || token.mint.toLowerCase().includes(search.toLowerCase())
-    })
-    .map((token, i) => {
-      const inUseHere = tokens.findIndex(t => t.mint === token.mint) >= 0 //in this module currently
-      const inUseElseWhere = false;
-      Object.entries(tokenMintsInUse).forEach(([moduleId, mints]) => { //used in other modules
-        if (moduleId === newArtModule.id) return;
-        if (mints.includes(token.mint)) inUseElseWhere = true;
-      });
+      return Object.values(collections)
+        .sort((a, b) => {
+          if (a.name === fallbackName) return -1;
+          return a.name.localeCompare(b.name)
+        })
+        .map((collection, i) => {
+          return(
+            <GroupedCollection
+              key={collection.name + i}
+              collection={collection}
+              tokenMintsInUse={tokenMintsInUse}
+              useUserTokens={useUserTokens}
+              tokens={tokens}
+              newArtModule={newArtModule}
+              setNewArtModule={setNewArtModule}
+              moduleFull={moduleFull}
+              handleTokenToSubmit={handleTokenToSubmit}
+              curationType={curationType}
+            />
+          )
+      })
 
-      const alreadyInUse = inUseHere || inUseElseWhere;
-
-      const artistUsername = useUserTokens
-        ? token.artist_name
-        : approvedArtists.find(artist => artist.id === token.artist_id).username;
-
-      return (
-        <TokenButton
-          key={`token-${token.mint}`} 
-          token={token}
-          alreadyInUse={alreadyInUse}
-          artistUsername={artistUsername}
-          moduleFull={moduleFull}
-          handleTokenToSubmit={handleTokenToSubmit}
-          setNewArtModule={setNewArtModule}
-          curationType={curationType}
-        />
-      )
-    })
-  , [availableTokens, search, useUserTokens, approvedArtists, tokens, tokenMintsInUse, moduleFull, handleTokenToSubmit, curationType, newArtModule.id])
+    } else {
+      return availableTokens
+        .filter((token) => {
+          if (!search) return true;
+          const artistUsername = useUserTokens
+            ? token.artist_name
+            : approvedArtists.find(artist => artist.id === token.artist_id).username;
+        
+          return token.name.toLowerCase().includes(search.toLowerCase())
+            || artistUsername?.toLowerCase().includes(search.toLowerCase())
+          // || token.mint.toLowerCase().includes(search.toLowerCase())
+        })
+        .map((token, i) => {
+          const inUseHere = tokens.findIndex(t => t.mint === token.mint) >= 0 //in this module currently
+          const inUseElseWhere = false;
+          Object.entries(tokenMintsInUse).forEach(([moduleId, mints]) => { //used in other modules
+            if (moduleId === newArtModule.id) return;
+            if (mints.includes(token.mint)) inUseElseWhere = true;
+          });
+  
+          const alreadyInUse = inUseHere || inUseElseWhere;
+  
+          const artistUsername = useUserTokens
+            ? token.artist_name
+            : approvedArtists.find(artist => artist.id === token.artist_id).username;
+  
+          return (
+            <AddTokenButton
+              key={`token-${ token.mint }`}
+              token={token}
+              alreadyInUse={alreadyInUse}
+              artistUsername={artistUsername}
+              moduleFull={moduleFull}
+              handleTokenToSubmit={handleTokenToSubmit}
+              setNewArtModule={setNewArtModule}
+              curationType={curationType}
+            />
+          )
+        })
+    }
+  }, [availableTokens, search, useUserTokens, approvedArtists, tokens, tokenMintsInUse, moduleFull, handleTokenToSubmit, curationType, newArtModule.id, groupByCollection])
 
   const content = (
     <div className="relative h-full min-h-[200px] max-h-[333px] min border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
@@ -330,9 +374,13 @@ export default function EditArtModuleModal({
         )
         : null
       }
-      <div className={clsx("w-full h-full p-2 overflow-auto grid gap-4 rounded-lg",
-        "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
-      )}>
+
+
+      <div
+        className={clsx("w-full h-full p-2 overflow-auto grid gap-4 rounded-lg",
+          "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+        )}
+      >
         {!availableTokens?.length 
           ? (
             <div className="col-span-5 flex justify-center items-center">
@@ -344,12 +392,6 @@ export default function EditArtModuleModal({
           )
           : availableTokenButtons
         }
-        
-        {/* {loading && useUserTokens && availableTokens?.length ? (
-          <div className="flex justify-center col-span-5">
-            <Oval color="#000" secondaryColor="#666" height={24} width={24} />
-          </div>
-        ): null} */}
       </div>
     </div>
   )
@@ -410,7 +452,7 @@ export default function EditArtModuleModal({
               className="w-full max-w-[20rem]"
               search={search}
               setSearch={setSearch}
-              placeholder="Search By Artwork"
+              placeholder="Search"
             />
           </div>
           {tokensLabel}
@@ -520,139 +562,5 @@ const EditArtItem = ({
         </div>
       </div>
 
-  )
-}
-
-const TokenButton = ({
-  token,
-  alreadyInUse,
-  artistUsername,
-  moduleFull,
-  setNewArtModule,
-  handleTokenToSubmit,
-  curationType
-}) => {
-  
-  const imageRef = useRef(null)
-  const { videoUrl } = useNftFiles(token)
-  const [loadingAspectRatio, setLoadingAspectRatio] = useState(false)
-  const [error, setError] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(false)
-
-  const handleAdd = async () => {
-    if (alreadyInUse || moduleFull) return
-    const newToken = { ...token }
-
-    if (curationType !== "curator") {//"artist" || "collector" 
-      // needs to add aspect ratio to token for when it gets auto submitted
-      setLoadingAspectRatio(true)
-      const aspectRatio = await getAspectRatio(imageRef.current)
-      setLoadingAspectRatio(false)
-
-      if (!aspectRatio) return console.log("Error getting aspect ratio")
-
-      newToken.aspect_ratio = aspectRatio
-
-      if (newToken.editions?.length) {
-        newToken.editions = newToken.editions.map(edition => ({
-          ...edition,
-          aspect_ratio: aspectRatio
-        }))
-      }
-
-      handleTokenToSubmit(newToken)
-    }
-
-    setNewArtModule(prev => ({
-      ...prev,
-      tokens: [...(prev?.tokens || []), token.mint]
-    }))
-  }
-
-  const getAspectRatio = async (imageElement) => {
-    try {
-      if (videoUrl) {
-        //fetch video dimensions
-        const video = document.createElement("video")
-
-        return new Promise((resolve, reject) => {
-          video.onloadedmetadata = () => resolve(Number(video.videoWidth / video.videoHeight))
-          video.onerror = (err) => reject(new Error(`Unable to load video - ${ err }`));
-          video.src = videoUrl
-          video.load()
-        });
-      }
-    } catch (err) {
-      console.log("Error fetching non-image dimensions: ", err)
-    }
-
-    return Number(imageElement.naturalWidth / imageElement.naturalHeight)
-  }
-  const handleError = (e) => {
-    if (e === IMAGE_FALLBACK_STAGES.METADATA) {
-      setError(true)
-    }
-  }
-
-  const editionCount = token.editions?.length
-  return (
-    <button className={clsx(
-      "relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden",
-      "duration-300 hover:scale-[102%] disabled:scale-100",
-      "inset-0 w-full pb-[100%]",
-      error && "hidden"
-      )}
-      key={token.mint}
-      onClick={handleAdd}
-      disabled={alreadyInUse || moduleFull || loadingAspectRatio || !imageLoaded}
-    >
-      <div className={clsx(
-        !editionCount && "hidden",
-        "bg-white dark:bg-neutral-900",
-        "rounded-full ring-2 ring-neutral-200 dark:ring-neutral-700",
-        "min-w-fit w-5 h-5 absolute top-2 right-2 z-10 flex justify-center items-center",
-        "text-leading-none font-bold"
-      )}>
-        {editionCount}
-      </div>
-      <CloudinaryImage
-        imageRef={imageRef}
-        className={clsx("flex-shrink-0 object-contain shadow-lg dark:shadow-white/5",
-          "w-full h-full absolute left-0 top-0",
-        )}
-        useMetadataFallback
-        token={token}
-        width={500}
-        onError={handleError}
-        onLoad={() => setImageLoaded(true)}
-        // noLazyLoad
-      />
-
-      {error ? (
-        <div
-          className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90  
-             flex flex-col justify-center items-center rounded-lg z-[15]
-          "
-        >
-          <p>Error loading metadata image</p>
-        </div>
-      ) : null}
-
-      {alreadyInUse ? (
-        <div className="absolute inset-0 flex justify-center items-center z-20">
-          <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">Already Being Used</p>
-        </div>
-      ) : null}
-      <div
-        className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90 
-            transition-opacity duration-300 opacity-0 hover:opacity-100
-             flex flex-col justify-center items-center rounded-lg z-20
-          "
-      >
-        <p className="font-bold">{token.name}</p>
-        {artistUsername ? <p>by {artistUsername}</p> : null}
-        <p className="text-xs">{truncate(token.mint)}</p>
-      </div>
-    </button>
   )
 }

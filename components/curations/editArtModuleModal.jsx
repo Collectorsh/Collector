@@ -281,7 +281,39 @@ export default function EditArtModuleModal({
   }, [curationType, submittedTokens, userTokensSplit, activeTabIndex])
 
   const availableTokenButtons = useMemo(() => {
-    if (groupByCollection && !search) {
+    const useGroupedTokens = false//groupByCollection && !search
+
+
+    const makeTokenButtons = (tokensToMake) => tokensToMake.map((token, i) => {
+      const inUseHere = tokens.findIndex(t => t.mint === token.mint) >= 0 //in this module currently
+      const inUseElseWhere = false;
+      Object.entries(tokenMintsInUse).forEach(([moduleId, mints]) => { //used in other modules
+        if (moduleId === newArtModule.id) return;
+        if (mints.includes(token.mint)) inUseElseWhere = true;
+      });
+
+      const alreadyInUse = inUseHere || inUseElseWhere;
+
+      const artistUsername = useUserTokens
+        ? token.artist_name
+        : approvedArtists.find(artist => artist.id === token.artist_id).username;
+
+      return (
+        <AddTokenButton
+          key={`token-${ token.mint }`}
+          token={token}
+          alreadyInUse={alreadyInUse}
+          artistUsername={artistUsername}
+          moduleFull={moduleFull}
+          handleTokenToSubmit={handleTokenToSubmit}
+          setNewArtModule={setNewArtModule}
+          curationType={curationType}
+        />
+      )
+    })
+
+
+    if (useGroupedTokens) {
       const collections = {}
       const fallbackName = "No On-Chain Collection"
       availableTokens.forEach(token => {
@@ -307,57 +339,24 @@ export default function EditArtModuleModal({
             <GroupedCollection
               key={collection.name + i}
               collection={collection}
-              tokenMintsInUse={tokenMintsInUse}
-              useUserTokens={useUserTokens}
-              tokens={tokens}
-              newArtModule={newArtModule}
-              setNewArtModule={setNewArtModule}
-              moduleFull={moduleFull}
-              handleTokenToSubmit={handleTokenToSubmit}
-              curationType={curationType}
+              makeTokenButtons={makeTokenButtons}
             />
           )
       })
 
     } else {
-      return availableTokens
-        .filter((token) => {
-          if (!search) return true;
-          const artistUsername = useUserTokens
-            ? token.artist_name
-            : approvedArtists.find(artist => artist.id === token.artist_id).username;
-        
-          return token.name.toLowerCase().includes(search.toLowerCase())
-            || artistUsername?.toLowerCase().includes(search.toLowerCase())
-          // || token.mint.toLowerCase().includes(search.toLowerCase())
-        })
-        .map((token, i) => {
-          const inUseHere = tokens.findIndex(t => t.mint === token.mint) >= 0 //in this module currently
-          const inUseElseWhere = false;
-          Object.entries(tokenMintsInUse).forEach(([moduleId, mints]) => { //used in other modules
-            if (moduleId === newArtModule.id) return;
-            if (mints.includes(token.mint)) inUseElseWhere = true;
-          });
-  
-          const alreadyInUse = inUseHere || inUseElseWhere;
-  
-          const artistUsername = useUserTokens
-            ? token.artist_name
-            : approvedArtists.find(artist => artist.id === token.artist_id).username;
-  
-          return (
-            <AddTokenButton
-              key={`token-${ token.mint }`}
-              token={token}
-              alreadyInUse={alreadyInUse}
-              artistUsername={artistUsername}
-              moduleFull={moduleFull}
-              handleTokenToSubmit={handleTokenToSubmit}
-              setNewArtModule={setNewArtModule}
-              curationType={curationType}
-            />
-          )
-        })
+      //all together
+      const filteredTokens = availableTokens.filter((token) => { 
+        if (!search) return true;
+        const artistUsername = useUserTokens
+          ? token.artist_name
+          : approvedArtists.find(artist => artist.id === token.artist_id).username;
+      
+        return token.name.toLowerCase().includes(search.toLowerCase())
+          || artistUsername?.toLowerCase().includes(search.toLowerCase())
+      })
+
+      return makeTokenButtons(filteredTokens)
     }
   }, [availableTokens, search, useUserTokens, approvedArtists, tokens, tokenMintsInUse, moduleFull, handleTokenToSubmit, curationType, newArtModule.id, groupByCollection])
 

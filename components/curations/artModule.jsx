@@ -71,22 +71,32 @@ const ArtModule = ({
     }
   }, [])
 
-  const { mappedTokens, mappedAspectRatios } = useMemo(() => { 
+  const { mappedTokens, mappedAspectRatios, mappedEditions } = useMemo(() => { 
     //Map out tokens and aspect ratio
     const mappedTokens = {}
     const mappedAspectRatios = {}
+    const mappedEditions = {}
 
     submittedTokens.forEach(token => { 
       const mint = token.mint;
+      
       mappedAspectRatios[mint] = getTokenAspectRatio(token)
       mappedTokens[mint] = token
+
+      if (token.is_edition) {
+        if(mappedEditions[token.parent]) {
+          mappedEditions[token.parent].push(token)
+        } else {
+          mappedEditions[token.parent] = [token]
+        }
+      }
     })
     return {
       mappedTokens,
-      mappedAspectRatios
+      mappedAspectRatios,
+      mappedEditions
     }
   }, [submittedTokens])
-
 
   const tokenRows = useMemo(() => { 
     if (!Object.values(mappedTokens).length) return []
@@ -104,12 +114,7 @@ const ArtModule = ({
           ? [tokens.slice(0, halfIndex), tokens.slice(halfIndex)]
           : [tokens]
     
-    return rows
-    
-    // const fullTokens = rows.map(mints => mints.map(mint => mappedTokens?.[mint]))
-    // const filteredTokens = fullTokens.map(tokens => tokens.filter(t => Boolean(t)))
-    // return filteredTokens;
-    
+    return rows    
   }, [artModule.tokens, isMobile, isTablet, mappedTokens])
 
   const itemRows = useMemo(() => {
@@ -137,11 +142,12 @@ const ArtModule = ({
             width={tokenWidth}
             curationType={curationType}
             owner={owner}
+            editions={mappedEditions[token.parent]}
           />
         )
       })
     })
-  }, [approvedArtists, handleCollect, mappedAspectRatios, tokenRows, wrapperWidth, maxHeight, curationType, owners])
+  }, [approvedArtists, handleCollect, mappedAspectRatios, mappedEditions, tokenRows, wrapperWidth, maxHeight, curationType, owners])
 
   return (
     <div
@@ -203,7 +209,7 @@ const ArtModule = ({
 
 export default ArtModule;
 
-export const ArtItem = ({ token, artist, handleCollect, height, width, curationType, owner }) => {  
+export const ArtItem = ({ token, artist, handleCollect, height, width, curationType, owner, editions }) => {  
   const [user] = useContext(UserContext);
   const { videoUrl, htmlUrl, vrUrl } = useNftFiles(token)
 
@@ -223,15 +229,20 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
 
   const isMasterEdition = token.is_master_edition
   const isEdition = token.is_edition
+  const listedEditionCount = editions?.filter(e => e.listed_status === "listed").length
   const supply = token.supply
   const maxSupply = token.max_supply
 
   const isListed = token.listed_status === "listed"
   const isSold = token.listed_status === "sold" || isMasterEdition && supply >= maxSupply
 
-  const supplyText = isMasterEdition
-    ? `${ maxSupply - supply }/${ maxSupply } Editions`
-    : "1 of 1"
+  const supplyText = useMemo(() => { 
+    if (curationType == "collector") return ""
+
+    if (isMasterEdition) return `${ maxSupply - supply }/${ maxSupply } Editions`
+    if (isEdition) return "Edition"; //`${ listedEditionCount }/${ maxSupply } Editions`
+    return "1 of 1"
+  }, [isMasterEdition, supply, maxSupply, isEdition, curationType]) 
   
   const cacheWidth = useMemo(() => {
     //round up to bucket of 250 so we aren't caching too many sizes

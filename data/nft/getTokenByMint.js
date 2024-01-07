@@ -69,7 +69,7 @@ async function getTokenByMint(tokenMint) {
   } catch (e) {
     console.error("Error getting token by mint: ", e);
   }
- 
+
   let hasEditionData = false
   //get item from minted_indexer if missing from helius (or if missing ofchain metadata like image)
   if (!mungedToken || !mungedToken.image) {
@@ -110,7 +110,7 @@ async function getTokenByMint(tokenMint) {
     const creatorsDetails = await apiClient.post("/creator/details", {
       tokens: [mungedToken],
     }).then((res) => res.data)
-  
+
     if (creatorsDetails.length > 0) {
       const detail = creatorsDetails[creatorsDetails.length - 1];
       mungedToken.artist_name = detail.name;

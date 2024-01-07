@@ -13,7 +13,6 @@ export async function submitTokens({
       curation_id: curationId,
       owner_id: ownerId,
     })
-
     return res.data;
   } catch (err) {
     console.log(err);

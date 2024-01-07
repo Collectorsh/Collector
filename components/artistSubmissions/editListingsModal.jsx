@@ -300,14 +300,14 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       <div className="overflow-auto ">
         <div className="text-center mt-4">
           <p className="font-bold">Please be aware: </p>
-          <p>
+          <p className={curation?.curation_type !== "curator" && "hidden" }>
             &bull; Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price
           </p>
           <p>
             &bull; For listings to be valid on Collector, your artwork cannot be listed on custodial marketplaces like Exchange Art or Mallow
           </p>
-          <p>
-            &bull; To receive funds from edition sales you will need to close the sale. This will also return the master edition to your wallet.
+          <p className={curation?.curation_type === "collector" && "hidden"}>
+            &bull; To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet.
           </p>
 
         </div>

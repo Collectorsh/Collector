@@ -1,6 +1,6 @@
 import { Metaplex, sol, walletAdapterIdentity, AuctionHouse } from "@metaplex-foundation/js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { LAMPORTS_PER_SOL, PublicKey, ba } from "@solana/web3.js";
+import { ComputeBudgetProgram, LAMPORTS_PER_SOL, PublicKey, ba } from "@solana/web3.js";
 import { useContext, useEffect, useState } from "react";
 import { connection } from "../config/settings";
 import { getSplitBalance } from "../pages/api/curations/withdraw";
@@ -63,6 +63,11 @@ const useCurationAuctionHouse = (curation) => {
       })
 
       const { receipt } = listingTxBuilder.getContext();
+      // const priorityFeeTx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 70000 })
+      // listingTxBuilder.add({
+      //   instruction: priorityFeeTx,
+      //   signers: []
+      // })
 
       await metaplex.rpc().sendAndConfirmTransaction(
         listingTxBuilder,
@@ -75,6 +80,10 @@ const useCurationAuctionHouse = (curation) => {
           receiptAddress: new PublicKey(receipt),
           loadJsonMetadata: false
         })
+        //might be picking up stale receipts from other auction houses
+        if (listing.auctionHouse.address.toString() !== auctionHouse.address.toString()) {
+          throw new Error("Listing not confirmed")
+        }
         return listing.receiptAddress.toString();
       })
 
@@ -99,6 +108,8 @@ const useCurationAuctionHouse = (curation) => {
         .cancelListing({
           auctionHouse,
           listing,
+        }, {
+          commitment: "finalized",
         })
       
       return canceled.response.signature
@@ -116,17 +127,16 @@ const useCurationAuctionHouse = (curation) => {
           loadJsonMetadata: false
         });
   
-      // const bought = await auctionHouseSDK
-      //   .buy({
-      //     auctionHouse,
-      //     listing,
-      //   })
-      // return bought?.response?.signature
-
       const buyBuilder = await auctionHouseSDK.builders().buy({
         auctionHouse,
         listing,
       })
+
+      // const priorityFeeTx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 70000 })
+      // buyBuilder.add({
+      //   instruction: priorityFeeTx,
+      //   signers: []
+      // })
 
       const txRes = await metaplex.rpc().sendAndConfirmTransaction(
         buyBuilder,

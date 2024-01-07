@@ -25,6 +25,7 @@ import { useRouter } from "next/router";
 import UserContext from "../../contexts/user";
 import { adminIDs } from "../../config/settings";
 import debounce from "lodash.debounce";
+import NotFound from "../../components/404";
 
 const ModelViewer = dynamic(() => import("../../components/artDisplay/modelDisplay"), {
   ssr: false
@@ -47,7 +48,7 @@ export default function DetailPage({token, curations}) {
   const imageRef = useRef(null);
 
   const isAdmin = adminIDs.includes(user?.id)
-  const userIsArtist = token.creators?.some(creator => user?.public_keys.includes(creator.address))
+  const userIsArtist = token?.creators?.some(creator => user?.public_keys.includes(creator.address))
   const showUpdateButton = isAdmin || userIsArtist
 
   const isMasterEdition = token?.is_master_edition
@@ -56,7 +57,7 @@ export default function DetailPage({token, curations}) {
   const maxSupply = token?.max_supply
   const editionNumber = token?.edition_number
 
-  const externalUrl = token.externalUrl
+  const externalUrl = token?.externalUrl
     ? parseExternalLink(token.externalUrl)
     : null
 
@@ -130,7 +131,7 @@ export default function DetailPage({token, curations}) {
 
   const handleUpdateMetadata = async () => { 
     setUpdating(true)
-    const updatedToken = await UpdateMetadata(token.mint)
+    const updatedToken = await UpdateMetadata(token?.mint)
     if (updatedToken) {
       success("Metadata Updated")
     } else {
@@ -138,6 +139,13 @@ export default function DetailPage({token, curations}) {
     }
     setUpdating(false)
   }
+
+  if (!token) return (
+    <div>
+      <MainNavigation />
+      <p className="font-bold text-center mt-20">Token Not Found</p>
+    </div>
+  )
 
   return (
     <>
@@ -275,7 +283,7 @@ export default function DetailPage({token, curations}) {
           <p className='mt-2'>{supplyText}</p>
         
           <p className="text-xs my-4 whitespace-pre-wrap">{token?.description}</p>
-          {activeCurations.length > 0
+          {activeCurations?.length > 0
             ? (
               <div className="my-4">
                 <hr className="border-neutral-200 dark:border-neutral-800" />
@@ -306,30 +314,30 @@ export default function DetailPage({token, curations}) {
 
             <div className="flex flex-wrap gap-x-4 mb-2">
               <p className="font-bold ">Creators: </p>
-              {token.creators?.map(creator => (
+              {token?.creators?.map(creator => (
                 <AddressLink key={creator.address} address={creator.address} />
               ))}
             </div>    
             {typeof token?.isMutable !== "undefined" ? (
               <div className="flex gap-4 mb-2">
                 <p className="font-bold">Mutable: </p>
-                <p>{token.isMutable.toString()}</p>
+                <p>{token?.isMutable.toString()}</p>
               </div>
             ) : null}
             {externalUrl ? (
               <div className="flex gap-4">
                 <p className="font-bold">External Url: </p>
-                <a href={externalUrl} target="_blank" rel="noreferrer">{token.externalUrl}</a>
+                <a href={externalUrl} target="_blank" rel="noreferrer">{token?.externalUrl}</a>
               </div>
             ) : null}
 
 
-            {token.attributes?.length > 0 ? (
+            {token?.attributes?.length > 0 ? (
               <>
                 <hr className="border-neutral-200 dark:border-neutral-800 my-2" />
                 <p className="font-bold mb-2">Attributes:</p>
                 <div className="grid md:grid-cols-2 gap-3">
-                  {token.attributes.map(attribute => (<Attribute key={attribute.trait_type} attribute={attribute} />))}
+                  {token?.attributes.map(attribute => (<Attribute key={attribute.trait_type} attribute={attribute} />))}
                 </div>
               </>
             ) : null}
@@ -362,14 +370,19 @@ const Attribute = ({ attribute }) => {
 
 export async function getServerSideProps(context) {
   const mint = context.params.mint;
+  try {
+    const baseCurations = await getCurationsByListingMint(mint)
+      .then(res => res?.curations);
+  
+    const curations = nullifyUndefinedArr(baseCurations);
+    const onlyPublished = curations?.filter(curation => curation.is_published)
+    const baseToken = await getTokenByMint(mint);
+    const token = nullifyUndefinedObj(baseToken);
 
-  const baseCurations = await getCurationsByListingMint(mint)
-    .then(res => res?.curations);
-
-  const curations = nullifyUndefinedArr(baseCurations);
-  const onlyPublished = curations?.filter(curation => curation.is_published)
-  const baseToken = await getTokenByMint(mint);
-  const token = nullifyUndefinedObj(baseToken);
-  return { props: { token, curations: onlyPublished } };
+    return { props: { token, curations: onlyPublished } };
+  } catch (err) { 
+    console.log("Error getting token by mint:", err.message)
+    return { props: { token: null, curations: null } }
+  }
 }
 

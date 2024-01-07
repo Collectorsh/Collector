@@ -47,7 +47,11 @@ async function getTokens(publicKeys, options) {
           creatorAddress: publicKey,
           onlyVerified: true,
           page: page, 
-          limit: maxBatch
+          limit: maxBatch,
+          displayOptions: {
+            "showUnverifiedCollections": true,
+            "showCollectionMetadata": true,
+          },
         },
       }
       : {
@@ -58,10 +62,10 @@ async function getTokens(publicKeys, options) {
           ownerAddress: publicKey,
           page: page,
           limit: maxBatch,
-          // "displayOptions": {
-          //   "showUnverifiedCollections": true,
-          //   "showCollectionMetadata": true
-          // },
+          displayOptions: {
+            "showUnverifiedCollections": true,
+            "showCollectionMetadata": true,
+          },
         }
       }
     
@@ -106,12 +110,12 @@ async function getTokens(publicKeys, options) {
   })
 
   const mungedTokens = creatorFilteredTokens.map((token) => { 
-    const { content, creators, ownership, id } = token
+    const { content, creators, ownership, id, grouping } = token
     const files = content?.files?.map((file) => ({
       ...file,
       type: file.mime
     }))
-  
+
     const image_cdn = content?.files?.find((file) => file.cdn_uri)?.cdn_uri
     return {
       artist_address: creators[0]?.address,
@@ -128,7 +132,8 @@ async function getTokens(publicKeys, options) {
       attributes: content.metadata.attributes,
       royalties: token.royalty.basis_points,
       primary_sale_happened: token.royalty?.primary_sale_happened,
-      image_cdn
+      image_cdn,
+      collection: grouping.length  ? grouping[0]?.collection_metadata : undefined
       //TODO Get from Helius when available and remove useTokenMetadata
       // is_edition: 
       // parent:
@@ -204,11 +209,13 @@ async function getTokens(publicKeys, options) {
   
   for (const result of results) {       
     // Loop through results and set artist name, twitter
-    let tokens = creatorResp.data.filter((t) => t.public_key === result.artist_address);
-    if (tokens.length > 0) {
-      let token = tokens[tokens.length - 1];
-      result.artist_name = token.name;
-      result.artist_twitter = token.twitter;
+    // let artists = creatorResp.data.filter((t) => t.public_key === result.artist_address);
+    const creatorsAddresses = result.creators.map((creator) => creator.address)
+    let artists = creatorResp.data.filter((t) => creatorsAddresses.includes(t.public_key) );
+    if (artists.length > 0) {
+      let artist = artists[artists.length - 1];
+      result.artist_name = artist.name;
+      result.artist_twitter = artist.twitter;
       if (result.artist_twitter === null) {
         let toke = creatorResp.data.find(
           (t) => t.public_key === result.artist_address && t.twitter !== null
@@ -242,6 +249,7 @@ export function useTokens(publicKeys, options) {
   const { allTokens, setAllTokens } = useContext(UserTokensContext)
   const [fetched, setFetched] = useState(0)
   const metadataRef = useRef([]);
+  const indexedRef = useRef([]);
 
   const loading = !data && !error || fetched > 0
 
@@ -261,17 +269,6 @@ export function useTokens(publicKeys, options) {
 
 
   const tokens = useMemo(() => allTokens?.[tokenKey], [allTokens, tokenKey])
-  
-  //update state when "fetched" is updated (used to prevent rerender loop)
-  // useEffect(() => {
-  //   if(!useTokenMetadata) return //only use this for metadata fetches
-  //   if (fetched && metadataRef.current.length) {
-  //     setAllTokens((prevTokens) => {
-  //       const newTokens = { ...prevTokens, [tokenKey]: metadataRef.current }
-  //       return newTokens
-  //     })
-  //   }
-  // },[fetched, setAllTokens, metadataRef, tokenKey, useTokenMetadata])
   
   useEffect(() => {    
     if (data && !alreadySet) {
@@ -318,12 +315,16 @@ export function useTokens(publicKeys, options) {
               const artistId = user?.public_keys.includes(fullToken.artist_address) ? user.id : null;
               const ownerId = user?.public_keys.includes(fullToken.owner_address) ? user.id : null;
 
-              await createIndex({
-                apiKey: user?.api_key,
-                artistId,
-                ownerId,
-                token: fullToken
-              })
+              if (!indexedRef.current.includes(fullToken.mint)) {
+                indexedRef.current.push(fullToken.mint)
+
+                await createIndex({
+                  apiKey: user?.api_key,
+                  artistId,
+                  ownerId,
+                  token: fullToken
+                })
+              }
               
             } catch (err) { 
               console.log(`Error creating minted_indexer record mint: ${ fullToken.mint }`, err)
@@ -335,7 +336,6 @@ export function useTokens(publicKeys, options) {
             if (!metadata.is_collection_nft) {
               const newTokens = [...metadataRef.current, fullToken]
               metadataRef.current = newTokens.sort((a, b) => a.name.localeCompare(b.name))
-              // if (fetchedLocal % 5 === 0) setFetched(fetchedLocal) //only update state every 5 fetches
             }
 
             fetchedLocal++;
@@ -382,6 +382,15 @@ const getMetadata = async (metaplex, mint) => {
     result.is_edition = !edition.isOriginal
     result.parent = edition.parent?.toString()
     result.edition_number = edition.number?.toString()
+
+    //TODO "parent" isnt the mint address, need to figure out how to get it
+    // //add total supply to editions
+    // if (result.parent && !result.max_supply) {
+    //   const parentMetadata = await metaplex.nfts().findByMint({
+    //     mintAddress: new PublicKey(result.parent)
+    //   })
+    //   result.max_supply = parentMetadata.edition?.maxSupply ? Number(parentMetadata.edition.maxSupply.toString()) : undefined
+    // }
 
   } catch (err) {
     console.log("Error getting metadata for mint", mint)

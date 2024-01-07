@@ -11,7 +11,6 @@ import { MAX_CURATOR_FEE_POINTS } from "../../pages/api/curations/createCuration
 import UserContext from "../../contexts/user"
 import { error, success } from "../../utils/toast"
 import { shootConfetti } from "../../utils/confetti"
-import { Switch } from "@headlessui/react"
 import clsx from "clsx"
 import { PLATFORM_AUCTION_HOUSE_1_ADDRESS } from "../../config/settings"
 
@@ -19,7 +18,11 @@ const decimalRegex = /^\d+(\.\d+)?$/;
 
 const maxCuratorFee = MAX_CURATOR_FEE_POINTS / 100;
 
-const curationTypes = ["collector", "artist", "curator"]
+const curationTypes = [
+  // "collector",
+  "artist",
+  "curator"
+]
 
 const CreateCurationModal = ({ isOpen, onClose }) => {
   const [user] = useContext(UserContext);

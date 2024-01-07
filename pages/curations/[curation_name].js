@@ -343,12 +343,12 @@ function CurationPage({curation}) {
   }
 
   const curatorText = useMemo(() => {
-    switch (curation.curation_type) {
+    switch (curation?.curation_type) {
       case "artist": return "Art by"
       case "collector": return "Collected by"
       case "curator": return "Curated by"
     }
-  }, [curation.curation_type])
+  }, [curation?.curation_type])
 
 
   if (isOwner && !draftContent && !publishedContent) return (
@@ -572,6 +572,7 @@ export async function getServerSideProps(context) {
   try {
     const name = context.params.curation_name;
     const curation = await getCurationByName(name)
+    console.log("🚀 ~ file: [curation_name].js:575 ~ getServerSideProps ~ curation:", curation)
 
     if (curation) {
       // //TODO remove this placeholder

@@ -24,6 +24,7 @@ import { useRouter } from "next/router";
 import LogRocket from "logrocket";
 import getListedItem from "../../data/curationListings/getListedItem";
 import LogRocketContext from "../../contexts/logRocket";
+import { sendAndConfirmTransaction } from "@solana/web3.js";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
@@ -204,12 +205,6 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         return;
       }
 
-      // const signed = await wallet.signTransaction(closeAndWithdrawMarketTX)
-      // const delistTXSignature = await connection.sendRawTransaction(signed.serialize({
-      //   // requireAllSignatures: false,
-      //   // verifySignatures: false,
-      // }))
-
       const delistTXSignature = await wallet.sendTransaction(closeAndWithdrawMarketTX, connection)
       const confirmation = await connection.confirmTransaction(delistTXSignature);
 
@@ -217,6 +212,10 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         error(`Error Delisting ${ token.name } Onchain`)
         return
       }
+
+      // const signed = await wallet.signTransaction(closeAndWithdrawMarketTX)
+      // const txSignature = await sendAndConfirmTransaction(connection, signed)
+      // console.log("🚀 ~ file: editListingsModal.jsx:217 ~ onDelist ~ txSignature :", txSignature )
 
       const res = await cancelListing({
         curationId: curation.id,
@@ -228,6 +227,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         error(`Error Withdrawing ${ token.name }: ${ res?.message }`)
         return
       }
+      
       success(`${ token.name } Has Been Withdrawn!`)
 
       const status = token.supply >= token.max_supply ? "master-edition-closed" : "unlisted"

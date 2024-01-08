@@ -204,7 +204,7 @@ const CurationTypeButton = ({ type, selected, onChange }) => {
         "rounded-lg px-4 py-2 my-2",
         "ring-neutral-100 dark:ring-neutral-900 bg-neutral-200 dark:bg-neutral-700",
         "hover:scale-[102%] hover:opacity-100 duration-300 active:scale-100",
-        selected ? "ring-4 ring-primary-500 dark:ring-primary-400" : "opacity-50"
+        selected ? "ring-4" : "opacity-50"
 
       )}
     >

@@ -116,6 +116,11 @@ async function getTokens(publicKeys, options) {
       type: file.mime
     }))
 
+    const collectionInfo = (grouping.length && grouping[0].collection_metadata) ? {
+      ...grouping[0].collection_metadata,
+      verified: grouping[0].verified,
+    } : undefined
+
     const image_cdn = content?.files?.find((file) => file.cdn_uri)?.cdn_uri
     return {
       artist_address: creators[0]?.address,
@@ -133,7 +138,7 @@ async function getTokens(publicKeys, options) {
       royalties: token.royalty.basis_points,
       primary_sale_happened: token.royalty?.primary_sale_happened,
       image_cdn,
-      collection: grouping.length  ? grouping[0]?.collection_metadata : undefined
+      collection: collectionInfo
       //TODO Get from Helius when available and remove useTokenMetadata
       // is_edition: 
       // parent:
@@ -290,6 +295,8 @@ export function useTokens(publicKeys, options) {
           const withMetadata = [];
           const remaining = [];
           nameSorted.forEach((token) => {
+            //using .id for now because it means we've recorded the edition metadata,
+            //but once we have that + the collection metadata, we can use something else (or not need this useEffect at all maybe?)
             if(token?.id !== undefined) {
               withMetadata.push(token)
             } else {

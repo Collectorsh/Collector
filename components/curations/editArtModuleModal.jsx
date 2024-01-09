@@ -20,6 +20,7 @@ import { Oval } from "react-loader-spinner";
 import { groupEditions } from "../../utils/groupEditions";
 import GroupedCollection from "./groupedCollection";
 import AddTokenButton from "./addTokenButton";
+import Checkbox from "../checkbox";
 
 
 export default function EditArtModuleModal({
@@ -42,7 +43,7 @@ export default function EditArtModuleModal({
   const [newArtModule, setNewArtModule] = useState(artModule)
   const [wrapperWidth, setWrapperWidth] = useState(0);
   const [search, setSearch] = useState("");
-  const [groupByCollection, setGroupByCollection] = useState(true);
+  const [groupByCollection, setGroupByCollection] = useState(false);
 
   const [tokensToSubmit, setTokensToSubmit] = useState([]);//only used for personal curations
   const [saving, setSaving] = useState(false);
@@ -116,10 +117,10 @@ export default function EditArtModuleModal({
         curationId: curationId,
       })
 
-      if (res?.status !== "success") {
+      if (!res || res?.status !== "success") {
         error(`Failed to submit tokens`)
       }
-      if (res.errors.length) {
+      if (res?.errors.length) {
         newArtModuleCopy.tokens = newArtModuleCopy.tokens.filter(tokenMint => !res.errors.find(err => err.mint === tokenMint))
         setNewArtModule(newArtModuleCopy)
         setSubmittedTokens(prev => prev.filter(token => !res.errors.find(err => err.mint === token.mint)))
@@ -281,7 +282,8 @@ export default function EditArtModuleModal({
   }, [curationType, submittedTokens, userTokensSplit, activeTabIndex])
 
   const availableTokenButtons = useMemo(() => {
-    const useGroupedTokens = false//groupByCollection && !search
+    //if searching or not userTokens don't group
+    const useGroupedTokens = groupByCollection && useUserTokens && !search
 
 
     const makeTokenButtons = (tokensToMake) => tokensToMake.map((token, i) => {
@@ -314,11 +316,16 @@ export default function EditArtModuleModal({
 
 
     if (useGroupedTokens) {
-      const collections = {}
-      const fallbackName = "No On-Chain Collection"
+      const fallbackName = "None"
+      const collections = {
+        [fallbackName]: {
+          name: fallbackName,
+          tokens: [] 
+        }
+      }
       availableTokens.forEach(token => {
         const cName = token.collection?.name || fallbackName;
-
+        
         const tokenNoColleciton = { ...token }
         delete tokenNoColleciton.collection //remove circular reference
         
@@ -326,14 +333,17 @@ export default function EditArtModuleModal({
           collections[cName] = { ...token.collection }
           collections[cName].tokens = [tokenNoColleciton]
         } else collections[cName].tokens.push(tokenNoColleciton);
-
+        
       })
-      
-      return Object.values(collections)
+      const sorted = Object.values(collections)
         .sort((a, b) => {
-          if (a.name === fallbackName) return -1;
-          return a.name.localeCompare(b.name)
+          // Move `fallbackName` to the end
+          // if (a.name === fallbackName) return -1;
+          // if (b.name === fallbackName) return 1; 
+
+          return b.tokens.length - a.tokens.length
         })
+      return sorted
         .map((collection, i) => {
           return(
             <GroupedCollection
@@ -452,6 +462,14 @@ export default function EditArtModuleModal({
               search={search}
               setSearch={setSearch}
               placeholder="Search"
+            />
+            <Checkbox
+              className={clsx(
+                !useUserTokens && "hidden",
+              )}
+              label="Group by Collection"
+              checked={groupByCollection}
+              onChange={() => setGroupByCollection(prev => !prev)}
             />
           </div>
           {tokensLabel}

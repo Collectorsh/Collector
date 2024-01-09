@@ -236,6 +236,8 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
   const isListed = token.listed_status === "listed"
   const isSold = token.listed_status === "sold" || isMasterEdition && supply >= maxSupply
 
+  const artistName = artist?.username || token.temp_artist_name
+
   const supplyText = useMemo(() => { 
     if (curationType == "collector") return ""
 
@@ -277,15 +279,13 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
 
   const userText = useMemo(() => { 
     if (curationType === "artist") {
-      return (owner && owner.username !== artist?.username) ?
+      return (owner && owner.username !== artistName) ?
         <p>Owned by {owner.username}</p>
         : null
-    } else {
-      return artist ?
-        <p>by {artist.username}</p>
-        : null
+    } else if (artistName) {
+      return <p>by {artistName}</p>
     }
-  },[curationType, artist, owner])
+  }, [curationType, artistName, owner])
   
   return (
     <div

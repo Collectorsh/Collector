@@ -160,7 +160,7 @@ export const getCloseAndWithdrawMarketTX = async ({
       }),
       new TransactionInstruction({
         keys: [{ pubkey: ownerPubkey, isSigner: true, isWritable: true }],
-        data: Buffer.from(`Curator and Collector Platform Fee - ${feePercentage*100}%`),
+        data: Buffer.from(`Curator and Platform Fee - ${feePercentage*100}%`),
         programId: new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"),
       })
     )

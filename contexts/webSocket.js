@@ -19,6 +19,8 @@ export const ActionCableProvider = ({ children }) => {
         setCableApp({
           cable: createConsumer(`${ host }/cable`),
         });
+      }).catch((err) => {
+        console.log("Error loading action cable", err);
       });
     }
   }, [CableApp?.cable]);

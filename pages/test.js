@@ -25,7 +25,7 @@ export default function TestPage() {
   const wallet = useWallet();
 
   async function getEditionMarket() {
-    const marketPubkey = new PublicKey("2HucNVoQyYENVzsippmMTqRyyHUqXkjxRi9nMTTQCr6L"); 
+    const marketPubkey = new PublicKey("BB3TPTwCF2aBL2z4NpwxUY4Kas2nw3LYSDwCdTWvFdVS"); 
     const marketAccount = await connection.getAccountInfo(marketPubkey);
     const [marketData] = Market.deserialize(marketAccount?.data);
     console.log("🚀 ~ file: test.js:31 ~ getEditionMarket ~ marketData:", marketData)

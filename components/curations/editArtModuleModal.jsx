@@ -316,7 +316,7 @@ export default function EditArtModuleModal({
 
 
     if (useGroupedTokens) {
-      const fallbackName = "Unknown Collection"
+      const fallbackName = "None"
       const collections = {
         [fallbackName]: {
           name: fallbackName,

@@ -74,7 +74,7 @@ const useCurationAuctionHouse = (curation) => {
         { commitment: "finalized" }
       )
 
-      const listing = await retryFetches(async () => {
+      const listingReceipt = await retryFetches(async () => {
         const listing = await auctionHouseSDK.findListingByReceipt({
           auctionHouse,
           receiptAddress: new PublicKey(receipt),
@@ -87,9 +87,9 @@ const useCurationAuctionHouse = (curation) => {
         return listing.receiptAddress.toString();
       })
 
-      if(!listing) throw new Error("Onchain listing not confirmed")      
+      if (!listingReceipt) throw new Error("Onchain listing not confirmed")      
 
-      return listing
+      return listingReceipt
     } catch (error) {
       console.log(error)
     }

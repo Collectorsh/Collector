@@ -43,7 +43,7 @@ export default function EditArtModuleModal({
   const [newArtModule, setNewArtModule] = useState(artModule)
   const [wrapperWidth, setWrapperWidth] = useState(0);
   const [search, setSearch] = useState("");
-  const [groupByCollection, setGroupByCollection] = useState(true);
+  const [groupByCollection, setGroupByCollection] = useState(false);
 
   const [tokensToSubmit, setTokensToSubmit] = useState([]);//only used for personal curations
   const [saving, setSaving] = useState(false);
@@ -117,10 +117,10 @@ export default function EditArtModuleModal({
         curationId: curationId,
       })
 
-      if (res?.status !== "success") {
+      if (!res || res?.status !== "success") {
         error(`Failed to submit tokens`)
       }
-      if (res.errors.length) {
+      if (res?.errors.length) {
         newArtModuleCopy.tokens = newArtModuleCopy.tokens.filter(tokenMint => !res.errors.find(err => err.mint === tokenMint))
         setNewArtModule(newArtModuleCopy)
         setSubmittedTokens(prev => prev.filter(token => !res.errors.find(err => err.mint === token.mint)))
@@ -341,7 +341,7 @@ export default function EditArtModuleModal({
           if (a.name === fallbackName) return -1;
           if (b.name === fallbackName) return 1; 
 
-          return a.name.localeCompare(b.name)
+          // return a.name.localeCompare(b.name)
         })
       return sorted
         .map((collection, i) => {

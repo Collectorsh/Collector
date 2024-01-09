@@ -572,10 +572,8 @@ export async function getServerSideProps(context) {
   try {
     const name = context.params.curation_name;
     const curation = await getCurationByName(name)
-    console.log("🚀 ~ file: [curation_name].js:575 ~ getServerSideProps ~ curation:", curation)
 
     if (curation) {
-      // //TODO remove this placeholder
       return { props: { curation } };
     } else {
       return { props: {} };

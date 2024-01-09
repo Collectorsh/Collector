@@ -23,7 +23,7 @@ const GroupedCollection = ({
     <Disclosure>
       {({ open }) => (
         <>
-          <Disclosure.Button className={clsx('flex gap-2 items-center rounded-lg', open && "ring-2 ring-neutral-300 dark:ring-neutral-700")}>
+          <Disclosure.Button className={clsx('flex gap-2 items-center rounded-lg h-fit', open && "ring-2 ring-neutral-300 dark:ring-neutral-700")}>
 
 
             <div className="w-20 h-20 flex-shrink-0 relative">

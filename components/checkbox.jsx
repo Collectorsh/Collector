@@ -4,7 +4,7 @@ const { default: clsx } = require("clsx");
 
 const Checkbox = ({ label, checked, onChange, className, labelLeft = false }) => (
   <label className={clsx(
-    "flex items-center gap-2",
+    "flex items-center gap-2 cursor-pointer",
     className
   )}>
     {labelLeft && label}

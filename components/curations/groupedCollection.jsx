@@ -23,14 +23,14 @@ const GroupedCollection = ({
     <Disclosure>
       {({ open }) => (
         <>
-          <Disclosure.Button className={clsx('flex gap-2 items-center rounded-lg h-fit', open && "ring-2 ring-neutral-300 dark:ring-neutral-700")}>
+          <Disclosure.Button className={clsx('flex gap-2 items-center rounded-lg h-fit relative', open && "ring-2 ring-neutral-300 dark:ring-neutral-700")}>
 
 
-            <div className="w-20 h-20 flex-shrink-0 relative">
+            <div className="w-full h-full pb-[100%] flex-shrink-0 relative rounded-lg overflow-hidden">
               <ContentLoader
                 speed={2}
                 className={clsx(
-                  "w-full h-full rounded-lg",
+                  "w-full h-full",
                   "absolute z-10 top-0 left-0",
                   imageLoaded ? "opacity-0" : "opacity-100"
                 )}
@@ -44,22 +44,24 @@ const GroupedCollection = ({
                   src={imageSrc}
                   alt=""
                 className={clsx(
-                    "h-full w-full",
-                    "object-cover rounded-lg duration-300",
+                    "h-full w-full absolute top-0 left-0",
+                    "object-cover duration-300",
                     imageLoaded ? "opacity-100" : "opacity-0"
                   )}
                   onLoad={() => setImageLoaded(true)}
                   onError={onImageError}
                 />
               ) : (
-                  <div className=" w-full h-full flex justify-center items-center rounded-lg bg-white dark:bg-black">
+                  <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center rounded-lg bg-white dark:bg-black">
 
-                    <p className="collector text-6xl font-bold mb-3">c</p>
+                    <p className="collector text-8xl font-bold mb-3">c</p>
                   </div>
               )}
             </div>
-            
-            <p className="font-bold text-left overflow-hidden">{collection.name}</p>
+            <div className="w-[calc(100%-12px)] max-w-fit rounded px-2 py-0 bg-neutral-200 dark:bg-neutral-800 flex gap-2 absolute bottom-1.5 left-1.5 z-10">
+              <p className="text-left truncate max-w-full">{collection.name}</p>
+              <p className="opacity-60">{collection.tokens.length}</p>
+            </div>
           </Disclosure.Button>
 
           <Transition

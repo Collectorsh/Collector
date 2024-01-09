@@ -338,10 +338,10 @@ export default function EditArtModuleModal({
       const sorted = Object.values(collections)
         .sort((a, b) => {
           // Move `fallbackName` to the end
-          if (a.name === fallbackName) return -1;
-          if (b.name === fallbackName) return 1; 
+          // if (a.name === fallbackName) return -1;
+          // if (b.name === fallbackName) return 1; 
 
-          // return a.name.localeCompare(b.name)
+          return b.tokens.length - a.tokens.length
         })
       return sorted
         .map((collection, i) => {

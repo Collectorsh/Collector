@@ -13,8 +13,7 @@ export default function DetailListings({ curation, mint }) {
   const { handleCollect } = useCurationAuctionHouse(curation)
   const [purchasing, setPurchasing] = useState(false)
   const listingToken = curation.submitted_token_listings?.find(l => l.mint === mint)
-  console.log("🚀 ~ file: listings.jsx:16 ~ DetailListings ~ curation:", curation)
-  console.log("🚀 ~ file: listings.jsx:16 ~ DetailListings ~ listingToken:", listingToken)
+
   if (!listingToken) return null
 
   //if the curation is an artist curation, and the listing is not by the artist,

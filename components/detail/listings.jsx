@@ -15,6 +15,13 @@ export default function DetailListings({ curation, mint }) {
   const listingToken = curation.submitted_token_listings?.find(l => l.mint === mint)
 
   if (!listingToken) return null
+
+  //if the curation is an artist curation, and the listing is not by the artist,
+  //don't show the listing, it will already be listed under the collector curation
+  const isSecondaryOnArtistCuration = curation.curation_type === "artist" && curation.curator_id !== listingToken.owner_id
+
+  if (isSecondaryOnArtistCuration) return null 
+
   const isListed = listingToken.listed_status === "listed"
   const isSold = listingToken.listed_status === "sold" || listingToken.listed_status === "master-edition-closed"
 

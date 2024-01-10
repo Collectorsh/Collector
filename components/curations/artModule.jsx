@@ -238,13 +238,13 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
 
   const artistName = artist?.username || token.temp_artist_name
 
-  const supplyText = useMemo(() => { 
-    if (curationType == "collector") return ""
+  const supplyText = useMemo(() => {
+    if (curationType == "collector" && (!isListed && !isSold)) return ""
 
     if (isMasterEdition) return `${ maxSupply - supply }/${ maxSupply } Editions`
-    if (isEdition) return "Edition"; //`${ listedEditionCount }/${ maxSupply } Editions`
+    if (isEdition) return `Edition (${ listedEditionCount})`;
     return "1 of 1"
-  }, [isMasterEdition, supply, maxSupply, isEdition, curationType]) 
+  }, [isMasterEdition, supply, maxSupply, isEdition, curationType, isListed, listedEditionCount, isSold]) 
   
   const cacheWidth = useMemo(() => {
     //round up to bucket of 250 so we aren't caching too many sizes

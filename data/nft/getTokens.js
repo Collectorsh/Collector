@@ -252,10 +252,9 @@ export function useTokens(publicKeys, options) {
   const { data, error } = useSWR({ publicKeys, options }, fetcher)
   const [user] = useContext(UserContext);
 
-  const { allTokens, setAllTokens } = useContext(UserTokensContext)
+  const { allTokens, setAllTokens, indexedRef } = useContext(UserTokensContext)
   const [fetched, setFetched] = useState(0)
   const metadataRef = useRef([]);
-  const indexedRef = useRef([]);
 
   const loading = !data && !error || fetched > 0
 

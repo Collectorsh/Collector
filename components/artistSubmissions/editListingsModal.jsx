@@ -83,13 +83,13 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         editionMarketAddress
       } = builder
 
-      // if (router.query.simulate) {
-      //   const signed = await wallet.signTransaction(listMasterEditionTX)
-      //   const sim = await connection.simulateTransaction(signed)
-      //   console.log("🚀 ~ file: editListingsModal.jsx:65 ~ onList ~ sim:", sim)
+      if (router.query.simulate) {
+        const signed = await wallet.signTransaction(listMasterEditionTX)
+        const sim = await connection.simulateTransaction(signed)
+        console.log("🚀 ~ file: editListingsModal.jsx:65 ~ onList ~ sim:", sim)
 
-      //   return;
-      // }
+        return;
+      }
 
       const signedTx = await wallet.signTransaction(listMasterEditionTX)
  
@@ -98,7 +98,10 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       // const { signature, confirmResponse } =
       await metaplex.rpc().sendAndConfirmTransaction(
         signedTx,
-        { commitment: "finalized" }
+        {
+          commitment: "finalized", //"confirmed"
+          maxRetries: 5
+        }
       );
 
       // if (!signature || Boolean(confirmResponse.value.err)) {

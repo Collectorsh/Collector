@@ -3,6 +3,7 @@ import useNftFiles from "../../hooks/useNftFiles"
 import CloudinaryImage, { IMAGE_FALLBACK_STAGES } from "../CloudinaryImage"
 import { truncate } from "../../utils/truncate"
 import clsx from "clsx"
+import { Oval } from "react-loader-spinner"
 
 const AddTokenButton = ({
   token,
@@ -100,6 +101,14 @@ const AddTokenButton = ({
       )}>
         {infoBadge}
       </div>
+
+      {loadingAspectRatio ? (
+        <div className="absolute inset-0 w-full h-full flex justify-center items-center z-10">
+          <Oval color="#FFF" secondaryColor="#666" height={48} width={48} />
+        </div>
+      ) : null
+      }
+
       <CloudinaryImage
         imageRef={imageRef}
         className={clsx("flex-shrink-0 object-contain shadow-lg dark:shadow-white/5",

@@ -157,6 +157,7 @@ export default function EditArtModuleModal({
     const masterEditions = []
     const editions = []
     const artTokens = []
+    const compressedTokens = []
     const remainingTokens = []    
     
     if (userTokens?.length) userTokens.forEach(token => {
@@ -166,6 +167,7 @@ export default function EditArtModuleModal({
       const useMasterEdition = token.is_master_edition && (curationType === "artist" || !soldOut)
       if (useMasterEdition) masterEditions.push(token)
       else if (token.is_edition) editions.push(token)
+      else if (token.compressed) compressedTokens.push(token)
       else if (isOneOfOne) artTokens.push(token)
       else remainingTokens.push(token)
     })
@@ -173,9 +175,9 @@ export default function EditArtModuleModal({
     const groupedEditions = groupEditions(editions)
     return {
       masterEditions,
-      editions: groupedEditions,
+      editions: [...groupedEditions, ...compressedTokens],
       artTokens,
-      remainingTokens
+      remainingTokens,
     }
   }, [userTokens, curationType])
  

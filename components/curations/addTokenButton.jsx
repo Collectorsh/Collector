@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import useNftFiles from "../../hooks/useNftFiles"
 import CloudinaryImage, { IMAGE_FALLBACK_STAGES } from "../CloudinaryImage"
 import { truncate } from "../../utils/truncate"
@@ -75,7 +75,11 @@ const AddTokenButton = ({
     }
   }
 
-  const editionCount = token.editions?.length
+  const infoBadge = useMemo(() => {
+    if (token.compressed) return "C"
+
+    return token.editions?.length
+  }, [token])
   return (
     <button className={clsx(
       "relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden",
@@ -88,13 +92,13 @@ const AddTokenButton = ({
       disabled={alreadyInUse || moduleFull || loadingAspectRatio || !imageLoaded}
     >
       <div className={clsx(
-        !editionCount && "hidden",
+        !infoBadge && "hidden",
         "bg-white dark:bg-neutral-900",
         "rounded-full ring-2 ring-neutral-200 dark:ring-neutral-700",
-        "min-w-fit w-5 h-5 absolute top-2 right-2 z-10 flex justify-center items-center",
+        "min-w-fit w-5 h-5 absolute top-2 left-2 z-10 flex justify-center items-center",
         "text-leading-none font-bold"
       )}>
-        {editionCount}
+        {infoBadge}
       </div>
       <CloudinaryImage
         imageRef={imageRef}

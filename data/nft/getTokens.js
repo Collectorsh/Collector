@@ -110,7 +110,7 @@ async function getTokens(publicKeys, options) {
   })
 
   const mungedTokens = creatorFilteredTokens.map((token) => { 
-    const { content, creators, ownership, id, grouping } = token
+    const { content, creators, ownership, id, grouping, compression } = token
     const files = content?.files?.map((file) => ({
       ...file,
       type: file.mime
@@ -138,7 +138,8 @@ async function getTokens(publicKeys, options) {
       royalties: token.royalty.basis_points,
       primary_sale_happened: token.royalty?.primary_sale_happened,
       image_cdn,
-      collection: collectionInfo
+      collection: collectionInfo,
+      compressed: compression.compressed,
       //TODO Get from Helius when available and remove useTokenMetadata
       // is_edition: 
       // parent:
@@ -181,7 +182,7 @@ async function getTokens(publicKeys, options) {
     const metadata = mintedIndexerTokens.find((t) => t.mint === token.mint)
 
     if (metadata) { 
-      result = { ...result, ...metadata }
+      result = { ...metadata, ...result}
     }
 
     if (!visibility) {
@@ -313,10 +314,14 @@ export function useTokens(publicKeys, options) {
           
           //fetch metadata from tokens missing edition info
           for (const t of remaining) {
-            const metadata = await getMetadata(metaplex, t.mint)
-            const token = remaining.find((t) => t.mint === metadata.mint)
-            const fullToken = { ...token, ...metadata }
-
+        
+            let fullToken = { ...t }
+            //compressed nfts dont have the same metadata structure
+            if (!t.compressed) {
+              const metadata = await getMetadata(metaplex, t.mint)
+              const token = remaining.find((t) => t.mint === metadata.mint) //finding token again incase of race condition
+              fullToken = { ...token, ...metadata }
+            } 
             //update indexer with full token
             try {
               const artistId = user?.public_keys.includes(fullToken.artist_address) ? user.id : null;
@@ -340,7 +345,7 @@ export function useTokens(publicKeys, options) {
         
         
             // //dont add collection nfts to metadataRef
-            if (!metadata.is_collection_nft) {
+            if (!fullToken.is_collection_nft) {
               const newTokens = [...metadataRef.current, fullToken]
               metadataRef.current = newTokens.sort((a, b) => a.name.localeCompare(b.name))
             }
@@ -387,16 +392,22 @@ const getMetadata = async (metaplex, mint) => {
     result.max_supply = edition.maxSupply ? Number(edition.maxSupply.toString()) : undefined
 
     result.is_edition = !edition.isOriginal
+
     result.parent = edition.parent?.toString()
+    result.address = edition.address?.toString()
+
+
     result.edition_number = edition.number?.toString()
 
     //TODO "parent" isnt the mint address, need to figure out how to get it
     // //add total supply to editions
     // if (result.parent && !result.max_supply) {
-    //   const parentMetadata = await metaplex.nfts().findByMint({
-    //     mintAddress: new PublicKey(result.parent)
-    //   })
-    //   result.max_supply = parentMetadata.edition?.maxSupply ? Number(parentMetadata.edition.maxSupply.toString()) : undefined
+    //   const accountInfo = await connection.getAccountInfo(new PublicKey(result.parent))
+
+    //   // const parentMetadata = await metaplex.nfts().findByMint({
+    //   //   mintAddress: new PublicKey(result.parent)
+    //   // })
+    //   // result.max_supply = parentMetadata.edition?.maxSupply ? Number(parentMetadata.edition.maxSupply.toString()) : undefined
     // }
 
   } catch (err) {

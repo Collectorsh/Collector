@@ -68,6 +68,7 @@ const useCurationAuctionHouse = (curation) => {
       //   instruction: priorityFeeTx,
       //   signers: []
       // })
+    
 
       await metaplex.rpc().sendAndConfirmTransaction(
         listingTxBuilder,

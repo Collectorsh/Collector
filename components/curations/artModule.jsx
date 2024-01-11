@@ -394,7 +394,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
           {userText}
 
           <div className='flex items-center gap-2 '>
-            {(token?.buy_now_price && (isListed || isSold))
+            {(token?.buy_now_price !== undefined && (isListed || isSold))
               ? <>
                 <p className=''>{roundToPrecision(token.buy_now_price, 2)}◎</p>
                 <span>-</span>

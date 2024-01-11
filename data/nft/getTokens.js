@@ -182,10 +182,6 @@ async function getTokens(publicKeys, options) {
     const metadata = mintedIndexerTokens.find((t) => t.mint === token.mint)
 
     if (metadata) { 
-      if (token.mint === 'Dm8AoHZVa3aARZP8Bn6sPagB4YqNUVSu7e31iuyXvpNF') {
-        console.log("metadata", metadata)
-        console.log("token", result)
-      }
       result = { ...metadata, ...result}
     }
 

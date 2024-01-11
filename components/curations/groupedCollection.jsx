@@ -24,8 +24,6 @@ const GroupedCollection = ({
       {({ open }) => (
         <>
           <Disclosure.Button className={clsx('flex gap-2 items-center rounded-lg h-fit relative', open && "ring-2 ring-neutral-300 dark:ring-neutral-700")}>
-
-
             <div className="w-full h-full pb-[100%] flex-shrink-0 relative rounded-lg overflow-hidden">
               <ContentLoader
                 speed={2}

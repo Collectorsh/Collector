@@ -300,6 +300,12 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
           Already Submitted</p>
         : null
       }
+      {loadingArt ? (
+        <div className="absolute inset-0 w-full h-full flex justify-center items-center">
+          <Oval color="#FFF" secondaryColor="#666" height={48} width={48} />
+        </div>
+      ) : null
+      }
       <div
         className="absolute text-center top-0 left-0 p-8 w-full h-full overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50 
           transition-opacity duration-300 opacity-0 group-hover:opacity-100

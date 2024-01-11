@@ -25,6 +25,7 @@ import LogRocket from "logrocket";
 import getListedItem from "../../data/curationListings/getListedItem";
 import LogRocketContext from "../../contexts/logRocket";
 import { sendAndConfirmTransaction } from "@solana/web3.js";
+import { groupEditions } from "../../utils/groupEditions";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
@@ -35,11 +36,25 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
 
   const { handleBuyNowList, handleDelist, auctionHouse } = useCurationAuctionHouse(curation)
   
-  const submissions = curation?.submitted_token_listings.filter(listing => {
+  const submissions = useMemo(() => {
+    const baseListings = curation?.submitted_token_listings.filter(listing => {
     const owned = listing.owner_address === wallet.publicKey.toString()
     const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
     return owned && !closedMaster
-  }) || [];
+    }) || [];
+
+    baseListings.sort((a, b) => a.name.localeCompare(b.name))
+    return baseListings
+
+    //trying seperate editions for now
+    // const editions = baseListings.filter(listing => listing.is_edition)
+    // const groupedEditions = groupEditions(editions)
+
+    // const others = baseListings.filter(listing => !listing.is_edition)
+
+    // return [...others, ...groupedEditions]
+
+  }, [curation, wallet])
 
   const isPersonalCuration = curation?.curation_type !== "curator" //"artist" || "collector"
 
@@ -348,6 +363,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
   const price = roundToPrecision(token.buy_now_price, 3)
   
   const isMasterEdition = token.is_master_edition
+  const isEdition = token.is_edition
   const editionSupply = token.supply
   const editionMaxSupply = token.max_supply
   const editionsLeft = editionMaxSupply - editionSupply
@@ -398,9 +414,32 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
   }
 
   const infoBadge = useMemo(() => {
-    if (token.compressed) return "C"
-
-    return token.editions?.length
+    if (token.compressed) return (
+      <Tippy
+        className="shadow-lg"
+        content="We currently do not support listings for compressed nfts"
+      >
+        <span>C</span>
+      </Tippy>
+    )
+    if (token.is_edition) return (
+      <Tippy
+        className="shadow-lg"
+        content="If there are multiple edition listings, the lowest price will be sold first"
+      >
+        <span>E</span>
+      </Tippy>
+    )
+    if (token.is_master_edition) return (
+      <Tippy
+        className="shadow-lg"
+        content="To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet."
+      >
+        <span>ME</span>
+      </Tippy>
+    )
+    return null
+    // return token.editions?.length
   }, [token])
 
   const delistText = isMasterEdition
@@ -492,7 +531,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
                   type="number"
                   min={0}
                   className="outline-none bg-transparent w-full"
-                  placeholder={isMasterEdition ? "Edition Price" : "Buy Now Price"}
+                  placeholder={(isMasterEdition || isEdition) ? "Edition Price" : "Buy Now Price"}
                   onChange={(e) => setListingPrice(e.target.value)}
                   value={listingPrice}
                 />

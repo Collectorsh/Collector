@@ -33,7 +33,7 @@ const SearchBar = ({ search, setSearch, placeholder = "Search", className, onEnt
             setSearch("")
             e.target.value = ""
           }
-          if (e.key === "Enter") onEnter(search)
+          if (e.key === "Enter" && onEnter) onEnter(search)
         }}
       />
       {search

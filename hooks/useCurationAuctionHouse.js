@@ -69,6 +69,7 @@ const useCurationAuctionHouse = (curation) => {
       //   signers: []
       // })
     
+      //May need to check for existing receipt of the same address, if it exists and its not canceled, then skip the tx and just post to db
 
       await metaplex.rpc().sendAndConfirmTransaction(
         listingTxBuilder,
@@ -81,6 +82,7 @@ const useCurationAuctionHouse = (curation) => {
           receiptAddress: new PublicKey(receipt),
           loadJsonMetadata: false
         })
+
         //might be picking up stale receipts from other auction houses
         if (listing.auctionHouse.address.toString() !== auctionHouse.address.toString()) {
           throw new Error("Listing not confirmed")
@@ -89,7 +91,6 @@ const useCurationAuctionHouse = (curation) => {
       })
 
       if (!listingReceipt) throw new Error("Onchain listing not confirmed")      
-
       return listingReceipt
     } catch (error) {
       console.log(error)

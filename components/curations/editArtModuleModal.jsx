@@ -143,14 +143,8 @@ export default function EditArtModuleModal({
 
   const handleTokenToSubmit = useCallback((token) => { 
     if (submittedTokens.find(t => t.mint === token.mint)) return;
-    if (token?.editions?.length) { 
-      //submit all owned editions  for potential listings
-      setTokensToSubmit(prev => [...prev, ...token.editions])
-      setSubmittedTokens(prev => [...prev, ...token.editions]) //optimistic update for displaying tokens
-    } else {
-      setTokensToSubmit(prev => [...prev, token])
-      setSubmittedTokens(prev => [...prev, token])
-    }
+    setTokensToSubmit(prev => [...prev, token])
+    setSubmittedTokens(prev => [...prev, token])
   },[submittedTokens, setSubmittedTokens])
 
   const userTokensSplit = useMemo(() => {
@@ -302,6 +296,10 @@ export default function EditArtModuleModal({
         ? token.artist_name
         : approvedArtists.find(artist => artist.id === token.artist_id).username;
 
+      const mintsInUse = [
+        ...Object.values(tokenMintsInUse),
+        ...tokens.map(t => t.mint)
+      ]
       return (
         <AddTokenButton
           key={`token-${ token.mint }`}
@@ -312,6 +310,7 @@ export default function EditArtModuleModal({
           handleTokenToSubmit={handleTokenToSubmit}
           setNewArtModule={setNewArtModule}
           curationType={curationType}
+          mintsInUse={mintsInUse}
         />
       )
     })

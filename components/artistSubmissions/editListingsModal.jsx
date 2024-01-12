@@ -45,15 +45,6 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
 
     baseListings.sort((a, b) => a.name.localeCompare(b.name))
     return baseListings
-
-    //trying seperate editions for now
-    // const editions = baseListings.filter(listing => listing.is_edition)
-    // const groupedEditions = groupEditions(editions)
-
-    // const others = baseListings.filter(listing => !listing.is_edition)
-
-    // return [...others, ...groupedEditions]
-
   }, [curation, wallet])
 
   const isPersonalCuration = curation?.curation_type !== "curator" //"artist" || "collector"
@@ -157,11 +148,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         listed_status: "listed",
         buy_now_price: Number(listingPrice),
       }
-    } else if (token.is_edition) {
-
-      //TODO handle edition list
-
-      return
+    // } else if (token.is_edition) {
+    //   //TODO handle edition list
+    //   return
     } else {
       //Handle 1/1 list
       const receipt = await handleBuyNowList(token.mint, listingPrice)
@@ -256,11 +245,11 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         buy_now_price: null,
         primary_sale_happened: true
       }
-    } else if (token.is_edition) {
+    // } else if (token.is_edition) {
 
-      //TODO Handle edition delist
+    //   //TODO Handle edition delist
 
-      return
+    //   return
     } else {
       //Handle 1/1 delist
       const delistTXSignatureConfirmation = await handleDelist(token.listing_receipt)

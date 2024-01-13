@@ -154,7 +154,10 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       //const { signature, confirmResponse } = 
       await metaplex.rpc().sendAndConfirmTransaction(
         transactionBuilder,
-        { commitment: "finalized" }
+        {
+          commitment: "finalized",
+          maxRetries: 5
+        }
       )
       
       const newNft = await retryFetches(() => metaplex.nfts().findByMint({ mintAddress }));

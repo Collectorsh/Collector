@@ -14,7 +14,8 @@ import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddres
 import { initializeMintInstructionData } from "@solana/spl-token";
 import { createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 import { createInitializeAccountInstruction } from "@solana/spl-token";
-import { findTokenAccountsByOwner } from "../utils/curations/findTokenAccountsByOwner";
+import { findATA, findTokenAccountsByOwner } from "../utils/curations/findTokenAccountsByOwner";
+import { getTransferNftTX } from "../utils/curations/transferNft";
 
 const DEBUG = false
 
@@ -59,17 +60,37 @@ const useCurationAuctionHouse = (curation) => {
   const handleBuyNowList = async (mint, price) => { 
     try {
       const mintPubkey = new PublicKey(mint)
-      
-      // const tokenAccount = await getAssociatedTokenAddress(mintPubkey, wallet.publicKey) //doesnt work for mints that used non ATA token addresses
+    
+      //should be able to skip tokenAccount and transfer step for most mints (currently just for a bug in our edition mints)
+      //TODO add retry step for this
       const [tokenAccount] = await findTokenAccountsByOwner(mintPubkey, wallet.publicKey)
+      const ata = findATA(mintPubkey, wallet.publicKey, metaplex)
+      
+      let transferTokenAccountTx
+      if (tokenAccount.toString() !== ata.toString()) { 
+        transferTokenAccountTx = getTransferNftTX(
+          wallet.publicKey,
+          wallet.publicKey,
+          mint,
+          tokenAccount
+        )
+      }
 
       const listingTxBuilder = auctionHouseSDK.builders().list({
         auctionHouse,         // A model of the Auction House related to this listing
         seller: wallet,       // Creator of a listing
         mintAccount: mintPubkey,    // The mint account to create a listing for, used to find the metadata
         price: sol(price),    // The listing price (in SOL)
-        tokenAccount
       })
+
+      if (transferTokenAccountTx) {
+        listingTxBuilder.prepend(...transferTokenAccountTx.instructions.map(i => ({
+          instruction: i,
+          signers: []
+          
+        })))
+      }
+
       const { receipt } = listingTxBuilder.getContext();
       // const priorityFeeTx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 70000 })
       // listingTxBuilder.add({
@@ -88,7 +109,7 @@ const useCurationAuctionHouse = (curation) => {
         const listing = await auctionHouseSDK.findListingByReceipt({
           auctionHouse,
           receiptAddress: new PublicKey(receipt),
-          loadJsonMetadata: false
+          loadJsonMetadata: false,
         })
 
         //might be picking up stale receipts from other auction houses

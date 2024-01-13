@@ -36,9 +36,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
   
   const submissions = useMemo(() => {
     const baseListings = curation?.submitted_token_listings.filter(listing => {
-    const owned = listing.owner_address === wallet?.publicKey.toString()
-    const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
-    return owned && !closedMaster
+      const owned = listing.owner_address === wallet?.publicKey.toString()
+      const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
+      return owned && !closedMaster
     }) || [];
 
     baseListings.sort((a, b) => {

@@ -1,6 +1,8 @@
 import { AccountLayout, TOKEN_PROGRAM_ID, createInitializeAccountInstruction } from "@solana/spl-token";
 import { Keypair, PublicKey, SystemProgram, Transaction  } from "@solana/web3.js";
 
+
+//Don't use this for minting, use createAssociatedTokenAccountInstruction() instead
 export const createTokenAccount = async ({
   payer,
   mint,

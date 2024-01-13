@@ -92,11 +92,11 @@ const useCurationAuctionHouse = (curation) => {
       }
 
       const { receipt } = listingTxBuilder.getContext();
-      // const priorityFeeTx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 70000 })
-      // listingTxBuilder.add({
-      //   instruction: priorityFeeTx,
-      //   signers: []
-      // })
+      const priorityFeeTx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 70000 })
+      listingTxBuilder.add({
+        instruction: priorityFeeTx,
+        signers: []
+      })
     
       //May need to check for existing receipt of the same address, if it exists and its not canceled, then skip the tx and just post to db
 

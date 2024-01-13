@@ -242,7 +242,8 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
     if (curationType == "collector" && (!isListed && !isSold)) return ""
 
     if (isMasterEdition) return `${ maxSupply - supply }/${ maxSupply } Editions`
-    if (isEdition) return `Edition (${ listedEditionCount})`;
+    const secEdCount = listedEditionCount ? `s (${ listedEditionCount })` : ""
+    if (isEdition) return `Secondary Edition${secEdCount}`;
     return "1 of 1"
   }, [isMasterEdition, supply, maxSupply, isEdition, curationType, isListed, listedEditionCount, isSold]) 
   

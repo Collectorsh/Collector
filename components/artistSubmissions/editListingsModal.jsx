@@ -24,8 +24,6 @@ import { useRouter } from "next/router";
 import LogRocket from "logrocket";
 import getListedItem from "../../data/curationListings/getListedItem";
 import LogRocketContext from "../../contexts/logRocket";
-import { sendAndConfirmTransaction } from "@solana/web3.js";
-import { groupEditions } from "../../utils/groupEditions";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
@@ -38,12 +36,17 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
   
   const submissions = useMemo(() => {
     const baseListings = curation?.submitted_token_listings.filter(listing => {
-    const owned = listing.owner_address === wallet.publicKey.toString()
+    const owned = listing.owner_address === wallet?.publicKey.toString()
     const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
     return owned && !closedMaster
     }) || [];
 
-    baseListings.sort((a, b) => a.name.localeCompare(b.name))
+    baseListings.sort((a, b) => {
+      const nameComp = a.name.localeCompare(b.name)
+      // if (a.listed_status === "listed") return -1 
+      // if (b.listed_status === "listed") return 1 
+      return nameComp
+    })
     return baseListings
   }, [curation, wallet])
 

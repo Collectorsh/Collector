@@ -1,6 +1,6 @@
-import { Metaplex, sol, walletAdapterIdentity, AuctionHouse } from "@metaplex-foundation/js";
+import { Metaplex, sol, walletAdapterIdentity, AuctionHouse, token } from "@metaplex-foundation/js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { ComputeBudgetProgram, LAMPORTS_PER_SOL, PublicKey, ba } from "@solana/web3.js";
+import { ComputeBudgetProgram, LAMPORTS_PER_SOL, PublicKey, Transaction, ba } from "@solana/web3.js";
 import { useContext, useEffect, useState } from "react";
 import { connection } from "../config/settings";
 import { getSplitBalance } from "../pages/api/curations/withdraw";
@@ -10,6 +10,10 @@ import recordSale from "../data/salesHistory/recordSale";
 import { error, success } from "../utils/toast";
 import { shootConfetti } from "../utils/confetti";
 import retryFetches from "../utils/curations/retryFetches";
+import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddress } from "@solana/spl-token";
+import { initializeMintInstructionData } from "@solana/spl-token";
+import { createAssociatedTokenAccountInstruction } from "@solana/spl-token";
+import { createInitializeAccountInstruction } from "@solana/spl-token";
 
 const DEBUG = false
 
@@ -53,15 +57,16 @@ const useCurationAuctionHouse = (curation) => {
 
   const handleBuyNowList = async (mint, price) => { 
     try {
+      const mintPubkey = new PublicKey(mint)
+      
 
       const listingTxBuilder = auctionHouseSDK.builders().list({
         auctionHouse,         // A model of the Auction House related to this listing
         seller: wallet,       // Creator of a listing
-        mintAccount: new PublicKey(mint),    // The mint account to create a listing for, used to find the metadata
+        mintAccount: mintPubkey,    // The mint account to create a listing for, used to find the metadata
         price: sol(price),    // The listing price (in SOL)
-        // tokens: 1          // The number of tokens to list, for an NFT listing it must be 1 token
+        // tokenAccount
       })
-
       const { receipt } = listingTxBuilder.getContext();
       // const priorityFeeTx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 70000 })
       // listingTxBuilder.add({
@@ -195,9 +200,9 @@ const useCurationAuctionHouse = (curation) => {
       } else {
         error(`Error buying ${ token.name }: ${ res?.message }`)
       }
-    } else if (isEdition) {
-      //TODO Handle edition purchase
-      return
+    // } else if (isEdition) {
+    //   //TODO Handle edition purchase
+    //   return
     } else if (token.listing_receipt) {
       //Handle 1/1 buy now purchase
       const txHash = await handleBuyNowPurchase(token.listing_receipt)

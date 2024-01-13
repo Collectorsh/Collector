@@ -365,6 +365,7 @@ export function useTokens(publicKeys, options) {
       }
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, tokenKey, useTokenMetadata, alreadySet, setAllTokens, user])
 
   return {
@@ -383,7 +384,6 @@ const getMetadata = async (metaplex, mint) => {
     })
 
     const edition = metadata.edition
-
     result.is_collection_nft = Boolean(metadata.collectionDetails);
 
     result.is_master_edition = Boolean(edition.maxSupply && Number(edition.maxSupply?.toString()) > 0)

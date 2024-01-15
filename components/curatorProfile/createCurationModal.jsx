@@ -19,7 +19,7 @@ const decimalRegex = /^\d+(\.\d+)?$/;
 const maxCuratorFee = MAX_CURATOR_FEE_POINTS / 100;
 
 const curationTypes = [
-  // "collector",
+  "collector",
   "artist",
   "curator"
 ]

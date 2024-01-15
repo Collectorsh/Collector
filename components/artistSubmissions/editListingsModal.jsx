@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Modal from "../Modal";
 import MainButton, { WarningButton } from "../MainButton";
 import CloudinaryImage from "../CloudinaryImage";
@@ -24,7 +24,6 @@ import { useRouter } from "next/router";
 import LogRocket from "logrocket";
 import getListedItem from "../../data/curationListings/getListedItem";
 import LogRocketContext from "../../contexts/logRocket";
-import { sendAndConfirmTransaction } from "@solana/web3.js";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
@@ -35,11 +34,21 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
 
   const { handleBuyNowList, handleDelist, auctionHouse } = useCurationAuctionHouse(curation)
   
-  const submissions = curation?.submitted_token_listings.filter(listing => {
-    const owned = listing.owner_address === wallet.publicKey.toString()
-    const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
-    return owned && !closedMaster
-  }) || [];
+  const submissions = useMemo(() => {
+    const baseListings = curation?.submitted_token_listings.filter(listing => {
+      const owned = listing.owner_address === wallet?.publicKey.toString()
+      const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
+      return owned && !closedMaster
+    }) || [];
+
+    baseListings.sort((a, b) => {
+      const nameComp = a.name.localeCompare(b.name)
+      // if (a.listed_status === "listed") return -1 
+      // if (b.listed_status === "listed") return 1 
+      return nameComp
+    })
+    return baseListings
+  }, [curation, wallet])
 
   const isPersonalCuration = curation?.curation_type !== "curator" //"artist" || "collector"
 
@@ -57,7 +66,6 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
     }
 
     if (token.is_master_edition) {
-
       const listingRes = await getListedItem(token.mint)
 
       if (listingRes.status === "success") {
@@ -96,11 +104,15 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
  
       const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet))
 
-      //const { signature, confirmResponse } = 
+      // const { signature, confirmResponse } =
       await metaplex.rpc().sendAndConfirmTransaction(
         signedTx,
-        { commitment: "finalized" }
-      )
+        {
+          commitment: "finalized", //"confirmed"
+          maxRetries: 5
+        }
+      );
+
       // if (!signature || Boolean(confirmResponse.value.err)) {
       //   error(`Error Listing ${ token.name } Editions Onchain`)
       //   return
@@ -139,11 +151,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         listed_status: "listed",
         buy_now_price: Number(listingPrice),
       }
-    } else if (token.is_edition) {
-
-      //TODO handle edition list
-
-      return
+    // } else if (token.is_edition) {
+    //   //TODO handle edition list
+    //   return
     } else {
       //Handle 1/1 list
       const receipt = await handleBuyNowList(token.mint, listingPrice)
@@ -238,11 +248,11 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         buy_now_price: null,
         primary_sale_happened: true
       }
-    } else if (token.is_edition) {
+    // } else if (token.is_edition) {
 
-      //TODO Handle edition delist
+    //   //TODO Handle edition delist
 
-      return
+    //   return
     } else {
       //Handle 1/1 delist
       const delistTXSignatureConfirmation = await handleDelist(token.listing_receipt)
@@ -345,13 +355,14 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
   const price = roundToPrecision(token.buy_now_price, 3)
   
   const isMasterEdition = token.is_master_edition
+  const isEdition = token.is_edition
   const editionSupply = token.supply
   const editionMaxSupply = token.max_supply
   const editionsLeft = editionMaxSupply - editionSupply
   const isSoldOut = isMasterEdition ? editionsLeft <= 0 : false
   const isListed = token.listed_status === "listed" || (isMasterEdition && isSoldOut)//to allow owner to withdraw master edition
   const isClosed = token.listed_status === "master-edition-closed"
-  const disableListing = !listingPrice || listingPrice <= 0 || listingPrice == token.buy_now_price || listing || isSoldOut
+  const disableListing = !listingPrice || listingPrice <= 0 || listingPrice == token.buy_now_price || listing || isSoldOut || token.compressed
 
   const handleList = async () => {
     try {
@@ -394,6 +405,35 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
     setListing(false)
   }
 
+  const infoBadge = useMemo(() => {
+    if (token.compressed) return (
+      <Tippy
+        className="shadow-lg"
+        content="We currently do not support listings for compressed nfts"
+      >
+        <span>C</span>
+      </Tippy>
+    )
+    if (token.is_edition) return (
+      <Tippy
+        className="shadow-lg"
+        content="If there are multiple edition listings, the lowest price will be sold first"
+      >
+        <span>E</span>
+      </Tippy>
+    )
+    if (token.is_master_edition) return (
+      <Tippy
+        className="shadow-lg"
+        content="To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet."
+      >
+        <span>ME</span>
+      </Tippy>
+    )
+    return null
+    // return token.editions?.length
+  }, [token])
+
   const delistText = isMasterEdition
     ? (isSoldOut ? "Withdraw" : "End Sale")
     : "Delist"
@@ -424,6 +464,16 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
           </button>
         </div>
       </Tippy>
+
+      <div className={clsx(
+        !infoBadge && "hidden",
+        "bg-white dark:bg-neutral-900",
+        "rounded-full ring-2 ring-neutral-200 dark:ring-neutral-700",
+        "min-w-fit w-6 h-6 absolute top-3 left-3 z-10 flex justify-center items-center",
+        "text-leading-none font-bold text-lg"
+      )}>
+        {infoBadge}
+      </div>
 
       <CloudinaryImage
         className={clsx("flex-shrink-0 overflow-hidden object-cover",
@@ -473,28 +523,38 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
                   type="number"
                   min={0}
                   className="outline-none bg-transparent w-full"
-                  placeholder={isMasterEdition ? "Edition Price" : "Buy Now Price"}
+                  placeholder={(isMasterEdition || isEdition) ? "Edition Price" : "Buy Now Price"}
                   onChange={(e) => setListingPrice(e.target.value)}
                   value={listingPrice}
                 />
                 <p>◎</p>
               </div>
-              <MainButton
-                solid
-                onClick={handleList}
-                disabled={disableListing}
-                noPadding
-                className={clsx("px-3 w-24 flex-shrink-0")}
+
+              <Tippy
+                className="shadow-lg"
+                content="We currently do not support listings for compressed nfts"
+                disabled={!token.compressed}
               >
-                {listing
-                  ? (
-                    <span className="inline-block translate-y-0.5">
-                      <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
-                    </span>
-                  )
-                  : "List!"
-                }
-              </MainButton>
+                <div>
+                  <MainButton
+                    solid
+                    onClick={handleList}
+                    disabled={disableListing}
+                    noPadding
+                    className={clsx("px-3 w-24 flex-shrink-0")}
+                  >
+                    {listing
+                      ? (
+                        <span className="inline-block translate-y-0.5">
+                          <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+                        </span>
+                      )
+                      : "List!"
+                    }
+                  </MainButton>
+
+                </div>
+              </Tippy>
 
             </div>
           )

@@ -195,7 +195,7 @@ export default function DetailPage({token, curations}) {
               (useAltMediaAspectRatio || videoUrl) && "absolute inset-0 object-contain z-0"
             )}
             token={token}
-            useUploadFallback
+            // useUploadFallback
             useMetadataFallback
             onLoad={() => setImgLoaded(true)}
           />
@@ -240,6 +240,7 @@ export default function DetailPage({token, curations}) {
                     token={token}
                     getAspectRatio={setVideoAspectRatio}
                     wrapperClass={clsx("w-full duration-100 z-20")}
+                    
                     style={{
                       width: "100%",
                       maxHeight: "75vh"

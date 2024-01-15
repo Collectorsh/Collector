@@ -7,10 +7,13 @@ export const UserTokensProvider = ({ children }) => {
   //{
   // [key]: list of tokens
   // }
+  const indexedRef = useRef([]);
+
   return (
     <UserTokensContext.Provider value={{
       setAllTokens,
-      allTokens
+      allTokens,
+      indexedRef
     }}>
       {children}
     </UserTokensContext.Provider>

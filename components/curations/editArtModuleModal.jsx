@@ -143,20 +143,15 @@ export default function EditArtModuleModal({
 
   const handleTokenToSubmit = useCallback((token) => { 
     if (submittedTokens.find(t => t.mint === token.mint)) return;
-    if (token?.editions?.length) { 
-      //submit all owned editions  for potential listings
-      setTokensToSubmit(prev => [...prev, ...token.editions])
-      setSubmittedTokens(prev => [...prev, ...token.editions]) //optimistic update for displaying tokens
-    } else {
-      setTokensToSubmit(prev => [...prev, token])
-      setSubmittedTokens(prev => [...prev, token])
-    }
+    setTokensToSubmit(prev => [...prev, token])
+    setSubmittedTokens(prev => [...prev, token])
   },[submittedTokens, setSubmittedTokens])
 
   const userTokensSplit = useMemo(() => {
     const masterEditions = []
     const editions = []
     const artTokens = []
+    const compressedTokens = []
     const remainingTokens = []    
     
     if (userTokens?.length) userTokens.forEach(token => {
@@ -166,6 +161,7 @@ export default function EditArtModuleModal({
       const useMasterEdition = token.is_master_edition && (curationType === "artist" || !soldOut)
       if (useMasterEdition) masterEditions.push(token)
       else if (token.is_edition) editions.push(token)
+      else if (token.compressed) compressedTokens.push(token)
       else if (isOneOfOne) artTokens.push(token)
       else remainingTokens.push(token)
     })
@@ -173,9 +169,9 @@ export default function EditArtModuleModal({
     const groupedEditions = groupEditions(editions)
     return {
       masterEditions,
-      editions: groupedEditions,
+      editions: [...groupedEditions, ...compressedTokens],
       artTokens,
-      remainingTokens
+      remainingTokens,
     }
   }, [userTokens, curationType])
  
@@ -300,6 +296,10 @@ export default function EditArtModuleModal({
         ? token.artist_name
         : approvedArtists.find(artist => artist.id === token.artist_id).username;
 
+      const mintsInUse = [
+        ...Object.values(tokenMintsInUse),
+        ...tokens.map(t => t.mint)
+      ]
       return (
         <AddTokenButton
           key={`token-${ token.mint }`}
@@ -310,6 +310,7 @@ export default function EditArtModuleModal({
           handleTokenToSubmit={handleTokenToSubmit}
           setNewArtModule={setNewArtModule}
           curationType={curationType}
+          mintsInUse={mintsInUse}
         />
       )
     })

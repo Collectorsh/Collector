@@ -4,6 +4,9 @@ import { MintLayout, TOKEN_PROGRAM_ID, createInitializeMintInstruction, createMi
 import { findVaultOwnerAddress, findTradeHistoryAddress, createBuyInstruction, Market, SellingResource } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { Metaplex, toBigNumber } from "@metaplex-foundation/js";
 import { MetadataProgram } from '@metaplex-foundation/mpl-token-metadata';
+import { createAssociatedTokenAccount } from "@solana/spl-token";
+import { getAssociatedTokenAddressSync } from "@solana/spl-token";
+import { createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 
 export const getMintEditionTX = async ({
   connection,
@@ -46,7 +49,7 @@ export const getMintEditionTX = async ({
 
   mainTX.add(mintTokenTX)
   signers.push(newMint)
-  signers.push(newMintAta)
+  // signers.push(newMintAta)
 
   console.log('New mint', newMint.publicKey.toBase58());
 
@@ -94,7 +97,10 @@ export const getMintEditionTX = async ({
       newMetadata: newMintMetadata,
       // newly generated mint edition PDA
       newEdition: newMintEdition,
-      newTokenAccount: newMintAta.publicKey,
+
+      newTokenAccount: newMintAta,
+      // newTokenAccount: newMintAta.publicKey, //deprecated
+
       // metaplex token metadata program address
       tokenMetadataProgram: MetadataProgram.PUBKEY,
       clock: SYSVAR_CLOCK_PUBKEY,
@@ -123,19 +129,32 @@ export const getMintTokenToAccountTX = async ({
 
   mintTokenTX.add(createMintTx);
 
-  const { tokenAccount: associatedTokenAccount, createTokenTx } = await createTokenAccount({
+  // const { tokenAccount: associatedTokenAccount, createTokenTx } = await createTokenAccount({
+  //   payer,
+  //   mint: mint.publicKey,
+  //   connection,
+  // });
+  const associatedToken = getAssociatedTokenAddressSync(mint.publicKey, payer);
+  const createTokenTx = createAssociatedTokenAccountInstruction(
     payer,
-    mint: mint.publicKey,
-    connection,
-  });
+    associatedToken,
+    payer,
+    mint.publicKey,
+  )
 
   mintTokenTX.add(createTokenTx);
 
-  mintTokenTX.add(createMintToInstruction(mint.publicKey, associatedTokenAccount.publicKey, payer, 1));
+  mintTokenTX.add(createMintToInstruction(
+    mint.publicKey,
+    associatedToken,
+    // associatedTokenAccount.publicKey,
+    payer, 1)
+  );
 
   return {
     mint,
-    mintAta: associatedTokenAccount,
+    // mintAta: associatedTokenAccount,
+    mintAta: associatedToken,
     mintTokenTX
   };
 };

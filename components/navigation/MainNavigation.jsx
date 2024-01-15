@@ -20,8 +20,8 @@ export default function MainNavigation() {
   const [user, setUser] = useContext(UserContext);
   const [open, setOpen] = useState(false);
 
-  const isCuratorApproved = user?.curator_approved
-
+  const isCuratorApproved = user?.curator_approved || (user?.subscription_level === "pro");
+  
   function toggleMenu() {
     setOpen(!open);
   }

@@ -9,6 +9,7 @@ import { Oval } from "react-loader-spinner";
 import SearchBar from "../SearchBar";
 import { truncate } from "../../utils/truncate";
 import useNftFiles from "../../hooks/useNftFiles";
+import { error } from "../../utils/toast";
 
 const tabs = ["1/1", "Master Editions"]
 
@@ -242,17 +243,19 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
         //fetch video dimensions
         const video = document.createElement("video")
         
-        return new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
           video.onloadedmetadata = () => resolve(Number(video.videoWidth / video.videoHeight))
-          video.onerror = (err) => reject(new Error(`Unable to load video - ${err}`));
+          video.onerror = (err) => reject(`Unable to load video - ${ err }`);
           video.src = videoUrl
           video.load()
         });
       } 
     } catch (err) {
       console.log("Error fetching non-image dimensions: ", err)
+      return null
     }
-    
+
+    //else its not video
     return Number(imageElement.naturalWidth / imageElement.naturalHeight)
   }
 
@@ -268,7 +271,11 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
       const aspectRatio = await getAspectRatio(imageRef.current)
       setLoadingArt(false)
 
-      if (!aspectRatio) return console.log("Error getting aspect ratio")
+      if (!aspectRatio) {
+        console.log("Error getting aspect ratio")
+        error(`Unable to process ${videoUrl ? "video" : "image"}`)
+        return
+      }
       
       newToken.aspect_ratio = aspectRatio
   
@@ -299,6 +306,12 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
         >
           Already Submitted</p>
         : null
+      }
+      {loadingArt ? (
+        <div className="absolute inset-0 w-full h-full flex justify-center items-center">
+          <Oval color="#FFF" secondaryColor="#666" height={48} width={48} />
+        </div>
+      ) : null
       }
       <div
         className="absolute text-center top-0 left-0 p-8 w-full h-full overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50 

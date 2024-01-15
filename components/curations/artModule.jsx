@@ -238,13 +238,14 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
 
   const artistName = artist?.username || token.temp_artist_name
 
-  const supplyText = useMemo(() => { 
-    if (curationType == "collector") return ""
+  const supplyText = useMemo(() => {
+    if (curationType == "collector" && (!isListed && !isSold)) return ""
 
     if (isMasterEdition) return `${ maxSupply - supply }/${ maxSupply } Editions`
-    if (isEdition) return "Edition"; //`${ listedEditionCount }/${ maxSupply } Editions`
+    const secEdCount = listedEditionCount ? `s (${ listedEditionCount })` : ""
+    if (isEdition) return `Secondary Edition${secEdCount}`;
     return "1 of 1"
-  }, [isMasterEdition, supply, maxSupply, isEdition, curationType]) 
+  }, [isMasterEdition, supply, maxSupply, isEdition, curationType, isListed, listedEditionCount, isSold]) 
   
   const cacheWidth = useMemo(() => {
     //round up to bucket of 250 so we aren't caching too many sizes
@@ -394,7 +395,7 @@ export const ArtItem = ({ token, artist, handleCollect, height, width, curationT
           {userText}
 
           <div className='flex items-center gap-2 '>
-            {(token?.buy_now_price && (isListed || isSold))
+            {(token?.buy_now_price !== undefined && (isListed || isSold))
               ? <>
                 <p className=''>{roundToPrecision(token.buy_now_price, 2)}◎</p>
                 <span>-</span>

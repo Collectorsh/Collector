@@ -1,6 +1,6 @@
-import { Metaplex, sol, walletAdapterIdentity, AuctionHouse } from "@metaplex-foundation/js";
+import { Metaplex, sol, walletAdapterIdentity, AuctionHouse, token } from "@metaplex-foundation/js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { ComputeBudgetProgram, LAMPORTS_PER_SOL, PublicKey, ba } from "@solana/web3.js";
+import { ComputeBudgetProgram, LAMPORTS_PER_SOL, PublicKey, Transaction, ba } from "@solana/web3.js";
 import { useContext, useEffect, useState } from "react";
 import { connection } from "../config/settings";
 import { getSplitBalance } from "../pages/api/curations/withdraw";
@@ -10,6 +10,12 @@ import recordSale from "../data/salesHistory/recordSale";
 import { error, success } from "../utils/toast";
 import { shootConfetti } from "../utils/confetti";
 import retryFetches from "../utils/curations/retryFetches";
+import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddress } from "@solana/spl-token";
+import { initializeMintInstructionData } from "@solana/spl-token";
+import { createAssociatedTokenAccountInstruction } from "@solana/spl-token";
+import { createInitializeAccountInstruction } from "@solana/spl-token";
+import { findATA, findTokenAccountsByOwner } from "../utils/curations/findTokenAccountsByOwner";
+import { getTransferNftTX } from "../utils/curations/transferNft";
 
 const DEBUG = false
 
@@ -53,21 +59,46 @@ const useCurationAuctionHouse = (curation) => {
 
   const handleBuyNowList = async (mint, price) => { 
     try {
+      const mintPubkey = new PublicKey(mint)
+    
+      //should be able to skip tokenAccount and transfer step for most mints (currently just for a bug in our edition mints)
+      //TODO add retry step for this
+      const [tokenAccount] = await findTokenAccountsByOwner(mintPubkey, wallet.publicKey)
+      const ata = findATA(mintPubkey, wallet.publicKey, metaplex)
+      
+      let transferTokenAccountTx
+      if (tokenAccount.toString() !== ata.toString()) { 
+        transferTokenAccountTx = getTransferNftTX(
+          wallet.publicKey,
+          wallet.publicKey,
+          mint,
+          tokenAccount
+        )
+      }
 
       const listingTxBuilder = auctionHouseSDK.builders().list({
         auctionHouse,         // A model of the Auction House related to this listing
         seller: wallet,       // Creator of a listing
-        mintAccount: new PublicKey(mint),    // The mint account to create a listing for, used to find the metadata
+        mintAccount: mintPubkey,    // The mint account to create a listing for, used to find the metadata
         price: sol(price),    // The listing price (in SOL)
-        // tokens: 1          // The number of tokens to list, for an NFT listing it must be 1 token
       })
 
+      if (transferTokenAccountTx) {
+        listingTxBuilder.prepend(...transferTokenAccountTx.instructions.map(i => ({
+          instruction: i,
+          signers: []
+          
+        })))
+      }
+
       const { receipt } = listingTxBuilder.getContext();
-      // const priorityFeeTx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 70000 })
-      // listingTxBuilder.add({
-      //   instruction: priorityFeeTx,
-      //   signers: []
-      // })
+      const priorityFeeTx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 70000 })
+      listingTxBuilder.add({
+        instruction: priorityFeeTx,
+        signers: []
+      })
+    
+      //May need to check for existing receipt of the same address, if it exists and its not canceled, then skip the tx and just post to db
 
       await metaplex.rpc().sendAndConfirmTransaction(
         listingTxBuilder,
@@ -78,8 +109,9 @@ const useCurationAuctionHouse = (curation) => {
         const listing = await auctionHouseSDK.findListingByReceipt({
           auctionHouse,
           receiptAddress: new PublicKey(receipt),
-          loadJsonMetadata: false
+          loadJsonMetadata: false,
         })
+
         //might be picking up stale receipts from other auction houses
         if (listing.auctionHouse.address.toString() !== auctionHouse.address.toString()) {
           throw new Error("Listing not confirmed")
@@ -88,7 +120,6 @@ const useCurationAuctionHouse = (curation) => {
       })
 
       if (!listingReceipt) throw new Error("Onchain listing not confirmed")      
-
       return listingReceipt
     } catch (error) {
       console.log(error)
@@ -193,9 +224,9 @@ const useCurationAuctionHouse = (curation) => {
       } else {
         error(`Error buying ${ token.name }: ${ res?.message }`)
       }
-    } else if (isEdition) {
-      //TODO Handle edition purchase
-      return
+    // } else if (isEdition) {
+    //   //TODO Handle edition purchase
+    //   return
     } else if (token.listing_receipt) {
       //Handle 1/1 buy now purchase
       const txHash = await handleBuyNowPurchase(token.listing_receipt)

@@ -45,7 +45,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
   const isEdition = token.is_edition
   const listedEditionCount = editionListings?.length
   const maxSupply = token.max_supply
-  const supply = maxSupply//token.supply
+  const supply = token.supply
 
   const isListed = token.listed_status === "listed"
   const isSold = token.listed_status === "sold" || isMasterEdition && supply >= maxSupply

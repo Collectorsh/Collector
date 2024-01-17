@@ -14,7 +14,10 @@ export async function findTokenAccountsByOwner(mintPublicKey, ownerPublicKey) {
   }
 }
 
-export function findATA(mintPublicKey, ownerPublicKey, existingMetaplex) {
+export function findATA(mintAddress, ownerAddress) {
+  const mintPublicKey = new PublicKey(mintAddress);
+  const ownerPublicKey = new PublicKey(ownerAddress);
+  
   const metaplex = Metaplex.make(connection);
   const pdas = metaplex.tokens().pdas();
   return pdas.associatedTokenAccount({ mint: mintPublicKey, owner: ownerPublicKey })

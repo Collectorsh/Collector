@@ -3,7 +3,7 @@ import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse"
 import MainButton from "../MainButton"
 import { Oval } from "react-loader-spinner"
 import UserContext from "../../contexts/user";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import { roundToPrecision } from "../../utils/maths";
@@ -13,6 +13,18 @@ export default function DetailListings({ curation, mint }) {
   const { handleCollect } = useCurationAuctionHouse(curation)
   const [purchasing, setPurchasing] = useState(false)
   const listingToken = curation.submitted_token_listings?.find(l => l.mint === mint)
+
+  const curationTypeText = useMemo(() => {
+    switch (curation.curation_type) {
+      case "curator":
+        return "Curated by"
+      case "artist":
+        return "Art by"
+      case "collector":
+        return "Collection by"
+    }
+  }, [curation.curation_type])
+
 
   if (!listingToken) return null
 
@@ -39,7 +51,7 @@ export default function DetailListings({ curation, mint }) {
       <Link href={`/curations/${curation.name}`}>
         <a className="hover:scale-105 duration-300">
           <p className="font-bold text-xl">{curation.name.replaceAll("_", " ")}</p>
-          <p>Curated by {curation.curator.username}</p>
+          <p>{curationTypeText} {curation.curator.username}</p>
         </a>
       </Link>
       {isListed

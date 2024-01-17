@@ -230,7 +230,6 @@ const useCurationAuctionHouse = (curation) => {
     } else if (token.listing_receipt) {
       //Handle 1/1 buy now purchase
       const txHash = await handleBuyNowPurchase(token.listing_receipt)
-
       const res = await recordSale({
         apiKey: user.api_key,
         curationId: token.curation_id,
@@ -240,10 +239,11 @@ const useCurationAuctionHouse = (curation) => {
         saleType: "buy_now",
         txHash: txHash,
       })
-
+   
       if (res?.status === "success") {
         success(`Congrats! ${ token.name } has been collected!`)
         shootConfetti(3)
+        return true
       } else {
         error(`Error buying ${ token.name }: ${ res?.message }`)
       }

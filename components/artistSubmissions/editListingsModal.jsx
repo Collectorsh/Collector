@@ -36,8 +36,8 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
   
   const submissions = useMemo(() => {
     const baseListings = curation?.submitted_token_listings.filter(listing => {
-      // const owned = listing.owner_address === wallet?.publicKey.toString()
-      const owned = user.public_keys.includes(listing.owner_address)
+      const owned = listing.owner_address === wallet?.publicKey.toString()
+      // const owned = user.public_keys.includes(listing.owner_address)
       const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
       return owned && !closedMaster
     }) || [];
@@ -49,7 +49,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       return nameComp
     })
     return baseListings
-  }, [curation, user.public_keys])
+  }, [curation, wallet])
 
   const isPersonalCuration = curation?.curation_type !== "curator" //"artist" || "collector"
 

@@ -344,9 +344,13 @@ const TableHeader = ({ children }) => {
 }
 
 const TableCell = ({ children, tippyContent }) => { 
+  const handleClick = () => {
+    if (!tippyContent) return;
+    navigator.clipboard.writeText(tippyContent);
+  }
   return (
     <Tippy content={tippyContent} className="align-start shadow-md min-w-fit" disabled={!tippyContent}>
-      <p className={clsx("truncate border-b py-1 px-2")}>
+      <p onClick={handleClick} className={clsx("truncate border-b py-1 px-2", tippyContent && "cursor-pointer")}>
         {children}
       </p>
     </Tippy>
@@ -355,10 +359,11 @@ const TableCell = ({ children, tippyContent }) => {
 
 const getDetailsFromRecord = (record) => { 
   const date = new Date(record.created_at).toLocaleDateString();
-  const artistName = record.artist ? record.artist.username : truncate(record.artist_address);
-  const sellerName = record.seller ? record.seller.username : truncate(record.seller_address);
-  const collectorName = record.buyer ? record.buyer.username : truncate(record.buyer_address);
-  const curatorName = record.curation.curator ? record.curation.curator.username : "N/A"
+  const artistName = record.artist?.username ?? truncate(record.artist_address);
+  const sellerName = record.seller?.username ?? truncate(record.seller_address);
+  const collectorName = record.buyer?.username ?? truncate(record.buyer_address);
+
+  const curatorName = record.curation?.curator?.username ?? "N/A"
   const saleType = record.sale_type.replaceAll("_", " ");
   const curationName = record.curation.name.replaceAll("_", " ");
   const curatorAddress = record.curation.curator.public_keys[0]

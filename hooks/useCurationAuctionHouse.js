@@ -239,7 +239,7 @@ const useCurationAuctionHouse = (curation) => {
         saleType: "buy_now",
         txHash: txHash,
       })
-   
+
       if (res?.status === "success") {
         success(`Congrats! ${ token.name } has been collected!`)
         shootConfetti(3)

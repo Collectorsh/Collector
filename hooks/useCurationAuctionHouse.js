@@ -229,6 +229,7 @@ const useCurationAuctionHouse = (curation) => {
     //   return
     } else if (token.listing_receipt) {
       //Handle 1/1 buy now purchase
+      
       const txHash = await handleBuyNowPurchase(token.listing_receipt)
       const res = await recordSale({
         apiKey: user.api_key,

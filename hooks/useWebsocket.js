@@ -46,6 +46,7 @@ const useActionCable = (socket_id, handlers = {}, channelName = "NotificationsCh
     // Clean up function
     return () => {
       if (subscription) {
+        subscription.unsubscribe();
         cable?.subscriptions.remove(subscription);
       }
     }

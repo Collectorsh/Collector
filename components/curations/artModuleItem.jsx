@@ -45,7 +45,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
   const isEdition = token.is_edition
   const listedEditionCount = editionListings?.length
   const maxSupply = token.max_supply
-  const supply = maxSupply//token.supply
+  const supply = token.supply
 
   const isListed = token.listed_status === "listed"
   const isSold = token.listed_status === "sold" || isMasterEdition && supply >= maxSupply
@@ -272,7 +272,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
             'flex flex-col gap-1',
           )}
         >
-          {(isListed && !sellingSecondaryFromMaster)
+          {(isListed && !sellingSecondaryFromMaster && !isSold)
             ? (
               <div className="flex items-center gap-2 flex-wrap">
 
@@ -306,7 +306,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
             : null
           }
 
-          {editionListings?.length
+          {sellingSecondaryFromMaster
           ? <EditionListing listing={editionListings[0]} onCollect={handleCollectSecEd} />
           : null
       }

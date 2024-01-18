@@ -1,6 +1,6 @@
 import { Metaplex, sol, walletAdapterIdentity, AuctionHouse, token } from "@metaplex-foundation/js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { ComputeBudgetProgram, LAMPORTS_PER_SOL, PublicKey, Transaction, ba } from "@solana/web3.js";
+import { ComputeBudgetProgram, LAMPORTS_PER_SOL, PublicKey, Transaction, ba, sendAndConfirmRawTransaction, sendAndConfirmTransaction } from "@solana/web3.js";
 import { useContext, useEffect, useState } from "react";
 import { connection } from "../config/settings";
 import { getSplitBalance } from "../pages/api/curations/withdraw";
@@ -16,6 +16,8 @@ import { createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 import { createInitializeAccountInstruction } from "@solana/spl-token";
 import { findATA, findTokenAccountsByOwner } from "../utils/curations/findTokenAccountsByOwner";
 import { getTransferNftTX } from "../utils/curations/transferNft";
+import { getTxFailed, setTxTFailed, setTxTried } from "../utils/cookies";
+import { getPriorityFeeInstruction } from "../utils/priorityFees";
 
 const DEBUG = false
 
@@ -120,7 +122,8 @@ const useCurationAuctionHouse = (curation) => {
         return listing.receiptAddress.toString();
       })
 
-      if (!listingReceipt) throw new Error("Onchain listing not confirmed")      
+      if (!listingReceipt) throw new Error("Onchain listing not confirmed")    
+      
       return listingReceipt
     } catch (error) {
       console.log(error)
@@ -150,35 +153,76 @@ const useCurationAuctionHouse = (curation) => {
     } 
   }
 
-  const handleBuyNowPurchase = async (listingReceipt) => { 
+  const handleBuyNowPurchase = async (token) => { 
+    const listingReceipt = token.listing_receipt
+    const txCookieId = `buyNowPurchase-${listingReceipt}`
     try {
+      const txHasFailed = getTxFailed(txCookieId)
+      //TODO add fallback steps for when tx fails
+
+      let activeReceipt = listingReceipt;
+      if (txHasFailed) { 
+        const listings = await auctionHouseSDK.findListings({
+          auctionHouse,
+          mint: new PublicKey(token.mint),
+        })
+        const activeListing = listings.find(l => {
+          const correctAH = l.auctionHouse.address.toString() === auctionHouse.address.toString() 
+          const lPrice = l.price.basisPoints.toNumber() / LAMPORTS_PER_SOL;
+          const correctPrice = lPrice === Number(token.buy_now_price)
+          return correctAH && correctPrice
+        })
+        if (activeListing) activeReceipt = activeListing.receiptAddress
+      } 
+        
       const listing = await auctionHouseSDK
         .findListingByReceipt({
           auctionHouse,
           receiptAddress: new PublicKey(listingReceipt),
           loadJsonMetadata: false
         });
-  
+
+      if (!listing) throw new Error("Listing not found")
+
       const buyBuilder = await auctionHouseSDK.builders().buy({
         auctionHouse,
         listing,
       })
 
-      // const priorityFeeTx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 70000 })
-      // buyBuilder.add({
-      //   instruction: priorityFeeTx,
-      //   signers: []
-      // })
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
 
-      const txRes = await metaplex.rpc().sendAndConfirmTransaction(
-        buyBuilder,
-        { commitment: "finalized" }
-      )
+      const buyTx = buyBuilder.toTransaction({
+        blockhash,
+        lastValidBlockHeight,
+      })
       
-      return txRes?.signature
-    } catch(error) {
-      console.log(error)
-    }
+      buyTx.feePayer = wallet.publicKey
+      buyTx.signatures = []
+      const priorityFeeIx = await getPriorityFeeInstruction(buyTx)
+    
+      buyTx.add(priorityFeeIx)
+      const signedTx = await wallet.signTransaction(buyTx)
+
+      const signature = sendAndConfirmRawTransaction(connection, signedTx.serialize(), {
+        commitment: "confirmed"
+      })
+
+      if (!signature) {
+        throw new Error("Error confirming buy now purchase")
+      }
+
+      setTxTFailed(txCookieId, false)
+      return { signature }
+    } catch (err) {
+      const error = err.message
+      if (error.includes("User rejected")) {
+        console.log("User rejected Buy Now transaction")
+        return {}
+      } else {
+        setTxTFailed(txCookieId, true)
+        return { error }
+      }
+    }   
   }
 
   const handleCollect = async (token) => {
@@ -233,23 +277,29 @@ const useCurationAuctionHouse = (curation) => {
       
       const saleType = isEdition ? "secondary_edition" : "buy_now"
 
-      const txHash = await handleBuyNowPurchase(token.listing_receipt)
-      const res = await recordSale({
-        apiKey: user.api_key,
-        curationId: token.curation_id,
-        token: token,
-        buyerId: user.id,
-        buyerAddress: wallet.publicKey.toString(),
-        saleType: saleType,
-        txHash: txHash,
-      })
+      const buyNowRes = await handleBuyNowPurchase(token)
 
-      if (res?.status === "success") {
+      if (buyNowRes.signature) {
         success(`Congrats! ${ token.name } has been collected!`)
         shootConfetti(3)
+
+        const res = await recordSale({
+          apiKey: user.api_key,
+          curationId: token.curation_id,
+          token: token,
+          buyerId: user.id,
+          buyerAddress: wallet.publicKey.toString(),
+          saleType: saleType,
+          txHash: buyNowRes.signature,
+        })
+
+        if (res?.status !== "success") {
+          console.log(`Error recording sale for ${ token.name }: ${ res?.message }`)
+        }
+
         return true
-      } else {
-        error(`Error buying ${ token.name }: ${ res?.message }`)
+      } else if (buyNowRes.error) {
+        error(`Error buying ${ token.name }: ${ buyNowRes.error }`)
       }
     }
   }

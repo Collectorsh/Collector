@@ -21,11 +21,14 @@ import { UpdateMetadata } from "../../data/nft/updateMetadata";
 import { Oval } from "react-loader-spinner";
 import { error, success } from "../../utils/toast";
 import { Toaster } from "react-hot-toast";
-import { useRouter } from "next/router";
 import UserContext from "../../contexts/user";
-import { adminIDs } from "../../config/settings";
+import { adminIDs, connection } from "../../config/settings";
 import debounce from "lodash.debounce";
-import NotFound from "../../components/404";
+import { Metaplex } from "@metaplex-foundation/js";
+import { PublicKey } from "@solana/web3.js";
+import getListingsByParent from "../../data/curationListings/getListingsByParent";
+import SecondaryEditionListings from "../../components/detail/secondaryEditionListings";
+import Link from "next/link";
 
 const ModelViewer = dynamic(() => import("../../components/artDisplay/modelDisplay"), {
   ssr: false
@@ -44,6 +47,7 @@ export default function DetailPage({token, curations}) {
   const [wrapperWidth, setWrapperWidth] = useState(0);
   const [videoAspectRatio, setVideoAspectRatio] = useState(1);
   const [maxHeight, setMaxHeight] = useState(0);
+  const [editionListings, setEditionListings] = useState(null);
   const wrapperRef = useRef(null);
   const imageRef = useRef(null);
 
@@ -86,6 +90,23 @@ export default function DetailPage({token, curations}) {
       return isToken && isListed
     })
   })
+
+  useEffect(() => {
+    if (!isMasterEdition) return;
+    
+    (async () => {
+      const res = await getListingsByParent(token.mint)
+      
+      if (res?.status !== "success") {
+        console.log("Error getting listings by parent", res?.msg || res?.error)
+        return;
+      } else {
+        const editionListings = res.listings
+        setEditionListings(editionListings)
+      }
+    })();
+
+  }, [token, isMasterEdition])
 
   useEffect(() => { 
     const getDimensions = () => { 
@@ -273,7 +294,9 @@ export default function DetailPage({token, curations}) {
 
           <div className="flex gap-1">
             {artistName
-              ? <p> by {artistName}</p>
+              ? (<Link href={`/gallery/${token.artist_account.username}`} passHref>
+                <p className="hover:scale-105 duration-300 cursor-pointer"> by {artistName}</p>
+              </Link>)
               : null
             }
             {(!isMasterEdition && ownerName !== artistName)
@@ -281,10 +304,11 @@ export default function DetailPage({token, curations}) {
               : null
             }
           </div>
+          
           <p className='mt-2'>{supplyText}</p>
         
           <p className="text-xs my-4 whitespace-pre-wrap">{token?.description}</p>
-          {activeCurations?.length > 0
+          {(activeCurations?.length > 0 || editionListings?.length)
             ? (
               <div className="my-4">
                 <hr className="border-neutral-200 dark:border-neutral-800" />
@@ -293,6 +317,9 @@ export default function DetailPage({token, curations}) {
                   {activeCurations?.map(curation => (
                     <DetailListings key={token.mint+curation.name} curation={curation} mint={token.mint} />
                   ))}
+                  {editionListings?.length
+                    ? (<SecondaryEditionListings editionListings={editionListings} />)
+                  : null}
                 </div>
               </div>
             )

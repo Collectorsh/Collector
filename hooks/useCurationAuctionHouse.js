@@ -37,7 +37,8 @@ const useCurationAuctionHouse = (curation) => {
 
   //set auction house
   useEffect(() => {
-    if(!wallet.connected || !auctionHouseAddress || auctionHouse) return
+    if (!wallet.connected || !auctionHouseAddress || auctionHouse) return
+  
     (async () => {
       const auctionHouse = await auctionHouseSDK
         .findByAddress({ address: new PublicKey(auctionHouseAddress) });
@@ -229,21 +230,24 @@ const useCurationAuctionHouse = (curation) => {
     //   return
     } else if (token.listing_receipt) {
       //Handle 1/1 buy now purchase
-      const txHash = await handleBuyNowPurchase(token.listing_receipt)
+      
+      const saleType = isEdition ? "secondary_edition" : "buy_now"
 
+      const txHash = await handleBuyNowPurchase(token.listing_receipt)
       const res = await recordSale({
         apiKey: user.api_key,
         curationId: token.curation_id,
         token: token,
         buyerId: user.id,
         buyerAddress: wallet.publicKey.toString(),
-        saleType: "buy_now",
+        saleType: saleType,
         txHash: txHash,
       })
 
       if (res?.status === "success") {
         success(`Congrats! ${ token.name } has been collected!`)
         shootConfetti(3)
+        return true
       } else {
         error(`Error buying ${ token.name }: ${ res?.message }`)
       }

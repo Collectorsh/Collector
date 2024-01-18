@@ -104,10 +104,9 @@ async function getTokens(publicKeys, options) {
   const creatorFilteredTokens = !justCreator
     ? baseTokens
     : baseTokens.filter((token) => { 
-      
-    const creatorsAddresses = token.creators.map((creator) => creator.address)
-    return Boolean(creatorsAddresses.find(address => publicKeys.includes(address)))
-  })
+        const creatorsAddresses = token.creators.map((creator) => creator.address)
+        return Boolean(creatorsAddresses.find(address => publicKeys.includes(address)))
+      })
 
   const mungedTokens = creatorFilteredTokens.map((token) => { 
     const { content, creators, ownership, id, grouping, compression } = token
@@ -222,12 +221,12 @@ async function getTokens(publicKeys, options) {
       let artist = artists[artists.length - 1];
       result.artist_name = artist.name;
       result.artist_twitter = artist.twitter;
-      if (result.artist_twitter === null) {
-        let toke = creatorResp.data.find(
-          (t) => t.public_key === result.artist_address && t.twitter !== null
-        );
-        if (toke) result.artist_twitter = toke.twitter;
-      }
+      // if (result.artist_twitter === null) {
+      //   let toke = creatorResp.data.find(
+      //     (t) => t.public_key === result.artist_address && t.twitter !== null
+      //   );
+      //   if (toke) result.artist_twitter = toke.twitter;
+      // }
     }
   }
 

@@ -1,4 +1,4 @@
-import { getAssociatedTokenAddress, createTransferCheckedInstruction, createAssociatedTokenAccountInstruction } from "@solana/spl-token";
+import { createTransferCheckedInstruction, createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import { findATA } from "./findTokenAccountsByOwner";
 
@@ -7,8 +7,6 @@ export function getTransferNftTX(ownerAddress, recipientAddress, mintAddress, pr
   const toPubkey = new PublicKey(recipientAddress);
   const mintPubkey = new PublicKey(mintAddress);
 
-  // const tokenAccount = await getAssociatedTokenAddress(mintPubkey, ownerPubkey)
-  // const newTokenAccount = await getAssociatedTokenAddress(mintPubkey, toPubkey)
   const tokenAccount = prevTokenAccount || findATA(mintPubkey, ownerPubkey)
   const newTokenAccount = findATA(mintPubkey, toPubkey)
 

@@ -1,14 +1,12 @@
 import { LAMPORTS_PER_SOL, PublicKey, SYSVAR_CLOCK_PUBKEY, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
 import { Metaplex } from "@metaplex-foundation/js";
 
-import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  getAssociatedTokenAddress,
-} from '@solana/spl-token';
+import { ASSOCIATED_TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
 import { MetadataProgram } from '@metaplex-foundation/mpl-token-metadata';
 import { findVaultOwnerAddress, findPrimaryMetadataCreatorsAddress, findTreasuryOwnerAddress, Market, SellingResource, createCloseMarketInstruction, createClaimResourceInstruction, findPayoutTicketAddress, createWithdrawInstruction, PrimaryMetadataCreators } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { createTokenAccount } from "./createTokenAccount";
+import { findATA } from "./findTokenAccountsByOwner";
 
 export const getCloseAndWithdrawMarketTX = async ({
   connection,
@@ -62,7 +60,7 @@ export const getCloseAndWithdrawMarketTX = async ({
   const [vaultOwner, vaultOwnerBump] = await findVaultOwnerAddress(masterEditionPubkey, storePubkey);
 
   //useAssociatedTokenAddress for non native sol tokens
-  const treasuryDestination = ownerPubkey//await getAssociatedTokenAddress(treasuryMintPubkey, wallet.publicKey);
+  const treasuryDestination = ownerPubkey//findATA(treasuryMintPubkey, wallet.publicKey);
 
   const metaplex = Metaplex.make(connection);
   const pdas = metaplex.nfts().pdas();
@@ -109,20 +107,8 @@ export const getCloseAndWithdrawMarketTX = async ({
     );
     mainTX.add(withdrawInstruction)
   }
-  
-  //TODO should make sure the account is active somehow (may need to reactivate in some cases)
-  const claimTokenPubkey = await getAssociatedTokenAddress(masterEditionPubkey, ownerPubkey)
 
-  //seems to cause problems when relisting (probably shouldnt be creating a new cliam token?)
-  // const { tokenAccount: claimToken, createTokenTx } = await createTokenAccount({
-  //   payer: ownerPubkey,
-  //   mint: masterEditionPubkey,
-  //   connection,
-  // });
-  // const claimTokenPubkey = claimToken.publicKey
-  // mainTX.add(createTokenTx)
-  // signers.push(claimToken)
-  
+  const claimTokenPubkey = findATA(masterEditionPubkey, ownerPubkey)  
 
   const claimResourceInstruction = createClaimResourceInstruction(
     {
@@ -170,9 +156,10 @@ export const getCloseAndWithdrawMarketTX = async ({
 
   mainTX.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
   mainTX.feePayer = ownerPubkey;
-  if (signers.length) mainTX.partialSign(...signers)
+  // if (signers.length) mainTX.partialSign(...signers)
 
   return {
     closeAndWithdrawMarketTX: mainTX,
+    signers
   }
 }

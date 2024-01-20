@@ -10,6 +10,8 @@ export const makeNotificationsSocketID = (pathname, username) => {
       return `${ username }-edit`
     }
     case "/": return null //no socket needed for home page
+    case "/dashboard": return null //no socket needed for dashboard
+    case "/gallery": return null //no socket needed for profile gallery
     default: return pathname.replace("/", "")
   }
 }

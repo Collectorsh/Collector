@@ -29,6 +29,8 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
 
   const itemRef = useRef(null)
 
+  if (token.name === "Long Way Home") console.log("token", token)
+
   const [lazyLoadBuffer, setLazyLoadBuffer] = useState("1000px")
 
   const { isVisible } = useElementObserver(itemRef, lazyLoadBuffer)

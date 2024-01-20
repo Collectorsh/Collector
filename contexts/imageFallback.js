@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { success, error } from "/utils/toastMessages";
 import { OptimizeSingleToken, OptimizeWithTokens } from "../utils/imageFallback";
 
 import { useCallback } from "react";

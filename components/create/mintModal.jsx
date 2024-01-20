@@ -14,6 +14,8 @@ import clsx from "clsx"
 import UserContext from "../../contexts/user"
 import createMintedIndex from "../../data/minted_indexer/create"
 import retryFetches from "../../utils/curations/retryFetches"
+import { makeTxWithPriorityFeeFromMetaplexBuilder } from "../../utils/solanaWeb3/priorityFees"
+import { signAndConfirmTx } from "../../utils/solanaWeb3/signAndConfirm"
 
 
 
@@ -112,19 +114,19 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
     }))
 
     try {
-      const res = await apiNodeClient.post(
+      const uploadMetadataRes = await apiNodeClient.post(
         "upload-metadata",
         fileData,
         {timeout: 0}
       ).then(res => res.data)
 
-      if (res.error || !res.uri) {
-        throw new Error(`Error uploading metadata: ${ res?.error }`)
+      if (uploadMetadataRes.error || !uploadMetadataRes.uri) {
+        throw new Error(`Error uploading metadata: ${ uploadMetadataRes?.error }`)
       }
 
       setStage(MINT_STAGE.MINTING)
 
-      const uri = res.uri
+      const { uri, metadata } = uploadMetadataRes
       const collectionPubkey = collection ? new PublicKey(collection.mint) : null
 
       const metaplex = new Metaplex(connection)
@@ -150,38 +152,35 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
   
         transactionBuilder.add(collectionBuilder)
       }
-
-      //const { signature, confirmResponse } = 
-      await metaplex.rpc().sendAndConfirmTransaction(
-        transactionBuilder,
-        {
-          commitment: "finalized",
-          maxRetries: 5
-        }
-      )
       
-      const newNft = await retryFetches(() => metaplex.nfts().findByMint({ mintAddress }));
+      const createTx = await makeTxWithPriorityFeeFromMetaplexBuilder(transactionBuilder, wallet)
 
-      if (!newNft) {
-        throw new Error("Error confirming NFT mint onchain")
-      }
-     
+      await signAndConfirmTx({
+        tx: createTx,
+        errorMessage: "Error confirming Create tx",
+        wallet,
+      })
+
+      setMintedAddress(mintAddress.toString())
+      setStage(MINT_STAGE.SUCCESS)
+      shootConfetti(3)
+
       const {
         animation_url,
         image,
         description,
         properties,
-      } = newNft.json;
+      } = metadata
 
       const token = {
-        mint: newNft.address.toString(),
+        mint: mintAddress.toString(),
         owner_address: wallet.publicKey.toString(),
         artist_address: wallet.publicKey.toString(),
         name,
         animation_url,
         image,
         description,
-        primary_sale_happened: newNft.primarySaleHappened,
+        primary_sale_happened: false,
         is_master_edition: Boolean(maxSupply > 0),
         supply: 0,
         max_supply: maxSupply,
@@ -189,13 +188,10 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         files: properties.files,
         royalties: sellerFeeBasisPoints,
       }
-
+      
       //Don't throw a full error for the user if the item is already minted
       await createMintedIndex(user, token)
 
-      setMintedAddress(newNft.address.toString())
-      setStage(MINT_STAGE.SUCCESS)
-      shootConfetti(3)
     } catch (e) {
       console.error("Error minting NFT: ", e);
       setStage(MINT_STAGE.ERROR)

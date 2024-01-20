@@ -1,9 +1,9 @@
 import { createTokenAccount } from "./createTokenAccount";
 import { Metaplex, toBigNumber } from "@metaplex-foundation/js";
 import { createCreateStoreInstruction, findVaultOwnerAddress, createSavePrimaryMetadataCreatorsInstruction, findPrimaryMetadataCreatorsAddress, createInitSellingResourceInstruction, findTreasuryOwnerAddress, createCreateMarketInstruction, createChangeMarketInstruction } from "@metaplex-foundation/mpl-fixed-price-sale";
-import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { Transaction, Keypair, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { truncate } from "../truncate";
+import { findATA } from "./findTokenAccountsByOwner";
 
 export const getListMasterEditionTX = async ({
   connection,
@@ -47,7 +47,7 @@ export const getListMasterEditionTX = async ({
   const metadata = pdas.metadata({ mint: masterEditionPubkey });
   const edition = pdas.edition({ mint: masterEditionPubkey });
   const editionBump = edition.bump;
-  const resourceTokenPubkey = await getAssociatedTokenAddress(masterEditionPubkey, ownerPubkey)
+  const resourceTokenPubkey = findATA(masterEditionPubkey, ownerPubkey)
 
   //init vault
   const [vaultOwner, vaultOwnerBump] = await findVaultOwnerAddress(masterEditionPubkey, store);
@@ -168,13 +168,14 @@ export const getListMasterEditionTX = async ({
 
   mainTX.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
   mainTX.feePayer = ownerPubkey;
-  mainTX.partialSign(...signers)
+  // mainTX.partialSign(...signers)
 
   console.log("List Master Edition TX partially signed")
 
   return {
     listMasterEditionTX: mainTX,
-    editionMarketAddress: marketKeyPair.publicKey.toString()
+    editionMarketAddress: marketKeyPair.publicKey.toString(),
+    signers
   }
 }
 

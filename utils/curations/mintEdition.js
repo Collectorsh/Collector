@@ -1,12 +1,10 @@
 import { Keypair, PublicKey, SYSVAR_CLOCK_PUBKEY, SystemProgram, Transaction } from "@solana/web3.js";
-import { createTokenAccount } from "./createTokenAccount";
 import { MintLayout, TOKEN_PROGRAM_ID, createInitializeMintInstruction, createMintToInstruction } from "@solana/spl-token";
 import { findVaultOwnerAddress, findTradeHistoryAddress, createBuyInstruction, Market, SellingResource } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { Metaplex, toBigNumber } from "@metaplex-foundation/js";
 import { MetadataProgram } from '@metaplex-foundation/mpl-token-metadata';
-import { createAssociatedTokenAccount } from "@solana/spl-token";
-import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { createAssociatedTokenAccountInstruction } from "@solana/spl-token";
+import { findATA } from "./findTokenAccountsByOwner";
 
 export const getMintEditionTX = async ({
   connection,
@@ -49,7 +47,6 @@ export const getMintEditionTX = async ({
 
   mainTX.add(mintTokenTX)
   signers.push(newMint)
-  // signers.push(newMintAta)
 
   console.log('New mint', newMint.publicKey.toBase58());
 
@@ -113,12 +110,13 @@ export const getMintEditionTX = async ({
 
   mainTX.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
   mainTX.feePayer = newOwnerPubkey;
-  mainTX.partialSign(...signers)
 
   return {
     mintEditionTX: mainTX,
+    signers
   }
 }
+
 export const getMintTokenToAccountTX = async ({
   connection,
   payer,
@@ -129,12 +127,7 @@ export const getMintTokenToAccountTX = async ({
 
   mintTokenTX.add(createMintTx);
 
-  // const { tokenAccount: associatedTokenAccount, createTokenTx } = await createTokenAccount({
-  //   payer,
-  //   mint: mint.publicKey,
-  //   connection,
-  // });
-  const associatedToken = getAssociatedTokenAddressSync(mint.publicKey, payer);
+  const associatedToken = findATA(mint.publicKey, payer)
   const createTokenTx = createAssociatedTokenAccountInstruction(
     payer,
     associatedToken,

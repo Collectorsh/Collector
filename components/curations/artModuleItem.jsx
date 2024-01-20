@@ -53,13 +53,14 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
   
   const artistName = artist?.username || token.temp_artist_name
   
-  const sellingSecondaryFromMaster = isMasterEdition && (!isListed || isSold) && editionListings?.length
+  const sellingSecondaryFromMaster = isMasterEdition && (!isListed || isSold) && Boolean(editionListings?.length)
   
   const price = sellingSecondaryFromMaster
-  ? editionListings?.[0].buy_now_price
-  : token.buy_now_price
+    ? editionListings?.[0].buy_now_price
+    : token.buy_now_price
   
-  const displayBuyNowPrice = price !== undefined && (isListed || isSold || sellingSecondaryFromMaster)
+  const noPrice = price === null || price === undefined
+  const displayBuyNowPrice = !noPrice && (isListed || isSold || sellingSecondaryFromMaster)
 
   const supplyText = useMemo(() => {
     if (curationType == "collector" && (!isListed && !isSold)) return ""
@@ -89,7 +90,6 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
         return;
       } else {
         const editionListings = res.listings.sort((a, b) => Number(a.buy_now_price) - Number(b.buy_now_price))
-        console.log("🚀 ~ file: artModuleItem.jsx:92 ~ editionListings:", editionListings)
         setEditionListings(editionListings)
       }
     })();

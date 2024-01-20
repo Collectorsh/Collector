@@ -24,27 +24,25 @@ export default function TestPage() {
 
     const marketAccount = await connection.getAccountInfo(marketPubkey);
     const [marketData] = Market.deserialize(marketAccount?.data);
-    console.log("🚀 ~ file: test.js:31 ~ getEditionMarket ~ marketData:", marketData)
-    console.log("🚀 OWNER:", marketData.owner.toString())
-
+    console.log("marketData:", marketData)
 
     const sellingResourcePubkey = marketData.sellingResource
     const storePubkey = marketData.store
     const storeAccount = await connection.getAccountInfo(storePubkey);
     const [storeData] = Store.deserialize(storeAccount?.data);
-    console.log("🚀 ~ file: test.js:35 ~ getEditionMarket ~ admin:", storeData.admin.toString())
+    console.log("admin/owner:", storeData.admin.toString())
     console.log("PRICE", marketData.price.toNumber() / LAMPORTS_PER_SOL)
     const sellingResourceAccount = await connection.getAccountInfo(sellingResourcePubkey);
     const [sellingResourceData] = SellingResource.deserialize(sellingResourceAccount?.data);
-    console.log("🚀 ~ file: test.js:36 ~ getEditionMarket ~ sellingResourceData resource:", sellingResourceData.resource.toString())
+    console.log("sellingResourceData resource:", sellingResourceData.resource.toString())
   }
 
   const getOwner = async () => {
     const owner = await getNftOwner("6CkZzZk1uuPRGupiHDP3tKoNyBVv6SznwsF671ZEeyPC")
-    console.log("🚀 ~ file: test.js:41 ~ getOwner ~ owner:", owner.toString())
+    console.log("owner:", owner.toString())
   }
   
-  // return <NotFound />
+  return <NotFound />
   return (
     <div>
       <MainNavigation />

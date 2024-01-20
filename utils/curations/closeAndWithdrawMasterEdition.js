@@ -5,7 +5,6 @@ import { ASSOCIATED_TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
 import { MetadataProgram } from '@metaplex-foundation/mpl-token-metadata';
 import { findVaultOwnerAddress, findPrimaryMetadataCreatorsAddress, findTreasuryOwnerAddress, Market, SellingResource, createCloseMarketInstruction, createClaimResourceInstruction, findPayoutTicketAddress, createWithdrawInstruction, PrimaryMetadataCreators } from "@metaplex-foundation/mpl-fixed-price-sale";
-import { createTokenAccount } from "./createTokenAccount";
 import { findATA } from "./findTokenAccountsByOwner";
 
 export const getCloseAndWithdrawMarketTX = async ({
@@ -156,7 +155,6 @@ export const getCloseAndWithdrawMarketTX = async ({
 
   mainTX.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
   mainTX.feePayer = ownerPubkey;
-  // if (signers.length) mainTX.partialSign(...signers)
 
   return {
     closeAndWithdrawMarketTX: mainTX,

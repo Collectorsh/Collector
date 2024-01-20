@@ -127,8 +127,6 @@ export const getMintTokenToAccountTX = async ({
 
   mintTokenTX.add(createMintTx);
 
- 
-  // const associatedToken = getAssociatedTokenAddressSync(mint.publicKey, payer);
   const associatedToken = findATA(mint.publicKey, payer)
   const createTokenTx = createAssociatedTokenAccountInstruction(
     payer,

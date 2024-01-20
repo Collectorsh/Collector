@@ -1,6 +1,6 @@
 import { Metaplex, sol, walletAdapterIdentity, AuctionHouse, token } from "@metaplex-foundation/js";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { ComputeBudgetProgram, LAMPORTS_PER_SOL, PublicKey, Transaction, ba, sendAndConfirmRawTransaction, sendAndConfirmTransaction } from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { LAMPORTS_PER_SOL, PublicKey, Transaction, ba, sendAndConfirmRawTransaction, sendAndConfirmTransaction } from "@solana/web3.js";
 import { useContext, useEffect, useState } from "react";
 import { connection } from "../config/settings";
 import { getSplitBalance } from "../pages/api/curations/withdraw";
@@ -360,12 +360,16 @@ const useCurationAuctionHouse = (curation) => {
 
       let activeReceipt = listingReceipt;
       if (txHasFailed) { 
+
         const activeListing = findActiveListing({
           tokenPrice: token.price,
           mint: token.mint
         })
         if (activeListing) activeReceipt = activeListing.receiptAddress
-        //if we still can't find the listing, then just try the original receipt
+        else {
+          //confirm the nft has left the sellers wallet, if so update the database
+          //TODO
+        }
       } 
         
       const listing = await auctionHouseSDK

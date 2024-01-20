@@ -3,7 +3,8 @@ import { useEffect, useRef, useContext, useState, useCallback } from 'react';
 import { ActionCableContext } from '../contexts/webSocket';
 
 export const makeNotificationsSocketID = (pathname, username) => {
-  if  (pathname.includes("curations")) return null //curations has its own handler  
+  if (pathname.includes("curations")) return null //curations has its own handler  
+  if (pathname.includes("gallery")) return null //galleries profiles dont need a socket
   switch (pathname) { 
     case "/edit": {
       if (!username) return null
@@ -11,7 +12,6 @@ export const makeNotificationsSocketID = (pathname, username) => {
     }
     case "/": return null //no socket needed for home page
     case "/dashboard": return null //no socket needed for dashboard
-    case "/gallery": return null //no socket needed for profile gallery
     default: return pathname.replace("/", "")
   }
 }
@@ -46,9 +46,9 @@ const useActionCable = (socket_id, handlers = {}, channelName = "NotificationsCh
 
 
     // Clean up function
-    return () => {
+    return async () => {
       if (subscription) {
-        subscription.unsubscribe();
+        await subscription.unsubscribe();
         cable?.subscriptions.remove(subscription);
       }
     }

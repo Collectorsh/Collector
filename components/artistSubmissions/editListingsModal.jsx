@@ -10,22 +10,15 @@ import updateListing, { cancelListing } from "../../data/curationListings/update
 import UserContext from "../../contexts/user";
 import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { getListMasterEditionTX } from "../../utils/curations/listMasterEdition";
-import { connection } from "../../config/settings";
-import { getCloseAndWithdrawMarketTX } from "../../utils/curations/closeAndWithdrawMasterEdition";
-import { Metaplex, PublicKey, token, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { XCircleIcon } from "@heroicons/react/solid";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import deleteSubmission from "../../data/curationListings/deleteSubmission";
-import retryFetches from "../../utils/curations/retryFetches";
-import { Market } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { useRouter } from "next/router";
 import LogRocket from "logrocket";
-import getListedItem from "../../data/curationListings/getListedItem";
+
 import LogRocketContext from "../../contexts/logRocket";
 import { setTxFailed } from "../../utils/cookies";
-import { getPriorityFeeInstruction } from "../../utils/solanaWeb3/priorityFees";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);

@@ -24,11 +24,8 @@ import { Toaster } from "react-hot-toast";
 import UserContext from "../../contexts/user";
 import { adminIDs, connection } from "../../config/settings";
 import debounce from "lodash.debounce";
-import { Metaplex } from "@metaplex-foundation/js";
-import { PublicKey } from "@solana/web3.js";
 import getListingsByParent from "../../data/curationListings/getListingsByParent";
 import SecondaryEditionListings from "../../components/detail/secondaryEditionListings";
-import Link from "next/link";
 import { ToggleLink } from "../../components/curations/artModuleItem";
 
 const ModelViewer = dynamic(() => import("../../components/artDisplay/modelDisplay"), {

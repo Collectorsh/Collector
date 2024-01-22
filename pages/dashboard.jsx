@@ -399,7 +399,7 @@ const CurationItem = ({ curation }) => {
     })
 
     if (res?.status === "success") {
-      success(`Successfully withdrew ${ roundToPrecision(collectedFees.curatorBalance, 3) } SOL!`)
+      success(`Successfully withdrew ${ roundToPrecision(collectedFees.curatorBalance, 4) } SOL!`)
       setCollectedFees({
         curatorBalance: 0,
         platformBalance: 0

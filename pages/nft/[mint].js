@@ -29,6 +29,7 @@ import { PublicKey } from "@solana/web3.js";
 import getListingsByParent from "../../data/curationListings/getListingsByParent";
 import SecondaryEditionListings from "../../components/detail/secondaryEditionListings";
 import Link from "next/link";
+import { ToggleLink } from "../../components/curations/artModuleItem";
 
 const ModelViewer = dynamic(() => import("../../components/artDisplay/modelDisplay"), {
   ssr: false
@@ -294,9 +295,16 @@ export default function DetailPage({token, curations}) {
 
           <div className="flex gap-1">
             {artistName
-              ? (<Link href={`/gallery/${token.artist_account.username}`} passHref>
-                <p className="hover:scale-105 duration-300 cursor-pointer"> by {artistName}</p>
-              </Link>)
+              // ? (<Link href={`/gallery/${token?.artist_account?.username}`} passHref>
+              //   <p className="hover:scale-105 duration-300 cursor-pointer"> by {artistName}</p>
+            // </Link>)
+              ? <ToggleLink
+                disabled={!token?.artist_account?.username}
+                href={`/gallery/${ token?.artist_account?.username }`}
+                passHref
+              >
+                <p className={clsx(token?.artist_account?.username && "hover:scale-105 duration-300 cursor-pointer")}> by {artistName}</p>
+              </ToggleLink>
               : null
             }
             {(!isMasterEdition && ownerName !== artistName)

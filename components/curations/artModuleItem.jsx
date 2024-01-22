@@ -320,7 +320,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
 
 export default ArtItem
 
-const ToggleLink = ({ disabled, children, ...props }) => {
+export const ToggleLink = ({ disabled, children, ...props }) => {
   if (disabled) return <Fragment>{children}</Fragment>
   return <Link {...props}>{children}</Link>
 }

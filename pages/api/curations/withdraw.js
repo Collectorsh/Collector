@@ -43,7 +43,6 @@ export default async function handler(req, res) {
       .findByAddress({ address: new PublicKey(auctionHouseAddress) });
     
     const splitBalance = await getSplitBalance(connection, auctionHouse.treasuryAccountAddress, curatorFee)
-    console.log("🚀 ~ file: withdraw.js:46 ~ handler ~ splitBalance:", splitBalance)
     let curatorBalance = splitBalance.curatorBalance
     let platformBalance = splitBalance.platformBalance
 

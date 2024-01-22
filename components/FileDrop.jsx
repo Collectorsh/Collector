@@ -81,7 +81,6 @@ const FileDrop = ({
 
   const accept = acceptableFiles || imageFormats
 
-  //TODO: add vr format here
   const formatDisplay = Object.keys(accept).join(", ")
     .replaceAll("image/", "")
     .replaceAll("video/", "")

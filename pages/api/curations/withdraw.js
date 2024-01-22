@@ -20,6 +20,7 @@ export const getSplitBalance = async (connection, treasuryAccountAddress, curato
   return {
     curatorBalance: curatorSplit * balance,
     platformBalance: platformSplit * balance,
+    totalBalance: balance
   }
 }
 
@@ -45,14 +46,18 @@ export default async function handler(req, res) {
     const splitBalance = await getSplitBalance(connection, auctionHouse.treasuryAccountAddress, curatorFee)
     let curatorBalance = splitBalance.curatorBalance
     let platformBalance = splitBalance.platformBalance
+    let totalBalance = splitBalance.totalBalance
 
     const balance = curatorBalance + platformBalance
 
 
     if (balance <= 0) {
+      //   //TODO split authority funds between curator and platform and withdraw those from authority, check this doesnt make accounts go negative
       // const authorityBalance = await connection.getBalance(authorityKeypair.publicKey)
       // if (authorityBalance > AUTHORITY_INIT_FUNDS) {
-      //   //TODO split authority funds between curator and platform and withdraw those from authority
+      //   const authSplitBalance = await getSplitBalance(connection, auctionHouse.treasuryAccountAddress, curatorFee)
+      //   curatorBalance = authSplitBalance.curatorBalance - AUTHORITY_INIT_FUNDS / 2
+      //   platformBalance = authSplitBalance.platformBalance - AUTHORITY_INIT_FUNDS / 2
       // } else {
       //   throw new Error("No funds available to withdraw")
       // }
@@ -62,7 +67,7 @@ export default async function handler(req, res) {
         .auctionHouse()
         .withdrawFromTreasuryAccount({
           auctionHouse,
-          amount: sol(balance),
+          amount: sol(totalBalance),
         });
 
       console.log(`Withdrawn ${ balance } SOL from Auction House Treasury`)

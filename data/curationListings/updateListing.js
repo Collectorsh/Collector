@@ -32,3 +32,20 @@ export async function cancelListing({ apiKey, tokenMint, curationId }) {
     console.log(err);
   }
 }
+
+export async function updateListingStatus({ apiKey, curationId,tokenMint,ownerAddress, listedStatus, nftState }) {
+  try {
+    let res = await apiClient.post("/curation_listing/update_listing_status", {
+      api_key: apiKey,
+      curation_id: curationId,
+      token_mint: tokenMint,
+      owner_address: ownerAddress,
+      listed_status: listedStatus,
+      nft_state: nftState
+    })
+
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}

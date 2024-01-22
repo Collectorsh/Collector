@@ -4,10 +4,11 @@ import { Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, sendA
 import crypto from 'crypto' 
 import { formatRSAPrivateKey } from "../../../utils/formatRSA";
 import { PLATFORM_FEE_POINTS, platformWithdrawalPubkey } from "./createCuration";
+import { getPriorityFeeInstruction } from "../../../utils/solanaWeb3/priorityFees";
 
 export const getSplitBalance = async (connection, treasuryAccountAddress, curatorFee) => {
   const balanceLamports = await connection.getBalance(new PublicKey(treasuryAccountAddress));
-  
+
   // Convert to SOL 
   const balance = balanceLamports / LAMPORTS_PER_SOL;
 
@@ -41,21 +42,33 @@ export default async function handler(req, res) {
       .auctionHouse()
       .findByAddress({ address: new PublicKey(auctionHouseAddress) });
     
-    const { curatorBalance, platformBalance } = await getSplitBalance(connection, auctionHouse.treasuryAccountAddress, curatorFee)
+    const splitBalance = await getSplitBalance(connection, auctionHouse.treasuryAccountAddress, curatorFee)
+    console.log("🚀 ~ file: withdraw.js:46 ~ handler ~ splitBalance:", splitBalance)
+    let curatorBalance = splitBalance.curatorBalance
+    let platformBalance = splitBalance.platformBalance
+
     const balance = curatorBalance + platformBalance
 
-    //
-    if (balance <= 0) throw new Error("No funds available to withdraw")
 
-    await metaplex
-      .auctionHouse()
-      .withdrawFromTreasuryAccount({
-        auctionHouse,
-        amount: sol(balance),
-      });
-  
-    console.log(`Withdrawn ${ balance } SOL from Auction House Treasury`)
-    
+    if (balance <= 0) {
+      // const authorityBalance = await connection.getBalance(authorityKeypair.publicKey)
+      // if (authorityBalance > AUTHORITY_INIT_FUNDS) {
+      //   //TODO split authority funds between curator and platform and withdraw those from authority
+      // } else {
+      //   throw new Error("No funds available to withdraw")
+      // }
+      throw new Error("No funds available to withdraw")
+    } else {
+      await metaplex
+        .auctionHouse()
+        .withdrawFromTreasuryAccount({
+          auctionHouse,
+          amount: sol(balance),
+        });
+
+      console.log(`Withdrawn ${ balance } SOL from Auction House Treasury`)
+    }
+
     //Build instructions for withdrawing the appropriate amount to the curator/platform
     //withhold the two required fees (standard is 0.000005 Sol), split them between curator and platform
     const AHwithdrawalFee = 0.000005
@@ -74,6 +87,11 @@ export default async function handler(req, res) {
         lamports: platformWithdrawalAmount,
       }),
     );
+
+    withdrawTX.recentBlockhash = (await connection.getRecentBlockhash()).blockhash
+    withdrawTX.feePayer = authorityKeypair.publicKey
+    const priorityFeeIx = await getPriorityFeeInstruction(withdrawTX)
+    withdrawTX.add(priorityFeeIx)
       
     // Sign transaction, broadcast, and confirm
     const signature = await sendAndConfirmTransaction(

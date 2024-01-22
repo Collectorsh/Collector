@@ -1,4 +1,4 @@
-import { ComputeBudgetProgram, Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import { ComputeBudgetProgram } from "@solana/web3.js";
 import axios from "axios";
 import  bs58 from "bs58";
 import { connection } from "../../config/settings";
@@ -31,7 +31,7 @@ export async function getPriorityFeeInstruction(transaction, priorityLevel = "HI
     const estimatedFee = response.data?.result?.priorityFeeEstimate;
     if (!estimatedFee) throw new Error("No response from Helius API");
     console.log("Estimated Priority Fee:", estimatedFee)
-    fee = estimatedFee;
+    fee = Math.ceil(estimatedFee);
   } catch (error) {
     console.log("Error getting priority fee estimate: ", error);
   }
@@ -40,7 +40,7 @@ export async function getPriorityFeeInstruction(transaction, priorityLevel = "HI
 
 }
 
-export const makeTxWithPriorityFeeFromMetaplexBuilder = async (builder, wallet) => {
+export const makeTxWithPriorityFeeFromMetaplexBuilder = async (builder, feePayer) => {
 
   const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
 
@@ -49,7 +49,7 @@ export const makeTxWithPriorityFeeFromMetaplexBuilder = async (builder, wallet) 
     lastValidBlockHeight,
   })
 
-  TX.feePayer = wallet.publicKey
+  TX.feePayer = feePayer
 
   const priorityFeeIx = await getPriorityFeeInstruction(TX)
   

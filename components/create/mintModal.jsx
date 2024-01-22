@@ -153,7 +153,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         transactionBuilder.add(collectionBuilder)
       }
       
-      const createTx = await makeTxWithPriorityFeeFromMetaplexBuilder(transactionBuilder, wallet)
+      const createTx = await makeTxWithPriorityFeeFromMetaplexBuilder(transactionBuilder, wallet.publicKey)
 
       await signAndConfirmTx({
         tx: createTx,
@@ -323,7 +323,6 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
           Confirm
         </MainButton>
       )
-      {/* TODO if artist with curations show profile page button instead */}
       case MINT_STAGE.SUCCESS: return (
         <Link href={`/nft/${ mintedAddress}`} passHref>
           <MainButton solid>

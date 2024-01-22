@@ -20,6 +20,7 @@ import getListedItem from "../data/curationListings/getListedItem";
 import { getListMasterEditionTX } from "../utils/curations/listMasterEdition";
 import { Market } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { updateEditionListing } from "../data/curationListings/updateEditionSupply";
+import { updateListingStatus } from "../data/curationListings/updateListing";
 const DEBUG = false
 
 const userRejectedText = "rejected"
@@ -115,7 +116,7 @@ const useCurationAuctionHouse = (curation) => {
 
       const { receipt } = listingTxBuilder.getContext();
 
-      const listTx = await makeTxWithPriorityFeeFromMetaplexBuilder(listingTxBuilder, wallet)
+      const listTx = await makeTxWithPriorityFeeFromMetaplexBuilder(listingTxBuilder, wallet.publicKey)
 
       const signature = await signAndConfirmTx({
         tx: listTx,
@@ -265,7 +266,7 @@ const useCurationAuctionHouse = (curation) => {
         listing,
       })
 
-      const delistTx = await makeTxWithPriorityFeeFromMetaplexBuilder(delistBuilder, wallet)
+      const delistTx = await makeTxWithPriorityFeeFromMetaplexBuilder(delistBuilder, wallet.publicKey)
 
       const signature = await signAndConfirmTx({
         tx: delistTx,
@@ -361,15 +362,26 @@ const useCurationAuctionHouse = (curation) => {
       let activeReceipt = listingReceipt;
       if (txHasFailed) { 
 
-        const activeListing = findActiveListing({
-          tokenPrice: token.price,
+        //confirm the nft has left the sellers wallet, if so update the database to unlisted
+        const onChainOwner = await getNftOwner(token.mint)
+        if (onChainOwner.toString() !== token.owner_address) {
+          await updateListingStatus({
+            apiKey: user.api_key,
+            curationId: token.curation_id,
+            tokenMint: token.mint,
+            ownerAddress: onChainOwner.toString(),
+            listedStatus: "unlisted",
+            nftState: "invalid-listing"
+          })
+          throw new Error(`${ token.name } has sold`)
+        } 
+
+        //else look for active listings
+        const activeListing = await findActiveListing({
+          tokenPrice: token.buy_now_price,
           mint: token.mint
         })
         if (activeListing) activeReceipt = activeListing.receiptAddress
-        else {
-          //confirm the nft has left the sellers wallet, if so update the database
-          //TODO
-        }
       } 
         
       const listing = await auctionHouseSDK
@@ -386,7 +398,7 @@ const useCurationAuctionHouse = (curation) => {
         listing,
       })
 
-      const buyTx = await makeTxWithPriorityFeeFromMetaplexBuilder(buyBuilder, wallet)
+      const buyTx = await makeTxWithPriorityFeeFromMetaplexBuilder(buyBuilder, wallet.publicKey)
 
       const signature = await signAndConfirmTx({
         tx: buyTx,
@@ -415,6 +427,7 @@ const useCurationAuctionHouse = (curation) => {
     try {
       const txHasFailed = getTxFailed(masterEditionMintTxCookieId)
       if (txHasFailed) {
+        //update the listing with the true supply to make sure it hasn't sold out 
         const metadata = await metaplex.nfts().findByMint({
           mintAddress: new PublicKey(token.mint),
         })
@@ -429,9 +442,7 @@ const useCurationAuctionHouse = (curation) => {
         })
 
         if (updateSupplyRes?.listed_status === "sold") {
-          const errorMessage = `${ token.name } has sold out`
-          error(errorMessage) //extra feedback for user
-          throw new Error(errorMessage)
+          throw new Error(`${ token.name } has sold out`)
         }
       }
 
@@ -462,12 +473,12 @@ const useCurationAuctionHouse = (curation) => {
       }
     } catch (err) {
       const error = err.message
+      setTxFailed(masterEditionMintTxCookieId, true)
       if (error.includes(userRejectedText)) {
         console.log("User rejected Edition Mint transaction")
         return {}
       } else {
         console.log("Error with Edition Mint TX", error)
-        setTxFailed(masterEditionMintTxCookieId, true)
         return { error }
       }
     }   
@@ -545,12 +556,9 @@ const useCurationAuctionHouse = (curation) => {
 
     return listings.find(l => {
       const correctAH = l.auctionHouse.address.toString() === auctionHouse.address.toString()
-  
       const lPrice = l.price.basisPoints.toNumber() / LAMPORTS_PER_SOL;
       const correctPrice = lPrice === Number(tokenPrice)
-  
       const active = l.canceledAt === null
-  
       return correctAH && correctPrice && active
     })
   }

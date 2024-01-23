@@ -14,6 +14,8 @@ export const LogRocketProvider = ({ children }) => {
   const [logRocketInitialized, setLogRocketInitialized] = useState(false)
   
   useEffect(() => { 
+    return // not using rocket log rn
+
     const randomRecordChance = user ? 0.75 : 0.25
     const randomlySelected = Math.random() < randomRecordChance
     const notDev = process.env.NEXT_PUBLIC_REACT_APP_STAGE !== "dev"

@@ -131,13 +131,14 @@ export default function EditArtModuleModal({
 
     onEditArtModule(newArtModuleCopy);
     setTokensToSubmit([]);
-    handleClose();
+    handleClose(false);
   }
-  const handleClose = () => {
+  const handleClose = (reset = true) => {
     onClose();
     setTimeout(() => {
       setSearch("")
       setSaving(false)
+      if(reset) setNewArtModule(artModule)
     }, 500);
   }
 
@@ -155,7 +156,6 @@ export default function EditArtModuleModal({
     const remainingTokens = []    
     
     if (userTokens?.length) userTokens.forEach(token => {
-          
       const soldOut = token.is_master_edition ? token.supply >= token.max_supply : false
       const isOneOfOne = !token.is_master_edition && !token.is_edition
       const useMasterEdition = token.is_master_edition && (curationType === "artist" || !soldOut)
@@ -358,6 +358,7 @@ export default function EditArtModuleModal({
     } else {
       //all together
       const filteredTokens = availableTokens.filter((token) => { 
+
         if (!search) return true;
         const artistUsername = useUserTokens
           ? token.artist_name

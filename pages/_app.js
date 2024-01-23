@@ -25,6 +25,7 @@ import { UserTokensProvider } from "../contexts/userTokens";
 import { VideoFallbackProvider } from "../contexts/videoFallback";
 import { RpcHealthProvider } from "../contexts/RpcHealth";
 import { LogRocketProvider } from "../contexts/logRocket";
+import { HighlightInit } from '@highlight-run/next/client'
 
 
 // const client = new ApolloClient({
@@ -80,6 +81,18 @@ export default function MyApp({ Component, pageProps }) {
           />
         </Head>      
       </div>
+      <HighlightInit
+        excludedHostnames={['localhost']}
+        projectId={'neykmqvg'}
+        serviceName="my-nextjs-frontend"
+        tracingOrigins
+        networkRecording={{
+          enabled: true,
+          recordHeadersAndBody: true,
+          urlBlocklist: [],
+        }}
+      />
+
       {/* <ApolloProvider client={client}> */}
         <RpcHealthProvider>
           <WalletContextProvider>

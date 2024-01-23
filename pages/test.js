@@ -11,6 +11,7 @@ import { Market, SellingResource, Store } from "@metaplex-foundation/mpl-fixed-p
 import { LAMPORTS_PER_SOL, PublicKey, } from "@solana/web3.js";
 import { findATA } from "../utils/curations/findTokenAccountsByOwner";
 import { getNftOwner } from "../utils/solanaWeb3/getNftOwner";
+import axios from "axios";
 
 
 
@@ -38,11 +39,35 @@ export default function TestPage() {
   }
 
   const getOwner = async () => {
-    const owner = await getNftOwner("6CkZzZk1uuPRGupiHDP3tKoNyBVv6SznwsF671ZEeyPC")
+    const mint = "NTQLgcNjKBsuP9849hKFfWZLD8WXsN5eefJ2qhdNhUR"
+    const owner = await getNftOwner(mint)
     console.log("owner:", owner.toString())
+   
+    const token = await axios.post(
+      `https://mainnet.helius-rpc.com/?api-key=${ process.env.NEXT_PUBLIC_HELIUS_API_KEY }`,
+      {
+        "jsonrpc": "2.0",
+        "id": "string",
+        "method": "getAsset",
+        "params": {
+          "id":mint,
+          "displayOptions": {
+            "showUnverifiedCollections": true,
+            "showCollectionMetadata": true,
+            "showFungible": false,
+            "showInscription": false
+          }
+        }
+      }
+    ).then((res) => {
+      return res.data.result;
+    })
+    console.log("🚀 ~ file: test.js:64 ~ getOwner ~ token:", token)
+
+      
   }
   
-  return <NotFound />
+  // return <NotFound />
   return (
     <div>
       <MainNavigation />

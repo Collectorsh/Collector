@@ -37,39 +37,39 @@ async function getTokens(publicKeys, options) {
   for (const publicKey of publicKeys) {
     let page = 1 // Starts at 1
     let continueFetching = true;
-
-    const fetchParams = queryByCreator
-      ? {
-        jsonrpc: '2.0',
-        id: `creator-tokens-${ publicKey }-${ page }`,
-        method: 'getAssetsByCreator',
-        params: {
-          creatorAddress: publicKey,
-          onlyVerified: true,
-          page: page, 
-          limit: maxBatch,
-          displayOptions: {
-            "showUnverifiedCollections": true,
-            "showCollectionMetadata": true,
-          },
-        },
-      }
-      : {
-        jsonrpc: "2.0",
-        id: `collector-tokens-${ publicKey }-${ page }`,
-        method: "getAssetsByOwner",
-        params: {
-          ownerAddress: publicKey,
-          page: page,
-          limit: maxBatch,
-          displayOptions: {
-            "showUnverifiedCollections": true,
-            "showCollectionMetadata": true,
+    while (continueFetching) {
+      console.log("HIT")
+      const fetchParams = queryByCreator
+        ? {
+          jsonrpc: '2.0',
+          id: `creator-tokens-${ publicKey }-${ page }`,
+          method: 'getAssetsByCreator',
+          params: {
+            creatorAddress: publicKey,
+            onlyVerified: true,
+            page: page, 
+            limit: maxBatch,
+            displayOptions: {
+              "showUnverifiedCollections": true,
+              "showCollectionMetadata": true,
+            },
           },
         }
-      }
-    
-    while (continueFetching) {
+        : {
+          jsonrpc: "2.0",
+          id: `collector-tokens-${ publicKey }-${ page }`,
+          method: "getAssetsByOwner",
+          params: {
+            ownerAddress: publicKey,
+            page: page,
+            limit: maxBatch,
+            displayOptions: {
+              "showUnverifiedCollections": true,
+              "showCollectionMetadata": true,
+            },
+          }
+        }
+      
       const res = await axios.post(
           `https://mainnet.helius-rpc.com/?api-key=${ process.env.NEXT_PUBLIC_HELIUS_API_KEY }`,
           fetchParams
@@ -77,18 +77,24 @@ async function getTokens(publicKeys, options) {
           return res.data.result;
         }).catch((err) => {
           console.log("Error Fetching Metadata By Owner:", err);
-          continueFetching = false
+          continueFetching = false;
+          
+          return undefined;
         });
+      
+      if (!res) break;
 
-      if (res?.total <= maxBatch) {
+      baseTokens.push(...res?.items)
+
+      if ((res?.total < maxBatch)) {
         continueFetching = false
+        break;
       } else {
         page++
       }
-
-      baseTokens.push(...res.items)
     }
 
+    
     //get items from minted_indexer to suppliment edition data, or in case helius missed them entirely
     let indexerRes
     if (queryByCreator) {

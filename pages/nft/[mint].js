@@ -292,9 +292,6 @@ export default function DetailPage({token, curations}) {
 
           <div className="flex gap-1">
             {artistName
-              // ? (<Link href={`/gallery/${token?.artist_account?.username}`} passHref>
-              //   <p className="hover:scale-105 duration-300 cursor-pointer"> by {artistName}</p>
-            // </Link>)
               ? <ToggleLink
                 disabled={!token?.artist_account?.username}
                 href={`/gallery/${ token?.artist_account?.username }`}
@@ -319,12 +316,14 @@ export default function DetailPage({token, curations}) {
                 <hr className="border-neutral-200 dark:border-neutral-800" />
                 <h2 className="font-bold mt-5 mb-2 ">Listings:</h2>
                 <div className="grid md:grid-cols-2 gap-6">
-                  {activeCurations?.map(curation => (
-                    <DetailListings key={token.mint+curation.name} curation={curation} mint={token.mint} />
-                  ))}
+                
+                  {/* only show secondary if there is no primary (for editions) */}
                   {editionListings?.length
                     ? (<SecondaryEditionListings editionListings={editionListings} />)
-                  : null}
+                    : activeCurations?.map(curation => (
+                      <DetailListings key={token.mint + curation.name} curation={curation} mint={token.mint} />
+                    ))
+                  }
                 </div>
               </div>
             )

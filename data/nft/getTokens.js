@@ -38,7 +38,6 @@ async function getTokens(publicKeys, options) {
     let page = 1 // Starts at 1
     let continueFetching = true;
     while (continueFetching) {
-      console.log("HIT")
       const fetchParams = queryByCreator
         ? {
           jsonrpc: '2.0',

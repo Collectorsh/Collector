@@ -12,6 +12,7 @@ import { LAMPORTS_PER_SOL, PublicKey, } from "@solana/web3.js";
 import { findATA } from "../utils/curations/findTokenAccountsByOwner";
 import { getNftOwner } from "../utils/solanaWeb3/getNftOwner";
 import axios from "axios";
+import { AUCTION_HOUSE_BUY_NOW_KEYS, LOOKUP_TABLE_ADDRESSES, condenseAddresses, createAddressLookUpTable, getAddressLookUpTable } from "../utils/solanaWeb3/addressLookupTables";
 
 
 
@@ -62,19 +63,23 @@ export default function TestPage() {
     ).then((res) => {
       return res.data.result;
     })
-    console.log("🚀 ~ file: test.js:64 ~ getOwner ~ token:", token)
+    console.log("🚀 ~ file: test.js:64 ~ getOwner ~ token:", token) 
+  }
 
-      
+  const buildTable = async () => {
+    // const keys = AUCTION_HOUSE_BUY_NOW_KEYS.map(key => new PublicKey(key))
+    // await createAddressLookUpTable(wallet, keys)
+    await getAddressLookUpTable(LOOKUP_TABLE_ADDRESSES.AUCTION_HOUSE_BUY_NOW)
   }
   
-  return <NotFound />
+  // return <NotFound />
   return (
     <div>
       <MainNavigation />
       <h1 className="text-center my-20 ">Test Page</h1>
       <MainButton onClick={getEditionMarket} className="mx-auto block">Get Market</MainButton>
       <MainButton onClick={getOwner} className="mx-auto block">Get Owner</MainButton>
-
+      <MainButton onClick={buildTable} className="mx-auto block">Build Table</MainButton>
     </div>
   )
 }

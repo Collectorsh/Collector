@@ -9,6 +9,14 @@ export const signAndConfirmTx = async ({
   commitment = "confirmed"
 }) => { 
   const signedTx = await wallet.signTransaction(tx)
+
+  const searchParams = new URLSearchParams(window?.location.search);
+  if (searchParams?.has("simulate")) {
+    const sim = await connection.simulateTransaction(signedTx)
+    console.log("Sim :", sim)
+    throw new Error("Simulating transaction")
+  }
+
   const signature = sendAndConfirmRawTransaction(connection, signedTx.serialize(), { commitment })
   if (!signature) throw new Error(errorMessage)
   return signature;

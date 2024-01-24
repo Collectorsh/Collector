@@ -1,6 +1,6 @@
 import { Metaplex, sol, walletAdapterIdentity, AuctionHouse, token } from "@metaplex-foundation/js";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { LAMPORTS_PER_SOL, PublicKey, Transaction, ba, sendAndConfirmRawTransaction, sendAndConfirmTransaction } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, PublicKey, Transaction, TransactionMessage, VersionedTransaction, ba, sendAndConfirmRawTransaction, sendAndConfirmTransaction } from "@solana/web3.js";
 import { useContext, useEffect, useState } from "react";
 import { connection } from "../config/settings";
 import { getSplitBalance } from "../pages/api/curations/withdraw";
@@ -21,6 +21,7 @@ import { getListMasterEditionTX } from "../utils/curations/listMasterEdition";
 import { Market } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { updateEditionListing } from "../data/curationListings/updateEditionSupply";
 import { updateListingStatus } from "../data/curationListings/updateListing";
+import { LOOKUP_TABLE_ADDRESSES, getAddressLookUpTable, getVersionedTxWithLookupTable } from "../utils/solanaWeb3/addressLookupTables";
 const DEBUG = false
 
 const userRejectedText = "rejected"
@@ -400,8 +401,14 @@ const useCurationAuctionHouse = (curation) => {
 
       const buyTx = await makeTxWithPriorityFeeFromMetaplexBuilder(buyBuilder, wallet.publicKey)
 
+      const vTx = await getVersionedTxWithLookupTable(
+        buyTx,
+        LOOKUP_TABLE_ADDRESSES.AUCTION_HOUSE_BUY_NOW,
+        wallet.publicKey
+      )
+
       const signature = await signAndConfirmTx({
-        tx: buyTx,
+        tx: vTx,
         errorMessage: "Error confirming Buy Now Purchase tx",
         wallet,
       })

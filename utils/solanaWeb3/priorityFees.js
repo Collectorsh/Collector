@@ -1,12 +1,16 @@
-import { ComputeBudgetProgram } from "@solana/web3.js";
+import { ComputeBudgetProgram, Transaction } from "@solana/web3.js";
 import axios from "axios";
 import  bs58 from "bs58";
 import { connection } from "../../config/settings";
 
 const defaultPriorityFee = 70000 //microlamports
 // priorityLevel: "MIN", "LOW", "MEDIUM", "HIGH", "VERYHIGH", "UNSAFEMAX"
-export async function getPriorityFeeInstruction(transaction, priorityLevel = "HIGH") {
+export async function getPriorityFeeInstruction(transaction, priorityLevel = "VERYHIGH") {
   let fee = defaultPriorityFee
+
+  // const budgetIx = ComputeBudgetProgram.setComputeUnitLimit({units: 1250})
+  // transaction.add(budgetIx)
+
   try {
     let serializedTx = transaction.serialize({
       requireAllSignatures: false,
@@ -36,7 +40,9 @@ export async function getPriorityFeeInstruction(transaction, priorityLevel = "HI
     console.log("Error getting priority fee estimate: ", error);
   }
 
-  return ComputeBudgetProgram.setComputeUnitPrice({ microLamports: fee })
+  const priorityFeeIx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: fee })
+  return priorityFeeIx
+  // return new Transaction().add(priorityFeeIx).add(budgetIx) 
 
 }
 

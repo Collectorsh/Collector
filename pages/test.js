@@ -72,7 +72,7 @@ export default function TestPage() {
     await getAddressLookUpTable(LOOKUP_TABLE_ADDRESSES.AUCTION_HOUSE_BUY_NOW)
   }
   
-  // return <NotFound />
+  return <NotFound />
   return (
     <div>
       <MainNavigation />

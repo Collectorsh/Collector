@@ -9,7 +9,6 @@ const identifyHighlight = (wallet, user) => {
   H.identify(user.username, {
     id: user.id,
     primaryWallet: wallet.publicKey.toString(),
-    wallets: user.public_keys,
   });
 }
 

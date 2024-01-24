@@ -14,6 +14,8 @@ import { connection } from "../../config/settings";
 import { shootConfetti } from "../../utils/confetti";
 import retryFetches from "../../utils/curations/retryFetches";
 import clsx from "clsx";
+import { makeTxWithPriorityFeeFromMetaplexBuilder } from "../../utils/solanaWeb3/priorityFees";
+import { signAndConfirmTx } from "../../utils/solanaWeb3/signAndConfirm";
 
 const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
   const wallet = useWallet();
@@ -52,19 +54,19 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
     }))
 
     try {
-      const res = await apiNodeClient.post(
+      const uploadMetadataRes = await apiNodeClient.post(
         "upload-collection-metadata",
         fileData,
         { timeout: 0 }
       ).then(res => res.data)
 
-      if (res.error || !res.uri) {
-        throw new Error(`Error uploading metadata: ${ res?.error }`)
+      if (uploadMetadataRes.error || !uploadMetadataRes.uri) {
+        throw new Error(`Error uploading collection metadata: ${ uploadMetadataRes?.error }`)
       }
 
       setStage(MINT_STAGE.MINTING)
 
-      const uri = res.uri
+      const { uri, metadata } = uploadMetadataRes
 
       const metaplex = new Metaplex(connection)
         .use(walletAdapterIdentity(wallet))
@@ -77,27 +79,26 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
 
       const { mintAddress } = transactionBuilder.getContext();
 
-      // const { signature, confirmResponse } =
-      await metaplex.rpc().sendAndConfirmTransaction(
-        transactionBuilder,
-        { commitment: "finalized" }
-      )
-      const newNft = await retryFetches(() => metaplex.nfts().findByMint({ mintAddress }));
+      const createTx = await makeTxWithPriorityFeeFromMetaplexBuilder(transactionBuilder, wallet.publicKey)
 
-      if (!newNft) {
-        throw new Error("Error getting minted NFT")
-      }
+      await signAndConfirmTx({
+        tx: createTx,
+        errorMessage: "Error confirming Create Collection tx",
+        wallet,
+        commitment: "finalized"
+      })
+
 
       //munged into collection format
       const newCollection = {
-        mint: newNft.address.toString(),
-        ...newNft.json
+        mint: mintAddress.toString(),
+        ...metadata
       }
 
       setCollections(prev => [...prev, newCollection])
 
       setStage(MINT_STAGE.SUCCESS)
-      shootConfetti(1)
+      shootConfetti(2)
     } catch (e) {
       console.error("Error minting NFT: ", e);
       setStage(MINT_STAGE.ERROR)

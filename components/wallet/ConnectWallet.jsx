@@ -3,8 +3,14 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import getApiKey from "/data/user/getApiKey";
 import UserContext from "/contexts/user";
 import getUserFromApiKey from "/data/user/getUserFromApiKey";
-import { set } from "nprogress";
-import { error } from "../../utils/toast";
+import { H } from 'highlight.run';
+
+const identifyHighlight = (wallet, user) => {
+  H.identify(user.username, {
+    id: user.id,
+    primaryWallet: wallet.publicKey.toString(),
+  });
+}
 
 export default function ConnectWallet() {
   const wallet = useWallet();
@@ -19,6 +25,7 @@ export default function ConnectWallet() {
     if (res?.data.status === "success") {
       localStorage.setItem("api_key", res.data.user.api_key);
       setUser(res.data.user);
+      identifyHighlight(wallet, res.data.user);
       setError(false);
     } else setError(true);
   }
@@ -27,6 +34,7 @@ export default function ConnectWallet() {
     let res = await getUserFromApiKey(apiKey);
     if (res?.data.status === "success") {
       setUser(res.data.user);
+      identifyHighlight(wallet, res.data.user);
     } else if (res?.data.status === "error" && res?.data.msg === "API Key not found") {
       localStorage.removeItem("api_key");
       if (publicKey && signMessage) await asyncGetApiKey(publicKey, signMessage);
@@ -54,6 +62,7 @@ export default function ConnectWallet() {
         } else {
           await asyncGetApiKey(wallet.publicKey, wallet.signMessage);
         }
+        
       } catch (e) {
         setError(true);
         console.log("Error Signing In", e)

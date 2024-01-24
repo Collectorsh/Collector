@@ -5,13 +5,15 @@ import { formatRSAPrivateKey, formatRSAPublicKey } from "../../../utils/formatRS
 import getKeyHash from "../../../data/key_hash/getHash";
 import apiClient from "../../../data/client/apiClient";
 import crypto from 'crypto'
+import { getPriorityFeeInstruction, makeTxWithPriorityFeeFromMetaplexBuilder } from "../../../utils/solanaWeb3/priorityFees";
+import { signAndConfirmTx } from "../../../utils/solanaWeb3/signAndConfirm";
 
 export const PLATFORM_FEE_POINTS = 500 //5%
 export const MAX_CURATOR_FEE_POINTS = 7500 //75%
 
 export const platformWithdrawalPubkey = "Emfvfxo51M7huTFgakJCwHvHFmBbQMwWUTgjJK6grcF9"
 
-const AUTHORITY_INIT_FUNDS = 0.02 * LAMPORTS_PER_SOL
+export const AUTHORITY_INIT_FUNDS = 0.02 * LAMPORTS_PER_SOL
 
 const fundAccount = async (fundingKeypair, recipientPubkey, lamportsToFund = AUTHORITY_INIT_FUNDS) => {
   const fundingTX = new Transaction().add(
@@ -22,6 +24,11 @@ const fundAccount = async (fundingKeypair, recipientPubkey, lamportsToFund = AUT
     }),
   );
 
+  fundingTX.recentBlockhash = (await connection.getRecentBlockhash()).blockhash
+  fundingTX.feePayer = fundingKeypair.publicKey
+  const priorityFeeIx = await getPriorityFeeInstruction(fundingTX)
+  fundingTX.add(priorityFeeIx)
+
   // Sign transaction, broadcast, and confirm
   const signature = await sendAndConfirmTransaction(
     connection,
@@ -29,6 +36,7 @@ const fundAccount = async (fundingKeypair, recipientPubkey, lamportsToFund = AUT
     [fundingKeypair],
     { commitment: 'finalized' }
   );
+
   console.log(`Funds sent to ${ recipientPubkey.toString() }`);
   console.log(`tx hash: ${ signature }`);
 }
@@ -72,22 +80,32 @@ export default async function handler(req, res) {
 
     //CREATE AUCTION HOUSE
     const metaplex = new Metaplex(connection).use(keypairIdentity(authorityKeypair));
+    
+    const auctionHouseBuilder = metaplex.auctionHouse().builders().createAuctionHouse({
+      sellerFeeBasisPoints: feePoints,
+      authority: authorityKeypair,
+      //     //withdrawals default to authority
 
-    const { auctionHouse } = await metaplex
-      .auctionHouse()
-      .create({
-        sellerFeeBasisPoints: feePoints,
-        authority: authorityKeypair,
-        //withdrawals default to authority
+      //     //ref https://docs.metaplex.com/programs/auction-house/auction-house-settings#require-sign-off
+      //     // requireSignOff: true,
+      //     // canChangeSalePrice: true,
+      //     // hasAuctioneer: true, // to enable auctioneer
+      //     // auctioneerAuthority: authorityKeypair???,
+    })
 
-        //ref https://docs.metaplex.com/programs/auction-house/auction-house-settings#require-sign-off
-        // requireSignOff: true,
-        // canChangeSalePrice: true,
-        // hasAuctioneer: true, // to enable auctioneer
-        // auctioneerAuthority: authorityKeypair???,
-      });
+    const { auctionHouseAddress } = auctionHouseBuilder.getContext()
 
-    console.log("Auction house created:", auctionHouse.address.toString())
+    const createAuctionHouseTx = await makeTxWithPriorityFeeFromMetaplexBuilder(auctionHouseBuilder, authorityKeypair.publicKey)
+    
+    const signature = await sendAndConfirmTransaction(
+      connection,
+      createAuctionHouseTx,
+      [authorityKeypair],
+      { commitment: 'finalized' }
+    );
+
+    console.log("createCuration ~ signature:", signature)
+    console.log("Auction house created:", auctionHouseAddress.toString())
 
     //TODO might need to add this back in when dealing with auctions
     // const minBalance = LAMPORTS_PER_SOL * 0.005
@@ -98,7 +116,7 @@ export default async function handler(req, res) {
       name: curationName,
       api_key: apiKey,
       curator_fee: curatorFee,
-      auction_house_address: auctionHouse.address.toString(),
+      auction_house_address: auctionHouseAddress.toString(),
       private_key_hash: encryptedSecretKey.toString('base64'),
       payout_address: curatorWithdrawalPubkey,
     }).then(res => res.data)
@@ -108,13 +126,9 @@ export default async function handler(req, res) {
     console.error("ERROR: ", err);
     console.log("====================================")
     try {
-      const feeCost = 5005001 // in lamports //5000000 for rent, 5000 remains as fee for refund tx
-      //TODO: close account to get rent back
-      //https://yihau.github.io/solana-web3-demo/advanced/token/close-account.html
 
-      const balanceLamports = await connection.getBalance(new PublicKey(authorityKeypair.publicKey));
+      const refundAmount = await connection.getBalance(new PublicKey(authorityKeypair.publicKey));
 
-      const refundAmount = balanceLamports// - feeCost
       if (refundAmount <= 0) throw new Error("Not enough balance to refund")
 
       const recoverTX = new Transaction().add(

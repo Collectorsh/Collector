@@ -12,7 +12,7 @@ export const transferSol = async ({ fromKeypair, toPubkey, lamportsToTransfer, d
 
   if (debug) {
     const sim = await connection.simulateTransaction(transferTX, [fromKeypair])
-    console.log("🚀 ~ file: transferSol.js:15 ~ transferSol ~ sim :", sim )
+    console.log("Sim :", sim )
   }
 
   // Sign transaction, broadcast, and confirm

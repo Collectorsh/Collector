@@ -10,20 +10,15 @@ import updateListing, { cancelListing } from "../../data/curationListings/update
 import UserContext from "../../contexts/user";
 import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { getListMasterEditionTX } from "../../utils/curations/listMasterEdition";
-import { connection } from "../../config/settings";
-import { getCloseAndWithdrawMarketTX } from "../../utils/curations/closeAndWithdrawMasterEdition";
-import { Metaplex, PublicKey, token, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { XCircleIcon } from "@heroicons/react/solid";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import deleteSubmission from "../../data/curationListings/deleteSubmission";
-import retryFetches from "../../utils/curations/retryFetches";
-import { Market } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { useRouter } from "next/router";
 import LogRocket from "logrocket";
-import getListedItem from "../../data/curationListings/getListedItem";
+
 import LogRocketContext from "../../contexts/logRocket";
+import { setTxFailed } from "../../utils/cookies";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
@@ -32,11 +27,12 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
 
   const { setAlwaysRecord } = useContext(LogRocketContext)
 
-  const { handleBuyNowList, handleDelist, auctionHouse } = useCurationAuctionHouse(curation)
+  const { handleBuyNowList, handleDelist, handleMasterEditionCloseAndWithdraw, handleMasterEditionList } = useCurationAuctionHouse(curation)
   
   const submissions = useMemo(() => {
     const baseListings = curation?.submitted_token_listings.filter(listing => {
       const owned = listing.owner_address === wallet?.publicKey.toString()
+      // const owned = user.public_keys.includes(listing.owner_address)
       const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
       return owned && !closedMaster
     }) || [];
@@ -66,122 +62,74 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
     }
 
     if (token.is_master_edition) {
-      const listingRes = await getListedItem(token.mint)
+      const listMasterEdRes = await handleMasterEditionList(token, listingPrice)
 
-      if (listingRes.status === "success") {
-        const curationName = listingRes.curationName.replaceAll("_", " ")
-        error(`${ token.name } is already listed in ${ curationName}`)
+      if (listMasterEdRes.error) {
+        error(`Error Listing Master Edition ${ token.name } Onchain`)
         return
-      }
-      
-      //Handle master edition market creation and update to the curation_listing
-      const builder = await getListMasterEditionTX({
-        connection: connection,
-        masterEdition: token,
-        editionPrice: Number(listingPrice),
-        ownerPubkey: wallet.publicKey,
-        // piecesPerWallet:
-      })
-      if (!builder) {
-        error(`Error Building ${ token.name } Editions Transaction`)
-        return
-      }
+      } else if (listMasterEdRes.editionMarketAddress) {
+        const editionMarketAddress = listMasterEdRes.editionMarketAddress
 
-      const {
-        listMasterEditionTX,
-        editionMarketAddress
-      } = builder
+        const res = await updateListing({
+          curationId: curation.id,
+          tokenMint: token.mint,
+          buyNowPrice: Number(listingPrice),
+          apiKey: user.api_key,
+          editionMarketAddress
+        })
 
-      if (router.query.simulate) {
-        const signed = await wallet.signTransaction(listMasterEditionTX)
-        const sim = await connection.simulateTransaction(signed)
-        console.log("🚀 ~ file: editListingsModal.jsx:65 ~ onList ~ sim:", sim)
+        if (res?.status !== "success") {
+          // set tx as failed, this will trigger a search for the existing market address in "handleMasterEditionList" the next time its tried
+          setTxFailed(listMasterEdRes.listMasterEditionTxCookieId, true)
 
-        return;
-      }
-
-      const signedTx = await wallet.signTransaction(listMasterEditionTX)
- 
-      const metaplex = new Metaplex(connection).use(walletAdapterIdentity(wallet))
-
-      // const { signature, confirmResponse } =
-      await metaplex.rpc().sendAndConfirmTransaction(
-        signedTx,
-        {
-          commitment: "finalized", //"confirmed"
-          maxRetries: 5
+          console.log(`Error Saving Master Edition Listing For ${ token.name }: ${ res?.message }`)
+          error(`Error Saving Master Edition Listing For ${ token.name }`)
+          return
         }
-      );
 
-      // if (!signature || Boolean(confirmResponse.value.err)) {
-      //   error(`Error Listing ${ token.name } Editions Onchain`)
-      //   return
-      // }
+        success(`${ token.name } has been listed!`)
 
-      //using onchain marketdata as a confirmation strategy because the rpc confirmation response was unreliable
-      const marketData = await retryFetches(async () => {
-        const marketPubkey = new PublicKey(editionMarketAddress)
-        const marketAccount = await connection.getAccountInfo(marketPubkey);
-        const [marketData] = Market.deserialize(marketAccount?.data);
-        return marketData
-      })
-
-      if (!marketData) {
-        throw new Error("Error confirming onchain listing")
+        newToken = {
+          ...token,
+          master_edition_market_address: editionMarketAddress,
+          listed_status: "listed",
+          buy_now_price: Number(listingPrice),
+        }
       }
-
-      const res = await updateListing({
-        curationId: curation.id,
-        tokenMint: token.mint,
-        buyNowPrice: Number(listingPrice),
-        apiKey: user.api_key,
-        editionMarketAddress
-      })
-
-      if (res?.status !== "success") {
-        error(`Error Saving Listing For ${ token.name }`)
-        throw new Error(`Error saving listing for ${ token.name } : ${ res?.message }`)
-      }
-
-      success(`${ token.name } has been listed!`)
-
-      newToken = {
-        ...token,
-        master_edition_market_address: editionMarketAddress,
-        listed_status: "listed",
-        buy_now_price: Number(listingPrice),
-      }
-    // } else if (token.is_edition) {
-    //   //TODO handle edition list
-    //   return
     } else {
-      //Handle 1/1 list
-      const receipt = await handleBuyNowList(token.mint, listingPrice)
-      if (!receipt) {
+      //Handle 1/1 and secondary edition list
+      const listRes = await handleBuyNowList(token.mint, listingPrice)
+
+      if (listRes.error) {
         error(`Error Listing ${ token.name } Onchain`)
         return
-      }
+      } else if (listRes.receipt) {
 
-      const res = await updateListing({
-        curationId: curation.id,
-        tokenMint: token.mint,
-        buyNowPrice: Number(listingPrice),
-        apiKey: user.api_key,
-        listingReceipt: receipt
-      })
+        const res = await updateListing({
+          curationId: curation.id,
+          tokenMint: token.mint,
+          buyNowPrice: Number(listingPrice),
+          apiKey: user.api_key,
+          listingReceipt: listRes.receipt
+        })
 
-      if (res?.status !== "success") {
-        error(`Error Saving Listing For ${ token.name }: ${ res?.message }`)
-        return
-      }
+        if (res?.status !== "success") {
+          // set tx as failed, this will trigger a search for the existing receipt in "handleBuyNowList" the next time its tried
+          setTxFailed(listRes.listTxCookieId, true)
 
-      success(`${ token.name } has been listed!`)
+          console.log(`Error Saving Listing For ${token.name}: ${res?.message}`)
+          error(`Error Saving Listing For ${ token.name }`)
+          return
+        }
 
-      newToken = {
-        ...token,
-        listed_status: "listed",
-        buy_now_price: Number(listingPrice),
-      }
+        success(`${ token.name } has been listed!`)
+
+        newToken = {
+          ...token,
+          listed_status: "listed",
+          buy_now_price: Number(listingPrice),
+        }
+      }      
     }
 
     if(newToken) handleEditListings(newToken, curation)
@@ -191,96 +139,75 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
     let newToken;
     if (token.is_master_edition) {
       //Handle master edition market close, treasury withdraw & asset retrieval
-      const builder = await getCloseAndWithdrawMarketTX({
-        connection: connection,
-        ownerPubkey: wallet.publicKey,
-        masterEditionMint: token.mint,
-        marketAddress: token.master_edition_market_address,
-        feePoints: auctionHouse.sellerFeeBasisPoints,
-        curationTreasuryAddress: auctionHouse.treasuryAccountAddress.toString()
-      })
+     
+      const withdrawRes = await handleMasterEditionCloseAndWithdraw(token)
 
-      if (!builder) {
-        error(`Error Building ${ token.name } Claim Transaction`)
+      if (withdrawRes.error) {
+        error(`Error Withdrawing ${ token.name } Onchain`)
         return
+      } else if (withdrawRes.signature) { 
+
+        
+        const res = await cancelListing({
+          curationId: curation.id,
+          tokenMint: token.mint,
+          apiKey: user.api_key
+        })
+
+        if (res?.status !== "success") {
+          setTxFailed(withdrawRes.withdrawCookieId, true)
+
+          console.log(`Error saving withdraw of ${ token.name }: ${ res?.message }`)
+          error(`Error saving withdraw of ${ token.name }`)
+          return
+        }
+
+        success(`${ token.name } Has Been Withdrawn!`)
+
+        const status = token.supply >= token.max_supply ? "master-edition-closed" : "unlisted"
+
+        newToken = {
+          ...token,
+          listed_status: status,
+          buy_now_price: null,
+          primary_sale_happened: true
+        }
       }
-
-      const { closeAndWithdrawMarketTX } = builder
-
-      if (router.query.simulate) {
-        const signed = await wallet.signTransaction(closeAndWithdrawMarketTX)
-        const sim = await connection.simulateTransaction(signed)
-        console.log("🚀 ~ file: editListingsModal.jsx:168 ~ onDelist ~ sim:", sim)
-
-        return;
-      }
-
-      const delistTXSignature = await wallet.sendTransaction(closeAndWithdrawMarketTX, connection)
-      const confirmation = await connection.confirmTransaction(delistTXSignature);
-
-      if (!delistTXSignature || Boolean(confirmation.value.err)) {
-        error(`Error Delisting ${ token.name } Onchain`)
-        return
-      }
-
-      // const signed = await wallet.signTransaction(closeAndWithdrawMarketTX)
-      // const txSignature = await sendAndConfirmTransaction(connection, signed)
-      // console.log("🚀 ~ file: editListingsModal.jsx:217 ~ onDelist ~ txSignature :", txSignature )
-
-      const res = await cancelListing({
-        curationId: curation.id,
-        tokenMint: token.mint,
-        apiKey: user.api_key
-      })
-
-      if (res?.status !== "success") {
-        error(`Error Withdrawing ${ token.name }: ${ res?.message }`)
-        return
-      }
-      
-      success(`${ token.name } Has Been Withdrawn!`)
-
-      const status = token.supply >= token.max_supply ? "master-edition-closed" : "unlisted"
-
-      newToken = {
-        ...token,
-        listed_status: status,
-        buy_now_price: null,
-        primary_sale_happened: true
-      }
-    // } else if (token.is_edition) {
-
-    //   //TODO Handle edition delist
-
-    //   return
     } else {
-      //Handle 1/1 delist
-      const delistTXSignatureConfirmation = await handleDelist(token.listing_receipt)
+      //Handle 1/1 and secondary edition delist
+      const delistRes = await handleDelist(token)
 
-      if (!delistTXSignatureConfirmation) {
+      if (delistRes.error) {
         error(`Error Delisting ${ token.name } Onchain`)
         return
-      }
+      } else if (delistRes.signature) {
+    
+        const res = await cancelListing({
+          curationId: curation.id,
+          tokenMint: token.mint,
+          apiKey: user.api_key
+        })
 
-      const res = await cancelListing({
-        curationId: curation.id,
-        tokenMint: token.mint,
-        apiKey: user.api_key
-      })
+        if (res?.status !== "success") {
+          // set tx as failed, this will trigger a search for the existing listings in "handleDelist" the next time its tried
+          setTxFailed(delistRes.delistCookieId, true)
 
-      if (res?.status !== "success") {
-        error(`Error delisting ${ token.name }: ${ res?.message }`)
-        return
-      }
-      success(`${ token.name } Has Been Delisted`)
+          console.log(`Error saving delist of ${ token.name }: ${ res?.message }`)
+          error(`Error saving delist of ${ token.name }`)
+          return
+        }
 
-      newToken = {
-        ...token,
-        listed_status: "unlisted",
-        buy_now_price: null,
-        listing_receipt: null
+        success(`${ token.name } Has Been Delisted`)
+
+        newToken = {
+          ...token,
+          listed_status: "unlisted",
+          buy_now_price: null,
+          listing_receipt: null
+        }
       }
     }
+
     if (newToken) handleEditListings(newToken, curation)
   }
 
@@ -476,7 +403,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
       </div>
 
       <CloudinaryImage
-        className={clsx("flex-shrink-0 overflow-hidden object-cover",
+        className={clsx("flex-shrink-0 overflow-hidden object-contain",
           "w-full h-[250px] rounded-t-lg p-1",
         )}
         token={token}

@@ -21,7 +21,7 @@ import { getListMasterEditionTX } from "../utils/curations/listMasterEdition";
 import { Market } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { updateEditionListing } from "../data/curationListings/updateEditionSupply";
 import { updateListingStatus } from "../data/curationListings/updateListing";
-import { LOOKUP_TABLE_ADDRESSES, getAddressLookUpTable, getVersionedTxWithLookupTable } from "../utils/solanaWeb3/addressLookupTables";
+import { LOOKUP_TABLE_ADDRESSES, getVersionedTxWithLookupTable } from "../utils/solanaWeb3/addressLookupTables";
 const DEBUG = false
 
 const userRejectedText = "rejected"

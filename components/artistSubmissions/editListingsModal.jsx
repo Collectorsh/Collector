@@ -17,19 +17,15 @@ import deleteSubmission from "../../data/curationListings/deleteSubmission";
 import { useRouter } from "next/router";
 import LogRocket from "logrocket";
 
-import LogRocketContext from "../../contexts/logRocket";
 import { setTxFailed } from "../../utils/cookies";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
   const wallet = useWallet()
-  const router = useRouter()
-
-  const { setAlwaysRecord } = useContext(LogRocketContext)
 
   const { handleBuyNowList, handleDelist, handleMasterEditionCloseAndWithdraw, handleMasterEditionList } = useCurationAuctionHouse(curation)
   
-  const submissions = useMemo(() => {
+  const submissions = (() => {
     const baseListings = curation?.submitted_token_listings.filter(listing => {
       const owned = listing.owner_address === wallet?.publicKey.toString()
       // const owned = user.public_keys.includes(listing.owner_address)
@@ -44,14 +40,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       return nameComp
     })
     return baseListings
-  }, [curation, wallet])
+  })();
 
   const isPersonalCuration = curation?.curation_type !== "curator" //"artist" || "collector"
-
-  useEffect(() => { 
-    setAlwaysRecord(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const onList = async (token, listingPrice) => {
     let newToken
@@ -235,16 +226,17 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       title={`Edit ${ curation?.name.replaceAll("_", " ") } Submission Listings`}
     >
       <div className="overflow-auto ">
-        <div className="text-center mt-4">
-          <p className="font-bold">Please be aware: </p>
-          <p className={curation?.curation_type !== "curator" && "hidden" }>
-            &bull; Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price
+        <div className="text-left mt-4 text-sm">
+          <p className="font-bold text-center text-base">Please be aware: </p>
+          <p className={curation?.curation_type !== "curator" ? "hidden" : "" }>
+            Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price.
           </p>
-          <p>
-            &bull; For listings to be valid on Collector, your artwork cannot be listed on custodial marketplaces like Exchange Art or Mallow
+          <p className="">
+            {/* For listings to be valid on Collector, your artwork cannot be listed on custodial marketplaces like Exchange Art or Mallow */}
+            Any artwork can be displayed, but in order sell them they can not be listed with custodial marketplaces like Exchange Art or Mallow.
           </p>
-          <p className={curation?.curation_type === "collector" && "hidden"}>
-            &bull; To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet.
+          <p className={curation?.curation_type === "collector" ? "hidden" : ""}>
+            To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet.
           </p>
 
         </div>
@@ -263,12 +255,12 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         </div>
 
       </div>
-
+{/* 
       <div className="w-full flex justify-end gap-4 mt-4 relative">
         <MainButton onClick={onClose}>
           Close
         </MainButton>
-      </div>
+      </div> */}
     </Modal>
   )
 }
@@ -289,7 +281,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
   const isSoldOut = isMasterEdition ? editionsLeft <= 0 : false
   const isListed = token.listed_status === "listed" || (isMasterEdition && isSoldOut)//to allow owner to withdraw master edition
   const isClosed = token.listed_status === "master-edition-closed"
-  const disableListing = !listingPrice || listingPrice <= 0 || listingPrice == token.buy_now_price || listing || isSoldOut || token.compressed
+  const disableListing = !listingPrice || listingPrice <= 0 || listing || isSoldOut || token.compressed //listingPrice == token.buy_now_price 
 
   const handleList = async () => {
     try {
@@ -396,7 +388,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
         !infoBadge && "hidden",
         "bg-white dark:bg-neutral-900",
         "rounded-full ring-2 ring-neutral-200 dark:ring-neutral-700",
-        "min-w-fit w-6 h-6 absolute top-3 left-3 z-10 flex justify-center items-center",
+        "min-w-fit w-6 h-6 absolute top-3 left-3 z-10 flex justify-center items-center p-1",
         "text-leading-none font-bold text-lg"
       )}>
         {infoBadge}

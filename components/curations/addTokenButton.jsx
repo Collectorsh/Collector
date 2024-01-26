@@ -5,6 +5,9 @@ import { truncate } from "../../utils/truncate"
 import clsx from "clsx"
 import { Oval } from "react-loader-spinner"
 import { error } from "../../utils/toast";
+import { Metaplex } from "@metaplex-foundation/js"
+import { getMasterEditionSupply } from "../../utils/solanaWeb3/getMasterEditionSupply"
+import { connection } from "../../config/settings"
 
 const AddTokenButton = ({
   token,
@@ -32,6 +35,8 @@ const AddTokenButton = ({
   const alreadyUsed = token.is_edition ? !availableEditions?.length : alreadyInUse
   const disableAdd = alreadyUsed || moduleFull || loadingAspectRatio || !imageLoaded
 
+  const isMasterEdition = token.is_master_edition
+
   const handleAdd = async () => {
     if (alreadyUsed || moduleFull) return
     let newToken;
@@ -57,6 +62,16 @@ const AddTokenButton = ({
         return
       }
       newToken.aspect_ratio = aspectRatio
+
+      if (isMasterEdition) {
+        //fetch live supply count
+        const metaplex = new Metaplex(connection)
+        const trueSupply = await getMasterEditionSupply(token.mint, metaplex)
+
+        if (trueSupply !== undefined) {
+          newToken.supply = trueSupply
+        }
+      }
 
       handleTokenToSubmit(newToken)
     }

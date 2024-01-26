@@ -26,8 +26,6 @@ import Drawer from "../components/Drawer";
 import IsMutableSwitch from "../components/create/isMutableSwitch";
 import ExternalUrlInput from "../components/create/externalUrl";
 import AttributesInput from "../components/create/attributes";
-import LogRocketContext from "../contexts/logRocket";
-
 //NFT standard reference - https://docs.metaplex.com/programs/token-metadata/changelog/v1.0
 
 export const maxUploadSize = 123 //MB
@@ -81,7 +79,6 @@ export default function MintPage() {
   const [user] = useContext(UserContext);
   const router = useRouter()
   const wallet = useWallet();
-  const { setAlwaysRecord } = useContext(LogRocketContext)
 
   const [altMediaFile, setAltMediaFile] = useState(null)
   const [imageFile, setImageFile] = useState(null)
@@ -110,12 +107,6 @@ export default function MintPage() {
   const requiredError = errors.filter(e => nonDisplayErrors.includes(e[1]))[0];
   const categoryDisplay = category === CATEGORIES.VR ? "3D Model" : category
   const isEditions = maxSupply > 1
-
-  useEffect(() => {
-    setAlwaysRecord(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
 
   useEffect(() => {
     if (!user) return

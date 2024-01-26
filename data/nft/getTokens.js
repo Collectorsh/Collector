@@ -220,19 +220,10 @@ async function getTokens(publicKeys, options) {
   //KEEP this block though
   if (useArtistDetails) {
     const creatorResp = await apiClient.post("/creator/details", {tokens: results})
-    for (const result of results) {
-      
-      result.artist_name = creatorResp?.data[result.artist_address]
-        
-      
-      // Loop through results and set artist name, twitter
-      // const creatorsAddresses = result.creators.map((creator) => creator.address)
-      // let artists = creatorResp.data.filter((c) => creatorsAddresses.includes(c.public_key));
-      // if (artists.length > 0) {
-      //   let artist = artists[artists.length - 1];
-      //   result.artist_name = artist.name;
-      //   // result.artist_twitter = artist.twitter;
-      // }
+    if (creatorResp?.data) {
+      for (const result of results) {
+        result.artist_name = creatorResp.data[result.artist_address]
+      }
     }
   }
 

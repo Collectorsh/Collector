@@ -37,6 +37,9 @@ import { HighlightInit } from '@highlight-run/next/client'
 export default function MyApp({ Component, pageProps }) {
   return (
     <>
+      {/* Start of HubSpot Embed Code */}
+      <script type="text/javascript" id="hs-script-loader" async defer src={`//js-na1.hs-scripts.com/${process.env.NEXT_PUBLIC_HUBSPOT_KEY}.js`}></script>
+      {/* End of HubSpot Embed Code */}
       <div>
         <Head>
           <meta charSet="UTF-8" />

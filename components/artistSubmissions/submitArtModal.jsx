@@ -10,6 +10,9 @@ import SearchBar from "../SearchBar";
 import { truncate } from "../../utils/truncate";
 import useNftFiles from "../../hooks/useNftFiles";
 import { error } from "../../utils/toast";
+import { Metaplex } from "@metaplex-foundation/js";
+import { connection } from "../../config/settings";
+import { getMasterEditionSupply } from "../../utils/solanaWeb3/getMasterEditionSupply";
 
 const tabs = ["1/1", "Master Editions"]
 
@@ -278,6 +281,16 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
       }
       
       newToken.aspect_ratio = aspectRatio
+
+      if (isMasterEdition) {
+        //fetch live supply count
+        const metaplex = new Metaplex(connection)
+        const trueSupply = await getMasterEditionSupply(token.mint, metaplex)
+
+        if (trueSupply !== undefined) {
+          newToken.supply = trueSupply
+        }
+      }
   
       setSelectedTokens(prev => [...prev, newToken])
     }

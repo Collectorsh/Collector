@@ -435,18 +435,7 @@ const useCurationAuctionHouse = (curation) => {
       const txHasFailed = getTxFailed(masterEditionMintTxCookieId)
       if (txHasFailed) {
         //update the listing with the true supply to make sure it hasn't sold out 
-        const metadata = await metaplex.nfts().findByMint({
-          mintAddress: new PublicKey(token.mint),
-        })
-
-        const supply = metadata?.edition?.supply
-        const trueSupply = supply ? Number(supply.toString()) : undefined
-
-        const updateSupplyRes = await updateEditionListing({
-          token: token,
-          supply: trueSupply,
-          apiKey: user.api_key
-        })
+        const updateSupplyRes = await updateEditionSupply(token)
 
         if (updateSupplyRes?.listed_status === "sold") {
           throw new Error(`${ token.name } has sold out`)
@@ -518,6 +507,9 @@ const useCurationAuctionHouse = (curation) => {
         })
         if (res?.status !== "success") {
           console.error(`Error recording edition mint sale for ${ token.name }: ${ res?.message }`)
+        }
+        if (res?.editionListingUpdateFailed) {
+          await updateEditionSupply(token)
         }
 
         return true
@@ -600,6 +592,18 @@ const useCurationAuctionHouse = (curation) => {
     }
     return null
   } 
+
+  const updateEditionSupply = async (token) => {
+    const trueSupply = await getMasterEditionSupply(token.mint, metaplex)
+
+    const updateSupplyRes = await updateEditionListing({
+      token: token,
+      supply: trueSupply,
+      apiKey: user.api_key
+    })
+
+    return updateSupplyRes
+  }
 
   return {
     handleBuyNowList,

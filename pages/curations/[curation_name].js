@@ -368,7 +368,7 @@ function CurationPage({curation}) {
     </>
   )
 
-  const curationMetaDescription = `${ curation.name.replaceAll("_", " ") } by ${ curation.curator.username }`
+  const curationMetaDescription = `${ curation.name.replaceAll("_", " ") } by ${ curation.curator?.username }`
 
 
   return (
@@ -425,10 +425,10 @@ function CurationPage({curation}) {
             <h1 className="font-bold text-5xl text-center w-full break-words">{name.replaceAll("_", " ")}</h1>
           </EditWrapper>
         </div>
-        <Link href={`/gallery/${ curation.curator.username }`} >
+        <Link href={`/gallery/${ curation.curator?.username }`} >
           <a className="flex gap-2 items-center justify-center mb-8 hover:scale-105 duration-300 w-fit mx-auto ">
-            <p className="text-lg">{curatorText} {curation.curator.username}</p>
-            {curation.curator.profile_image
+            <p className="text-lg">{curatorText} {curation.curator?.username}</p>
+            {curation.curator?.profile_image
               ? (<div className="relative">
                   <CloudinaryImage
                     className={clsx(

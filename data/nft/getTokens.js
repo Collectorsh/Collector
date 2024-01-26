@@ -145,11 +145,13 @@ async function getTokens(publicKeys, options) {
       collection: collectionInfo,
       compressed: compression.compressed,
       //TODO Get from Helius when available and remove useTokenMetadata
-      // is_edition: 
+      // is_edition:
       // parent:
       // is_master_edition:
       // supply:
       // max_supply:
+      //compressed:
+      //is_collection_nft
     }
   }).filter((item) => {
     const notUsable = !item.uri || !item.artist_address || !item.mint || !item.image
@@ -168,6 +170,8 @@ async function getTokens(publicKeys, options) {
     } 
   }
 
+
+  //TODO get rid of once gallery 1.0 are sunsetted <>
   const visResults = await apiClient.post("/get_visibility_and_order", {
     public_key: publicKeys[0],
     cld_ids: mungedTokens.map(token => getTokenCldImageId(token)),
@@ -210,31 +214,21 @@ async function getTokens(publicKeys, options) {
   if (justVisible) {
     results = results.filter((r) => r.visible);
   }
+  //TODO get rid of once gallery 1.0 are sunsetted ^^^<>
 
-  const creatorResp = useArtistDetails
-    ? await apiClient.post("/creator/details", {
-      tokens: results,
-    })
-    : { data: [] };
-  
-  for (const result of results) {       
-    // Loop through results and set artist name, twitter
-    // let artists = creatorResp.data.filter((t) => t.public_key === result.artist_address);
-    const creatorsAddresses = result.creators.map((creator) => creator.address)
-    let artists = creatorResp.data.filter((t) => creatorsAddresses.includes(t.public_key) );
-    if (artists.length > 0) {
-      let artist = artists[artists.length - 1];
-      result.artist_name = artist.name;
-      result.artist_twitter = artist.twitter;
-      // if (result.artist_twitter === null) {
-      //   let toke = creatorResp.data.find(
-      //     (t) => t.public_key === result.artist_address && t.twitter !== null
-      //   );
-      //   if (toke) result.artist_twitter = toke.twitter;
-      // }
+
+  //KEEP this block though
+  if (useArtistDetails) {
+    const creatorResp = await apiClient.post("/creator/details", {tokens: results})
+    if (creatorResp?.data) {
+      for (const result of results) {
+        result.artist_name = creatorResp.data[result.artist_address]
+      }
     }
   }
 
+
+  //TODO get rid of once gallery 1.0 are sunsetted <>
   results = results.sort((a, b) => {
     const aOrderId = coalesce(a.order_id, +Infinity);
     const bOrderId = coalesce(b.order_id, +Infinity);

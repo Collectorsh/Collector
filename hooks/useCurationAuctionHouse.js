@@ -22,6 +22,7 @@ import { Market } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { updateEditionListing } from "../data/curationListings/updateEditionSupply";
 import { updateListingStatus } from "../data/curationListings/updateListing";
 import { LOOKUP_TABLE_ADDRESSES, getVersionedTxWithLookupTable } from "../utils/solanaWeb3/addressLookupTables";
+import { getMasterEditionSupply } from "../utils/solanaWeb3/getMasterEditionSupply";
 const DEBUG = false
 
 const userRejectedText = "rejected"
@@ -508,6 +509,7 @@ const useCurationAuctionHouse = (curation) => {
         if (res?.status !== "success") {
           console.error(`Error recording edition mint sale for ${ token.name }: ${ res?.message }`)
         }
+        console.log("🚀 ~ file: useCurationAuctionHouse.js:512 ~ handleCollect ~ res:", res)
         if (res?.editionListingUpdateFailed) {
           await updateEditionSupply(token)
         }

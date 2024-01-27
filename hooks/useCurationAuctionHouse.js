@@ -511,7 +511,7 @@ const useCurationAuctionHouse = (curation) => {
         }
 
         if (res?.editionListingUpdateFailed) {
-          await updateEditionSupply(token)
+          setTimeout(() => updateEditionSupply(token), 2000) //wait then update the supply
         }
 
         return true

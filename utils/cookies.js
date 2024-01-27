@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 
 export const getTxFailed = (txId) => {
-  return Cookies.get(`txTried-${ txId }`);
+  return Boolean(Cookies.get(`txTried-${ txId }`));
 }
 
 // Set the cookie to expire in 1 day

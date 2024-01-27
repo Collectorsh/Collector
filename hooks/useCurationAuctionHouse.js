@@ -509,7 +509,7 @@ const useCurationAuctionHouse = (curation) => {
         if (res?.status !== "success") {
           console.error(`Error recording edition mint sale for ${ token.name }: ${ res?.message }`)
         }
-        console.log("🚀 ~ file: useCurationAuctionHouse.js:512 ~ handleCollect ~ res:", res)
+
         if (res?.editionListingUpdateFailed) {
           await updateEditionSupply(token)
         }

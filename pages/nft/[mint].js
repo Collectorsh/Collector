@@ -318,12 +318,13 @@ export default function DetailPage({token, curations}) {
                 <div className="grid md:grid-cols-2 gap-6">
                 
                   {/* only show secondary if there is no primary (for editions) */}
-                  {editionListings?.length
-                    ? (<SecondaryEditionListings editionListings={editionListings} />)
-                    : activeCurations?.map(curation => (
+                  {activeCurations?.length
+                    ? activeCurations?.map(curation => (
                       <DetailListings key={token.mint + curation.name} curation={curation} mint={token.mint} />
-                    ))
+                      ))
+                    : (<SecondaryEditionListings editionListings={editionListings} />)
                   }
+                  
                 </div>
               </div>
             )

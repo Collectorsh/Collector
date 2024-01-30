@@ -263,7 +263,7 @@ function ProfilePage({ curator }) {
                 className="flex items-center px-4 py-2"
                 onClick={() => setCreateCurationOpen(true)}
               >
-                Create New Curation <PlusIcon className="w-6 h-6 ml-2" />
+                Create new curation <PlusIcon className="w-6 h-6 ml-2" />
               </MainButton>
             )
             : null

@@ -8,7 +8,8 @@ async function recordSale({
   buyerAddress,
   saleType,
   txHash,
-  editionsMinted
+  editionsMinted,
+  newSupply
 }) {
   try {
     if (!txHash) throw new Error("txHash is required");
@@ -26,6 +27,7 @@ async function recordSale({
       seller_id: token.owner_id,
       seller_address: token.owner_address,
       editions_minted: editionsMinted,
+      new_supply: newSupply
     })
 
     return res.data;

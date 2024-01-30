@@ -58,6 +58,7 @@ const CollectionDropDown = ({ selectedCollection, setCollection, setError, exist
           <ChevronDownIcon className="w-5 h-5" />
         </Listbox.Button>
         <Transition
+          className="relative z-10"
           enter="transition duration-100 ease-out"
           enterFrom="transform scale-95 opacity-0"
           enterTo="transform scale-100 opacity-100"

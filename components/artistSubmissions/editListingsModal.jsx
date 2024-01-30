@@ -225,7 +225,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       onClose={onClose}
       title={`Edit ${ curation?.name.replaceAll("_", " ") } Submission Listings`}
     >
-      <div className="overflow-auto ">
+      <div className="overflow-auto">
         <div className="text-left mt-4 text-sm">
           <p className="font-bold text-center text-base">Please be aware: </p>
           <p className={curation?.curation_type !== "curator" ? "hidden" : "" }>

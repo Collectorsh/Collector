@@ -432,8 +432,10 @@ const useCurationAuctionHouse = (curation) => {
   const handleMasterEditionMint = async (token) => { 
     const marketAddress = token.master_edition_market_address
     const masterEditionMintTxCookieId = `editionMint-${ marketAddress }`
+
     try {
       const txHasFailed = getTxFailed(masterEditionMintTxCookieId)
+
       if (txHasFailed) {
         //update the listing with the true supply to make sure it hasn't sold out 
         const updateSupplyRes = await updateEditionSupply(token)
@@ -487,9 +489,11 @@ const useCurationAuctionHouse = (curation) => {
     const isEdition = token.is_edition
     if (isMasterEdition && token.master_edition_market_address) {
       //Handle Edition mint/purchase
+      // const trueSupply = await getMasterEditionSupply(token.mint, metaplex)
+
       const mintRes = await handleMasterEditionMint(token)
 
-      if (mintRes.error) {
+      if (mintRes?.error) {
         error(`Error minting ${ token.name }: ${ mintRes.error }`)
       } else if (mintRes.signature) {
 
@@ -504,14 +508,18 @@ const useCurationAuctionHouse = (curation) => {
           buyerAddress: wallet.publicKey.toString(),
           saleType: "edition_mint",
           txHash: mintRes.signature,
-          editionsMinted: 1
+          editionsMinted: 1,
+          // newSupply: trueSupply + 1
         })
         if (res?.status !== "success") {
           console.error(`Error recording edition mint sale for ${ token.name }: ${ res?.message }`)
         }
 
         if (res?.editionListingUpdateFailed) {
-          setTimeout(() => updateEditionSupply(token), 2000) //wait then update the supply
+          setTimeout(() => {
+            console.log("UPDATEING DELAY")
+            updateEditionSupply(token)
+          }, 1000*60) //wait 1 min for chain to update then update the supply
         }
 
         return true
@@ -596,6 +604,7 @@ const useCurationAuctionHouse = (curation) => {
   } 
 
   const updateEditionSupply = async (token) => {
+    console.log("HITTTTT")
     const trueSupply = await getMasterEditionSupply(token.mint, metaplex)
 
     const updateSupplyRes = await updateEditionListing({

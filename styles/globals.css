@@ -6,11 +6,6 @@
   h1, .collector {
     @apply font-display
   }
-
-  #hubspot-messages-iframe-container  {
-    background-color: transparent !important;
-  }
-
 }
 
 .Toastify__toast-container {

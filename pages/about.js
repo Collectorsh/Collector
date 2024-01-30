@@ -1,7 +1,8 @@
-import Link from "next/link";
+
 import MainNavigation from "/components/navigation/MainNavigation";
 
 export default function About() {
+
   return (
     <div className="dark:bg-black dark:text-whitish">
       <MainNavigation />

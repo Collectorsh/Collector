@@ -219,6 +219,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
     } 
   }
 
+  const useCuratorInfo = curation?.curation_type === "curator"
+  const useMasterEditionInfo = curation?.curation_type !== "collector"
+
   return (
     <Modal
       isOpen={isOpen}
@@ -226,16 +229,12 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       title={`Edit ${ curation?.name.replaceAll("_", " ") } Submission Listings`}
     >
       <div className="overflow-auto">
-        <div className="text-left mt-4 text-sm">
+        <div className={clsx("text-left mt-4 text-sm", (!useCuratorInfo && !useMasterEditionInfo) ? "hidden": "")}>
           <p className="font-bold text-center text-base">Please be aware: </p>
-          <p className={curation?.curation_type !== "curator" ? "hidden" : "" }>
+          <p className={!useCuratorInfo && "hidden"}>
             Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price.
           </p>
-          <p className="">
-            {/* For listings to be valid on Collector, your artwork cannot be listed on custodial marketplaces like Exchange Art or Mallow */}
-            Any artwork can be displayed, but in order sell them they can not be listed with custodial marketplaces like Exchange Art or Mallow.
-          </p>
-          <p className={curation?.curation_type === "collector" ? "hidden" : ""}>
+          <p className={!useMasterEditionInfo && "hidden"}>
             To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet.
           </p>
 

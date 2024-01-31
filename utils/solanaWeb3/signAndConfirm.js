@@ -6,7 +6,8 @@ export const signAndConfirmTx = async ({
   tx,
   wallet,
   errorMessage = "Error confirming transaction",
-  commitment = "confirmed"
+  commitment = "confirmed",
+  skipPreflight = false
 }) => { 
   const signedTx = await wallet.signTransaction(tx)
 
@@ -17,7 +18,7 @@ export const signAndConfirmTx = async ({
     throw new Error("Simulating transaction")
   }
 
-  const signature = sendAndConfirmRawTransaction(connection, signedTx.serialize(), { commitment })
+  const signature = sendAndConfirmRawTransaction(connection, signedTx.serialize(), { commitment, skipPreflight })
   if (!signature) throw new Error(errorMessage)
   return signature;
 }

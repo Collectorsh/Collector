@@ -29,7 +29,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
 
   const itemRef = useRef(null)
 
-  const [lazyLoadBuffer, setLazyLoadBuffer] = useState("1000px")
+  const [lazyLoadBuffer, setLazyLoadBuffer] = useState("500px")
 
   const { isVisible } = useElementObserver(itemRef, lazyLoadBuffer)
 
@@ -99,7 +99,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
   useEffect(() => {
     //check screen hieght and set lazy load buffer to screen height
     const windowHeight = window.innerHeight
-    setLazyLoadBuffer(`${ windowHeight }px`)
+    setLazyLoadBuffer(`${ windowHeight/2 }px`)
   }, [])
 
   useEffect(() => {
@@ -164,6 +164,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
           className={clsx(
             'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg',
             "hover:-translate-y-2 active:translate-y-0",
+            "bg-neutral-200 dark:bg-neutral-800",
             disableLink && "hover:translate-y-0",
           )}
           style={{

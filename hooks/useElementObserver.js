@@ -13,7 +13,8 @@ const useElementObserver = (element, rootMargin) => {
           if (entry?.isIntersecting) isIntersecting = true
         })
         setState(isIntersecting)
-      }
+      },
+      { rootMargin }
     );
     current && observer.observe(current);
 

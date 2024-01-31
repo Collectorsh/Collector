@@ -12,7 +12,6 @@ import { ActivitiesProvider } from "/contexts/activities";
 import { FollowingProvider } from "/contexts/following";
 import { SingleNftProvider } from "/contexts/single_nft";
 import { CartProvider } from "/contexts/cart";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import PlausibleProvider from "next-plausible";
 import Footer from "/components/Footer";
 import { ImageFallbackProvider } from "../contexts/imageFallback";
@@ -24,7 +23,6 @@ import { metaDescription, metaPreviewImage } from "../config/settings";
 import { UserTokensProvider } from "../contexts/userTokens";
 import { VideoFallbackProvider } from "../contexts/videoFallback";
 import { RpcHealthProvider } from "../contexts/RpcHealth";
-import { LogRocketProvider } from "../contexts/logRocket";
 import { HighlightInit } from '@highlight-run/next/client'
 
 
@@ -37,6 +35,9 @@ import { HighlightInit } from '@highlight-run/next/client'
 export default function MyApp({ Component, pageProps }) {
   return (
     <>
+      {/* Start of HubSpot Embed Code */}
+      {/* <script type="text/javascript" id="hs-script-loader" async defer src={`//js-na1.hs-scripts.com/${process.env.NEXT_PUBLIC_HUBSPOT_KEY}.js`}></script> */}
+      {/* End of HubSpot Embed Code */}
       <div>
         <Head>
           <meta charSet="UTF-8" />
@@ -97,7 +98,7 @@ export default function MyApp({ Component, pageProps }) {
         <RpcHealthProvider>
           <WalletContextProvider>
             <UserProvider>
-              <LogRocketProvider>        
+   
                 <ActionCableProvider>
                   <ImageFallbackProvider>
                     <VideoFallbackProvider>
@@ -127,8 +128,7 @@ export default function MyApp({ Component, pageProps }) {
                       </ListingsProvider>
                     </VideoFallbackProvider>
                   </ImageFallbackProvider>
-                </ActionCableProvider>
-              </LogRocketProvider>       
+                </ActionCableProvider>    
             </UserProvider>
           </WalletContextProvider>
         </RpcHealthProvider>

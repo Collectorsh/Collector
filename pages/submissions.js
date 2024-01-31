@@ -113,11 +113,11 @@ const Submissions = ({ }) => {
       
       //display errors for tokens not successfully submitted
       res.errors.forEach(err => error(err.message))
-      
       setApprovedCurations(prev => {
         const newCuration = prev.find(g => g.id === curation.id)
+
         if (!newCuration) return prev
-        if (newCuration.submitted_token_listings) newCuration.submitted_token_listings.push(...listings)
+        if (newCuration.submitted_token_listings.length) newCuration.submitted_token_listings.push(...listings)
         else newCuration.submitted_token_listings = listings
   
         setCurationToEdit(newCuration)
@@ -241,7 +241,7 @@ const Submissions = ({ }) => {
         {!user ? <p className="text-center text-lg mt-20">Please connect wallet to continue</p> : null}
 
         {user && loadingCurations ? <p className="text-center text-lg animate-pulse mt-20">Loading Curations...</p> : null}
-        {user && !loadingCurations && !approvedCurations.length ? <p className="text-center text-lg mt-20">Sorry, No Curations Found</p> : null}
+        {user && !loadingCurations && !approvedCurations.length ? <p className="text-center text-lg mt-20">Sorry, no curations found. Please contact your curator and ask to get approved.</p> : null}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 px-4">
           {user

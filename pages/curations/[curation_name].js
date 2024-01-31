@@ -368,7 +368,7 @@ function CurationPage({curation}) {
     </>
   )
 
-  const curationMetaDescription = `${ curation.name.replaceAll("_", " ") } by ${ curation.curator.username }`
+  const curationMetaDescription = `${ curation.name.replaceAll("_", " ") } by ${ curation.curator?.username }`
 
 
   return (
@@ -406,7 +406,7 @@ function CurationPage({curation}) {
               />
             ) : (
               <div className="absolute inset-0 w-full h-full object-cover 2xl:rounded-b-2xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25 flex justify-center items-center">
-                <p className="font-xl font-bold">Click the edit button in the top right to add a banner</p>
+                  <p className={clsx("font-xl font-bold", !isOwner && "hidden")}>Click the edit button in the top right to add a banner</p>
               </div>
             )}
           </div>
@@ -425,10 +425,10 @@ function CurationPage({curation}) {
             <h1 className="font-bold text-5xl text-center w-full break-words">{name.replaceAll("_", " ")}</h1>
           </EditWrapper>
         </div>
-        <Link href={`/gallery/${ curation.curator.username }`} >
+        <Link href={`/gallery/${ curation.curator?.username }`} >
           <a className="flex gap-2 items-center justify-center mb-8 hover:scale-105 duration-300 w-fit mx-auto ">
-            <p className="text-lg">{curatorText} {curation.curator.username}</p>
-            {curation.curator.profile_image
+            <p className="text-lg">{curatorText} {curation.curator?.username}</p>
+            {curation.curator?.profile_image
               ? (<div className="relative">
                   <CloudinaryImage
                     className={clsx(

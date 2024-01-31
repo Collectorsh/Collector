@@ -193,7 +193,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       await createMintedIndex(user, token)
 
     } catch (e) {
-      console.error("Error minting NFT: ", e);
+      console.error("Error minting NFT: ", e.message);
       setStage(MINT_STAGE.ERROR)
     }
   },[nftProps, wallet, user])
@@ -283,7 +283,8 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       case MINT_STAGE.ERROR: return (
         <div className="h-56 flex flex-col gap-2 justify-center">
           <p className="text-center text-2xl font-bold">Sorry, there was an error minting your art onchain.</p>
-          <p className="text-center">Please, make sure your internet connection is stable and then try again.</p>
+          
+          {/* <p className="text-center">Please, make sure your internet connection is stable and then try again.</p> */}
         </div>
       )
       

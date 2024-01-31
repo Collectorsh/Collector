@@ -22,6 +22,7 @@ import { Market } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { updateEditionListing } from "../data/curationListings/updateEditionSupply";
 import { updateListingStatus } from "../data/curationListings/updateListing";
 import { LOOKUP_TABLE_ADDRESSES, getVersionedTxWithLookupTable } from "../utils/solanaWeb3/addressLookupTables";
+import { getMasterEditionSupply } from "../utils/solanaWeb3/getMasterEditionSupply";
 const DEBUG = false
 
 const userRejectedText = "rejected"
@@ -332,6 +333,7 @@ const useCurationAuctionHouse = (curation) => {
         tx: closeAndWithdrawMarketTX,
         errorMessage: "Error confirming Close and Withdraw ME tx",
         wallet,
+        // skipPreflight: true
       })
 
       setTxFailed(withdrawCookieId, false)
@@ -431,22 +433,13 @@ const useCurationAuctionHouse = (curation) => {
   const handleMasterEditionMint = async (token) => { 
     const marketAddress = token.master_edition_market_address
     const masterEditionMintTxCookieId = `editionMint-${ marketAddress }`
+
     try {
       const txHasFailed = getTxFailed(masterEditionMintTxCookieId)
+
       if (txHasFailed) {
         //update the listing with the true supply to make sure it hasn't sold out 
-        const metadata = await metaplex.nfts().findByMint({
-          mintAddress: new PublicKey(token.mint),
-        })
-
-        const supply = metadata?.edition?.supply
-        const trueSupply = supply ? Number(supply.toString()) : undefined
-
-        const updateSupplyRes = await updateEditionListing({
-          token: token,
-          supply: trueSupply,
-          apiKey: user.api_key
-        })
+        const updateSupplyRes = await updateEditionSupply(token)
 
         if (updateSupplyRes?.listed_status === "sold") {
           throw new Error(`${ token.name } has sold out`)
@@ -497,9 +490,11 @@ const useCurationAuctionHouse = (curation) => {
     const isEdition = token.is_edition
     if (isMasterEdition && token.master_edition_market_address) {
       //Handle Edition mint/purchase
+      // const trueSupply = await getMasterEditionSupply(token.mint, metaplex)
+
       const mintRes = await handleMasterEditionMint(token)
 
-      if (mintRes.error) {
+      if (mintRes?.error) {
         error(`Error minting ${ token.name }: ${ mintRes.error }`)
       } else if (mintRes.signature) {
 
@@ -514,10 +509,18 @@ const useCurationAuctionHouse = (curation) => {
           buyerAddress: wallet.publicKey.toString(),
           saleType: "edition_mint",
           txHash: mintRes.signature,
-          editionsMinted: 1
+          editionsMinted: 1,
+          // newSupply: trueSupply + 1
         })
         if (res?.status !== "success") {
           console.error(`Error recording edition mint sale for ${ token.name }: ${ res?.message }`)
+        }
+
+        if (res?.editionListingUpdateFailed) {
+          setTimeout(() => {
+            console.log("UPDATEING DELAY")
+            updateEditionSupply(token)
+          }, 1000*60) //wait 1 min for chain to update then update the supply
         }
 
         return true
@@ -600,6 +603,19 @@ const useCurationAuctionHouse = (curation) => {
     }
     return null
   } 
+
+  const updateEditionSupply = async (token) => {
+    console.log("HITTTTT")
+    const trueSupply = await getMasterEditionSupply(token.mint, metaplex)
+
+    const updateSupplyRes = await updateEditionListing({
+      token: token,
+      supply: trueSupply,
+      apiKey: user.api_key
+    })
+
+    return updateSupplyRes
+  }
 
   return {
     handleBuyNowList,

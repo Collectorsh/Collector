@@ -24,8 +24,8 @@ export function findATA(mintAddress, ownerAddress) {
 
 
   // vanilla (using metaplex in case they change things)
-  return PublicKey.findProgramAddressSync(
-    [ownerPublicKey.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mintPublicKey.toBuffer()],
-    ASSOCIATED_TOKEN_PROGRAM_ID
-  )
+  // return PublicKey.findProgramAddressSync(
+  //   [ownerPublicKey.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mintPublicKey.toBuffer()],
+  //   ASSOCIATED_TOKEN_PROGRAM_ID
+  // )
 }

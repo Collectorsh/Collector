@@ -6,6 +6,8 @@ import { ASSOCIATED_TOKEN_PROGRAM_ID} from '@solana/spl-token';
 import { MetadataProgram } from '@metaplex-foundation/mpl-token-metadata';
 import { findVaultOwnerAddress, findPrimaryMetadataCreatorsAddress, findTreasuryOwnerAddress, Market, SellingResource, createCloseMarketInstruction, createClaimResourceInstruction, findPayoutTicketAddress, createWithdrawInstruction, PrimaryMetadataCreators } from "@metaplex-foundation/mpl-fixed-price-sale";
 import { findATA } from "./findTokenAccountsByOwner";
+import { createInitializeAccountInstruction } from "@solana/spl-token";
+import { Connection } from "@solana/web3.js";
 
 export const getCloseAndWithdrawMarketTX = async ({
   connection,
@@ -108,6 +110,17 @@ export const getCloseAndWithdrawMarketTX = async ({
   }
 
   const claimTokenPubkey = findATA(masterEditionPubkey, ownerPubkey)  
+  const claimBalance = await connection.getBalance(claimTokenPubkey)
+
+  //check if claim token account is initialized
+  if (claimBalance === 0) { 
+    const initIx = createInitializeAccountInstruction(
+      claimTokenPubkey,
+      masterEditionPubkey,
+      ownerPubkey,
+    )
+    mainTX.add(initIx)
+  }
 
   const claimResourceInstruction = createClaimResourceInstruction(
     {

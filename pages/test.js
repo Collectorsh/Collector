@@ -66,20 +66,24 @@ export default function TestPage() {
     console.log("🚀 ~ file: test.js:64 ~ getOwner ~ token:", token) 
   }
 
-  const buildTable = async () => {
-    // const keys = AUCTION_HOUSE_BUY_NOW_KEYS.map(key => new PublicKey(key))
-    // await createAddressLookUpTable(wallet, keys)
-    await getAddressLookUpTable(LOOKUP_TABLE_ADDRESSES.AUCTION_HOUSE_BUY_NOW)
-  }
+  const getClaimToken = async () => {
+    const masterEditionPubkey = new PublicKey("CcJVAZZaoM3YjUGb4H4gcTZxycehYiXB83NsEsqbhdt2")
+    const ownerPubkey = new PublicKey("9FzG1ZMGSXqkY44L3xzuzSqRwLwMGPHXboLnPSF1sW7t")
+    const claimTokenPubkey = findATA(masterEditionPubkey, ownerPubkey)  
+    console.log("🚀 ~ getClaimToken ~ claimTokenPubkey:", claimTokenPubkey.toString())
+
+    const claimBalance = await connection.getBalance(claimTokenPubkey)
+    console.log("🚀 ~ getClaimToken ~ claimBalance:", claimBalance)
+  } 
   
-  return <NotFound />
+  // return <NotFound />
   return (
     <div>
       <MainNavigation />
       <h1 className="text-center my-20 ">Test Page</h1>
       <MainButton onClick={getEditionMarket} className="mx-auto block">Get Market</MainButton>
       <MainButton onClick={getOwner} className="mx-auto block">Get Owner</MainButton>
-      <MainButton onClick={buildTable} className="mx-auto block">Build Table</MainButton>
+      <MainButton onClick={getClaimToken} className="mx-auto block">Get Claim Token</MainButton>
     </div>
   )
 }

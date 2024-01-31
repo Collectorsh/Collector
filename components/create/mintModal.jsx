@@ -193,7 +193,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       await createMintedIndex(user, token)
 
     } catch (e) {
-      console.error("Error minting NFT: ", e);
+      console.error("Error minting NFT: ", e.message);
       setStage(MINT_STAGE.ERROR)
     }
   },[nftProps, wallet, user])

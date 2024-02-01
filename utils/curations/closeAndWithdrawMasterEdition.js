@@ -8,6 +8,8 @@ import { findVaultOwnerAddress, findPrimaryMetadataCreatorsAddress, findTreasury
 import { findATA } from "./findTokenAccountsByOwner";
 import { createInitializeAccountInstruction } from "@solana/spl-token";
 import { Connection } from "@solana/web3.js";
+import { createAssociatedTokenAccountInstruction } from "@solana/spl-token";
+
 
 export const getCloseAndWithdrawMarketTX = async ({
   connection,
@@ -105,28 +107,23 @@ export const getCloseAndWithdrawMarketTX = async ({
         treasuryOwnerBump,
         payoutTicketBump,
       },
-    );
-    mainTX.add(withdrawInstruction)
-  }
-
+      );
+      mainTX.add(withdrawInstruction)
+    }
+    
   const claimTokenPubkey = findATA(masterEditionPubkey, ownerPubkey)  
   const claimBalance = await connection.getBalance(claimTokenPubkey)
 
   //check if claim token account is initialized
   if (claimBalance === 0) { 
-    const initIx = createInitializeAccountInstruction(
-      claimTokenPubkey,
-      masterEditionPubkey,
-      ownerPubkey,
+    //re-init ATA if not
+    const createAtaIx = createAssociatedTokenAccountInstruction(
+      ownerPubkey, 
+      claimTokenPubkey, //ata
+      ownerPubkey, 
+      masterEditionPubkey //mint
     )
-    mainTX.add(initIx)
-
-    // const createTokenAccount = createAssociatedTokenAccountInstruction(
-    //   ownerPubkey,
-    //   new PublicKey(newTokenAccount),
-    //   toPubkey,
-    //   mintPubkey
-    // )
+    mainTX.add(createAtaIx)
   }
 
   const claimResourceInstruction = createClaimResourceInstruction(

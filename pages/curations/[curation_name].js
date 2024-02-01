@@ -179,11 +179,13 @@ function CurationPage({curation}) {
   const handlePublish = async () => { 
     if (!isOwner) return;
 
+  
     const res = await publishContent({
       draftContent: draftContent,
       apiKey: user.api_key,
       name: curation.name
     })
+
     if (res?.status === "success") { 
 
       // delete any submissions no longer being used
@@ -192,7 +194,7 @@ function CurationPage({curation}) {
         //"modules" will be draft modules
         //if token doesn't exist there it can be removed for the submission list
         const filteredSubmissions = submittedTokens.filter((token) => {
-          const existsInModules = modules.some((module) => module.type === "art" && module.tokens.includes(token.mint))
+          const existsInModules = draftContent.modules.some((module) => module.type === "art" && module.tokens.includes(token.mint))
           if (!existsInModules) unusedTokenMints.push(token.mint)
           return existsInModules
         })
@@ -231,14 +233,27 @@ function CurationPage({curation}) {
 
   const handleSaveDraftContent = async (newContent) => { 
     if (!newContent || !isOwner) return
-    
+
+    let newDraft = newContent;
+
+    if (curation.curation_type !== "curator") {//"artist" || "collector"
+      //filter art modules to only include tokens that have been submitted (in case of failed submissions that are still in modules)
+      const filteredModules = newDraft.modules.map((module) => {
+        if (module.type !== "art") return module
+        const tokens = module.tokens.filter((token) => submittedTokens.some((sub) => sub.mint === token))
+        return { ...module, tokens }
+      })
+      newDraft = { ...newDraft, modules: filteredModules }
+    }
+
     const res = await saveDraftContent({
-      draftContent: newContent,
+      draftContent: newDraft,
       apiKey: user.api_key,
       name: curation.name
     })
 
     if (res?.status !== "success") error("Content update failed")
+    else setDraftContent(newDraft)
   }
 
   const handleInviteArtists = async (newArtists) => { 

@@ -40,9 +40,9 @@ export default function TestPage() {
   }
 
   const getOwner = async () => {
-    const mint = "NTQLgcNjKBsuP9849hKFfWZLD8WXsN5eefJ2qhdNhUR"
-    const owner = await getNftOwner(mint)
-    console.log("owner:", owner.toString())
+    const mint = "82nchD6REo6TDdPf1686gZ2WDG3aHm3V3WC4ShZ2RpTa"
+    // const owner = await getNftOwner(mint)
+    // console.log("owner:", owner.toString())
    
     const token = await axios.post(
       `https://mainnet.helius-rpc.com/?api-key=${ process.env.NEXT_PUBLIC_HELIUS_API_KEY }`,
@@ -66,24 +66,15 @@ export default function TestPage() {
     console.log("🚀 ~ file: test.js:64 ~ getOwner ~ token:", token) 
   }
 
-  const getClaimToken = async () => {
-    const masterEditionPubkey = new PublicKey("CcJVAZZaoM3YjUGb4H4gcTZxycehYiXB83NsEsqbhdt2")
-    const ownerPubkey = new PublicKey("9FzG1ZMGSXqkY44L3xzuzSqRwLwMGPHXboLnPSF1sW7t")
-    const claimTokenPubkey = findATA(masterEditionPubkey, ownerPubkey)  
-    console.log("🚀 ~ getClaimToken ~ claimTokenPubkey:", claimTokenPubkey.toString())
-
-    const claimBalance = await connection.getBalance(claimTokenPubkey)
-    console.log("🚀 ~ getClaimToken ~ claimBalance:", claimBalance)
-  } 
+ 
   
-  return <NotFound />
+  // return <NotFound />
   return (
     <div>
       <MainNavigation />
       <h1 className="text-center my-20 ">Test Page</h1>
       <MainButton onClick={getEditionMarket} className="mx-auto block">Get Market</MainButton>
       <MainButton onClick={getOwner} className="mx-auto block">Get Owner</MainButton>
-      <MainButton onClick={getClaimToken} className="mx-auto block">Get Claim Token</MainButton>
     </div>
   )
 }

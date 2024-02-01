@@ -4,8 +4,8 @@ import  bs58 from "bs58";
 import { connection } from "../../config/settings";
 
 const defaultPriorityFee = 70000 //microlamports
-// priorityLevel: "MIN", "LOW", "MEDIUM", "HIGH", "VERYHIGH", "UNSAFEMAX"
-export async function getPriorityFeeInstruction(transaction, priorityLevel = "VERYHIGH") {
+// priorityLevel: "MIN", "LOW", "MEDIUM", "HIGH", "VERY_HIGH", "UNSAFEMAX"
+export async function getPriorityFeeInstruction(transaction, priorityLevel = "VERY_HIGH") {
   let fee = defaultPriorityFee
 
   // const budgetIx = ComputeBudgetProgram.setComputeUnitLimit({units: 1250})

@@ -20,7 +20,6 @@ export function getTransferNftTX(ownerAddress, recipientAddress, mintAddress, pr
   )
 
   //Need to skip this if the account already exists
-  //TODO detect if exists
   const createTokenAccount = createAssociatedTokenAccountInstruction(
     ownerPubkey,
     new PublicKey(newTokenAccount),

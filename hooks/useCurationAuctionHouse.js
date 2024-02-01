@@ -333,7 +333,7 @@ const useCurationAuctionHouse = (curation) => {
         tx: closeAndWithdrawMarketTX,
         errorMessage: "Error confirming Close and Withdraw ME tx",
         wallet,
-        // skipPreflight: true
+        skipPreflight: true
       })
 
       setTxFailed(withdrawCookieId, false)

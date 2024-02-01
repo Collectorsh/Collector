@@ -120,6 +120,13 @@ export const getCloseAndWithdrawMarketTX = async ({
       ownerPubkey,
     )
     mainTX.add(initIx)
+
+    // const createTokenAccount = createAssociatedTokenAccountInstruction(
+    //   ownerPubkey,
+    //   new PublicKey(newTokenAccount),
+    //   toPubkey,
+    //   mintPubkey
+    // )
   }
 
   const claimResourceInstruction = createClaimResourceInstruction(

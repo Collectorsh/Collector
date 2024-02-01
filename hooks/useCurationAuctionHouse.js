@@ -518,7 +518,6 @@ const useCurationAuctionHouse = (curation) => {
 
         if (res?.editionListingUpdateFailed) {
           setTimeout(() => {
-            console.log("UPDATEING DELAY")
             updateEditionSupply(token)
           }, 1000*60) //wait 1 min for chain to update then update the supply
         }
@@ -605,7 +604,6 @@ const useCurationAuctionHouse = (curation) => {
   } 
 
   const updateEditionSupply = async (token) => {
-    console.log("HITTTTT")
     const trueSupply = await getMasterEditionSupply(token.mint, metaplex)
 
     const updateSupplyRes = await updateEditionListing({

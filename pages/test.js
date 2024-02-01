@@ -76,7 +76,7 @@ export default function TestPage() {
     console.log("🚀 ~ getClaimToken ~ claimBalance:", claimBalance)
   } 
   
-  // return <NotFound />
+  return <NotFound />
   return (
     <div>
       <MainNavigation />

@@ -254,12 +254,6 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
         </div>
 
       </div>
-{/* 
-      <div className="w-full flex justify-end gap-4 mt-4 relative">
-        <MainButton onClick={onClose}>
-          Close
-        </MainButton>
-      </div> */}
     </Modal>
   )
 }

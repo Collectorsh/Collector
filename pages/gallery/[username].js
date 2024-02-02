@@ -36,7 +36,7 @@ const getBioDelta = (curator, isOwner) => {
   else if (isOwner) return JSON.stringify({
     ops: [
       {
-        attributes: { size: 'large' },
+        attributes: { size: '16px' },
         insert: curator?.bio || bioPlaceholder
       },
       {

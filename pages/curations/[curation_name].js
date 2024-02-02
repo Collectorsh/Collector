@@ -80,7 +80,7 @@ function CurationPage({curation}) {
   const draftDescriptionDelta = draftContent?.description_delta || JSON.stringify({
     ops: [
       {
-        attributes: { size: 'large' },
+        attributes: { size: '16px' },
         insert: draftContent?.description || descriptionPlaceholder,
       },
       {
@@ -92,7 +92,7 @@ function CurationPage({curation}) {
   const publishedDescriptionDelta = publishedContent?.description_delta || JSON.stringify({
     ops: [
       {
-        attributes: { size: 'large' },
+        attributes: { size: '16px' },
         insert: publishedContent?.description || ""
       },
       {
@@ -442,12 +442,12 @@ function CurationPage({curation}) {
         </div>
         <Link href={`/gallery/${ curation.curator?.username }`} >
           <a className="flex gap-2 items-center justify-center mb-8 hover:scale-105 duration-300 w-fit mx-auto ">
-            <p className="text-lg">{curatorText} {curation.curator?.username}</p>
+            <p className="text-base">{curatorText} {curation.curator?.username}</p>
             {curation.curator?.profile_image
               ? (<div className="relative">
                   <CloudinaryImage
                     className={clsx(
-                      "w-14 h-14 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800",
+                      "w-10 h-10 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800",
                     )}
                     id={pfpImgId}
                     noLazyLoad

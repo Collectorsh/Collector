@@ -10,7 +10,7 @@ export default function Modal({
   closeDisabled,
   children,
   widthClass = "max-w-screen-xl",
-  closeButtonPlacement = "absolute top-2 right-2"
+  closeButtonPlacement = "absolute top-2 right-2 md:"
 }) {
   return (
     <Transition show={isOpen} as={Fragment}>
@@ -39,7 +39,7 @@ export default function Modal({
           >
             <Dialog.Panel
               className={clsx(
-                "relative p-4 rounded-lg bg-white",
+                "relative p-2 md:px-14 md:py-6 rounded-lg bg-white",
                 "dark:bg-neutral-800",
                 "shadow-md shadow-black/25 dark:shadow-neutral-500/25",
                 "w-full max-h-[calc(100%-1rem)]",
@@ -51,7 +51,7 @@ export default function Modal({
               <button onClick={onClose} className={clsx("duration-200 hover:scale-105 active:scale-100", closeButtonPlacement, closeDisabled && "hidden")}>
                 <XCircleIcon className="w-8 h-8" />
               </button>
-              {title ? < Dialog.Title className="text-center font-bold text-3xl">{title}</Dialog.Title> : null}
+              {title ? < Dialog.Title className="text-center font-bold text-3xl py-4">{title}</Dialog.Title> : null}
             
               {children}
             </Dialog.Panel>

@@ -6,7 +6,7 @@ import getUserFromApiKey from "/data/user/getUserFromApiKey";
 import { H } from 'highlight.run';
 
 const identifyHighlight = (wallet, user) => {
-  if (!user) return;
+  if (!user?.username) return;
   H.identify(user.username, {
     id: user.id,
     primaryWallet: wallet?.publicKey?.toString() || "",

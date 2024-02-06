@@ -226,20 +226,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Edit ${ curation?.name.replaceAll("_", " ") } Submission Listings`}
+      title={`Edit "${ curation?.name.replaceAll("_", " ") }" Listings`}
     >
       <div className="overflow-auto">
-        <div className={clsx("text-left mt-4 text-sm", (!useCuratorInfo && !useMasterEditionInfo) ? "hidden": "")}>
-          <p className="font-bold text-center text-base">Please be aware: </p>
-          <p className={!useCuratorInfo && "hidden"}>
-            Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price.
-          </p>
-          <p className={!useMasterEditionInfo && "hidden"}>
-            To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet.
-          </p>
-
-        </div>
-
         <div className="mt-4 p-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {submissions?.map((token) => (
             <Submission
@@ -251,7 +240,22 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
               isPersonalCuration={isPersonalCuration}
             />
           ))}
+          {!submissions.length ? (
+            <div className="col-span-3 flex flex-col gap-1 items-center justify-center h-full w-full">
+              <p>No available listings.</p>
+              <p>Once a listable artwork is added to the curation it will be shown here.</p>
+            </div>
+          ): null}
         </div>
+      </div>
+      <div className={clsx("text-left mt-4 text-xs", (!useCuratorInfo && !useMasterEditionInfo) ? "hidden" : "")}>
+        <p className="font-bold text-left">Please be aware: </p>
+        <p className={!useCuratorInfo ? "hidden" : "text-neutral-500"}>
+          Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price.
+        </p>
+        <p className={!useMasterEditionInfo ? "hidden" : "text-neutral-500"}>
+          To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet.
+        </p>
 
       </div>
     </Modal>
@@ -321,7 +325,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
     if (token.compressed) return (
       <Tippy
         className="shadow-lg"
-        content="We currently do not support listings for compressed nfts"
+        content="Compressed - We currently do not support listings for compressed nfts"
       >
         <span>C</span>
       </Tippy>
@@ -329,7 +333,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
     if (token.is_edition) return (
       <Tippy
         className="shadow-lg"
-        content="If there are multiple edition listings, the lowest price will be sold first"
+        content="Editions (secondary) - If there are multiple edition listings, the lowest price will be sold first"
       >
         <span>E</span>
       </Tippy>
@@ -337,9 +341,9 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
     if (token.is_master_edition) return (
       <Tippy
         className="shadow-lg"
-        content="To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet."
+        content="Master Editions - To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet."
       >
-        <span>ME</span>
+        <span>M</span>
       </Tippy>
     )
     return null
@@ -379,9 +383,9 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
 
       <div className={clsx(
         !infoBadge && "hidden",
-        "bg-white dark:bg-neutral-900",
+        "bg-white dark:bg-neutral-900 collector",
         "rounded-full ring-2 ring-neutral-200 dark:ring-neutral-700",
-        "min-w-fit w-6 h-6 absolute top-3 left-3 z-10 flex justify-center items-center p-1",
+        "min-w-fit w-7 h-7 absolute top-3 left-3 z-10 flex justify-center items-center p-1",
         "text-leading-none font-bold text-lg"
       )}>
         {infoBadge}
@@ -397,8 +401,8 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
         useUploadFallback
       />
       <div className="p-2">
-        <div className="flex flex-wrap justify-between items-center gap-3 mb-2 ">
-          <h3 className="font-bold text-xl px-1">{token.name}</h3>
+        <div className="flex flex-wrap justify-between items-center gap-x-3 mb-2 ">
+          <p className="font-bold text-xl px-1">{token.name}</p>
           <p className="text-sm">{isMasterEdition ? `(${ editionsLeft }/${editionMaxSupply} Editions)` : ""}</p>
         </div>
         {isListed

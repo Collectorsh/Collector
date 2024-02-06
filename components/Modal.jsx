@@ -10,7 +10,7 @@ export default function Modal({
   closeDisabled,
   children,
   widthClass = "max-w-screen-xl",
-  closeButtonPlacement = "absolute top-2 right-2 md:"
+  closeButtonPlacement = "absolute top-2 right-2"
 }) {
   return (
     <Transition show={isOpen} as={Fragment}>

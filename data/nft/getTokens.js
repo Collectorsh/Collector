@@ -293,21 +293,22 @@ export function useTokens(publicKeys, options) {
           const withMetadata = [];
           const remaining = [];
           nameSorted.forEach((token) => {
-            //using .id for now because it means we've recorded the edition metadata,
-            //but once we have that + the collection metadata, we can use something else (or not need this useEffect at all maybe?)
+            //using .id for now because it means we've recorded/indexed the edition metadata,
+            //but once we have that + the collection metadata from helius, we can use something else (or not need this useEffect at all maybe?)
             if(token?.id !== undefined) {
               withMetadata.push(token)
             } else {
               remaining.push(token)
             }
           })
+  
+          fetchedLocal += withMetadata.length
+          setFetched(fetchedLocal) //update count state with all tokens that have metadata ()
 
           // update ref with metadata tokens (but not collection nfts)
           metadataRef.current = withMetadata.filter((item) => { 
             return !item.is_collection_nft
           })
-          fetchedLocal += withMetadata.length
-          setFetched(fetchedLocal) //update state
           
           //fetch metadata from tokens missing edition info
           for (const t of remaining) {
@@ -320,27 +321,21 @@ export function useTokens(publicKeys, options) {
               fullToken = { ...token, ...metadata }
             } 
             //update indexer with full token
-            try {
-              const artistId = user?.public_keys.includes(fullToken.artist_address) ? user.id : null;
-              const ownerId = user?.public_keys.includes(fullToken.owner_address) ? user.id : null;
+       
+            const artistId = user?.public_keys.includes(fullToken.artist_address) ? user.id : null;
+            const ownerId = user?.public_keys.includes(fullToken.owner_address) ? user.id : null;
 
-              if (!indexedRef.current.includes(fullToken.mint)) {
-                indexedRef.current.push(fullToken.mint)
+            if (!indexedRef.current.includes(fullToken.mint)) {
+              indexedRef.current.push(fullToken.mint)
 
-                await createIndex({
-                  apiKey: user?.api_key,
-                  artistId,
-                  ownerId,
-                  token: fullToken
-                })
-              }
-              
-            } catch (err) { 
-              console.log(`Error creating minted_indexer record mint: ${ fullToken.mint }`, err)
-              continue;
+              await createIndex({
+                apiKey: user?.api_key,
+                artistId,
+                ownerId,
+                token: fullToken
+              })
             }
-        
-        
+          
             // //dont add collection nfts to metadataRef
             if (!fullToken.is_collection_nft) {
               const newTokens = [...metadataRef.current, fullToken]

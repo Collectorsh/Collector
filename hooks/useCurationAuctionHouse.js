@@ -23,7 +23,7 @@ import { updateEditionListing } from "../data/curationListings/updateEditionSupp
 import { updateListingStatus } from "../data/curationListings/updateListing";
 import { LOOKUP_TABLE_ADDRESSES, getVersionedTxWithLookupTable } from "../utils/solanaWeb3/addressLookupTables";
 import { getMasterEditionSupply } from "../utils/solanaWeb3/getMasterEditionSupply";
-const DEBUG = false
+const DEBUG = true
 
 const userRejectedText = "rejected"
 
@@ -80,6 +80,16 @@ const useCurationAuctionHouse = (curation) => {
         mintAccount: mintPubkey,    // The mint account to create a listing for, used to find the metadata
         price: sol(price),    // The listing price (in SOL)
       })
+
+      const metadata = await metaplex.nfts().findByMint({
+        mintAddress: new PublicKey(mint)
+      })
+
+      if (metadata.json.seller_fee_basis_points + auctionHouse.sellerFeeBasisPoints >= 10000) { 
+        const errorMessage = "Artist royalties and curation fees exceeds 100%"
+        error(errorMessage) //extra feedback for user
+        throw new Error(errorMessage)
+      }
 
       if (txHasFailed) {
         //if tx failed, check if the listing already exists onchain
@@ -623,7 +633,7 @@ const useCurationAuctionHouse = (curation) => {
     setCollectedFees,
     auctionHouse,
     handleMasterEditionCloseAndWithdraw,
-    handleMasterEditionList
+    handleMasterEditionList,
   }
 }
 

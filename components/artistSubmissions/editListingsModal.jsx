@@ -248,7 +248,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
           ): null}
         </div>
       </div>
-      <div className={clsx("text-left mt-4 text-xs text-opacity-50", (!useCuratorInfo && !useMasterEditionInfo) ? "hidden" : "")}>
+      <div className={clsx("text-left mt-4 text-xs", (!useCuratorInfo && !useMasterEditionInfo) ? "hidden" : "")}>
         <p className="font-bold text-left">Please be aware: </p>
         <p className={!useCuratorInfo ? "hidden" : "text-neutral-500"}>
           Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price.

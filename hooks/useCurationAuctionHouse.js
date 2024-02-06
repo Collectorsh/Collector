@@ -23,7 +23,8 @@ import { updateEditionListing } from "../data/curationListings/updateEditionSupp
 import { updateListingStatus } from "../data/curationListings/updateListing";
 import { LOOKUP_TABLE_ADDRESSES, getVersionedTxWithLookupTable } from "../utils/solanaWeb3/addressLookupTables";
 import { getMasterEditionSupply } from "../utils/solanaWeb3/getMasterEditionSupply";
-const DEBUG = true
+
+const DEBUG = false
 
 const userRejectedText = "rejected"
 

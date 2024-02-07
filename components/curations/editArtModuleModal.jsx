@@ -111,12 +111,13 @@ export default function EditArtModuleModal({
   const gapSize = 24
 
   useEffect(() => {
-    setTimeout(debouncedResize, 500)
+    setTimeout(handleResize, 500)
     window.addEventListener("resize", debouncedResize)
     return () => {
       debouncedResize.cancel()
       window.removeEventListener("resize", debouncedResize)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, activeTabIndex])
 
   const tokens = useMemo(() => {

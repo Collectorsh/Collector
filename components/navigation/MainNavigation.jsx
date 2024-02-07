@@ -4,7 +4,6 @@ import React, { useState, useContext, useEffect, Fragment, Suspense, useCallback
 import { useWallet } from "@solana/wallet-adapter-react";
 import UserContext from "/contexts/user";
 import { Dialog, Transition } from "@headlessui/react";
-import { XIcon, BellIcon } from "@heroicons/react/outline";
 import DarkMode from "/components/navigation/DarkMode";
 import ConnectWallet from "/components/wallet/ConnectWallet";
 import Gallery from "/components/navigation/Gallery";
@@ -12,6 +11,8 @@ import CreateUsernameModal from "/components/onboarding/CreateUsernameModal";
 import { truncate } from "../../utils/truncate";
 import WalletButton from "./WalletButton";
 import RpcHealthFeedback from "./RpcHeathFeedback";
+
+import * as Icon from 'react-feather'
 
 export default function MainNavigation() {
   const wallet = useWallet();
@@ -52,14 +53,14 @@ export default function MainNavigation() {
         <div>
           <div className="flex">
             <div className="flex items-center col-span-1">
-              <div className="cursor-pointer md:my-3 flex gap-4 items-center ">
+              <div className="cursor-pointer md:my-3 flex gap-4 items-end ">
                 <Link href="/">
                   <a className="collector text-3xl font-bold flex items-center">
                   collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r
                     </a>
                   </Link>
                   {/* <span className="mt-2 collector">-</span> */}
-                  <span className="mt-2 collector tracking-wide">Beta</span>
+                  <span className="collector tracking-wide pb-[1px]">Beta</span>
               </div>
               </div>
             <div className="hidden md:flex items-center justify-end w-full">
@@ -88,18 +89,7 @@ export default function MainNavigation() {
                 onClick={toggleMenu}
                 style={{ background: "none" }}
               >
-                <svg
-                  className="w-6 h-6 text-gray-400 hover:text-gray-600"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  style={{ background: "none" }}
-                >
-                  <path d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
+                <Icon.Menu />
               </button>
             </div>
           </div>
@@ -140,7 +130,7 @@ export default function MainNavigation() {
                     onClick={() => setOpen(false)}
                   >
                     <span className="sr-only">Close panel</span>
-                    <XIcon className="h-6 w-6" aria-hidden="true" />
+                      <Icon.X aria-hidden/>
                   </button>
                 </div>
               </Transition.Child>

@@ -1,7 +1,6 @@
 import { useTheme } from "next-themes";
-import { SunIcon, MoonIcon } from "@heroicons/react/solid";
 import { useState, useEffect } from "react";
-
+import * as Icon from 'react-feather'
 const DarkMode = ({withText}) => {
   const { systemTheme, theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -25,24 +24,27 @@ const DarkMode = ({withText}) => {
 
     if (currentTheme === "dark") {
       return (
-        <SunIcon
-          className="w-7 h-7 text-yellow-500 inline pr-0.5 pt-0.5"
+        <Icon.Sun
+          size={26}
+          color="yellow"
+          // className="text-yellow-300 inline pr-0.5 pt-0.5"
           role="button"
-        
+          strokeWidth={2.5}
         />
       );
     } else {
       return (
-        <MoonIcon
-          className="w-7 h-7 text-gray-900 inline hover:scale-110 pr-0.5 pt-0.5"
+        <Icon.Moon
+          size={26}
+          color="gray"
           role="button"
-         
+          strokeWidth={2.5}
         />
       );
     }
   };
 
-  return <div className="inline" onClick={handleClick}>
+  return <div className="inline-flex items-center gap-1" onClick={handleClick}>
     {renderThemeChanger()}
     {withText ? <span className="ml-1">Toggle Dark Mode</span>: null}
   </div>;

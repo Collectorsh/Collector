@@ -147,8 +147,11 @@ export default function EditArtModuleModal({
 
       if (!res || res?.status !== "success") {
         error(`Failed to submit tokens`)
+      } else {
+        onEditArtModule(newArtModuleCopy);
+        setTokensToSubmit([]);
       }
-      if (res?.errors.length) {
+      if (res?.errors?.length) {
         newArtModuleCopy.tokens = newArtModuleCopy.tokens.filter(tokenMint => !res.errors.find(err => err.mint === tokenMint))
         setNewArtModule(newArtModuleCopy)
         setSubmittedTokens(prev => prev.filter(token => !res.errors.find(err => err.mint === token.mint)))
@@ -156,9 +159,6 @@ export default function EditArtModuleModal({
       }
       setSaving(false)
     }
-
-    onEditArtModule(newArtModuleCopy);
-    setTokensToSubmit([]);
     handleClose(false);
   }
   const handleClose = (reset = true) => {

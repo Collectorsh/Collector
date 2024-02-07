@@ -45,7 +45,7 @@ async function getTokens(publicKeys, options) {
           method: 'getAssetsByCreator',
           params: {
             creatorAddress: publicKey,
-            onlyVerified: true,
+            // onlyVerified: true,
             page: page, 
             limit: maxBatch,
             displayOptions: {
@@ -105,6 +105,9 @@ async function getTokens(publicKeys, options) {
       mintedIndexerTokens.push(...indexerRes.mints)
     }
   }
+
+  console.log("🚀 ~ getTokens ~ baseTokens:", baseTokens.filter(t => t.content.metadata.name.includes("noise")))
+
 
   const creatorFilteredTokens = !justCreator
     ? baseTokens

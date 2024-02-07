@@ -54,8 +54,44 @@ export default function EditArtModuleModal({
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
   const tabsRef = useRef([]);
 
-  const tabs = curationType === "collector" ? ["1/1", "Editions"] : ["1/1", "Master Editions"]
+  const divRef = useRef(null)
+  const expandRef = useRef(null)
+  const startYRef = useRef(null)
+  const startHeightRef = useRef(null)
+  const [wrapperHeight, setWrapperHeight] = useState(0)
 
+
+  const handleResize = () => {
+    if (!wrapperRef.current) return;
+    const width = wrapperRef.current.clientWidth
+    setWrapperWidth(width)
+    setWrapperHeight(wrapperRef.current.clientHeight)
+
+    const currentTab = tabsRef.current[activeTabIndex];
+    if (!currentTab) return
+    setTabUnderlineLeft(currentTab.offsetLeft);
+    setTabUnderlineWidth(currentTab.clientWidth);
+  }
+  const debouncedResize = debounce(handleResize, 250)
+
+  const onDragStart = (e) => {
+    startYRef.current = e.clientY;
+    startHeightRef.current = parseInt(document.defaultView.getComputedStyle(divRef.current).height, 10);
+    document.documentElement.addEventListener('mousemove', doDrag, false);
+    document.documentElement.addEventListener('mouseup', stopDrag, false);
+  }
+
+  function doDrag(e) {
+    divRef.current.style.maxHeight = (startHeightRef.current + e.clientY - startYRef.current) + 'px';
+  }
+
+  function stopDrag() {
+    document.documentElement.removeEventListener('mousemove', doDrag, false);
+    document.documentElement.removeEventListener('mouseup', stopDrag, false);
+    debouncedResize()
+  }
+
+  const tabs = curationType === "collector" ? ["1/1", "Editions"] : ["1/1", "Master Editions"]
   
   //Dont fetch user tokens if this is a curator curation
   const useUserTokens = curationType !== "curator"
@@ -375,7 +411,9 @@ export default function EditArtModuleModal({
   }, [availableTokens, search, useUserTokens, approvedArtists, tokens, tokenMintsInUse, moduleFull, handleTokenToSubmit, curationType, newArtModule.id, groupByCollection])
 
   const content = (
-    <div className="relative h-full min-h-[200px] max-h-[333px] min border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+    <div className="relative h-full max-h-[333px] min-h-[200px] min border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900"//max-h-[333px]  h-full min-h-[200px]
+      ref={divRef}
+    >
       {moduleFull ?
         (
           <div className="absolute inset-0 z-50 h-full flex justify-center items-center backdrop-blur-sm">
@@ -480,7 +518,17 @@ export default function EditArtModuleModal({
           {content}
         </div>
 
-        <hr className="block border-neutral-200 dark:border-neutral-700 my-4" />
+        <button
+          className="cursor-[row-resize] my-3 flex flex-col items-center justify-center w-full gap-[2px]"
+          ref={expandRef}
+          onClick={() => console.log("expand")}
+          onMouseDown={onDragStart}
+        >
+          <hr className="block border-neutral-200 dark:border-neutral-700 w-8" />
+          <hr className="block border-neutral-200 dark:border-neutral-700 w-full" />
+          <hr className="block border-neutral-200 dark:border-neutral-700 w-8" />
+        </button>
+
         <div className="px-3 py-2 w-full overflow-x-hidden relative min-h-[340px] h-fit">
           <div className={clsx(
             "w-full min-h-[4rem] relative h-full",

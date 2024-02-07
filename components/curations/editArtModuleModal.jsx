@@ -103,12 +103,12 @@ export default function EditArtModuleModal({
       .filter(token => Boolean(token))
   }, [newArtModule.tokens, submittedTokens])
   
-  const moduleFull = tokens.length >= 4
+  const moduleFull = tokens?.length >= 4
   
   const handleSave = async () => {
     const newArtModuleCopy = {...newArtModule}
     
-    if (curationType !== "curator" && tokensToSubmit.length) {//"artist" || "collector" 
+    if (curationType !== "curator" && tokensToSubmit?.length) {//"artist" || "collector" 
       setSaving(true)
 
       const res = await submitTokens({
@@ -119,8 +119,10 @@ export default function EditArtModuleModal({
 
       if (!res || res?.status !== "success") {
         error(`Failed to submit tokens`)
-      }
-      if (res?.errors.length) {
+        setSaving(false)
+        return
+      } 
+      if (res?.errors?.length) {
         newArtModuleCopy.tokens = newArtModuleCopy.tokens.filter(tokenMint => !res.errors.find(err => err.mint === tokenMint))
         setNewArtModule(newArtModuleCopy)
         setSubmittedTokens(prev => prev.filter(token => !res.errors.find(err => err.mint === token.mint)))

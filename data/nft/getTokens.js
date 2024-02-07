@@ -106,8 +106,6 @@ async function getTokens(publicKeys, options) {
     }
   }
 
-  console.log("🚀 ~ getTokens ~ baseTokens:", baseTokens.filter(t => t.content.metadata.name.includes("noise")))
-
 
   const creatorFilteredTokens = !justCreator
     ? baseTokens

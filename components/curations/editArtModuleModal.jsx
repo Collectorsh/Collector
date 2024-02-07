@@ -42,6 +42,7 @@ export default function EditArtModuleModal({
   
   const [newArtModule, setNewArtModule] = useState(artModule)
   const [wrapperWidth, setWrapperWidth] = useState(0);
+  const [wrapperHeight, setWrapperHeight] = useState(0)
   const [search, setSearch] = useState("");
   const [groupByCollection, setGroupByCollection] = useState(false);
 
@@ -58,13 +59,11 @@ export default function EditArtModuleModal({
   const expandRef = useRef(null)
   const startYRef = useRef(null)
   const startHeightRef = useRef(null)
-  const [wrapperHeight, setWrapperHeight] = useState(0)
 
 
   const handleResize = () => {
     if (!wrapperRef.current) return;
-    const width = wrapperRef.current.clientWidth
-    setWrapperWidth(width)
+    setWrapperWidth(wrapperRef.current.clientWidth)
     setWrapperHeight(wrapperRef.current.clientHeight)
 
     const currentTab = tabsRef.current[activeTabIndex];
@@ -112,20 +111,7 @@ export default function EditArtModuleModal({
   const gapSize = 24
 
   useEffect(() => {
-    const handleResize = () => {
-      if (!wrapperRef.current) return;
-      const width = wrapperRef.current.clientWidth
-      setWrapperWidth(width)
-
-      const currentTab = tabsRef.current[activeTabIndex];
-      if (!currentTab) return
-      setTabUnderlineLeft(currentTab.offsetLeft);
-      setTabUnderlineWidth(currentTab.clientWidth);
-    }
-    setTimeout(handleResize, 500)
-
-    const debouncedResize = debounce(handleResize, 250)
-
+    setTimeout(debouncedResize, 500)
     window.addEventListener("resize", debouncedResize)
     return () => {
       debouncedResize.cancel()
@@ -228,7 +214,7 @@ export default function EditArtModuleModal({
       mappedAspectRatios[mint] = aspect
     })
 
-    const maxHeight = 333;
+    const maxHeight = wrapperHeight;
     const rowGapOffset = gapSize * (tokens.length - 1);
     const rowHeight = Math.min((wrapperWidth - rowGapOffset) / totalAspectRatio, maxHeight);
 
@@ -281,7 +267,7 @@ export default function EditArtModuleModal({
         </SortableArt>
       )
     })
-  }, [tokens, isMobile, curationType, wrapperWidth])
+  }, [tokens, isMobile, curationType, wrapperWidth, wrapperHeight])
 
   const contentTitle = useMemo(() => {
     switch (curationType) {
@@ -495,7 +481,7 @@ export default function EditArtModuleModal({
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Edit Art Module">
       <div
-        className="overflow-y-auto grid h-screen max-h-full grid-rows-[1fr,auto,1fr] mt-4 relative"
+        className="overflow-y-auto grid h-screen max-h-full grid-rows-[auto,auto,1fr] mt-4 relative"
       >
         <div className="relative flex flex-col">
           <div className="flex items-center justify-between flex-wrap px-4 gap-2">
@@ -529,7 +515,7 @@ export default function EditArtModuleModal({
           <hr className="block border-neutral-200 dark:border-neutral-700 w-8" />
         </button>
 
-        <div className="px-3 py-2 w-full overflow-x-hidden relative min-h-[340px] h-fit">
+        <div className="px-3 py-2 w-full overflow-hidden relative min-h-[340px] h-full">
           <div className={clsx(
             "w-full min-h-[4rem] relative h-full",
           )} 

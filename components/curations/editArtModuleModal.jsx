@@ -54,44 +54,6 @@ export default function EditArtModuleModal({
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
   const tabsRef = useRef([]);
 
-  const divRef = useRef(null)
-  const expandRef = useRef(null)
-  const startYRef = useRef(null)
-  const startHeightRef = useRef(null)
-  const [wrapperHeight, setWrapperHeight] = useState(0)
-
-
-  const handleResize = () => {
-    if (!wrapperRef.current) return;
-    const width = wrapperRef.current.clientWidth
-    setWrapperWidth(width)
-    setWrapperHeight(wrapperRef.current.clientHeight)
-
-    const currentTab = tabsRef.current[activeTabIndex];
-    if (!currentTab) return
-    setTabUnderlineLeft(currentTab.offsetLeft);
-    setTabUnderlineWidth(currentTab.clientWidth);
-  }
-  const debouncedResize = debounce(handleResize, 250)
-
-  const onDragStart = (e) => {
-    startYRef.current = e.clientY;
-    startHeightRef.current = parseInt(document.defaultView.getComputedStyle(divRef.current).height, 10);
-    document.documentElement.addEventListener('mousemove', doDrag, false);
-    document.documentElement.addEventListener('mouseup', stopDrag, false);
-  }
-
-  function doDrag(e) {
-    divRef.current.style.maxHeight = (startHeightRef.current + e.clientY - startYRef.current) + 'px';
-  }
-
-  function stopDrag() {
-    document.documentElement.removeEventListener('mousemove', doDrag, false);
-    document.documentElement.removeEventListener('mouseup', stopDrag, false);
-    debouncedResize()
-  }
- 
-
   const tabs = curationType === "collector" ? ["1/1", "Editions"] : ["1/1", "Master Editions"]
 
   
@@ -114,9 +76,19 @@ export default function EditArtModuleModal({
   const gapSize = 24
 
   useEffect(() => {
-    
+    const handleResize = () => {
+      if (!wrapperRef.current) return;
+      const width = wrapperRef.current.clientWidth
+      setWrapperWidth(width)
+
+      const currentTab = tabsRef.current[activeTabIndex];
+      if (!currentTab) return
+      setTabUnderlineLeft(currentTab.offsetLeft);
+      setTabUnderlineWidth(currentTab.clientWidth);
+    }
     setTimeout(handleResize, 500)
 
+    const debouncedResize = debounce(handleResize, 250)
 
     window.addEventListener("resize", debouncedResize)
     return () => {
@@ -131,12 +103,12 @@ export default function EditArtModuleModal({
       .filter(token => Boolean(token))
   }, [newArtModule.tokens, submittedTokens])
   
-  const moduleFull = tokens.length >= 4
+  const moduleFull = tokens?.length >= 4
   
   const handleSave = async () => {
     const newArtModuleCopy = {...newArtModule}
     
-    if (curationType !== "curator" && tokensToSubmit.length) {//"artist" || "collector" 
+    if (curationType !== "curator" && tokensToSubmit?.length) {//"artist" || "collector" 
       setSaving(true)
 
       const res = await submitTokens({
@@ -147,10 +119,9 @@ export default function EditArtModuleModal({
 
       if (!res || res?.status !== "success") {
         error(`Failed to submit tokens`)
-      } else {
-        onEditArtModule(newArtModuleCopy);
-        setTokensToSubmit([]);
-      }
+        setSaving(false)
+        return
+      } 
       if (res?.errors?.length) {
         newArtModuleCopy.tokens = newArtModuleCopy.tokens.filter(tokenMint => !res.errors.find(err => err.mint === tokenMint))
         setNewArtModule(newArtModuleCopy)
@@ -159,6 +130,9 @@ export default function EditArtModuleModal({
       }
       setSaving(false)
     }
+
+    onEditArtModule(newArtModuleCopy);
+    setTokensToSubmit([]);
     handleClose(false);
   }
   const handleClose = (reset = true) => {
@@ -218,7 +192,7 @@ export default function EditArtModuleModal({
       mappedAspectRatios[mint] = aspect
     })
 
-    const maxHeight = wrapperHeight
+    const maxHeight = 333;
     const rowGapOffset = gapSize * (tokens.length - 1);
     const rowHeight = Math.min((wrapperWidth - rowGapOffset) / totalAspectRatio, maxHeight);
 
@@ -271,7 +245,7 @@ export default function EditArtModuleModal({
         </SortableArt>
       )
     })
-  }, [tokens, isMobile, curationType, wrapperWidth, wrapperHeight])
+  }, [tokens, isMobile, curationType, wrapperWidth])
 
   const contentTitle = useMemo(() => {
     switch (curationType) {
@@ -401,9 +375,7 @@ export default function EditArtModuleModal({
   }, [availableTokens, search, useUserTokens, approvedArtists, tokens, tokenMintsInUse, moduleFull, handleTokenToSubmit, curationType, newArtModule.id, groupByCollection])
 
   const content = (
-    <div className="relative h-full max-h-[333px] min-h-[200px] min border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900"//max-h-[333px]  h-full min-h-[200px]
-      ref={divRef}
-    >
+    <div className="relative h-full min-h-[200px] max-h-[333px] min border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
       {moduleFull ?
         (
           <div className="absolute inset-0 z-50 h-full flex justify-center items-center backdrop-blur-sm">
@@ -485,7 +457,7 @@ export default function EditArtModuleModal({
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Edit Art Module">
       <div
-        className="overflow-y-auto grid h-screen max-h-full grid-rows-[auto,auto,1fr] mt-4 relative"
+        className="overflow-y-auto grid h-screen max-h-full grid-rows-[1fr,auto,1fr] mt-4 relative"
       >
         <div className="relative flex flex-col">
           <div className="flex items-center justify-between flex-wrap px-4 gap-2">
@@ -508,18 +480,8 @@ export default function EditArtModuleModal({
           {content}
         </div>
 
-        <button
-          className="cursor-[row-resize] my-3 flex flex-col items-center justify-center w-full gap-[2px]"
-          ref={expandRef}
-          onClick={() => console.log("expand")}
-          onMouseDown={onDragStart}
-        >
-          <hr className="block border-neutral-200 dark:border-neutral-700 w-8" />
-          <hr className="block border-neutral-200 dark:border-neutral-700 w-full" />
-          <hr className="block border-neutral-200 dark:border-neutral-700 w-8"/>
-        </button>
-
-        <div className="px-3 py-2 w-full overflow-hidden relative min-h-[340px] h-full">
+        <hr className="block border-neutral-200 dark:border-neutral-700 my-4" />
+        <div className="px-3 py-2 w-full overflow-x-hidden relative min-h-[340px] h-fit">
           <div className={clsx(
             "w-full min-h-[4rem] relative h-full",
           )} 

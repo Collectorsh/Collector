@@ -44,7 +44,7 @@ const DarkMode = ({withText}) => {
     }
   };
 
-  return <div className="inline-flex items-center gap-1" onClick={handleClick}>
+  return <div className="inline-flex items-center gap-1 rounded" onClick={handleClick}>
     {renderThemeChanger()}
     {withText ? <span className="ml-1">Toggle Dark Mode</span>: null}
   </div>;

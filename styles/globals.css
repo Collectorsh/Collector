@@ -6,6 +6,47 @@
   h1, .collector {
     @apply font-display
   }
+
+  html, body {
+    @apply bg-neutral-50 text-neutral-950;
+    @apply dark:bg-neutral-950 dark:text-neutral-100;
+  }
+}
+
+@layer components {
+  .palette1 {
+    @apply bg-neutral-50 text-neutral-950;
+    @apply dark:bg-neutral-950 dark:text-neutral-100;
+  }
+  .hoverPalette1:hover {
+    @apply bg-neutral-100 ;
+    @apply dark:bg-neutral-900;
+  }
+  .palette2 {
+    @apply bg-neutral-100 text-neutral-950;
+    @apply dark:bg-neutral-900 dark:text-neutral-100;
+  }
+  .hoverPalette2:hover {
+    @apply bg-neutral-200 ;
+    @apply dark:bg-neutral-800;
+  }
+
+  .palette3 {
+    @apply bg-neutral-200 text-neutral-950;
+    @apply dark:bg-neutral-800 dark:text-neutral-100;
+  }
+  .hoverPalette3:hover {
+    @apply bg-neutral-300 ;
+    @apply dark:bg-neutral-700;
+  }
+
+  .borderPalette {
+    @apply border-neutral-300 dark:border-neutral-700;
+  }
+
+  .hoverPalette1, .hoverPalette2, .hoverPalette3 {
+    @apply duration-300;
+  }
 }
 
 .Toastify__toast-container {
@@ -15,17 +56,14 @@
   color: #fff;
 }
 
-html, body {
-  background: #ffffff;
-  color: #1c1c1c;
-}
+
 /* :root {
 } */
 
-[data-theme="dark"] html,[data-theme="dark"] body {
-  background: #000000;
-  color: #eee;
-}
+/* [data-theme="dark"] html,[data-theme="dark"] body {
+
+  @apply bg-neutral-500 text-neutral-100
+} */
 
 /* :root {
   --swiper-navigation-color: rbga(0,0,0,0.5)
@@ -37,10 +75,9 @@ html, body {
 }
 
 
-.dark {
-  background: #000000;
-  color: #eee;
-}
+/* .dark {
+  @apply bg-neutral-500 text-neutral-100
+} */
 
 h4 {
   font-weight: 600;

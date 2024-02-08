@@ -10,14 +10,7 @@ import Tippy from "@tippyjs/react";
 
 export default function Gallery() {
   const [user, setUser] = useContext(UserContext);
-  const { publicKey, disconnect } = useWallet();
   
-  function signOut() {
-    disconnect().then(() => {
-      localStorage.removeItem("api_key");
-      setUser(null);
-    });
-  }
 
   const isCuratorApproved = user?.curator_approved || (user?.subscription_level === "pro");
 
@@ -78,39 +71,10 @@ export default function Gallery() {
                   </>
                 ) : null}
 
-                <hr className="mt-2 borderPalette"/>
+                <hr className="mt-2 borderPalette3"/>
 
                 
-                <div className="palette3 p-2 grid grid-cols-3 overflow-hidden">
-                  <div className=" px-2 pb-1 flex flex-col items-start col-span-2">
-                    <p className="truncate w-full">{user?.username}</p>
-                    <p className="text-xs opacity-50">
-                      {publicKey?.toBase58().substr(0, 4)}...
-                      {publicKey?.toBase58().slice(-4)}
-                    </p>
-                  </div>
-                  <div className="flex justify-end">
-                    <Tippy content="Profile settings" className="shadow">
-                      <div className="">
-                        <Link href="/settings">
-                          <a className="h-full  p-1 rounded-md flex items-center hoverPalette3">
-                            <Icon.Settings size={20} />
-                          </a>
-                        </Link>
-                      </div>
-                    </Tippy>
-
-                    <Tippy content="Log out" className="shadow">
-                      <button className="block text-left p-1 rounded-md hoverPalette3"
-                        onClick={signOut}
-                      >
-                        {/* Sign out */}
-                        <Icon.LogOut size={20} />
-                      </button>
-                    </Tippy>
-                  </div>
-                </div>
-
+               <UserCard />
             
                 
               </Menu.Items>
@@ -120,4 +84,48 @@ export default function Gallery() {
       </Menu>
     </div>
   );
+}
+
+
+export const UserCard = ({inset}) => {
+  const [user, setUser] = useContext(UserContext);
+  const { publicKey, disconnect } = useWallet();
+
+  function signOut() {
+    disconnect().then(() => {
+      localStorage.removeItem("api_key");
+      setUser(null);
+    });
+  }
+  return (
+    <div className={clsx("palette3 p-2 grid grid-cols-3 overflow-hidden", inset && "rounded-md shadow-inner")}>
+    <div className=" px-2 pb-1 flex flex-col items-start col-span-2">
+      <p className="truncate w-full">{user?.username}</p>
+      <p className="text-xs opacity-50">
+        {publicKey?.toBase58().substr(0, 4)}...
+        {publicKey?.toBase58().slice(-4)}
+      </p>
+    </div>
+    <div className="flex justify-end">
+      <Tippy content="Profile settings" className="shadow">
+        <div className="">
+          <Link href="/settings">
+            <a className="h-full  p-1 rounded-md flex items-center hoverPalette3">
+              <Icon.Settings size={inset ? 24 : 20} />
+            </a>
+          </Link>
+        </div>
+      </Tippy>
+
+      <Tippy content="Log out" className="shadow">
+        <button className="block text-left p-1 rounded-md hoverPalette3"
+          onClick={signOut}
+        >
+          {/* Sign out */}
+          <Icon.LogOut size={inset ? 24 : 20} />
+        </button>
+      </Tippy>
+    </div>
+    </div>
+  )
 }

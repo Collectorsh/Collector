@@ -22,13 +22,19 @@
     @apply bg-neutral-100 ;
     @apply dark:bg-neutral-900;
   }
+  .borderPalette1 {
+    @apply border-neutral-100 dark:border-neutral-900;
+  }
+
   .palette2 {
     @apply bg-neutral-100 text-neutral-950;
     @apply dark:bg-neutral-900 dark:text-neutral-100;
   }
   .hoverPalette2:hover {
-    @apply bg-neutral-200 ;
-    @apply dark:bg-neutral-800;
+    @apply bg-neutral-200 dark:bg-neutral-800;
+  }
+  .borderPalette2 {
+    @apply border-neutral-200 dark:border-neutral-800;
   }
 
   .palette3 {
@@ -39,8 +45,7 @@
     @apply bg-neutral-300 ;
     @apply dark:bg-neutral-700;
   }
-
-  .borderPalette {
+  .borderPalette3 {
     @apply border-neutral-300 dark:border-neutral-700;
   }
 

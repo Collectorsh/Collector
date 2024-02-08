@@ -42,6 +42,7 @@ export default function EditArtModuleModal({
   
   const [newArtModule, setNewArtModule] = useState(artModule)
   const [wrapperWidth, setWrapperWidth] = useState(0);
+  const [wrapperHeight, setWrapperHeight] = useState(0)
   const [search, setSearch] = useState("");
   const [groupByCollection, setGroupByCollection] = useState(false);
 
@@ -58,13 +59,11 @@ export default function EditArtModuleModal({
   const expandRef = useRef(null)
   const startYRef = useRef(null)
   const startHeightRef = useRef(null)
-  const [wrapperHeight, setWrapperHeight] = useState(0)
 
 
   const handleResize = () => {
     if (!wrapperRef.current) return;
-    const width = wrapperRef.current.clientWidth
-    setWrapperWidth(width)
+    setWrapperWidth(wrapperRef.current.clientWidth)
     setWrapperHeight(wrapperRef.current.clientHeight)
 
     const currentTab = tabsRef.current[activeTabIndex];
@@ -90,10 +89,8 @@ export default function EditArtModuleModal({
     document.documentElement.removeEventListener('mouseup', stopDrag, false);
     debouncedResize()
   }
- 
 
   const tabs = curationType === "collector" ? ["1/1", "Editions"] : ["1/1", "Master Editions"]
-
   
   //Dont fetch user tokens if this is a curator curation
   const useUserTokens = curationType !== "curator"
@@ -114,15 +111,13 @@ export default function EditArtModuleModal({
   const gapSize = 24
 
   useEffect(() => {
-    
     setTimeout(handleResize, 500)
-
-
     window.addEventListener("resize", debouncedResize)
     return () => {
       debouncedResize.cancel()
       window.removeEventListener("resize", debouncedResize)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, activeTabIndex])
 
   const tokens = useMemo(() => {
@@ -220,7 +215,7 @@ export default function EditArtModuleModal({
       mappedAspectRatios[mint] = aspect
     })
 
-    const maxHeight = wrapperHeight
+    const maxHeight = wrapperHeight;
     const rowGapOffset = gapSize * (tokens.length - 1);
     const rowHeight = Math.min((wrapperWidth - rowGapOffset) / totalAspectRatio, maxHeight);
 
@@ -518,7 +513,7 @@ export default function EditArtModuleModal({
         >
           <hr className="block border-neutral-200 dark:border-neutral-700 w-8" />
           <hr className="block border-neutral-200 dark:border-neutral-700 w-full" />
-          <hr className="block border-neutral-200 dark:border-neutral-700 w-8"/>
+          <hr className="block border-neutral-200 dark:border-neutral-700 w-8" />
         </button>
 
         <div className="px-3 py-2 w-full overflow-hidden relative min-h-[340px] h-full">

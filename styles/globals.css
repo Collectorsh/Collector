@@ -8,51 +8,56 @@
   }
 
   html, body {
-    @apply bg-neutral-50 text-neutral-950;
-    @apply dark:bg-neutral-950 dark:text-neutral-100;
+    @apply bg-zinc-50 text-neutral-900;
+    @apply dark:bg-zinc-950 dark:text-neutral-100;
   }
 }
 
 @layer components {
   .palette1 {
-    @apply bg-neutral-50 text-neutral-950;
-    @apply dark:bg-neutral-950 dark:text-neutral-100;
+    @apply bg-zinc-50 text-neutral-900;
+    @apply dark:bg-zinc-950 dark:text-neutral-100;
   }
   .hoverPalette1:hover {
-    @apply bg-neutral-100 ;
-    @apply dark:bg-neutral-900;
+    @apply bg-zinc-200 dark:bg-zinc-800;
   }
   .borderPalette1 {
-    @apply border-neutral-100 dark:border-neutral-900;
+    @apply border-zinc-200 dark:border-zinc-800;
   }
 
   .palette2 {
-    @apply bg-neutral-100 text-neutral-950;
-    @apply dark:bg-neutral-900 dark:text-neutral-100;
+    @apply bg-zinc-100 dark:bg-zinc-800;
   }
   .hoverPalette2:hover {
-    @apply bg-neutral-200 dark:bg-neutral-800;
+    @apply bg-zinc-200 dark:bg-zinc-700;
   }
   .borderPalette2 {
-    @apply border-neutral-200 dark:border-neutral-800;
+    @apply border-zinc-200 dark:border-zinc-700;
   }
 
   .palette3 {
-    @apply bg-neutral-200 text-neutral-950;
-    @apply dark:bg-neutral-800 dark:text-neutral-100;
+    @apply bg-zinc-200 dark:bg-zinc-900;
   }
   .hoverPalette3:hover {
-    @apply bg-neutral-300 ;
-    @apply dark:bg-neutral-700;
+    @apply bg-zinc-300 dark:bg-zinc-800;
   }
   .borderPalette3 {
-    @apply border-neutral-300 dark:border-neutral-700;
+    @apply border-zinc-300 dark:border-zinc-700;
   }
 
   .hoverPalette1, .hoverPalette2, .hoverPalette3 {
     @apply duration-300;
   }
+
+  .textPalette1 {
+    @apply text-neutral-900 dark:text-neutral-100;
+  }
+  .textPalette2 {
+    @apply text-neutral-600 dark:text-neutral-400;
+  }
+
 }
+
 
 .Toastify__toast-container {
   padding: 16px;
@@ -578,11 +583,11 @@ code {
 
 
 .ql-snow.ql-snow.ql-toolbar .ql-picker .ql-picker-options {
-  @apply bg-white dark:bg-neutral-800 rounded shadow border-neutral-200 dark:border-neutral-700;
+  @apply bg-zinc-100 dark:bg-zinc-800 rounded shadow border-zinc-300 dark:border-zinc-700;
 }
 
 .ql-snow.ql-snow .ql-picker.ql-expanded .ql-picker-label {
-  @apply rounded border-neutral-200 dark:border-neutral-700 
+  @apply rounded border-zinc-300 dark:border-zinc-700 
 }
 
 .ql-snow.ql-snow .ql-picker .ql-picker-label {

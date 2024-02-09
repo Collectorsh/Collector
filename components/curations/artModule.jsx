@@ -6,6 +6,7 @@ import useBreakpoints from '../../hooks/useBreakpoints';
 import debounce from 'lodash.debounce';
 import { getTokenAspectRatio } from '../../hooks/useNftFiles';
 import ArtItem from './artModuleItem';
+import * as Icon from 'react-feather';
 
 const ArtModule = ({
   artModule,
@@ -135,6 +136,8 @@ const ArtModule = ({
         onEdit={() => setEditArtOpen(true)}
         placement="outside-tr"
         groupHoverClass="group-hover/artRow:opacity-100"
+        text="Edit Module"
+        icon={<Icon.Image size={20} strokeWidth={2.5} />}
       >
         {itemRows.map((row, i) => {
           return (

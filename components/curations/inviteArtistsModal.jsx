@@ -25,6 +25,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
   }, [viewerPasscode, passcode])
   
   const handleInvite = () => {
+    if (!newApproveArtists?.length) return
     onInvite(newApproveArtists)
     handleClose({keepCurrent: true})
   }
@@ -150,7 +151,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
         <MainButton onClick={handleClose}>
           Cancel
         </MainButton>
-        <MainButton onClick={handleInvite} solid>
+        <MainButton onClick={handleInvite} solid disabled={!newApproveArtists?.length}>
           Save
         </MainButton>
       </div>

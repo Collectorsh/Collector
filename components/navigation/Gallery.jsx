@@ -42,7 +42,7 @@ export default function Gallery() {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Menu.Items className="palette2 origin-top-right absolute right-0 mt-2 w-48 overflow-hidden rounded-md shadow-md outline-none text-left">
+              <Menu.Items className="palette2 origin-top-right absolute right-0 mt-2 pt-2 w-48 overflow-hidden rounded-md shadow-md outline-none text-left">
                 {user.subscription_level === "pro" ? (
                   <Menu.Item>
                     <Link href={`/gallery/${ user.username }`}>

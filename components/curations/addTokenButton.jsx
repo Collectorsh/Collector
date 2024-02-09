@@ -135,8 +135,8 @@ const AddTokenButton = ({
   return (
     <button
       className={clsx(
-        "relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden bg-neutral-200 dark:bg-neutral-800",
-        "duration-300 hover:scale-[102%] disabled:scale-100",
+        "relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden palette3",
+        "duration-300 ",
         "inset-0 w-full pb-[100%]",
         imageError && "hidden"
       )}
@@ -169,7 +169,7 @@ const AddTokenButton = ({
 
         <CloudinaryImage
           imageRef={imageRef}
-          className={clsx("flex-shrink-0 object-contain shadow-lg dark:shadow-white/5",
+          className={clsx("flex-shrink-0 object-contain shadow-lg ",
             "w-full h-full absolute left-0 top-0",
           )}
           useMetadataFallback

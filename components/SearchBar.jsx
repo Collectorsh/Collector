@@ -19,8 +19,8 @@ const SearchBar = ({ search, setSearch, placeholder = "Search", className, onEnt
   
   return (
     <div className={clsx(
-      "flex items-center justify-between gap-1 border-2 rounded-md p-2",
-      "border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900",
+      "flex items-center justify-between gap-1 border-2 rounded-lg p-2",
+      "palette2 borderPalette3",
       className
     )} >
       <input

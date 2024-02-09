@@ -27,7 +27,6 @@ const DarkMode = ({withText}) => {
         <Icon.Sun
           size={26}
           color="yellow"
-          // className="text-yellow-300 inline pr-0.5 pt-0.5"
           role="button"
           strokeWidth={2.5}
         />
@@ -44,7 +43,7 @@ const DarkMode = ({withText}) => {
     }
   };
 
-  return <div className="inline-flex items-center gap-1 rounded" onClick={handleClick}>
+  return <div className="inline-flex items-center gap-1 rounded pl-1" onClick={handleClick}>
     {renderThemeChanger()}
     {withText ? <span className="ml-1">Toggle Dark Mode</span>: null}
   </div>;

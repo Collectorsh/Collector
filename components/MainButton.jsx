@@ -1,28 +1,38 @@
 import clsx from "clsx"
 import { forwardRef } from "react"
 
-const MainButton = forwardRef(({ children, solid = false, className, disabled, noPadding, warning, ...props }, ref) => {
+const MainButton = forwardRef(({ children, solid = false, className, disabled, noPadding, size, ...props }, ref) => {
 
   const bgClass = solid
-    ? "bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-700"
-    : "hover:bg-neutral-700 dark:hover:bg-neutral-200 hover:text-white dark:hover:text-black"
+    ? "bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-300"
+    : "bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800"
 
   const disabledClass = solid
-    ? "disabled:bg-black dark:disabled:bg-white disabled:border-black dark:disabled:border-white"
-    : "disabled:bg-transparent dark:disabled:bg-transparent disabled:border-black dark:disabled:border-white disabled:text-black dark:disabled:text-white"
+  ? "disabled:bg-zinc-900 dark:bg-zinc-100"
+  : "disabled:bg-zinc-100 dark:bg-zinc-900"
   
+  const sizeClass = () => {
+    if (noPadding) return ""
+    switch (size) {
+      case "xl": return "py-3 px-8 text-xl rounded-lg "
+      case "lg": return "py-1.5 px-6 text-lg rounded-lg "
+      case "md":
+      default: return "py-1 px-4 text-base rounded-md"
+    }
+  }
   
   return (
     <button
       ref={ref}
       disabled={disabled}
-      className={clsx("border-2 border-black dark:border-white",
-        "dark:hover:bg-neutral-200 hover:border-neutral-700 dark:hover:border-neutral-200",
+      className={clsx("border-2 border-zinc-900 dark:border-zinc-100",
+        " hover:border-zinc-700 dark:hover:border-zinc-300",
         bgClass,
-        "rounded-lg duration-300 hover:scale-105 active:scale-100",
-        "text-lg font-bold",
-        noPadding ? "" : "py-3 px-6",
-        "disabled:scale-100 disabled:opacity-50",
+        "disabled:border-zinc-900 dark:disabled:border-zinc-100",
+        "disabled:opacity-50",
+        "rounded-lg duration-300",
+        "font-bold",
+        sizeClass(),
         disabledClass,
         className
       )}
@@ -38,17 +48,26 @@ MainButton.displayName = "MainButton"
 
 export default MainButton
 
-export const WarningButton = ({ children, className, disabled, noPadding, warning, ...props }) => {
+export const WarningButton = ({ children, className, disabled, noPadding, warning, size, ...props }) => {
+  const sizeClass = () => {
+    if (noPadding) return ""
+    switch (size) {
+      case "xl": return "py-3 px-8 text-xl rounded-lg "
+      case "lg": return "py-1.5 px-6 text-lg rounded-lg "
+      case "md":
+      default: return "py-1 px-4 text-base rounded-md"
+    }
+  }
   return (
     <button
       disabled={disabled}
       className={clsx("border-2 border-red-500 text-red-500",
         "hover:border-red-600",
-        "hover:bg-red-600 hover:text-white",
-        "rounded-lg duration-300 hover:scale-105 active:scale-100",
-        "text-lg font-bold",
-        noPadding ? "" : "py-3 px-6",
-        "disabled:scale-100 disabled:opacity-50",
+        "hover:bg-red-600/20",
+        "duration-300",
+        "font-bold",
+        sizeClass(),
+        "disabled:opacity-50",
         "disabled:bg-transparent dark:disabled:bg-transparent disabled:border-red-500 disabled:text-red-500",
         className
       )}

@@ -1,12 +1,15 @@
 import { CogIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
+import MainButton from "../MainButton";
+import * as Icon from 'react-feather'
 
 const EditWrapper = ({
   children,
   isOwner,
   onEdit,
   placement,
-  icon = <CogIcon className="w-8 h-8" />,
+  text,
+  icon = <Icon.Settings size={20} strokeWidth={2.5} />,
   groupHoverClass,
   className
 }) => { 
@@ -15,23 +18,40 @@ const EditWrapper = ({
     switch (placement) { 
       case "inside-tr": return "top-4 right-4";
       case "tr": return "top-0 right-0";
-      case "outside-tr": return "-top-4 -right-4";
+      case "outside-tr": return "-top-5 -right-6";
+      case "inside-br": return "bottom-6 right-6";
+      default: return placement;
     }
   }
 
+  // const editButton = (
+  //   <button
+  //     disabled={!isOwner}
+  //     onClick={onEdit}
+  //     className={clsx("absolute z-[19]", getPlacement(),
+  //       "bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700",
+  //       "rounded-full shadow-md shadow-black/20",
+  //       "duration-300 opacity-50 hover:opacity-100",
+  //       groupHoverClass,
+  //     )}
+  //   >
+  //     {icon}
+  //   </button>
+  // )
   const editButton = (
-    <button
+    <MainButton
       disabled={!isOwner}
       onClick={onEdit}
-      className={clsx("absolute z-[19]", getPlacement(),
-        "bg-neutral-200 dark:bg-neutral-700 rounded-full shadow-lg dark:shadow-white/10",
-        "duration-300 opacity-30 hover:opacity-100",
-        groupHoverClass,
-        "hover:scale-110 active:scale-100",
-      )}
+      noPadding={!text}
+      className={clsx(
+        "flex items-center gap-3 duration-300 opacity-50",
+        "absolute z-[19]", getPlacement(),
+        !text && "rounded-full",
+        groupHoverClass)}
     >
+      {text}
       {icon}
-    </button>
+    </MainButton>
   )
   return (
     <div className={clsx("inline-block relative h-full w-full", className)}>

@@ -35,9 +35,11 @@ import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/c
 import AuthorizedViewerBar from "../../components/curations/authorizedViewerBar";
 import { deleteMultipleSubmissions } from "../../data/curationListings/deleteSubmission";
 
-import dynamic from 'next/dynamic';
+
 import { deltaToPlainText } from "../../utils/Quill";
-const QuillContent = dynamic(() => import('../../components/Quill').then(mod => mod.QuillContent), { ssr: false })
+import CurationBanner from "../../components/curations/banner";
+import CurationName from "../../components/curations/name";
+import CurationDescription from "../../components/curations/description";
 
 const descriptionPlaceholder = "Tell us about this curation."
 
@@ -57,7 +59,6 @@ function CurationPage({curation}) {
   const [unpublishModalOpen, setUnpublishModalOpen] = useState(false);
   const [isEditingDraft, setIsEditingDraft] = useState(!curation?.is_published); //defaults to true if unpublished
   const [isPublished, setIsPublished] = useState(curation?.is_published);
-  const [bannerLoaded, setBannerLoaded] = useState(true);
 
   const [submittedTokens, setSubmittedTokens] = useState(curation?.submitted_token_listings || []);
   const [approvedArtists, setApprovedArtists] = useState(curation?.approved_artists || []);
@@ -114,7 +115,6 @@ function CurationPage({curation}) {
   //currently we are allowing curations to be published without content
   const hasNoContent = false//{modules.length === 0 || !banner} 
 
-  const bannerImgId = parseCloudImageId(banner)
   const pfpImgId = parseCloudImageId(curation?.curator?.profile_image)
 
   const metaImage = curation?.published_content?.banner_image
@@ -169,12 +169,6 @@ function CurationPage({curation}) {
       })();
     }
   }, [isOwner, curation?.name, user?.api_key, viewerPasscodeQuery])
-
-  useEffect(() => {
-    if (!useDraftContent || !publishContent.banner_image) return;
-    //set loaded to false when the banner changes
-    if (banner !== publishedContent.banner_image) setBannerLoaded(false);
-  }, [banner, publishedContent?.banner_image, useDraftContent])
 
   const handlePublish = async () => { 
     if (!isOwner) return;
@@ -399,50 +393,22 @@ function CurationPage({curation}) {
       </Head>
       <Toaster />
       <MainNavigation />
-      <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 group/banner">
-        <EditWrapper
-          isOwner={displayDraftEdit}
-          onEdit={() => setEditBannerOpen(true)}
-          placement="inside-tr"
-          groupHoverClass="group-hover/banner:opacity-100"
-        // icon={<PhotographIcon className="w-6 h-6" />}
-        >
-          <div className="w-full pb-[50%] md:pb-[33%] relative">
-            {banner ? (
-              <CloudinaryImage
-                className={clsx(
-                  "absolute inset-0 w-full h-full object-cover 2xl:rounded-b-2xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25",
-                  !bannerLoaded && "animate-pulse"
-                )}
-                id={bannerImgId}
-                noLazyLoad
-                onLoad={() => setBannerLoaded(true)}
-                width={3000}
-              />
-            ) : (
-              <div className="absolute inset-0 w-full h-full object-cover 2xl:rounded-b-2xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25 flex justify-center items-center">
-                  <p className={clsx("font-xl font-bold", !isOwner && "hidden")}>Click the edit button in the top right to add a banner</p>
-              </div>
-            )}
-          </div>
-        </EditWrapper>
-      </div>
+      <CurationBanner
+        banner={banner}
+        setEditBannerOpen={setEditBannerOpen}
+        displayDraftEdit={displayDraftEdit}
+        useDraftContent={useDraftContent}
+        publishedBanner={publishedContent?.banner_image}
+      />
       <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-10">
        
-        <div className="group/name w-fit mb-3 mx-auto max-w-full">
-          <EditWrapper
-            isOwner={displayPublishedEdit}
-            onEdit={() => setEditNameOpen(true)}
-            placement="outside-tr"
-            groupHoverClass="group-hover/name:opacity-100"
-          // icon={<PencilAltIcon className="w-6 h-6" />}
-          >
-            <h1 className="font-bold text-5xl text-center w-full break-words">{name.replaceAll("_", " ")}</h1>
-          </EditWrapper>
-        </div>
+        <CurationName
+          name={name}
+          setEditNameOpen={setEditNameOpen}
+          displayPublishedEdit={displayPublishedEdit}
+        />
         <Link href={`/gallery/${ curation.curator?.username }`} >
-          <a className="flex gap-2 items-center justify-center mb-8 hover:scale-105 duration-300 w-fit mx-auto ">
-            <p className="text-base">{curatorText} {curation.curator?.username}</p>
+          <a className="flex gap-2 items-center justify-center mb-8 hoverPalette1 rounded-md px-3 py-1 w-fit mx-auto ">
             {curation.curator?.profile_image
               ? (<div className="relative">
                   <CloudinaryImage
@@ -456,20 +422,15 @@ function CurationPage({curation}) {
                 </div>)
                 : null
               }
+            <p className="text-lg font-bold"> {curation.curator?.username}</p>
           </a>
         </Link>
   
-        <div className="group/description w-full mx-auto">
-          <EditWrapper
-            isOwner={displayDraftEdit}
-            onEdit={() => setEditDescriptionOpen(true)}
-            placement="outside-tr"
-            groupHoverClass="group-hover/description:opacity-100"
-          // icon={<PencilAltIcon className="w-6 h-6" />}
-          >
-            <QuillContent textDelta={description} />
-          </EditWrapper>
-        </div>
+        <CurationDescription
+          description={description}
+          setEditDescriptionOpen={setEditDescriptionOpen}
+          displayDraftEdit={displayDraftEdit}
+        />
 
         <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
 

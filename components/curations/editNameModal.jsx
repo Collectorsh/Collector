@@ -63,20 +63,20 @@ const EditNameModal = ({ name, onSave, isOpen, onClose }) => {
       title="Edit Curation Name"
       widthClass="max-w-screen-sm"
     >
-      <p className="pl-2 mt-6 text-center">Please note, changing the name here will change the published curation&apos;s url.</p>
+      <p className="textPalette2 text-sm my-2 text-center">Please note, changing the name here will change the published curation&apos;s url.</p>
       <input
-        className="my-4 border-4 rounded-xl
-        border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 
-        w-full p-3"
+        className="my-1 border-2 rounded-lg
+        pallette2 borderPalette3
+        w-full px-4 py-2"
         onChange={(e) => setNewName(e.target.value.replaceAll(" ", "_"))}
         value={newName}
       />
-      <p className="text-sm pl-4 italic text-red-500 h-4">{nameError}</p>
+      <p className="text-sm pl-4 text-red-500 h-4">{nameError}</p>
       <div className="w-full flex justify-end gap-4">
-        <MainButton onClick={onClose}>
+        <MainButton onClick={onClose} size="lg">
           Cancel
         </MainButton>
-        <MainButton onClick={handleSave} solid disabled={!nameValid}>
+        <MainButton onClick={handleSave} solid disabled={!nameValid} size="lg">
           Save
         </MainButton>
       </div>

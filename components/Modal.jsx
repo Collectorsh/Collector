@@ -1,7 +1,7 @@
 import { Fragment, useMemo } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { XCircleIcon } from "@heroicons/react/outline";
 import clsx from "clsx";
+import * as Icon from "react-feather";
 
 export default function Modal({
   title,
@@ -14,7 +14,7 @@ export default function Modal({
 }) {
   return (
     <Transition show={isOpen} as={Fragment}>
-      <Dialog onClose={onClose} className="z-[1001] relative w-screen h-screen dark:text-white">
+      <Dialog onClose={onClose} className="z-[1001] relative w-screen h-screen">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -39,19 +39,18 @@ export default function Modal({
           >
             <Dialog.Panel
               className={clsx(
-                "relative p-2 md:px-14 md:py-6 rounded-lg bg-white",
-                "dark:bg-neutral-800",
-                "shadow-md shadow-black/25 dark:shadow-neutral-500/25",
+                "relative p-2 md:px-14 md:py-6 rounded-lg palette3",
+                "shadow-md shadow-black/25",
                 "w-full max-h-[calc(100%-1rem)]",
                 "flex flex-col",
                 widthClass
               )}
             >
           
-              <button onClick={onClose} className={clsx("duration-200 hover:scale-105 active:scale-100", closeButtonPlacement, closeDisabled && "hidden")}>
-                <XCircleIcon className="w-8 h-8" />
+              <button onClick={onClose} className={clsx("hoverPalette3 rounded-full p-1", closeButtonPlacement, closeDisabled && "hidden")}>
+                <Icon.X size={24} strokeWidth={2.5} />
               </button>
-              {title ? < Dialog.Title className="text-center font-bold text-3xl py-4">{title}</Dialog.Title> : null}
+              {title ? < Dialog.Title className="text-center font-bold text-3xl pt-2 pb-4">{title}</Dialog.Title> : null}
             
               {children}
             </Dialog.Panel>

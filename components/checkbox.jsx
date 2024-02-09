@@ -10,7 +10,7 @@ const Checkbox = ({ label, checked, onChange, className, labelLeft = false }) =>
     {labelLeft && label}
     <input type="checkbox" checked={checked} onChange={onChange} className="hidden" />
     <span className={clsx(
-      "w-5 h-5 rounded border-[3px] border-neutral-300 dark:border-neutral-700",
+      "w-5 h-5 rounded border-[3px] palette2 borderPalette3",
     )}>
       {checked && (
         <CheckIcon className="w-full h-full stroke-2" />

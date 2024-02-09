@@ -8,7 +8,6 @@ import DarkMode from "/components/navigation/DarkMode";
 import ConnectWallet from "/components/wallet/ConnectWallet";
 import Gallery from "/components/navigation/Gallery";
 import CreateUsernameModal from "/components/onboarding/CreateUsernameModal";
-import { truncate } from "../../utils/truncate";
 import WalletButton from "./WalletButton";
 import RpcHealthFeedback from "./RpcHeathFeedback";
 
@@ -27,16 +26,8 @@ export default function MainNavigation() {
   function toggleMenu() {
     setOpen(!open);
   }
-  // const signOut = useCallback(() => {
-  //   wallet.disconnect().then(() => {
-  //     localStorage.removeItem("api_key");
-  //     setUser(null);
-  //     router.push("/");
-  //   });
-  // },[router, setUser, wallet])
 
   useEffect(() => {
-    
     //if no wallet connected but stale user, sign out
     if (user && !wallet.publicKey) signOut();
 
@@ -48,9 +39,9 @@ export default function MainNavigation() {
     <div className="pb-[76px] relative">
       <ConnectWallet />
       <CreateUsernameModal />
-      <nav className="palette1 shadow-[0px_1px_4px_rgba(130,130,130,0.1)] py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
+      <nav className="palette1 shadow-black/10 shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
         <RpcHealthFeedback />
-        <div className="max-w-screen-2xl mx-auto">
+        <div className="max-w-screen-2xl 2xl:px-8 mx-auto">
           <div>
             <div className="flex">
               <div className="flex items-center col-span-1">
@@ -95,7 +86,7 @@ export default function MainNavigation() {
           <Transition.Root show={open} as={Fragment}>
             <Dialog
               as="div"
-              className="fixed inset-0 overflow-hidden z-20"
+              className="fixed inset-0 overflow-hidden z-[1001]"
               onClose={() => setOpen(true)}
             >
               <div className="absolute inset-0 overflow-hidden">
@@ -123,7 +114,7 @@ export default function MainNavigation() {
                         <DarkMode />
                       </div>
 
-                      <div className="flex flex-col gap-2 overflow-y-scroll p-4 text-xl">
+                      <div className="flex flex-col gap-2 p-4 text-xl">
                       
                         <Link href="/" passHref>
                           <p className="">Home</p>
@@ -163,10 +154,12 @@ export default function MainNavigation() {
                           : <WalletButton />
                         }
                       </div>
-                      <div className="">
-                        <UserCard inset />
-
-                      </div>
+                      
+                      {user
+                        ? <UserCard inset />
+                        : null
+                      }
+                      
                     </div>
                   </Transition.Child>
                 </div>

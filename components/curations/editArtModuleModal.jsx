@@ -398,7 +398,7 @@ export default function EditArtModuleModal({
   }, [availableTokens, search, useUserTokens, approvedArtists, tokens, tokenMintsInUse, moduleFull, handleTokenToSubmit, curationType, newArtModule.id, groupByCollection])
 
   const content = (
-    <div className="relative h-full max-h-[333px] min-h-[200px] min border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900"//max-h-[333px]  h-full min-h-[200px]
+    <div className="relative h-full max-h-[333px] min-h-[200px] min border-4 rounded-xl palette2 borderPalette3"//max-h-[333px]  h-full min-h-[200px]
       ref={divRef}
     >
       {moduleFull ?
@@ -438,7 +438,7 @@ export default function EditArtModuleModal({
     <>
       
       <div className="relative mx-auto w-fit">
-        <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
+        <div className="flex justify-center space-x-2 border-b-8 borderPalette3">
           {tabs.map((tab, i) => {
             const handleClick = () => {
               setActiveTabIndex(i);
@@ -459,8 +459,8 @@ export default function EditArtModuleModal({
           })}
 
         </div>
-        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700" />
+        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
+        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700" />
         <span
           className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner shadow-black/10 dark:shadow-white/10"
         />
@@ -511,9 +511,9 @@ export default function EditArtModuleModal({
           onClick={() => console.log("expand")}
           onMouseDown={onDragStart}
         >
-          <hr className="block border-neutral-200 dark:border-neutral-700 w-8" />
-          <hr className="block border-neutral-200 dark:border-neutral-700 w-full" />
-          <hr className="block border-neutral-200 dark:border-neutral-700 w-8" />
+          <hr className="block borderPalette3 w-8 border" />
+          <hr className="block borderPalette3 w-full border" />
+          <hr className="block borderPalette3 w-8 border"/>
         </button>
 
         <div className="px-3 py-2 w-full overflow-hidden relative min-h-[340px] h-full">
@@ -546,17 +546,18 @@ export default function EditArtModuleModal({
       </div>
       
       <div className="w-full flex justify-center md:justify-between items-center gap-4 mt-4 flex-wrap">
-        <WarningButton onClick={onDeleteModule}>
+        <WarningButton onClick={onDeleteModule} size="lg">
           Delete Module
         </WarningButton>
         <div className="flex gap-4">
-          <MainButton onClick={handleClose}>
+          <MainButton onClick={handleClose} size="lg">
             Cancel
           </MainButton>
           <MainButton
             onClick={handleSave}
             solid
             disabled={saving}
+            size="lg"
           >
             {saving
               ? (

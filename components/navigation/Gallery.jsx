@@ -50,15 +50,19 @@ export default function Gallery() {
                 {publicKey?.toBase58().slice(-4)}
               </p>
             </Menu.Item>
-            {user.subscription_level === "pro" ? (
+            {user.subscription_level !== "pro" ? (
               <Menu.Item>
                 <Link href={`/gallery/${ user.username }`}>
                   <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    Gallery
+                    My Gallery
                   </a>
                 </Link>
               </Menu.Item>
-            ) : null}
+            ) : (
+                <a className="block px-4 py-2 text-sm text-gray-700 ">
+                  My Gallery <span className="text-xs">(coming soon!)</span>
+                </a>
+            )}
             {isCuratorApproved ? (
               <>
                 <Menu.Item>

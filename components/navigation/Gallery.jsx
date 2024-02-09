@@ -54,11 +54,15 @@ export default function Gallery() {
               <Menu.Item>
                 <Link href={`/gallery/${ user.username }`}>
                   <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    Gallery
+                    My Gallery
                   </a>
                 </Link>
               </Menu.Item>
-            ) : null}
+            ) : (
+                <a className="block px-4 py-2 text-sm text-gray-700 ">
+                  My Gallery <span className="text-xs">(coming soon!)</span>
+                </a>
+            )}
             {isCuratorApproved ? (
               <>
                 <Menu.Item>

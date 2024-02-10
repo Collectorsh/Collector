@@ -241,9 +241,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
             />
           ))}
           {!submissions.length ? (
-            <div className="col-span-3 flex flex-col gap-1 items-center justify-center h-full w-full">
-              <p>No available listings.</p>
-              <p>Once a listable artwork is added to the curation it will be shown here.</p>
+            <div className="col-span-3 flex flex-col gap-1 items-center justify-center h-full w-full pb-12 bt-6">
+              <p className="font-bold">No Listings Yet</p>
+              <p>Add your artwork via the art module and then list them here.</p>
             </div>
           ): null}
         </div>

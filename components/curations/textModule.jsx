@@ -14,9 +14,9 @@ const TextModule = ({ textModule, onEditTextModule, isOwner, onDeleteModule }) =
       <EditWrapper
         isOwner={isOwner}
         onEdit={() => setEditTextOpen(true)}
-        placement="outside-tr"
+        placement="tr"
         groupHoverClass="group-hover:opacity-100"
-        text="Edit Module"
+        text="Edit Text"
         icon={<Icon.Edit size={20} strokeWidth={2.5} />}
       >
         <QuillContent textDelta={textModule.textDelta} />

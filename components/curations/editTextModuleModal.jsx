@@ -42,10 +42,10 @@ const EditTextModuleModal = ({ textModule, onEditTextModule, isOpen, onClose, on
           Delete Module
         </WarningButton>
         <div className="flex gap-4">
-          <MainButton onClick={handleClose} size="lg">
+          <MainButton onClick={handleClose} size="lg" standardWidth>
             Cancel
           </MainButton>
-          <MainButton onClick={handleSave} solid size="lg">
+          <MainButton onClick={handleSave} solid size="lg" standardWidth>
             Save
           </MainButton>
         </div>

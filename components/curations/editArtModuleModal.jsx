@@ -1,14 +1,12 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import MainButton, { WarningButton } from "../MainButton";
-import CloudinaryImage, { IMAGE_FALLBACK_STAGES } from "../CloudinaryImage";
+import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
 import Modal from "../Modal";
 import SearchBar from "../SearchBar";
 import { RoundedCurve } from "./roundedCurveSVG";
-import { XCircleIcon } from "@heroicons/react/solid";
 import useBreakpoints from "../../hooks/useBreakpoints";
-import { truncate } from "../../utils/truncate";
-import useNftFiles, { getTokenAspectRatio } from "../../hooks/useNftFiles";
+import { getTokenAspectRatio } from "../../hooks/useNftFiles";
 import debounce from "lodash.debounce";
 import { useTokens } from "../../data/nft/getTokens";
 import UserContext from "../../contexts/user";
@@ -21,6 +19,8 @@ import { groupEditions } from "../../utils/groupEditions";
 import GroupedCollection from "./groupedCollection";
 import AddTokenButton from "./addTokenButton";
 import Checkbox from "../checkbox";
+
+import * as Icon from "react-feather";
 
 
 export default function EditArtModuleModal({
@@ -449,8 +449,9 @@ export default function EditArtModuleModal({
                 key={tab}
                 ref={(el) => (tabsRef.current[i] = el)}
                 className={clsx(
-                  "px-3 py-1 capitalize hover:opacity-100 hover:scale-[102%] font-bold duration-300",
-                  isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
+                  "px-3 py-0 my-1 capitalize  font-bold duration-300",
+                  "hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded",
+                )}
                 onClick={handleClick}
               >
                 {tab}
@@ -462,10 +463,10 @@ export default function EditArtModuleModal({
         <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
         <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700" />
         <span
-          className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner shadow-black/10 dark:shadow-white/10"
+          className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner palette2 shadow-black/10 dark:shadow-white/10"
         />
         <span
-          className="absolute rounded-full bottom-0 block h-1 bg-black dark:bg-white transition-all duration-300"
+          className="absolute rounded-full bottom-0 block h-1 bg-zinc-700 dark:bg-zinc-300 transition-all duration-300"
           style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
         />
       </div>
@@ -473,9 +474,9 @@ export default function EditArtModuleModal({
   )
     : (
       <div className="relative mx-auto w-fit">
-        <p className="font-bold bg-neutral-200 dark:bg-neutral-700 h-5">{contentTitle}</p>
-        <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-neutral-200 dark:fill-neutral-700" />
+        <p className="font-bold bg-zinc-300 dark:bg-zinc-700 h-5">{contentTitle}</p>
+        <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
+        <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-zinc-300 dark:fill-zinc-700" />
       </div>
     )
 
@@ -550,7 +551,7 @@ export default function EditArtModuleModal({
           Delete Module
         </WarningButton>
         <div className="flex gap-4">
-          <MainButton onClick={handleClose} size="lg">
+          <MainButton onClick={handleClose} size="lg" standardWidth>
             Cancel
           </MainButton>
           <MainButton
@@ -558,6 +559,7 @@ export default function EditArtModuleModal({
             solid
             disabled={saving}
             size="lg"
+            standardWidth
           >
             {saving
               ? (
@@ -594,20 +596,19 @@ const EditArtItem = ({
         >
           <button
             className={clsx(
-              "absolute -top-2 -right-2 z-50",
-              "bg-neutral-200/50 dark:bg-neutral-700/50 rounded-full shadow-lg dark:shadow-white/10",
-              "duration-300 hover:scale-110 active:scale-100",
+              "absolute -top-2 -right-2 z-50 p-1",
+              "bg-zinc-300/50 dark:bg-zinc-700/50 rounded-full shadow-md",
+              "duration-300 hover:bg-zinc-300 dark:hover:bg-zinc-700",
             )}
             onClick={onRemove}
           >
-            <XCircleIcon className="w-8 h-8" />
+           <Icon.X />
           </button>
           <CloudinaryImage
             className={clsx(
               "object-cover",
-              "shadow-lg rounded-lg",
+              "shadow-md rounded-lg",
               "w-full h-full"
-              // "max-h-[333px]"
             )}
             width={500}
             useMetadataFallback

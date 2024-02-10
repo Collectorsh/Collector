@@ -1,15 +1,15 @@
 import clsx from "clsx"
 import { forwardRef } from "react"
 
-const MainButton = forwardRef(({ children, solid = false, className, disabled, noPadding, size, ...props }, ref) => {
+const MainButton = forwardRef(({ children, solid = false, className, disabled, noPadding, standardWidth, size, ...props }, ref) => {
 
   const bgClass = solid
     ? "bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-300"
     : "bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800"
 
   const disabledClass = solid
-  ? "disabled:bg-zinc-900 dark:bg-zinc-100"
-  : "disabled:bg-zinc-100 dark:bg-zinc-900"
+  ? "disabled:bg-zinc-900 disabled:dark:bg-zinc-100"
+  : "disabled:bg-zinc-100 disabled:dark:bg-zinc-900"
   
   const sizeClass = () => {
     if (noPadding) return ""
@@ -34,6 +34,7 @@ const MainButton = forwardRef(({ children, solid = false, className, disabled, n
         "font-bold",
         sizeClass(),
         disabledClass,
+        standardWidth && "w-28",
         className
       )}
       {...props}

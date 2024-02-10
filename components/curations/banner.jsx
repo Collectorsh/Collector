@@ -24,23 +24,12 @@ const CurationBanner = ({ setEditBannerOpen, displayDraftEdit, banner, useDraftC
       <EditWrapper
         isOwner={banner && displayDraftEdit}
         onEdit={() => setEditBannerOpen(true)}
-        placement="bottom-4 right-4 lg:right-14 2xl:bottom-6 2xl:right-6"
+        placement="bottom-4 right-9 lg:right-[76px] 2xl:bottom-6 2xl:right-[44px]"
         groupHoverClass="group-hover/banner:opacity-100"
         text="Edit Banner"
         icon={<Icon.Image size={20} strokeWidth={2.5} />}
       >
       <div className="w-full pb-[50%] md:pb-[33%] relative 2xl:rounded-b-2xl shadow-black/20 shadow-md overflow-hidden">
-        {/* {(banner && displayDraftEdit) ? (
-          <div className="absolute bottom-5 right-5 z-10">
-            <MainButton
-              onClick={() => setEditBannerOpen(true)}
-              className={clsx("flex items-center gap-3 duration-300 opacity-50 group-hover/banner:opacity-100")}
-            >
-              Edit Banner
-              <Icon.Image size={18}  strokeWidth={2.5}/>
-            </MainButton>
-          </div>
-        ) : null} */}
           {banner ? (
             <CloudinaryImage
               className={clsx(

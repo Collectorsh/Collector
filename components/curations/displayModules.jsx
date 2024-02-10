@@ -72,7 +72,7 @@ const DisplayModules = ({
   return (
     <div className="grid grid-cols-1 gap-4 p-4">
       {modules?.map((module, i) => (
-        <div key={module.id}>
+        <div key={module.id} className='border-4 border-transparent'>
           <Module
             module={module}
             curationType={curationType}

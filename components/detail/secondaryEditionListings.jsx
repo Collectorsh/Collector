@@ -77,10 +77,10 @@ export const EditionListing = ({ listing, onCollect }) => {
           {purchasing
             ? (
               <span className="inline-block translate-y-0.5">
-                <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+                <Oval color="#FFF" secondaryColor="#666" height={18} width={18} strokeWidth={4} className="translate-y-0.5" />
               </span>
             )
-            : `Collect (${ price }◎)`
+            : `Collect ${ price }◎`
           }
         </MainButton>
       </div>

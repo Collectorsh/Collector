@@ -33,7 +33,6 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
 
   const { isVisible } = useElementObserver(itemRef, lazyLoadBuffer)
 
-  const [videoLoaded, setVideoLoaded] = useState(false);
   const [purchasing, setPurchasing] = useState(false)
   const [mediaType, setMediaType] = useState(CATEGORIES.IMAGE)
   const [lowMemory, setLowMemory] = useState(false)
@@ -63,13 +62,13 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
   const displayBuyNowPrice = !noPrice && (isListed || isSold || sellingSecondaryFromMaster)
 
   const supplyText = useMemo(() => {
-    if (curationType == "collector" && (!isListed && !isSold)) return ""
+    // if (curationType == "collector" && (!isListed && !isSold)) return ""
 
     const secEdCount = listedEditionCount ? `${ listedEditionCount }` : ""
     if (sellingSecondaryFromMaster) return `${ secEdCount }/${ maxSupply } Secondary Editions`
 
     if (isMasterEdition) return `${ maxSupply - supply }/${ maxSupply } Editions`
-    if (isEdition) return "Secondary Edition";
+    if (isEdition) return "Edition";
     return "1 of 1"
   }, [isMasterEdition, supply, maxSupply, isEdition, curationType, isListed, listedEditionCount, isSold, sellingSecondaryFromMaster])
 
@@ -112,10 +111,10 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
   const userText = useMemo(() => {
     if (curationType === "artist") {
       return (owner && owner.username !== artistName) ?
-        <p>Owned by {owner.username}</p>
+        <p className="font-bold">Owned by {owner.username}</p>
         : null
     } else if (artistName) {
-      return <p>by {artistName}</p>
+      return <p className="font-bold">by {artistName}</p>
     }
   }, [curationType, artistName, owner])
 
@@ -162,9 +161,9 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
         <a
           disabled={disableLink}
           className={clsx(
-            'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md shadow-black/25 dark:shadow-neutral-400/25 rounded-lg',
+            'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md rounded-lg',
             "hover:-translate-y-2 active:translate-y-0",
-            "bg-neutral-200 dark:bg-neutral-800",
+            "bg-zinc-200 dark:bg-zinc-800",
             disableLink && "hover:translate-y-0",
           )}
           style={{
@@ -208,8 +207,6 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
             {videoUrl ? (
               <VideoPlayer
                 videoUrl={videoUrl}
-                setVideoLoaded={setVideoLoaded}
-
                 token={token}
                 cacheWidth={cacheWidth}
               />
@@ -227,26 +224,28 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
               width={cacheWidth}
               noLazyLoad
             />
-
-
           </Transition>
 
         </a>
       </ToggleLink>
+
       <div
-        className="w-full mt-4 px-4 mx-auto
-          flex flex-wrap gap-x-6 gap-y-3 justify-between items-start"
+        className="w-full mt-1 px-4 mx-auto
+          flex flex-wrap gap-x-6 gap-y-3 justify-between items-center"
         style={{
           maxWidth: width
         }}
       >
-
         <div
-          className={clsx('flex gap-1', "flex-col items-start")}
+          className={clsx('flex gap-1', "flex-col items-start relative")}
         >
+
+          <p className='textPalette2 font-bold text-sm mt-1'>{supplyText}{secondaryListingInfo}</p>
+
+      
           <Link href={`/nft/${ token.mint }`} disabled={disableLink} passHref>
             <p
-              className='font-bold text-2xl leading-8 truncate cursor-pointer'
+              className='font-bold text-2xl leading-6 truncate cursor-pointer'
               style={{
                 maxWidth: width
               }}
@@ -256,24 +255,9 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
           </Link>
 
           {userText}
-
-          <div className='flex items-center gap-2 '>
-            {(displayBuyNowPrice || sellingSecondaryFromMaster)
-              ? <>
-                <p className=''>{roundToPrecision(price, 2)}◎</p>
-                <span>-</span>
-              </>
-              : null
-            }
-            <span className=''>{supplyText}{secondaryListingInfo}</span>
-          </div>
         </div>
-        <div
-          className={clsx(
-            'flex flex-col gap-1',
-          )}
-        >
-          {(isListed && !sellingSecondaryFromMaster && !isSold)
+        <div>
+          {(isListed || isSold)
             ? (
               <div className="flex items-center gap-2 flex-wrap">
 
@@ -285,20 +269,22 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
                   <div>
                     <MainButton
                       onClick={handleBuy}
-                      className={clsx("px-3",
-                        "w-24"
-                      )}
-                      noPadding
+                      className="min-w-[158px]"
                       disabled={!handleCollect || purchasing || !user || isSold}
+                      size="lg"
+                      solid
                     >
                       {purchasing
                         ? (
                           <span className="inline-block translate-y-0.5">
-                            <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+                            <Oval color="#FFF" secondaryColor="#666" height={18} width={18} strokeWidth={4} className="translate-y-0.5"/>
                           </span>
                         )
-                        : "Collect"
+                        : isSold
+                          ? <p>Sold{isMasterEdition ? " Out" : ""} {roundToPrecision(price, 2)}◎</p>
+                          : <p>Collect {roundToPrecision(price, 2) }◎</p>
                       }
+               
                     </MainButton>
                   </div>
                 </Tippy>
@@ -308,10 +294,9 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
           }
 
           {sellingSecondaryFromMaster
-          ? <EditionListing listing={editionListings[0]} onCollect={handleCollectSecEd} />
-          : null
-      }
-          {isSold && !sellingSecondaryFromMaster ? <p className='font-bold text-xl leading-[32px]'>Sold {isMasterEdition ? " Out" : ""}!</p> : null}
+            ? <EditionListing listing={editionListings[0]} onCollect={handleCollectSecEd} />
+            : null
+          }
         </div>
       </div>
 

@@ -63,7 +63,7 @@ const EditNameModal = ({ name, onSave, isOpen, onClose }) => {
       title="Edit Curation Name"
       widthClass="max-w-screen-sm"
     >
-      <p className="textPalette2 text-sm my-2 text-center">Please note, changing the name here will change the published curation&apos;s url.</p>
+      <p className="textPalette2 text-sm my-2 text-center">Please note: changing the name here will change the published curation&apos;s url.</p>
       <input
         className="my-1 border-2 rounded-lg
         pallette2 borderPalette3
@@ -73,10 +73,10 @@ const EditNameModal = ({ name, onSave, isOpen, onClose }) => {
       />
       <p className="text-sm pl-4 text-red-500 h-4">{nameError}</p>
       <div className="w-full flex justify-end gap-4">
-        <MainButton onClick={onClose} size="lg">
+        <MainButton onClick={onClose} size="lg" standardWidth>
           Cancel
         </MainButton>
-        <MainButton onClick={handleSave} solid disabled={!nameValid} size="lg">
+        <MainButton onClick={handleSave} solid disabled={!nameValid} size="lg" standardWidth>
           Save
         </MainButton>
       </div>

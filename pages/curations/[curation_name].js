@@ -402,35 +402,38 @@ function CurationPage({curation}) {
       />
       <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-10">
        
-        <CurationName
-          name={name}
-          setEditNameOpen={setEditNameOpen}
-          displayPublishedEdit={displayPublishedEdit}
-        />
-        <Link href={`/gallery/${ curation.curator?.username }`} >
-          <a className="flex gap-2 items-center justify-center mb-8 hoverPalette1 rounded-md px-3 py-1 w-fit mx-auto ">
-            {curation.curator?.profile_image
-              ? (<div className="relative">
-                  <CloudinaryImage
-                    className={clsx(
-                      "w-10 h-10 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800",
-                    )}
-                    id={pfpImgId}
-                    noLazyLoad
-                    width={500}
-                  />
-                </div>)
-                : null
-              }
-            <p className="text-lg font-bold"> {curation.curator?.username}</p>
-          </a>
-        </Link>
-  
-        <CurationDescription
-          description={description}
-          setEditDescriptionOpen={setEditDescriptionOpen}
-          displayDraftEdit={displayDraftEdit}
-        />
+        <div className="px-4">
+          <CurationName
+            name={name}
+            setEditNameOpen={setEditNameOpen}
+            displayPublishedEdit={displayPublishedEdit}
+          />
+          <Link href={`/gallery/${ curation.curator?.username }`} >
+            <a className="flex gap-3 items-center justify-center mb-8 hoverPalette1 rounded-md px-4 py-2 w-fit mx-auto ">
+              {curation.curator?.profile_image
+                ? (<div className="relative">
+                    <CloudinaryImage
+                      className={clsx(
+                        "w-10 h-10 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800",
+                      )}
+                      id={pfpImgId}
+                      noLazyLoad
+                      width={500}
+                    />
+                  </div>)
+                  : null
+                }
+              <p className="text-lg font-bold"> {curation.curator?.username}</p>
+            </a>
+          </Link>
+    
+          <CurationDescription
+            description={description}
+            setEditDescriptionOpen={setEditDescriptionOpen}
+            displayDraftEdit={displayDraftEdit}
+          />
+
+        </div>
 
         <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
 

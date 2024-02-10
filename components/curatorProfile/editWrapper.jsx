@@ -17,8 +17,8 @@ const EditWrapper = ({
   const getPlacement = () => {
     switch (placement) { 
       case "inside-tr": return "top-4 right-4";
-      case "tr": return "top-0 right-0";
-      case "outside-tr": return "-top-5 -right-6";
+      case "tr": return "-top-2 -right-2";
+      case "outside-tr": return "-top-4 -right-6";
       case "inside-br": return "bottom-6 right-6";
       default: return placement;
     }

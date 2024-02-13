@@ -26,7 +26,7 @@ import { useRouter } from "next/router";
 import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 import withdrawFromTreasury from "../../data/curation/withdrawFromTreasury";
 import { roundToPrecision } from "../../utils/maths";
-
+import { v4 as uuidv4 } from 'uuid';
 
 import Head from "next/head";
 import { metaPreviewImage } from "../../config/settings";
@@ -40,6 +40,9 @@ import { deltaToPlainText } from "../../utils/Quill";
 import CurationBanner from "../../components/curations/banner";
 import CurationName from "../../components/curations/name";
 import CurationDescription from "../../components/curations/description";
+import MainButton from "../../components/MainButton";
+
+import * as Icon from 'react-feather'
 
 const descriptionPlaceholder = "Tell us about this curation."
 
@@ -59,6 +62,7 @@ function CurationPage({curation}) {
   const [unpublishModalOpen, setUnpublishModalOpen] = useState(false);
   const [isEditingDraft, setIsEditingDraft] = useState(!curation?.is_published); //defaults to true if unpublished
   const [isPublished, setIsPublished] = useState(curation?.is_published);
+  const [addingModule, setAddingModule] = useState(false);
 
   const [submittedTokens, setSubmittedTokens] = useState(curation?.submitted_token_listings || []);
   const [approvedArtists, setApprovedArtists] = useState(curation?.approved_artists || []);
@@ -318,7 +322,8 @@ function CurationPage({curation}) {
   const handleEditModules = (setModulesCB) => {
     if (!isOwner) return;
     
-    setDraftContent(prev => {
+    setAddingModule(true)
+    setDraftContent(((prev) => {
       const newModules = typeof setModulesCB === "function"
         ? setModulesCB(prev.modules)
         : setModulesCB
@@ -327,9 +332,11 @@ function CurationPage({curation}) {
         ...prev,
         modules: newModules
       }
-      handleSaveDraftContent(newContent)
+      handleSaveDraftContent(newContent).then(() => {
+        setAddingModule(false)
+      })
       return newContent
-    })
+    }))
 
   }
 
@@ -351,11 +358,21 @@ function CurationPage({curation}) {
     }
   }
 
+  const addArtModule = () => {
+    handleEditModules((prev) => [...prev, { type: "art", id: uuidv4(), tokens: [] }])
+    // window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+
+  const addTextModule = () => {
+    handleEditModules((prev) => [...prev, { type: "text", id: uuidv4(), textDelta: undefined }])
+    // window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+
   const curatorText = useMemo(() => {
     switch (curation?.curation_type) {
-      case "artist": return "Art by"
-      case "collector": return "Collected by"
-      case "curator": return "Curated by"
+      case "artist": return "an artist curation by"
+      case "collector": return "a collector curation by"
+      case "curator": return "a group curation by"
     }
   }, [curation?.curation_type])
 
@@ -406,8 +423,9 @@ function CurationPage({curation}) {
           <CurationName
             name={name}
             setEditNameOpen={setEditNameOpen}
-            displayPublishedEdit={displayPublishedEdit}
+            displayPublishedEdit={displayDraftEdit}//{displayPublishedEdit}
           />
+          <p className="font-xs textPalette3 text-center">{curatorText}</p>
           <Link href={`/gallery/${ curation.curator?.username }`} >
             <a className="flex gap-3 items-center justify-center mb-8 hoverPalette1 rounded-md px-4 py-2 w-fit mx-auto ">
               {curation.curator?.profile_image
@@ -455,25 +473,50 @@ function CurationPage({curation}) {
           : <h1 className="animate-pulse font-bold text-4xl text-center mt-10">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
         }
 
+        {displayDraftEdit ? (
+            <div className='flex gap-4 flex-wrap justify-center md:place-self-start my-8'>
+              <MainButton
+                solid
+                className="flex gap-2 items-center"
+              onClick={addArtModule}
+              disabled={addingModule}
+              >
+                Add Art Module <Icon.Plus />
+              </MainButton>
+              <MainButton
+                className="flex gap-2 items-center"
+              onClick={addTextModule}
+              disabled={addingModule}
+              >
+                Add Text Module <Icon.Plus />
+              </MainButton>
+            </div>
+          ) : null
+        }
+       
+
+
         {isOwner
           ? (
-            <GlobalEditBar
-              isOpen={globalEditOpen}
-              setOpen={setGlobalEditOpen}
-              setModules={handleEditModules}
-              handleInviteArtists={() => setInviteArtistsModalOpen(true)}
-              openPublish={() => setPublishModalOpen(true)}
-              openUnpublish={() => setUnpublishModalOpen(true)}
-              isEditingDraft={isEditingDraft}
-              setIsEditingDraft={setIsEditingDraft}
-              hasChanges={hasChanges}
-              isPublished={isPublished}
-              noContent={hasNoContent}
-              collectedFees={collectedFees}
-              handleWithdrawFees={handleWithdrawFees}
-              curation={curation}
-              submittedTokens={submittedTokens}
-            />
+            <>
+              <GlobalEditBar
+                isOpen={globalEditOpen}
+                setOpen={setGlobalEditOpen}
+                setModules={handleEditModules}
+                handleInviteArtists={() => setInviteArtistsModalOpen(true)}
+                openPublish={() => setPublishModalOpen(true)}
+                openUnpublish={() => setUnpublishModalOpen(true)}
+                isEditingDraft={isEditingDraft}
+                setIsEditingDraft={setIsEditingDraft}
+                hasChanges={hasChanges}
+                isPublished={isPublished}
+                noContent={hasNoContent}
+                collectedFees={collectedFees}
+                handleWithdrawFees={handleWithdrawFees}
+                curation={curation}
+                submittedTokens={submittedTokens}
+              />
+            </>
           )
           : null
         }

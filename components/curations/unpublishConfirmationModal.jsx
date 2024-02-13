@@ -12,15 +12,15 @@ const UnpublishConfirmationModal = ({ onUnpublish, isOpen, onClose, name }) => {
       title={`Unpublish ${ name.replaceAll("_", " ") }`}
       widthClass="max-w-screen-sm"
     >
-      <div className="flex flex-col gap-3 py-6 items-center justify-center h-32">
+      <div className="flex flex-col gap-3 pb-10 pt-6 text-center items-center justify-center min-h-[9rem]">
         <p className="text-xl font-bold">Are you sure?</p>
-        <p>Unpublishing {name.replaceAll("_", " ")} means no one will be able to view it.</p>
+        <p className="textPalette2">Unpublishing {name.replaceAll("_", " ")} means no one will be able to view it.</p>
       </div>
       <div className="w-full flex justify-center flex-wrap gap-4">
-        <MainButton onClick={onClose}>
+        <MainButton onClick={onClose} size="lg" className="w-[8.75rem]">
           Cancel
         </MainButton>
-        <WarningButton onClick={handleUnpublish} solid>
+        <WarningButton onClick={handleUnpublish} solid size="lg" className="w-[8.75rem]">
           Unpublish
         </WarningButton>
       </div>

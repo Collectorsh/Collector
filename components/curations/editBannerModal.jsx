@@ -147,13 +147,14 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
       {submittedTokens?.filter(searchFilter).map((token, i) => {
         const isSelected = selected?.mint === token.mint;
         return (
-          <button className="relative flex justify-center flex-shrink-0" key={token.mint}
+          <button className="relative flex flex-shrink-0 pb-[33%] w-full" key={token.mint}
             onClick={() => setSelected(isSelected ? null : token)}
           >
             <CloudinaryImage
-              className={clsx("flex-shrink-0 overflow-hidden object-cover shadow-lg dark:shadow-white/5",
-                "w-full h-[250px] rounded-lg",
-                isSelected && "ring-4 ring-black dark:ring-white"
+              className={clsx("flex-shrink-0 overflow-hidden object-cover shadow hover:shadow-md",
+                "w-full h-full rounded-lg",
+                isSelected && "ring-4 ring-zinc-700 dark:ring-zinc-300",
+                "absolute inset-0"
               )}
               useMetadataFallback
               useUploadFallback

@@ -30,7 +30,7 @@ const MainButton = forwardRef(({ children, solid = false, className, disabled, n
         bgClass,
         "disabled:border-zinc-900 dark:disabled:border-zinc-100",
         "disabled:opacity-50",
-        "rounded-lg duration-300",
+        "rounded-lg duration-300 transition",
         "font-bold",
         sizeClass(),
         disabledClass,

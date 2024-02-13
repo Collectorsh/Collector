@@ -1,7 +1,7 @@
 import { ClipboardCopyIcon, CheckIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
-
+import * as Icon from "react-feather";
 const CopyButton = ({ textToCopy, className }) => {
   const [copied, setCopied] = useState(false);
 
@@ -22,13 +22,15 @@ const CopyButton = ({ textToCopy, className }) => {
 
   return (
     <button
-      className={clsx("p-2 rounded flex items-center space-x-2 hover:scale-110 active:scale-100 duration-300", className)}
+      className={clsx("p-1 rounded flex items-center space-x-2 hoverPalette3", className)}
       onClick={() => copyToClipboard(textToCopy)}
     >
       {copied ? (
-        <CheckIcon className="h-6 w-6 text-emerald-500" />
+        // <CheckIcon className="h-6 w-6 text-emerald-500" />
+        <Icon.Check strokeWidth={2.5} className="stroke-emerald-500" size={18} />
       ) : (
-        <ClipboardCopyIcon className="h-6 w-6" />
+          // <ClipboardCopyIcon className="h-6 w-6" />
+          <Icon.Copy strokeWidth={2.5} size={18} />
       )}
     </button>
   );

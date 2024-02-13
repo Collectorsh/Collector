@@ -269,7 +269,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
                   <div>
                     <MainButton
                       onClick={handleBuy}
-                      className="min-w-[158px]"
+                      className="min-w-[10rem]"
                       disabled={!handleCollect || purchasing || !user || isSold}
                       size="lg"
                       solid

@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import LogRocket from "logrocket";
 
 import { setTxFailed } from "../../utils/cookies";
+import * as Icon from "react-feather";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
@@ -355,38 +356,39 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
     : "Delist"
 
   return (
-    <div className="relative h-fit shadow-md shadow-black/10 dark:shadow-white/5 rounded-lg
-      bg-neutral-100 dark:bg-neutral-700
+    <div className="relative h-fit shadow  rounded-lg
+      palette2
     ">
       <Tippy
-        className="shadow-lg"
+        className="shadow"
         content={token.listed_status !== "unlisted"
           ? "You must close the listing before removing the submission"
           : "This will remove your submission from the curation"
         }
       >
-        <div>
+        {/* extra div to allow disabled button and tippy at same time */}
+        <div className="absolute -top-2 -right-2">
           <button
             className={clsx(
-              "absolute -top-2 -right-2",
-              "bg-neutral-200/50 dark:bg-neutral-700/50 rounded-full shadow-lg dark:shadow-white/10",
-              "duration-300 hover:scale-110 active:scale-100 disabled:hover:scale-100",
+               "p-1",
+              "bg-zinc-300/50 dark:bg-zinc-700/50 rounded-full shadow-md",
+              "duration-300 hover:bg-zinc-300 dark:hover:bg-zinc-700",
               isPersonalCuration && "hidden"
             )}
             onClick={handleDelete}
             disabled={token.listed_status !== "unlisted"}
           >
-            <XCircleIcon className="w-8 h-8" />
+            <Icon.X />
           </button>
         </div>
       </Tippy>
 
       <div className={clsx(
         !infoBadge && "hidden",
-        "bg-white dark:bg-neutral-900 collector",
-        "rounded-full ring-2 ring-neutral-200 dark:ring-neutral-700",
-        "min-w-fit w-7 h-7 absolute top-3 left-3 z-10 flex justify-center items-center p-1",
-        "text-leading-none font-bold text-lg"
+        "palette1 ",
+        "rounded-full ring-2 ring-zinc-300 dark:ring-zinc-700",
+        "min-w-fit w-6 h-6 absolute top-2 left-2 z-10 flex justify-center items-center",
+        "text-leading-none font-bold"
       )}>
         {infoBadge}
       </div>
@@ -400,41 +402,36 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
         useMetadataFallback
         useUploadFallback
       />
-      <div className="p-2">
-        <div className="flex flex-wrap justify-between items-center gap-x-3 mb-2 ">
+      <div className="p-4">
+        <div className="flex flex-wrap justify-between items-center gap-x-3 mb-2">
           <p className="font-bold text-xl px-1">{token.name}</p>
           <p className="text-sm">{isMasterEdition ? `(${ editionsLeft }/${editionMaxSupply} Editions)` : ""}</p>
         </div>
         {isListed
           ? (
             <div className={clsx("flex items-center flex-wrap", isClosed ? "justify-center": "justify-between")}>
-              <p className="font-bold px-1 py-1">
+              <p className="font-bold px-1 py-1 textPalette2">
                 {isSoldOut
                   ? "Sold Out!"
-                  : `Listed For: ${price}◎`
+                  : `Listed For ${price}◎`
                 }
               </p>
-              <WarningButton
+              <MainButton
                 onClick={handleUnlist}
-                noPadding
-                className={clsx("px-3 w-28", isClosed && "hidden")}
+                
+                className={clsx("w-28", isClosed && "hidden")}
                 disabled={listing || isClosed}
               >
                 {listing
-                  ? (
-                    <span className="inline-block translate-y-0.5">
-                      <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
-                    </span>
-                  )
+                  ? <Oval color="#FFF" secondaryColor="#666" height={18} width={18} strokeWidth={4} className="translate-y-0.5" />
                   : delistText
                 }
-              </WarningButton>
+              </MainButton>
             </div>
           )
           : (
             <div className="flex gap-3 w-full">
-
-              <div className="flex w-full items-center border-2 px-3 py-0 rounded-lg border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800">
+              <div className="flex w-full items-center border-2 px-3 py-0 rounded-lg borderPalette3 palette1">
                 <input
                   type="number"
                   min={0}
@@ -456,15 +453,11 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
                     solid
                     onClick={handleList}
                     disabled={disableListing}
-                    noPadding
-                    className={clsx("px-3 w-24 flex-shrink-0")}
+                   
+                    className={clsx("w-24 flex-shrink-0 flex items-center justify-center")}
                   >
                     {listing
-                      ? (
-                        <span className="inline-block translate-y-0.5">
-                          <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
-                        </span>
-                      )
+                      ? <Oval color="#FFF" secondaryColor="#666" height={18} width={18} strokeWidth={4} className="translate-y-0.5" />
                       : "List!"
                     }
                   </MainButton>

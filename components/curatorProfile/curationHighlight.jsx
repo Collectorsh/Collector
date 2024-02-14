@@ -36,7 +36,7 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
   
   return (
     <Link href={`/curations/${ name }`} >
-      <a className="block w-full my-4">
+      <a className="block w-full">
         <div className="w-full pb-[50%] md:pb-[33%] relative duration-300 hover:scale-[102%] active:scale-100"> 
           <PublishedTag isPublished={is_published} isOwner={isOwner} />
 

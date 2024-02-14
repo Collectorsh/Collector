@@ -53,7 +53,7 @@ const SortableModulesWrapper = ({ moduleComponents, modules, setModules, classNa
     const module = modules.find(module => module.id === id);
     if (!module) return null
     return (
-      <div className="relative rounded-lg ring-4 ring-neutral-200 dark:ring-neutral-700 cursor-grabbing bg-white dark:bg-black w-full scale-50 origin-left">
+      <div className="relative rounded-lg ring-4 ring-zinc-200 dark:ring-zinc-700 cursor-grabbing palette1 w-full scale-50 origin-left">
         <GrabHandle grabbing/>
         <div className='pointer-events-none w-full'>
           <Module

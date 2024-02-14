@@ -4,7 +4,8 @@ import 'react-quill/dist/quill.bubble.css';
 import Quill from "quill";
 
 const Size = Quill.import('attributors/style/size');
-Size.whitelist = ['12px', '16px', '24px', "32px"];
+const sizeOptions = ['12px', '16px', '24px', "32px"];
+Size.whitelist = [...sizeOptions, "small", "normal", "large", "huge"];
 Quill.register(Size, true);
 
 const ReactQuill = dynamic(
@@ -15,7 +16,7 @@ const ReactQuill = dynamic(
 const modules = {
   toolbar: [
     // [{ 'size': [] }],
-    [{ 'size': Size.whitelist }],
+    [{ 'size': sizeOptions }],
     ['bold', 'italic', 'underline', 'strike'],
     [{ 'align': [] }],
     ['blockquote', 'code-block'],

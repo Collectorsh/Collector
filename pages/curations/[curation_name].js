@@ -453,7 +453,7 @@ function CurationPage({curation}) {
 
         </div>
 
-        <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
+        <hr className="my-12 borderPalette1" />
 
         {curationDetails ? (
           <DisplayModules

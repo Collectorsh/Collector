@@ -179,8 +179,9 @@ const Submissions = ({ }) => {
       return (
         <div key={id} className="relative">
           <Link href={`/curations/${ name }${ passcodeQuery }`} >
-            <a className={clsx(
-
+            <a
+              className={clsx(
+                curation.hidden && "pointer-events-none",
               "relative shadow-lg shadow-black/25 dark:shadow-neutral-500/25 rounded-xl overflow-hidden hover:-translate-y-3 duration-300 block"
             )}>
               <CloudinaryImage
@@ -210,8 +211,10 @@ const Submissions = ({ }) => {
                 )
                 : null}
               <MainButton
-                solid noPadding className="px-3 py-1"
+                solid noPadding
+                className={clsx("px-3 py-1", curation.hidden && "hidden")}
                 onClick={() => handleOpenSubmitModal(curation)}
+                disabled={curation.hidden}
               >
                 Submit Art
               </MainButton>

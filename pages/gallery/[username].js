@@ -21,11 +21,12 @@ import CreateCurationModal from "../../components/curatorProfile/createCurationM
 import getCuratorFromUsername from "../../data/user/getCuratorByUsername";
 import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/cloudinary/idParsing";
 
-import dynamic from 'next/dynamic';
 import SortableCurationPreviewWrapper from "../../components/curations/sortableCurationPreviewWrapper";
 import SortableCurationPreview from "../../components/curations/sortableCurationPreview";
-import { type } from "ramda";
 import saveCurationsOrder from "../../data/user/saveCurationsOrder";
+import * as Icon from 'react-feather'
+
+import dynamic from 'next/dynamic';
 const QuillContent = dynamic(() => import('../../components/Quill').then(mod => mod.QuillContent), { ssr: false })
 
 
@@ -49,6 +50,7 @@ const getBioDelta = (curator, isOwner) => {
 }
 
 function ProfilePage({ curator }) {
+  const router = useRouter();
   const [user] = useContext(UserContext);
   const isOwner = Boolean(user && user.public_keys.includes(curator?.public_keys?.[0]) && user.api_key);
 
@@ -163,6 +165,10 @@ function ProfilePage({ curator }) {
     else error("Socials update failed")
   }
 
+  const handleGoToSettings = () => { 
+    router.push('/settings')
+  }
+
   if (!curator) return (
     <>
       <MainNavigation />
@@ -177,17 +183,18 @@ function ProfilePage({ curator }) {
       <MainNavigation />
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 group/banner">
         <EditWrapper
-          isOwner={isOwner}
+          isOwner={banner && isOwner}
           onEdit={() => setEditBannerOpen(true)}
-          placement="inside-tr"
+          placement="bottom-4 right-9 lg:right-[76px] 2xl:bottom-6 2xl:right-[44px]"
           groupHoverClass="group-hover/banner:opacity-100"
-          // icon={<PhotographIcon className="w-6 h-6" />}
+          text="Edit Banner"
+          icon={<Icon.Image size={20} strokeWidth={2.5} />}
         >
-          <div className="w-full pb-[50%] md:pb-[33%] relative">
+          <div className="w-full pb-[50%] md:pb-[33%] relative 2xl:rounded-b-2xl shadow-md shadow-black/20 overflow-hidden">
             {banner ? (
               <CloudinaryImage
                 className={clsx(
-                  "absolute inset-0 w-full h-full object-cover 2xl:rounded-b-2xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25",
+                  "absolute inset-0 w-full h-full object-cover",
                   !bannerLoaded && "animate-pulse"
                 )}
                 id={bannerImgId}
@@ -196,24 +203,37 @@ function ProfilePage({ curator }) {
                 width={2000}
               />
             ) : (
-                <div className="absolute inset-0 w-full h-full object-cover 2xl:rounded-b-2xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25 flex justify-center items-center">
-                  <p className="font-xl font-bold">Click the edit button in the top right to add a banner</p>
+                <div className={clsx(
+                  "absolute inset-0 w-full h-full flex justify-center items-center bg-zinc-200 dark:bg-zinc-800",
+                )}>
+                  <MainButton
+                    size="xl"
+                    onClick={() => setEditBannerOpen(true)}
+                    className={clsx("flex items-center gap-2", !isOwner && "hidden")}
+                  >
+                    Add Banner
+                    <Icon.Plus strokeWidth={2.5} />
+                  </MainButton>
                 </div>
             )}
           </div>
         </EditWrapper>
-        <div className="w-32 h-32 lg:w-40 lg:h-40 absolute -bottom-12 ml-6 lg:ml-12 2xl:ml-6 group/pfp">
+        <div
+          className="absolute -bottom-12 left-6 lg:left-16 group/pfp rounded-full"
+        >
           <EditWrapper
-            isOwner={isOwner}
+            isOwner={pfp && isOwner}
             onEdit={() => setEditPfpOpen(true)}
-            placement="tr"
+            placement="top-0 sm:-right-4 sm:translate-x-1/2 "
             groupHoverClass="group-hover/pfp:opacity-100"
-            // icon={<PhotographIcon className="w-6 h-6" />}
+            text="Edit Pfp"
+            icon={<Icon.Image size={20} strokeWidth={2.5} />}
+            buttonClassName="w-max"
           >
             {pfp ? (
               <CloudinaryImage
                 className={clsx(
-                  "w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black",
+                  "w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full overflow-hidden palette3 borderPalette0 border-4 ",
                   !pfpLoaded && "animate-pulse"
                 )}
                 id={pfpImgId}
@@ -222,103 +242,129 @@ function ProfilePage({ curator }) {
                 width={500}
               />
             ) : (
-              <div className="flex justify-center items-center w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800 border-8 border-white dark:border-black">
-                <p className="collector text-8xl font-bold mb-5">c</p>
+                <div className="flex justify-center items-center w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full palette3 borderPalette0 border-4">
+                  {isOwner ? (
+                    <MainButton
+                      onClick={() => setEditPfpOpen(true)}
+                      className={clsx("flex items-center justify-center gap-2 absolute left-1/2 top-1/2 -translate-x-[50%] -translate-y-[50%] w-max")}
+                    >
+                      Add Pfp
+                      <Icon.Plus strokeWidth={2.5} />
+                    </MainButton>
+                  ) : (
+                    <p className="collector text-8xl font-bold mb-5">c</p> 
+                  )}
               </div>
             )}
           </EditWrapper>
         </div>
       </div>
       <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-16">
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-8">
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="font-bold text-5xl mr-3">{curator.username}</h1>
-            <EditWrapper
-              className="max-w-fit"
-              isOwner={isOwner}
-              onEdit={() => setEditSocialsOpen(true)}
-              placement="outside-tr"
-              // icon={<PencilAltIcon className="w-6 h-6" />}
-            >
-              <div className="flex items-center gap-2">
-                {socials.length
-                  ? socials.map((social, index) => (
-                    <SocialLink
-                      key={social.type + index}
-                      link={social.link} type={social.type}
-                    />
-                    
-                  ))
-                  : isOwner
-                    ? <p>Link your socials</p>
+        <div className="px-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-8">
+            <div className="flex flex-wrap items-center gap-6 group/settings">
+
+              <EditWrapper
+                className="max-w-fit"
+                isOwner={isOwner}
+                onEdit={handleGoToSettings}
+                placement="tr"
+                groupHoverClass="group-hover/settings:opacity-100"
+                buttonClassName="palette3 hoverPalette3 p-1"
+              >
+                <h1 className="font-bold text-5xl mr-2">{curator.username}</h1>
+              </EditWrapper>
+
+              <EditWrapper
+                className="max-w-fit"
+                isOwner={isOwner}
+                onEdit={() => setEditSocialsOpen(true)}
+                placement="top-1/2 -right-2 -translate-y-1/2 translate-x-full"
+                groupHoverClass="group-hover/settings:opacity-100"
+                text="Edit Socials"
+                buttonClassName="w-max"
+                icon=" "
+              >
+                <div className="flex items-center gap-2">
+                  {socials.length
+                    ? socials.map((social, index) => (
+                      <SocialLink
+                        key={social.type + index}
+                        link={social.link} type={social.type}
+                      />
+                      
+                    ))
                     : null
-                }
-              </div>
+                  }
+                </div>
+              </EditWrapper>
+            </div>
+          </div>
+          <div className={clsx(
+            "group/bio w-full mx-auto rounded-md border-4 border-transparent",
+            isOwner && "duration-300 border-dashed border-zinc-200/40 dark:border-zinc-700/40 hover:border-zinc-200 hover:dark:border-zinc-700",
+          )}>
+            <EditWrapper
+              isOwner={isOwner}
+              onEdit={() => setEditBioOpen(true)}
+              placement="tr"
+              groupHoverClass="group-hover/bio:opacity-100"
+              text="Edit Bio"
+              icon={<Icon.Edit size={20} strokeWidth={2.5} />}
+            >
+              <QuillContent textDelta={bio}/>
             </EditWrapper>
           </div>
+        </div>
+
+        <hr className="mt-12 borderPalette1" />
+
+        <div className="p-4">
           {isOwner
             ? (
-              <MainButton
-                noPadding
-                className="flex items-center px-4 py-2"
-                onClick={() => setCreateCurationOpen(true)}
+              <SortableCurationPreviewWrapper
+                curations={curations}
+                setCurations={handleCurationOrderChange}
               >
-                Create new curation <PlusIcon className="w-6 h-6 ml-2" />
-              </MainButton>
+                {curations?.length
+                  ? (
+                    <>
+                      <SortableCurationPreview id={curations[0].id}>
+                        <CurationHighlight curation={curations[0]} isOwner={isOwner} />
+                      </SortableCurationPreview>
+              
+                      <CurationList asSortable curations={curations.slice(1)} isOwner={isOwner}/>
+                    </>
+                  )
+                  : null
+                }
+              </SortableCurationPreviewWrapper>
+
             )
-            : null
+            : curations?.length
+              ? (
+                <>
+                  <CurationHighlight curation={curations[0]} isOwner={isOwner} />
+                  <CurationList curations={curations.slice(1)} isOwner={isOwner} />
+                </>
+              )
+              : null
           }
         </div>
-        <div className="group/bio w-full">
-          <EditWrapper
-            isOwner={isOwner}
-            onEdit={() => setEditBioOpen(true)}
-            placement="outside-tr"
-            groupHoverClass="group-hover/bio:opacity-100"
-            // icon={<PencilAltIcon className="w-6 h-6" />}
-          >
-            <QuillContent textDelta={bio}/>
-          </EditWrapper>
-        </div>
-
-        <hr className="mt-12 border-neutral-200 dark:border-neutral-800" />
+        
         {isOwner
           ? (
-            <SortableCurationPreviewWrapper
-              curations={curations}
-              setCurations={handleCurationOrderChange}
+            <MainButton
+              size={"xl"}
+              className="m-auto flex items-center justify-center gap-2 mt-8"
+              onClick={() => setCreateCurationOpen(true)}
             >
-              {curations?.length
-                ? (
-                  <>
-                    <SortableCurationPreview id={curations[0].id}>
-                      <CurationHighlight curation={curations[0]} isOwner={isOwner} />
-                    </SortableCurationPreview>
-            
-                    <hr className="my-12 border-neutral-200 dark:border-neutral-800" />  
-                    
-                    <CurationList asSortable curations={curations.slice(1)} isOwner={isOwner}/>
-                  </>
-                )
-                : null
-              }
-            </SortableCurationPreviewWrapper>
-
+              Create new curation 
+              <Icon.Plus  strokeWidth={2.5} />
+            </MainButton>
           )
-          : curations?.length
-            ? (
-              <>
-                <CurationHighlight curation={curations[0]} isOwner={isOwner} />
-          
-                <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
-
-                <CurationList curations={curations.slice(1)} isOwner={isOwner} />
-              </>
-            )
-            : null
+          : null
         }
-        
-
       </div>
       {isOwner
         ? (

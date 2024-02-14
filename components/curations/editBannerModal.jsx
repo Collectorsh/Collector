@@ -13,7 +13,6 @@ import { customIdPrefix } from "../../utils/cloudinary/idParsing";
 import uploadCldImage from "../../data/cloudinary/uploadCldImage";
 import { error } from "../../utils/toast";
 import { truncate } from "../../utils/truncate";
-import CopyButton from "../CopyToClipboard";
 import { groupEditions } from "../../utils/groupEditions";
 import Tippy from "@tippyjs/react";
 

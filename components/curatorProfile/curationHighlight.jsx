@@ -10,10 +10,18 @@ const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillConte
 
 
 const CurationHighlight = ({ curation, isOwner, withCurator }) => { 
-  const { banner_image, name, description, description_delta, is_published, curator } = curation
+  const { banner_image, name, description, description_delta, is_published, curation_type } = curation
   
   const bannerImgId = parseCloudImageId(banner_image)
 
+
+  const curationText = useMemo(() => {
+    switch (curation_type) {
+      case "artist": return "an artist curation"
+      case "collector": return "a collector curation"
+      case "curator": return "a group curation"
+    }
+  }, [curation_type])
   return (
     <>
       <Link href={`/curations/${ name }`} >
@@ -33,6 +41,7 @@ const CurationHighlight = ({ curation, isOwner, withCurator }) => {
           >
             {name.replaceAll("_", " ")}
           </h2>
+          {/* <p className="text-sm textPalette3 text-center">{curationText}</p> */}
         </a>
       </Link>
       <div className="px-4 md:px-10 mt-6 mb-8">

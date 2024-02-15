@@ -548,7 +548,7 @@ export default function EditArtModuleModal({
       
       <div className="w-full flex justify-center md:justify-between items-center gap-4 mt-4 flex-wrap">
         <WarningButton onClick={onDeleteModule} size="lg">
-          Delete Module
+          Delete
         </WarningButton>
         <div className="flex gap-4">
           <MainButton onClick={handleClose} size="lg" standardWidth>

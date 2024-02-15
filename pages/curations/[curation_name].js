@@ -477,20 +477,20 @@ function CurationPage({curation}) {
             <div className='flex gap-4 flex-wrap justify-center md:place-self-start my-6'>
               <MainButton
                 solid
-                className="flex gap-2 items-center w-[14.25rem]"
-              onClick={addArtModule}
-              disabled={addingModule}
-              size="lg"
+                className="flex gap-2 items-center justify-center w-[10rem]"
+                onClick={addArtModule}
+                disabled={addingModule}
+                size="lg"
               >
-                Add Art Module <Icon.Plus />
+                Add Art <Icon.Plus />
               </MainButton>
               <MainButton
-              className="flex gap-2 items-center w-[14.25rem]"
-              onClick={addTextModule}
-              disabled={addingModule}
-              size="lg"
+              className="flex gap-2 items-center justify-center w-[10rem]"
+                onClick={addTextModule}
+                disabled={addingModule}
+                size="lg"
               >
-                Add Text Module <Icon.Plus />
+                Add Text <Icon.Plus />
               </MainButton>
             </div>
           ) : null

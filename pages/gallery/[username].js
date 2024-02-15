@@ -332,6 +332,8 @@ function ProfilePage({ curator }) {
                       <SortableCurationPreview id={curations[0].id}>
                         <CurationHighlight curation={curations[0]} isOwner={isOwner} />
                       </SortableCurationPreview>
+
+                      <div className="h-6"/>
               
                       <CurationList asSortable curations={curations.slice(1)} isOwner={isOwner}/>
                     </>
@@ -345,6 +347,7 @@ function ProfilePage({ curator }) {
               ? (
                 <>
                   <CurationHighlight curation={curations[0]} isOwner={isOwner} />
+                  <div className="h-6" />
                   <CurationList curations={curations.slice(1)} isOwner={isOwner} />
                 </>
               )

@@ -1,7 +1,6 @@
 import { Fragment, useState } from "react"
 import MainButton from "../MainButton"
 import Modal from "../Modal"
-import { ChevronDownIcon, PlusIcon, XIcon } from "@heroicons/react/solid"
 import { getIcon, socialTypes } from "../SocialLink"
 import { Menu, Transition } from "@headlessui/react"
 import clsx from "clsx"
@@ -134,8 +133,9 @@ const SocialIconDropdown = ({ type, setType }) => {
         <>
           <Menu.Button className="flex items-center justify-between w-10">
             {getIcon(type)}
-            <ChevronDownIcon
-              className={clsx("h-5 w-5 duration-200", open ? "transform rotate-180" : "")}
+            <Icon.ChevronDown
+            size={20}
+              className={clsx("duration-300", open ? "transform rotate-180" : "")}
             />
           </Menu.Button>
 

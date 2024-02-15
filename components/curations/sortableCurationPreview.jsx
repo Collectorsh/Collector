@@ -26,7 +26,7 @@ const SortableCurationPreview = ({id, children}) => {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}
-      className={clsx("relative rounded-lg border-4",
+      className={clsx("relative rounded-xl border-4",
         "border-zinc-200/40 dark:border-zinc-700/40 hover:border-zinc-200 hover:dark:border-zinc-700 border-dashed",
         "duration-300 group/module",
         "cursor-default",

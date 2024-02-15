@@ -66,7 +66,7 @@ const EditNameModal = ({ name, onSave, isOpen, onClose }) => {
       <p className="textPalette2 text-sm my-2 text-center">Please note: changing the name here will change the published curation&apos;s url.</p>
       <input
         className="my-1 border-2 rounded-lg
-        pallette2 borderPalette3
+        palette2 borderPalette3 outline-none
         w-full px-4 py-2"
         onChange={(e) => setNewName(e.target.value.replaceAll(" ", "_"))}
         value={newName}

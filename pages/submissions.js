@@ -16,9 +16,9 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useTokens } from "../data/nft/getTokens";
 import { parseCloudImageId } from "../utils/cloudinary/idParsing";
-import { curationListPlaceholderId } from "../components/curatorProfile/curationList";
 import { addSelfApprovedArtists } from "../data/curation/updateApprovedArtists";
 import "tippy.js/dist/tippy.css";
+import { defaultCollectorImageId } from "../config/settings";
 
 
 const Submissions = ({ }) => {
@@ -186,7 +186,7 @@ const Submissions = ({ }) => {
             )}>
               <CloudinaryImage
                 className="w-full h-[300px] object-cover"
-                id={bannerImgId || curationListPlaceholderId}
+                id={bannerImgId || defaultCollectorImageId}
                 noLazyLoad
                 width={1400}
               />

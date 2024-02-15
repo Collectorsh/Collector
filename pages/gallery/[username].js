@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import CloudinaryImage from "../../components/CloudinaryImage";
 import MainNavigation from "../../components/navigation/MainNavigation";
 import UserContext from "../../contexts/user";
@@ -67,29 +67,55 @@ function ProfilePage({ curator }) {
 
   const [bannerLoaded, setBannerLoaded] = useState(true);
   const [pfpLoaded, setPfpLoaded] = useState(true);
+  const [useOwnerView, setUseOwnerView] = useState(false)
   
 
-  const curationsInit = useMemo(() => {
-    const curations = isOwner
-      ? curator?.curations
-      : curator?.curations.filter(curation => curation.is_published)
+  // const getCurationsInit = useCallback((curatorInit, useOwnerView) => {
+  //   const curations = useOwnerView
+  //     ? curatorInit?.curations
+  //     : curatorInit?.curations.filter(curation => curation.is_published)
     
-    if (curator.curations_order?.length) { 
-      const curationIds = curator.curations_order
+  //   if (curatorInit.curations_order?.length) { 
+  //     const curationIds = curatorInit.curations_order
+  //     const ordered = curationIds.map(id => curations?.find(curation => curation.id === id))
+  //       .filter(curation => curation)
+      
+  //     const remaining = curations?.filter(curation => !curationIds.includes(curation.id))
+  //     return [...ordered, ...remaining]
+  //   } else {
+  //     return curations?.sort(curation => curation.is_published ? -1 : 1)
+  //   }
+  // }, [])
+  const getCurationsInit = useCallback((baseCurations, curationOrder, useOwnerView) => {
+    const curations = useOwnerView
+      ? baseCurations
+      : baseCurations.filter(curation => curation.is_published)
+
+    if (curationOrder?.length) {
+      const curationIds = curationOrder
       const ordered = curationIds.map(id => curations?.find(curation => curation.id === id))
         .filter(curation => curation)
-      
+
       const remaining = curations?.filter(curation => !curationIds.includes(curation.id))
       return [...ordered, ...remaining]
     } else {
       return curations?.sort(curation => curation.is_published ? -1 : 1)
     }
-  }, [curator, isOwner])
+  }, [])
  
-  const [curations, setCurations] = useState(curationsInit);
+  const [curations, setCurations] = useState([]);
+  const workingCurationsRef = useRef([])
 
   const bannerImgId = parseCloudImageId(banner)
   const pfpImgId = parseCloudImageId(pfp)
+  
+  useEffect(() => {
+    //set up the initial state
+    setUseOwnerView(isOwner)
+    setCurations(getCurationsInit(curator.curations, curator.curations_order, isOwner))
+    //don't change when curator changes, this is just for on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOwner])
 
   useEffect(() => {
     //update the state when the curator changes
@@ -98,10 +124,9 @@ function ProfilePage({ curator }) {
       setPfp(curator.profile_image);
       setBio(getBioDelta(curator, isOwner));
       setSocials(curator.socials || []);
-      setCurations(curationsInit);
     }
-  },[curator, isOwner, curationsInit])
-
+  }, [curator, isOwner])
+ 
   useEffect(() => {
     //set loaded to false when the banner changes
     if (banner !== curator?.banner_image) setBannerLoaded(false);
@@ -111,6 +136,8 @@ function ProfilePage({ curator }) {
     //set loaded to false when the pfp changes
     if (pfp !== curator?.profile_image) setPfpLoaded(false);
   }, [pfp, curator?.profile_image])
+
+
 
   const handleSaveCurationOrder = async (curationIds) => {
     if (!isOwner || !curationIds) return
@@ -126,7 +153,10 @@ function ProfilePage({ curator }) {
       const newCurations = typeof setCurationsCB === "function"
         ? setCurationsCB(prev)
         : setCurationsCB;
-      handleSaveCurationOrder(newCurations.map(curation => curation.id))
+      
+      const order = newCurations.map(curation => curation.id)
+      handleSaveCurationOrder(order)
+
       return newCurations
     })
   }
@@ -169,6 +199,25 @@ function ProfilePage({ curator }) {
     router.push('/settings')
   }
 
+  const toggleOwnerView = () => { 
+    setUseOwnerView(prev => {
+      const newUseView = !prev;
+
+      if (newUseView && workingCurationsRef.current.length) {
+        setCurations(workingCurationsRef.current)
+      } else if (!newUseView) {
+        //take the current curations and filter out the unpublished ones
+  
+        setCurations((prev) => {
+          workingCurationsRef.current = prev;
+          return prev.filter(curation => curation.is_published)
+        })
+      }
+
+      return newUseView;
+    })
+ 
+  }
   if (!curator) return (
     <>
       <MainNavigation />
@@ -183,7 +232,7 @@ function ProfilePage({ curator }) {
       <MainNavigation />
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 group/banner">
         <EditWrapper
-          isOwner={banner && isOwner}
+          isOwner={banner && useOwnerView}
           onEdit={() => setEditBannerOpen(true)}
           placement="bottom-4 right-9 lg:right-[76px] 2xl:bottom-6 2xl:right-[44px]"
           groupHoverClass="group-hover/banner:opacity-100"
@@ -209,7 +258,7 @@ function ProfilePage({ curator }) {
                   <MainButton
                     size="xl"
                     onClick={() => setEditBannerOpen(true)}
-                    className={clsx("flex items-center gap-2", !isOwner && "hidden")}
+                    className={clsx("flex items-center gap-2", !useOwnerView && "hidden")}
                   >
                     Add Banner
                     <Icon.Plus strokeWidth={2.5} />
@@ -222,13 +271,15 @@ function ProfilePage({ curator }) {
           className="absolute -bottom-12 left-6 lg:left-16 group/pfp rounded-full"
         >
           <EditWrapper
-            isOwner={pfp && isOwner}
+            isOwner={pfp && useOwnerView}
             onEdit={() => setEditPfpOpen(true)}
-            placement="top-0 sm:-right-4 sm:translate-x-1/2 "
             groupHoverClass="group-hover/pfp:opacity-100"
-            text="Edit Pfp"
-            icon={<Icon.Image size={20} strokeWidth={2.5} />}
-            buttonClassName="w-max"
+            buttonClassName="palette3 hoverPalette3 border-2 p-1 border-zinc-900 dark:border-zinc-100"
+            icon={<Icon.Image size={24} strokeWidth={2.5} />}
+            placement="top-0 right-0"
+            // placement="top-0 sm:translate-x-1/2 "
+            // text="Edit Profile Picture"
+            // buttonClassName="w-max"
           >
             {pfp ? (
               <CloudinaryImage
@@ -243,7 +294,7 @@ function ProfilePage({ curator }) {
               />
             ) : (
                 <div className="flex justify-center items-center w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full palette3 borderPalette0 border-4">
-                  {isOwner ? (
+                  {useOwnerView ? (
                     <MainButton
                       onClick={() => setEditPfpOpen(true)}
                       className={clsx("flex items-center justify-center gap-2 absolute left-1/2 top-1/2 -translate-x-[50%] -translate-y-[50%] w-max")}
@@ -266,18 +317,18 @@ function ProfilePage({ curator }) {
 
               <EditWrapper
                 className="max-w-fit"
-                isOwner={isOwner}
+                isOwner={useOwnerView}
                 onEdit={handleGoToSettings}
-                placement="tr"
+                placement="-top-3 -right-3"
                 groupHoverClass="group-hover/settings:opacity-100"
-                buttonClassName="palette3 hoverPalette3 p-1"
+                buttonClassName="palette3 hoverPalette3 p-1 border-2 border-zinc-900 dark:border-zinc-100"
               >
                 <h1 className="font-bold text-5xl mr-2">{curator.username}</h1>
               </EditWrapper>
 
               <EditWrapper
                 className="max-w-fit"
-                isOwner={isOwner}
+                isOwner={useOwnerView}
                 onEdit={() => setEditSocialsOpen(true)}
                 placement="top-1/2 -right-2 -translate-y-1/2 translate-x-full"
                 groupHoverClass="group-hover/settings:opacity-100"
@@ -302,10 +353,10 @@ function ProfilePage({ curator }) {
           </div>
           <div className={clsx(
             "group/bio w-full mx-auto rounded-md border-4 border-transparent",
-            isOwner && "duration-300 border-dashed border-zinc-200/40 dark:border-zinc-700/40 hover:border-zinc-200 hover:dark:border-zinc-700",
+            useOwnerView && "duration-300 border-dashed border-zinc-200/40 dark:border-zinc-700/40 hover:border-zinc-200 hover:dark:border-zinc-700",
           )}>
             <EditWrapper
-              isOwner={isOwner}
+              isOwner={useOwnerView}
               onEdit={() => setEditBioOpen(true)}
               placement="tr"
               groupHoverClass="group-hover/bio:opacity-100"
@@ -317,10 +368,10 @@ function ProfilePage({ curator }) {
           </div>
         </div>
 
-        <hr className="mt-12 borderPalette1" />
+        <hr className="mt-12 mb-6 borderPalette1" />
 
         <div className="p-4">
-          {isOwner
+          {useOwnerView
             ? (
               <SortableCurationPreviewWrapper
                 curations={curations}
@@ -346,16 +397,18 @@ function ProfilePage({ curator }) {
             : curations?.length
               ? (
                 <>
-                  <CurationHighlight curation={curations[0]} isOwner={isOwner} />
+                  <div className="border-4 border-transparent">
+                    <CurationHighlight curation={curations[0]} isOwner={false} />
+                  </div>
                   <div className="h-6" />
-                  <CurationList curations={curations.slice(1)} isOwner={isOwner} />
+                  <CurationList curations={curations.slice(1)} isOwner={false} />
                 </>
               )
               : null
           }
         </div>
         
-        {isOwner
+        {useOwnerView
           ? (
             <MainButton
               size={"xl"}
@@ -369,7 +422,7 @@ function ProfilePage({ curator }) {
           : null
         }
       </div>
-      {isOwner
+      {useOwnerView
         ? (
           <>
             <EditImageModal
@@ -406,6 +459,19 @@ function ProfilePage({ curator }) {
         )
         : null
       }
+
+      <div
+        className={clsx('fixed bottom-0 right-0 -rotate-45 h-10 w-10', !isOwner && "hidden")}
+      >
+        <button
+          onClick={toggleOwnerView}
+          className='hoverPalette2 borderPalette2 border-2 palette2 absolute left-1/2 -translate-x-[50%] top-0 h-[150%] w-[300%] flex justify-center items-start pt-1'>
+          {useOwnerView
+            ? <Icon.Eye className="rotate-45"/>
+            : <Icon.Edit className="rotate-45" />
+          }
+        </button>
+      </div>
     </>
   );
 }

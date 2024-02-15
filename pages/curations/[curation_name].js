@@ -192,6 +192,8 @@ function CurationPage({curation}) {
         //"modules" will be draft modules
         //if token doesn't exist there it can be removed for the submission list
         const filteredSubmissions = submittedTokens.filter((token) => {
+          //keep if listed or ME that need to be withdrawn
+          if (token.listed_status === "listed" || (token.is_master_edition && token.listed_status === "sold")) return true;
           const existsInModules = draftContent.modules.some((module) => module.type === "art" && module.tokens.includes(token.mint))
           if (!existsInModules) unusedTokenMints.push(token.mint)
           return existsInModules
@@ -477,20 +479,20 @@ function CurationPage({curation}) {
             <div className='flex gap-4 flex-wrap justify-center md:place-self-start my-6'>
               <MainButton
                 solid
-                className="flex gap-2 items-center w-[14.25rem]"
-              onClick={addArtModule}
-              disabled={addingModule}
-              size="lg"
+                className="flex gap-2 items-center justify-center w-[10rem]"
+                onClick={addArtModule}
+                disabled={addingModule}
+                size="lg"
               >
-                Add Art Module <Icon.Plus />
+                Add Art <Icon.Plus />
               </MainButton>
               <MainButton
-              className="flex gap-2 items-center w-[14.25rem]"
-              onClick={addTextModule}
-              disabled={addingModule}
-              size="lg"
+              className="flex gap-2 items-center justify-center w-[10rem]"
+                onClick={addTextModule}
+                disabled={addingModule}
+                size="lg"
               >
-                Add Text Module <Icon.Plus />
+                Add Text <Icon.Plus />
               </MainButton>
             </div>
           ) : null

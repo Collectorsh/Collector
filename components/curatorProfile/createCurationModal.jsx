@@ -85,8 +85,8 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
 
   const form = (
     <>
-      <p className="font-bold my-2 text-xl text-center">Curation Type</p>
-      <div className="grid sm:grid-cols-3 gap-4">
+      {/* <p className="font-bold my-2 text-xl text-center">Curation Type</p> */}
+      <div className="grid sm:grid-cols-3 gap-4 mt-4">
         {curationTypes.map((type) => {
           return (
             <CurationTypeButton
@@ -121,7 +121,7 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
         <div className={curationType !== "curator" && "hidden"}>
           <div className="relative mb-1">
             <p className="font-bold">Curator Fee</p>
-            <p className="text-xs textPalette2">Percentage of sales allocated to you as the curator (we recommend around 10%)</p>
+            <p className="text-xs textPalette2">Percentage of sales allocated to you as the curator (average fee is 5-10%)</p>
           </div>
           <div className="flex w-full border-2 px-3 py-2 rounded-lg palette2 borderPalette3">
             <input
@@ -147,7 +147,7 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
   return (
     <Modal
       isOpen={isOpen} onClose={handleClose}
-      title="Create New Curation"
+      title="Choose your curation type"
       widthClass="max-w-2xl"
     >
       
@@ -184,7 +184,7 @@ const CurationTypeButton = ({ type, selected, onChange }) => {
   const description = useMemo(() => { 
     switch (type) {
       case "curator":
-        return "Showcase artwork from a variety of artists"
+        return "Invite artists to submit and showcase their work"
       case "artist":
         return "Showcase artworks you have created"
       case "collector":
@@ -219,7 +219,7 @@ const CurationTypeButton = ({ type, selected, onChange }) => {
         {icon}
       </div>
 
-      <p className="text-sm text-left">{ description}</p>
+      <p className="text-sm text-left textPalette2">{ description}</p>
     </button>
   )
 }

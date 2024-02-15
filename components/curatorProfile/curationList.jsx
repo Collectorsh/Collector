@@ -20,7 +20,9 @@ const CurationList = ({ curations, isOwner, asSortable }) => {
           </SortableCurationPreview>
         ))
         : curations?.map(curation => (
-          <CurationListItem key={curation.id} curation={curation} isOwner={isOwner} />
+          <div key={curation.id} className="border-4 border-transparent">
+            <CurationListItem  curation={curation} isOwner={isOwner} />
+          </div> 
         ))
     }
     </div>
@@ -29,9 +31,17 @@ const CurationList = ({ curations, isOwner, asSortable }) => {
 
 export default CurationList;
 
-export const CurationListItem = ({ curation, isOwner, withCurator }) => { 
-  const { banner_image, name, description_delta, is_published, curator } = curation
+export const CurationListItem = ({ curation, isOwner }) => { 
+  const { banner_image, name, description_delta, is_published, curation_type } = curation
   const bannerImgId = parseCloudImageId(banner_image)
+
+  const curationText = useMemo(() => {
+    switch (curation_type) {
+      case "artist": return "an artist curation"
+      case "collector": return "a collector curation"
+      case "curator": return "a group curation"
+    }
+  }, [curation_type])
 
   return (
     <Link href={`/curations/${ name }`} >
@@ -54,6 +64,7 @@ export const CurationListItem = ({ curation, isOwner, withCurator }) => {
         <h3 className="font-bold collector text-2xl text-center my-2 px-3 w-fit mx-auto rounded-md duration-300 group-hover/curationItem:bg-zinc-200 group-hover/curationItem:dark:bg-zinc-800">
           {name.replaceAll("_", " ")}
         </h3>
+        {/* <p className="text-sm textPalette3 text-center mb-1">{curationText}</p> */}
       </a>
     </Link>
   )

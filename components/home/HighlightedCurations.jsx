@@ -1,6 +1,6 @@
 import React from "react";
-import CurationHighlight from "../curatorProfile/curationHighlight";
-import CurationList from "../curatorProfile/curationList";
+import LandingCurationHighlight from "./LandingCurationHighlight";
+import LandingCurationList from "./LandingCurationList";
 
 export default function HighlightedCurations({curations}) {
 
@@ -9,9 +9,9 @@ export default function HighlightedCurations({curations}) {
       {curations?.length
         ? (
           <>
-            <CurationHighlight curation={curations[0]} withCurator />
+            <LandingCurationHighlight curation={curations[0]} withCurator />
             <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
-            <CurationList curations={curations.slice(1)} withCurator/>
+            <LandingCurationList curations={curations.slice(1)} withCurator/>
           </>
         )
         : null

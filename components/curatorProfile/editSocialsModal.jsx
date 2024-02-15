@@ -1,10 +1,11 @@
 import { Fragment, useState } from "react"
 import MainButton from "../MainButton"
 import Modal from "../Modal"
-import { ChevronDownIcon, PlusIcon, XIcon } from "@heroicons/react/solid"
 import { getIcon, socialTypes } from "../SocialLink"
 import { Menu, Transition } from "@headlessui/react"
 import clsx from "clsx"
+
+import * as Icon from 'react-feather'
 
 const EditSocialsModal = ({ socials, onSave, isOpen, onClose }) => { 
   const [newSocials, setNewSocials] = useState(socials || [])
@@ -29,26 +30,27 @@ const EditSocialsModal = ({ socials, onSave, isOpen, onClose }) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="Edit Your Links" widthClass="max-w-md">
+    <Modal isOpen={isOpen} onClose={handleClose} title="Edit Your Links" widthClass="max-w-lg">
 
-      <div className="my-6">
+      <div className="pb-6">
         {newSocials.map((social, i) => (<SocialItem key={i} {...social} index={i} setNewSocials={setNewSocials} />))}
         <MainButton
           onClick={addSocial}
           className={clsx(
-            "w-full h-10 p-0 flex items-center justify-center gap-2 hover:scale-[102%]",
+            "w-full h-10 p-0 flex items-center justify-center gap-2",
             noMoreSocials ? "hidden" : ""
           )}
           disabled={noMoreSocials}
         >
-          Add Social <PlusIcon className="inline-block w-5 h-5" />
+          Add Social 
+          <Icon.Plus size={20} />
         </MainButton>
       </div>
       <div className="w-full flex justify-end gap-4">
-        <MainButton onClick={handleClose}>
+        <MainButton onClick={handleClose} size="lg" standardWidth>
           Cancel
         </MainButton>
-        <MainButton onClick={handleSave} solid disabled={cantSave}>
+        <MainButton onClick={handleSave} solid disabled={cantSave} size="lg" standardWidth>
           Save
         </MainButton>
       </div>
@@ -98,7 +100,7 @@ const SocialItem = ({ type, link, setNewSocials, index }) => {
 
   return (
     <div className="w-full my-3 shadow rounded p-2 flex justify-between items-center gap-8
-      bg-neutral-100 dark:bg-neutral-900
+      palette2
     "
     >
       <div className="flex justify-between items-center gap-2 w-full">
@@ -108,7 +110,7 @@ const SocialItem = ({ type, link, setNewSocials, index }) => {
             {getPrefix().replace("https://", "")}
           </p>
           <input
-            className="bg-transparent outline-none border-b-2 border-neutral-200 dark:border-neutral-700 w-full pl-1"
+            className="bg-transparent outline-none border-b-2 borderPalette2 w-full pl-1"
             type="text"
             value={link.replace(getPrefix(), "")}
             onChange={editLink}
@@ -116,8 +118,8 @@ const SocialItem = ({ type, link, setNewSocials, index }) => {
         </div>
 
       </div>
-      <button onClick={removeSocial} className="duration-200 hover:scale-105 active:scale-100 opacity-50 hover:opacity-100">
-        <XIcon  className="w-5 h-5" />
+      <button onClick={removeSocial} className="duration-200 opacity-50 hover:opacity-100">
+        <Icon.X size={20} />
       </button>
 
     </div>
@@ -131,8 +133,9 @@ const SocialIconDropdown = ({ type, setType }) => {
         <>
           <Menu.Button className="flex items-center justify-between w-10">
             {getIcon(type)}
-            <ChevronDownIcon
-              className={clsx("h-5 w-5 duration-200", open ? "transform rotate-180" : "")}
+            <Icon.ChevronDown
+            size={20}
+              className={clsx("duration-300", open ? "transform rotate-180" : "")}
             />
           </Menu.Button>
 
@@ -147,14 +150,14 @@ const SocialIconDropdown = ({ type, setType }) => {
             leaveTo="transform opacity-0 scale-95"
           >
             <Menu.Items
-              className="absolute top-0 left-0 mt-6 w-fit flex flex-col justify-center rounded-md shadow  bg-white dark:bg-black z-20 outline-none focus:outline-none"
+              className="absolute top-0 left-0 mt-6 w-fit flex flex-col justify-center rounded-md shadow  palette1 z-20 outline-none focus:outline-none"
             >
               {socialTypes.map((socialType, index) => (
                 <Menu.Item
                   key={socialType + index}
                 >
                   <button
-                    className="p-2 duration-200 opacity-75 hover:opacity-100 hover:scale-105 active:scale-100 flex items-center justify-center"
+                    className="p-2 duration-200 opacity-75 hover:opacity-100 flex items-center justify-center"
                     onClick={(e) => {
                       e.stopPropagation()
                       setType(socialType)

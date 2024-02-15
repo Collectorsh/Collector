@@ -16,9 +16,9 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useTokens } from "../data/nft/getTokens";
 import { parseCloudImageId } from "../utils/cloudinary/idParsing";
-import { curationListPlaceholderId } from "../components/curatorProfile/curationList";
 import { addSelfApprovedArtists } from "../data/curation/updateApprovedArtists";
 import "tippy.js/dist/tippy.css";
+import { defaultCollectorImageId } from "../config/settings";
 
 
 const Submissions = ({ }) => {
@@ -179,13 +179,14 @@ const Submissions = ({ }) => {
       return (
         <div key={id} className="relative">
           <Link href={`/curations/${ name }${ passcodeQuery }`} >
-            <a className={clsx(
-
+            <a
+              className={clsx(
+                curation.hidden && "pointer-events-none",
               "relative shadow-lg shadow-black/25 dark:shadow-neutral-500/25 rounded-xl overflow-hidden hover:-translate-y-3 duration-300 block"
             )}>
               <CloudinaryImage
                 className="w-full h-[300px] object-cover"
-                id={bannerImgId || curationListPlaceholderId}
+                id={bannerImgId || defaultCollectorImageId}
                 noLazyLoad
                 width={1400}
               />
@@ -210,8 +211,10 @@ const Submissions = ({ }) => {
                 )
                 : null}
               <MainButton
-                solid noPadding className="px-3 py-1"
+                solid noPadding
+                className={clsx("px-3 py-1", curation.hidden && "hidden")}
                 onClick={() => handleOpenSubmitModal(curation)}
+                disabled={curation.hidden}
               >
                 Submit Art
               </MainButton>

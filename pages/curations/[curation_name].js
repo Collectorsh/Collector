@@ -453,7 +453,7 @@ function CurationPage({curation}) {
 
         </div>
 
-        <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
+        <hr className="my-12 borderPalette1" />
 
         {curationDetails ? (
           <DisplayModules
@@ -474,19 +474,21 @@ function CurationPage({curation}) {
         }
 
         {displayDraftEdit ? (
-            <div className='flex gap-4 flex-wrap justify-center md:place-self-start my-8'>
+            <div className='flex gap-4 flex-wrap justify-center md:place-self-start my-6'>
               <MainButton
                 solid
-                className="flex gap-2 items-center"
+                className="flex gap-2 items-center w-[14.25rem]"
               onClick={addArtModule}
               disabled={addingModule}
+              size="lg"
               >
                 Add Art Module <Icon.Plus />
               </MainButton>
               <MainButton
-                className="flex gap-2 items-center"
+              className="flex gap-2 items-center w-[14.25rem]"
               onClick={addTextModule}
               disabled={addingModule}
+              size="lg"
               >
                 Add Text Module <Icon.Plus />
               </MainButton>

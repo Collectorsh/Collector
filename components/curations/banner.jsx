@@ -6,8 +6,6 @@ import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
 import MainButton from "../MainButton";
 
 import * as Icon from 'react-feather'
-import { curationListPlaceholderId } from "../curatorProfile/curationList";
-
 
 const CurationBanner = ({ setEditBannerOpen, displayDraftEdit, banner, useDraftContent, publishedBanner}) => {
   const [bannerLoaded, setBannerLoaded] = useState(true);
@@ -46,7 +44,7 @@ const CurationBanner = ({ setEditBannerOpen, displayDraftEdit, banner, useDraftC
               "absolute inset-0 w-full h-full flex justify-center items-center bg-zinc-200 dark:bg-zinc-800",
             )}>
                 <MainButton
-                size="xl"
+                size="lg"
                 onClick={() => setEditBannerOpen(true)}
                 className={clsx("flex items-center gap-2", !displayDraftEdit && "hidden")}
               >

@@ -100,7 +100,7 @@ const GlobalEditBar = ({
       <div className='flex gap-4 flex-wrap justify-center  place-self-center'>
         <Tippy content="View Published" className='shadow'>
           <MainButton
-            className={clsx(!isPublished && "hidden", "flex gap-2 items-center justify-center px-2")}
+            className={clsx(!isPublished && "hidden", "flex gap-2 items-center justify-center px-2 rounded-md")}
             onClick={() => setIsEditingDraft(false)}
             noPadding
           >
@@ -189,18 +189,17 @@ const GlobalEditBar = ({
       >
         <button
           onClick={toggleEditOpen}
-          className='hoverPalette2 borderPalette2 border-4 palette2 absolute left-1/2 -translate-x-[50%] top-0 h-[150%] w-[300%] flex justify-center items-start pt-1'>
+          className='hoverPalette2 borderPalette2 border-2 palette2 absolute left-1/2 -translate-x-[50%] top-0 h-[150%] w-[300%] flex justify-center items-start pt-1'>
           <Icon.ArrowUp strokeWidth={2.5}/>
         </button>
       </div>
+
       <div className={clsx("w-full",
         'fixed bottom-0 left-0 duration-300 ',
         isOpen ? "translate-y-0 translate-x-0" : "translate-y-full translate-x-4",
         "palette2",
         "z-[1000]"
       )}>
-        
-
         <EditListingsModal
           isOpen={editListingsOpen}
           onClose={() => setEditListingsOpen(false)}
@@ -212,42 +211,16 @@ const GlobalEditBar = ({
           'w-full py-2 px-4',
           "borderPalette2 border-t-2 flex justify-between"
         )}>
-          {/* <button
-            className="absolute right-[50%] translate-x-[50%] -top-12 h-12 w-32 translate-y-[1px] font-bold
-            bg-white dark:bg-neutral-900
-            p-0 hover:scale-110 origin-bottom duration-300
-            drop-shadow-[0px_-4px_0px_var(--tw-shadow-color)]
-            "
-            onClick={toggleEditOpen}
-          >
-            <RoundedCurve
-              className="absolute top-0 -right-20 w-20 h-12 -translate-x-[1px] bg-transparent duration-300
-              fill-white dark:fill-neutral-900
-              "
-            />
-            <RoundedCurve
-              className="absolute top-0 -left-20 scale-x-[-1] w-20 h-12 translate-x-[1px] bg-transparent duration-300
-              fill-white dark:fill-neutral-900
-              "
-            />
-
-            <div className='relative flex justify-center items-center pl-2'>
-              <p>{isOpen ? "Close Edit" : "Open Edit"}</p>
-              <ChevronDownIcon className={clsx("w-5 h-5 duration-300", isOpen ? "rotate-0":"-rotate-180")}/>
-            </div>
-            <p className='text-sm font-normal'>{getTabText()}</p>
-
-          </button> */}
           <div className='w-10'/>
           <div className="w-full grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] place-items-center max-w-screen-xl mx-auto gap-4 py-2 px-4">
             {isEditingDraft ? draftButtons : publishedButtons}
           </div>
-            <button
-              className='align-right rounded-lg p-2 hoverPalette2'
-              onClick={toggleEditOpen}
-            >
+          <button
+            className='align-right rounded-lg p-2 hoverPalette2'
+            onClick={toggleEditOpen}
+          >
             <Icon.ArrowDownRight strokeWidth={2.5} />
-            </button>
+          </button>
 
         </div>
       </div>

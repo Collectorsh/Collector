@@ -14,8 +14,8 @@ const MainButton = forwardRef(({ children, solid = false, className, disabled, n
   const sizeClass = () => {
     if (noPadding) return ""
     switch (size) {
-      case "xl": return "py-3 px-8 text-xl rounded-lg "
-      case "lg": return "py-1.5 px-6 text-lg rounded-lg "
+      case "xl": return "py-3 px-8 text-xl rounded-lg"
+      case "lg": return "py-1.5 px-6 text-lg rounded-lg"
       case "md":
       default: return "py-1 px-4 text-base rounded-md"
     }
@@ -30,7 +30,7 @@ const MainButton = forwardRef(({ children, solid = false, className, disabled, n
         bgClass,
         "disabled:border-zinc-900 dark:disabled:border-zinc-100",
         "disabled:opacity-50",
-        "rounded-lg duration-300 transition",
+        "duration-300 transition",
         "font-bold",
         sizeClass(),
         disabledClass,

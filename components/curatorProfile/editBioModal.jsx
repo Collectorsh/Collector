@@ -21,7 +21,7 @@ const EditBioModal = ({ bio, onSave, isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Edit Your Bio">
-      <div className="my-4 border-4 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
+      <div className="my-4 border-4 palette2 borderPalette3 rounded-xl
           w-full p-2 min-h-[8rem]
         ">
         <QuillEditor
@@ -30,10 +30,10 @@ const EditBioModal = ({ bio, onSave, isOpen, onClose }) => {
         />
       </div>
       <div className="w-full flex justify-end gap-4">
-        <MainButton onClick={onClose}>
+        <MainButton onClick={onClose} size="lg" standardWidth>
           Cancel
         </MainButton>
-        <MainButton onClick={handleSave} solid>
+        <MainButton onClick={handleSave} solid size="lg" standardWidth>
           Save
         </MainButton>
       </div>

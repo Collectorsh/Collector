@@ -245,7 +245,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
       
           <Link href={`/nft/${ token.mint }`} disabled={disableLink} passHref>
             <p
-              className='font-bold text-2xl leading-6 truncate cursor-pointer'
+              className='font-bold text-2xl leading-7 truncate cursor-pointer'
               style={{
                 maxWidth: width
               }}
@@ -259,8 +259,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
         <div>
           {(isListed || isSold)
             ? (
-              <div className="flex items-center gap-2 flex-wrap">
-
+              
                 <Tippy
                   content="Connect your wallet first!"
                   className="shadow-lg"
@@ -269,7 +268,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
                   <div>
                     <MainButton
                       onClick={handleBuy}
-                      className="min-w-[10rem]"
+                      className="min-w-[10rem] mt-1.5"
                       disabled={!handleCollect || purchasing || !user || isSold}
                       size="lg"
                       solid
@@ -288,7 +287,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
                     </MainButton>
                   </div>
                 </Tippy>
-              </div>
+             
             )
             : null
           }

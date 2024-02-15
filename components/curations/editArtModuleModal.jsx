@@ -424,7 +424,7 @@ export default function EditArtModuleModal({
             <div className="col-span-5 flex justify-center items-center">
               {useUserTokens 
                 ? <p className="animate-pulse">Gathering your digital assets{loadingCounter}</p>
-                : <p>There are currently no available artworks</p>
+                : <p>It looks like nothing has been submitted yet.</p>
               }
             </div>
           )

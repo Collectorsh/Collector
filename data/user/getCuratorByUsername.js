@@ -14,7 +14,6 @@ async function getCuratorFromUsername(username) {
 
 export default getCuratorFromUsername;
 
-
 const fetcher = async (username) => {
   if (!username) return undefined
   return await getCuratorFromUsername(username)

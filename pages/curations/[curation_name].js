@@ -192,6 +192,8 @@ function CurationPage({curation}) {
         //"modules" will be draft modules
         //if token doesn't exist there it can be removed for the submission list
         const filteredSubmissions = submittedTokens.filter((token) => {
+          //keep if listed or ME that need to be withdrawn
+          if (token.listed_status === "listed" || (token.is_master_edition && token.listed_status === "sold")) return true;
           const existsInModules = draftContent.modules.some((module) => module.type === "art" && module.tokens.includes(token.mint))
           if (!existsInModules) unusedTokenMints.push(token.mint)
           return existsInModules

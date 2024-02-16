@@ -1,6 +1,7 @@
 import { useMemo } from "react"
 import clsx from "clsx";
 import * as Icon from 'react-feather'
+import Tippy from "@tippyjs/react";
 
 export const socialTypes = ["twitter", "instagram", "other"]
 export const getIcon = (type) => { 
@@ -18,9 +19,12 @@ const SocialLink = ({
   const icon = useMemo(() => getIcon(type), [type])
   const href = link.includes("//") ? link : `//${ link }`
   return (
-    <a href={href} className={clsx("opacity-75 hover:opacity-100 transition duration-300",className)}>
-      {icon}
-    </a>
+    <Tippy content={link} className="shadow">
+      <a href={href} className={clsx("opacity-75 hover:opacity-100 transition hoverPalette1 rounded-md p-1.5",className)}>
+        {icon}
+      </a>
+
+    </Tippy>
   )
 }
 

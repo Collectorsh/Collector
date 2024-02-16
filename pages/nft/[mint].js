@@ -28,6 +28,7 @@ import getListingsByParent from "../../data/curationListings/getListingsByParent
 import SecondaryEditionListings from "../../components/detail/secondaryEditionListings";
 import { ToggleLink } from "../../components/curations/artModuleItem";
 
+import * as Icon from "react-feather";
 const ModelViewer = dynamic(() => import("../../components/artDisplay/modelDisplay"), {
   ssr: false
 });
@@ -197,14 +198,13 @@ export default function DetailPage({token, curations}) {
         >
           <button
             onClick={expandImage}
-            className={clsx("absolute z-[15] right-5 top-5 p-0.5",
-              "bg-neutral-200 dark:bg-neutral-700 rounded shadow-lg dark:shadow-white/10",
-              "duration-300",
-              "md:opacity-50 hover:opacity-100 group-hover:opacity-100",
-              "hover:scale-110 active:scale-100",
+            className={clsx("absolute z-[15] right-5 top-5 p-1",
+              "rounded shadow hover:shadow-md",
+              "duration-300 hoverPalette2 palette2",
+              "md:opacity-50 hover:opacity-100 group-hover:opacity-100 textPalette2",
             )}
           >
-            <ArrowsExpandIcon className="w-7 h-7" />
+            <Icon.Maximize size={26} />
           </button>
 
           <CloudinaryImage
@@ -272,14 +272,15 @@ export default function DetailPage({token, curations}) {
         </div>
 
         <div
-          className={clsx("mt-3 px-4 mx-auto")}
+          className={clsx("mt-2 px-4 mx-auto")}
         >
+          <p className='text-sm textPalette2'>{supplyText}</p>
           <div className="flex justify-between items-center">
-            <h1 className="collector text-4xl mb-2">{token?.name}</h1>
+            <h1 className="collector text-4xl leading-9">{token?.name}</h1>
             
             {showUpdateButton ? (
               <MainButton
-                noPadding className="px-2 py-0 w-44 flex justify-center items-center"
+                className="w-44 flex justify-center items-center"
                 onClick={handleUpdateMetadata}
                 disabled={updating}
               >
@@ -297,7 +298,7 @@ export default function DetailPage({token, curations}) {
                 href={`/gallery/${ token?.artist_account?.username }`}
                 passHref
               >
-                <p className={clsx(token?.artist_account?.username && "hover:scale-105 duration-300 cursor-pointer")}> by {artistName}</p>
+                <p className={clsx(token?.artist_account?.username && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer")}> by {artistName}</p>
               </ToggleLink>
               : null
             }
@@ -307,14 +308,14 @@ export default function DetailPage({token, curations}) {
             }
           </div>
           
-          <p className='mt-2'>{supplyText}</p>
+          
         
           <p className="text-xs my-4 whitespace-pre-wrap">{token?.description}</p>
           {(activeCurations?.length > 0 || editionListings?.length)
             ? (
               <div className="my-4">
-                <hr className="border-neutral-200 dark:border-neutral-800" />
-                <h2 className="font-bold mt-5 mb-2 ">Listings:</h2>
+                <hr className="borderPalette2" />
+                <h2 className="font-bold mt-4 mb-2 textPalette2">Listings:</h2>
                 <div className="grid md:grid-cols-2 gap-6">
                 
                   {/* only show secondary if there is no primary (for editions) */}
@@ -330,36 +331,35 @@ export default function DetailPage({token, curations}) {
             )
             : null
           }
-          <hr className="border-neutral-200 dark:border-neutral-800 my-2" />
+          <hr className="borderPalette2 my-2" />
           
-
           <Drawer
             title="See More"
             wrapperClass="my-2"
             buttonClass="font-bold"
           >
             <div className="flex flex-wrap gap-x-4 mb-2">
-              <span className="font-bold">Mint Address: </span>
-              <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl} target="_blank" rel="noreferrer">
+              <span className="font-bold textPalette2">Mint Address: </span>
+              <a className="block w-fit rounded-md hoverPalette1 px-2 relative -left-2" href={solscanUrl} target="_blank" rel="noreferrer">
                 {truncate(token?.mint)}
               </a>
             </div>
 
             <div className="flex flex-wrap gap-x-4 mb-2">
-              <p className="font-bold ">Creators: </p>
+              <p className="font-bold textPalette2">Creators: </p>
               {token?.creators?.map(creator => (
                 <AddressLink key={creator.address} address={creator.address} />
               ))}
             </div>    
             {typeof token?.isMutable !== "undefined" ? (
               <div className="flex gap-4 mb-2">
-                <p className="font-bold">Mutable: </p>
+                <p className="font-bold textPalette2">Mutable: </p>
                 <p>{token?.isMutable.toString()}</p>
               </div>
             ) : null}
             {externalUrl ? (
               <div className="flex gap-4">
-                <p className="font-bold">External Url: </p>
+                <p className="font-bold textPalette2">External Url: </p>
                 <a href={externalUrl} target="_blank" rel="noreferrer">{token?.externalUrl}</a>
               </div>
             ) : null}
@@ -368,7 +368,7 @@ export default function DetailPage({token, curations}) {
             {token?.attributes?.length > 0 ? (
               <>
                 <hr className="border-neutral-200 dark:border-neutral-800 my-2" />
-                <p className="font-bold mb-2">Attributes:</p>
+                <p className="font-bold mb-2 textPalette2">Attributes:</p>
                 <div className="grid md:grid-cols-2 gap-3">
                   {token?.attributes.map(attribute => (<Attribute key={attribute.trait_type} attribute={attribute} />))}
                 </div>
@@ -386,7 +386,7 @@ export default function DetailPage({token, curations}) {
 const AddressLink = ({ address}) => { 
   const solscanUrl = address ? `https://solscan.io/account/${ address }` : ""
   return (
-    <a className="block hover:scale-105 duration-300 w-fit" href={solscanUrl} target="_blank" rel="noreferrer">
+    <a className="block rounded-md hoverPalette1 px-2 relative -left-2 w-fit" href={solscanUrl} target="_blank" rel="noreferrer">
       {truncate(address, 4)}
     </a>
   )

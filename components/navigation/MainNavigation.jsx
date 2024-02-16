@@ -45,9 +45,9 @@ export default function MainNavigation() {
           <div>
             <div className="flex">
               <div className="flex items-center col-span-1">
-                <div className="cursor-pointer md:my-3 flex gap-4 items-end ">
+                <div className="md:my-3 flex gap-4 items-end ">
                   <Link href="/">
-                    <a className="collector text-3xl font-bold flex items-center">
+                    <a className="collector text-3xl font-bold flex items-center rounded-md px-2 py-0 hoverPalette1">
                       collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r
                     </a>
                   </Link>
@@ -56,7 +56,7 @@ export default function MainNavigation() {
               </div>
               <div className="hidden md:flex items-center justify-end w-full">
                 <Link href="/about">
-                  <a className="mr-8 font-bold">
+                  <a className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1">
                     About
                   </a>
                 </Link>

@@ -70,8 +70,8 @@ export const EditionListing = ({ listing, onCollect }) => {
       <div>
         <MainButton
           onClick={handleBuy}
-          className={clsx("px-3 min-w-[10rem]")}
-          noPadding
+          className={clsx("min-w-[10rem] mt-1.5")}
+          size="lg"
           disabled={!handleCollect || purchasing || !user}
         >
           {purchasing

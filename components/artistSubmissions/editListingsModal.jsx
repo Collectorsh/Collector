@@ -419,7 +419,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
               <MainButton
                 onClick={handleUnlist}
                 
-                className={clsx("w-28", isClosed && "hidden")}
+                className={clsx("w-28 flex justify-center items-center", isClosed && "hidden")}
                 disabled={listing || isClosed}
               >
                 {listing

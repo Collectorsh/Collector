@@ -124,7 +124,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
         content="Editions are sold lowest price first"
         className="shadow-lg"
       >
-        <InformationCircleIcon className="w-4 inline -mt-2" />
+        <InformationCircleIcon className="w-4 inline -mt-2 opacity-50" />
       </Tippy>
     )
     : null

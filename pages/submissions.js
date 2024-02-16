@@ -182,7 +182,7 @@ const Submissions = ({ }) => {
             <a
               className={clsx(
                 curation.hidden && "pointer-events-none",
-              "relative shadow-lg shadow-black/25 dark:shadow-neutral-500/25 rounded-xl overflow-hidden hover:-translate-y-3 duration-300 block"
+              "relative shadow hover:shadow-md shadow-black/20 rounded-xl overflow-hidden hover:-translate-y-3 duration-300 block"
             )}>
               <CloudinaryImage
                 className="w-full h-[300px] object-cover"
@@ -201,8 +201,6 @@ const Submissions = ({ }) => {
               {artistSubmissions.length
                 ? (
                   <MainButton
-                    noPadding
-                    className="px-3 py-1 flex gap-1 items-center"
                     disabled={!artistSubmissions.length}
                     onClick={() => handleOpenListingsModal(curation)}
                   >
@@ -211,8 +209,8 @@ const Submissions = ({ }) => {
                 )
                 : null}
               <MainButton
-                solid noPadding
-                className={clsx("px-3 py-1", curation.hidden && "hidden")}
+                solid 
+                className={clsx(curation.hidden && "hidden")}
                 onClick={() => handleOpenSubmitModal(curation)}
                 disabled={curation.hidden}
               >
@@ -233,7 +231,7 @@ const Submissions = ({ }) => {
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Approved Curations</h2>
           <Link href="/create" passHref>
-            <MainButton solid disabled={!approvedCurations?.length}>
+            <MainButton size="lg" solid disabled={!approvedCurations?.length}>
               Create
             </MainButton>
           </Link>

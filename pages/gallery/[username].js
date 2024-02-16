@@ -239,7 +239,7 @@ function ProfilePage({ curator }) {
           text="Edit Banner"
           icon={<Icon.Image size={20} strokeWidth={2.5} />}
         >
-          <div className="w-full pb-[50%] md:pb-[33%] relative 2xl:rounded-b-2xl shadow-md shadow-black/20 overflow-hidden">
+          <div className="w-full pb-[50%] md:pb-[33%] relative 2xl:rounded-b-2xl shadow-md overflow-hidden">
             {banner ? (
               <CloudinaryImage
                 className={clsx(

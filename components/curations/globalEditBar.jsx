@@ -4,11 +4,12 @@ import { ChevronDownIcon, PlusIcon, UserAddIcon, TagIcon } from '@heroicons/reac
 import clsx from 'clsx';
 import { RoundedCurve } from './roundedCurveSVG';
 import { roundToPrecision } from '../../utils/maths';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Tippy from '@tippyjs/react';
 import { Oval } from 'react-loader-spinner';
 import EditListingsModal from '../artistSubmissions/editListingsModal';
 import * as Icon from 'react-feather'
+import DeleteConfirmationModal from './deleteConfirmationModal';
 
 const GlobalEditBar = ({
   setModules,
@@ -30,21 +31,30 @@ const GlobalEditBar = ({
 }) => {
   const [withdrawing, setWithdrawing] = useState(false)
   const [editListingsOpen, setEditListingsOpen] = useState(false)
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
 
   const curationType = curation?.curation_type
   const curationWithSubmissions = {
     ...curation,
     submitted_token_listings: submittedTokens
   }
-  
-  const addArtModule = () => {
-    setModules((prev) => [...prev, { type: "art", id: uuidv4(), tokens: [] }])
-    window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
-  }
 
-  const addTextModule = () => {
-    setModules((prev) => [...prev, { type: "text", id: uuidv4(), textDelta: undefined }])
-    window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
+  const curatorBalance = collectedFees ? collectedFees.curatorBalance : 0
+  const curatorFee = roundToPrecision(curatorBalance, 3)
+  const fees = collectedFees ? <span>{curatorFee}◎</span> : <span className='animate-pulse'>...</span>
+
+  //its ok to delete a group/curator curation because those listings are accessed via the submissions page
+  const hasActiveListings = curation.type !== "curator" && submittedTokens?.filter(s => s.listed_status === "listed" || s.is_master_edition && s.listed_status === "sold").length
+  const hasUncollectedFees = collectedFees?.curatorBalance
+  const disabledDelete = hasActiveListings || hasUncollectedFees
+  
+  const disabledDeleteText = (() => {
+    if(hasActiveListings) return "Please close active listings before deleting"
+    if (hasUncollectedFees) return "Please withdraw your fees before deleting"
+  })();
+
+  const openDelete = () => { 
+    setDeleteModalOpen(true)
   }
 
   const toggleEditOpen = () => { 
@@ -129,10 +139,6 @@ const GlobalEditBar = ({
     </>
   )
 
-  const curatorBalance = collectedFees ? collectedFees.curatorBalance : 0
-  const curatorFee = roundToPrecision(curatorBalance, 3)
-  const fees = collectedFees ? <span>{curatorFee}◎</span> : <span className='animate-pulse'>...</span>
-
   const publishedButtons = (
     <>
       <div className='flex gap-4 flex-wrap justify-center md:place-self-start w-full'>
@@ -207,11 +213,28 @@ const GlobalEditBar = ({
           handleRemoveListing={handleRemoveListing}
           curation={curationWithSubmissions}
         />
+        <DeleteConfirmationModal
+          isOpen={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          name={curation?.name}
+        />
+
         <div className={clsx(
           'w-full py-2 px-4',
           "borderPalette2 border-t-2 flex justify-between"
         )}>
-          <div className='w-10'/>
+          <Tippy disabled={!disabledDelete} content={disabledDeleteText}>
+            <div>
+              <button
+                className={clsx('h-full align-left rounded-lg p-2 hoverPalette2 disabled:opacity-50 disabled:palette2')}
+                onClick={openDelete}
+                disabled={disabledDelete}
+              >
+                <Icon.Trash2 strokeWidth={2.5} size={22} color="red"/>
+              </button>
+
+            </div>
+          </Tippy>
           <div className="w-full grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] place-items-center max-w-screen-xl mx-auto gap-4 py-2 px-4">
             {isEditingDraft ? draftButtons : publishedButtons}
           </div>

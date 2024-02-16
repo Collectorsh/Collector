@@ -29,7 +29,7 @@ export default function ArtModal({ isOpen, onClose, token,  }) {
       isOpen={isOpen} onClose={onClose}
       widthClass="w-[auto_!important]"
       closeButtonPlacement="absolute -right-3 -top-3"
-     
+      padding="p-2"
     >
       <div
         ref={wrapperRef}

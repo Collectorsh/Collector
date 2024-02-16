@@ -34,7 +34,7 @@ export default function SecondaryEditionListings({ editionListings }) {
     <div className="flex flex-wrap justify-between gap-2 items-center">
       <div>
         <p className="font-bold text-lg">Secondary Editions</p>
-        <p>{displayedEditionListings.length || "None"} available{info}</p>
+        <p className="font-sm textPalette2">{displayedEditionListings.length || "None"} available{info}</p>
       </div>
    
       {displayedEditionListings?.length
@@ -64,7 +64,7 @@ export const EditionListing = ({ listing, onCollect }) => {
   return(
     <Tippy
       content="Connect your wallet first!"
-      className="shadow-lg"
+      className="shadow"
       disabled={Boolean(user)}
     >
       <div>

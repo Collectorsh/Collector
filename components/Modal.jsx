@@ -10,7 +10,8 @@ export default function Modal({
   closeDisabled,
   children,
   widthClass = "max-w-screen-xl",
-  closeButtonPlacement = "absolute top-2 right-2"
+  closeButtonPlacement = "absolute top-2 right-2",
+  padding
 }) {
   return (
     <Transition show={isOpen} as={Fragment}>
@@ -39,7 +40,8 @@ export default function Modal({
           >
             <Dialog.Panel
               className={clsx(
-                "relative p-2 md:px-14 md:py-6 rounded-lg palette3",
+                padding || "p-2 md:px-14 md:py-6",
+                "relative  rounded-lg palette3",
                 "shadow-md shadow-black/25",
                 "w-full max-h-[calc(100%-1rem)]",
                 "flex flex-col",
@@ -47,7 +49,7 @@ export default function Modal({
               )}
             >
           
-              <button onClick={onClose} className={clsx("hoverPalette3 rounded-full p-1", closeButtonPlacement, closeDisabled && "hidden")}>
+              <button onClick={onClose} className={clsx("palette3 hoverPalette3 rounded-full p-1 z-10", closeButtonPlacement, closeDisabled && "hidden")}>
                 <Icon.X size={24} strokeWidth={2.5} />
               </button>
               {title ? < Dialog.Title className="text-center font-bold text-3xl pt-2 pb-4">{title}</Dialog.Title> : null}

@@ -21,7 +21,7 @@ export default function Gallery() {
         {({ open }) => (
           <>
             
-            <Menu.Button className="flex text-sm rounded px-3 py-1 border-0 ring-0 outline-none hoverPalette1">
+            <Menu.Button className="flex rounded-md px-3 py-1 border-0 ring-0 outline-none hoverPalette1">
               <span className="sr-only">Open user menu</span>
               <p className="text-base cursor-pointer font-bold inline-flex items-end gap-1 ">
                 Menu

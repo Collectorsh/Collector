@@ -114,7 +114,16 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
         <p className="font-bold">Owned by {owner.username}</p>
         : null
     } else if (artistName) {
-      return <p className="font-bold">by {artistName}</p>
+      return (
+        <ToggleLink
+          disabled={!artist?.username}
+          href={`/gallery/${ artist?.username }`}
+          passHref
+        >
+          <p className={clsx(artist?.username && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer")}> by {artistName}</p>
+        </ToggleLink>
+        // <p className="font-bold">by {artistName}</p>
+      )
     }
   }, [curationType, artistName, owner])
 
@@ -245,7 +254,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
       
           <Link href={`/nft/${ token.mint }`} disabled={disableLink} passHref>
             <p
-              className='font-bold text-2xl leading-7 truncate cursor-pointer'
+              className='font-bold text-2xl leading-7 truncate cursor-pointer px-2 relative -left-2 hoverPalette1 rounded-md'
               style={{
                 maxWidth: width
               }}

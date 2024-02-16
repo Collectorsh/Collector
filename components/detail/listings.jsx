@@ -17,11 +17,11 @@ export default function DetailListings({ curation, mint }) {
   const curationTypeText = useMemo(() => {
     switch (curation.curation_type) {
       case "curator":
-        return "Curated by"
+        return "Group curation by"
       case "artist":
-        return "Art by"
+        return "Art curation by"
       case "collector":
-        return "Collection by"
+        return "Collection curation by"
     }
   }, [curation.curation_type])
 
@@ -47,25 +47,25 @@ export default function DetailListings({ curation, mint }) {
   }
 
   return (
-    <div className="flex flex-wrap justify-between gap-2 items-center">
+    <div className="flex flex-wrap justify-between items-center">
       <Link href={`/curations/${curation.name}`}>
-        <a className="hover:scale-105 duration-300">
+        <a className="hoverPalette1 px-2 rounded-md duration-300 relative -left-2">
           <p className="font-bold text-xl">{curation.name.replaceAll("_", " ")}</p>
-          <p>{curationTypeText} {curation.curator.username}</p>
+          <p className="text-sm textPalette2">{curationTypeText} {curation.curator.username}</p>
         </a>
       </Link>
       {isListed
         ? (
           <Tippy
             content="Connect your wallet first!"
-            className="shadow-lg"
+            className="shadow"
             disabled={Boolean(user)}
           >
             <div>
               <MainButton
                 onClick={handleBuy}
-                className={clsx("px-3 min-w-[10rem]" )}
-                noPadding
+                className={clsx("min-w-[10rem]" )}
+                size="lg"
                 disabled={!handleCollect || purchasing || !user}
               >
                 {purchasing
@@ -74,7 +74,7 @@ export default function DetailListings({ curation, mint }) {
                       <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
                     </span>
                   )
-                  : `Collect (${ price}◎)` 
+                  : `Collect ${ price}◎` 
                 }
               </MainButton>
             </div>

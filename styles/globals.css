@@ -75,29 +75,10 @@
   color: #fff;
 }
 
-
-/* :root {
-} */
-
-/* [data-theme="dark"] html,[data-theme="dark"] body {
-
-  @apply bg-neutral-500 text-neutral-100
-} */
-
-/* :root {
-  --swiper-navigation-color: rbga(0,0,0,0.5)
-} */
-
 .swiper-button-prev, .swiper-button-next {
   @apply text-black dark:text-white !important;
   filter: drop-shadow(0px 2px 2px rgba(120,120,120,1));
 }
-
-
-/* .dark {
-  @apply bg-neutral-500 text-neutral-100
-} */
-
 h4 {
   font-weight: 600;
 }
@@ -304,13 +285,14 @@ input:checked + .toggle-bg {
   @apply bg-greeny border-greeny;
 }
 
-.tippy-box {
-  background-color: #eee !important;
-  color: #111 !important;
+.tippy-box.tippy-box {
+  @apply bg-zinc-200 dark:bg-zinc-700;
+  @apply text-neutral-900 dark:text-neutral-100;
+  @apply shadow dark:shadow-white/10 text-sm leading-4 px-1 py-0 h-fit;
 }
 
-.tippy-arrow {
-  color: #eee !important;
+.tippy-arrow.tippy-arrow {
+  @apply text-neutral-200 dark:text-neutral-700;
 }
 
 .react-select-container {

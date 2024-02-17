@@ -274,7 +274,7 @@ export default function DetailPage({token, curations}) {
         <div
           className={clsx("mt-2 px-4 mx-auto")}
         >
-          <p className='text-sm textPalette2'>{supplyText}</p>
+          <p className='text-sm textPalette2 font-bold'>{supplyText}</p>
           <div className="flex justify-between items-center">
             <h1 className="collector text-4xl leading-9">{token?.name}</h1>
             
@@ -298,12 +298,14 @@ export default function DetailPage({token, curations}) {
                 href={`/gallery/${ token?.artist_account?.username }`}
                 passHref
               >
-                <p className={clsx(token?.artist_account?.username && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer")}> by {artistName}</p>
+                <p className={clsx(
+                  token?.artist_account?.username && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer"
+                )}> by {artistName}</p>
               </ToggleLink>
               : null
             }
             {(!isMasterEdition && ownerName !== artistName)
-              ? <p className="">- owned by {ownerName}</p>
+              ? <p className={clsx(token?.artist_account?.username && "relative -left-4")}>- owned by {ownerName}</p>
               : null
             }
           </div>
@@ -395,8 +397,8 @@ const AddressLink = ({ address}) => {
 const Attribute = ({ attribute }) => {
   return (
     <div className="grid grid-cols-[2fr_3fr] w-full text-sm">
-      <p className="font-bold truncate">{attribute.trait_type ?? attribute.traitType}:</p>
-      <p className="truncate opacity-70">{attribute.value}</p>
+      <p className="font-bold truncate textPalette2">{attribute.trait_type ?? attribute.traitType}:</p>
+      <p className="truncate">{attribute.value}</p>
     </div>
   )
 }

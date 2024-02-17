@@ -70,7 +70,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
     if (isMasterEdition) return `${ maxSupply - supply }/${ maxSupply } Editions`
     if (isEdition) return "Edition";
     return "1 of 1"
-  }, [isMasterEdition, supply, maxSupply, isEdition, curationType, isListed, listedEditionCount, isSold, sellingSecondaryFromMaster])
+  }, [isMasterEdition, supply, maxSupply, isEdition, listedEditionCount, sellingSecondaryFromMaster])
 
   const cacheWidth = useMemo(() => {
     //round up to bucket of 250 so we aren't caching too many sizes
@@ -125,7 +125,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
         // <p className="font-bold">by {artistName}</p>
       )
     }
-  }, [curationType, artistName, owner])
+  }, [curationType, artistName, artist?.username, owner])
 
   const secondaryListingInfo = sellingSecondaryFromMaster
     ? (

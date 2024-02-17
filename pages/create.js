@@ -190,7 +190,7 @@ export default function MintPage() {
 
   return (
     <>
-      <CheckLoggedIn />
+      {/* <CheckLoggedIn /> */}
       <MainNavigation />
       <Toaster />
       <MintModal
@@ -291,7 +291,7 @@ export default function MintPage() {
 
           <Drawer
             title="Extras"
-            drawerClass="border-4 rounded-xl border-neutral-200 dark:border-neutral-700"
+            drawerClass="rounded-lg border-2 border-zinc-200 dark:border-zinc-800"
             buttonClass="font-bold text-lg my-2 mx-auto"
           >
             <div className="flex flex-col gap-4">
@@ -309,7 +309,8 @@ export default function MintPage() {
           >
             <div className="mt-4">
               <MainButton
-                solid disabled={isError} className="w-full hover:scale-[102%]"
+                solid disabled={isError} className="w-full"
+                size="lg"
                 onClick={openMintModal}
               >
                 {mintModalOpen

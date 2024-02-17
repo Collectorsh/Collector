@@ -3,7 +3,8 @@ import { REQUIRED } from "../../pages/create"
 
 const NameInput = ({
   name, setName, setError,
-  placeholder = "What is the title of your artwork."
+  placeholder = "The title of your artwork",
+  paletteClass = "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800"
 }) => {
   const limit = 32
 
@@ -20,12 +21,10 @@ const NameInput = ({
 
   return (
     <div>
-      <p className="font-bold text-lg mb-1 ml-4">Name*</p>
+      <p className="font-bold text-lg mb-1 ml-4">Name</p>
       <input 
         type="text"
-        className="border-4 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
-          w-full p-3
-        "
+        className={clsx("w-full px-3.5 py-2 outline-none rounded-md border-2", paletteClass)}
         onChange={handleChange}
         value={name}
         placeholder={placeholder}

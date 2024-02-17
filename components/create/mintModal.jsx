@@ -31,7 +31,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
   const wallet = useWallet();
   const [user] = useContext(UserContext);
 
-  const [stage, setStage] = useState(MINT_STAGE.INIT)
+  const [stage, setStage] = useState(MINT_STAGE.ERROR)
   const [previewImage, setPreviewImage] = useState(null)
   const [previewAlt, setPreviewAlt] = useState(null)
   const [mintedAddress, setMintedAddress] = useState(null)
@@ -258,13 +258,13 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
                 )}
               </div>
               
-              <p className="text-sm whitespace-pre-wrap">{description}</p>
+              <p className="text-sm whitespace-pre-wrap textPalette2">{description}</p>
             
               <div className="grid sm:grid-cols-2">
                 <p className="font-bold">{royalties}% Royalties</p>
                 <div>
                   {creators.map(creator => (
-                    <p className="" key={creator.address.toString()}>{creator.share}% - {truncate(creator.address.toString())} </p>
+                    <p className="textPalette2" key={creator.address.toString()}>{creator.share}% - {truncate(creator.address.toString())} </p>
                   ))}
                 </div>
               </div>
@@ -276,8 +276,8 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       case MINT_STAGE.SUCCESS: return (
         <div className="h-56 flex flex-col gap-2 justify-center">
           <p className="text-center text-2xl font-bold">Congrats! {name} has been successfully minted!</p>
-          <p className="text-center">View it on <a className="underline" href={`https://solscan.io/token/${ mintedAddress }`} target="_blank" rel="noreferrer">Solscan</a></p>
-          <p className="text-center">Freshly minted art may take a few minutes to load.</p>
+          <p className="text-center textPalette2">View it on <a className="underline" href={`https://solscan.io/token/${ mintedAddress }`} target="_blank" rel="noreferrer">Solscan</a></p>
+          <p className="text-center textPalette2">Freshly minted art may take a few minutes to load.</p>
         </div>
       )
       case MINT_STAGE.ERROR: return (
@@ -294,9 +294,9 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
           {stage === MINT_STAGE.MINTING ? (
             <p className="text-center">Sign the transaction to mint your art onchain.</p>
           ): (
-            <p className="text-center">This may take a few minutes.</p>
+              <p className="text-center textPalette2">This may take a few minutes.</p>
           )}
-          <p className="text-center">Please stay on this page until the mint process has finished.</p>
+          <p className="text-center textPalette2">Please stay on this page until the mint process has finished.</p>
         </div>
       )
     }
@@ -305,39 +305,39 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
   const secondaryButton = useMemo(() => { 
     switch (stage) {
       case MINT_STAGE.SUCCESS: return (
-        <MainButton onClick={handleReset} >
+        <MainButton onClick={handleReset} size="lg" className="w-[11.5rem]">
           Create Another
         </MainButton>
       )
       default: return (
-        <MainButton onClick={handleClose}>
+        <MainButton onClick={handleClose} disabled={preventClose} size="lg" className="w-[7.63rem]">
           Cancel
         </MainButton>
       )
     }
-  }, [stage, handleClose, handleReset])
+  }, [stage, handleClose, handleReset, preventClose])
 
   const actionButton = useMemo(() => {
     switch (stage) { 
       case MINT_STAGE.INIT: return (
-        <MainButton onClick={onMint} solid>
+        <MainButton onClick={onMint} solid size="lg" className="w-[7.63rem]">
           Confirm
         </MainButton>
       )
       case MINT_STAGE.SUCCESS: return (
         <Link href={`/nft/${ mintedAddress}`} passHref>
-          <MainButton solid>
+          <MainButton solid size="lg" className="w-[11.5rem]">
             Detail Page
           </MainButton>
         </Link>
       )
       case MINT_STAGE.ERROR: return (
-        <MainButton onClick={onMint} solid>
+        <MainButton onClick={onMint} solid size="lg" className="w-[7.63rem]">
           Retry
         </MainButton>
       )
       default: return (
-        <MainButton solid disabled>
+        <MainButton solid disabled size="lg" className="w-[7.63rem]">
           <span className="inline-block translate-y-0.5">
             <Oval color="#FFF" secondaryColor="#666" height={17} width={17} />
           </span>

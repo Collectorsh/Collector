@@ -127,7 +127,7 @@ export default function MintPage() {
       verified: true,
       share: 100,
     }])
-  }, [wallet, creators])
+  }, [wallet.publicKey, creators])
 
   useEffect(() => {
     if (!wallet.publicKey) return
@@ -190,7 +190,7 @@ export default function MintPage() {
 
   return (
     <>
-      {/* <CheckLoggedIn /> */}
+      <CheckLoggedIn />
       <MainNavigation />
       <Toaster />
       <MintModal
@@ -218,7 +218,7 @@ export default function MintPage() {
          
         </div>
 
-        <hr className="mt-6 mb-12 border-neutral-200 dark:border-neutral-800" />
+        <hr className="mt-6 mb-12 borderPalette2" />
 
         <div 
           className={clsx(
@@ -316,7 +316,7 @@ export default function MintPage() {
                 {mintModalOpen
                   ? (
                     <span className="inline-block translate-y-0.5">
-                      <Oval color="#FFF" secondaryColor="#666" height={17} width={17} />
+                      <Oval color="#FFF" secondaryColor="#666" height={17} width={17} strokeWidth={2.5} />
                     </span>
                   )
                   : "Mint!"

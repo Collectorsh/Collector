@@ -118,7 +118,7 @@ const SocialItem = ({ type, link, setNewSocials, index }) => {
         </div>
 
       </div>
-      <button onClick={removeSocial} className="duration-200 opacity-50 hover:opacity-100">
+      <button onClick={removeSocial} className="duration-300 opacity-50 hover:opacity-100">
         <Icon.X size={20} />
       </button>
 

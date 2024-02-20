@@ -31,7 +31,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
   const wallet = useWallet();
   const [user] = useContext(UserContext);
 
-  const [stage, setStage] = useState(MINT_STAGE.ERROR)
+  const [stage, setStage] = useState(MINT_STAGE.INIT)
   const [previewImage, setPreviewImage] = useState(null)
   const [previewAlt, setPreviewAlt] = useState(null)
   const [mintedAddress, setMintedAddress] = useState(null)
@@ -66,8 +66,8 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
     setStage(MINT_STAGE.INIT)
   }
 
-  const handleClose = useCallback(() => {
-    if (preventClose) return
+  const handleClose = useCallback((overrideClose = false) => {
+    if (preventClose && !overrideClose) return
     onClose()
     setTimeout(() => resetLocally(), 500) //wait for modal to close before resetting so the content doesn't change while closing
   }, [onClose, preventClose])
@@ -310,12 +310,12 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         </MainButton>
       )
       default: return (
-        <MainButton onClick={handleClose} disabled={preventClose} size="lg" className="w-[7.63rem]">
+        <MainButton onClick={() => handleClose(true)}  size="lg" className="w-[7.63rem]">
           Cancel
         </MainButton>
       )
     }
-  }, [stage, handleClose, handleReset, preventClose])
+  }, [stage, handleClose, handleReset])
 
   const actionButton = useMemo(() => {
     switch (stage) { 

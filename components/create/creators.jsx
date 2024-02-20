@@ -1,9 +1,8 @@
-import MainButton from "../MainButton"
-import { InformationCircleIcon, PlusIcon, XIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
 import { PublicKey } from "@solana/web3.js"
 import { REQUIRED } from "../../pages/create"
 import Tippy from "@tippyjs/react"
+import * as Icon from 'react-feather'
 
 const CreatorsInput = ({ creators, setCreators, setError }) => {
   
@@ -60,26 +59,26 @@ const CreatorsInput = ({ creators, setCreators, setError }) => {
 
   const info = (
     <Tippy
-      content="The wallet address and share of royalties for each creator."
-      className="shadow-lg"
+      content="The wallet address and share of royalties for each creator"
     >
-      <InformationCircleIcon className="w-4" />
+      <Icon.Info size={14} className="opacity-50"/>
     </Tippy>
   )
 
 
   return (
     <div>
-      <p className="font-bold text-lg mb-1 ml-4 flex items-center">Creators {info}</p>
-      <div className=" border-4 px-3 py-2 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 min-h-[100px]">
+      <p className="font-bold text-lg mb-1 ml-4 flex gap-1">Creators {info}</p>
+      <div className="w-full px-3.5 py-2 outline-none rounded-md border-2 bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 min-h-[100px]">
         {creators.map((creator, i) => (<CreatorItem key={"creator"+i} index={i} handleChange={handleChange} creator={creator} />))}
         <button
           onClick={addCreator}
           className={clsx(
-            "w-full h-10 p-0 flex items-center justify-center gap-2 hover:scale-105 active:scale-100 duration-300",
+            "w-full h-10 flex items-center justify-center gap-1.5 hoverPalette2 rounded-md px-2",
             )}
             >
-          Add Creator<PlusIcon className="inline-block w-5 h-5" />
+          Add Creator
+          <Icon.Plus size={18} strokeWidth={2.5}/>
         </button>
       </div>
     </div>
@@ -115,7 +114,7 @@ const CreatorItem = ({ creator, index, handleChange }) => {
 
   return (
     <div className="flex justify-between items-center mb-2">
-      <div className="flex justify-between items-center gap-2 w-full border-b-2 border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
+      <div className="flex justify-between items-center gap-0.5 w-full border-b-2 borderPalette2">
         <input
           className={clsx("bg-transparent outline-none w-full pl-1",
             isPrimaryCreator && "font-bold"
@@ -126,6 +125,8 @@ const CreatorItem = ({ creator, index, handleChange }) => {
           onChange={editAddress}
           placeholder="Creator Address"
         />
+
+        <p>-</p>
 
         <div className="flex justify-end">
           <input
@@ -140,8 +141,8 @@ const CreatorItem = ({ creator, index, handleChange }) => {
           <p>%</p>
         </div>
       </div>
-      <button onClick={removeCreator} className={clsx("duration-200 hover:scale-105 active:scale-100 opacity-50 hover:opacity-100", isPrimaryCreator && "hidden")}>
-        <XIcon className="w-5 h-5" />
+      <button onClick={removeCreator} className={clsx("duration-300 opacity-50 hover:opacity-100", isPrimaryCreator && "hidden")}>
+        <Icon.X size={20} />
       </button>
 
     </div>

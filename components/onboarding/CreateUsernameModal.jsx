@@ -105,6 +105,7 @@ export default function CreateUsernameModal() {
             setUsername={setUsername}
             email={email}
             setEmail={setEmail}
+            paletteClass="palette2 borderPalette3"
           />
         </>
       )
@@ -149,7 +150,7 @@ export default function CreateUsernameModal() {
         <p className="text-sm pl-4 italic text-red-500 h-4 w-full mt-3 text-center">{error}</p>
         <div className="w-full flex justify-center gap-4 relative mt-2">
           <MainButton
-            onClick={handleClose}
+            onClick={handleClose} size="lg" standardWidth
           >
             Close
           </MainButton>
@@ -160,7 +161,7 @@ export default function CreateUsernameModal() {
           >
             <div className={stage === 1 ? "hidden" : ""}>
               <MainButton
-                className="w-24"
+                size="lg" standardWidth
                 onClick={handleSave}
                 solid
                 disabled={disableSave}

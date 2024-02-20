@@ -27,6 +27,13 @@ export default function MainNavigation() {
     setOpen(!open);
   }
 
+  function signOut() {
+    wallet?.disconnect().then(() => {
+      localStorage.removeItem("api_key");
+      setUser(null);
+    });
+  }
+
   useEffect(() => {
     //if no wallet connected but stale user, sign out
     if (user && !wallet.publicKey) signOut();

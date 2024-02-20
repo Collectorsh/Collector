@@ -14,8 +14,8 @@ const ExternalUrlInput = ({
       <p className="font-bold text-lg mb-1 ml-4">External Url</p>
       <input 
         type="text"
-        className="border-4 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
-          w-full p-3
+        className=" rounded-md border-2 bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800
+          w-full px-3.5 py-2 outline-none
         "
         onChange={handleChange}
         value={externalUrl}

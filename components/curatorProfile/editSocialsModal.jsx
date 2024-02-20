@@ -30,7 +30,7 @@ const EditSocialsModal = ({ socials, onSave, isOpen, onClose }) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="Edit Your Links" widthClass="max-w-lg">
+    <Modal isOpen={isOpen} onClose={handleClose} title="Edit Socials" widthClass="max-w-lg">
 
       <div className="pb-6">
         {newSocials.map((social, i) => (<SocialItem key={i} {...social} index={i} setNewSocials={setNewSocials} />))}
@@ -118,7 +118,7 @@ const SocialItem = ({ type, link, setNewSocials, index }) => {
         </div>
 
       </div>
-      <button onClick={removeSocial} className="duration-200 opacity-50 hover:opacity-100">
+      <button onClick={removeSocial} className="duration-300 opacity-50 hover:opacity-100">
         <Icon.X size={20} />
       </button>
 

@@ -62,6 +62,7 @@ export default function Settings() {
       <div className="flex justify-between items-center">
         <p className="text-2xl font-bold">Profile</p>
         <MainButton
+          size="lg"
           className="w-24"
           onClick={handleSave}
           solid
@@ -70,14 +71,14 @@ export default function Settings() {
           {saving
             ? (
               <span className="inline-block translate-y-0.5">
-                <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+                <Oval color="#FFF" secondaryColor="#666" height={18} width={18} strokeWidth={2.5}/>
               </span>
             )
             : "Save"
           }
         </MainButton>
       </div>
-      <p className="text-sm pl-4 italic text-red-500 h-4 w-full mt-3 text-center">{error}</p>
+      <p className="text-sm pl-4 text-red-500 h-4 w-full mt-0 text-center">{error}</p>
       <UsernameAndEmail
         username={username}
         setUsername={setUsername}

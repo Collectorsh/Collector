@@ -9,7 +9,8 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import MainButton from "../MainButton";
 import { Switch } from "@headlessui/react";
 import clsx from "clsx";
-import { PlusIcon, XIcon } from "@heroicons/react/solid";
+import * as Icon from 'react-feather'
+import Checkbox from "../checkbox";
 
 export default function Wallets() {
   const wallet = useWallet();
@@ -88,33 +89,21 @@ export default function Wallets() {
 
       </div>
 
-      <div className="flex justify-start items-center gap-4 pl-1 mt-2">
+      <div className="flex justify-start items-center gap-4 pl-1 mt-4">
         <MainButton
           solid
           onClick={addWallet}
-          className="flex gap-2 items-center"
+          className="flex gap-2 items-center justify-center"
         >
           Link New Wallet
-          <PlusIcon className="w-5 h-5" />
+          <Icon.Plus size={20} strokeWidth={2.5}/>
         </MainButton>
-        
-        <Switch
+
+        <Checkbox
+          label={`I am using a Ledger`}
           checked={usingLedger}
-          onChange={setUsingLedger}
-          className={clsx(
-            'bg-neutral-100 dark:bg-neutral-900',
-            "border-neutral-200 dark:border-neutral-700 border-2",
-            "relative inline-flex h-8 w-14 items-center rounded-full flex-shrink-0"
-          )}
-        >
-          <span className="sr-only">Toggle Ledger</span>
-          <span
-            className={clsx(usingLedger ? 'translate-x-7' : 'translate-x-1',
-              "inline-block h-5 w-5 transform rounded-full   transition bg-neutral-900 dark:bg-neutral-100"
-            )}
-          />
-        </Switch>
-        <p>I am {!usingLedger ? "not" : ""} using a Ledger</p>
+          onChange={() => setUsingLedger(prev => !prev)}
+        />
       </div>
     </div>
   )
@@ -124,16 +113,15 @@ export default function Wallets() {
 const AddressCard = ({ pubKey, isPrimary, onRemove }) => { 
   return (
     <div className={clsx(
-      "flex justify-between items-center gap-2 w-full border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 px-4 py-2 rounded-lg",
-      "border-b-2"
+      "flex justify-between items-center gap-2 w-full palette2 px-4 py-2 rounded-lg shadow",
     )}>
       <p>
-        <span className={clsx(!isPrimary && "hidden", "font-bold")}>Primary: </span>
-        {pubKey}
+        <span className={clsx(!isPrimary && "hidden", "font-bold")}>Primary:  </span>
+        <span className="textPalette2">{pubKey}</span>
       </p>
      
-      <button onClick={onRemove} className={clsx("duration-200 hover:scale-105 active:scale-100 opacity-50 hover:opacity-100", isPrimary && "hidden")}>
-        <XIcon className="w-5 h-5" />
+      <button onClick={onRemove} className={clsx("duration-300 opacity-50 hover:opacity-100", isPrimary && "hidden")}>
+        <Icon.X size={20} strokeWidth={2.5}/>
       </button>
     </div>
 

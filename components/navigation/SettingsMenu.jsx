@@ -10,15 +10,7 @@ export default function SettingsMenu() {
   const router = useRouter();
   const wallet = useWallet();
   const [user, setUser] = useContext(UserContext);
-  const { publicKey } = useWallet();
 
-  function signOut() {
-    wallet.disconnect().then(() => {
-      localStorage.removeItem("api_key");
-      setUser(null);
-      router.push("/");
-    });
-  }
 
   return (
     <div className="relative -mt-9">

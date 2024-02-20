@@ -23,11 +23,11 @@ export default function Gallery() {
             
             <Menu.Button className="flex rounded-md px-3 py-1 border-0 ring-0 outline-none hoverPalette1">
               <span className="sr-only">Open user menu</span>
-              <p className="text-base cursor-pointer font-bold inline-flex items-end gap-1 ">
+              <p className="text-base cursor-pointer font-bold inline-flex items-center justify-center gap-1 ">
                 Menu
                 <Icon.ChevronDown
-                  size={22}
-                  strokeWidth={2.4}
+                  size={20}
+                  strokeWidth={2.6}
                   className={clsx("duration-300", open ? "transform rotate-180" : "")}
                 />
               </p>

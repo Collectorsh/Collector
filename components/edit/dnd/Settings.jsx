@@ -4,7 +4,6 @@ import { success, error } from "/utils/toastMessages";
 import saveLayout from "/data/dashboard/saveLayout";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
 import { useImageFallbackContext } from "../../../contexts/imageFallback";
 
 export default function Settings({
@@ -15,6 +14,7 @@ export default function Settings({
   hideAll,
   showAll,
 }) {
+  //DEPRECATED - TO BE DELETED
   const [saving, setSaving] = useState(false);
   const { uploadAll } = useImageFallbackContext()
 
@@ -90,10 +90,11 @@ export default function Settings({
           content={`The number of columns to display when viewing your gallery`}
           className="bg-gray-300 align-middle"
         >
-          <QuestionMarkCircleIcon
+          i
+          {/* <QuestionMarkCircleIcon
             className="ml-2 inline h-6 w-6 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-greeny dark:hover:text-greeny"
             aria-hidden="true"
-          />
+          /> */}
         </Tippy>
       </h2>
       <div className="grid w-full grid-cols-4 space-x-2 rounded-xl p-2">

@@ -1,9 +1,10 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { DownloadIcon, ChipIcon } from "@heroicons/react/outline";
+
 import { Oval } from "react-loader-spinner";
 
 export default function LoadingModal({ open, title, content, icon }) {
+  return; //DEPRECATED - TO BE DELETED
   function setOpen() {}
 
   return (
@@ -46,7 +47,7 @@ export default function LoadingModal({ open, title, content, icon }) {
               <div className="bg-white dark:bg-dark3 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                    {icon === "download" && (
+                    {/* {icon === "download" && (
                       <DownloadIcon
                         className="h-6 w-6 text-blue-600"
                         aria-hidden="true"
@@ -57,7 +58,7 @@ export default function LoadingModal({ open, title, content, icon }) {
                         className="h-6 w-6 text-blue-600"
                         aria-hidden="true"
                       />
-                    )}
+                    )} */}
                   </div>
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                     <Dialog.Title

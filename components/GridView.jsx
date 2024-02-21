@@ -5,7 +5,6 @@ import { roundToTwo } from "/utils/roundToTwo";
 import { marketplaceLink } from "/utils/marketplaceHelpers";
 import Moment from "react-moment";
 import Image from "/components/Image";
-import { CogIcon } from "@heroicons/react/outline";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import saveUser from "/data/user/saveUser";
@@ -21,6 +20,7 @@ export default function GridView({
   refreshProfileImage,
   showOffers,
 }) {
+  //DEPRECATED - TO BE DELETED
   const [user, setUser] = useContext(UserContext);
 
   function classNames(...classes) {
@@ -187,10 +187,11 @@ export default function GridView({
               <Menu as="div" className="absolute top-4 right-4">
                 <div>
                   <Menu.Button className="inline-flex justify-center focus:outline-none">
-                    <CogIcon
+                    {/* <CogIcon
                       className="h-6 w-6 inline cursor-pointer text-gray-200"
                       aria-hidden="true"
-                    />
+                    /> */}
+                  Cog
                   </Menu.Button>
                 </div>
                 <Transition

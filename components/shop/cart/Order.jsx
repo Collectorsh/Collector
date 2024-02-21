@@ -9,12 +9,12 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import LoadingModal from "/components/LoadingModal";
 import { SystemProgram, Transaction, PublicKey } from "@solana/web3.js";
 import verifyPurchase from "/data/shop/verifyPurchase";
-import { TrashIcon } from "@heroicons/react/outline";
 import Select from "react-select";
 import countryList from "react-select-country-list";
 import { connection } from "/config/settings";
 
 export default function Order() {
+  return; //DEPRECATED - TO BE DELETED
   const [user] = useContext(UserContext);
   const [cart, setCart] = useContext(CartContext);
   const { publicKey, sendTransaction } = useWallet();
@@ -369,11 +369,12 @@ export default function Order() {
                     key={index}
                     className="my-3 border-t border-b border-gray-100 dark:border-dark3 py-2"
                   >
-                    <TrashIcon
+                    Trash
+                    {/* <TrashIcon
                       className="h-4 w-4 inline cursor-pointer text-red-400 float-right"
                       aria-hidden="true"
                       onClick={() => removeFromCart(item.id)}
-                    />
+                    /> */}
                     <p className="mb-2 font-bold">{item.product.name}</p>
                     <div className="mb-2 dark:text-white">
                       <label>size: </label>

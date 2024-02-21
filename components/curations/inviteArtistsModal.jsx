@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import MainButton from "../MainButton"
 import Modal from "../Modal"
-import { InformationCircleIcon, XIcon } from "@heroicons/react/solid"
 import { RoundedCurve } from "./roundedCurveSVG"
 import SearchBar from "../SearchBar"
 import getUserFromUsername from "../../data/user/getUserFromUsername"
@@ -95,8 +94,8 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
         ) : (
           <MainButton
             onClick={handleGeneratePasscode}
-            className="mt-1 px-3"
-            noPadding
+            className="mt-1"
+            
           >
             Generate Link
           </MainButton>
@@ -116,11 +115,12 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
         />
         <MainButton
           onClick={handleSearch}
-          noPadding
-          className=" py-1.5 px-3"
+          className="flex gap-1.5 items-center"
+          size="lg"
           disabled={addDisabled}
         >
           Add
+          <Icon.Plus size={19} strokeWidth={2.5} />
         </MainButton>
       </div>
 
@@ -166,7 +166,7 @@ export default InviteArtistsModal
 const ArtistChip = ({ name, onRemove }) => { 
   return (
     <div className="flex items-center gap-1 rounded-lg pl-2 pr-1
-    bg-white dark:bg-black
+      palette1
       border border-zinc-300 dark:border-zinc-700
     ">
       <p>{name}</p>

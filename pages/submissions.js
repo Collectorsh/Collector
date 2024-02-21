@@ -175,6 +175,8 @@ const Submissions = ({ }) => {
         return isArtist && notSold
       })
 
+      if (curation.hidden && !artistSubmissions.length) return null
+
       const passcodeQuery = curation.viewer_passcode ? `?passcode=${ curation.viewer_passcode }` : ""
       return (
         <div key={id} className="relative">
@@ -182,7 +184,7 @@ const Submissions = ({ }) => {
             <a
               className={clsx(
                 curation.hidden && "pointer-events-none",
-              "relative shadow hover:shadow-md shadow-black/20 rounded-xl overflow-hidden hover:-translate-y-3 duration-300 block"
+              "relative shadow hover:shadow-md shadow-black/10 rounded-xl overflow-hidden hover:-translate-y-2 duration-300 block"
             )}>
               <CloudinaryImage
                 className="w-full h-[300px] object-cover"
@@ -220,7 +222,7 @@ const Submissions = ({ }) => {
           </div>
         </div>
       )
-    })
+    }).filter(Boolean)
   }, [approvedCurations, user?.public_keys])
 
   return (

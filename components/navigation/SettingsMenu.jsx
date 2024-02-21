@@ -4,9 +4,9 @@ import { Fragment, useContext } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import UserContext from "/contexts/user";
-import { CogIcon } from "@heroicons/react/outline";
 
 export default function SettingsMenu() {
+  return; //DEPRECATED - TO BE DELETED
   const router = useRouter();
   const wallet = useWallet();
   const [user, setUser] = useContext(UserContext);
@@ -17,7 +17,8 @@ export default function SettingsMenu() {
       <Menu as="div" className="absolute top-0 right-0 inset-y-0 z-20">
         <Menu.Button className="text-sm rounded-full focus:outline-none">
           <span className="sr-only">settings menu</span>
-          <CogIcon className="h-12 w-12" aria-hidden="true" />
+          Settings
+          {/* <CogIcon className="h-12 w-12" aria-hidden="true" /> */}
         </Menu.Button>
         <Transition
           as={Fragment}

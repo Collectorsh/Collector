@@ -10,9 +10,10 @@ import { MintCountdown } from "/utils/mint/MintCountdown";
 import MintedModal from "/components/MintedModal";
 
 import { connection } from "/config/settings";
+import NotFound from "../404";
 
 export default function PublicMint({ address, drop }) {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [total, setTotal] = useState(0);

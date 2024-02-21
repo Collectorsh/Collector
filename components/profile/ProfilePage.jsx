@@ -7,6 +7,7 @@ import Listings from "/components/profile/Listings";
 import "tippy.js/dist/tippy.css";
 import FollowingModal from "/components/profile/FollowingModal";
 import SettingsMenu from "/components/navigation/SettingsMenu";
+import NotFound from "../404";
 
 function ProfilePage({
   profileUser,
@@ -15,7 +16,7 @@ function ProfilePage({
   image,
   refreshProfileImage,
 }) {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const [user] = useContext(UserContext);
   const [followingModal, setFollowingModal] = useState(false);
 

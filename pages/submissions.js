@@ -2,8 +2,6 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import UserContext from "../contexts/user";
 import CloudinaryImage from "../components/CloudinaryImage";
 import MainButton from "../components/MainButton";
-
-import CheckLoggedIn from "../components/CheckLoggedIn";
 import { useRouter } from "next/router";
 import MainNavigation from "../components/navigation/MainNavigation";
 import SubmitArtModal from "../components/artistSubmissions/submitArtModal";

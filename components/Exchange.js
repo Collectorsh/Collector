@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
+import NotFound from "./404";
 
 function Exchange(props) {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
 
   const [collection, setCollection] = useState();
 

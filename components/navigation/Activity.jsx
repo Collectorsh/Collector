@@ -2,9 +2,10 @@ import Link from "next/link";
 import { Fragment, useContext } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import UserContext from "/contexts/user";
+import NotFound from "../404";
 
 export default function Activity() {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const [user] = useContext(UserContext);
 
   return (

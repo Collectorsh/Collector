@@ -1,7 +1,8 @@
 import Link from "next/link";
+import NotFound from "../404";
 
 export default function Tools() {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 py-6">
       <div className="col-span-1">

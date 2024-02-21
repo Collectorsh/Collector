@@ -11,8 +11,7 @@ import NotFound from "../components/404";
 const totalPerPage = 12
 
 export default function Discover() {
-  return <NotFound />
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const searchRef = useRef()
   const [search, setSearch] = useState();
   const [page, setPage] = useState(1);

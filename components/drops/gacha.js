@@ -10,9 +10,10 @@ import Moment from "react-moment";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import { toDate } from "/utils/mint/utils";
 import { connection } from "/config/settings";
+import NotFound from "../404";
 
 export default function Gacha({ address, drop }) {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [holder, setHolder] = useState();

@@ -1,7 +1,8 @@
 import Link from "next/link";
+import NotFound from "../404";
 
 export default function Meta({ token, collector, market }) {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const removeElement = (e) => {
     e.target.parentNode.remove();
   };

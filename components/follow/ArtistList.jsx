@@ -4,9 +4,10 @@ import unfollowArtist from "/data/artists/unfollowArtist";
 import FollowFilter from "/components/follow/ArtistFilter";
 import UserContext from "/contexts/user";
 import FollowingContext from "/contexts/following";
+import NotFound from "../404";
 
 export default function ArtistList() {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const [user] = useContext(UserContext);
   const [following, setFollowing] = useContext(FollowingContext);
   const [followedArtists, setFollowedArtists] = useState(following);
@@ -114,7 +115,8 @@ export default function ArtistList() {
                 >
                   <td className="py-4 px-6">{follow.artist}</td>
                   <td className="py-4 px-6 text-center">
-                    <BellIcon
+                    Bell
+                    {/* <BellIcon
                       className={`inline h-5 w-5 align-middle cursor-pointer ${
                         follow.notify_listing
                           ? "text-green-600"
@@ -126,7 +128,7 @@ export default function ArtistList() {
                           follow.notify_listing ? false : true
                         )
                       }
-                    />
+                    /> */}
                   </td>
                   <td className="py-4 px-6 text-center">
                     Bell

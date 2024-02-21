@@ -5,10 +5,11 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import followArtist from "/data/artists/followArtist";
 import unfollowArtist from "/data/artists/unfollowArtist";
+import NotFound from "./404";
 
 
 export default function FollowButton({ follow }) {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const [user] = useContext(UserContext);
   const [following, setFollowing] = useContext(FollowingContext);
 

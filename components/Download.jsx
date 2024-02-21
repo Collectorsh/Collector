@@ -1,8 +1,9 @@
 import { useState } from "react";
 import LoadingModal from "/components/LoadingModal";
+import NotFound from "./404";
 
 export default function Download({ url, text }) {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const [loading, setLoading] = useState(false);
 
   async function downloadFile() {

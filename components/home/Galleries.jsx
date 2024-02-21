@@ -4,9 +4,10 @@ import getPopularGalleries from "/data/home/getPopularGalleries";
 import getDaos from "/data/home/getDaos";
 import GalleryContent from "/components/home/GalleryContent";
 import getCuratedGalleries from "/data/home/getCuratedGalleries";
+import NotFound from "../404";
 
 export default function GalleriesPage() {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const [popular, setPopular] = useState();
   const [daos, setDaos] = useState();
   const [curated, setCurated] = useState();

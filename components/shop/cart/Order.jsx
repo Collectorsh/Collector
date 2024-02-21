@@ -12,9 +12,10 @@ import verifyPurchase from "/data/shop/verifyPurchase";
 import Select from "react-select";
 import countryList from "react-select-country-list";
 import { connection } from "/config/settings";
+import NotFound from "../../404";
 
 export default function Order() {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const [user] = useContext(UserContext);
   const [cart, setCart] = useContext(CartContext);
   const { publicKey, sendTransaction } = useWallet();

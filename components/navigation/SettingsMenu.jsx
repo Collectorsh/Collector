@@ -4,9 +4,10 @@ import { Fragment, useContext } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import UserContext from "/contexts/user";
+import NotFound from "../404";
 
 export default function SettingsMenu() {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const router = useRouter();
   const wallet = useWallet();
   const [user, setUser] = useContext(UserContext);

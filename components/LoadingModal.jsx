@@ -2,9 +2,10 @@ import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 import { Oval } from "react-loader-spinner";
+import NotFound from "./404";
 
 export default function LoadingModal({ open, title, content, icon }) {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   function setOpen() {}
 
   return (

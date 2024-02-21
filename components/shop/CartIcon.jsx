@@ -2,9 +2,10 @@ import React, { useEffect, useState, useContext } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import CartContext from "/contexts/cart";
+import NotFound from "../404";
 
 export default function CartIcon({ showCart, showBack }) {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const router = useRouter();
   const [cart] = useContext(CartContext);
   const [items, setItems] = useState(0);

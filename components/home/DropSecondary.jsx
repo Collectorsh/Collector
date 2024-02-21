@@ -4,9 +4,10 @@ import getDropSecondary from "/data/home/getDropSecondary";
 import { marketplaceLink } from "/utils/marketplaceHelpers";
 import { roundToTwo } from "/utils/roundToTwo";
 import ContentLoader from "react-content-loader";
+import NotFound from "../404";
 
 export default function DropSecondary() {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const [listings, setListings] = useState();
 
   const fetchDropSecondary = useCallback(async () => {

@@ -3,7 +3,6 @@ import CloudinaryImage from "../../components/CloudinaryImage";
 import MainNavigation from "../../components/navigation/MainNavigation";
 import UserContext from "../../contexts/user";
 import EditWrapper from "../../components/curatorProfile/editWrapper";
-import { PencilAltIcon, PhotographIcon, PlusIcon } from "@heroicons/react/solid";
 import EditImageModal from "../../components/curatorProfile/editImageModal";
 import EditBioModal from "../../components/curatorProfile/editBioModal";
 import CurationHighlight from "../../components/curatorProfile/curationHighlight";
@@ -69,23 +68,6 @@ function ProfilePage({ curator }) {
   const [pfpLoaded, setPfpLoaded] = useState(true);
   const [useOwnerView, setUseOwnerView] = useState(false)
   
-
-  // const getCurationsInit = useCallback((curatorInit, useOwnerView) => {
-  //   const curations = useOwnerView
-  //     ? curatorInit?.curations
-  //     : curatorInit?.curations.filter(curation => curation.is_published)
-    
-  //   if (curatorInit.curations_order?.length) { 
-  //     const curationIds = curatorInit.curations_order
-  //     const ordered = curationIds.map(id => curations?.find(curation => curation.id === id))
-  //       .filter(curation => curation)
-      
-  //     const remaining = curations?.filter(curation => !curationIds.includes(curation.id))
-  //     return [...ordered, ...remaining]
-  //   } else {
-  //     return curations?.sort(curation => curation.is_published ? -1 : 1)
-  //   }
-  // }, [])
   const getCurationsInit = useCallback((baseCurations, curationOrder, useOwnerView) => {
     const curations = useOwnerView
       ? baseCurations
@@ -112,7 +94,7 @@ function ProfilePage({ curator }) {
   useEffect(() => {
     //set up the initial state
     setUseOwnerView(isOwner)
-    setCurations(getCurationsInit(curator.curations, curator.curations_order, isOwner))
+    if (curator?.curations) setCurations(getCurationsInit(curator.curations, curator.curations_order, isOwner))
     //don't change when curator changes, this is just for on mount
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOwner])

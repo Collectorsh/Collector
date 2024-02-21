@@ -1,5 +1,4 @@
 import { Listbox, Transition } from "@headlessui/react"
-import { CheckIcon, ChevronDownIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
 import { useState } from "react"
 import * as Icon from 'react-feather'

@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { XCircleIcon } from "@heroicons/react/solid";
 import debounce from "lodash.debounce";
 import clsx from "clsx";
 import * as Icon from 'react-feather'

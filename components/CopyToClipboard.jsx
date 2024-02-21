@@ -1,4 +1,3 @@
-import { ClipboardCopyIcon, CheckIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
 import * as Icon from "react-feather";

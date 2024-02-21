@@ -16,8 +16,8 @@ import { Oval } from "react-loader-spinner";
 import { CATEGORIES } from "../FileDrop";
 import CloudinaryImage from "../CloudinaryImage";
 import getListingsByParent from "../../data/curationListings/getListingsByParent";
-import { InformationCircleIcon } from "@heroicons/react/solid";
 import { EditionListing } from "../detail/secondaryEditionListings";
+import * as Icon from "react-feather";
 
 const ModelViewer = dynamic(() => import('../artDisplay/modelDisplay'), {
   ssr: false
@@ -110,30 +110,38 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
 
   const userText = useMemo(() => {
     if (curationType === "artist") {
-      return (owner && owner.username !== artistName) ?
-        <p className="font-bold">Owned by {owner.username}</p>
+      const useOwnerLink = owner && owner.subscription_level === "pro" && owner.username
+
+      return (owner?.username && owner.username !== artistName) ? (
+        <ToggleLink
+          disabled={!useOwnerLink}  
+          href={`/gallery/${ owner?.username }`}
+          passHref
+        > 
+          <p className={clsx(useOwnerLink && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer")}>Owned by {owner.username}</p>
+        </ToggleLink>
+      )
         : null
     } else if (artistName) {
+      const useArtistLink = artist && artist.subscription_level === "pro" && artist.username
       return (
         <ToggleLink
-          disabled={!artist?.username}
+          disabled={!useArtistLink}
           href={`/gallery/${ artist?.username }`}
           passHref
         >
-          <p className={clsx(artist?.username && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer")}> by {artistName}</p>
+          <p className={clsx(useArtistLink && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer")}> by {artistName}</p>
         </ToggleLink>
-        // <p className="font-bold">by {artistName}</p>
       )
     }
-  }, [curationType, artistName, artist?.username, owner])
+  }, [curationType, artistName, artist, owner])
 
   const secondaryListingInfo = sellingSecondaryFromMaster
     ? (
       <Tippy
         content="Editions are sold lowest price first"
-        className="shadow-lg"
       >
-        <InformationCircleIcon className="w-4 inline -mt-2 opacity-50" />
+        <Icon.Info size={14} className="inline opacity-50" />
       </Tippy>
     )
     : null
@@ -249,7 +257,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
           className={clsx('flex gap-1', "flex-col items-start relative")}
         >
 
-          <p className='textPalette2 font-bold text-sm mt-1'>{supplyText}{secondaryListingInfo}</p>
+          <p className='textPalette2 font-bold text-sm mt-1 flex gap-1'>{supplyText}{secondaryListingInfo}</p>
 
       
           <Link href={`/nft/${ token.mint }`} disabled={disableLink} passHref>

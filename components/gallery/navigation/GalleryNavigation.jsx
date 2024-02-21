@@ -10,15 +10,14 @@ import React, {
 import UserContext from "/contexts/user";
 import getUserFromApiKey from "/data/user/getUserFromApiKey";
 import { Dialog, Transition } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
 import { host } from "/config/settings";
 import DarkMode from "/components/navigation/DarkMode";
-import { HomeIcon, ShareIcon, UserCircleIcon } from "@heroicons/react/solid";
 import TwitterLogo from "/components/logos/TwitterLogo";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 
 export default function GalleryNavigation({ user }) {
+  //DEPRECATED - TO BE DELETED
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
   const [open, setOpen] = useState(false);
 
@@ -195,7 +194,7 @@ export default function GalleryNavigation({ user }) {
                           onClick={() => setOpen(false)}
                         >
                           <span className="sr-only">Close panel</span>
-                          <XIcon className="h-6 w-6" aria-hidden="true" />
+                          X
                         </button>
                       </div>
                     </Transition.Child>

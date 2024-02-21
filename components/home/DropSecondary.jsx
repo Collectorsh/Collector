@@ -3,10 +3,10 @@ import Link from "next/link";
 import getDropSecondary from "/data/home/getDropSecondary";
 import { marketplaceLink } from "/utils/marketplaceHelpers";
 import { roundToTwo } from "/utils/roundToTwo";
-import { ArrowRightIcon } from "@heroicons/react/outline";
 import ContentLoader from "react-content-loader";
 
 export default function DropSecondary() {
+  return; //DEPRECATED - TO BE DELETED
   const [listings, setListings] = useState();
 
   const fetchDropSecondary = useCallback(async () => {
@@ -49,10 +49,11 @@ export default function DropSecondary() {
         <Link href="/drops">
           <a>See all Drops</a>
         </Link>
-        <ArrowRightIcon
+        {/* <ArrowRightIcon
           className="h-4 w-4 ml-1 inline cursor-pointer"
           aria-hidden="true"
-        />
+        /> */}
+        Right arrow
       </p>
       <div className="grid grid-flow-col grid-cols-card auto-cols-card py-4 gap-6 overflow-x-auto items-start mt-6">
         {listings ? (

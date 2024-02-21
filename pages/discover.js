@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useAllGalleries } from "../data/home/getAllGalleries";
 import { useEffect, useRef, useState } from "react";
 import debounce from "lodash.debounce";
-import { ArrowLeftIcon, ArrowRightIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, XCircleIcon } from "@heroicons/react/solid";
+
 import CloudinaryImage from "../components/CloudinaryImage";
 import NotFound from "../components/404";
 
@@ -12,6 +12,7 @@ const totalPerPage = 12
 
 export default function Discover() {
   return <NotFound />
+  return; //DEPRECATED - TO BE DELETED
   const searchRef = useRef()
   const [search, setSearch] = useState();
   const [page, setPage] = useState(1);
@@ -94,7 +95,7 @@ export default function Discover() {
                       }
                     }}
                   >
-                    <XCircleIcon className="fill-black dark:fill-white" width={20} height={20} />
+                    {/* <XCircleIcon className="fill-black dark:fill-white" width={20} height={20} /> */}
                   </button>
                 )
                 : null
@@ -106,14 +107,14 @@ export default function Discover() {
                 disabled={Boolean(page === 1)}
                 onClick={() => setPage(1)}
               >
-                <ChevronDoubleLeftIcon className="fill-black dark:fill-white" width={16} height={16} />
+                {/* <ChevronDoubleLeftIcon className="fill-black dark:fill-white" width={16} height={16} /> */}
               </button>
               <button
                 className="disabled:invert-[0.5]"
                 disabled={Boolean(page === 1)}
                 onClick={() => setPage(prev => prev-1)}
               >
-                <ArrowLeftIcon className="fill-black dark:fill-white" width={16} height={16}/>
+                {/* <ArrowLeftIcon className="fill-black dark:fill-white" width={16} height={16}/> */}
               </button>
 
               {total ? <span className="mx-2">{page} / {total ? totalPages : "..."}</span> : null}
@@ -123,14 +124,14 @@ export default function Discover() {
                 disabled={Boolean(page >= totalPages)}
                 onClick={() => setPage(prev => prev+1)}
               >
-                <ArrowRightIcon className="fill-black dark:fill-white" width={16} height={16} />
+                {/* <ArrowRightIcon className="fill-black dark:fill-white" width={16} height={16} /> */}
               </button>
               <button
                  className="disabled:invert-[0.5]"
                 disabled={Boolean(page >= totalPages)}
                 onClick={() => setPage(totalPages)}
               >
-                <ChevronDoubleRightIcon className="fill-black dark:fill-white" width={16} height={16} />
+                {/* <ChevronDoubleRightIcon className="fill-black dark:fill-white" width={16} height={16} /> */}
               </button>
             </div>
 

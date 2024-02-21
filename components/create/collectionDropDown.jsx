@@ -1,5 +1,4 @@
 import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, ChevronDownIcon, InformationCircleIcon, PlusIcon } from '@heroicons/react/solid'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import MainButton from '../MainButton'
@@ -81,7 +80,7 @@ const CollectionDropDown = ({ selectedCollection, setCollection, setError, exist
                     <Listbox.Option key={collection.mint} value={collection}>
                         <div
                           className={clsx(
-                            "p-2 flex gap-1 items-center justify-between w-full cursor-pointer rounded",
+                            "p-2 flex gap-1 items-center w-full cursor-pointer rounded",
                             'hoverPalette2' 
                           )}
                         >
@@ -90,7 +89,7 @@ const CollectionDropDown = ({ selectedCollection, setCollection, setError, exist
                             <img src={collection.image} alt="" className="w-8 h-8 rounded" />
                             {collection.name}
                           </div>
-                          {selectedCollection?.mint === collection.mint ? <CheckIcon className="w-6 h-6 float-right" /> : null}
+                          {selectedCollection?.mint === collection.mint ? <Icon.Check strokeWidth={2.5} size={20} /> : null}
                         </div>
                     </Listbox.Option>
                     ))

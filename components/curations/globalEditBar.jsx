@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 import MainButton, { WarningButton } from '../MainButton';
-import { ChevronDownIcon, PlusIcon, UserAddIcon, TagIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import { RoundedCurve } from './roundedCurveSVG';
 import { roundToPrecision } from '../../utils/maths';

@@ -2,11 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import getPopularGalleries from "/data/home/getPopularGalleries";
 import getDaos from "/data/home/getDaos";
-import { ArrowRightIcon } from "@heroicons/react/outline";
 import GalleryContent from "/components/home/GalleryContent";
 import getCuratedGalleries from "/data/home/getCuratedGalleries";
 
 export default function GalleriesPage() {
+  return; //DEPRECATED - TO BE DELETED
   const [popular, setPopular] = useState();
   const [daos, setDaos] = useState();
   const [curated, setCurated] = useState();
@@ -31,10 +31,7 @@ export default function GalleriesPage() {
           <Link href="/discover">
             <a>See all Galleries</a>
           </Link>
-          <ArrowRightIcon
-            className="h-4 w-4 ml-1 inline cursor-pointer"
-            aria-hidden="true"
-          />
+          Arrow
         </p>
       </div>
       {/* <GalleryContent name="Dao's &amp; Collectives" items={daos} />

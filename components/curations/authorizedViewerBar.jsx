@@ -1,13 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
-import MainButton, { WarningButton } from '../MainButton';
-import {  CheckIcon, ChevronDownIcon, PlusIcon, UserAddIcon } from '@heroicons/react/solid';
+import MainButton from '../MainButton';
 import clsx from 'clsx';
-import { RoundedCurve } from './roundedCurveSVG';
-import { roundToPrecision } from '../../utils/maths';
-import { useState } from 'react';
-import Tippy from '@tippyjs/react';
-import { Oval } from 'react-loader-spinner';
 import * as Icon from 'react-feather'
+
 const AuthorizedViewerBar = ({
   setOpen,
   isOpen,

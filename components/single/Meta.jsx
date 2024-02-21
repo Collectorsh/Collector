@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { ArrowRightIcon } from "@heroicons/react/outline";
 
 export default function Meta({ token, collector, market }) {
+  return; //DEPRECATED - TO BE DELETED
   const removeElement = (e) => {
     e.target.parentNode.remove();
   };
@@ -89,10 +89,11 @@ export default function Meta({ token, collector, market }) {
           <Link href={`/drops/${market}/market`}>
             <a>Go to original drop</a>
           </Link>
-          <ArrowRightIcon
+          arrow right
+          {/* <ArrowRightIcon
             className="h-4 w-4 ml-1 inline cursor-pointer"
             aria-hidden="true"
-          />
+          /> */}
         </p>
       )}
     </div>

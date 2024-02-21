@@ -1,4 +1,3 @@
-import { CogIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import MainButton from "../MainButton";
 import * as Icon from 'react-feather'

@@ -1,12 +1,12 @@
 import Link from "next/link";
 import MainNavigation from "/components/navigation/MainNavigation";
-import { CheckIcon } from "@heroicons/react/solid";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import NotFound from "../components/404";
 
 export default function Premium() {
   return <NotFound />
+  return; //DEPRECATED - TO BE DELETED
   return (
     <div className="dark:bg-black dark:text-whitish">
       <MainNavigation />

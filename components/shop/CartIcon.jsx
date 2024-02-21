@@ -2,9 +2,9 @@ import React, { useEffect, useState, useContext } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import CartContext from "/contexts/cart";
-import { ShoppingBagIcon } from "@heroicons/react/outline";
 
 export default function CartIcon({ showCart, showBack }) {
+  return; //DEPRECATED - TO BE DELETED
   const router = useRouter();
   const [cart] = useContext(CartContext);
   const [items, setItems] = useState(0);
@@ -20,10 +20,11 @@ export default function CartIcon({ showCart, showBack }) {
   return (
     <div className="absolute right-4 md:right-8 top-3 sm:top-20">
       <div className="inline">
-        <ShoppingBagIcon
+        Shopping Cart
+        {/* <ShoppingBagIcon
           className="h-8 w-8 inline cursor-pointer dark:text-white align-middle"
           aria-hidden="true"
-        />
+        /> */}
         <span className="dark:text-white text-2xl align-middle inline">
           {items}
         </span>

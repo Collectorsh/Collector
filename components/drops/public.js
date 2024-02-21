@@ -8,10 +8,11 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Oval } from "react-loader-spinner";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import MintedModal from "/components/MintedModal";
-import { ArrowRightIcon } from "@heroicons/react/outline";
+
 import { connection } from "/config/settings";
 
 export default function PublicMint({ address, drop }) {
+  return; //DEPRECATED - TO BE DELETED
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [total, setTotal] = useState(0);
@@ -234,10 +235,10 @@ export default function PublicMint({ address, drop }) {
                 <Link href={`/drops/${drop.slug}/market`}>
                   <a>Go to Market</a>
                 </Link>
-                <ArrowRightIcon
+                {/* <ArrowRightIcon
                   className="h-4 w-4 ml-1 inline cursor-pointer"
                   aria-hidden="true"
-                />
+                /> */}
               </p>
             )}
             {(mintState === "public" ||

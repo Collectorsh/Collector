@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { DotsVerticalIcon } from '@heroicons/react/solid'
+import * as Icon from 'react-feather'
 import clsx from 'clsx';
 import { RoundedCurve } from './roundedCurveSVG';
 
@@ -52,6 +52,6 @@ export const GrabHandle = ({ listeners, setActivatorNodeRef, grabbing }) => (
   >
     <RoundedCurve className="absolute bottom-[calc(100%-0.5rem)] h-4 -rotate-90  fill-zinc-200 dark:fill-zinc-700 bg-transparent" />
     <RoundedCurve className="absolute scale-x-[-1] top-[calc(100%-0.5rem)] h-4 -rotate-90 fill-zinc-200 dark:fill-zinc-700 bg-transparent" />
-    <DotsVerticalIcon className='w-5 h-5' />
+    <Icon.MoreVertical size={20} strokeWidth={2.5} className='relative right-[1px]' />
   </button>
 )

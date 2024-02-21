@@ -5,7 +5,7 @@ import { nullifyUndefinedArr, nullifyUndefinedObj } from "../../utils/nullifyUnd
 import { useContext, useEffect, useRef, useState } from "react";
 import { truncate } from "../../utils/truncate";
 import getCurationsByListingMint from "../../data/curation/getCurationsByListingMint";
-import { ArrowsExpandIcon } from "@heroicons/react/solid";
+
 import clsx from "clsx";
 import ArtModal from "../../components/detail/artModal";
 import DetailListings from "../../components/detail/listings";
@@ -71,6 +71,9 @@ export default function DetailPage({token, curations}) {
   
   const artistName = token?.artist_name ? token.artist_name.replace("_", " ") : truncate(token?.artist_address, 4)
   const ownerName = token?.owner_name ? token.owner_name.replace("_", " ") : truncate(token?.owner_address, 4)
+
+  const useArtistLink = token?.artist_account?.username && token?.artist_account?.subscription_level === "pro"
+  const useOwnerLink = token?.owner_account?.username && token?.owner_account?.subscription_level === "pro"
 
   const supplyText = isMasterEdition
     ? `${ maxSupply - supply }/${ maxSupply } Editions Available`
@@ -291,21 +294,37 @@ export default function DetailPage({token, curations}) {
             ) : null}
           </div>
 
-          <div className="flex gap-1 mt-1">
+          <div className="flex mt-1">
             {artistName
               ? <ToggleLink
-                disabled={!token?.artist_account?.username}
+                disabled={!useArtistLink}
                 href={`/gallery/${ token?.artist_account?.username }`}
                 passHref
               >
                 <p className={clsx(
-                  token?.artist_account?.username && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer"
+                  "relative -left-2 rounded-md px-2 py-0",
+                  useArtistLink && "hoverPalette1 cursor-pointer"
                 )}> by {artistName}</p>
               </ToggleLink>
               : null
             }
+
             {(!isMasterEdition && ownerName !== artistName)
-              ? <p className={clsx(token?.artist_account?.username && "relative -left-4")}>- owned by {ownerName}</p>
+              ? (
+                <>
+                  <p className="relative -left-2">-</p>
+                  <ToggleLink
+                    disabled={!useOwnerLink}
+                    href={`/gallery/${ token?.owner_account?.username }`}
+                    passHref
+                  >
+                    <p className={clsx(
+                      "relative -left-2 rounded-md px-2 py-0",
+                      useOwnerLink && "hoverPalette1 cursor-pointer"
+                    )}>owned by {ownerName}</p>
+                  </ToggleLink>
+                </>
+              )
               : null
             }
           </div>

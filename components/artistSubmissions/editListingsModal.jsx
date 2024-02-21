@@ -10,11 +10,9 @@ import updateListing, { cancelListing } from "../../data/curationListings/update
 import UserContext from "../../contexts/user";
 import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { XCircleIcon } from "@heroicons/react/solid";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import deleteSubmission from "../../data/curationListings/deleteSubmission";
-import { useRouter } from "next/router";
 import LogRocket from "logrocket";
 
 import { setTxFailed } from "../../utils/cookies";

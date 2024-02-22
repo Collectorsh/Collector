@@ -29,6 +29,7 @@ import SecondaryEditionListings from "../../components/detail/secondaryEditionLi
 import { ToggleLink } from "../../components/curations/artModuleItem";
 
 import * as Icon from "react-feather";
+import { displayName } from "../../utils/displayName";
 const ModelViewer = dynamic(() => import("../../components/artDisplay/modelDisplay"), {
   ssr: false
 });
@@ -69,8 +70,18 @@ export default function DetailPage({token, curations}) {
     ? assetWidth / altFileAspectRatio
     : assetWidth / videoAspectRatio
   
-  const artistName = token?.artist_name ? token.artist_name.replace("_", " ") : truncate(token?.artist_address, 4)
-  const ownerName = token?.owner_name ? token.owner_name.replace("_", " ") : truncate(token?.owner_address, 4)
+  const artistName =
+    token?.artist_account?.username
+      ? displayName(token.artist_account)
+      : token?.artist_name
+        ? token.artist_name
+        : truncate(token?.artist_address, 4)
+  const ownerName =
+    token?.owner_account?.username
+      ? displayName(token.owner_account)
+      : token?.owner_name 
+        ? token.owner_name
+        : truncate(token?.owner_address, 4)
 
   const useArtistLink = token?.artist_account?.username && token?.artist_account?.subscription_level === "pro"
   const useOwnerLink = token?.owner_account?.username && token?.owner_account?.subscription_level === "pro"

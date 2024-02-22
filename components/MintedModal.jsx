@@ -1,9 +1,10 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Link from "next/link";
+import NotFound from "./404";
 
 export default function MintedModal({ open, nft, updateOpen }) {
-  return; //DEPRECATED - TO BE DELETED
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   function setOpen() {}
 
   return (

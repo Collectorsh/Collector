@@ -17,6 +17,7 @@ import { parseCloudImageId } from "../utils/cloudinary/idParsing";
 import { addSelfApprovedArtists } from "../data/curation/updateApprovedArtists";
 import "tippy.js/dist/tippy.css";
 import { defaultCollectorImageId } from "../config/settings";
+import { displayName } from "../utils/displayName";
 
 
 const Submissions = ({ }) => {
@@ -195,7 +196,7 @@ const Submissions = ({ }) => {
           <div className="my-2 px-3 gap-3 flex justify-between flex-wrap">
             <div>
               <h3 className="font-bold collector text-2xl">{name.replaceAll("_", " ")}</h3>
-              <p>Curated by {curator.username}</p>
+              <p>Curated by {displayName(curator)}</p>
             </div>
             <div className="flex gap-2 items-center flex-wrap">
               {artistSubmissions.length

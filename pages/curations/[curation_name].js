@@ -43,6 +43,7 @@ import CurationDescription from "../../components/curations/description";
 import MainButton from "../../components/MainButton";
 
 import * as Icon from 'react-feather'
+import { displayName } from "../../utils/displayName";
 
 const descriptionPlaceholder = "Tell us about this curation."
 
@@ -110,7 +111,6 @@ function CurationPage({curation}) {
   
   const modules = useDraftContent ? draftContent?.modules : publishedContent?.modules;
 
-  const displayPublishedEdit = globalEditOpen && isOwner;
   const displayDraftEdit = globalEditOpen && useDraftContent && isOwner;
   const displayCuration = Boolean(curation?.is_published || isOwner || isAuthorizedViewer);
 
@@ -427,7 +427,7 @@ function CurationPage({curation}) {
             setEditNameOpen={setEditNameOpen}
             displayPublishedEdit={displayDraftEdit}//{displayPublishedEdit}
           />
-          <p className="font-xs textPalette3 text-center">{curatorText}</p>
+          {/* <p className="font-xs textPalette3 text-center">{curatorText}</p> */}
           <Link href={`/gallery/${ curation.curator?.username }`} >
             <a className="flex gap-3 items-center justify-center mb-8 hoverPalette1 rounded-md px-4 py-2 w-fit mx-auto ">
               {curation.curator?.profile_image
@@ -443,7 +443,7 @@ function CurationPage({curation}) {
                   </div>)
                   : null
                 }
-              <p className="text-lg font-bold"> {curation.curator?.username}</p>
+              <p className="text-lg font-bold">{displayName(curation?.curator)}</p>
             </a>
           </Link>
     

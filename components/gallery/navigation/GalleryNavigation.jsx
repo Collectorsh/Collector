@@ -27,7 +27,7 @@ export default function GalleryNavigation({ user }) {
 
   const asyncGetUser = useCallback(async (apiKey) => {
     let res = await getUserFromApiKey(apiKey);
-    setLoggedInUser(res.data.user);
+    setLoggedInUser(res.user);
   }, []);
 
   useEffect(() => {

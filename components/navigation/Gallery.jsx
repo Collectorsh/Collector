@@ -6,6 +6,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import * as Icon from 'react-feather'
 import clsx from "clsx";
 import Tippy from "@tippyjs/react";
+import { displayName } from "../../utils/displayName";
 
 
 export default function Gallery() {
@@ -107,9 +108,9 @@ export const UserCard = ({inset}) => {
   return (
     <div className={clsx("palette3 p-2 grid grid-cols-3 overflow-hidden", inset && "rounded-md shadow-inner")}>
     <div className=" px-2 pb-1 flex flex-col items-start col-span-2">
-      <p className="truncate w-full">{user?.username}</p>
+      <p className="truncate w-full">{displayName(user)}</p>
       <p className="text-xs opacity-50">
-        {publicKey?.toBase58().substr(0, 4)}...
+        {publicKey?.toBase58().slice(0, 4)}...
         {publicKey?.toBase58().slice(-4)}
       </p>
     </div>

@@ -18,6 +18,7 @@ import CloudinaryImage from "../CloudinaryImage";
 import getListingsByParent from "../../data/curationListings/getListingsByParent";
 import { EditionListing } from "../detail/secondaryEditionListings";
 import * as Icon from "react-feather";
+import { displayName } from "../../utils/displayName";
 
 const ModelViewer = dynamic(() => import('../artDisplay/modelDisplay'), {
   ssr: false
@@ -50,7 +51,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
   const isSold = token.listed_status === "sold" || isMasterEdition && supply >= maxSupply
 
   
-  const artistName = artist?.username || token.temp_artist_name
+  const artistName = displayName(artist) || token.temp_artist_name
   
   const sellingSecondaryFromMaster = isMasterEdition && (!isListed || isSold) && Boolean(editionListings?.length)
   
@@ -112,13 +113,13 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
     if (curationType === "artist") {
       const useOwnerLink = owner && owner.subscription_level === "pro" && owner.username
 
-      return (owner?.username && owner.username !== artistName) ? (
+      return (owner?.username && owner.username !== artist.username) ? (
         <ToggleLink
           disabled={!useOwnerLink}  
           href={`/gallery/${ owner?.username }`}
           passHref
         > 
-          <p className={clsx(useOwnerLink && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer")}>Owned by {owner.username}</p>
+          <p className={clsx(useOwnerLink && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer")}>Owned by {displayName(owner)}</p>
         </ToggleLink>
       )
         : null

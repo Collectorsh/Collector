@@ -9,11 +9,11 @@ import { Oval } from "react-loader-spinner";
 import { urlRegex } from "../curations/editNameModal";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import UsernameAndEmail from "./UsernameAndEmail";
 import { success } from "../../utils/toast";
 import { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import { emailRegex, usernameError } from "../settings/Settings";
+import { ProfileEmail, ProfileUsername } from "./ProfileInputs";
 
 
 
@@ -100,9 +100,12 @@ export default function CreateUsernameModal() {
           <p className="text-center my-4">
             Enter your username to finish setting up your account. You can always change this later in your profile settings.
           </p>
-          <UsernameAndEmail
+          <ProfileUsername
             username={username}
             setUsername={setUsername}
+            paletteClass="palette2 borderPalette3"
+          />
+          <ProfileEmail
             email={email}
             setEmail={setEmail}
             paletteClass="palette2 borderPalette3"

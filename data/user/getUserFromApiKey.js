@@ -5,7 +5,7 @@ async function getUserFromApiKey(apiKey) {
     const response = await apiClient.post("/user/from_api_key", {
       api_key: apiKey,
     });
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
   }

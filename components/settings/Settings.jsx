@@ -4,9 +4,9 @@ import { Toaster } from "react-hot-toast";
 import { success, error } from "/utils/toastMessages";
 import saveUser from "/data/user/saveUser";
 import { urlRegex } from "../curations/editNameModal";
-import UsernameAndEmail from "../onboarding/UsernameAndEmail";
 import MainButton from "../MainButton";
 import { Oval } from "react-loader-spinner";
+import { ProfileDisplayName, ProfileEmail, ProfileUsername } from "../onboarding/ProfileInputs";
 
 
 export const usernameError = 'Must be 2 to 31 characters and only contain letters, numbers, "_" and "-"'
@@ -19,6 +19,7 @@ export default function Settings() {
   const [saving, setSaving] = useState(false);
   const [username, setUsername] = useState(user?.username || "")
   const [email, setEmail] = useState(user?.email || "")
+  const [displayName, setDisplayName] = useState(user?.name || user?.username || "")
   const disableSave = error || username?.length < 2 || saving;
 
 
@@ -45,6 +46,7 @@ export default function Settings() {
     const res = await saveUser(user.api_key, {
       username: username,
       email: email,
+      name: displayName,
     });
 
     if (res.data && res.data.status === "success") {
@@ -79,11 +81,20 @@ export default function Settings() {
         </MainButton>
       </div>
       <p className="text-sm pl-4 text-red-500 h-4 w-full mt-0 text-center">{error}</p>
-      <UsernameAndEmail
+      <ProfileUsername
         username={username}
         setUsername={setUsername}
+        paletteClass="palette2 borderPalette3"
+      />
+      <ProfileDisplayName
+        displayName={displayName}
+        setDisplayName={setDisplayName}
+        paletteClass="palette2 borderPalette3"
+      />
+      <ProfileEmail
         email={email}
         setEmail={setEmail}
+        paletteClass="palette2 borderPalette3"
       />
     </div>
   )

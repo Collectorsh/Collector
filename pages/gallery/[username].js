@@ -10,22 +10,23 @@ import SocialLink from "../../components/SocialLink";
 import EditSocialsModal from "../../components/curatorProfile/editSocialsModal";
 import CurationList from "../../components/curatorProfile/curationList";
 import { useRouter } from "next/router";
-import { updateBannerImage, updateBio, updateProfileImage, updateSocials } from "../../data/user/updateProfile";
+import { updateBannerImage, updateBio, updateDisplayName, updateProfileImage, updateSocials } from "../../data/user/updateProfile";
 import { success, error } from "/utils/toastMessages";
-import getUserFromUsername from "../../data/user/getUserFromUsername";
 import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
 import MainButton from "../../components/MainButton";
 import CreateCurationModal from "../../components/curatorProfile/createCurationModal";
 import getCuratorFromUsername from "../../data/user/getCuratorByUsername";
 import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/cloudinary/idParsing";
-
+import { displayName as getDisplayName } from "../../utils/displayName";
 import SortableCurationPreviewWrapper from "../../components/curations/sortableCurationPreviewWrapper";
 import SortableCurationPreview from "../../components/curations/sortableCurationPreview";
 import saveCurationsOrder from "../../data/user/saveCurationsOrder";
 import * as Icon from 'react-feather'
 
 import dynamic from 'next/dynamic';
+import EditDisplayNameModal from "../../components/curatorProfile/editDisplayNameModal";
+
 const QuillContent = dynamic(() => import('../../components/Quill').then(mod => mod.QuillContent), { ssr: false })
 
 
@@ -50,12 +51,13 @@ const getBioDelta = (curator, isOwner) => {
 
 function ProfilePage({ curator }) {
   const router = useRouter();
-  const [user] = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
   const isOwner = Boolean(user && user.public_keys.includes(curator?.public_keys?.[0]) && user.api_key);
 
   const [editBannerOpen, setEditBannerOpen] = useState(false);
   const [editPfpOpen, setEditPfpOpen] = useState(false);
   const [editBioOpen, setEditBioOpen] = useState(false);
+  const [editDisplayNameOpen, setEditDisplayNameOpen] = useState(false);
   const [editSocialsOpen, setEditSocialsOpen] = useState(false);
   const [createCurationOpen, setCreateCurationOpen] = useState(false);
 
@@ -63,6 +65,7 @@ function ProfilePage({ curator }) {
   const [pfp, setPfp] = useState(curator?.profile_image);
   const [bio, setBio] = useState(getBioDelta(curator, isOwner));
   const [socials, setSocials] = useState(curator?.socials || []);
+  const [displayName, setDisplayName] = useState(getDisplayName(curator));
 
   const [bannerLoaded, setBannerLoaded] = useState(true);
   const [pfpLoaded, setPfpLoaded] = useState(true);
@@ -175,6 +178,17 @@ function ProfilePage({ curator }) {
     const res = await updateSocials(user.api_key, newSocials)
     if (res.status === "success") success("Socials Updated!")
     else error("Socials update failed")
+  }
+
+  const handleEditDisplayName = async (newDisplayName) => { 
+    if (!isOwner) return;
+    const res = await updateDisplayName(user.api_key, newDisplayName)
+    if (res.status === "success") {
+      success("Display Name Updated!")
+      setDisplayName(newDisplayName);
+      setUser(prev => ({ ...prev, name: newDisplayName }))
+    }
+    else error("Display name update failed")
   }
 
   const handleGoToSettings = () => { 
@@ -300,12 +314,15 @@ function ProfilePage({ curator }) {
               <EditWrapper
                 className="max-w-fit"
                 isOwner={useOwnerView}
-                onEdit={handleGoToSettings}
+                onEdit={() => setEditDisplayNameOpen(true)}
                 placement="-top-3 -right-3"
                 groupHoverClass="group-hover/settings:opacity-100"
                 buttonClassName="palette3 hoverPalette3 p-1 border-2 border-zinc-900 dark:border-zinc-100"
+                // buttonClassName="w-max"
+                // text="Edit Display Name"
+                icon={<Icon.Edit size={20} strokeWidth={2.5} />}
               >
-                <h1 className="font-bold text-5xl mr-2">{curator.username}</h1>
+                <h1 className="font-bold text-5xl mr-2">{displayName}</h1>
               </EditWrapper>
 
               <EditWrapper
@@ -436,6 +453,12 @@ function ProfilePage({ curator }) {
             <CreateCurationModal
               isOpen={createCurationOpen}
               onClose={() => setCreateCurationOpen(false)}
+            />
+            <EditDisplayNameModal
+              name={displayName}
+              isOpen={editDisplayNameOpen}
+              onClose={() => setEditDisplayNameOpen(false)}
+              onSave={handleEditDisplayName}
             />
           </>
         )

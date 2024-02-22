@@ -17,16 +17,20 @@ import LogRocket from "logrocket";
 
 import { setTxFailed } from "../../utils/cookies";
 import * as Icon from "react-feather";
+import WalletDropdown from "../wallet/WalletDropdown";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { truncate } from "../../utils/truncate";
+import { displayName } from "../../utils/displayName";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
   const wallet = useWallet()
-
+  const { setVisible: setModalVisible } = useWalletModal();
   const { handleBuyNowList, handleDelist, handleMasterEditionCloseAndWithdraw, handleMasterEditionList } = useCurationAuctionHouse(curation)
   
   const submissions = (() => {
     const baseListings = curation?.submitted_token_listings.filter(listing => {
-      const owned = listing.owner_address === wallet?.publicKey.toString()
+      const owned = listing.owner_address === wallet?.publicKey?.toString()
       // const owned = user.public_keys.includes(listing.owner_address)
       const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
       return owned && !closedMaster
@@ -227,6 +231,9 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       onClose={onClose}
       title={`Edit "${ curation?.name.replaceAll("_", " ") }" Listings`}
     >
+
+      <p className="text-sm textPalette2 text-center">Viewing listings from {truncate(wallet?.publicKey?.toBase58(), 4)}</p>      
+
       <div className="overflow-auto">
         <div className="mt-4 p-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {submissions?.map((token) => (
@@ -250,7 +257,7 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
       <div className={clsx("text-left mt-4 text-xs", (!useCuratorInfo && !useMasterEditionInfo) ? "hidden" : "")}>
         <p className="font-bold text-left">Please be aware: </p>
         <p className={!useCuratorInfo ? "hidden" : "text-neutral-500"}>
-          Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price.
+          Your curator {displayName(curation?.curator)} will receive {curation?.curator_fee}% of the sale price.
         </p>
         <p className={!useMasterEditionInfo ? "hidden" : "text-neutral-500"}>
           To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet.

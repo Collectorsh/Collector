@@ -1,7 +1,6 @@
 import { Dialog } from "@headlessui/react";
-import { XCircleIcon } from "@heroicons/react/outline";
-
-export default function OptimizeFeedbackModal({isOpen, setIsOpen, completed, waiting, progress}) {
+export default function OptimizeFeedbackModal({ isOpen, setIsOpen, completed, waiting, progress }) {
+  //DEPRECATED - TO BE DELETED
   return (
     <Dialog
       open={isOpen}
@@ -19,7 +18,8 @@ export default function OptimizeFeedbackModal({isOpen, setIsOpen, completed, wai
             className="absolute top-2 right-2 hover:scale-105"
             onClick={() => setIsOpen(false)}
           >
-            <XCircleIcon className="" width={28} height={28} />
+            X
+            {/* <XCircleIcon className="" width={28} height={28} /> */}
           </button>
           <Dialog.Title className="text-3xl font-bold text-center mb-4">Optimization in Progress</Dialog.Title>
           <p className="font-bold">We are currently optimizing your artwork in order to provide a premium viewing and editing experience.</p>

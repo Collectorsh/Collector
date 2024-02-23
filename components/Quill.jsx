@@ -1,7 +1,12 @@
 import dynamic from "next/dynamic";
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
-import { useEffect, useRef } from "react";
+import Quill from "quill";
+
+const Size = Quill.import('attributors/style/size');
+const sizeOptions = ['12px', '16px', '24px', "32px"];
+Size.whitelist = [...sizeOptions, "small", "normal", "large", "huge"];
+Quill.register(Size, true);
 
 const ReactQuill = dynamic(
   () => import('react-quill'),
@@ -10,8 +15,8 @@ const ReactQuill = dynamic(
 
 const modules = {
   toolbar: [
-    [{ 'size': [] }],
-    // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    // [{ 'size': [] }],
+    [{ 'size': sizeOptions }],
     ['bold', 'italic', 'underline', 'strike'],
     [{ 'align': [] }],
     ['blockquote', 'code-block'],
@@ -44,7 +49,7 @@ const modules = {
 export const initialDeltaContent = JSON.stringify({
   ops: [
     {
-      attributes: { size: 'large' },
+      attributes: { size: "16px" },
       insert: " "
     },
     {
@@ -69,6 +74,7 @@ export const QuillEditor = ({ textDelta, onChange }) => {
 
   return (
     <ReactQuill
+      
       theme="snow"
       modules={modules}
       value={JSON.parse(textDelta || initialDeltaContent)}

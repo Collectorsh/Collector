@@ -4,14 +4,15 @@ import React, { useState, useContext, useEffect, Fragment, Suspense, useCallback
 import { useWallet } from "@solana/wallet-adapter-react";
 import UserContext from "/contexts/user";
 import { Dialog, Transition } from "@headlessui/react";
-import { XIcon, BellIcon } from "@heroicons/react/outline";
 import DarkMode from "/components/navigation/DarkMode";
 import ConnectWallet from "/components/wallet/ConnectWallet";
 import Gallery from "/components/navigation/Gallery";
 import CreateUsernameModal from "/components/onboarding/CreateUsernameModal";
-import { truncate } from "../../utils/truncate";
 import WalletButton from "./WalletButton";
 import RpcHealthFeedback from "./RpcHeathFeedback";
+
+import * as Icon from 'react-feather'
+import { UserCard } from "./Gallery";
 
 export default function MainNavigation() {
   const wallet = useWallet();
@@ -25,16 +26,15 @@ export default function MainNavigation() {
   function toggleMenu() {
     setOpen(!open);
   }
-  const signOut = useCallback(() => {
-    wallet.disconnect().then(() => {
+
+  function signOut() {
+    wallet?.disconnect().then(() => {
       localStorage.removeItem("api_key");
       setUser(null);
-      router.push("/");
     });
-  },[router, setUser, wallet])
+  }
 
   useEffect(() => {
-    
     //if no wallet connected but stale user, sign out
     if (user && !wallet.publicKey) signOut();
 
@@ -46,192 +46,132 @@ export default function MainNavigation() {
     <div className="pb-[76px] relative">
       <ConnectWallet />
       <CreateUsernameModal />
-      <nav className="bg-white dark:bg-black shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
+      <nav className="palette1 shadow-black/10 shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
         <RpcHealthFeedback />
-        <div className="max-w-screen-2xl mx-auto">
-        <div>
-          <div className="flex">
-            <div className="flex items-center col-span-1">
-              <div className="cursor-pointer md:my-3 flex gap-4 items-center ">
-                <Link href="/">
-                  <a className="collector text-3xl font-bold flex items-center">
-                  collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r
+        <div className="max-w-screen-2xl 2xl:px-8 mx-auto">
+          <div>
+            <div className="flex">
+              <div className="flex items-center col-span-1">
+                <div className="md:my-3 flex gap-4 items-end ">
+                  <Link href="/">
+                    <a className="collector text-3xl font-bold flex items-center rounded-md px-2 py-0 hoverPalette1">
+                      collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r
                     </a>
                   </Link>
-                  {/* <span className="mt-2 collector">-</span> */}
-                  <span className="mt-2 collector tracking-wide">Beta</span>
+                  <span className="collector tracking-wide pb-[1px]">Beta</span>
+                </div>
               </div>
-              </div>
-            <div className="hidden md:flex items-center justify-end w-full">
-              <Link href="/about">
-                <a className="mr-8 font-bold">
-                  About
-                </a>
-              </Link>
-              {/* {user && <Gallery />} */}
-              {user
+              <div className="hidden md:flex items-center justify-end w-full">
+                <Link href="/about">
+                  <a className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1">
+                    About
+                  </a>
+                </Link>
+            
+                {user
                   ? <Gallery />//<Profile />
-                : (
+                  : (
                     <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                      
-                      <WalletButton />
-                      
-                  </div>
-                )
-              }
-              <DarkMode />
-            </div>
-            {/* <!-- Mobile menu button --> */}
-            <div className="flex md:hidden text-right items-center col-span-1 justify-end w-full">
-              <button
-                className="outline-none mobile-menu-button cursor-pointer"
-                onClick={toggleMenu}
-                style={{ background: "none" }}
-              >
-                <svg
-                  className="w-6 h-6 text-gray-400 hover:text-gray-600"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                      <WalletButton /> 
+                    </div>
+                    )
+                }
+                <DarkMode />
+              </div>
+              {/* <!-- Mobile menu button --> */}
+              <div className="flex md:hidden text-right items-center col-span-1 justify-end w-full">
+                <button
+                  className="outline-none mobile-menu-button cursor-pointer"
+                  onClick={toggleMenu}
                   style={{ background: "none" }}
                 >
-                  <path d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        <Transition.Root show={open} as={Fragment}>
-          <Dialog
-            as="div"
-            className="fixed inset-0 overflow-hidden z-20"
-            onClose={() => setOpen(true)}
-          >
-
-            <div className="absolute inset-0 overflow-hidden">
-              
-              <Transition.Child
-                as={Fragment}
-                enter="ease-in-out duration-500"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="ease-in-out duration-500"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <Dialog.Overlay className="absolute inset-0 transition-opacity" />
-              </Transition.Child>
-              <Transition.Child
-                as={Fragment}
-                enter="ease-in-out duration-500"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="ease-in-out duration-500"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <div className="absolute top-0 left-0 flex pt-4 pr-2 z-30">
-                  <button
-                    type="button"
-                    className="rounded-md text-gray-800 hover:text-black outline-none focus:outline-none cursor-pointer ml-4 dark:text-white"
-                    onClick={() => setOpen(false)}
-                  >
-                    <span className="sr-only">Close panel</span>
-                    <XIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
-                </div>
-              </Transition.Child>
-              <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
-                <Transition.Child
-                  as={Fragment}
-                  enter="transform transition ease-in-out duration-500 sm:duration-500"
-                  enterFrom="translate-x-full"
-                  enterTo="translate-x-0"
-                  leave="transform transition ease-in-out duration-500 sm:duration-500"
-                  leaveFrom="translate-x-0"
-                  leaveTo="translate-x-full"
-                >
-                  <div className="pointer-events-auto relative w-screen">
-                    <div className="flex h-full flex-col overflow-y-scroll bg-white dark:bg-black pb-6 shadow-xl">
-                      <div className="relative mt-12 flex-1 px-4 sm:px-6">
-                        <div className="absolute inset-0 px-4 sm:px-6 mt-2">
-                          <div className="mt-4 dark:text-gray-200">
-                            <div className="mr-4 inline">
-                              <DarkMode withText/>
-                            </div>
-                          </div>
-                          <div className="mt-6 dark:text-gray-200">
-                            <p
-                            className={`text-xl cursor-pointer border-b-2 py-2 border-gray-100 dark:border-dark3 ${ path === "/" ? "font-bold" : ""
-                              }`}
-                            >
-                              <Link href="/">Home</Link>
-                            </p>
-                            
-                              <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                <Link href="/about">About</Link>
-                              </p>
-                           
-
-                            {user && (
-                              <>
-                                <div className="">
-                                
-                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                    <Link href="/settings">Settings</Link>
-                                  </p>
-                            
-                                    {user.subscription_level === "pro" ? (
-                                      <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                        <Link href={`/gallery/${ user.username }`}>
-                                      
-                                          Gallery
-                                          
-                                        </Link>
-                                      </p>
-                                    ) : null}
-                                    {isCuratorApproved ? (
-                                      <>
-                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                          <Link href={`/submissions`}>Submissions</Link>
-                                        </p>
-                                        <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                          <Link href={`/create`}>Create</Link>
-                                        </p>
-                                      </>
-                                    ) : null}
-                                
-                                  <p className="text-xl font-light cursor-pointer border-b-2 border-gray-100 dark:border-dark3 py-2">
-                                      <a onClick={signOut}>
-                                        Sign Out
-                                        <span className=" ml-4 text-sm">{truncate(wallet?.publicKey?.toString())}</span>
-                                      </a>
-                                  </p>
-                                </div>
-                              </>
-                            )}
-                            {!user ? (
-                              <div className="mt-8 md:mt-0">
-                                  <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                                    
-                                      <WalletButton />
-                                    
-                                  </div>
-                              </div>
-                            ) : null}
-                          </div>
-                        </div>
-                        {/* /End replace */}
-                      </div>
-                    </div>
-                  </div>
-                </Transition.Child>
+                  <Icon.Menu />
+                </button>
               </div>
             </div>
-          </Dialog>
+          </div>
+          <Transition.Root show={open} as={Fragment}>
+            <Dialog
+              as="div"
+              className="fixed inset-0 overflow-hidden z-[1001]"
+              onClose={() => setOpen(true)}
+            >
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
+                  <Transition.Child
+                    as={Fragment}
+                    enter="transform transition ease-in-out duration-500 sm:duration-500"
+                    enterFrom="translate-x-full"
+                    enterTo="translate-x-0"
+                    leave="transform transition ease-in-out duration-500 sm:duration-500"
+                    leaveFrom="translate-x-0"
+                    leaveTo="translate-x-full"
+                  >
+                    <div className="pointer-events-auto relative w-screen palette1 p-6">
+                       
+                      <div className="flex z-30 justify-between w-full pb-5">
+                        <button
+                          type="button"
+                          className="rounded-md outline-none focus:outline-none cursor-pointer"
+                          onClick={() => setOpen(false)}
+                        >
+                          <span className="sr-only">Close panel</span>
+                          <Icon.X aria-hidden />
+                        </button>
+                        <DarkMode />
+                      </div>
+
+                      <div className="flex flex-col gap-2 p-4 text-xl">
+                      
+                        <Link href="/" passHref>
+                          <p className="">Home</p>
+                        </Link>
+                        <hr className="borderPalette3"/>
+                        <Link href="/about" passHref>
+                          <p className="">About</p>
+                        </Link>
+                        <hr className="borderPalette3" />
+                        {user
+                          ? (<>
+                            {user.subscription_level === "pro"
+                              ? (<>
+                                <Link href={`/gallery/${ user.username }`} passHref>
+                                  <p className="">My Gallery</p>
+                                </Link>
+                                <hr className="borderPalette3" />
+                              </>)
+                              : null
+                            }
+                              
+                            {isCuratorApproved
+                              ? (<>
+                                <Link href={`/create`} passHref>
+                                  <p className="">Mint</p>
+                                </Link>
+                                <hr className="borderPalette3" />
+                                <Link href={`/submissions`} passHref>
+                                  <p className="">Submissions</p>
+                                </Link>
+                                <hr className="borderPalette3" />
+                              </>)
+                              : null
+                            }
+                            
+                          </>)
+                          : <WalletButton />
+                        }
+                      </div>
+                      
+                      {user
+                        ? <UserCard inset />
+                        : null
+                      }
+                      
+                    </div>
+                  </Transition.Child>
+                </div>
+              </div>
+            </Dialog>
           </Transition.Root>
         </div>
       </nav>

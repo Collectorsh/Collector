@@ -2,7 +2,8 @@ import clsx from "clsx"
 
 const DescriptionInput = ({
   description, setDescription, setError,
-  placeholder = "Describe your artwork."
+  placeholder = "Description of your artwork",
+  paletteClass = "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800"
 }) => { 
   const limit = 1000
 
@@ -19,9 +20,9 @@ const DescriptionInput = ({
     <div>
       <p className="font-bold text-lg mb-1 ml-4">Description</p>
       <textarea
-        className="border-4 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
-          w-full h-32 p-3
-        "
+        className={clsx("px-3.5 py-2 outline-none rounded-md border-2 w-full h-24",
+          paletteClass  
+        )}
         onChange={handleChange}
         value={description}
         placeholder={placeholder}

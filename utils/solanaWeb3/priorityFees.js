@@ -7,10 +7,6 @@ const defaultPriorityFee = 70000 //microlamports
 // priorityLevel: "MIN", "LOW", "MEDIUM", "HIGH", "VERY_HIGH", "UNSAFEMAX"
 export async function getPriorityFeeInstruction(transaction, priorityLevel = "VERY_HIGH") {
   let fee = defaultPriorityFee
-
-  // const budgetIx = ComputeBudgetProgram.setComputeUnitLimit({units: 1250})
-  // transaction.add(budgetIx)
-
   try {
     let serializedTx = transaction.serialize({
       requireAllSignatures: false,
@@ -42,7 +38,6 @@ export async function getPriorityFeeInstruction(transaction, priorityLevel = "VE
 
   const priorityFeeIx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: fee })
   return priorityFeeIx
-  // return new Transaction().add(priorityFeeIx).add(budgetIx) 
 
 }
 

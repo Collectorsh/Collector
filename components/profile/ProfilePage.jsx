@@ -5,9 +5,9 @@ import CollectorUsername from "/components/CollectorUsername";
 import Collected from "/components/profile/Collected";
 import Listings from "/components/profile/Listings";
 import "tippy.js/dist/tippy.css";
-import { ViewGridIcon } from "@heroicons/react/outline";
 import FollowingModal from "/components/profile/FollowingModal";
 import SettingsMenu from "/components/navigation/SettingsMenu";
+import NotFound from "../404";
 
 function ProfilePage({
   profileUser,
@@ -16,6 +16,7 @@ function ProfilePage({
   image,
   refreshProfileImage,
 }) {
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const [user] = useContext(UserContext);
   const [followingModal, setFollowingModal] = useState(false);
 
@@ -50,10 +51,10 @@ function ProfilePage({
           <div className="inline">
             <Link href={`/${profileUser.username}`}>
               <a className="align-middle cursor-pointer rounded-3xl text-sm xl:text-md py-2.5 px-3 font-bold border border-4 bg-black text-white border-black dark:bg-whitish dark:text-black dark:border-whitish">
-                <ViewGridIcon
+                {/* <ViewGridIcon
                   className="h-5 w-5 inline mr-2"
                   aria-hidden="true"
-                />
+                /> */}
                 <span className="">View Gallery</span>
               </a>
             </Link>

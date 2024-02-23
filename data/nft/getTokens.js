@@ -45,7 +45,7 @@ async function getTokens(publicKeys, options) {
           method: 'getAssetsByCreator',
           params: {
             creatorAddress: publicKey,
-            onlyVerified: true,
+            // onlyVerified: true,
             page: page, 
             limit: maxBatch,
             displayOptions: {
@@ -105,6 +105,7 @@ async function getTokens(publicKeys, options) {
       mintedIndexerTokens.push(...indexerRes.mints)
     }
   }
+
 
   const creatorFilteredTokens = !justCreator
     ? baseTokens

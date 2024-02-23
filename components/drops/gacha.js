@@ -9,10 +9,11 @@ import { Oval } from "react-loader-spinner";
 import Moment from "react-moment";
 import { MintCountdown } from "/utils/mint/MintCountdown";
 import { toDate } from "/utils/mint/utils";
-import { ArrowRightIcon } from "@heroicons/react/outline";
 import { connection } from "/config/settings";
+import NotFound from "../404";
 
 export default function Gacha({ address, drop }) {
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const [holder, setHolder] = useState();
@@ -214,10 +215,10 @@ export default function Gacha({ address, drop }) {
           <Link href={`/drops/${drop.slug}/market`}>
             <a>Go to Market</a>
           </Link>
-          <ArrowRightIcon
+          {/* <ArrowRightIcon
             className="h-4 w-4 ml-1 inline cursor-pointer"
             aria-hidden="true"
-          />
+          /> */}
         </p>
       )}
 

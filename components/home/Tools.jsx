@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { PhotographIcon, CollectionIcon } from "@heroicons/react/outline";
+import NotFound from "../404";
 
 export default function Tools() {
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 py-6">
       <div className="col-span-1">
@@ -17,7 +18,7 @@ export default function Tools() {
       <div className="col-span-2">
         <div className="bg-gallery_background dark:bg-dark1 rounded-3xl p-6">
           <div className="align-middle">
-            <PhotographIcon className="h-6 w-6 inline mr-1 align-middle text-white" />
+            {/* <PhotographIcon className="h-6 w-6 inline mr-1 align-middle text-white" /> */}
             <h2 className="text-white text-xl font-semibold inline align-middle">
               Gallery
             </h2>

@@ -1,14 +1,15 @@
 import { useMemo } from "react"
-import { GlobeAltIcon } from "@heroicons/react/solid"
 import clsx from "clsx";
+import * as Icon from 'react-feather'
+import Tippy from "@tippyjs/react";
 
 export const socialTypes = ["twitter", "instagram", "other"]
 export const getIcon = (type) => { 
   switch (type) { 
-    case "twitter": return <TwitterIcon className="w-6 h-6" />
+    case "twitter": return <TwitterIcon className="w-4 h-4" />
     case "instagram": return <InstaIcon className="w-5 h-5" />
     case "other":
-    default: return <GlobeAltIcon className="w-6 h-6" />
+    default: return <Icon.Globe size={20} />
   }
 }
 
@@ -18,9 +19,12 @@ const SocialLink = ({
   const icon = useMemo(() => getIcon(type), [type])
   const href = link.includes("//") ? link : `//${ link }`
   return (
-    <a href={href} className={clsx("opacity-75 hover:scale-105 hover:opacity-100 transition duration-300",className)}>
-      {icon}
-    </a>
+    <Tippy content={link} className="shadow">
+      <a href={href} className={clsx("opacity-75 hover:opacity-100 transition hoverPalette1 rounded-md p-1.5",className)}>
+        {icon}
+      </a>
+
+    </Tippy>
   )
 }
 
@@ -28,14 +32,13 @@ export default SocialLink;
 
 const TwitterIcon = ({ className }) => (
   <svg
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 48 48"
-  className={clsx("fill-current",className)}
->
-  <path
-    d="M46.105,11.02c-1.551,0.687-3.219,1.145-4.979,1.362c1.789-1.062,3.166-2.756,3.812-4.758	c-1.674,0.981-3.529,1.702-5.502,2.082C37.86,8.036,35.612,7,33.122,7c-4.783,0-8.661,3.843-8.661,8.582	c0,0.671,0.079,1.324,0.226,1.958c-7.196-0.361-13.579-3.782-17.849-8.974c-0.75,1.269-1.172,2.754-1.172,4.322	c0,2.979,1.525,5.602,3.851,7.147c-1.42-0.043-2.756-0.438-3.926-1.072c0,0.026,0,0.064,0,0.101c0,4.163,2.986,7.63,6.944,8.419	c-0.723,0.198-1.488,0.308-2.276,0.308c-0.559,0-1.104-0.063-1.632-0.158c1.102,3.402,4.299,5.889,8.087,5.963	c-2.964,2.298-6.697,3.674-10.756,3.674c-0.701,0-1.387-0.04-2.065-0.122C7.73,39.577,12.283,41,17.171,41	c15.927,0,24.641-13.079,24.641-24.426c0-0.372-0.012-0.742-0.029-1.108C43.483,14.265,44.948,12.751,46.105,11.02"
-  />
-</svg> 
+    viewBox="0 0 1200 1227"
+    xmlns="http://www.w3.org/2000/svg"
+    className={clsx("fill-current stroke-2", className)}
+  >
+    <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z" />
+  </svg>
+
 )
 
 const InstaIcon = ({ className }) => (

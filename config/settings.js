@@ -81,7 +81,8 @@ export const adminIDs = [
   5421, //Scott (username: EV3)
 ]
 
-export const metaPreviewImage = baseCloudImageUrl("global/Collector_Hero_btrh4t")
+export const defaultCollectorImageId = "global/Collector_Hero_btrh4t"
+export const metaPreviewImage = baseCloudImageUrl(defaultCollectorImageId)
 export const metaDescription = "Collect, Curate, and Discover Beautiful Art" 
 
 export const PLATFORM_AUCTION_HOUSE_1_ADDRESS = "Cin5enJN3ZJfwJzdvBs4UJYRS7azTtjxxk8BErcX6Z1k" //5% fee

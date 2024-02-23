@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { ExternalLinkIcon } from "@heroicons/react/outline";
+import NotFound from "./404";
 
 function Exchange(props) {
+  return <NotFound />; //DEPRECATED - TO BE DELETED
+
   const [collection, setCollection] = useState();
 
   useEffect(() => {
@@ -35,7 +37,7 @@ function Exchange(props) {
           >
             <a className="bg-exchange w-fit px-3 py-3 rounded-lg align-middle cursor-pointer text-slate-900 font-semibold">
               <span className="align-top">Make an Offer</span>
-              <ExternalLinkIcon className="inline h-4 w-4 align-middle ml-1 -mt-1" />
+              {/* <ExternalLinkIcon className="inline h-4 w-4 align-middle ml-1 -mt-1" /> */}
             </a>
           </Link>
         </div>

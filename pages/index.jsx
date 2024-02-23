@@ -9,7 +9,7 @@ export default function Home({highlightedCurations}) {
   const [user] = useContext(UserContext);
 
   return (
-    <div className="dark:bg-black">
+    <div className="">
       <MainNavigation />
       <div className="max-w-screen-xl mx-auto px-4 sm:px-8">
         <Hero />

@@ -10,24 +10,27 @@ import updateListing, { cancelListing } from "../../data/curationListings/update
 import UserContext from "../../contexts/user";
 import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { XCircleIcon } from "@heroicons/react/solid";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import deleteSubmission from "../../data/curationListings/deleteSubmission";
-import { useRouter } from "next/router";
 import LogRocket from "logrocket";
 
 import { setTxFailed } from "../../utils/cookies";
+import * as Icon from "react-feather";
+import WalletDropdown from "../wallet/WalletDropdown";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { truncate } from "../../utils/truncate";
+import { displayName } from "../../utils/displayName";
 
 const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveListing, curation }) => {
   const [user] = useContext(UserContext);
   const wallet = useWallet()
-
+  const { setVisible: setModalVisible } = useWalletModal();
   const { handleBuyNowList, handleDelist, handleMasterEditionCloseAndWithdraw, handleMasterEditionList } = useCurationAuctionHouse(curation)
   
   const submissions = (() => {
     const baseListings = curation?.submitted_token_listings.filter(listing => {
-      const owned = listing.owner_address === wallet?.publicKey.toString()
+      const owned = listing.owner_address === wallet?.publicKey?.toString()
       // const owned = user.public_keys.includes(listing.owner_address)
       const closedMaster = listing.is_master_edition && listing.listed_status === "master-edition-closed"
       return owned && !closedMaster
@@ -226,20 +229,12 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Edit ${ curation?.name.replaceAll("_", " ") } Submission Listings`}
+      title={`Edit "${ curation?.name.replaceAll("_", " ") }" Listings`}
     >
+
+      <p className="text-sm textPalette2 text-center">Viewing listings from {truncate(wallet?.publicKey?.toBase58(), 4)}</p>      
+
       <div className="overflow-auto">
-        <div className={clsx("text-left mt-4 text-sm", (!useCuratorInfo && !useMasterEditionInfo) ? "hidden": "")}>
-          <p className="font-bold text-center text-base">Please be aware: </p>
-          <p className={!useCuratorInfo && "hidden"}>
-            Your curator {curation?.curator.username} will receive {curation?.curator_fee}% of the sale price.
-          </p>
-          <p className={!useMasterEditionInfo && "hidden"}>
-            To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet.
-          </p>
-
-        </div>
-
         <div className="mt-4 p-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {submissions?.map((token) => (
             <Submission
@@ -251,15 +246,24 @@ const EditListingsModal = ({ isOpen, onClose, handleEditListings, handleRemoveLi
               isPersonalCuration={isPersonalCuration}
             />
           ))}
+          {!submissions.length ? (
+            <div className="col-span-3 flex flex-col gap-1 items-center justify-center h-full w-full pb-12 bt-6">
+              <p className="font-bold">No Listings Yet</p>
+              <p>Add your artwork via the art module and then list them here.</p>
+            </div>
+          ): null}
         </div>
+      </div>
+      <div className={clsx("text-left mt-4 text-xs", (!useCuratorInfo && !useMasterEditionInfo) ? "hidden" : "")}>
+        <p className="font-bold text-left">Please be aware: </p>
+        <p className={!useCuratorInfo ? "hidden" : "text-neutral-500"}>
+          Your curator {displayName(curation?.curator)} will receive {curation?.curator_fee}% of the sale price.
+        </p>
+        <p className={!useMasterEditionInfo ? "hidden" : "text-neutral-500"}>
+          To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet.
+        </p>
 
       </div>
-{/* 
-      <div className="w-full flex justify-end gap-4 mt-4 relative">
-        <MainButton onClick={onClose}>
-          Close
-        </MainButton>
-      </div> */}
     </Modal>
   )
 }
@@ -327,7 +331,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
     if (token.compressed) return (
       <Tippy
         className="shadow-lg"
-        content="We currently do not support listings for compressed nfts"
+        content="Compressed - We currently do not support listings for compressed nfts"
       >
         <span>C</span>
       </Tippy>
@@ -335,7 +339,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
     if (token.is_edition) return (
       <Tippy
         className="shadow-lg"
-        content="If there are multiple edition listings, the lowest price will be sold first"
+        content="Editions (secondary) - If there are multiple edition listings, the lowest price will be sold first"
       >
         <span>E</span>
       </Tippy>
@@ -343,9 +347,9 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
     if (token.is_master_edition) return (
       <Tippy
         className="shadow-lg"
-        content="To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet."
+        content="Master Editions - To receive funds from primary edition sales you will need to close the sale. This will also return the master edition to your wallet."
       >
-        <span>ME</span>
+        <span>M</span>
       </Tippy>
     )
     return null
@@ -357,38 +361,39 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
     : "Delist"
 
   return (
-    <div className="relative h-fit shadow-md shadow-black/10 dark:shadow-white/5 rounded-lg
-      bg-neutral-100 dark:bg-neutral-700
+    <div className="relative h-fit shadow  rounded-lg
+      palette2
     ">
       <Tippy
-        className="shadow-lg"
+        className="shadow"
         content={token.listed_status !== "unlisted"
           ? "You must close the listing before removing the submission"
           : "This will remove your submission from the curation"
         }
       >
-        <div>
+        {/* extra div to allow disabled button and tippy at same time */}
+        <div className="absolute -top-2 -right-2">
           <button
             className={clsx(
-              "absolute -top-2 -right-2",
-              "bg-neutral-200/50 dark:bg-neutral-700/50 rounded-full shadow-lg dark:shadow-white/10",
-              "duration-300 hover:scale-110 active:scale-100 disabled:hover:scale-100",
+               "p-1",
+              "bg-zinc-300/50 dark:bg-zinc-700/50 rounded-full shadow-md",
+              "duration-300 hover:bg-zinc-300 dark:hover:bg-zinc-700",
               isPersonalCuration && "hidden"
             )}
             onClick={handleDelete}
             disabled={token.listed_status !== "unlisted"}
           >
-            <XCircleIcon className="w-8 h-8" />
+            <Icon.X />
           </button>
         </div>
       </Tippy>
 
       <div className={clsx(
         !infoBadge && "hidden",
-        "bg-white dark:bg-neutral-900",
-        "rounded-full ring-2 ring-neutral-200 dark:ring-neutral-700",
-        "min-w-fit w-6 h-6 absolute top-3 left-3 z-10 flex justify-center items-center p-1",
-        "text-leading-none font-bold text-lg"
+        "palette1 ",
+        "rounded-full ring-2 ring-zinc-300 dark:ring-zinc-700",
+        "min-w-fit w-6 h-6 absolute top-2 left-2 z-10 flex justify-center items-center",
+        "text-leading-none font-bold"
       )}>
         {infoBadge}
       </div>
@@ -402,41 +407,36 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
         useMetadataFallback
         useUploadFallback
       />
-      <div className="p-2">
-        <div className="flex flex-wrap justify-between items-center gap-3 mb-2 ">
-          <h3 className="font-bold text-xl px-1">{token.name}</h3>
+      <div className="p-4">
+        <div className="flex flex-wrap justify-between items-center gap-x-3 mb-2">
+          <p className="font-bold text-xl px-1">{token.name}</p>
           <p className="text-sm">{isMasterEdition ? `(${ editionsLeft }/${editionMaxSupply} Editions)` : ""}</p>
         </div>
         {isListed
           ? (
             <div className={clsx("flex items-center flex-wrap", isClosed ? "justify-center": "justify-between")}>
-              <p className="font-bold px-1 py-1">
+              <p className="font-bold px-1 py-1 textPalette2">
                 {isSoldOut
                   ? "Sold Out!"
-                  : `Listed For: ${price}◎`
+                  : `Listed For ${price}◎`
                 }
               </p>
-              <WarningButton
+              <MainButton
                 onClick={handleUnlist}
-                noPadding
-                className={clsx("px-3 w-28", isClosed && "hidden")}
+                
+                className={clsx("w-28 flex justify-center items-center", isClosed && "hidden")}
                 disabled={listing || isClosed}
               >
                 {listing
-                  ? (
-                    <span className="inline-block translate-y-0.5">
-                      <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
-                    </span>
-                  )
+                  ? <Oval color="#FFF" secondaryColor="#666" height={18} width={18} strokeWidth={4} className="translate-y-0.5" />
                   : delistText
                 }
-              </WarningButton>
+              </MainButton>
             </div>
           )
           : (
             <div className="flex gap-3 w-full">
-
-              <div className="flex w-full items-center border-2 px-3 py-0 rounded-lg border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800">
+              <div className="flex w-full items-center border-2 px-3 py-0 rounded-lg borderPalette3 palette1">
                 <input
                   type="number"
                   min={0}
@@ -458,15 +458,11 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
                     solid
                     onClick={handleList}
                     disabled={disableListing}
-                    noPadding
-                    className={clsx("px-3 w-24 flex-shrink-0")}
+                   
+                    className={clsx("w-24 flex-shrink-0 flex items-center justify-center")}
                   >
                     {listing
-                      ? (
-                        <span className="inline-block translate-y-0.5">
-                          <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
-                        </span>
-                      )
+                      ? <Oval color="#FFF" secondaryColor="#666" height={18} width={18} strokeWidth={4} className="translate-y-0.5" />
                       : "List!"
                     }
                   </MainButton>

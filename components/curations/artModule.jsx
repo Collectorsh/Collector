@@ -6,6 +6,7 @@ import useBreakpoints from '../../hooks/useBreakpoints';
 import debounce from 'lodash.debounce';
 import { getTokenAspectRatio } from '../../hooks/useNftFiles';
 import ArtItem from './artModuleItem';
+import * as Icon from 'react-feather';
 
 const ArtModule = ({
   artModule,
@@ -126,15 +127,15 @@ const ArtModule = ({
     <div
       ref={wrapperRef}
       className={clsx("relative group w-full group/artRow min-h-[4rem] duration-300",
-        // isVisible ? "opacity-100" : "opacity-0"
       )}
-     
     >
       <EditWrapper
         isOwner={isOwner}
         onEdit={() => setEditArtOpen(true)}
-        placement="outside-tr"
+        placement="tr"
         groupHoverClass="group-hover/artRow:opacity-100"
+        text="Edit Art"
+        icon={<Icon.Image size={20} strokeWidth={2.5} />}
       >
         {itemRows.map((row, i) => {
           return (

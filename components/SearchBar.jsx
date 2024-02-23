@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
-import { XCircleIcon } from "@heroicons/react/solid";
 import debounce from "lodash.debounce";
 import clsx from "clsx";
-
+import * as Icon from 'react-feather'
 const SearchBar = ({ search, setSearch, placeholder = "Search", className, onEnter }) => {
   const searchRef = useRef(null)
 
@@ -19,8 +18,8 @@ const SearchBar = ({ search, setSearch, placeholder = "Search", className, onEnt
   
   return (
     <div className={clsx(
-      "flex items-center justify-between gap-1 border-2 rounded-md p-2",
-      "border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900",
+      "flex items-center justify-between gap-1 border-2 rounded-lg p-2",
+      "palette2 borderPalette3",
       className
     )} >
       <input
@@ -39,6 +38,7 @@ const SearchBar = ({ search, setSearch, placeholder = "Search", className, onEnt
       {search
         ? (
           <button
+            className="hoverPalette3 p-0.5 rounded-full"
             onClick={() => {
               setSearch("")
               if (searchRef.current) {
@@ -46,7 +46,8 @@ const SearchBar = ({ search, setSearch, placeholder = "Search", className, onEnt
               }
             }}
           >
-            <XCircleIcon className="fill-black dark:fill-white" width={20} height={20} />
+            <Icon.X size={20} strokeWidth={2.5} />
+            {/* <XCircleIcon className="fill-black dark:fill-white" width={20} height={20} /> */}
           </button>
         )
         : null

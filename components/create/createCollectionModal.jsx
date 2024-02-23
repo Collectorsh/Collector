@@ -12,10 +12,10 @@ import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { apiNodeClient } from "../../data/client/apiClient";
 import { connection } from "../../config/settings";
 import { shootConfetti } from "../../utils/confetti";
-import retryFetches from "../../utils/curations/retryFetches";
 import clsx from "clsx";
 import { makeTxWithPriorityFeeFromMetaplexBuilder } from "../../utils/solanaWeb3/priorityFees";
 import { signAndConfirmTx } from "../../utils/solanaWeb3/signAndConfirm";
+import { RoundedCurve } from "../curations/roundedCurveSVG";
 
 const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
   const wallet = useWallet();
@@ -110,8 +110,14 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
     switch (stage) {
       case MINT_STAGE.INIT: return (
         <div className="flex flex-col gap-0">
-          <div className="flex flex-col gap-2 h-[40vh] w-full mb-4">
-            <p className="text-center font-bold text-lg">Collection Image</p>
+          {/* <p className="text-center font-bold text-lg mb-2">Collection Image</p> */}
+          <div className="relative mx-auto w-fit">
+            <p className="font-bold bg-zinc-300 dark:bg-zinc-700 h-5">Collection Image</p>
+            <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
+            <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-zinc-300 dark:fill-zinc-700" />
+          </div>
+          <div className="h-[40vh] w-full mb-4 palette2 borderPalette3 border-4 rounded-lg p-2">
+
             <FileDrop
               onDrop={setImageFile}
               imageClass="object-contain p-2 mx-auto"
@@ -122,13 +128,15 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
             name={collectionName}
             setName={setCollectionName}
             setError={() => { }}
-            placeholder="What is the title of your collection."
+            placeholder="The title of your collection"
+            paletteClass="palette2 borderPalette3"
           />
           <DescriptionInput
             description={collectionDescription}
             setDescription={setCollectionDescription}
             setError={() => { }}
-            placeholder="Describe your collection."
+            placeholder="Your collection's description"
+            paletteClass="palette2 borderPalette3"
           />
           
         </div>
@@ -164,20 +172,20 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
   const actionButton = useMemo(() => {
     switch (stage) {
       case MINT_STAGE.INIT: return (
-        <MainButton onClick={onMint} solid disabled={disableCreate}>
-          Create!
+        <MainButton onClick={onMint} solid disabled={disableCreate} size="lg" standardWidth>
+          Create
         </MainButton>
       )
       case MINT_STAGE.ERROR: return (
-        <MainButton onClick={onMint} solid disabled={disableCreate}>
+        <MainButton onClick={onMint} solid disabled={disableCreate} size="lg" standardWidth>
           Retry
         </MainButton>
       ) 
       case MINT_STAGE.SUCCESS: return () => null;
       default: return (
-        <MainButton solid disabled>
+        <MainButton solid disabled size="lg" standardWidth>
           <span className="inline-block translate-y-0.5">
-            <Oval color="#FFF" secondaryColor="#666" height={17} width={17} />
+            <Oval color="#FFF" secondaryColor="#666" strokeWidth={2.5} height={17} width={17} />
           </span>
         </MainButton>
       )
@@ -189,7 +197,7 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
       isOpen={isOpen}
       onClose={handleClose}
       closeDisabled={preventClose}
-      title={`Create New Collection`}
+      title={`Create A New Collection`}
       widthClass={"max-w-screen-sm"}
     >
       <div className="h-full overflow-y-auto my-2">
@@ -204,7 +212,7 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
         >
           <MainButton
             onClick={handleClose}
-         
+            size="lg" standardWidth
           >
             {MINT_STAGE.SUCCESS === stage ? "Return" : "Cancel"}
           </MainButton>

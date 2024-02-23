@@ -4,9 +4,10 @@ import { Fragment, useContext } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import UserContext from "/contexts/user";
-import { UserCircleIcon } from "@heroicons/react/solid";
+import NotFound from "../404";
 
 export default function MainNavigation() {
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const router = useRouter();
   const wallet = useWallet();
   const [user, setUser] = useContext(UserContext);
@@ -33,7 +34,7 @@ export default function MainNavigation() {
                 className="h-8 w-8 rounded-full"
               />
             ) : ( */}
-              <UserCircleIcon className="h-8 w-8 rounded-full bg-gray-50 text-black" />
+              User menu
             {/* )} */}
           </Menu.Button>
         </div>

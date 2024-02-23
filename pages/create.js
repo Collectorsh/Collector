@@ -127,7 +127,7 @@ export default function MintPage() {
       verified: true,
       share: 100,
     }])
-  }, [wallet, creators])
+  }, [wallet.publicKey, creators])
 
   useEffect(() => {
     if (!wallet.publicKey) return
@@ -218,7 +218,7 @@ export default function MintPage() {
          
         </div>
 
-        <hr className="mt-6 mb-12 border-neutral-200 dark:border-neutral-800" />
+        <hr className="mt-6 mb-12 borderPalette2" />
 
         <div 
           className={clsx(
@@ -291,7 +291,7 @@ export default function MintPage() {
 
           <Drawer
             title="Extras"
-            drawerClass="border-4 rounded-xl border-neutral-200 dark:border-neutral-700"
+            drawerClass="rounded-lg border-2 border-zinc-200 dark:border-zinc-800"
             buttonClass="font-bold text-lg my-2 mx-auto"
           >
             <div className="flex flex-col gap-4">
@@ -309,13 +309,14 @@ export default function MintPage() {
           >
             <div className="mt-4">
               <MainButton
-                solid disabled={isError} className="w-full hover:scale-[102%]"
+                solid disabled={isError} className="w-full"
+                size="lg"
                 onClick={openMintModal}
               >
                 {mintModalOpen
                   ? (
                     <span className="inline-block translate-y-0.5">
-                      <Oval color="#FFF" secondaryColor="#666" height={17} width={17} />
+                      <Oval color="#FFF" secondaryColor="#666" height={17} width={17} strokeWidth={2.5} />
                     </span>
                   )
                   : "Mint!"

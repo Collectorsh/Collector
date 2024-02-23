@@ -9,11 +9,11 @@ import { Oval } from "react-loader-spinner";
 import { urlRegex } from "../curations/editNameModal";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import UsernameAndEmail from "./UsernameAndEmail";
 import { success } from "../../utils/toast";
 import { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import { emailRegex, usernameError } from "../settings/Settings";
+import { ProfileEmail, ProfileUsername } from "./ProfileInputs";
 
 
 
@@ -100,11 +100,15 @@ export default function CreateUsernameModal() {
           <p className="text-center my-4">
             Enter your username to finish setting up your account. You can always change this later in your profile settings.
           </p>
-          <UsernameAndEmail
+          <ProfileUsername
             username={username}
             setUsername={setUsername}
+            paletteClass="palette2 borderPalette3"
+          />
+          <ProfileEmail
             email={email}
             setEmail={setEmail}
+            paletteClass="palette2 borderPalette3"
           />
         </>
       )
@@ -149,7 +153,7 @@ export default function CreateUsernameModal() {
         <p className="text-sm pl-4 italic text-red-500 h-4 w-full mt-3 text-center">{error}</p>
         <div className="w-full flex justify-center gap-4 relative mt-2">
           <MainButton
-            onClick={handleClose}
+            onClick={handleClose} size="lg" standardWidth
           >
             Close
           </MainButton>
@@ -160,7 +164,7 @@ export default function CreateUsernameModal() {
           >
             <div className={stage === 1 ? "hidden" : ""}>
               <MainButton
-                className="w-24"
+                size="lg" standardWidth
                 onClick={handleSave}
                 solid
                 disabled={disableSave}

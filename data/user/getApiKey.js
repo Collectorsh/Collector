@@ -10,7 +10,7 @@ async function getApiKey(publicKey, signMessage) {
       Buffer.from(signature),
       nonce
     );
-    return res;
+    return res?.data;
   }
 }
 

@@ -13,8 +13,8 @@ import { customIdPrefix } from "../../utils/cloudinary/idParsing";
 import uploadCldImage from "../../data/cloudinary/uploadCldImage";
 import { error } from "../../utils/toast";
 import { truncate } from "../../utils/truncate";
-import CopyButton from "../CopyToClipboard";
 import { groupEditions } from "../../utils/groupEditions";
+import Tippy from "@tippyjs/react";
 
 const uploadTabTitle = "Upload"
 const submittedTabTitle = "Submitted Art"
@@ -146,13 +146,14 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
       {submittedTokens?.filter(searchFilter).map((token, i) => {
         const isSelected = selected?.mint === token.mint;
         return (
-          <button className="relative flex justify-center flex-shrink-0" key={token.mint}
+          <button className="relative flex flex-shrink-0 pb-[33%] w-full" key={token.mint}
             onClick={() => setSelected(isSelected ? null : token)}
           >
             <CloudinaryImage
-              className={clsx("flex-shrink-0 overflow-hidden object-cover shadow-lg dark:shadow-white/5",
-                "w-full h-[250px] rounded-lg",
-                isSelected && "ring-4 ring-black dark:ring-white"
+              className={clsx("flex-shrink-0 overflow-hidden object-cover shadow hover:shadow-md",
+                "w-full h-full rounded-lg",
+                isSelected && "ring-4 ring-zinc-700 dark:ring-zinc-300",
+                "absolute inset-0"
               )}
               useMetadataFallback
               useUploadFallback
@@ -168,7 +169,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
   const uploadComp = (
     <div className="p-2 rounded-lg h-full w-full relative">
       {saving ? (
-        <div className="absolute inset-0 z-50 backdrop-blur-sm bg-neutral-200/50 dark:bg-neutral-700/50 animate-pulse flex justify-center items-center h-full">
+        <div className="absolute inset-0 z-50 backdrop-blur-sm bg-zinc-200/50 dark:bg-zinc-700/50 animate-pulse flex justify-center items-center h-full">
           <p className="text-lg">Uploading...</p>  
         </div>
       ) : null}
@@ -189,14 +190,14 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Edit The Gallery Banner">
       <SearchBar
-        className="ml-2 pl-4 w-full max-w-[20rem] mt-8"
+        className="ml-2 pl-4 w-full max-w-[20rem] mt-4"
         search={search}
         setSearch={setSearch}
         placeholder="Search By Artwork"
       />
 
       <div className="relative mx-auto w-fit">
-        <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
+        <div className="flex justify-center space-x-2 border-b-8 borderPalette3">
           {tabs.map((tab, i) => {
             const handleClick = () => {
               setActiveTabIndex(i);
@@ -212,8 +213,9 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
                 key={tab}
                 ref={(el) => (tabsRef.current[i] = el)}
                 className={clsx(
-                  "px-3 py-1 capitalize hover:opacity-100 hover:scale-[102%] font-bold duration-300",
-                  isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
+                  "px-3 py-0 my-1 capitalize  font-bold duration-300",
+                  "hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded"
+                )}
                 onClick={handleClick}
               >
                 {tabTitle}
@@ -222,24 +224,24 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
           })}
         
         </div>
-        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]"  />
-        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700"/>
+        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]"  />
+        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700"/>
         <span
-          className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner shadow-black/10 dark:shadow-white/10"
+          className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner palette2 shadow-black/10 dark:shadow-white/10"
         />
         <span
-          className="absolute rounded-full bottom-0 block h-1 bg-black dark:bg-white transition-all duration-300"
+          className="absolute rounded-full bottom-0 block h-1 bg-zinc-700 dark:bg-zinc-300 transition-all duration-300"
           style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
         />
       </div>
-      <div className="h-[540px] max-h-full border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+      <div className="h-[540px] max-h-full border-4 rounded-xl overflow-hidden palette2 borderPalette3">
         {tabContent[activeTabIndex]}
       </div>
       <div className="w-full flex justify-end gap-4 mt-4">
-        <MainButton onClick={handleClose}>
+        <MainButton onClick={handleClose} size="lg" standardWidth>
           Cancel
         </MainButton>
-        <MainButton onClick={handleSave} solid disabled={saveDisabled}>
+        <MainButton onClick={handleSave} solid disabled={saveDisabled} size="lg" standardWidth>
           Save
         </MainButton>
       </div>
@@ -264,33 +266,40 @@ const TokenItem = ({ token , isSelected, setSelected}) => {
     >
       {error ? (
         <div
-          className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90  
+          className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-zinc-200/90 dark:bg-zinc-800/90  
              flex flex-col justify-center items-center rounded-lg z-20
           "
         >
           <p>Error loading metadata image</p>
-          <a
-            className="hover:scale-105 duration-300"
-            href={`https://solscan.io/token/${ token.mint }`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {truncate(token.mint)}
-          </a>
+          <Tippy content="View token on Solscan" className="shadow">
+            <a
+              className="hover:bg-zinc-400 dark:hover:bg-zinc-600 rounded-md px-2 duration-300"
+              href={`https://solscan.io/token/${ token.mint }`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {truncate(token.mint)}
+            </a>
+
+          </Tippy>
         </div>
       ) : null}
 
-      <CloudinaryImage
-        className={clsx("flex-shrink-0 overflow-hidden object-cover shadow-lg dark:shadow-white/5",
-          "w-full h-[250px] rounded-lg",
-          isSelected && "ring-4 ring-black dark:ring-white",
-          error && "z-0"
-        )}
-        useMetadataFallback
-        token={token}
-        width={800}
-        onError={handleError}
-      />
+      <div className="pb-[33%] relative w-full">
+        <CloudinaryImage
+          className={clsx("flex-shrink-0 overflow-hidden object-cover shadow hover:shadow-md",
+            "w-full h-full rounded-lg",
+            isSelected && "ring-4 ring-zinc-700 dark:ring-zinc-300",
+            error && "z-0",
+            "absolute inset-0"
+          )}
+          useMetadataFallback
+          token={token}
+          width={800}
+          onError={handleError}
+        />
+
+      </div>
 
       
     </button>

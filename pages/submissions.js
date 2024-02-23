@@ -2,8 +2,6 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import UserContext from "../contexts/user";
 import CloudinaryImage from "../components/CloudinaryImage";
 import MainButton from "../components/MainButton";
-
-import CheckLoggedIn from "../components/CheckLoggedIn";
 import { useRouter } from "next/router";
 import MainNavigation from "../components/navigation/MainNavigation";
 import SubmitArtModal from "../components/artistSubmissions/submitArtModal";
@@ -16,9 +14,10 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useTokens } from "../data/nft/getTokens";
 import { parseCloudImageId } from "../utils/cloudinary/idParsing";
-import { curationListPlaceholderId } from "../components/curatorProfile/curationList";
 import { addSelfApprovedArtists } from "../data/curation/updateApprovedArtists";
 import "tippy.js/dist/tippy.css";
+import { defaultCollectorImageId } from "../config/settings";
+import { displayName } from "../utils/displayName";
 
 
 const Submissions = ({ }) => {
@@ -175,17 +174,20 @@ const Submissions = ({ }) => {
         return isArtist && notSold
       })
 
+      if (curation.hidden && !artistSubmissions.length) return null
+
       const passcodeQuery = curation.viewer_passcode ? `?passcode=${ curation.viewer_passcode }` : ""
       return (
         <div key={id} className="relative">
           <Link href={`/curations/${ name }${ passcodeQuery }`} >
-            <a className={clsx(
-
-              "relative shadow-lg shadow-black/25 dark:shadow-neutral-500/25 rounded-xl overflow-hidden hover:-translate-y-3 duration-300 block"
+            <a
+              className={clsx(
+                curation.hidden && "pointer-events-none",
+              "relative shadow hover:shadow-md shadow-black/10 rounded-xl overflow-hidden hover:-translate-y-2 duration-300 block"
             )}>
               <CloudinaryImage
                 className="w-full h-[300px] object-cover"
-                id={bannerImgId || curationListPlaceholderId}
+                id={bannerImgId || defaultCollectorImageId}
                 noLazyLoad
                 width={1400}
               />
@@ -194,14 +196,12 @@ const Submissions = ({ }) => {
           <div className="my-2 px-3 gap-3 flex justify-between flex-wrap">
             <div>
               <h3 className="font-bold collector text-2xl">{name.replaceAll("_", " ")}</h3>
-              <p>Curated by {curator.username}</p>
+              <p>Curated by {displayName(curator)}</p>
             </div>
             <div className="flex gap-2 items-center flex-wrap">
               {artistSubmissions.length
                 ? (
                   <MainButton
-                    noPadding
-                    className="px-3 py-1 flex gap-1 items-center"
                     disabled={!artistSubmissions.length}
                     onClick={() => handleOpenListingsModal(curation)}
                   >
@@ -210,8 +210,10 @@ const Submissions = ({ }) => {
                 )
                 : null}
               <MainButton
-                solid noPadding className="px-3 py-1"
+                solid 
+                className={clsx(curation.hidden && "hidden")}
                 onClick={() => handleOpenSubmitModal(curation)}
+                disabled={curation.hidden}
               >
                 Submit Art
               </MainButton>
@@ -219,7 +221,7 @@ const Submissions = ({ }) => {
           </div>
         </div>
       )
-    })
+    }).filter(Boolean)
   }, [approvedCurations, user?.public_keys])
 
   return (
@@ -230,7 +232,7 @@ const Submissions = ({ }) => {
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Approved Curations</h2>
           <Link href="/create" passHref>
-            <MainButton solid disabled={!approvedCurations?.length}>
+            <MainButton size="lg" solid disabled={!approvedCurations?.length}>
               Create
             </MainButton>
           </Link>

@@ -53,7 +53,7 @@ const PublishConfirmationModal = ({ isOpen, onClose, name, onPublish, onViewPubl
       <>
         <p className="text-xl font-bold">Congrats, {name.replaceAll("_", " ")} is now live!</p>
         <div className="flex gap-2 items-center justify-center flex-wrap">
-          <p className="underline font-bold">{getUrl()}</p>
+          <p className="font-bold textPalette2">{getUrl()}</p>
           <CopyButton textToCopy={getUrl()} />
         </div>
       </>
@@ -61,33 +61,33 @@ const PublishConfirmationModal = ({ isOpen, onClose, name, onPublish, onViewPubl
     if(isPublished) return (
       <>
         <p className="text-xl font-bold">Are you sure?</p>
-        <p>Publishing this draft of {name.replaceAll("_", " ")} will overwrite the currently published version.</p>
+        <p className="textPalette2">Publishing this draft of {name.replaceAll("_", " ")} will overwrite the currently published version.</p>
       </>
     )
     return (
       <>
         <p className="text-xl font-bold">Are you sure?</p>
-        <p>Publishing this draft of {name.replaceAll("_", " ")} means anyone will be able to view it.</p>
+        <p className="textPalette2">Publishing this draft of {name.replaceAll("_", " ")} will make it viewable by everyone.</p>
       </>
     )
   }
   const getButtons = () => {
     if (publishSuccess) return (
       <>
-        <MainButton onClick={handleClose}>
+        <MainButton onClick={handleClose} className="w-[12.2rem]" size="lg">
           Continue Editing
         </MainButton>
-        <MainButton onClick={handleViewPublished} solid>
+        <MainButton onClick={handleViewPublished} className="w-[12.2rem]"  solid  size="lg">
           View Published
         </MainButton>
       </>
     )
     else return (
       <>
-        <MainButton onClick={handleClose}>
+        <MainButton onClick={handleClose} size="lg" className="w-[7.63rem]">
           Cancel
         </MainButton>
-        <MainButton onClick={handlePublish} solid disabled={saving}>
+        <MainButton onClick={handlePublish} solid disabled={saving}  size="lg" className="w-[7.63rem]">
           Publish!
         </MainButton>
       </>
@@ -101,7 +101,7 @@ const PublishConfirmationModal = ({ isOpen, onClose, name, onPublish, onViewPubl
       title={`Publish ${ name.replaceAll("_", " ") }`}
       widthClass="max-w-screen-sm"
     >
-      <div className="flex flex-col gap-3 py-6 text-center items-center justify-center h-32">
+      <div className="flex flex-col gap-3 pb-10 pt-6 text-center items-center justify-center min-h-[9rem]">
         { getContent()}
       </div>
       <div className="w-full flex justify-center flex-wrap gap-4">

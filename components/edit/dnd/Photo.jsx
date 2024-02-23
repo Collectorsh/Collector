@@ -1,6 +1,5 @@
 import React, { forwardRef, useState } from "react";
 import axios from "axios";
-import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { addDefaultSource } from "/utils/addDefaultSource";
@@ -9,6 +8,7 @@ import ContentLoader from "react-content-loader";
 
 export const Photo = forwardRef(
   ({ token, uri, index, faded, style, section, bulkEdit, ...props }, ref) => {
+    //DEPRECATED - TO BE DELETED
     const height = props.height ? props.height : 200;
 
     const inlineStyles = {
@@ -64,10 +64,11 @@ export const Photo = forwardRef(
         <Menu as="div" className="absolute top-1 right-0">
           <div>
             <Menu.Button className="inline-flex justify-center focus:outline-none">
-              <DotsVerticalIcon
+              {/* <DotsVerticalIcon
                 className="h-6 w-6 inline cursor-pointer text-white"
                 aria-hidden="true"
-              />
+              /> */}
+              Dots
             </Menu.Button>
           </div>
           <Transition

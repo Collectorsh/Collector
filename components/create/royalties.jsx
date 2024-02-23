@@ -1,7 +1,6 @@
 import Tippy from "@tippyjs/react"
 import { REQUIRED } from "../../pages/create"
-import { InformationCircleIcon } from "@heroicons/react/solid"
-
+import * as Icon from 'react-feather'
 const RoyaltiesInput = ({ royalties, setRoyalties, setError }) => { 
   const max = 90
   const handleChange = (e) => { 
@@ -20,17 +19,16 @@ const RoyaltiesInput = ({ royalties, setRoyalties, setError }) => {
 
   const info = (
     <Tippy
-      content="The percentage of all secondary sales the creator(s) will get."
-      className="shadow-lg"
+      content="The percentage of all secondary sales the creator(s) will get"
     >
-      <InformationCircleIcon className="w-4" />
+      <Icon.Info size={14} className="opacity-50"/>
     </Tippy>
   )
 
   return (
     <div>
-      <p className="font-bold text-lg mb-1 ml-4 flex items-center">Royalties* {info}</p>
-      <div className="flex w-full border-4 p-3 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
+      <p className="font-bold text-lg mb-1 ml-4 flex gap-1">Royalties {info}</p>
+      <div className="flex w-full px-3.5 py-2 outline-none rounded-md border-2 bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
         <input
           type="number"
           min={0}

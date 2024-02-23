@@ -1,7 +1,7 @@
 import { Listbox, Transition } from "@headlessui/react"
-import { CheckIcon, ChevronDownIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
 import { useState } from "react"
+import * as Icon from 'react-feather'
 
 const types = [
   { type: "single", display: "1 of 1" },
@@ -36,51 +36,52 @@ const NftTypeInput = ({ maxSupply, setMaxSupply, setError, setIsMutable }) => {
   return (
 
     <div className={clsx("grid" , isEditions ? "grid-cols-2 gap-2" : "")}>
-        <div>
-          <p className="font-bold text-lg mb-1 ml-4">Type</p>
-          <Listbox value={nftType} onChange={handleChange}>
-            <Listbox.Button className="text-current border-4
-                rounded-xl border-neutral-200 dark:border-neutral-700 
-                bg-neutral-100 dark:bg-neutral-900
-                w-full h-fit p-3 flex items-center
-              "
-            >
-              {nftType.display} <ChevronDownIcon className="w-5 h-5" />
-            </Listbox.Button>
-            <Transition
-              enter="transition duration-100 ease-out"
-              enterFrom="transform scale-95 opacity-0"
-              enterTo="transform scale-100 opacity-100"
-              leave="transition duration-75 ease-out"
-              leaveFrom="transform scale-100 opacity-100"
-              leaveTo="transform scale-95 opacity-0"
-            >
-              <Listbox.Options className="absolute top-0 left-0 w-full bg-white dark:bg-black p-2 rounded-lg shadow ">
-                {types.map((type) => (
-                  <Listbox.Option key={type.type} value={type}>
-                    {({ active, selected }) => (
-                      <li
-                        className={clsx(
-                          "p-2 flex gap-1 items-center w-full cursor-pointer rounded",
-                          active ? 'bg-neutral-500/25' : '',
-                          // selected ? 'bg-neutral-500/50' : ''
-                        )}
-                      >
-                        {type.display}
-                        {selected && <CheckIcon className="w-6 h-6" />}
-                      </li>
-                    )}
-                  </Listbox.Option>
-                ))}
-              </Listbox.Options>
-            </Transition>
-          </Listbox>
-        </div>
+      <div>
+        <p className="font-bold text-lg mb-1 ml-4">Type</p>
+        <Listbox value={nftType} onChange={handleChange}>
+          {({ open }) => (
+            <>
+              <Listbox.Button className={clsx("text-current flex gap-1 items-center justify-between",
+                  "w-full px-3.5 py-2 outline-none rounded-md border-2 bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 hoverPalette1"
+              )}>
+                {nftType.display} 
+                <Icon.ChevronDown size={20} strokeWidth={2.5} className={clsx("duration-300", open && "rotate-180")} />
+              </Listbox.Button>
+              <Transition
+                enter="transition duration-100 ease-out"
+                enterFrom="transform scale-95 opacity-0"
+                enterTo="transform scale-100 opacity-100"
+                leave="transition duration-75 ease-out"
+                leaveFrom="transform scale-100 opacity-100"
+                leaveTo="transform scale-95 opacity-0"
+              >
+                <Listbox.Options className="absolute top-2 left-0 w-full palette2 p-2 rounded shadow ">
+                  {types.map((type) => (
+                    <Listbox.Option key={type.type} value={type}>
+                      {({ active, selected }) => (
+                        <li
+                          className={clsx(
+                            "p-2 flex gap-1 items-center w-full cursor-pointer rounded",
+                            "hoverPalette2",
+                          )}
+                        >
+                          {type.display}
+                          {selected && <Icon.Check size={20} strokeWidth={2.5} />}
+                        </li>
+                      )}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </Transition>
+            </>
+          )}
+        </Listbox>
+      </div>
 
       {isEditions ? (
         <div>
           <p className="font-bold text-lg mb-1 ml-4">Max Supply</p>
-          <div className="flex w-full border-4 p-3 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
+          <div className="flex px-3.5 py-2 outline-none rounded-md border-2 bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
               <input
                 type="number"
                 min={2}

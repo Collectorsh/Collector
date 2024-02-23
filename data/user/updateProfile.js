@@ -36,3 +36,12 @@ export async function updateSocials(api_key, socials) {
   }
 }
 
+export async function updateDisplayName(api_key, displayName) {
+  try {
+    const res = await apiClient.post("/user/update_display_name", { api_key, name: displayName });
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+

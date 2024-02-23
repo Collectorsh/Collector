@@ -26,7 +26,7 @@ import { useRouter } from "next/router";
 import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse";
 import withdrawFromTreasury from "../../data/curation/withdrawFromTreasury";
 import { roundToPrecision } from "../../utils/maths";
-
+import { v4 as uuidv4 } from 'uuid';
 
 import Head from "next/head";
 import { metaPreviewImage } from "../../config/settings";
@@ -35,9 +35,15 @@ import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/c
 import AuthorizedViewerBar from "../../components/curations/authorizedViewerBar";
 import { deleteMultipleSubmissions } from "../../data/curationListings/deleteSubmission";
 
-import dynamic from 'next/dynamic';
+
 import { deltaToPlainText } from "../../utils/Quill";
-const QuillContent = dynamic(() => import('../../components/Quill').then(mod => mod.QuillContent), { ssr: false })
+import CurationBanner from "../../components/curations/banner";
+import CurationName from "../../components/curations/name";
+import CurationDescription from "../../components/curations/description";
+import MainButton from "../../components/MainButton";
+
+import * as Icon from 'react-feather'
+import { displayName } from "../../utils/displayName";
 
 const descriptionPlaceholder = "Tell us about this curation."
 
@@ -57,7 +63,7 @@ function CurationPage({curation}) {
   const [unpublishModalOpen, setUnpublishModalOpen] = useState(false);
   const [isEditingDraft, setIsEditingDraft] = useState(!curation?.is_published); //defaults to true if unpublished
   const [isPublished, setIsPublished] = useState(curation?.is_published);
-  const [bannerLoaded, setBannerLoaded] = useState(true);
+  const [addingModule, setAddingModule] = useState(false);
 
   const [submittedTokens, setSubmittedTokens] = useState(curation?.submitted_token_listings || []);
   const [approvedArtists, setApprovedArtists] = useState(curation?.approved_artists || []);
@@ -80,7 +86,7 @@ function CurationPage({curation}) {
   const draftDescriptionDelta = draftContent?.description_delta || JSON.stringify({
     ops: [
       {
-        attributes: { size: 'large' },
+        attributes: { size: '16px' },
         insert: draftContent?.description || descriptionPlaceholder,
       },
       {
@@ -92,7 +98,7 @@ function CurationPage({curation}) {
   const publishedDescriptionDelta = publishedContent?.description_delta || JSON.stringify({
     ops: [
       {
-        attributes: { size: 'large' },
+        attributes: { size: '16px' },
         insert: publishedContent?.description || ""
       },
       {
@@ -105,7 +111,6 @@ function CurationPage({curation}) {
   
   const modules = useDraftContent ? draftContent?.modules : publishedContent?.modules;
 
-  const displayPublishedEdit = globalEditOpen && isOwner;
   const displayDraftEdit = globalEditOpen && useDraftContent && isOwner;
   const displayCuration = Boolean(curation?.is_published || isOwner || isAuthorizedViewer);
 
@@ -114,7 +119,6 @@ function CurationPage({curation}) {
   //currently we are allowing curations to be published without content
   const hasNoContent = false//{modules.length === 0 || !banner} 
 
-  const bannerImgId = parseCloudImageId(banner)
   const pfpImgId = parseCloudImageId(curation?.curator?.profile_image)
 
   const metaImage = curation?.published_content?.banner_image
@@ -170,12 +174,6 @@ function CurationPage({curation}) {
     }
   }, [isOwner, curation?.name, user?.api_key, viewerPasscodeQuery])
 
-  useEffect(() => {
-    if (!useDraftContent || !publishContent.banner_image) return;
-    //set loaded to false when the banner changes
-    if (banner !== publishedContent.banner_image) setBannerLoaded(false);
-  }, [banner, publishedContent?.banner_image, useDraftContent])
-
   const handlePublish = async () => { 
     if (!isOwner) return;
 
@@ -194,6 +192,8 @@ function CurationPage({curation}) {
         //"modules" will be draft modules
         //if token doesn't exist there it can be removed for the submission list
         const filteredSubmissions = submittedTokens.filter((token) => {
+          //keep if listed or ME that need to be withdrawn
+          if (token.listed_status === "listed" || (token.is_master_edition && token.listed_status === "sold")) return true;
           const existsInModules = draftContent.modules.some((module) => module.type === "art" && module.tokens.includes(token.mint))
           if (!existsInModules) unusedTokenMints.push(token.mint)
           return existsInModules
@@ -324,7 +324,8 @@ function CurationPage({curation}) {
   const handleEditModules = (setModulesCB) => {
     if (!isOwner) return;
     
-    setDraftContent(prev => {
+    setAddingModule(true)
+    setDraftContent(((prev) => {
       const newModules = typeof setModulesCB === "function"
         ? setModulesCB(prev.modules)
         : setModulesCB
@@ -333,9 +334,11 @@ function CurationPage({curation}) {
         ...prev,
         modules: newModules
       }
-      handleSaveDraftContent(newContent)
+      handleSaveDraftContent(newContent).then(() => {
+        setAddingModule(false)
+      })
       return newContent
-    })
+    }))
 
   }
 
@@ -357,11 +360,21 @@ function CurationPage({curation}) {
     }
   }
 
+  const addArtModule = () => {
+    handleEditModules((prev) => [...prev, { type: "art", id: uuidv4(), tokens: [] }])
+    // window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+
+  const addTextModule = () => {
+    handleEditModules((prev) => [...prev, { type: "text", id: uuidv4(), textDelta: undefined }])
+    // window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+
   const curatorText = useMemo(() => {
     switch (curation?.curation_type) {
-      case "artist": return "Art by"
-      case "collector": return "Collected by"
-      case "curator": return "Curated by"
+      case "artist": return "an artist curation by"
+      case "collector": return "a collector curation by"
+      case "curator": return "a group curation by"
     }
   }, [curation?.curation_type])
 
@@ -399,79 +412,50 @@ function CurationPage({curation}) {
       </Head>
       <Toaster />
       <MainNavigation />
-      <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 group/banner">
-        <EditWrapper
-          isOwner={displayDraftEdit}
-          onEdit={() => setEditBannerOpen(true)}
-          placement="inside-tr"
-          groupHoverClass="group-hover/banner:opacity-100"
-        // icon={<PhotographIcon className="w-6 h-6" />}
-        >
-          <div className="w-full pb-[50%] md:pb-[33%] relative">
-            {banner ? (
-              <CloudinaryImage
-                className={clsx(
-                  "absolute inset-0 w-full h-full object-cover 2xl:rounded-b-2xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25",
-                  !bannerLoaded && "animate-pulse"
-                )}
-                id={bannerImgId}
-                noLazyLoad
-                onLoad={() => setBannerLoaded(true)}
-                width={3000}
-              />
-            ) : (
-              <div className="absolute inset-0 w-full h-full object-cover 2xl:rounded-b-2xl shadow-lg shadow-black/25 dark:shadow-neutral-500/25 flex justify-center items-center">
-                  <p className={clsx("font-xl font-bold", !isOwner && "hidden")}>Click the edit button in the top right to add a banner</p>
-              </div>
-            )}
-          </div>
-        </EditWrapper>
-      </div>
+      <CurationBanner
+        banner={banner}
+        setEditBannerOpen={setEditBannerOpen}
+        displayDraftEdit={displayDraftEdit}
+        useDraftContent={useDraftContent}
+        publishedBanner={publishedContent?.banner_image}
+      />
       <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-10">
        
-        <div className="group/name w-fit mb-3 mx-auto max-w-full">
-          <EditWrapper
-            isOwner={displayPublishedEdit}
-            onEdit={() => setEditNameOpen(true)}
-            placement="outside-tr"
-            groupHoverClass="group-hover/name:opacity-100"
-          // icon={<PencilAltIcon className="w-6 h-6" />}
-          >
-            <h1 className="font-bold text-5xl text-center w-full break-words">{name.replaceAll("_", " ")}</h1>
-          </EditWrapper>
-        </div>
-        <Link href={`/gallery/${ curation.curator?.username }`} >
-          <a className="flex gap-2 items-center justify-center mb-8 hover:scale-105 duration-300 w-fit mx-auto ">
-            <p className="text-lg">{curatorText} {curation.curator?.username}</p>
-            {curation.curator?.profile_image
-              ? (<div className="relative">
-                  <CloudinaryImage
-                    className={clsx(
-                      "w-14 h-14 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800",
-                    )}
-                    id={pfpImgId}
-                    noLazyLoad
-                    width={500}
-                  />
-                </div>)
-                : null
-              }
-          </a>
-        </Link>
-  
-        <div className="group/description w-full mx-auto">
-          <EditWrapper
-            isOwner={displayDraftEdit}
-            onEdit={() => setEditDescriptionOpen(true)}
-            placement="outside-tr"
-            groupHoverClass="group-hover/description:opacity-100"
-          // icon={<PencilAltIcon className="w-6 h-6" />}
-          >
-            <QuillContent textDelta={description} />
-          </EditWrapper>
+        <div className="px-4">
+          <CurationName
+            name={name}
+            setEditNameOpen={setEditNameOpen}
+            displayPublishedEdit={displayDraftEdit}//{displayPublishedEdit}
+          />
+          {/* <p className="font-xs textPalette3 text-center">{curatorText}</p> */}
+          <Link href={`/gallery/${ curation.curator?.username }`} >
+            <a className="flex gap-3 items-center justify-center mb-8 hoverPalette1 rounded-md px-4 py-2 w-fit mx-auto ">
+              {curation.curator?.profile_image
+                ? (<div className="relative">
+                    <CloudinaryImage
+                      className={clsx(
+                        "w-10 h-10 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800",
+                      )}
+                      id={pfpImgId}
+                      noLazyLoad
+                      width={500}
+                    />
+                  </div>)
+                  : null
+                }
+              <p className="text-lg font-bold">{displayName(curation?.curator)}</p>
+            </a>
+          </Link>
+    
+          <CurationDescription
+            description={description}
+            setEditDescriptionOpen={setEditDescriptionOpen}
+            displayDraftEdit={displayDraftEdit}
+          />
+
         </div>
 
-        <hr className="my-12 border-neutral-200 dark:border-neutral-800" />
+        <hr className="my-12 borderPalette1" />
 
         {curationDetails ? (
           <DisplayModules
@@ -491,25 +475,52 @@ function CurationPage({curation}) {
           : <h1 className="animate-pulse font-bold text-4xl text-center mt-10">collect<span className="w-[1.2rem] h-[1.15rem] rounded-[0.75rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r</h1>
         }
 
+        {displayDraftEdit ? (
+            <div className='flex gap-4 flex-wrap justify-center md:place-self-start my-6'>
+              <MainButton
+                solid
+                className="flex gap-2 items-center justify-center w-[10rem]"
+                onClick={addArtModule}
+                disabled={addingModule}
+                size="lg"
+              >
+                Add Art <Icon.Plus />
+              </MainButton>
+              <MainButton
+              className="flex gap-2 items-center justify-center w-[10rem]"
+                onClick={addTextModule}
+                disabled={addingModule}
+                size="lg"
+              >
+                Add Text <Icon.Plus />
+              </MainButton>
+            </div>
+          ) : null
+        }
+       
+
+
         {isOwner
           ? (
-            <GlobalEditBar
-              isOpen={globalEditOpen}
-              setOpen={setGlobalEditOpen}
-              setModules={handleEditModules}
-              handleInviteArtists={() => setInviteArtistsModalOpen(true)}
-              openPublish={() => setPublishModalOpen(true)}
-              openUnpublish={() => setUnpublishModalOpen(true)}
-              isEditingDraft={isEditingDraft}
-              setIsEditingDraft={setIsEditingDraft}
-              hasChanges={hasChanges}
-              isPublished={isPublished}
-              noContent={hasNoContent}
-              collectedFees={collectedFees}
-              handleWithdrawFees={handleWithdrawFees}
-              curation={curation}
-              submittedTokens={submittedTokens}
-            />
+            <>
+              <GlobalEditBar
+                isOpen={globalEditOpen}
+                setOpen={setGlobalEditOpen}
+                setModules={handleEditModules}
+                handleInviteArtists={() => setInviteArtistsModalOpen(true)}
+                openPublish={() => setPublishModalOpen(true)}
+                openUnpublish={() => setUnpublishModalOpen(true)}
+                isEditingDraft={isEditingDraft}
+                setIsEditingDraft={setIsEditingDraft}
+                hasChanges={hasChanges}
+                isPublished={isPublished}
+                noContent={hasNoContent}
+                collectedFees={collectedFees}
+                handleWithdrawFees={handleWithdrawFees}
+                curation={curation}
+                submittedTokens={submittedTokens}
+              />
+            </>
           )
           : null
         }

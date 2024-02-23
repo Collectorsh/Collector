@@ -4,54 +4,77 @@ import getApiKey from "/data/user/getApiKey";
 import UserContext from "/contexts/user";
 import getUserFromApiKey from "/data/user/getUserFromApiKey";
 import { H } from 'highlight.run';
+import { success, error} from "../../utils/toast";
 
 const identifyHighlight = (wallet, user) => {
-  if (!user) return;
+  if (!user?.username) return;
   H.identify(user.username, {
     id: user.id,
     primaryWallet: wallet?.publicKey?.toString() || "",
   });
 }
 
+const checkWalletAddress = (wallet, user) => { 
+  if (user.public_keys.includes(wallet.publicKey.toString())) return true;
+  return false
+}
+
 export default function ConnectWallet() {
   const wallet = useWallet();
   const [user, setUser] = useContext(UserContext);
   const [fetching, setFetching] = useState(false);
-  const [error, setError] = useState(false);
+  const [apiError, setApiError] = useState(false);
 
-  const asyncGetApiKey = async (publicKey, signMessage) => {
-    if (!publicKey || !signMessage) return;
+  const asyncGetApiKey = useCallback(async () => {
+    let res = await getApiKey(wallet.publicKey, wallet.signMessage);
+    if (res?.status === "success") {
+      // if (checkWalletAddress(wallet, res.user)) {
+        localStorage.setItem("api_key", res.user.api_key);
+        setUser(res.user);
+        identifyHighlight(wallet, res.user);
+        setApiError(false);
+      // }
+    } else {
+      error("Error Signing In")
+      await wallet.disconnect();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wallet])
 
-    let res = await getApiKey(publicKey, signMessage);
-    if (res?.data.status === "success") {
-      localStorage.setItem("api_key", res.data.user.api_key);
-      setUser(res.data.user);
-      identifyHighlight(wallet, res.data.user);
-      setError(false);
-    } else setError(true);
-  }
+  const handleGetNewApiKey = useCallback(async () => {
+    localStorage.removeItem("api_key");
+    if (wallet.publicKey && wallet.signMessage) await asyncGetApiKey();
+  }, [wallet, asyncGetApiKey])
 
-  const asyncGetUser = async (apiKey, publicKey, signMessage) => {
+  const asyncGetUser = useCallback(async (apiKey) => {
     let res = await getUserFromApiKey(apiKey);
-    if (res?.data.status === "success") {
-      setUser(res.data.user);
-      identifyHighlight(wallet, res.data.user);
-    } else if (res?.data.status === "error" && res?.data.msg === "API Key not found") {
-      localStorage.removeItem("api_key");
-      if (publicKey && signMessage) await asyncGetApiKey(publicKey, signMessage);
-    } else setError(true);
-  }
+    if (res?.status === "success") {
+      if (checkWalletAddress(wallet, res.user)) {
+        setUser(res.user);
+        identifyHighlight(wallet, res.user);
+      } else {
+        await handleGetNewApiKey()
+      }
+    } else if (res?.status === "error" && res?.msg === "API Key not found") {
+      await handleGetNewApiKey()
+    } else {
+      error("Error Signing In")
+      await wallet.disconnect();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wallet, handleGetNewApiKey])
+
 
   useEffect(() => {
     if(!wallet.connected) {
-      setError(false);
+      setApiError(false);
     }
   }, [wallet])
 
   useEffect(() => {
     if (user?.api_key) return;
-    if (fetching || error) return;
-    if (!wallet || !wallet.connected) return;
+    if (fetching || apiError) return;
+    if (!wallet?.publicKey || !wallet?.signMessage) return;
     
     (async () => {
       setFetching(true)
@@ -59,20 +82,26 @@ export default function ConnectWallet() {
       const apiKey = localStorage.getItem("api_key");
       try {
         if (apiKey) {
-          await asyncGetUser(apiKey, wallet.publicKey, wallet.signMessage);
+          await asyncGetUser(apiKey);
         } else {
-          await asyncGetApiKey(wallet.publicKey, wallet.signMessage);
+          await asyncGetApiKey();
         }
         
       } catch (e) {
-        setError(true);
         console.log("Error Signing In", e)
+        if (e.message.includes("rejected")) {
+          //on rejected message, disconnect wallet
+          await wallet.disconnect()
+        } else {
+          setApiError(true);
+          error("Error Signing In")
+        }
       }
       setFetching(false);
     })()
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallet, user, fetching, Error]);
+  }, [wallet, user]);
 
   return null
 }

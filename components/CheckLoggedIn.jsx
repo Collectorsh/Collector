@@ -14,7 +14,9 @@ export default function CheckLoggedIn({ holder = false }) {
   // This navigation and check is included by all dashboard pages
   const asyncGetUser = useCallback(async (apiKey) => {
     let res = await getUserFromApiKey(apiKey);
-    setUser(res.data.user);
+    setUser(res.user);
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -27,6 +29,7 @@ export default function CheckLoggedIn({ holder = false }) {
         if (!user.token_holder) router.push("/");
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return null;

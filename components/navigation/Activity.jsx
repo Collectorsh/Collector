@@ -2,9 +2,10 @@ import Link from "next/link";
 import { Fragment, useContext } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import UserContext from "/contexts/user";
-import { ChevronDownIcon } from "@heroicons/react/outline";
+import NotFound from "../404";
 
 export default function Activity() {
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const [user] = useContext(UserContext);
 
   return (
@@ -16,10 +17,6 @@ export default function Activity() {
             <span className="sr-only">Open user menu</span>
             <p className="menu text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
               Premium
-              <ChevronDownIcon
-                className="h-4 w-4 ml-1 inline"
-                aria-hidden="true"
-              />
             </p>
           </Menu.Button>
         </div>

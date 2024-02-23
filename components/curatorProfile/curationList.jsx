@@ -4,20 +4,25 @@ import clsx from "clsx";
 import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
 import SortableCurationPreview from "../curations/sortableCurationPreview";
 import { useMemo } from "react";
+import * as Icon from "react-feather";
+import { defaultCollectorImageId } from "../../config/settings";
+import dynamic from 'next/dynamic';
 
-export const curationListPlaceholderId = "global/Collector_Hero_btrh4t"
+const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillContent), { ssr: false })
 
-const CurationList = ({ curations, isOwner, withCurator, asSortable }) => {
+const CurationList = ({ curations, isOwner, asSortable }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
       {asSortable
         ? curations?.map(curation => (
           <SortableCurationPreview key={curation.id} id={curation.id}>
-            <CurationListItem key={curation.id} curation={curation} isOwner={isOwner} withCurator={withCurator} />
+            <CurationListItem key={curation.id} curation={curation} isOwner={isOwner} />
           </SortableCurationPreview>
         ))
         : curations?.map(curation => (
-          <CurationListItem key={curation.id} curation={curation} isOwner={isOwner} withCurator={withCurator} />
+          <div key={curation.id} className="border-4 border-transparent">
+            <CurationListItem  curation={curation} isOwner={isOwner} />
+          </div> 
         ))
     }
     </div>
@@ -26,44 +31,40 @@ const CurationList = ({ curations, isOwner, withCurator, asSortable }) => {
 
 export default CurationList;
 
-export const CurationListItem = ({ curation, isOwner, withCurator }) => { 
-  const { banner_image, name, description, is_published, curator } = curation
+export const CurationListItem = ({ curation, isOwner }) => { 
+  const { banner_image, name, description_delta, is_published, curation_type } = curation
   const bannerImgId = parseCloudImageId(banner_image)
 
-  const curationTypeText = useMemo(() => {
-    switch (curation.curation_type) {
-      case "curator":
-        return "Curated by"
-      case "artist":
-        return "Art by"
-      case "collector":
-        return "Collection by"
+  const curationText = useMemo(() => {
+    switch (curation_type) {
+      case "artist": return "an artist curation"
+      case "collector": return "a collector curation"
+      case "curator": return "a group curation"
     }
-  }, [curation.curation_type])
+  }, [curation_type])
 
-  const simpleCurationTypeText = curation.curation_type === "curator" ? "Curation" : "Solo Exhibition"
   return (
     <Link href={`/curations/${ name }`} >
-      <a className="w-full duration-300 hover:scale-[102%] active:scale-100 relative
-       group
+      <a className="w-full duration-300 relative
+       group/curationItem
       "
       >
         <PublishedTag isPublished={is_published} isOwner={isOwner} />
-        <div className="relative shadow-lg shadow-black/25 dark:shadow-neutral-500/25 rounded-xl overflow-hidden" >
+        <div className="relative shadow group-hover/curationItem:shadow-md shadow-black/20 rounded-xl overflow-hidden duration-300 " >
           <CloudinaryImage
             className="w-full h-[300px] object-cover "
-            id={bannerImgId || curationListPlaceholderId}
+            id={bannerImgId || defaultCollectorImageId}
             noLazyLoad
             width={1400}
           />
+          <div className="opacity-0 group-hover/curationItem:opacity-100 duration-300 absolute inset-0 bg-zinc-200/75 dark:bg-zinc-800/75 backdrop-blur-sm p-4 h-full overflow-y-auto cursor-pointer">
+            {description_delta && <QuillContent textDelta={description_delta} />} 
+          </div>
         </div>
-        <h3 className="font-bold collector text-2xl text-center my-2">
+        <h3 className="font-bold collector text-2xl text-center my-2 px-3 w-fit mx-auto rounded-md duration-300 group-hover/curationItem:bg-zinc-200 group-hover/curationItem:dark:bg-zinc-800">
           {name.replaceAll("_", " ")}
         </h3>
-        {withCurator && curator
-          ? <p className="text-center">{curationTypeText} {curator.username}</p>
-          : null
-        }
+        {/* <p className="text-sm textPalette3 text-center mb-1">{curationText}</p> */}
       </a>
     </Link>
   )

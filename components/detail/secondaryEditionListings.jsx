@@ -7,8 +7,7 @@ import { useContext, useMemo, useState } from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import { roundToPrecision } from "../../utils/maths";
-import { InformationCircleIcon } from "@heroicons/react/solid";
-
+import * as Icon from 'react-feather'
 
 export default function SecondaryEditionListings({ editionListings }) {
 
@@ -26,7 +25,7 @@ export default function SecondaryEditionListings({ editionListings }) {
       content="Editions are sold lowest price first"
       className="shadow-lg"
     >
-      <InformationCircleIcon className="w-4 inline -mt-2" />
+      <Icon.Info size={14} />
     </Tippy>
   )
 
@@ -34,7 +33,7 @@ export default function SecondaryEditionListings({ editionListings }) {
     <div className="flex flex-wrap justify-between gap-2 items-center">
       <div>
         <p className="font-bold text-lg">Secondary Editions</p>
-        <p>{displayedEditionListings.length || "None"} available{info}</p>
+        <p className="font-sm textPalette2 flex gap-1">{displayedEditionListings.length || "None"} available{info}</p>
       </div>
    
       {displayedEditionListings?.length
@@ -64,23 +63,23 @@ export const EditionListing = ({ listing, onCollect }) => {
   return(
     <Tippy
       content="Connect your wallet first!"
-      className="shadow-lg"
+      className="shadow"
       disabled={Boolean(user)}
     >
       <div>
         <MainButton
           onClick={handleBuy}
-          className={clsx("px-3 min-w-[10rem]")}
-          noPadding
+          className={clsx("min-w-[10rem] mt-1.5")}
+          size="lg"
           disabled={!handleCollect || purchasing || !user}
         >
           {purchasing
             ? (
               <span className="inline-block translate-y-0.5">
-                <Oval color="#FFF" secondaryColor="#666" height={18} width={18} />
+                <Oval color="#FFF" secondaryColor="#666" height={18} width={18} strokeWidth={4} className="translate-y-0.5" />
               </span>
             )
-            : `Collect (${ price }◎)`
+            : `Collect ${ price }◎`
           }
         </MainButton>
       </div>

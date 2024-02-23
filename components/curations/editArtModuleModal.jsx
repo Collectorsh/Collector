@@ -1,14 +1,12 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import MainButton, { WarningButton } from "../MainButton";
-import CloudinaryImage, { IMAGE_FALLBACK_STAGES } from "../CloudinaryImage";
+import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
 import Modal from "../Modal";
 import SearchBar from "../SearchBar";
 import { RoundedCurve } from "./roundedCurveSVG";
-import { XCircleIcon } from "@heroicons/react/solid";
 import useBreakpoints from "../../hooks/useBreakpoints";
-import { truncate } from "../../utils/truncate";
-import useNftFiles, { getTokenAspectRatio } from "../../hooks/useNftFiles";
+import { getTokenAspectRatio } from "../../hooks/useNftFiles";
 import debounce from "lodash.debounce";
 import { useTokens } from "../../data/nft/getTokens";
 import UserContext from "../../contexts/user";
@@ -21,6 +19,8 @@ import { groupEditions } from "../../utils/groupEditions";
 import GroupedCollection from "./groupedCollection";
 import AddTokenButton from "./addTokenButton";
 import Checkbox from "../checkbox";
+
+import * as Icon from "react-feather";
 
 
 export default function EditArtModuleModal({
@@ -42,6 +42,7 @@ export default function EditArtModuleModal({
   
   const [newArtModule, setNewArtModule] = useState(artModule)
   const [wrapperWidth, setWrapperWidth] = useState(0);
+  const [wrapperHeight, setWrapperHeight] = useState(0)
   const [search, setSearch] = useState("");
   const [groupByCollection, setGroupByCollection] = useState(false);
 
@@ -54,8 +55,42 @@ export default function EditArtModuleModal({
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
   const tabsRef = useRef([]);
 
-  const tabs = curationType === "collector" ? ["1/1", "Editions"] : ["1/1", "Master Editions"]
+  const divRef = useRef(null)
+  const expandRef = useRef(null)
+  const startYRef = useRef(null)
+  const startHeightRef = useRef(null)
 
+
+  const handleResize = () => {
+    if (!wrapperRef.current) return;
+    setWrapperWidth(wrapperRef.current.clientWidth)
+    setWrapperHeight(wrapperRef.current.clientHeight)
+
+    const currentTab = tabsRef.current[activeTabIndex];
+    if (!currentTab) return
+    setTabUnderlineLeft(currentTab.offsetLeft);
+    setTabUnderlineWidth(currentTab.clientWidth);
+  }
+  const debouncedResize = debounce(handleResize, 250)
+
+  const onDragStart = (e) => {
+    startYRef.current = e.clientY;
+    startHeightRef.current = parseInt(document.defaultView.getComputedStyle(divRef.current).height, 10);
+    document.documentElement.addEventListener('mousemove', doDrag, false);
+    document.documentElement.addEventListener('mouseup', stopDrag, false);
+  }
+
+  function doDrag(e) {
+    divRef.current.style.maxHeight = (startHeightRef.current + e.clientY - startYRef.current) + 'px';
+  }
+
+  function stopDrag() {
+    document.documentElement.removeEventListener('mousemove', doDrag, false);
+    document.documentElement.removeEventListener('mouseup', stopDrag, false);
+    debouncedResize()
+  }
+
+  const tabs = curationType === "collector" ? ["1/1", "Editions"] : ["1/1", "Master Editions"]
   
   //Dont fetch user tokens if this is a curator curation
   const useUserTokens = curationType !== "curator"
@@ -76,25 +111,13 @@ export default function EditArtModuleModal({
   const gapSize = 24
 
   useEffect(() => {
-    const handleResize = () => {
-      if (!wrapperRef.current) return;
-      const width = wrapperRef.current.clientWidth
-      setWrapperWidth(width)
-
-      const currentTab = tabsRef.current[activeTabIndex];
-      if (!currentTab) return
-      setTabUnderlineLeft(currentTab.offsetLeft);
-      setTabUnderlineWidth(currentTab.clientWidth);
-    }
     setTimeout(handleResize, 500)
-
-    const debouncedResize = debounce(handleResize, 250)
-
     window.addEventListener("resize", debouncedResize)
     return () => {
       debouncedResize.cancel()
       window.removeEventListener("resize", debouncedResize)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, activeTabIndex])
 
   const tokens = useMemo(() => {
@@ -192,7 +215,7 @@ export default function EditArtModuleModal({
       mappedAspectRatios[mint] = aspect
     })
 
-    const maxHeight = 333;
+    const maxHeight = wrapperHeight;
     const rowGapOffset = gapSize * (tokens.length - 1);
     const rowHeight = Math.min((wrapperWidth - rowGapOffset) / totalAspectRatio, maxHeight);
 
@@ -245,7 +268,7 @@ export default function EditArtModuleModal({
         </SortableArt>
       )
     })
-  }, [tokens, isMobile, curationType, wrapperWidth])
+  }, [tokens, isMobile, curationType, wrapperWidth, wrapperHeight])
 
   const contentTitle = useMemo(() => {
     switch (curationType) {
@@ -375,7 +398,9 @@ export default function EditArtModuleModal({
   }, [availableTokens, search, useUserTokens, approvedArtists, tokens, tokenMintsInUse, moduleFull, handleTokenToSubmit, curationType, newArtModule.id, groupByCollection])
 
   const content = (
-    <div className="relative h-full min-h-[200px] max-h-[333px] min border-4 rounded-xl border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+    <div className="relative h-full max-h-[333px] min-h-[200px] min border-4 rounded-xl palette2 borderPalette3"//max-h-[333px]  h-full min-h-[200px]
+      ref={divRef}
+    >
       {moduleFull ?
         (
           <div className="absolute inset-0 z-50 h-full flex justify-center items-center backdrop-blur-sm">
@@ -399,7 +424,7 @@ export default function EditArtModuleModal({
             <div className="col-span-5 flex justify-center items-center">
               {useUserTokens 
                 ? <p className="animate-pulse">Gathering your digital assets{loadingCounter}</p>
-                : <p>There are currently no available artworks</p>
+                : <p>It looks like nothing has been submitted yet.</p>
               }
             </div>
           )
@@ -413,7 +438,7 @@ export default function EditArtModuleModal({
     <>
       
       <div className="relative mx-auto w-fit">
-        <div className="flex justify-center space-x-2 border-b-8 border-neutral-200 dark:border-neutral-700">
+        <div className="flex justify-center space-x-2 border-b-8 borderPalette3">
           {tabs.map((tab, i) => {
             const handleClick = () => {
               setActiveTabIndex(i);
@@ -424,8 +449,9 @@ export default function EditArtModuleModal({
                 key={tab}
                 ref={(el) => (tabsRef.current[i] = el)}
                 className={clsx(
-                  "px-3 py-1 capitalize hover:opacity-100 hover:scale-[102%] font-bold duration-300",
-                  isSelected ? "border-black dark:border-white opacity-100" : "border-transparent opacity-75")}
+                  "px-3 py-0 my-1 capitalize  font-bold duration-300",
+                  "hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded",
+                )}
                 onClick={handleClick}
               >
                 {tab}
@@ -434,13 +460,13 @@ export default function EditArtModuleModal({
           })}
 
         </div>
-        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-200 dark:fill-neutral-700" />
+        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
+        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700" />
         <span
-          className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner shadow-black/10 dark:shadow-white/10"
+          className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner palette2 shadow-black/10 dark:shadow-white/10"
         />
         <span
-          className="absolute rounded-full bottom-0 block h-1 bg-black dark:bg-white transition-all duration-300"
+          className="absolute rounded-full bottom-0 block h-1 bg-zinc-700 dark:bg-zinc-300 transition-all duration-300"
           style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
         />
       </div>
@@ -448,16 +474,16 @@ export default function EditArtModuleModal({
   )
     : (
       <div className="relative mx-auto w-fit">
-        <p className="font-bold bg-neutral-200 dark:bg-neutral-700 h-5">{contentTitle}</p>
-        <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-neutral-200 dark:fill-neutral-700" />
+        <p className="font-bold bg-zinc-300 dark:bg-zinc-700 h-5">{contentTitle}</p>
+        <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
+        <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-zinc-300 dark:fill-zinc-700" />
       </div>
     )
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Edit Art Module">
       <div
-        className="overflow-y-auto grid h-screen max-h-full grid-rows-[1fr,auto,1fr] mt-4 relative"
+        className="overflow-y-auto grid h-screen max-h-full grid-rows-[auto,auto,1fr] mt-4 relative"
       >
         <div className="relative flex flex-col">
           <div className="flex items-center justify-between flex-wrap px-4 gap-2">
@@ -480,8 +506,18 @@ export default function EditArtModuleModal({
           {content}
         </div>
 
-        <hr className="block border-neutral-200 dark:border-neutral-700 my-4" />
-        <div className="px-3 py-2 w-full overflow-x-hidden relative min-h-[340px] h-fit">
+        <button
+          className="cursor-[row-resize] my-3 flex flex-col items-center justify-center w-full gap-[2px]"
+          ref={expandRef}
+          onClick={() => console.log("expand")}
+          onMouseDown={onDragStart}
+        >
+          <hr className="block borderPalette3 w-8 border" />
+          <hr className="block borderPalette3 w-full border" />
+          <hr className="block borderPalette3 w-8 border"/>
+        </button>
+
+        <div className="px-3 py-2 w-full overflow-hidden relative min-h-[340px] h-full">
           <div className={clsx(
             "w-full min-h-[4rem] relative h-full",
           )} 
@@ -511,17 +547,19 @@ export default function EditArtModuleModal({
       </div>
       
       <div className="w-full flex justify-center md:justify-between items-center gap-4 mt-4 flex-wrap">
-        <WarningButton onClick={onDeleteModule}>
-          Delete Module
+        <WarningButton onClick={onDeleteModule} size="lg">
+          Delete
         </WarningButton>
         <div className="flex gap-4">
-          <MainButton onClick={handleClose}>
+          <MainButton onClick={handleClose} size="lg" standardWidth>
             Cancel
           </MainButton>
           <MainButton
             onClick={handleSave}
             solid
             disabled={saving}
+            size="lg"
+            standardWidth
           >
             {saving
               ? (
@@ -558,20 +596,19 @@ const EditArtItem = ({
         >
           <button
             className={clsx(
-              "absolute -top-2 -right-2 z-50",
-              "bg-neutral-200/50 dark:bg-neutral-700/50 rounded-full shadow-lg dark:shadow-white/10",
-              "duration-300 hover:scale-110 active:scale-100",
+              "absolute -top-2 -right-2 z-50 p-1",
+              "bg-zinc-300/50 dark:bg-zinc-700/50 rounded-full shadow-md",
+              "duration-300 hover:bg-zinc-300 dark:hover:bg-zinc-700",
             )}
             onClick={onRemove}
           >
-            <XCircleIcon className="w-8 h-8" />
+           <Icon.X />
           </button>
           <CloudinaryImage
             className={clsx(
               "object-cover",
-              "shadow-lg rounded-lg",
+              "shadow-md rounded-lg",
               "w-full h-full"
-              // "max-h-[333px]"
             )}
             width={500}
             useMetadataFallback

@@ -1,9 +1,10 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Link from "next/link";
-import { XCircleIcon } from "@heroicons/react/outline";
+import NotFound from "./404";
 
 export default function MintedModal({ open, nft, updateOpen }) {
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   function setOpen() {}
 
   return (
@@ -43,10 +44,10 @@ export default function MintedModal({ open, nft, updateOpen }) {
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <XCircleIcon
+              {/* <XCircleIcon
                 className="absolute h-7 w-7 cursor-pointer text-gray-500 hover:text-black dark:text-gray-500 dark:hover:text-white top-2 right-2"
                 onClick={() => updateOpen(false)}
-              />
+              /> */}
               <div className="bg-white dark:bg-dark3 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="text-center">
                   <p className="text-3xl text-black dark:text-white">

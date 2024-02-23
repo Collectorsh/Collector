@@ -1,6 +1,7 @@
-import { InformationCircleIcon, PlusIcon, XIcon } from "@heroicons/react/solid"
+
 import clsx from "clsx"
 import Tippy from "@tippyjs/react"
+import * as Icon from 'react-feather'
 
 const AttributesInput = ({ attributes, setAttributes }) => {
   
@@ -14,28 +15,19 @@ const AttributesInput = ({ attributes, setAttributes }) => {
     ])
   }
 
-  const info = (
-    <Tippy
-      content="The wallet address and share of royalties for each creator."
-      className="shadow-lg"
-    >
-      <InformationCircleIcon className="w-4" />
-    </Tippy>
-  )
-
-
   return (
     <div>
       <p className="font-bold text-lg mb-1 ml-4 flex">Attributes</p>
-      <div className=" border-4 px-3 py-2 rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
+      <div className="w-full px-3.5 py-2 outline-none rounded-md border-2 bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
         {attributes.map((attribute, i) => (<AttributesItem key={"attribute"+i} index={i} handleChange={setAttributes} attribute={attribute} />))}
         <button
           onClick={addAttribute}
           className={clsx(
-            "w-full h-10 p-0 flex items-center justify-center gap-2 hover:scale-105 active:scale-100 duration-300",
-            )}
+            "w-full h-10 flex items-center justify-center gap-1.5 hoverPalette2 rounded-md px-2",
+          )}
             >
-          Add Attribute<PlusIcon className="inline-block w-5 h-5" />
+          Add Attribute
+          <Icon.Plus size={18} strokeWidth={2.5} />
         </button>
       </div>
     </div>
@@ -70,7 +62,7 @@ const AttributesItem = ({ attribute, index, handleChange }) => {
     <div className="flex justify-between items-center mb-2">
       <div className="grid grid-cols-2 gap-4 w-full">
         <input
-          className={clsx("bg-transparent outline-none border-b-2 border-neutral-300 dark:border-neutral-700 w-full pl-1")}
+          className={clsx("bg-transparent outline-none border-b-2 borderPalette2 w-full pl-1")}
           type="text"
           value={attribute.trait_type}
           onChange={editTraitType}
@@ -78,15 +70,15 @@ const AttributesItem = ({ attribute, index, handleChange }) => {
         />
 
         <input
-          className={clsx("bg-transparent outline-none border-b-2 border-neutral-300 dark:border-neutral-700 w-full pl-1")}
+          className={clsx("bg-transparent outline-none border-b-2 borderPalette2 w-full pl-1")}
           type="text"
           value={attribute.value}
           onChange={editValue}
           placeholder="Value"
         />
       </div>
-      <button onClick={removeAttribute} className={clsx("duration-200 hover:scale-105 active:scale-100 opacity-50 hover:opacity-100")}>
-        <XIcon className="w-5 h-5" />
+      <button onClick={removeAttribute} className={clsx("duration-300 opacity-50 hover:opacity-100")}>
+        <Icon.X size={20} />
       </button>
 
     </div>

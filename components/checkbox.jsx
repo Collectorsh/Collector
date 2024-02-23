@@ -1,19 +1,18 @@
-import { CheckIcon } from "@heroicons/react/solid";
-
-const { default: clsx } = require("clsx");
+import clsx from 'clsx';
+import * as Icon from 'react-feather'
 
 const Checkbox = ({ label, checked, onChange, className, labelLeft = false }) => (
   <label className={clsx(
-    "flex items-center gap-2 cursor-pointer",
+    "flex items-center justify-center gap-2 cursor-pointer",
     className
   )}>
     {labelLeft && label}
     <input type="checkbox" checked={checked} onChange={onChange} className="hidden" />
     <span className={clsx(
-      "w-5 h-5 rounded border-[3px] border-neutral-300 dark:border-neutral-700",
+      "w-6 h-6 rounded border-2 palette2 borderPalette3",
     )}>
       {checked && (
-        <CheckIcon className="w-full h-full stroke-2" />
+        <Icon.Check size={19} strokeWidth={2.5} className="mt-[1px] ml-[1px]" />
       )}
     </span>
     {!labelLeft && label}

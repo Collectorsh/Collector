@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { DownloadIcon } from "@heroicons/react/solid";
 import LoadingModal from "/components/LoadingModal";
+import NotFound from "./404";
 
 export default function Download({ url, text }) {
+  return <NotFound />; //DEPRECATED - TO BE DELETED
   const [loading, setLoading] = useState(false);
 
   async function downloadFile() {
@@ -23,10 +24,10 @@ export default function Download({ url, text }) {
   return (
     <>
       <a onClick={downloadFile}>
-        <DownloadIcon
+        {/* <DownloadIcon
           className="h-6 w-6 inline cursor-pointer"
           aria-hidden="true"
-        />
+        /> */}
         {text && <span>{text}</span>}
       </a>
       <LoadingModal

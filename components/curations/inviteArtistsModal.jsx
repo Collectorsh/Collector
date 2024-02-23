@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import MainButton from "../MainButton"
 import Modal from "../Modal"
-import { InformationCircleIcon, XIcon } from "@heroicons/react/solid"
 import { RoundedCurve } from "./roundedCurveSVG"
 import SearchBar from "../SearchBar"
 import getUserFromUsername from "../../data/user/getUserFromUsername"
@@ -10,6 +9,7 @@ import Tippy from "@tippyjs/react"
 import generateViewerPasscode from "../../data/curation/generateViewerPasscode"
 import UserContext from "../../contexts/user"
 import { host } from "../../config/settings"
+import * as Icon from "react-feather"
 
 const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewerPasscode, name }) => {
 
@@ -25,6 +25,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
   }, [viewerPasscode, passcode])
   
   const handleInvite = () => {
+    if (!newApproveArtists?.length) return
     onInvite(newApproveArtists)
     handleClose({keepCurrent: true})
   }
@@ -71,9 +72,9 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
   const info = (
     <Tippy
       content="When an artist uses this link they will be automatically added to your curation"
-      className="shadow-lg"
+      className="shadow"
     >
-      <InformationCircleIcon className="w-4" />
+      <Icon.Info className="opacity-50" size={14} />
     </Tippy>
   )
 
@@ -87,14 +88,14 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
         </p>
         {passcode ? (
           <div className="flex items-center gap-2">
-            <p className="text-sm">{getUrl()}</p>
+            <p className="text-sm textPalette2">{getUrl()}</p>
             <CopyButton textToCopy={getUrl()} />
           </div>
         ) : (
           <MainButton
             onClick={handleGeneratePasscode}
-            className="mt-1 px-3"
-            noPadding
+            className="mt-1"
+            
           >
             Generate Link
           </MainButton>
@@ -102,7 +103,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
         
       </div>
 
-      <hr className="my-5 border-neutral-200 dark:border-neutral-700" />
+      <hr className="my-5 borderPalette3" />
  
       <div className="flex items-center justify-center gap-2">
         <SearchBar
@@ -114,25 +115,26 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
         />
         <MainButton
           onClick={handleSearch}
-          noPadding
-          className=" py-1.5 px-3"
+          className="flex gap-1.5 items-center"
+          size="lg"
           disabled={addDisabled}
         >
           Add
+          <Icon.Plus size={19} strokeWidth={2.5} />
         </MainButton>
       </div>
 
       <p className="text-center text-sm italic text-red-500 h-4 ">{error}</p>
 
-      <p className="text-center mb-4">Artists must have a Collector account</p>
+      <p className="text-center mb-4 text-sm textPalette2">Artists must have a Collector account</p>
 
       <div className="relative mx-auto w-fit">
-        <p className="bg-neutral-200 dark:bg-neutral-700 h-6 font-bold">Approved Artists</p>
-        <RoundedCurve className="absolute bottom-0 -left-8 w-8 h-6 fill-neutral-200 dark:fill-neutral-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-8 w-8 h-6 fill-neutral-200 dark:fill-neutral-700" />
+        <p className="bg-zinc-300 dark:bg-zinc-700 h-6 font-bold">Approved Artists</p>
+        <RoundedCurve className="absolute bottom-0 -left-8 w-8 h-6 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
+        <RoundedCurve className="absolute bottom-0 -right-8 w-8 h-6 fill-zinc-300 dark:fill-zinc-700" />
       </div>
       <div className="mb-6 min-h-[5.5rem] border-4 rounded-xl p-2
-       border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
+       border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-900
        flex items-start flex-wrap gap-2
        ">
         {newApproveArtists.map((artist, i) => {
@@ -147,10 +149,10 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
       </div>
       
       <div className="w-full flex justify-center gap-4">
-        <MainButton onClick={handleClose}>
+        <MainButton onClick={handleClose} standardWidth size="lg">
           Cancel
         </MainButton>
-        <MainButton onClick={handleInvite} solid>
+        <MainButton onClick={handleInvite} solid disabled={!newApproveArtists?.length} standardWidth size="lg">
           Save
         </MainButton>
       </div>
@@ -164,12 +166,12 @@ export default InviteArtistsModal
 const ArtistChip = ({ name, onRemove }) => { 
   return (
     <div className="flex items-center gap-1 rounded-lg pl-2 pr-1
-    bg-white dark:bg-black
-      border border-neutral-200 dark:border-neutral-700
+      palette1
+      border border-zinc-300 dark:border-zinc-700
     ">
       <p>{name}</p>
-      <button onClick={onRemove} className="opacity-50 hover:opacity-100 hover:scale-110 active:scale-100 duration-300">
-        <XIcon className="w-4 h-4" />
+      <button onClick={onRemove} className="opacity-50 hover:opacity-100 duration-300">
+        <Icon.X size={16} />
       </button>
     </div>
   )

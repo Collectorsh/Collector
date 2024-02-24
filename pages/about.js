@@ -1,8 +1,9 @@
 
+import NotFound from "../components/404";
 import MainNavigation from "/components/navigation/MainNavigation";
 
 export default function About() {
-
+  return <NotFound />
   return (
     <div className="">
       <MainNavigation />

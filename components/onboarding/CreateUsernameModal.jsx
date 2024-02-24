@@ -46,7 +46,7 @@ export default function CreateUsernameModal() {
     //keep email here so errors reset when retyping email
   }, [username, email])
 
-  const handleSave = async (andGoToSettings = false) => {
+  const handleSave = async () => {
 
     //check email
     //no email is also valid

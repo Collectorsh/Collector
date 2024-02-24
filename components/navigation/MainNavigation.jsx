@@ -67,12 +67,12 @@ export default function MainNavigation() {
                     Waitlist
                   </a>
                 </Link> */}
-
+{/* 
                 <Link href="/about">
                   <a className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1">
                     About
                   </a>
-                </Link>
+                </Link> */}
             
                 {user
                   ? <Gallery />//<Profile />
@@ -132,15 +132,17 @@ export default function MainNavigation() {
                         <Link href="/" passHref>
                           <p className="">Home</p>
                         </Link>
-                        {/* <hr className="borderPalette3" />
-                        <Link href="/waitlist" passHref>
+                        <hr className="borderPalette3" />
+
+                        {/* <Link href="/waitlist" passHref>
                           <p className="">Waitlist</p>
-                        </Link> */}
-                        <hr className="borderPalette3"/>
-                        <Link href="/about" passHref>
+                        </Link>
+                        <hr className="borderPalette3"/> */}
+
+                        {/* <Link href="/about" passHref>
                           <p className="">About</p>
                         </Link>
-                        <hr className="borderPalette3" />
+                        <hr className="borderPalette3" /> */}
                         {user
                           ? (<>
                             {user.subscription_level === "pro"
@@ -160,7 +162,7 @@ export default function MainNavigation() {
                                 </Link>
                                 <hr className="borderPalette3" />
                                 <Link href={`/submissions`} passHref>
-                                  <p className="">Submissions</p>
+                                  <p className="">Submit</p>
                                 </Link>
                                 <hr className="borderPalette3" />
                               </>)

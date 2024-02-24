@@ -70,7 +70,7 @@ export default function Gallery() {
                       <Menu.Item>
                         <Link href={`/submissions`}>
                           <a className="block p-2 hoverPalette2 rounded-md">
-                            Submissions
+                            Submit
                           </a>
                         </Link>
                       </Menu.Item>

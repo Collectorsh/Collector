@@ -1,18 +1,27 @@
+import Tippy from "@tippyjs/react";
 import clsx from "clsx";
+
+import * as Icon from "react-feather"
 
 export const ProfileDisplayName = ({
   displayName, setDisplayName,
   paletteClass = "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800"
 }) => {
-
+  const info = (
+    <Tippy
+      content="The name shown in your gallery and on artworks you've created or collected"
+    >
+      <Icon.Info size={14} className="opacity-50" />
+    </Tippy>
+  )
   return (
     <div>
-      <p className="font-bold text-lg mb-1 ml-4">Display Name</p>
+      <p className="font-bold text-lg ml-4 mt-2 flex gap-1">Display Name {info}</p>
       <input
         className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", paletteClass)}
         onChange={(e) => setDisplayName(e.target.value)}
         value={displayName}
-        placeholder="Username"
+        placeholder="Display Name"
       />
     </div>
   )
@@ -22,10 +31,17 @@ export const ProfileUsername = ({
   username, setUsername,
   paletteClass = "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800"
 }) => {
+  const info = (
+    <Tippy
+      content={["Your unique handle used in urls", <br key="break"/>, "(e.g. collector.sh/username)"]}
+    >
+      <Icon.Info size={14} className="opacity-50" />
+    </Tippy>
+  )
 
   return (
     <div>
-      <p className="font-bold text-lg mb-1 ml-4">Username</p>
+      <p className="font-bold text-lg ml-4 mt-2 flex gap-1">Username {info}</p>
       <input
         className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", paletteClass)}
         onChange={(e) => setUsername(e.target.value.replaceAll(" ", "_"))}
@@ -43,7 +59,7 @@ export const ProfileEmail = ({
 
   return (
     <div>
-      <p className="font-bold text-lg mb-1 ml-4 mt-4">Email</p>
+      <p className="font-bold text-lg ml-4 mt-2">Email <span className="text-sm textPalette2">(optional)</span></p>
       <input
         className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", paletteClass)}
         onChange={(e) => setEmail(e.target.value)}

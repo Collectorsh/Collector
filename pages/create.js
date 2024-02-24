@@ -214,7 +214,7 @@ export default function MintPage() {
       />
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
-          <h2 className="text-5xl font-bold">Create</h2>
+          <h2 className="text-5xl font-bold">Mint</h2>
          
         </div>
 

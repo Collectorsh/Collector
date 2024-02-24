@@ -230,7 +230,7 @@ const Submissions = ({ }) => {
       <Toaster />
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
-          <h2 className="text-5xl font-bold">Approved Curations</h2>
+          <h2 className="text-5xl font-bold">Submit</h2>
           <Link href="/create" passHref>
             <MainButton size="lg" solid disabled={!approvedCurations?.length}>
               Create

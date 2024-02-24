@@ -17,7 +17,6 @@ import LogRocket from "logrocket";
 
 import { setTxFailed } from "../../utils/cookies";
 import * as Icon from "react-feather";
-import WalletDropdown from "../wallet/WalletDropdown";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { truncate } from "../../utils/truncate";
 import { displayName } from "../../utils/displayName";

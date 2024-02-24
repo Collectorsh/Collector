@@ -13,8 +13,7 @@ import { success } from "../../utils/toast";
 import { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import { emailRegex, usernameError } from "../settings/Settings";
-import { ProfileEmail, ProfileUsername } from "./ProfileInputs";
-
+import { ProfileDisplayName, ProfileEmail, ProfileUsername } from "./ProfileInputs";
 
 
 export default function CreateUsernameModal() {
@@ -27,6 +26,7 @@ export default function CreateUsernameModal() {
   const [username, setUsername] = useState(user?.username || "")
   const [email, setEmail] = useState(user?.email || "")
   const [usernameSaved, setUsernameSaved] = useState(false) 
+  const [displayName, setDisplayName] = useState(user?.name || user?.username || "");//default to username if no display name
 
   const [stage, setStage] = useState(0);//0 - username/email, 1 - addresses
 
@@ -40,7 +40,6 @@ export default function CreateUsernameModal() {
   useEffect(() => {
     if (username?.length < 2) return; //don't set an error when they are beginning to type
     const isUrlValid = urlRegex.test(username);
-
 
     if (!isUrlValid) setError(usernameError);
     else setError(null)
@@ -63,6 +62,7 @@ export default function CreateUsernameModal() {
     const res = await saveUser(user.api_key, {
       username: username,
       email: email,
+      name: displayName,
     });
 
     if (res.data && res.data.status === "success") {
@@ -82,14 +82,6 @@ export default function CreateUsernameModal() {
   }
 
   const handleClose = () => {
-    // if (!usernameSaved) {
-    //   //sign out user if they havent saved their username
-    //   wallet.disconnect().then(() => {
-    //     localStorage.removeItem("api_key");
-    //     setUser(null);
-    //   });
-    // } 
-
     setShowModal(false)
   }
 
@@ -103,6 +95,11 @@ export default function CreateUsernameModal() {
           <ProfileUsername
             username={username}
             setUsername={setUsername}
+            paletteClass="palette2 borderPalette3"
+          />
+          <ProfileDisplayName
+            displayName={displayName}
+            setDisplayName={setDisplayName}
             paletteClass="palette2 borderPalette3"
           />
           <ProfileEmail
@@ -151,6 +148,7 @@ export default function CreateUsernameModal() {
         {content()}
         
         <p className="text-sm pl-4 italic text-red-500 h-4 w-full mt-3 text-center">{error}</p>
+        
         <div className="w-full flex justify-center gap-4 relative mt-2">
           <MainButton
             onClick={handleClose} size="lg" standardWidth

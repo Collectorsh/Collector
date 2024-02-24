@@ -23,8 +23,11 @@ import { RoundedCurve } from "../components/curations/roundedCurveSVG";
 import { adminGetAllCuratorCurations } from "../data/curation/adminGetAllCurations";
 import useCurationAuctionHouse from "../hooks/useCurationAuctionHouse";
 import { shootConfetti } from "../utils/confetti";
+import { getWaitlistSignups } from "../data/waitlist_signups/getAllSignups";
+import CopyButton from "../components/CopyToClipboard";
+import { approveWaitlistSignup } from "../data/waitlist_signups/approveSignup";
 
-const tabs = ["Stats", "Fees"]
+const tabs = ["Stats", "Fees", "Waitlist"]
 
 export default function Dashboard() { 
   const [user] = useContext(UserContext);
@@ -42,6 +45,7 @@ export default function Dashboard() {
   const [artistUsername, setArtistUsername] = useState("");
   const [collectorUsername, setCollectorUsername] = useState("");
   const [curationName, setCurationName] = useState("");
+  const [waitlist, setWaitlist] = useState([])
 
   const [curations, setCurations] = useState([]);
 
@@ -52,6 +56,8 @@ export default function Dashboard() {
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(49);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
   const tabsRef = useRef([]);
+
+  const isAdmin = adminIDs.includes(user?.id)
 
   useEffect(() => {
     function setTabPosition() {
@@ -65,11 +71,9 @@ export default function Dashboard() {
 
     return () => window.removeEventListener("resize", setTabPosition);
   }, [activeTabIndex]);
-  
-
-  const isAdmin = adminIDs.includes(user?.id)
 
   useEffect(() => { 
+    if (!isAdmin) return;
     (async () => {
       if (!wallet) return;
 
@@ -83,7 +87,8 @@ export default function Dashboard() {
       const balance = balanceLamports / LAMPORTS_PER_SOL;
       setCollectedFees(balance)
     })()
-  }, [wallet])
+  }, [wallet, isAdmin])
+
   useEffect(() => {
     if (!isAdmin) return;
     (async () => {
@@ -91,6 +96,15 @@ export default function Dashboard() {
       setCurations(curations)
     })();
   }, [isAdmin, user])
+
+
+  useEffect(() => { 
+    if (!isAdmin) return;
+    (async () => {
+      const waitlist = await getWaitlistSignups()
+      setWaitlist(waitlist.filter(signup => signup.user.subscription_level !== "pro"))
+    })()
+  }, [isAdmin])
 
   const handleFetch = async () => { 
     if(!isAdmin) return
@@ -273,8 +287,10 @@ export default function Dashboard() {
       </div>
     </>
   )
+  const waitlistTable = waitlist?.map(signup => <SingupItem key={signup.id} signup={signup} setWaitlist={setWaitlist} />)
 
-  const content = [stats, fees]
+  const content = [stats, fees, waitlistTable];
+
 
   return (
     <>
@@ -427,6 +443,53 @@ const CurationItem = ({ curation }) => {
           <Oval color="#FFF" secondaryColor="#666" height={20} width={20} />
         ): "Withdraw"}
    
+      </MainButton>
+    </div>
+  )
+}
+
+const SingupItem = ({ signup, setWaitlist }) => { 
+  const [user] = useContext(UserContext);
+  const [approving, setApproving] = useState(false)
+
+  const handleApprove = async () => {
+    setApproving(true)
+    const res = await approveWaitlistSignup({
+      apiKey: user.api_key,
+      signupUserId: signup.user.id
+    })
+
+    if (res.success) {
+      success(`${ signup.user.username } has been approved!`)
+      setWaitlist(prev => prev.filter(s => s.id !== signup.id))
+    } else {
+      error("Approval failed")
+    }
+    setApproving(false)
+  }
+  return (
+    <div key={signup.id} className="grid grid-cols-5 border-b-2 borderPalette2 items-center p-4">
+      <p>{signup.user.username || "no username"}</p>
+      <p className="flex gap-1">
+        {signup.email}
+        <CopyButton text={signup.email} />
+      </p>
+      <p>
+        <a href={`https://twitter.com/${ signup.twitter_handle }`} target="_blank" rel="noreferrer" className="p-1 rounded-md hoverPalette1">
+          @{signup.twitter_handle}
+        </a>
+      </p>
+      <p className="whitespace-pre-line text-xs textPalette2">{signup.more_info}</p>
+      <MainButton
+        disabled={approving}
+        onClick={handleApprove}
+        solid
+        className="flex items-center justify-center"
+      >
+        {approving
+          ? <Oval color="#FFF" secondaryColor="#666" height={20} width={20} strokeWidth={2.5}/>
+          : "Approve"
+        }
       </MainButton>
     </div>
   )

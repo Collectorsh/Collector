@@ -113,7 +113,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
     if (curationType === "artist") {
       const useOwnerLink = owner && owner.subscription_level === "pro" && owner.username
 
-      return (owner?.username && owner.username !== artist.username) ? (
+      return (owner?.username && owner.username !== artist?.username) ? (
         <ToggleLink
           disabled={!useOwnerLink}  
           href={`/gallery/${ owner?.username }`}

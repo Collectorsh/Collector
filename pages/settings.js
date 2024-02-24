@@ -12,7 +12,7 @@ function SettingsPage() {
       <CheckLoggedIn />
       <MainNavigation />
       <Toaster />
-      <div className="relative max-w-screen-md mx-auto 2xl:px-8 py-12">
+      <div className="relative max-w-screen-md mx-auto px-2  2xl:px-8 py-12">
   
         <div className="w-full">
           <h2 className="text-5xl font-semibold  w-full py-1 inline-block">

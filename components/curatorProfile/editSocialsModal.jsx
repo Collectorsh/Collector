@@ -7,6 +7,9 @@ import clsx from "clsx"
 
 import * as Icon from 'react-feather'
 
+export const twitterHandleRegex = /^[A-Za-z0-9_]{1,15}$/;
+
+
 const EditSocialsModal = ({ socials, onSave, isOpen, onClose }) => { 
   const [newSocials, setNewSocials] = useState(socials || [])
 

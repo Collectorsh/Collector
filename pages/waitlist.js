@@ -13,6 +13,8 @@ import { twitterHandleRegex } from "../components/curatorProfile/editSocialsModa
 import { createWaitlistSignup } from "../data/waitlist_signups/createSignup";
 import { Oval } from "react-loader-spinner";
 import { error } from "../utils/toast";
+import CloudinaryImage from "../components/CloudinaryImage";
+import { displayName } from "../utils/displayName";
 
 export default function WaitlistPage() {
   const [user] = useContext(UserContext);
@@ -67,7 +69,7 @@ export default function WaitlistPage() {
       valid = false;
     }
 
-    if (!emailRegex.test(email)) {
+    if (email && !emailRegex.test(email)) {
       setErrors(prev => ({
         ...prev,
         email: "Please use a valid email",
@@ -121,13 +123,13 @@ export default function WaitlistPage() {
   const form = (
     <>
       <p className="font-bold text-4xl text-center mb-8">
-        longe username{user?.username ? `${ user?.username }, j` : "J"}oin the waitlist!
+        {user?.username ? `${ displayName(user) }, j` : "J"}oin the waitlist!
       </p>
       <div className="max-w-xs mx-auto">
     
         <p className="font-bold text-lg ml-4 mt-2">Twitter Handle</p>
         <div className={clsx("my-1 border-2 rounded-lg w-full px-4 py-2", "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800", "flex gap-1 items-center")}>
-          <p className="textPalette2 text-sm">twitter.com/</p>
+          <p className="textPalette2 text-sm">@</p>
           <input
             className={clsx("bg-transparent outline-none w-full")}
             onChange={handleHandleChange}
@@ -136,7 +138,7 @@ export default function WaitlistPage() {
           />
         </div >
      
-        <p className="font-bold text-lg ml-4 mt-2">Email</p>
+        <p className="font-bold text-lg ml-4 mt-2">Email <span className="text-sm textPalette2">(optional)</span></p>
         <input
           className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800")}
           onChange={handleEmailChange}
@@ -144,18 +146,17 @@ export default function WaitlistPage() {
           placeholder="Email"
         />
      
-        <p className="font-bold text-lg ml-4 mt-2">Additional Info</p>
-        <p className="text-sm textPalette2 ml-4">Anything else we should know about you?</p>
+        <p className="font-bold text-lg ml-4 mt-2">Additional Info <span className="text-sm textPalette2">(optional)</span></p>
         <textarea
           className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800")}
           onChange={(e) => setMoreInfo(e.target.value)}
           value={moreInfo}
-          placeholder="Additional Info"
+          placeholder="Any additional information you'd like to share?"
         />
         {Object.values(errors).filter(Boolean).map((error, i) => <p key={i} className="text-red-500">{error}</p>)}
         <MainButton
           onClick={handleSubmit}
-          disabled={Object.values(errors).filter(Boolean).length || !email || !twitterHandle || submitting}
+          disabled={Object.values(errors).filter(Boolean).length || !twitterHandle || submitting}
           className="w-full mt-6 flex justify-center items-center"
           size="lg"
           solid
@@ -174,7 +175,6 @@ export default function WaitlistPage() {
       <p className="font-bold text-4xl text-center mb-8">
         Join the waitlist!
       </p>
-      <p className="textPalette2">Please connect your wallet and sign in to apply</p>
       <MainButton
         onClick={() => setVisible(true)}
         className="m-auto mt-4"
@@ -188,9 +188,9 @@ export default function WaitlistPage() {
   const waiting = (
     <div className="text-center">
       <p className="font-bold text-4xl text-center mb-8">
-        { user?.username }, you are on the waitlist!
+        {displayName(user) }, you are on the waitlist!
       </p>
-      <p className="textPalette2">We will contact you when you get approved!</p>
+      <p className="textPalette2">We will reach out to you in 2-4 weeks!</p>
 
     </div>
   )
@@ -198,7 +198,7 @@ export default function WaitlistPage() {
   const approved = (
     <div className="text-center">
       <p className="font-bold text-4xl text-center mb-8">
-        Congrats {user?.username}, you have been approved!
+        Congrats {displayName(user)}, you have been approved!
       </p>
       <p className="textPalette2">Enjoy using Collector!</p>
     </div>
@@ -218,7 +218,16 @@ export default function WaitlistPage() {
     <div>
       <MainNavigation />
       <Toaster />
-      <div className="relative max-w-lg mx-auto px-2 2xl:px-8 py-12 pt-12 md:pt-20">
+      <div className="relative max-w-lg mx-auto px-2 2xl:px-8 py-12 pt-6 md:pt-14">
+        
+        <div className="opacity-95">
+          <CloudinaryImage
+            className="w-36 h-36 mx-auto dark:invert "
+            id="global/Collector-mascot-transparent_qsqcwx"
+            noLazyLoad
+            width={500}
+          />
+        </div>
         {content()}
       </div>
     </div>

@@ -147,7 +147,8 @@ const AddTokenButton = ({
 
       ref={itemRef}
     >
-      <div className={clsx(!isVisible && "hidden",
+      <div className={clsx(
+        !isVisible && "hidden",
         "duration-700 opacity-0", show  && "opacity-100"
       )}>
         <div className={clsx(

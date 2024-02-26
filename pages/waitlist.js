@@ -220,7 +220,7 @@ export default function WaitlistPage() {
       <Toaster />
       <div className="relative max-w-lg mx-auto px-2 2xl:px-8 py-12 pt-6 md:pt-14">
         
-        <div className="opacity-90">
+        <div className="opacity-95">
           <CloudinaryImage
             className="w-36 h-36 mx-auto dark:invert "
             id="global/Collector-mascot-transparent_qsqcwx"

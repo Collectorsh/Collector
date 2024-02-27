@@ -6,9 +6,6 @@ import SortableCurationPreview from "../curations/sortableCurationPreview";
 import { useMemo } from "react";
 import * as Icon from "react-feather";
 import { defaultCollectorImageId } from "../../config/settings";
-import dynamic from 'next/dynamic';
-
-const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillContent), { ssr: false })
 
 const CurationList = ({ curations, isOwner, asSortable }) => {
   return (
@@ -50,18 +47,15 @@ export const CurationListItem = ({ curation, isOwner }) => {
       "
       >
         <PublishedTag isPublished={is_published} isOwner={isOwner} />
-        <div className="relative shadow group-hover/curationItem:shadow-md shadow-black/20 rounded-xl overflow-hidden duration-300 " >
+        <div className="relative shadow group-hover/curationItem:shadow-md shadow-black/20 rounded-xl overflow-hidden duration-300 pb-[33%]" >
           <CloudinaryImage
-            className="w-full h-[300px] object-cover "
+            className="w-full h-full object-cover absolute inset-0"//300px
             id={bannerImgId || defaultCollectorImageId}
             noLazyLoad
             width={1400}
           />
-          <div className="opacity-0 group-hover/curationItem:opacity-100 duration-300 absolute inset-0 bg-zinc-200/75 dark:bg-zinc-800/75 backdrop-blur-sm p-4 h-full overflow-y-auto cursor-pointer">
-            {description_delta && <QuillContent textDelta={description_delta} />} 
-          </div>
         </div>
-        <h3 className="font-bold collector text-2xl text-center my-2 px-3 w-fit mx-auto rounded-md duration-300 group-hover/curationItem:bg-zinc-200 group-hover/curationItem:dark:bg-zinc-800">
+        <h3 className="font-bold collector text-xl text-center my-2 px-3 w-fit mx-auto rounded-md duration-300 group-hover/curationItem:bg-zinc-200 group-hover/curationItem:dark:bg-zinc-800">
           {name.replaceAll("_", " ")}
         </h3>
         {/* <p className="text-sm textPalette3 text-center mb-1">{curationText}</p> */}

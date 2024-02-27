@@ -1,21 +1,21 @@
 import React, { useContext, useEffect } from "react";
 import MainNavigation from "/components/navigation/MainNavigation";
-import Hero from "/components/home/Hero";
-import UserContext from "/contexts/user";
-import HighlightedCurations from "../components/home/HighlightedCurations";
+
 import getHighlightedCurations from "../data/curation/getHighlightedCurations";
+import LandingHero from "../components/landing/hero";
+import LandingHighlightedCurations from "../components/landing/HighlightedCurations";
+import LandingRecentCurations from "../components/landing/recentCurations";
+import LandingLetter from "../components/landing/letter";
 
-export default function Home({highlightedCurations}) {
-  const [user] = useContext(UserContext);
-
+export default function Home({highlightedCurations, recentCurations}) {
   return (
     <div className="">
       <MainNavigation />
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-8">
-        <Hero />
-      </div>
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8  border-neutral-100 dark:border-neutral-800 py-10">
-        <HighlightedCurations curations={highlightedCurations} />
+      <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-10">
+        <LandingHero />
+        <LandingHighlightedCurations curations={highlightedCurations} />
+        <LandingRecentCurations curations={recentCurations} />
+        <LandingLetter />
       </div>
     </div>
   );
@@ -25,7 +25,12 @@ export async function getServerSideProps() {
   try {
     const res = await getHighlightedCurations()
     if (res) {
-      return { props: { highlightedCurations: res } };
+      return {
+        props: {
+          highlightedCurations: res.slice(0, 4),
+          recentCurations: res.slice(0, 6)
+        }
+      };
     } else {
       return { props: {} };
     }

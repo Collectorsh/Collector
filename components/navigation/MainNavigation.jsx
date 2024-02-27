@@ -55,7 +55,7 @@ export default function MainNavigation() {
                 <div className="md:my-3 flex gap-4 items-end ">
                   <Link href="/">
                     <a className="collector text-3xl font-bold flex items-center rounded-md px-2 py-0 hoverPalette1">
-                      collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r
+                      collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-neutral-900 dark:bg-neutral-100 inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r
                     </a>
                   </Link>
                   <span className="collector tracking-wide pb-[1px]">Beta</span>

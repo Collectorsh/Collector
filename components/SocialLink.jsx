@@ -30,7 +30,7 @@ const SocialLink = ({
 
 export default SocialLink;
 
-const TwitterIcon = ({ className }) => (
+export const TwitterIcon = ({ className }) => (
   <svg
     viewBox="0 0 1200 1227"
     xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +41,7 @@ const TwitterIcon = ({ className }) => (
 
 )
 
-const InstaIcon = ({ className }) => (
+export const InstaIcon = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"

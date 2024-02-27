@@ -3,7 +3,7 @@ import MainNavigation from "/components/navigation/MainNavigation";
 
 import getHighlightedCurations from "../data/curation/getHighlightedCurations";
 import LandingHero from "../components/landing/hero";
-import LandingHighlightedCurations from "../components/landing/HighlightedCurations";
+import LandingHighlightedCurations from "../components/landing/highlightedCurations";
 import LandingRecentCurations from "../components/landing/recentCurations";
 import LandingLetter from "../components/landing/letter";
 

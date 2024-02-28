@@ -93,7 +93,7 @@ export default function Burn({ address }) {
     <>
       <h2 className="mb-4 font-bold text-xl">Poster Burn Party</h2>
       {remaining && total && (
-        <p className="bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
+        <p className="bg-neutral-100 dark:bg-dark2 p-2 w-ft font-bold">
           Remaining: {remaining}/{total}
         </p>
       )}
@@ -116,7 +116,7 @@ export default function Burn({ address }) {
                   </>
                 ) : (
                   <button
-                    className="bg-red-500 px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer disabled:cursor-default disabled:bg-gray-300"
+                    className="bg-red-500 px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer disabled:cursor-default disabled:bg-neutral-300"
                     onClick={() => mintNow()}
                     disabled={isMinting}
                   >

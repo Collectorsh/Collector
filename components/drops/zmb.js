@@ -220,7 +220,7 @@ export default function ZmbMint({ address, drop }) {
                   ({itemsMinted}/{total})
                 </span>
               </p>
-              <div className="h-1 bg-gray-100 w-full">
+              <div className="h-1 bg-neutral-100 w-full">
                 <div
                   className="h-1 bg-greeny"
                   style={{
@@ -279,7 +279,7 @@ export default function ZmbMint({ address, drop }) {
                             holder === "yes" &&
                             numMinted < maxMint)) && (
                           <button
-                            className="px-4 py-2 text-lg font-semibold cursor-pointer rounded-xl disabled:bg-gray-300 bg-greeny text-black"
+                            className="px-4 py-2 text-lg font-semibold cursor-pointer rounded-xl disabled:bg-neutral-300 bg-greeny text-black"
                             onClick={() => mintNow()}
                             disabled={isMinting}
                           >

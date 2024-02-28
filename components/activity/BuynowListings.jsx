@@ -11,7 +11,7 @@ export default function BuynowListings({ listings, user }) {
       {listings.map((item, index) => (
         <div
           key={index}
-          className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
+          className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-neutral-200 dark:border-dark3"
         >
           <div className="rounded-lg overflow-hidden">
             <Link
@@ -42,7 +42,7 @@ export default function BuynowListings({ listings, user }) {
                   )}
                 </div>
               </div>
-              <div className="bg-black rounded-b-2xl px-[10px] py-3 text-gray-50 -mx-[10px] h-16">
+              <div className="bg-black rounded-b-2xl px-[10px] py-3 text-neutral-50 -mx-[10px] h-16">
                 <div className="text-sm">
                   <div className="font-black dark:text-whitish float-left">
                     ◎{roundToTwo(item.amount / 1000000000)}

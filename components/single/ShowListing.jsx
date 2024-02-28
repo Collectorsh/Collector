@@ -85,8 +85,8 @@ export default function ShowListing({
         <div className="">
           {publicKey && publicKey.toBase58() === listing.seller ? (
             <div>
-              <p className="text-gray-800 dark:text-gray-50">Listing Price</p>
-              <p className="text-gray-800 dark:text-gray-50 font-bold text-2xl">
+              <p className="text-neutral-800 dark:text-neutral-50">Listing Price</p>
+              <p className="text-neutral-800 dark:text-neutral-50 font-bold text-2xl">
                 ◎{roundToTwo(listing.price / 1000000000)}
               </p>
               {processing ? (
@@ -124,7 +124,7 @@ export default function ShowListing({
             </div>
           ) : (
             <>
-              <p className="text-gray-800 dark:text-gray-50">Listing Price</p>
+              <p className="text-neutral-800 dark:text-neutral-50">Listing Price</p>
               <p className="text-black dark:text-white font-bold text-2xl mb-4">
                 ◎{roundToTwo(listing.price / 1000000000)}
               </p>

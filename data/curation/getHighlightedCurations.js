@@ -1,6 +1,6 @@
 import apiClient from "../client/apiClient";
 
-async function getHighlightedCurations() {
+export async function getHighlightedCurations() {
   try {
     let res = await apiClient.get("/curation/get_highlighted_curations");
     return res.data;
@@ -9,4 +9,11 @@ async function getHighlightedCurations() {
   }
 }
 
-export default getHighlightedCurations;
+export async function getLatestCurations() {
+  try {
+    let res = await apiClient.get("/curation/get_latest_curations");
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}

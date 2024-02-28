@@ -57,17 +57,9 @@ export default function MyApp({ Component, pageProps }) {
           <meta key="twitter-description" name="twitter:description" content={metaDescription} />
           <meta key="twitter-image" name="twitter:image" content={metaPreviewImage} />
 
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin="true"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=DM+Serif+Text&display=swap"
-            rel="stylesheet"
-          />
-          <link
+       
+         
+          {/* <link
             rel="stylesheet"
             type="text/css"
             href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
@@ -76,7 +68,7 @@ export default function MyApp({ Component, pageProps }) {
             rel="stylesheet"
             type="text/css"
             href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-          />
+          /> */}
         </Head>      
       </div>
       <HighlightInit

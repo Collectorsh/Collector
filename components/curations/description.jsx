@@ -9,7 +9,7 @@ const CurationDescription = ({ description, displayDraftEdit, setEditDescription
   return (
     <div className={clsx(
       "group/description w-full mx-auto rounded-md border-4 border-transparent",
-      displayDraftEdit && "duration-300 border-dashed border-zinc-200/40 dark:border-zinc-700/40 hover:border-zinc-200 hover:dark:border-zinc-700",
+      displayDraftEdit && "duration-300 border-dashed border-neutral-200/40 dark:border-neutral-700/40 hover:border-neutral-200 hover:dark:border-neutral-700",
     )}>
       <EditWrapper
         isOwner={displayDraftEdit}

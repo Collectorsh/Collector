@@ -138,7 +138,7 @@ function Gallery({user}) {
           {(user) && <GalleryContainer tokens={renderedTokens} user={user} uploadAllCompleted={uploadAllCompleted} />}
           {(!user) && (
             <div className="max-w-7xl mx-auto">
-              <p className="dark:text-gray-100 pt-8">
+              <p className="dark:text-neutral-100 pt-8">
                 We couldn&apos;t find a user with that name!!!
               </p>
             </div>

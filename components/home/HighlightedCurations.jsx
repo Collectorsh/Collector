@@ -4,7 +4,7 @@ import React from "react";
 export default function HighlightedCurations({curations}) {
 
   return (
-    <div className="bg-zinc-200 dark:bg-zinc-800 py-10 rounded-xl shadow">
+    <div className="bg-neutral-200 dark:bg-neutral-800 py-10 rounded-xl shadow">
       {curations?.length
         ? (
           <div className="max-w-screen-2xl mx-auto px-6 lg:px-16">

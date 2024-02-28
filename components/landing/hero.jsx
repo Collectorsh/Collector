@@ -1,48 +1,67 @@
 import { useRouter } from "next/router";
 import CloudinaryImage from "../CloudinaryImage";
 import MainButton from "../MainButton";
+import * as Icon from "react-feather";
+import { useContext } from "react";
+import UserContext from "../../contexts/user";
 
 const LandingHero = () => { 
+  const [user] = useContext(UserContext);
   const router = useRouter();
-  const goToWaitlist = () => { 
-    router.push("/waitlist");
+  const isPro = user?.subscription_level === "pro";
+
+  const getStarted = () => {
+    if (isPro) {
+      if (!user.username) router.push("/settings");
+      else router.push(`/gallery/${user.username}`);
+    } else {
+      router.push("/waitlist");
+    }
   }
+
+  const scrollDown = () => { 
+    window.scrollTo({ 
+      top: window.innerHeight - 76, // could be negative value
+      left: 0, 
+      behavior: 'smooth' 
+    });
+  }
+   
   return (
-    <div className="grid md:grid-cols-2 mb-20 
-    max-w-screen-2xl mx-auto px-6 lg:px-16">
-      {/* <p className="text-6xl collector leading-[5rem] text-center pt-16 pb-6 md:py-32">Collect, Curate, and Discover<br /> Beautiful Art</p> */}
+    <div className="h-screen w-full max-w-screen-xl mx-auto px-4 sm:px-8">
+      {/* 300 is triple to size of the nav bar (76px) + half the image height 72 */}
+      <div className="h-[calc(100%-300px)] flex flex-col justify-center items-center gap-16"> 
 
-      <div className="text-center collector pt-16 pb-6 md:py-28">
-        <p className="text-5xl">collect</p>
-        <p className="text-6xl">curate</p>
-        <p className="text-7xl">discover</p>
-        <p className="text-[5rem] leading-none">beautiful art</p>
-      </div>
-
-      {/* <div className="text-center pt-16 pb-6 md:py-28">
-        <p className="text-8xl collector">collect<span className="w-[3.05rem] h-[3rem] rounded-[1.45rem] bg-neutral-900 dark:bg-neutral-100 inline-block"></span>r</p>
-        <p className="text-xl">Collect, Curate, and Discover Beautiful Art</p>
-      </div> */}
-
-      <div className="flex flex-col h-full justify-center items-center">
-        <div className="opacity-95">
-          <CloudinaryImage
-           
-            className="w-36 h-36 mx-auto dark:invert"
-            id="global/Collector-mascot-transparent_qsqcwx"
-            noLazyLoad
-            width={500}
-          />
+        <div className="flex flex-col justify-center items-center">
+          <div className="opacity-95 relative">
+            <CloudinaryImage
+              noLoaderScreen
+              className="w-36 h-36 mx-auto dark:invert object-contain"
+              id="global/Collector-mascot-transparent_qsqcwx"
+              noLazyLoad
+              width={500}
+            />
+          </div>
+          <h1 className="text-center collector text-5xl md:text-7xl font-semibold">
+            your digital gallery
+          </h1>
         </div>
-        <MainButton
-          onClick={goToWaitlist}
-          className="mb-8"
-          solid
-          size="xl"
-        >
-          Join the waitlist!
-        </MainButton>
+          <MainButton
+            onClick={getStarted}
+            // className="mb-8"
+            solid
+            size="xl"
+          >
+            Get Started!
+          </MainButton>
       </div>
+      <button
+        onClick={scrollDown}
+        className="absolute bottom-6 left-1/2 -translate-x-[50%] text-lg font-bold flex gap-2 items-center hoverPalette1 rounded-md px-3 py-0.5"
+      >
+        Discover
+        <Icon.ArrowDown size={20} strokeWidth={3}/>
+      </button>
     </div>
 
   )

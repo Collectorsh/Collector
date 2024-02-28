@@ -206,7 +206,7 @@ const CurationTypeButton = ({ type, selected, onChange }) => {
       className={clsx(
         "flex flex-col gap-2 items-start",
         "rounded-lg px-4 py-2",
-        "ring-zinc-300 dark:ring-zinc-700 palette2",
+        "ring-neutral-300 dark:ring-neutral-700 palette2",
         "hover:opacity-100 duration-300",
         selected ? "ring-4" : "opacity-50"
 

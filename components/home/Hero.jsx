@@ -67,7 +67,7 @@ export default function Hero() {
           </button> */}
         </div>
         
-        {/* <div className="bg-gray-300/20 lg:shadow-lg p-3 rounded-xl delay-200 animate-enter w-fit mx-auto">
+        {/* <div className="bg-neutral-300/20 lg:shadow-lg p-3 rounded-xl delay-200 animate-enter w-fit mx-auto">
           <CloudinaryImage
             id="global/hero-gal-dark.png"
             className="hidden dark:block rounded-lg overflow-hidden"

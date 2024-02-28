@@ -450,7 +450,7 @@ export default function EditArtModuleModal({
                 ref={(el) => (tabsRef.current[i] = el)}
                 className={clsx(
                   "px-3 py-0 my-1 capitalize  font-bold duration-300",
-                  "hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded",
+                  "hover:bg-neutral-300 dark:hover:bg-neutral-700 rounded",
                 )}
                 onClick={handleClick}
               >
@@ -460,13 +460,13 @@ export default function EditArtModuleModal({
           })}
 
         </div>
-        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700" />
+        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1]" />
+        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-300 dark:fill-neutral-700" />
         <span
           className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner palette2 shadow-black/10 dark:shadow-white/10"
         />
         <span
-          className="absolute rounded-full bottom-0 block h-1 bg-zinc-700 dark:bg-zinc-300 transition-all duration-300"
+          className="absolute rounded-full bottom-0 block h-1 bg-neutral-700 dark:bg-neutral-300 transition-all duration-300"
           style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
         />
       </div>
@@ -474,9 +474,9 @@ export default function EditArtModuleModal({
   )
     : (
       <div className="relative mx-auto w-fit">
-        <p className="font-bold bg-zinc-300 dark:bg-zinc-700 h-5">{contentTitle}</p>
-        <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-zinc-300 dark:fill-zinc-700" />
+        <p className="font-bold bg-neutral-300 dark:bg-neutral-700 h-5">{contentTitle}</p>
+        <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1]" />
+        <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-neutral-300 dark:fill-neutral-700" />
       </div>
     )
 
@@ -597,8 +597,8 @@ const EditArtItem = ({
           <button
             className={clsx(
               "absolute -top-2 -right-2 z-50 p-1",
-              "bg-zinc-300/50 dark:bg-zinc-700/50 rounded-full shadow-md",
-              "duration-300 hover:bg-zinc-300 dark:hover:bg-zinc-700",
+              "bg-neutral-300/50 dark:bg-neutral-700/50 rounded-full shadow-md",
+              "duration-300 hover:bg-neutral-300 dark:hover:bg-neutral-700",
             )}
             onClick={onRemove}
           >

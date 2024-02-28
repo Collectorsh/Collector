@@ -391,7 +391,7 @@ function CurationPage({curation}) {
     <>
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <p className="dark:text-gray-100 pt-20 text-center">Sorry, we could not find a Curation with that name</p>
+        <p className="dark:text-neutral-100 pt-20 text-center">Sorry, we could not find a Curation with that name</p>
       </div>
     </>
   )

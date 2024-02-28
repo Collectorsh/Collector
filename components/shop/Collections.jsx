@@ -27,7 +27,7 @@ export default function Collections() {
             collections.map((collection, index) => (
               <div
                 key={index}
-                className="mx-auto hover:cursor-pointer border-2 p-2 hover:bg-greenlightbg hover:dark:bg-greendarkbg hover:border-greeny hover:dark:border-greeny border-white dark:border-black text-gray-700 dark:text-white hover:dark:text-white"
+                className="mx-auto hover:cursor-pointer border-2 p-2 hover:bg-greenlightbg hover:dark:bg-greendarkbg hover:border-greeny hover:dark:border-greeny border-white dark:border-black text-neutral-700 dark:text-white hover:dark:text-white"
               >
                 <div className="w-full sm:w-[300px] h-full sm:h-[350px] bg-white dark:bg-black border-2 border-black dark:border-white rounded-lg">
                   <Link

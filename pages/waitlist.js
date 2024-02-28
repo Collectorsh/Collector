@@ -128,7 +128,7 @@ export default function WaitlistPage() {
       <div className="max-w-xs mx-auto">
     
         <p className="font-bold text-lg ml-4 mt-2">Twitter Handle</p>
-        <div className={clsx("my-1 border-2 rounded-lg w-full px-4 py-2", "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800", "flex gap-1 items-center")}>
+        <div className={clsx("my-1 border-2 rounded-lg w-full px-4 py-2", "bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800", "flex gap-1 items-center")}>
           <p className="textPalette2 text-sm">@</p>
           <input
             className={clsx("bg-transparent outline-none w-full")}
@@ -140,7 +140,7 @@ export default function WaitlistPage() {
      
         <p className="font-bold text-lg ml-4 mt-2">Email <span className="text-sm textPalette2">(optional)</span></p>
         <input
-          className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800")}
+          className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", "bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800")}
           onChange={handleEmailChange}
           value={email}
           placeholder="Email"
@@ -148,7 +148,7 @@ export default function WaitlistPage() {
      
         <p className="font-bold text-lg ml-4 mt-2">Additional Info <span className="text-sm textPalette2">(optional)</span></p>
         <textarea
-          className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800")}
+          className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", "bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800")}
           onChange={(e) => setMoreInfo(e.target.value)}
           value={moreInfo}
           placeholder="Any additional information you'd like to share?"
@@ -222,7 +222,7 @@ export default function WaitlistPage() {
         
         <div className="opacity-95">
           <CloudinaryImage
-            className="w-36 h-36 mx-auto dark:invert "
+            className="w-36 h-36 mx-auto dark:invert object-contain"
             id="global/Collector-mascot-transparent_qsqcwx"
             noLazyLoad
             width={500}

@@ -291,7 +291,7 @@ export default function MintPage() {
 
           <Drawer
             title="Extras"
-            drawerClass="rounded-lg border-2 border-zinc-200 dark:border-zinc-800"
+            drawerClass="rounded-lg border-2 border-neutral-200 dark:border-neutral-800"
             buttonClass="font-bold text-lg my-2 mx-auto"
           >
             <div className="flex flex-col gap-4">

@@ -32,7 +32,7 @@ export default function Discover() {
     return Array.from({ length: totalPerPage }, (_, index) => (
       <div className="" key={index}>
         <div
-          className="bg-gray-300/20 lg:shadow-lg rounded-xl relative p-3 mx-auto"
+          className="bg-neutral-300/20 lg:shadow-lg rounded-xl relative p-3 mx-auto"
         >
           <ContentLoader
             speed={2}
@@ -67,7 +67,7 @@ export default function Discover() {
       <MainNavigation />
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 clear-both">
         <div className="mx-auto pt-3 md:px-0">
-          <h2 className="mt-8 mb-12 text-5xl font-semibold text-gray-800 w-full py-1 inline-block dark:text-white">
+          <h2 className="mt-8 mb-12 text-5xl font-semibold text-neutral-800 w-full py-1 inline-block dark:text-white">
             Discover
           </h2>
           <div className="grid content-center gap-2 md:grid-cols-3">
@@ -162,7 +162,7 @@ const ImageCard = ({ item }) => {
   return (
     <div key={item.image} className="">
       <div
-        className="bg-gray-300/20 sm:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
+        className="bg-neutral-300/20 sm:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
       >
         <div className="mb-4 relative h-[250px]">
           <Link href={`/${ item.username }`}>

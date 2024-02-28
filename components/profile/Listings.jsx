@@ -21,7 +21,7 @@ export default function Listings({ user }) {
           <h2 className="text-4xl font-extrabold text-black w-fit inline-block dark:text-white">
             Listings
           </h2>
-          <div className="w-full border-b border-gray-200 dark:border-dark3 mt-3 mb-6"></div>
+          <div className="w-full border-b border-neutral-200 dark:border-dark3 mt-3 mb-6"></div>
           <div className="flex flex-wrap gap-8">
             <GridView items={listings} type="listing" />
           </div>

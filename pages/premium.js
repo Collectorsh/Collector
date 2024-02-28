@@ -15,7 +15,7 @@ export default function Premium() {
             Collector Premium
           </h2>
           <section className="grid grid-cols-1 gap-x-20 lg:grid-cols-2 justify-items-center w-full w-full lg:px-10 py-12">
-            <article className="w-full xl:w-[350px] bg-white w-full mb-10 lg:px-4 px-6 py-5 text-left text-primary-dark rounded-lg dark:bg-dark3 dark:text-gray-100 h-fit">
+            <article className="w-full xl:w-[350px] bg-white w-full mb-10 lg:px-4 px-6 py-5 text-left text-primary-dark rounded-lg dark:bg-dark3 dark:text-neutral-100 h-fit">
               <h5 className="font-bold text-2xl mb-3">Free</h5>
               <ul className="text-sm font-bold">
                 <li className="pt-4 pb-4">

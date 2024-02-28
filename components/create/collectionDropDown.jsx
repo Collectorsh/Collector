@@ -43,7 +43,7 @@ const CollectionDropDown = ({ selectedCollection, setCollection, setError, exist
           <>
             <Listbox.Button className="text-current 
                     w-full h-fit flex justify-between items-center
-                    px-3.5 py-2 outline-none rounded-md border-2 bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 hoverPalette1
+                    px-3.5 py-2 outline-none rounded-md border-2 bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 hoverPalette1
                   "
             >
               {selectedCollection ? (

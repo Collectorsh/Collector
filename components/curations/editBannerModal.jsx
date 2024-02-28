@@ -152,7 +152,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
             <CloudinaryImage
               className={clsx("flex-shrink-0 overflow-hidden object-cover shadow hover:shadow-md",
                 "w-full h-full rounded-lg",
-                isSelected && "ring-4 ring-zinc-700 dark:ring-zinc-300",
+                isSelected && "ring-4 ring-neutral-700 dark:ring-neutral-300",
                 "absolute inset-0"
               )}
               useMetadataFallback
@@ -169,7 +169,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
   const uploadComp = (
     <div className="p-2 rounded-lg h-full w-full relative">
       {saving ? (
-        <div className="absolute inset-0 z-50 backdrop-blur-sm bg-zinc-200/50 dark:bg-zinc-700/50 animate-pulse flex justify-center items-center h-full">
+        <div className="absolute inset-0 z-50 backdrop-blur-sm bg-neutral-200/50 dark:bg-neutral-700/50 animate-pulse flex justify-center items-center h-full">
           <p className="text-lg">Uploading...</p>  
         </div>
       ) : null}
@@ -214,7 +214,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
                 ref={(el) => (tabsRef.current[i] = el)}
                 className={clsx(
                   "px-3 py-0 my-1 capitalize  font-bold duration-300",
-                  "hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded"
+                  "hover:bg-neutral-300 dark:hover:bg-neutral-700 rounded"
                 )}
                 onClick={handleClick}
               >
@@ -224,13 +224,13 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
           })}
         
         </div>
-        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]"  />
-        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700"/>
+        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1]"  />
+        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-300 dark:fill-neutral-700"/>
         <span
           className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner palette2 shadow-black/10 dark:shadow-white/10"
         />
         <span
-          className="absolute rounded-full bottom-0 block h-1 bg-zinc-700 dark:bg-zinc-300 transition-all duration-300"
+          className="absolute rounded-full bottom-0 block h-1 bg-neutral-700 dark:bg-neutral-300 transition-all duration-300"
           style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
         />
       </div>
@@ -266,14 +266,14 @@ const TokenItem = ({ token , isSelected, setSelected}) => {
     >
       {error ? (
         <div
-          className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-zinc-200/90 dark:bg-zinc-800/90  
+          className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90  
              flex flex-col justify-center items-center rounded-lg z-20
           "
         >
           <p>Error loading metadata image</p>
           <Tippy content="View token on Solscan" className="shadow">
             <a
-              className="hover:bg-zinc-400 dark:hover:bg-zinc-600 rounded-md px-2 duration-300"
+              className="hover:bg-neutral-400 dark:hover:bg-neutral-600 rounded-md px-2 duration-300"
               href={`https://solscan.io/token/${ token.mint }`}
               target="_blank"
               rel="noreferrer"
@@ -289,7 +289,7 @@ const TokenItem = ({ token , isSelected, setSelected}) => {
         <CloudinaryImage
           className={clsx("flex-shrink-0 overflow-hidden object-cover shadow hover:shadow-md",
             "w-full h-full rounded-lg",
-            isSelected && "ring-4 ring-zinc-700 dark:ring-zinc-300",
+            isSelected && "ring-4 ring-neutral-700 dark:ring-neutral-300",
             error && "z-0",
             "absolute inset-0"
           )}

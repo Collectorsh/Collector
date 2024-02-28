@@ -25,7 +25,7 @@ export default function LoadingModal({ open, title, content, icon }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <Dialog.Overlay className="fixed inset-0 bg-neutral-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}
@@ -64,12 +64,12 @@ export default function LoadingModal({ open, title, content, icon }) {
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                     <Dialog.Title
                       as="h3"
-                      className="text-lg leading-6 font-medium dark:text-white text-gray-900"
+                      className="text-lg leading-6 font-medium dark:text-white text-neutral-900"
                     >
                       {title}
                     </Dialog.Title>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500 dark:text-whitish">
+                      <p className="text-sm text-neutral-500 dark:text-whitish">
                         {content}
                       </p>
                     </div>

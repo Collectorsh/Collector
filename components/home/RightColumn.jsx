@@ -100,13 +100,13 @@ export default function RightColumn() {
                 {item.results.map((result, index) => (
                   <div key={index}>
                     <div className="py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">
+                      <dt className="text-sm font-medium text-neutral-500">
                         {transactionName(result.type)}
                       </dt>
-                      <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1">
+                      <dd className="mt-1 text-sm text-neutral-900 dark:text-neutral-300 sm:mt-0 sm:col-span-1">
                         {numberWithCommas(result.count)}
                       </dd>
-                      <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1">
+                      <dd className="mt-1 text-sm text-neutral-900 dark:text-neutral-300 sm:mt-0 sm:col-span-1">
                         ◎
                         {numberWithCommas(
                           roundToTwo(result.total / 1000000000)
@@ -116,8 +116,8 @@ export default function RightColumn() {
                   </div>
                 ))}
                 <div className="py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-gray-500">Volume</dt>
-                  <dd className="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-1 sm:col-start-3">
+                  <dt className="text-sm font-medium text-neutral-500">Volume</dt>
+                  <dd className="mt-1 text-sm text-neutral-900 dark:text-neutral-300 sm:mt-0 sm:col-span-1 sm:col-start-3">
                     ◎
                     {numberWithCommas(
                       roundToTwo(calculateTotal(item) / 1000000000)

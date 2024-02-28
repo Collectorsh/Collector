@@ -7,7 +7,7 @@ export default function ArtistDetails({ token }) {
         <div className="">
           {token.artist_name && (
             <>
-              <p className="font-semibold text-xs left text-dark1 dark:text-gray-400">
+              <p className="font-semibold text-xs left text-dark1 dark:text-neutral-400">
                 {token.artist_twitter && (
                   <Link
                     href={`https://twitter.com/${token.artist_twitter.substring(

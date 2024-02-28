@@ -88,19 +88,21 @@ export default function MainNavigation() {
                     Waitlist
                   </a>
                 </Link> */}
-{/* 
-                <Link href="/about">
-                  <a className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1">
-                    About
-                  </a>
-                </Link> */}
-
                 <button
                   onClick={getStarted}
                   className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1"
                 >
                   Get Started!
                 </button>
+              
+
+                {/* 
+                <Link href="/about">
+                  <a className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1">
+                    About
+                  </a>
+                </Link> */}
+
             
                 {user
                   ? <Gallery />//<Profile />

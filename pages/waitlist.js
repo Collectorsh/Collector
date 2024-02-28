@@ -226,6 +226,7 @@ export default function WaitlistPage() {
             id="global/Collector-mascot-transparent_qsqcwx"
             noLazyLoad
             width={500}
+            noLoaderScreen
           />
         </div>
         {content()}

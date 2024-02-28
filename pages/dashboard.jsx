@@ -26,6 +26,8 @@ import { shootConfetti } from "../utils/confetti";
 import { getWaitlistSignups } from "../data/waitlist_signups/getAllSignups";
 import CopyButton from "../components/CopyToClipboard";
 import { approveWaitlistSignup } from "../data/waitlist_signups/approveSignup";
+import * as Icon from "react-feather";
+
 
 const tabs = ["Stats", "Fees", "Waitlist"]
 
@@ -101,8 +103,8 @@ export default function Dashboard() {
   useEffect(() => { 
     if (!isAdmin) return;
     (async () => {
-      const waitlist = await getWaitlistSignups()
-      setWaitlist(waitlist.filter(signup => signup.user.subscription_level !== "pro"))
+      const wl = await getWaitlistSignups()
+      setWaitlist(wl.sort(signup => signup.user.subscription_level !== "pro" ? -1 : 1))
     })()
   }, [isAdmin])
 
@@ -452,6 +454,8 @@ const SingupItem = ({ signup, setWaitlist }) => {
   const [user] = useContext(UserContext);
   const [approving, setApproving] = useState(false)
 
+  const approved = signup.user.subscription_level === "pro"
+
   const handleApprove = async () => {
     setApproving(true)
     const res = await approveWaitlistSignup({
@@ -461,7 +465,13 @@ const SingupItem = ({ signup, setWaitlist }) => {
 
     if (res.success) {
       success(`${ signup.user.username } has been approved!`)
-      setWaitlist(prev => prev.filter(s => s.id !== signup.id))
+      setWaitlist(prev => prev.map(s => s.id === signup.id ? {
+        ...s,
+        user: {
+          ...s.user,
+          subscription_level: "pro",
+        }
+      } : s))
     } else {
       error("Approval failed")
     }
@@ -480,17 +490,22 @@ const SingupItem = ({ signup, setWaitlist }) => {
         </a>
       </p>
       <p className="whitespace-pre-line text-xs textPalette2">{signup.more_info}</p>
-      <MainButton
-        disabled={approving}
-        onClick={handleApprove}
-        solid
-        className="flex items-center justify-center"
-      >
-        {approving
-          ? <Oval color="#FFF" secondaryColor="#666" height={20} width={20} strokeWidth={2.5}/>
-          : "Approve"
-        }
-      </MainButton>
+
+      {approved ? (
+        <Icon.Check color="green" strokeWidth={3} className="mx-auto"/>
+      ): (
+        <MainButton
+          disabled={approving}
+          onClick={handleApprove}
+          solid
+          className="flex items-center justify-center"
+        >
+          {approving
+            ? <Oval color="#FFF" secondaryColor="#666" height={20} width={20} strokeWidth={2.5}/>
+            : "Approve"
+          }
+        </MainButton>
+      )}
     </div>
   )
 }

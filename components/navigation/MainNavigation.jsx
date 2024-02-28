@@ -83,17 +83,17 @@ export default function MainNavigation() {
                 
               </div>
               <div className="hidden md:flex items-center justify-end w-full">
-                {/* <Link href="/waitlist">
+                <Link href="/waitlist">
                   <a className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1">
                     Waitlist
                   </a>
-                </Link> */}
-                <button
+                </Link>
+                {/* <button
                   onClick={getStarted}
                   className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1"
                 >
                   Get Started!
-                </button>
+                </button> */}
               
 
                 {/* 
@@ -169,7 +169,7 @@ export default function MainNavigation() {
                         </Link>
                         <hr className="borderPalette3"/>
 
-                 ]
+                 
 
                         {/* <Link href="/about" passHref>
                           <p className="">About</p>

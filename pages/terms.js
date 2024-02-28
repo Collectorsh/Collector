@@ -1,5 +1,5 @@
 import ReactMarkdown from 'react-markdown'
-import matter from "neutral-matter";
+import matter from "gray-matter";
 import fs from 'fs';
 import path from 'path';
 import MainNavigation from '../components/navigation/MainNavigation';

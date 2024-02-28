@@ -169,7 +169,7 @@ export default function MainNavigation() {
                         </Link>
                         <hr className="borderPalette3"/>
 
-                 ]
+                 
 
                         {/* <Link href="/about" passHref>
                           <p className="">About</p>

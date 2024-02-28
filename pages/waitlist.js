@@ -15,10 +15,12 @@ import { Oval } from "react-loader-spinner";
 import { error } from "../utils/toast";
 import CloudinaryImage from "../components/CloudinaryImage";
 import { displayName } from "../utils/displayName";
+import SvgCurve from "../components/svgCurve";
+import { useRouter } from "next/router";
 
 export default function WaitlistPage() {
   const [user] = useContext(UserContext);
-  const wallet = useWallet();
+  const router = useRouter();
   const {setVisible} = useWalletModal()
 
   const [signup, setSignup] = useState(null);
@@ -120,12 +122,20 @@ export default function WaitlistPage() {
     }))
   }
 
+  const handleTwitterShare = () => {
+
+  }
+
+  const handleGetStarted = () => { 
+    router.push(`/gallery/${ user.username }`)
+  }
+
   const form = (
     <>
-      <p className="font-bold text-4xl text-center mb-8">
+      <p className="font-bold text-5xl text-center mb-8">
         {user?.username ? `${ displayName(user) }, j` : "J"}oin the waitlist!
       </p>
-      <div className="max-w-xs mx-auto">
+      <div className="max-w-lg mx-auto">
     
         <p className="font-bold text-lg ml-4 mt-2">Twitter Handle</p>
         <div className={clsx("my-1 border-2 rounded-lg w-full px-4 py-2", "bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800", "flex gap-1 items-center")}>
@@ -172,7 +182,7 @@ export default function WaitlistPage() {
 
   const notLoggedIn = (
     <div className="text-center">
-      <p className="font-bold text-4xl text-center mb-8">
+      <p className="font-bold text-5xl text-center mb-8">
         Join the waitlist!
       </p>
       <MainButton
@@ -187,8 +197,8 @@ export default function WaitlistPage() {
 
   const waiting = (
     <div className="text-center">
-      <p className="font-bold text-4xl text-center mb-8">
-        {displayName(user) }, you are on the waitlist!
+      <p className="font-bold text-5xl text-center mb-8">
+        {displayName(user) || "..." }, you are on the waitlist!
       </p>
       <p className="textPalette2">We will reach out to you in 2-4 weeks!</p>
 
@@ -197,10 +207,28 @@ export default function WaitlistPage() {
 
   const approved = (
     <div className="text-center">
-      <p className="font-bold text-4xl text-center mb-8">
-        Congrats {displayName(user)}, you have been approved!
+      <p className="font-bold text-5xl text-center mb-8">
+        Congrats {displayName(user) || "..."}, <br /> you have been approved!
       </p>
       <p className="textPalette2">Enjoy using Collector!</p>
+
+      <div className="flex gap-6 mt-16 items-center justify-center">
+        <MainButton
+          onClick={handleTwitterShare}
+          size="lg"
+          className="w-[12.25rem]"
+        >
+          Share to Twitter
+        </MainButton>
+        <MainButton
+          onClick={handleGetStarted}
+          size="lg"
+          solid
+          className="w-[12rem]"
+        >
+          Get Started!
+        </MainButton>
+      </div> 
     </div>
   )
 
@@ -218,18 +246,31 @@ export default function WaitlistPage() {
     <div>
       <MainNavigation />
       <Toaster />
-      <div className="relative max-w-lg mx-auto px-2 2xl:px-8 py-12 pt-6 md:pt-14">
-        
-        <div className="opacity-95">
-          <CloudinaryImage
-            className="w-36 h-36 mx-auto dark:invert object-contain"
-            id="global/Collector-mascot-transparent_qsqcwx"
-            noLazyLoad
-            width={500}
-            noLoaderScreen
-          />
-        </div>
-        {content()}
+      <div className="h-[calc(100svh-76px)] relative">
+        <SvgCurve
+          color="fill-neutral-200 dark:fill-neutral-800"
+          position="top-0 left-0"
+          flipped
+        />
+        <div className="relative px-2 2xl:px-8 h-full flex flex-col justify-center items-center">
+          <div className="relative">
+            <div className="opacity-95 ">
+              <CloudinaryImage
+                className="w-36 h-36 mx-auto dark:invert object-contain absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full"
+                id="global/Collector-mascot-transparent_qsqcwx"
+                noLazyLoad
+                width={500}
+                noLoaderScreen
+              />
+            </div>
+            {content()}
+          </div>
+          </div>
+      </div>
+      <div className="relative">
+        <SvgCurve
+          color="fill-neutral-200 dark:fill-neutral-800"
+        />
       </div>
     </div>
   )

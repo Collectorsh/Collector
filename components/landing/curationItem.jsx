@@ -40,7 +40,7 @@ const LandingCurationItem = ({
       </Link>
 
       <Link href={`/gallery/${ curation.curator?.username }`} >
-        <a className={clsx("flex gap-3 items-center justify-center rounded-md px-3 py-1 w-fit mx-auto ", hoverClass)}>
+        <a className={clsx("flex gap-2 items-center justify-center rounded-md px-3 py-1 w-fit mx-auto mt-1", hoverClass)}>
           {curation.curator?.profile_image
             ? (<div className="relative">
               <CloudinaryImage

@@ -6,16 +6,18 @@ import LandingRecentCurations from "../components/landing/recentCurations";
 import LandingLetter from "../components/landing/letter";
 import { getHighlightedCurations, getLatestCurations } from "../data/curation/getHighlightedCurations";
 
+
+export const homepageWidthClass = "max-w-screen-2xl mx-auto 2xl:px-8"
 export default function Home({highlightedCurations, recentCurations}) {
   return (
     <div className="">
       <MainNavigation />
-      <div className="max-w-screen-2xl mx-auto 2xl:px-8">
-        <LandingHero />
-        <LandingHighlightedCurations curations={highlightedCurations} />
-        <LandingRecentCurations curations={recentCurations} />
-        <LandingLetter />
-      </div>
+      
+      <LandingHero />
+      <LandingHighlightedCurations curations={highlightedCurations} />
+      <LandingRecentCurations curations={recentCurations} />
+      <LandingLetter />
+     
     </div>
   );
 }

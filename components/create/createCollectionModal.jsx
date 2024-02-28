@@ -112,9 +112,9 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
         <div className="flex flex-col gap-0">
           {/* <p className="text-center font-bold text-lg mb-2">Collection Image</p> */}
           <div className="relative mx-auto w-fit">
-            <p className="font-bold bg-zinc-300 dark:bg-zinc-700 h-5">Collection Image</p>
-            <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
-            <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-zinc-300 dark:fill-zinc-700" />
+            <p className="font-bold bg-neutral-300 dark:bg-neutral-700 h-5">Collection Image</p>
+            <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1]" />
+            <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-neutral-300 dark:fill-neutral-700" />
           </div>
           <div className="h-[40vh] w-full mb-4 palette2 borderPalette3 border-4 rounded-lg p-2">
 

@@ -28,7 +28,7 @@ const RoyaltiesInput = ({ royalties, setRoyalties, setError }) => {
   return (
     <div>
       <p className="font-bold text-lg mb-1 ml-4 flex gap-1">Royalties {info}</p>
-      <div className="flex w-full px-3.5 py-2 outline-none rounded-md border-2 bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
+      <div className="flex w-full px-3.5 py-2 outline-none rounded-md border-2 bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800">
         <input
           type="number"
           min={0}

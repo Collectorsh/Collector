@@ -218,7 +218,7 @@ function ProfilePage({ curator }) {
     <>
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <p className="dark:text-gray-100 pt-20 text-center">Sorry, we could not find a Curator with that name</p>
+        <p className="dark:text-neutral-100 pt-20 text-center">Sorry, we could not find a Curator with that name</p>
       </div>
     </>
   )
@@ -249,7 +249,7 @@ function ProfilePage({ curator }) {
               />
             ) : (
                 <div className={clsx(
-                  "absolute inset-0 w-full h-full flex justify-center items-center bg-zinc-200 dark:bg-zinc-800",
+                  "absolute inset-0 w-full h-full flex justify-center items-center bg-neutral-200 dark:bg-neutral-800",
                 )}>
                   <MainButton
                     size="xl"
@@ -270,7 +270,7 @@ function ProfilePage({ curator }) {
             isOwner={pfp && useOwnerView}
             onEdit={() => setEditPfpOpen(true)}
             groupHoverClass="group-hover/pfp:opacity-100"
-            buttonClassName="palette3 hoverPalette3 border-2 p-1 border-zinc-900 dark:border-zinc-100"
+            buttonClassName="palette3 hoverPalette3 border-2 p-1 border-neutral-900 dark:border-neutral-100"
             icon={<Icon.Image size={24} strokeWidth={2.5} />}
             placement="top-0 right-0"
             // placement="top-0 sm:translate-x-1/2 "
@@ -317,7 +317,7 @@ function ProfilePage({ curator }) {
                 onEdit={() => setEditDisplayNameOpen(true)}
                 placement="-top-3 -right-3"
                 groupHoverClass="group-hover/settings:opacity-100"
-                buttonClassName="palette3 hoverPalette3 p-1 border-2 border-zinc-900 dark:border-zinc-100"
+                buttonClassName="palette3 hoverPalette3 p-1 border-2 border-neutral-900 dark:border-neutral-100"
                 // buttonClassName="w-max"
                 // text="Edit Display Name"
                 icon={<Icon.Edit size={20} strokeWidth={2.5} />}
@@ -352,7 +352,7 @@ function ProfilePage({ curator }) {
           </div>
           <div className={clsx(
             "group/bio w-full mx-auto rounded-md border-4 border-transparent",
-            useOwnerView && "duration-300 border-dashed border-zinc-200/40 dark:border-zinc-700/40 hover:border-zinc-200 hover:dark:border-zinc-700",
+            useOwnerView && "duration-300 border-dashed border-neutral-200/40 dark:border-neutral-700/40 hover:border-neutral-200 hover:dark:border-neutral-700",
           )}>
             <EditWrapper
               isOwner={useOwnerView}

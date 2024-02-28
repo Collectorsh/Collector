@@ -33,7 +33,7 @@ export default function TopArtists({ listings }) {
     <>
       <div className="px-4 xl:px-0 mx-auto clear-both">
         <div className="mx-auto pt-3 md:px-0">
-          <h2 className="tracking-wide text-center mt-10 mb-7 text-2xl font-bold text-gray-800 w-full py-1 inline-block dark:text-whitish">
+          <h2 className="tracking-wide text-center mt-10 mb-7 text-2xl font-bold text-neutral-800 w-full py-1 inline-block dark:text-whitish">
             Top Selling Artists
           </h2>
         </div>
@@ -44,17 +44,17 @@ export default function TopArtists({ listings }) {
             <div key={index} className="px-4">
               <Link href={`/nft/${item.listing.mintAddress}`}>
                 <a>
-                  <div className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl border border-gray-200 dark:border-dark3">
+                  <div className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl border border-neutral-200 dark:border-dark3">
                     <div className="pb-4" key={item.listing.mintAddress}>
                       <Image token={item.listing} />
 
-                      <div className="text-sm text-gray-700 dark:text-gray-300 mt-2 px-2">
+                      <div className="text-sm text-neutral-700 dark:text-neutral-300 mt-2 px-2">
                         {item.listing.name}
                       </div>
-                      <div className="text-md font-semibold text-gray-700 dark:text-gray-300 mt-2 px-2">
+                      <div className="text-md font-semibold text-neutral-700 dark:text-neutral-300 mt-2 px-2">
                         {item.name}
                       </div>
-                      <div className="clear-both font-semibold text-gray-700 dark:text-gray-300 mt-2 px-2 border-t border-gray-100 dark:border-dark1">
+                      <div className="clear-both font-semibold text-neutral-700 dark:text-neutral-300 mt-2 px-2 border-t border-neutral-100 dark:border-dark1">
                         {item.listing.username && (
                           <div className="mt-2">
                             {item.listing.twitter_profile_image ? (

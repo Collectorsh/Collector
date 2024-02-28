@@ -30,7 +30,7 @@ export default function Offers({ token }) {
       {offer && (
         <Link href={`/nft/${getMint(token)}`} title="">
           <a>
-            <div className="text-sm cursor-pointer text-dark3 dark:text-gray-300 bg-whitish dark:bg-dark3 w-fit px-2 py-1 rounded cursor-pointer absolute top-3 left-3">
+            <div className="text-sm cursor-pointer text-dark3 dark:text-neutral-300 bg-whitish dark:bg-dark3 w-fit px-2 py-1 rounded cursor-pointer absolute top-3 left-3">
               Offer ◎{roundToTwo(offer.price / 1000000000)}
             </div>
           </a>

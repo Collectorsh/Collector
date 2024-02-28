@@ -24,7 +24,7 @@ export default function MintedModal({ open, nft, updateOpen }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <Dialog.Overlay className="fixed inset-0 bg-neutral-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}
@@ -45,7 +45,7 @@ export default function MintedModal({ open, nft, updateOpen }) {
           >
             <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               {/* <XCircleIcon
-                className="absolute h-7 w-7 cursor-pointer text-gray-500 hover:text-black dark:text-gray-500 dark:hover:text-white top-2 right-2"
+                className="absolute h-7 w-7 cursor-pointer text-neutral-500 hover:text-black dark:text-neutral-500 dark:hover:text-white top-2 right-2"
                 onClick={() => updateOpen(false)}
               /> */}
               <div className="bg-white dark:bg-dark3 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">

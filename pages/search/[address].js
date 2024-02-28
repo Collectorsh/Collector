@@ -34,7 +34,7 @@ export default function Search() {
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
           {tokens && <GalleryContainer tokens={tokens} />}
           {!tokens && notFound && (
-            <p className="dark:text-gray-100">
+            <p className="dark:text-neutral-100">
               We tried but we couldn&apos;t find any NFTs at this address.
             </p>
           )}

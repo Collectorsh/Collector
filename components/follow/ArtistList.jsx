@@ -62,46 +62,46 @@ export default function ArtistList() {
   }
 
   return (
-    <div className="dark:text-gray-200 leading-6 pb-6">
+    <div className="dark:text-neutral-200 leading-6 pb-6">
       <FollowFilter following={following} filteredResults={filteredResults} />
       {following && following.length > 0 ? (
         <>
-          <table className="relative h-full min-w-full rounded-lg border-gray-100 dark:border-gray-900 border-0 border-separate [border-spacing:0_0.5rem]">
+          <table className="relative h-full min-w-full rounded-lg border-neutral-100 dark:border-neutral-900 border-0 border-separate [border-spacing:0_0.5rem]">
             <thead className="top-[9rem] bg-white dark:bg-dark2">
               <tr>
                 <th
                   scope="col"
-                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-left text-button-lg font-semibold py-4 px-6 text-gray-600 dark:text-gray-400 ng-star-inserted"
+                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-left text-button-lg font-semibold py-4 px-6 text-neutral-600 dark:text-neutral-400 ng-star-inserted"
                 >
                   Artist
                 </th>
                 <th
                   scope="col"
-                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-gray-600 dark:text-gray-400 ng-star-inserted"
+                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-neutral-600 dark:text-neutral-400 ng-star-inserted"
                 >
                   Buy Now Listing
                 </th>
                 <th
                   scope="col"
-                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-gray-600 dark:text-gray-400 ng-star-inserted"
+                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-neutral-600 dark:text-neutral-400 ng-star-inserted"
                 >
                   New Edition
                 </th>
                 <th
                   scope="col"
-                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-gray-600 dark:text-gray-400 ng-star-inserted"
+                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-neutral-600 dark:text-neutral-400 ng-star-inserted"
                 >
                   Auction Start
                 </th>
                 <th
                   scope="col"
-                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-gray-600 dark:text-gray-400 ng-star-inserted"
+                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-neutral-600 dark:text-neutral-400 ng-star-inserted"
                 >
                   Auction End
                 </th>
                 <th
                   scope="col"
-                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-gray-600 dark:text-gray-400 ng-star-inserted"
+                  className="first:rounded-tl-lg last:rounded-tr-lg 6px; text-center text-button-lg font-semibold py-4 px-6 text-neutral-600 dark:text-neutral-400 ng-star-inserted"
                 >
                   Unfollow
                 </th>
@@ -111,7 +111,7 @@ export default function ArtistList() {
               {followedArtists.map((follow, index) => (
                 <tr
                   key={index}
-                  className="bg-transparent dark:bg-dark3 dark:border-0 dark:text-gray-50 h-full lg:hover:shadow-[0_12px_40px_0px_rgba(0,0,0,0.18)] rounded-xl shadow-[0_12px_40px_0px_rgba(0,0,0,0.06)] text-gray-900 ng-star-inserted"
+                  className="bg-transparent dark:bg-dark3 dark:border-0 dark:text-neutral-50 h-full lg:hover:shadow-[0_12px_40px_0px_rgba(0,0,0,0.18)] rounded-xl shadow-[0_12px_40px_0px_rgba(0,0,0,0.06)] text-neutral-900 ng-star-inserted"
                 >
                   <td className="py-4 px-6">{follow.artist}</td>
                   <td className="py-4 px-6 text-center">
@@ -120,7 +120,7 @@ export default function ArtistList() {
                       className={`inline h-5 w-5 align-middle cursor-pointer ${
                         follow.notify_listing
                           ? "text-green-600"
-                          : "text-gray-400"
+                          : "text-neutral-400"
                       }`}
                       onClick={(e) =>
                         changeListingNotify(
@@ -136,7 +136,7 @@ export default function ArtistList() {
                       className={`inline h-5 w-5 align-middle cursor-pointer ${
                         follow.notify_edition
                           ? "text-green-600"
-                          : "text-gray-400"
+                          : "text-neutral-400"
                       }`}
                       onClick={(e) =>
                         changeEditionNotify(
@@ -150,7 +150,7 @@ export default function ArtistList() {
                     Bell
                     {/* <BellIcon
                       className={`inline h-5 w-5 align-middle cursor-pointer ${
-                        follow.notify_start ? "text-green-600" : "text-gray-400"
+                        follow.notify_start ? "text-green-600" : "text-neutral-400"
                       }`}
                       onClick={(e) =>
                         changeStartNotify(
@@ -164,7 +164,7 @@ export default function ArtistList() {
                     Bell
                     {/* <BellIcon
                       className={`inline h-5 w-5 align-middle cursor-pointer ${
-                        follow.notify_end ? "text-green-600" : "text-gray-400"
+                        follow.notify_end ? "text-green-600" : "text-neutral-400"
                       }`}
                       onClick={(e) =>
                         changeEndNotify(

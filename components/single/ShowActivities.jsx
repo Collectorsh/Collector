@@ -49,25 +49,25 @@ export default function ShowActivities({ token }) {
                 <tr>
                   <th
                     scope="col"
-                    className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200"
+                    className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200"
                   >
                     Amount
                   </th>
                   <th
                     scope="col"
-                    className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200"
+                    className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200"
                   >
                     Buyer
                   </th>
                   <th
                     scope="col"
-                    className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200"
+                    className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200"
                   >
                     Marketplace
                   </th>
                   <th
                     scope="col"
-                    className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200"
+                    className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200"
                   >
                     Date
                   </th>
@@ -76,10 +76,10 @@ export default function ShowActivities({ token }) {
               <tbody>
                 {activities.map((a, index) => (
                   <tr className="" key={index}>
-                    <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                    <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                       ◎ {roundToTwo(a.amount / 1000000000)}
                     </td>
-                    <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                    <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                       <a
                         href={`https://solscan.io/account/${token.mint}`}
                         target="_blank"
@@ -89,12 +89,12 @@ export default function ShowActivities({ token }) {
                         {formatWalletAddress(a.buyer)}
                       </a>
                     </td>
-                    <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                    <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                       {auctionHouses.includes(a.marketplace)
                         ? "Collector"
                         : a.marketplace}
                     </td>
-                    <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                    <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                       {moment.unix(a.time).format("MMMM Do YYYY H:mm")}
                     </td>
                   </tr>

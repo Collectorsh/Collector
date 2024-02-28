@@ -130,7 +130,7 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
                   ref={(el) => (tabsRef.current[i] = el)}
                   className={clsx(
                     "px-3 py-0 my-1 capitalize  font-bold duration-300",
-                    "hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded"
+                    "hover:bg-neutral-300 dark:hover:bg-neutral-700 rounded"
                   )}
                   onClick={handleClick}
                 >
@@ -140,13 +140,13 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
             })}
 
           </div>
-          <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
-          <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700" />
+          <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1]" />
+          <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-300 dark:fill-neutral-700" />
           <span
             className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner palette2 shadow-black/10 dark:shadow-white/10"
           />
           <span
-            className="absolute rounded-full bottom-0 block h-1 bg-zinc-700 dark:bg-zinc-300 transition-all duration-300"
+            className="absolute rounded-full bottom-0 block h-1 bg-neutral-700 dark:bg-neutral-300 transition-all duration-300"
             style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
           />
         </div>
@@ -167,9 +167,9 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
         </div>
 
         <div className="relative mx-auto w-fit mt-8">
-          <p className="bg-zinc-300 dark:bg-zinc-700 h-6 font-bold">Submitting</p>
-          <RoundedCurve className="absolute bottom-0 -left-8 w-8 h-6 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
-          <RoundedCurve className="absolute bottom-0 -right-8 w-8 h-6 fill-zinc-300 dark:fill-zinc-700" />
+          <p className="bg-neutral-300 dark:bg-neutral-700 h-6 font-bold">Submitting</p>
+          <RoundedCurve className="absolute bottom-0 -left-8 w-8 h-6 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1]" />
+          <RoundedCurve className="absolute bottom-0 -right-8 w-8 h-6 fill-neutral-300 dark:fill-neutral-700" />
         </div>
         <div className="min-h-[5.5rem] border-4 rounded-xl p-2
         palette2 borderPalette3
@@ -218,7 +218,7 @@ const ArtChip = ({ name, onRemove, isMasterEdition }) => {
   return (
     <div className="flex items-center gap-1 rounded-lg pl-2 pr-1
      palette1
-      border border-zinc-300 dark:border-zinc-700
+      border border-neutral-300 dark:border-neutral-700
     ">
       <p className="flex items-center gap-1">
         {name}
@@ -308,7 +308,7 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
         imageRef={imageRef}
         className={clsx("flex-shrink-0 overflow-hidden object-contain shadow hover:shadow-md palette1",
           "w-full h-[250px] rounded-lg",
-          isSelected && "ring-4 ring-zinc-700 dark:ring-zinc-300",
+          isSelected && "ring-4 ring-neutral-700 dark:ring-neutral-300",
           alreadySubmitted && "opacity-50 blur-[2px]"
         )}
         token={token}
@@ -317,7 +317,7 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
       />
       {alreadySubmitted
         ? <p className="absolute top-[50%] right-[50%] translate-x-[50%] -translate-y-[50%] z-50 shadow-lg
-              bg-zinc-200/50 dark:bg-zinc-800/50 px-5 py-2 rounded-lg font-bold"
+              bg-neutral-200/50 dark:bg-neutral-800/50 px-5 py-2 rounded-lg font-bold"
         >
           Already Submitted</p>
         : null
@@ -329,7 +329,7 @@ const ArtworkItem = ({ token, alreadySubmitted, selectedTokens, setSelectedToken
       ) : null
       }
       <div
-        className="absolute text-center top-0 left-0 p-8 w-full h-full overflow-hidden bg-zinc-200/50 dark:bg-zinc-800/50 
+        className="absolute text-center top-0 left-0 p-8 w-full h-full overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50 
           transition-opacity duration-300 opacity-0 group-hover:opacity-100
           backdrop-blur-sm flex flex-col justify-center items-center rounded-lg 
           "

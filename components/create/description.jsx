@@ -3,7 +3,7 @@ import clsx from "clsx"
 const DescriptionInput = ({
   description, setDescription, setError,
   placeholder = "Description of your artwork",
-  paletteClass = "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800"
+  paletteClass = "bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800"
 }) => { 
   const limit = 1000
 

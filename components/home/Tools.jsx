@@ -43,7 +43,7 @@ export default function Tools() {
           </div>
         </div>
 
-        {/* <div className="mt-8 bg-gray-200 dark:bg-dark2 rounded-3xl px-6 pt-6">
+        {/* <div className="mt-8 bg-neutral-200 dark:bg-dark2 rounded-3xl px-6 pt-6">
           <div className="align-middle">
             <CollectionIcon className="h-6 w-6 inline mr-1 align-middle" />
             <h2 className="text-black dark:text-white text-xl font-semibold inline align-middle">
@@ -65,7 +65,7 @@ export default function Tools() {
               </div>
               <div className="mt-8 block">
                 <Link href="/feed">
-                  <a className="py-3.5 px-4 text-lg rounded-3xl bg-black text-white dark:bg-whitish dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold">
+                  <a className="py-3.5 px-4 text-lg rounded-3xl bg-black text-white dark:bg-whitish dark:text-black cursor-pointer hover:bg-neutral-800 hover:dark:bg-neutral-200 font-bold">
                     See More
                   </a>
                 </Link>

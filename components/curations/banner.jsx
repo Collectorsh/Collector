@@ -32,7 +32,8 @@ const CurationBanner = ({ setEditBannerOpen, displayDraftEdit, banner, useDraftC
             <CloudinaryImage
               className={clsx(
                 "absolute inset-0 w-full h-full object-cover ",
-                !bannerLoaded && "animate-pulse"
+                !bannerLoaded && "animate-pulse",
+                
               )}
               id={bannerImgId}
               noLazyLoad
@@ -41,7 +42,7 @@ const CurationBanner = ({ setEditBannerOpen, displayDraftEdit, banner, useDraftC
             />
           ) : (
             <div className={clsx(
-              "absolute inset-0 w-full h-full flex justify-center items-center bg-zinc-200 dark:bg-zinc-800",
+              "absolute inset-0 w-full h-full flex justify-center items-center bg-neutral-200 dark:bg-neutral-800",
             )}>
                 <MainButton
                 size="lg"

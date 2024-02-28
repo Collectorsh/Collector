@@ -375,8 +375,8 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
           <button
             className={clsx(
                "p-1",
-              "bg-zinc-300/50 dark:bg-zinc-700/50 rounded-full shadow-md",
-              "duration-300 hover:bg-zinc-300 dark:hover:bg-zinc-700",
+              "bg-neutral-300/50 dark:bg-neutral-700/50 rounded-full shadow-md",
+              "duration-300 hover:bg-neutral-300 dark:hover:bg-neutral-700",
               isPersonalCuration && "hidden"
             )}
             onClick={handleDelete}
@@ -390,7 +390,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
       <div className={clsx(
         !infoBadge && "hidden",
         "palette1 ",
-        "rounded-full ring-2 ring-zinc-300 dark:ring-zinc-700",
+        "rounded-full ring-2 ring-neutral-300 dark:ring-neutral-700",
         "min-w-fit w-6 h-6 absolute top-2 left-2 z-10 flex justify-center items-center",
         "text-leading-none font-bold"
       )}>

@@ -52,7 +52,7 @@ export default function GalleryNavigation({ user }) {
                 }}
               />
             )} */}
-            <h2 className="text-2xl text-gray-800 font-bold align-middle dark:text-gray-100 mr-2">
+            <h2 className="text-2xl text-neutral-800 font-bold align-middle dark:text-neutral-100 mr-2">
               <Link
                 href={`/${user.username}`}
                 title="Collector Home"
@@ -70,7 +70,7 @@ export default function GalleryNavigation({ user }) {
                 <a target="_blank" className="cursor-pointer">
                   <Tippy
                     content={`@${user.twitter_screen_name}`}
-                    className="bg-gray-300"
+                    className="bg-neutral-300"
                   >
                     <TwitterLogo size="25" />
                   </Tippy>
@@ -85,7 +85,7 @@ export default function GalleryNavigation({ user }) {
               className="align-middle inline"
             >
               {/* <HomeIcon
-                className="h-6 w-6 inline mx-2 cursor-pointer text-slate-900 dark:text-gray-100 hover:scale-110"
+                className="h-6 w-6 inline mx-2 cursor-pointer text-slate-900 dark:text-neutral-100 hover:scale-110"
                 aria-hidden="true"
               /> */}
               <div className="cursor-pointer select-none mr-4 bg-black dark:bg-white rounded-full h-8 w-8 flex justify-center items-center">
@@ -99,9 +99,9 @@ export default function GalleryNavigation({ user }) {
               className="align-middle inline"
             >
               <a>
-                <Tippy content="Profile" className="bg-gray-300">
+                <Tippy content="Profile" className="bg-neutral-300">
                   <UserCircleIcon
-                    className="h-6 w-6 inline mx-2 cursor-pointer text-slate-900 dark:text-gray-100 hover:scale-110"
+                    className="h-6 w-6 inline mx-2 cursor-pointer text-slate-900 dark:text-neutral-100 hover:scale-110"
                     aria-hidden="true"
                   />
                 </Tippy>
@@ -116,9 +116,9 @@ export default function GalleryNavigation({ user }) {
               <a target="_blank">
                 <Tippy
                   content="Share gallery to Twitter"
-                  className="bg-gray-300"
+                  className="bg-neutral-300"
                 >
-                  <ShareIcon className="w-6 h-6 inline mr-4 text-slate-900 dark:text-gray-100 cursor-pointer hover:scale-110 focus:outline-none" />
+                  <ShareIcon className="w-6 h-6 inline mr-4 text-slate-900 dark:text-neutral-100 cursor-pointer hover:scale-110 focus:outline-none" />
                 </Tippy>
               </a>
             </Link> */}
@@ -135,7 +135,7 @@ export default function GalleryNavigation({ user }) {
               style={{ background: "none" }}
             >
               <svg
-                className="w-6 h-6 text-gray-400 hover:text-gray-600"
+                className="w-6 h-6 text-neutral-400 hover:text-neutral-600"
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -165,7 +165,7 @@ export default function GalleryNavigation({ user }) {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Dialog.Overlay className="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                <Dialog.Overlay className="absolute inset-0 bg-neutral-500 bg-opacity-75 transition-opacity" />
               </Transition.Child>
               <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
                 <Transition.Child
@@ -190,7 +190,7 @@ export default function GalleryNavigation({ user }) {
                       <div className="absolute top-0 left-0 flex pt-4 pr-2 sm:-ml-10 sm:pr-4">
                         <button
                           type="button"
-                          className="rounded-md text-gray-800 hover:text-black outline-none focus:outline-none cursor-pointer ml-4 dark:text-white"
+                          className="rounded-md text-neutral-800 hover:text-black outline-none focus:outline-none cursor-pointer ml-4 dark:text-white"
                           onClick={() => setOpen(false)}
                         >
                           <span className="sr-only">Close panel</span>
@@ -201,11 +201,11 @@ export default function GalleryNavigation({ user }) {
                     <div className="flex h-full flex-col overflow-y-scroll bg-white dark:bg-dark1 pb-6 shadow-xl">
                       <div className="relative mt-12 flex-1 px-4 sm:px-6">
                         <div className="absolute inset-0 px-4 sm:px-6 mt-2">
-                          <div className="mt-4 dark:text-gray-200">
+                          <div className="mt-4 dark:text-neutral-200">
                             <DarkMode />
                             <span className="ml-2">Toggle Dark Mode</span>
                           </div>
-                          <div className="mt-6 dark:text-gray-200">
+                          <div className="mt-6 dark:text-neutral-200">
                             <Link
                               href="/"
                               title="Collector Home"
@@ -213,7 +213,7 @@ export default function GalleryNavigation({ user }) {
                             >
                               <a>
                                 {/* <HomeIcon
-                                  className="h-6 w-6 inline mr-4 cursor-pointer text-slate-900 dark:text-gray-100 hover:scale-110"
+                                  className="h-6 w-6 inline mr-4 cursor-pointer text-slate-900 dark:text-neutral-100 hover:scale-110"
                                   aria-hidden="true"
                                 /> */}
                                 <div className="inline-flex mr-4 bg-black dark:bg-white rounded-full h-8 w-8 justify-center items-center">
@@ -223,7 +223,7 @@ export default function GalleryNavigation({ user }) {
                               </a>
                             </Link>
                           </div>
-                          {/* <div className="mt-6 dark:text-gray-200">
+                          {/* <div className="mt-6 dark:text-neutral-200">
                             <Link
                               href={`/${user.username}/profile`}
                               title="Profile"
@@ -231,26 +231,26 @@ export default function GalleryNavigation({ user }) {
                             >
                               <a>
                                 <UserCircleIcon
-                                  className="h-6 w-6 inline mr-4 cursor-pointer text-slate-900 dark:text-gray-100 hover:scale-110"
+                                  className="h-6 w-6 inline mr-4 cursor-pointer text-slate-900 dark:text-neutral-100 hover:scale-110"
                                   aria-hidden="true"
                                 />
                                 <span className="-ml-2">Profile</span>
                               </a>
                             </Link>
                           </div> */}
-                          {/* <div className="mt-6 dark:text-gray-200">
+                          {/* <div className="mt-6 dark:text-neutral-200">
                             <Link
                               href={`https://twitter.com/intent/tweet?text=${host}/${user.username}`}
                               title="Share to Twitter"
                               className="align-middle inline"
                             >
                               <a target="_blank">
-                                <ShareIcon className="w-6 h-6 inline mr-4 text-slate-900 dark:text-gray-100 cursor-pointer hover:scale-110 focus:outline-none" />
+                                <ShareIcon className="w-6 h-6 inline mr-4 text-slate-900 dark:text-neutral-100 cursor-pointer hover:scale-110 focus:outline-none" />
                                 <span className="-ml-2">Share to Twitter</span>
                               </a>
                             </Link>
                           </div> */}
-                          <div className="mt-6 dark:text-gray-200">
+                          <div className="mt-6 dark:text-neutral-200">
                             {/* {loggedInUser &&
                               loggedInUser.username !== user.username && (
                                 <>
@@ -259,7 +259,7 @@ export default function GalleryNavigation({ user }) {
                                   ) ? (
                                     <Tippy
                                       content={`Stop following ${user.username}`}
-                                      className="bg-gray-300"
+                                      className="bg-neutral-300"
                                     >
                                       <button
                                         className="cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1 px-1 xl:py-1.5 xl:px-2.5 font-bold border border-4 bg-white text-black border-black hover:border-red-700 dark:hover:border-red-800 dark:bg-black dark:text-whitish dark:border-whitish"
@@ -273,7 +273,7 @@ export default function GalleryNavigation({ user }) {
                                   ) : (
                                     <Tippy
                                       content={`Follow ${user.username}`}
-                                      className="bg-gray-300"
+                                      className="bg-neutral-300"
                                     >
                                       <button
                                         className="cursor-pointer rounded-3xl mr-2 text-sm xl:text-md py-1 px-1 xl:py-1.5 xl:px-2.5 font-bold border border-4 bg-black text-white border-black dark:bg-whitish dark:text-black dark:border-whitish"

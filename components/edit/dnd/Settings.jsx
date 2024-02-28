@@ -56,13 +56,13 @@ export default function Settings({
   return (
     <div className="mt-2">
       <button
-        className="mb-3 w-[49%] py-2.5 px-4 rounded-3xl bg-gray-200 text-black dark:bg-dark3 dark:text-white cursor-pointer hover:bg-gray-100 hover:dark:bg-dark1 font-bold"
+        className="mb-3 w-[49%] py-2.5 px-4 rounded-3xl bg-neutral-200 text-black dark:bg-dark3 dark:text-white cursor-pointer hover:bg-neutral-100 hover:dark:bg-dark1 font-bold"
         onClick={() => hideAll()}
       >
         <span>Hide All</span>
       </button>
       <button
-        className="mb-3 w-[49%] float-right py-2.5 px-4 rounded-3xl bg-gray-200 text-black dark:bg-dark3 dark:text-white cursor-pointer hover:bg-gray-100 hover:dark:bg-dark1 font-bold"
+        className="mb-3 w-[49%] float-right py-2.5 px-4 rounded-3xl bg-neutral-200 text-black dark:bg-dark3 dark:text-white cursor-pointer hover:bg-neutral-100 hover:dark:bg-dark1 font-bold"
         onClick={() => showAll()}
       >
         <span>Show All</span>
@@ -84,15 +84,15 @@ export default function Settings({
           <span>Save Layout</span>
         )}
       </button>
-      <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-4 mb-1">
+      <h2 className="bg-neutral-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-4 mb-1">
         <span className="align-middle">Columns</span>
         <Tippy
           content={`The number of columns to display when viewing your gallery`}
-          className="bg-gray-300 align-middle"
+          className="bg-neutral-300 align-middle"
         >
           i
           {/* <QuestionMarkCircleIcon
-            className="ml-2 inline h-6 w-6 cursor-pointer outline-none text-gray-400 dark:text-[#555] hover:text-greeny dark:hover:text-greeny"
+            className="ml-2 inline h-6 w-6 cursor-pointer outline-none text-neutral-400 dark:text-[#555] hover:text-greeny dark:hover:text-greeny"
             aria-hidden="true"
           /> */}
         </Tippy>

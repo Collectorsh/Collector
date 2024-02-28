@@ -44,7 +44,7 @@ function ArtistSearch() {
     <div className="relative -mt-1">
       <form id="search" onSubmit={doSearch} className="w-fit border">
         <div className="absolute inset-y-0 left-0 pl-0 flex items-center pointer-events-none">
-          <span className="text-gray-500 dark:text-gray-100 sm:text-sm ml-2">
+          <span className="text-neutral-500 dark:text-neutral-100 sm:text-sm ml-2">
             <svg
               width="24"
               height="24"
@@ -74,13 +74,13 @@ function ArtistSearch() {
           id="query"
           name="query"
           placeholder="Find artists to follow"
-          className="pl-10 md:w-[400px] lg:w-[500px] pr-4 py-3 block border-none border search w-full outline-none text-gray-800 dark:text-gray-300 placeholder-gray-400 bg-transparent rounded-3xl"
+          className="pl-10 md:w-[400px] lg:w-[500px] pr-4 py-3 block border-none border search w-full outline-none text-neutral-800 dark:text-neutral-300 placeholder-neutral-400 bg-transparent rounded-3xl"
           onChange={(e) => setSearchTerm(e.target.value)}
           value={searchTerm}
         />
       </form>
       {(searching || results) && (
-        <div className="min-h-[100px] w-[500px] bg-gray-100 dark:bg-dark3 absolute z-10 text-left p-4 rounded-b-lg">
+        <div className="min-h-[100px] w-[500px] bg-neutral-100 dark:bg-dark3 absolute z-10 text-left p-4 rounded-b-lg">
           {searching ? (
             <div className="w-[40px] ml-[175px] mt-[15px]">
               <Oval color="#000" secondaryColor="#fff" height={30} width={30} />
@@ -97,7 +97,7 @@ function ArtistSearch() {
                     >
                       {result.name}
                       {result.twitter && (
-                        <span className="ml-6 text-gray-600">
+                        <span className="ml-6 text-neutral-600">
                           {result.twitter}
                         </span>
                       )}

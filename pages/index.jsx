@@ -1,17 +1,16 @@
 import React, { useContext, useEffect } from "react";
 import MainNavigation from "/components/navigation/MainNavigation";
-
-import getHighlightedCurations from "../data/curation/getHighlightedCurations";
 import LandingHero from "../components/landing/hero";
 import LandingHighlightedCurations from "../components/landing/highlightedCurations";
 import LandingRecentCurations from "../components/landing/recentCurations";
 import LandingLetter from "../components/landing/letter";
+import { getHighlightedCurations, getLatestCurations } from "../data/curation/getHighlightedCurations";
 
 export default function Home({highlightedCurations, recentCurations}) {
   return (
     <div className="">
       <MainNavigation />
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-10">
+      <div className="max-w-screen-2xl mx-auto 2xl:px-8">
         <LandingHero />
         <LandingHighlightedCurations curations={highlightedCurations} />
         <LandingRecentCurations curations={recentCurations} />
@@ -23,12 +22,13 @@ export default function Home({highlightedCurations, recentCurations}) {
 
 export async function getServerSideProps() {
   try {
-    const res = await getHighlightedCurations()
-    if (res) {
+    const featured = await getHighlightedCurations()
+    const latest = await getLatestCurations()
+    if (featured && latest) {
       return {
         props: {
-          highlightedCurations: res.slice(0, 4),
-          recentCurations: res.slice(0, 6)
+          highlightedCurations: featured.slice(0, 4),
+          recentCurations: latest.slice(0, 6)
         }
       };
     } else {

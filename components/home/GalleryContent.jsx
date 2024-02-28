@@ -16,7 +16,7 @@ export default function GalleryContent({ name, items }) {
     return Array.from({ length: 6 }, (_, index) => (
       <SwiperSlide key={`slide-${ index }`}>
         <div className="md:p-4">
-          <div className="bg-gray-300/20 lg:shadow-lg rounded-xl relative p-3 mx-auto">
+          <div className="bg-neutral-300/20 lg:shadow-lg rounded-xl relative p-3 mx-auto">
             <ContentLoader
               speed={2}
                 className="w-full mb-4 h-[250px] rounded-lg"
@@ -95,7 +95,7 @@ const ImageSlide = ({ item }) => {
   return(
     <div className="md:p-4">
       <div
-        className="bg-gray-300/20 md:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
+        className="bg-neutral-300/20 md:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
       >
         <Link href={`/${ item.username }`}>
           <a >

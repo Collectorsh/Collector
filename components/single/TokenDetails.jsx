@@ -40,10 +40,10 @@ export default function TokenDetails({ token }) {
                 <table className="min-w-full">
                   <tbody>
                     <tr className="">
-                      <td className="py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-300">
+                      <td className="py-4 text-sm font-medium text-neutral-900 whitespace-nowrap dark:text-neutral-300">
                         Token Mint
                       </td>
-                      <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                      <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                         <a
                           href={`https://solscan.io/account/${token.mint}`}
                           target="_blank"
@@ -60,18 +60,18 @@ export default function TokenDetails({ token }) {
                         {[2, 6].includes(token.edition.key) && (
                           <>
                             <tr className="">
-                              <td className="py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-300">
+                              <td className="py-4 text-sm font-medium text-neutral-900 whitespace-nowrap dark:text-neutral-300">
                                 Type
                               </td>
-                              <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                              <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                                 Master Edition
                               </td>
                             </tr>
                             <tr className="">
-                              <td className="py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-300">
+                              <td className="py-4 text-sm font-medium text-neutral-900 whitespace-nowrap dark:text-neutral-300">
                                 Printed
                               </td>
-                              <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                              <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                                 {token.edition.supply || 0}/
                                 {token.edition.max_supply}
                               </td>
@@ -81,18 +81,18 @@ export default function TokenDetails({ token }) {
                         {token.edition.key === 1 && token.edition.max_supply && (
                           <>
                             <tr className="">
-                              <td className="py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-300">
+                              <td className="py-4 text-sm font-medium text-neutral-900 whitespace-nowrap dark:text-neutral-300">
                                 Type
                               </td>
-                              <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                              <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                                 Limited Edition
                               </td>
                             </tr>
                             <tr className="">
-                              <td className="py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-300">
+                              <td className="py-4 text-sm font-medium text-neutral-900 whitespace-nowrap dark:text-neutral-300">
                                 Edition Number
                               </td>
-                              <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                              <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                                 {token.edition.supply} of{" "}
                                 {token.edition.max_supply}
                               </td>
@@ -102,28 +102,28 @@ export default function TokenDetails({ token }) {
                         {token.edition.key === 1 && !token.edition.max_supply && (
                           <>
                             <tr className="">
-                              <td className="py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-300">
+                              <td className="py-4 text-sm font-medium text-neutral-900 whitespace-nowrap dark:text-neutral-300">
                                 Type
                               </td>
-                              <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                              <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                                 Open Edition
                               </td>
                             </tr>
                             <tr className="">
-                              <td className="py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-300">
+                              <td className="py-4 text-sm font-medium text-neutral-900 whitespace-nowrap dark:text-neutral-300">
                                 Edition Number
                               </td>
-                              <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                              <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                                 {token.edition.supply}
                               </td>
                             </tr>
                           </>
                         )}
                         <tr className="">
-                          <td className="py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-300">
+                          <td className="py-4 text-sm font-medium text-neutral-900 whitespace-nowrap dark:text-neutral-300">
                             Royalty
                           </td>
-                          <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                          <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                             {royalty()}%
                           </td>
                         </tr>
@@ -146,10 +146,10 @@ export default function TokenDetails({ token }) {
                 <tbody>
                   {token.attributes.map((att, index) => (
                     <tr className="" key={index}>
-                      <td className="py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-300">
+                      <td className="py-4 text-sm font-medium text-neutral-900 whitespace-nowrap dark:text-neutral-300">
                         {att.trait_type}
                       </td>
-                      <td className="py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-200">
+                      <td className="py-4 text-sm text-neutral-500 whitespace-nowrap dark:text-neutral-200">
                         {att.value}
                       </td>
                     </tr>

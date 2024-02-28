@@ -89,7 +89,7 @@ export const Photo = forwardRef(
                       target="_blank"
                       rel="noreferrer"
                       className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                        active ? "bg-neutral-100 text-neutral-900" : "text-neutral-700",
                         "block px-4 py-2 text-sm cursor-pointer"
                       )}
                     >

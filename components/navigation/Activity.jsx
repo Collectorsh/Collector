@@ -15,7 +15,7 @@ export default function Activity() {
         <div>
           <Menu.Button className="flex text-sm rounded-full focus:outline-none">
             <span className="sr-only">Open user menu</span>
-            <p className="menu text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
+            <p className="menu text-lg cursor-pointer inline font-normal text-neutral-900 dark:text-neutral-100">
               Premium
             </p>
           </Menu.Button>
@@ -32,28 +32,28 @@ export default function Activity() {
           <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none text-left">
             <Menu.Item>
               <Link href="/activity?id=buynow">
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <a className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                   Buy Now
                 </a>
               </Link>
             </Menu.Item>
             <Menu.Item>
               <Link href="/activity?id=following">
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <a className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                   Auctions
                 </a>
               </Link>
             </Menu.Item>
             <Menu.Item>
               <Link href="/activity?id=bids">
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <a className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                   My Bids
                 </a>
               </Link>
             </Menu.Item>
             <Menu.Item>
               <Link href="/activity?id=follow">
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <a className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                   Follow Artists
                 </a>
               </Link>

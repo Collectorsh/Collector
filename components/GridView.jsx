@@ -45,7 +45,7 @@ export default function GridView({
       {items.map((item, index) => (
         <div
           key={index}
-          className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
+          className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-neutral-200 dark:border-dark3"
         >
           <div className="rounded-lg overflow-hidden">
             {type === "listing" && (
@@ -124,7 +124,7 @@ export default function GridView({
                   )}
               </div>
 
-              <div className="bg-black rounded-b-2xl px-[10px] py-3 text-gray-50 -mx-[10px] h-16">
+              <div className="bg-black rounded-b-2xl px-[10px] py-3 text-neutral-50 -mx-[10px] h-16">
                 <div className="text-sm">
                   {type === "listing" && (
                     <div className="font-black dark:text-whitish mt-1 float-left">
@@ -188,7 +188,7 @@ export default function GridView({
                 <div>
                   <Menu.Button className="inline-flex justify-center focus:outline-none">
                     {/* <CogIcon
-                      className="h-6 w-6 inline cursor-pointer text-gray-200"
+                      className="h-6 w-6 inline cursor-pointer text-neutral-200"
                       aria-hidden="true"
                     /> */}
                   Cog
@@ -211,8 +211,8 @@ export default function GridView({
                             onClick={(e) => setProfileImage(item)}
                             className={classNames(
                               active
-                                ? "bg-gray-100 text-gray-900"
-                                : "text-gray-700",
+                                ? "bg-neutral-100 text-neutral-900"
+                                : "text-neutral-700",
                               "block px-4 py-2 text-sm cursor-pointer"
                             )}
                           >

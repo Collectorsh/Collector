@@ -50,7 +50,7 @@ export default function SellModal({ open, token, closeModal, refetch }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <Dialog.Overlay className="fixed inset-0 bg-neutral-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}
@@ -81,25 +81,25 @@ export default function SellModal({ open, token, closeModal, refetch }) {
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                     <Dialog.Title
                       as="h3"
-                      className="text-lg leading-6 font-medium text-gray-900"
+                      className="text-lg leading-6 font-medium text-neutral-900"
                     >
                       List Now
                     </Dialog.Title>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500 mb-2">{token.name}</p>
+                      <p className="text-sm text-neutral-500 mb-2">{token.name}</p>
                       {user && user.token_holder && (
-                        <p className="text-sm text-gray-500 bg-gray-100 rounded-sm px-1 w-fit">
+                        <p className="text-sm text-neutral-500 bg-neutral-100 rounded-sm px-1 w-fit">
                           0% fee
                         </p>
                       )}
-                      <p className="text-sm text-gray-500 mt-2">Amount:</p>
+                      <p className="text-sm text-neutral-500 mt-2">Amount:</p>
                       <input
                         type="number"
                         step="1"
                         min="0.0000"
                         name="amount"
                         id="amount"
-                        className="w-full rounded-lg px-4 py-3 bg-gray-50 border border-gray-400 text-black"
+                        className="w-full rounded-lg px-4 py-3 bg-neutral-50 border border-neutral-400 text-black"
                       />
                       <button
                         className={`w-full mt-4 bg-black text-white rounded-lg px-4 py-4 ${

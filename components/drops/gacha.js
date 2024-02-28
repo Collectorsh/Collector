@@ -191,7 +191,7 @@ export default function Gacha({ address, drop }) {
                   ({itemsMinted}/{total})
                 </span>
               </p>
-              <div className="h-1 bg-gray-100 w-full">
+              <div className="h-1 bg-neutral-100 w-full">
                 <div
                   className="h-1 bg-greeny"
                   style={{
@@ -246,7 +246,7 @@ export default function Gacha({ address, drop }) {
                     </>
                   ) : (
                     <button
-                      className="bg-greeny px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer disabled:cursor-default disabled:bg-gray-300"
+                      className="bg-greeny px-4 py-2 rounded-xl font-semibold text-black text-lg cursor-pointer disabled:cursor-default disabled:bg-neutral-300"
                       onClick={() => mintNow("holder")}
                       disabled={
                         isMinting
@@ -295,7 +295,7 @@ export default function Gacha({ address, drop }) {
                 </>
               ) : (
                 <button
-                  className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
+                  className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-neutral-300"
                   onClick={() => mintNow("public")}
                   disabled={isMinting}
                 >

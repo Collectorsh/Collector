@@ -37,7 +37,8 @@ const CloudinaryImage = ({
   useUploadFallback = false,
   useMetadataFallback = false,
   noLazyLoad = false,
-  onError
+  onError,
+  noLoaderScreen = false
 }) => {
   const { uploadSingleToken } = useImageFallbackContext()
   const fallback = useFallbackImage(token)
@@ -155,7 +156,7 @@ const CloudinaryImage = ({
   return (
     <>
       {noLazyLoad ? null : <div ref={llRef} className='w-1 h-full opacity-0 absolute -z-10' />}
-      {(loading)
+      {(!noLoaderScreen && loading)
         ? (<div className={clsx("absolute z-10 top-0 left-0 w-full h-full overflow-hidden", className)}>
           <ContentLoader
             title=""

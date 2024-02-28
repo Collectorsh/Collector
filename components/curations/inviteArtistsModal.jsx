@@ -129,12 +129,12 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
       <p className="text-center mb-4 text-sm textPalette2">Artists must have a Collector account</p>
 
       <div className="relative mx-auto w-fit">
-        <p className="bg-zinc-300 dark:bg-zinc-700 h-6 font-bold">Approved Artists</p>
-        <RoundedCurve className="absolute bottom-0 -left-8 w-8 h-6 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-8 w-8 h-6 fill-zinc-300 dark:fill-zinc-700" />
+        <p className="bg-neutral-300 dark:bg-neutral-700 h-6 font-bold">Approved Artists</p>
+        <RoundedCurve className="absolute bottom-0 -left-8 w-8 h-6 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1]" />
+        <RoundedCurve className="absolute bottom-0 -right-8 w-8 h-6 fill-neutral-300 dark:fill-neutral-700" />
       </div>
       <div className="mb-6 min-h-[5.5rem] border-4 rounded-xl p-2
-       border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-900
+       border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
        flex items-start flex-wrap gap-2
        ">
         {newApproveArtists.map((artist, i) => {
@@ -167,7 +167,7 @@ const ArtistChip = ({ name, onRemove }) => {
   return (
     <div className="flex items-center gap-1 rounded-lg pl-2 pr-1
       palette1
-      border border-zinc-300 dark:border-zinc-700
+      border border-neutral-300 dark:border-neutral-700
     ">
       <p>{name}</p>
       <button onClick={onRemove} className="opacity-50 hover:opacity-100 duration-300">

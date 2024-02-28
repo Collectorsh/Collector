@@ -209,7 +209,7 @@ export default function Order() {
                         name="first-name"
                         id="first-name"
                         autoComplete="given-name"
-                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                        className={`bg-neutral-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-neutral-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
                           isError &&
                           isError === "first-name" &&
                           "border border-red-500"
@@ -229,7 +229,7 @@ export default function Order() {
                         name="last-name"
                         id="last-name"
                         autoComplete="family-name"
-                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                        className={`bg-neutral-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-neutral-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
                           isError &&
                           isError === "last-name" &&
                           "border border-red-500"
@@ -249,7 +249,7 @@ export default function Order() {
                         name="email-address"
                         id="email-address"
                         autoComplete="email"
-                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                        className={`bg-neutral-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-neutral-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
                           isError &&
                           isError === "email-address" &&
                           "border border-red-500"
@@ -268,7 +268,7 @@ export default function Order() {
                         options={countryOptions}
                         value={country}
                         onChange={changeCountry}
-                        className={`bg-gray-100 dark:bg-dark3 mt-1 block w-full rounded-md shadow-sm sm:text-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+                        className={`bg-neutral-100 dark:bg-dark3 mt-1 block w-full rounded-md shadow-sm sm:text-sm focus:border-indigo-500 focus:ring-indigo-500 ${
                           isError &&
                           isError === "country" &&
                           "border border-red-500"
@@ -289,7 +289,7 @@ export default function Order() {
                         name="street-address"
                         id="street-address"
                         autoComplete="street-address"
-                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                        className={`bg-neutral-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-neutral-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
                           isError &&
                           isError === "street-address" &&
                           "border border-red-500"
@@ -309,7 +309,7 @@ export default function Order() {
                         name="city"
                         id="city"
                         autoComplete="address-level2"
-                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                        className={`bg-neutral-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-neutral-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
                           isError &&
                           isError === "city" &&
                           "border border-red-500"
@@ -329,7 +329,7 @@ export default function Order() {
                         name="region"
                         id="region"
                         autoComplete="address-level1"
-                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                        className={`bg-neutral-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-neutral-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
                           isError &&
                           isError === "region" &&
                           "border border-red-500"
@@ -349,7 +349,7 @@ export default function Order() {
                         name="postal-code"
                         id="postal-code"
                         autoComplete="postal-code"
-                        className={`bg-gray-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                        className={`bg-neutral-100 dark:bg-dark3 mt-1 p-2 block w-full rounded-md border-neutral-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
                           isError &&
                           isError === "postal-code" &&
                           "border border-red-500"
@@ -368,7 +368,7 @@ export default function Order() {
                 {cart.map((item, index) => (
                   <div
                     key={index}
-                    className="my-3 border-t border-b border-gray-100 dark:border-dark3 py-2"
+                    className="my-3 border-t border-b border-neutral-100 dark:border-dark3 py-2"
                   >
                     Trash
                     {/* <TrashIcon
@@ -389,7 +389,7 @@ export default function Order() {
                 ))}
                 {total && (
                   <>
-                    <h2 className="py-2 text-2xl font-extrabold my-5 w-full border-t border-b border-gray-100 dark:border-dark3">
+                    <h2 className="py-2 text-2xl font-extrabold my-5 w-full border-t border-b border-neutral-100 dark:border-dark3">
                       TOTAL
                       <span className="float-right text-2xl">
                         ◎{roundToTwo(total / 1000000000)}

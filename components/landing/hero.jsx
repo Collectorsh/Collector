@@ -37,13 +37,13 @@ const LandingHero = () => {
         color="fill-neutral-200 dark:fill-neutral-800"
         flipped
       /> */}
-      <div className="h-[calc(100svh-76px)] mx-auto w-full max-w-screen-xl px-4 sm:px-8 relative flex flex-col items-center justify-between py-[5%]">
+      <div className="min-h-page mx-auto w-full max-w-screen-xl px-4 sm:px-8 relative flex flex-col items-center justify-between pb-[5%]">
         
         
         {/* 224 is double to size of the nav bar (76px) + 1/2 the image height 72 */}
         <div
        
-          className="min-h-[350px] h-[calc(100%-224px)] flex flex-col justify-center items-center gap-8 md:gap-16"
+          className="min-h-[350px] h-pageImageOffset flex flex-col justify-center items-center gap-8 md:gap-16"
         > 
 
           <div className="">

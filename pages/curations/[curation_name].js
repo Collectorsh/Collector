@@ -398,7 +398,6 @@ function CurationPage({curation}) {
 
   const curationMetaDescription = `${ curation.name.replaceAll("_", " ") } by ${ curation.curator?.username }`
 
-
   return (
     <>
       <Head>
@@ -419,9 +418,9 @@ function CurationPage({curation}) {
         useDraftContent={useDraftContent}
         publishedBanner={publishedContent?.banner_image}
       />
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-10">
+      <div className="max-w-screen-2xl mx-auto px-4 lg:px-16 py-10">
        
-        <div className="px-4">
+        <div className="md:px-4">
           <CurationName
             name={name}
             setEditNameOpen={setEditNameOpen}

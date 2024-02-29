@@ -306,10 +306,10 @@ function ProfilePage({ curator }) {
           </EditWrapper>
         </div>
       </div>
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-16">
+      <div className="max-w-screen-2xl mx-auto px-4 lg:px-16 py-16 w-full">
         <div className="px-4">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-8">
-            <div className="flex flex-wrap items-center gap-6 group/settings">
+            <div className="flex flex-wrap items-center gap-6 group/settings w-full">
 
               <EditWrapper
                 className="max-w-fit"
@@ -322,7 +322,7 @@ function ProfilePage({ curator }) {
                 // text="Edit Display Name"
                 icon={<Icon.Edit size={20} strokeWidth={2.5} />}
               >
-                <h1 className="font-bold text-5xl mr-2">{displayName}</h1>
+                <h1 className="font-bold mr-2 text-4xl md:text-5xl overflow-y-hidden overflow-x-auto w-full">{displayName}</h1>
               </EditWrapper>
 
               <EditWrapper
@@ -369,7 +369,7 @@ function ProfilePage({ curator }) {
 
         <hr className="mt-12 mb-6 borderPalette1" />
 
-        <div className="p-4">
+        <div className="py-4 md:p-4">
           {useOwnerView
             ? (
               <SortableCurationPreviewWrapper

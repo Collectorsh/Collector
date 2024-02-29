@@ -5,6 +5,7 @@ import * as Icon from "react-feather";
 import { useContext } from "react";
 import UserContext from "../../contexts/user";
 import SvgCurve from "../svgCurve";
+import { collectorBobId } from "../../config/settings";
 
 const LandingHero = () => { 
   const [user] = useContext(UserContext);
@@ -42,15 +43,15 @@ const LandingHero = () => {
         {/* 224 is double to size of the nav bar (76px) + 1/2 the image height 72 */}
         <div
        
-          className="min-h-[350px] h-[calc(100%-224px)] flex flex-col justify-center items-center "
+          className="min-h-[350px] h-[calc(100%-224px)] flex flex-col justify-center items-center gap-8 md:gap-16"
         > 
 
-          {/* <div className="flex flex-col justify-center items-center"> */}
+          <div className="">
             <div className="opacity-95 relative">
               <CloudinaryImage
                 noLoaderScreen
-                className="w-36 h-36 mx-auto dark:invert object-contain"
-                id="global/Collector-mascot-transparent_qsqcwx"
+                className="w-36 h-36 mx-auto dark:invert object-contain relative -bottom-2"
+                id={collectorBobId}
                 noLazyLoad
                 width={500}
               />
@@ -58,12 +59,12 @@ const LandingHero = () => {
             <h1 className="text-center collector text-5xl md:text-7xl font-bold">
               Your Digital Gallery
             </h1>
-          {/* </div> */}
+          </div>
           <MainButton
             onClick={getStarted}
             solid
             size="xl"
-            className="mt-8 md:mt-16 mx-auto block"
+            // className="mt-8 md:mt-16 mx-auto block"
           >
             Join Waitlist!
           </MainButton>
@@ -75,12 +76,8 @@ const LandingHero = () => {
       >
         Discover
         <Icon.ArrowDown size={20} strokeWidth={3}/>
-      </button>
-        
+      </button>      
       </div>
-      {/* <div className="h-[5%] w-full block"/> */}
-
-
     </div>
   )
 }

@@ -115,7 +115,7 @@ export const UserCard = ({inset}) => {
       </p>
     </div>
     <div className="flex justify-end">
-      <Tippy content="Profile settings" className="shadow">
+      <Tippy content="Settings" className="shadow">
         <div className="">
           <Link href="/settings">
             <a className="h-full  p-1 rounded-md flex items-center hoverPalette3">

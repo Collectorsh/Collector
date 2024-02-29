@@ -17,6 +17,7 @@ import CloudinaryImage from "../components/CloudinaryImage";
 import { displayName } from "../utils/displayName";
 import SvgCurve from "../components/svgCurve";
 import { useRouter } from "next/router";
+import { collectorBobId } from "../config/settings";
 
 export default function WaitlistPage() {
   const [user] = useContext(UserContext);
@@ -36,6 +37,7 @@ export default function WaitlistPage() {
     email: null,
     twitterHandle: null,
     moreInfo: null,
+    username: null,
   });
 
   const isApproved = user?.subscription_level === "pro";
@@ -45,14 +47,14 @@ export default function WaitlistPage() {
       setErrors(prev => ({
         ...prev,
         user_id: null,
+        username: Boolean(user.username) ? null : "Please add a username before applying for the waitlist. Go to Settings (gear icon) in the Menu",
       }))
 
       if (!email) setEmail(user.email || "")
     }
 
-
     (async () => {
-      if (user?.username) { 
+      if (user?.id) { 
         const signup = await getWaitlistSignupById({ userId: user.id });
         if (signup) setSignup(signup);
       }
@@ -67,6 +69,14 @@ export default function WaitlistPage() {
       setErrors(prev => ({
         ...prev,
         user_id: "Please connect your wallet to sign in before applying for the waitlist",
+      }))
+      valid = false;
+    }
+
+    if (!user?.username) { 
+      setErrors(prev => ({
+        ...prev,
+        username: "Please add a username before applying for the waitlist. Go to Settings (gear icon) in the Menu",
       }))
       valid = false;
     }
@@ -135,7 +145,7 @@ export default function WaitlistPage() {
       <p className="font-bold text-4xl md:text-5xl text-center mb-8">
         {user?.username ? `${ displayName(user) }, j` : "J"}oin the waitlist!
       </p>
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-sm w-full mx-auto">
     
         <p className="font-bold text-lg ml-4 mt-2">Twitter Handle</p>
         <div className={clsx("my-1 border-2 rounded-lg w-full px-4 py-2", "bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800", "flex gap-1 items-center")}>
@@ -166,7 +176,7 @@ export default function WaitlistPage() {
         {Object.values(errors).filter(Boolean).map((error, i) => <p key={i} className="text-red-500">{error}</p>)}
         <MainButton
           onClick={handleSubmit}
-          disabled={Object.values(errors).filter(Boolean).length || !twitterHandle || submitting}
+          disabled={submitting}
           className="w-full mt-6 flex justify-center items-center"
           size="lg"
           solid
@@ -232,6 +242,7 @@ export default function WaitlistPage() {
     </div>
   )
 
+  const usingForm = user && !isApproved && !signup;
   const content = () => {
     if (!user) return notLoggedIn;
     if (isApproved) {
@@ -252,20 +263,24 @@ export default function WaitlistPage() {
           position="top-0 left-0"
           flipped
         /> */}
-        <div className="relative px-2 2xl:px-8 h-full flex flex-col justify-center items-center">
-          <div className="relative">
-            <div className="opacity-95 ">
-              <CloudinaryImage
-                className="w-36 h-36 mx-auto dark:invert object-contain absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full"
-                id="global/Collector-mascot-transparent_qsqcwx"
-                noLazyLoad
-                width={500}
-                noLoaderScreen
-              />
-            </div>
-            {content()}
+        <div className={clsx(
+          "relative px-4 2xl:px-8 flex flex-col justify-center items-center palette1",
+          "h-[calc(100%-224px)]",
+          usingForm ? "min-h-[600px]" : "min-h-[425px]"
+        )} >
+          
+          <div className="opacity-95 ">
+            <CloudinaryImage
+              className="w-36 h-36 mx-auto dark:invert object-contain relative -bottom-2"
+              id={collectorBobId}
+              noLazyLoad
+              width={500}
+              noLoaderScreen
+            />
           </div>
-          </div>
+          {content()}  
+        </div>
+        
       </div>
       {/* <div className="relative">
         <SvgCurve

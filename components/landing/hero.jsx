@@ -50,7 +50,7 @@ const LandingHero = () => {
             <div className="opacity-95 relative">
               <CloudinaryImage
                 noLoaderScreen
-                className="w-36 h-36 mx-auto dark:invert object-contain relative -bottom-2"
+                className="w-36 h-36 mx-auto dark:invert object-contain"
                 id={collectorBobId}
                 noLazyLoad
                 width={500}

@@ -271,7 +271,7 @@ export default function WaitlistPage() {
           
           <div className="opacity-95 ">
             <CloudinaryImage
-              className="w-36 h-36 mx-auto dark:invert object-contain relative -bottom-2"
+              className="w-36 h-36 mx-auto dark:invert object-contain"
               id={collectorBobId}
               noLazyLoad
               width={500}

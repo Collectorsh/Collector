@@ -102,8 +102,8 @@ export default function WaitlistPage() {
         setSignup(res)
         shootConfetti(2)
       }
-      setSubmitting(false)
     }
+    setSubmitting(false)
   }
 
   const handleEmailChange = (e) => { 
@@ -132,7 +132,7 @@ export default function WaitlistPage() {
 
   const form = (
     <>
-      <p className="font-bold text-5xl text-center mb-8">
+      <p className="font-bold text-4xl md:text-5xl text-center mb-8">
         {user?.username ? `${ displayName(user) }, j` : "J"}oin the waitlist!
       </p>
       <div className="max-w-lg mx-auto">
@@ -182,7 +182,7 @@ export default function WaitlistPage() {
 
   const notLoggedIn = (
     <div className="text-center">
-      <p className="font-bold text-5xl text-center mb-8">
+      <p className="font-bold text-4xl md:text-5xl text-center mb-8">
         Join the waitlist!
       </p>
       <MainButton
@@ -197,7 +197,7 @@ export default function WaitlistPage() {
 
   const waiting = (
     <div className="text-center">
-      <p className="font-bold text-5xl text-center mb-8">
+      <p className="font-bold text-4xl md:text-5xl text-center mb-8">
         {displayName(user) || "..." }, you are on the waitlist!
       </p>
       <p className="textPalette2">We will reach out to you in 2-4 weeks!</p>
@@ -207,12 +207,12 @@ export default function WaitlistPage() {
 
   const approved = (
     <div className="text-center">
-      <p className="font-bold text-5xl text-center mb-8">
+      <p className="font-bold text-4xl md:text-5xl text-center mb-4 md:mb-8">
         Congrats {displayName(user) || "..."}, <br /> you have been approved!
       </p>
       <p className="textPalette2">Enjoy using Collector!</p>
 
-      <div className="flex gap-6 mt-16 items-center justify-center">
+      <div className="flex flex-wrap-reverse gap-x-6 gap-y-3 mt-8 md:mt-16 items-center justify-center">
         <MainButton
           onClick={handleTwitterShare}
           size="lg"
@@ -247,11 +247,11 @@ export default function WaitlistPage() {
       <MainNavigation />
       <Toaster />
       <div className="h-[calc(100svh-76px)] relative">
-        <SvgCurve
+        {/* <SvgCurve
           color="fill-neutral-200 dark:fill-neutral-800"
           position="top-0 left-0"
           flipped
-        />
+        /> */}
         <div className="relative px-2 2xl:px-8 h-full flex flex-col justify-center items-center">
           <div className="relative">
             <div className="opacity-95 ">
@@ -267,11 +267,11 @@ export default function WaitlistPage() {
           </div>
           </div>
       </div>
-      <div className="relative">
+      {/* <div className="relative">
         <SvgCurve
           color="fill-neutral-200 dark:fill-neutral-800"
         />
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -22,24 +22,25 @@ const LandingHero = () => {
   }
 
   const scrollDown = () => { 
-    window.scrollTo({ 
-      top: window.innerHeight - (76*2),
-      left: 0, 
-      behavior: 'smooth' 
-    });
+    document.getElementById('featuredCurations').scrollIntoView({ behavior: 'smooth'})
+    // window.scrollTo({ 
+    //   top: window.innerHeight,
+    //   left: 0, 
+    //   behavior: 'smooth' 
+    // });
   }
    
   return (
     <div className="relative">
-      <SvgCurve
+      {/* <SvgCurve
         color="fill-neutral-200 dark:fill-neutral-800"
         flipped
-      />
+      /> */}
       <div className="h-[calc(100svh-76px)] w-full max-w-screen-xl mx-auto px-4 sm:px-8">
         
         
         {/* 224 is double to size of the nav bar (76px) +the image height 72 */}
-        <div className="h-[calc(100%-224px)] flex flex-col justify-center items-center gap-16"> 
+        <div className="h-[calc(100%-224px)] flex flex-col justify-center items-center gap-8 md:gap-16"> 
 
           <div className="flex flex-col justify-center items-center">
             <div className="opacity-95 relative">
@@ -57,7 +58,6 @@ const LandingHero = () => {
           </div>
             <MainButton
               onClick={getStarted}
-              // className="mb-8"
               solid
               size="xl"
             >
@@ -66,7 +66,7 @@ const LandingHero = () => {
         </div>
         <button
           onClick={scrollDown}
-          className="absolute bottom-[15%] left-1/2 -translate-x-[50%] text-lg font-bold flex gap-2 items-center hoverPalette1 rounded-md px-3 py-0.5"
+          className="absolute bottom-[5%] left-1/2 -translate-x-[50%] text-lg font-bold flex gap-2 items-center hoverPalette1 rounded-md px-3 py-0.5"
         >
           Discover
           <Icon.ArrowDown size={20} strokeWidth={3}/>

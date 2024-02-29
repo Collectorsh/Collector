@@ -5,6 +5,7 @@ import * as Icon from "react-feather";
 import { useContext } from "react";
 import UserContext from "../../contexts/user";
 import SvgCurve from "../svgCurve";
+import { collectorBobId } from "../../config/settings";
 
 const LandingHero = () => { 
   const [user] = useContext(UserContext);
@@ -36,18 +37,21 @@ const LandingHero = () => {
         color="fill-neutral-200 dark:fill-neutral-800"
         flipped
       /> */}
-      <div className="h-[calc(100svh-76px)] w-full max-w-screen-xl mx-auto px-4 sm:px-8">
+      <div className="h-[calc(100svh-76px)] mx-auto w-full max-w-screen-xl px-4 sm:px-8 relative flex flex-col items-center justify-between py-[5%]">
         
         
-        {/* 224 is double to size of the nav bar (76px) +the image height 72 */}
-        <div className="h-[calc(100%-224px)] flex flex-col justify-center items-center gap-8 md:gap-16"> 
+        {/* 224 is double to size of the nav bar (76px) + 1/2 the image height 72 */}
+        <div
+       
+          className="min-h-[350px] h-[calc(100%-224px)] flex flex-col justify-center items-center gap-8 md:gap-16"
+        > 
 
-          <div className="flex flex-col justify-center items-center">
+          <div className="">
             <div className="opacity-95 relative">
               <CloudinaryImage
                 noLoaderScreen
-                className="w-36 h-36 mx-auto dark:invert object-contain"
-                id="global/Collector-mascot-transparent_qsqcwx"
+                className="w-36 h-36 mx-auto dark:invert object-contain relative -bottom-2"
+                id={collectorBobId}
                 noLazyLoad
                 width={500}
               />
@@ -56,25 +60,24 @@ const LandingHero = () => {
               Your Digital Gallery
             </h1>
           </div>
-            <MainButton
-              onClick={getStarted}
-              solid
-              size="xl"
-            >
-              Join Waitlist!
-            </MainButton>
+          <MainButton
+            onClick={getStarted}
+            solid
+            size="xl"
+            // className="mt-8 md:mt-16 mx-auto block"
+          >
+            Join Waitlist!
+          </MainButton>
         </div>
-        <button
-          onClick={scrollDown}
-          className="absolute bottom-[5%] left-1/2 -translate-x-[50%] text-lg font-bold flex gap-2 items-center hoverPalette1 rounded-md px-3 py-0.5"
-        >
-          Discover
-          <Icon.ArrowDown size={20} strokeWidth={3}/>
-        </button>
 
-        
+      <button
+        onClick={scrollDown}
+        className="text-lg font-bold flex gap-2 items-center hoverPalette1 rounded-md px-3 py-0.5"//absolute bottom-[5%] left-1/2 -translate-x-[50%] 
+      >
+        Discover
+        <Icon.ArrowDown size={20} strokeWidth={3}/>
+      </button>      
       </div>
-
     </div>
   )
 }

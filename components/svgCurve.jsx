@@ -20,7 +20,7 @@ const SvgCurve = ({
         color,
         flipped ? "rotate-0" : "rotate-180",
         turned ? "scale-x-[-1]" : "scale-x-100",
-        isVisible ? "scale-y-[85%] md:scale-y-[70%]" : "scale-y-0"
+        isVisible ? "scale-y-[90%] md:scale-y-[70%]" : "scale-y-0"
       )}
       ref={ref}
     >

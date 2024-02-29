@@ -5,9 +5,10 @@ import { homepageWidthClass } from "../../pages";
 
 
 export default function LandingHighlightedCurations({curations}) {
-  //bg-neutral-200 dark:bg-neutral-800  shadow 
+  //pt-28 pb-60
   return (
-    <div className="pt-28 pb-60  relative bg-neutral-200 dark:bg-neutral-800">
+    <div className="pt-12 pb-40  relative bg-neutral-200 dark:bg-neutral-800 mt-56">
+      <div id="featuredCurations" className="absolute top-[-130px] md:top-[-160px] lg:top-[-200px]"/>
       <SvgCurve
         color="fill-neutral-200 dark:fill-neutral-800"
       />
@@ -15,7 +16,7 @@ export default function LandingHighlightedCurations({curations}) {
         {curations?.length
           ? (
             <div className="max-w-screen-2xl mx-auto px-6 lg:px-16">
-              <h2 className="font-bold text-5xl text-center collector mb-14">Featured</h2>
+              <h2 className="font-bold text-4xl md:text-5xl text-center collector mb-14">Featured</h2>
               {/* <p className="textPalette2 text-center mb-8">These curations really knock our socks off</p> */}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

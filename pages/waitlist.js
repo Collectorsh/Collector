@@ -47,7 +47,7 @@ export default function WaitlistPage() {
       setErrors(prev => ({
         ...prev,
         user_id: null,
-        username: Boolean(user.username) ? null : "Please add a username before applying for the waitlist. Go to Settings (gear icon) in the Menu",
+        username: null
       }))
 
       if (!email) setEmail(user.email || "")
@@ -142,10 +142,10 @@ export default function WaitlistPage() {
 
   const form = (
     <>
-      <p className="font-bold text-4xl md:text-5xl text-center mb-8">
+      <p className="font-bold text-4xl md:text-5xl text-center mb-8 px-4 2xl:px-8 ">
         {user?.username ? `${ displayName(user) }, j` : "J"}oin the waitlist!
       </p>
-      <div className="max-w-sm w-full mx-auto">
+      <div className="max-w-sm w-full mx-auto palette1 px-4 2xl:px-8 pb-8">
     
         <p className="font-bold text-lg ml-4 mt-2">Twitter Handle</p>
         <div className={clsx("my-1 border-2 rounded-lg w-full px-4 py-2", "bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800", "flex gap-1 items-center")}>
@@ -173,7 +173,7 @@ export default function WaitlistPage() {
           value={moreInfo}
           placeholder="Any additional information you'd like to share?"
         />
-        {Object.values(errors).filter(Boolean).map((error, i) => <p key={i} className="text-red-500">{error}</p>)}
+        {Object.values(errors).filter(Boolean).map((error, i) => <p key={i} className="text-amber-500">{error}</p>)}
         <MainButton
           onClick={handleSubmit}
           disabled={submitting}
@@ -191,7 +191,7 @@ export default function WaitlistPage() {
   )
 
   const notLoggedIn = (
-    <div className="text-center">
+    <div className="text-center px-4 2xl:px-8 ">
       <p className="font-bold text-4xl md:text-5xl text-center mb-8">
         Join the waitlist!
       </p>
@@ -206,7 +206,7 @@ export default function WaitlistPage() {
   )
 
   const waiting = (
-    <div className="text-center">
+    <div className="text-center px-4 2xl:px-8 ">
       <p className="font-bold text-4xl md:text-5xl text-center mb-8">
         {displayName(user) || "..." }, you are on the waitlist!
       </p>
@@ -216,7 +216,7 @@ export default function WaitlistPage() {
   )
 
   const approved = (
-    <div className="text-center">
+    <div className="text-center px-4 2xl:px-8 ">
       <p className="font-bold text-4xl md:text-5xl text-center mb-4 md:mb-8">
         Congrats {displayName(user) || "..."}, <br /> you have been approved!
       </p>
@@ -257,16 +257,12 @@ export default function WaitlistPage() {
     <div>
       <MainNavigation />
       <Toaster />
-      <div className="h-[calc(100svh-76px)] relative">
-        {/* <SvgCurve
-          color="fill-neutral-200 dark:fill-neutral-800"
-          position="top-0 left-0"
-          flipped
-        /> */}
+      <div className="min-h-page relative">
+
         <div className={clsx(
-          "relative px-4 2xl:px-8 flex flex-col justify-center items-center palette1",
-          "h-[calc(100%-224px)]",
-          usingForm ? "min-h-[600px]" : "min-h-[425px]"
+          "relative flex flex-col justify-center items-center palette1",
+          "h-pageImageOffset",
+          usingForm ? "min-h-[800px]" : "min-h-[425px]"
         )} >
           
           <div className="opacity-95 ">
@@ -282,11 +278,7 @@ export default function WaitlistPage() {
         </div>
         
       </div>
-      {/* <div className="relative">
-        <SvgCurve
-          color="fill-neutral-200 dark:fill-neutral-800"
-        />
-      </div> */}
+
     </div>
   )
 }

@@ -101,7 +101,7 @@ export default function MyApp({ Component, pageProps }) {
                                     <PlausibleProvider domain="collector.sh">
                                       <CartProvider>
                 
-                                        <div className="min-h-[100vh]">
+                                        <div className="min-h-screen h-fit">
                                           <Component {...pageProps} />
                                         </div>
                                         <Footer />

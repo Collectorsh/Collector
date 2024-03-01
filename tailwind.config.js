@@ -47,19 +47,19 @@ module.exports = {
         enter: 'enter 1s ease-out',
       },
       height:{
-        screen: ['100vh', '100dvh'],
-        page: ["calc(100vh - 76px)", "calc(100dvh - 76px)"],
-        pageImageOffset: ["calc(100vh - 296px)", "calc(100dvh - 296px)"] //double nav bar (223px) + image height (144px) to center the text below image
+        screen: ['100vh', '100svh'],
+        page: ["calc(100vh - 76px)", "calc(100svh - 76px)"],
+        pageImageOffset: ["calc(100vh - 296px)", "calc(100svh - 296px)"] //double nav bar (223px) + image height (144px) to center the text below image
       },
       maxHeight: {
-        screen: ['100vh', '100dvh'],
-        page: ["calc(100vh - 76px)", "calc(100dvh - 76px)"],
-        pageImageOffset: ["calc(100vh - 296px)", "calc(100dvh - 296px)"] //double nav bar (223px) + image height (144px) to center the text below image
+        screen: ['100vh', '100svh'],
+        page: ["calc(100vh - 76px)", "calc(100svh - 76px)"],
+        pageImageOffset: ["calc(100vh - 296px)", "calc(100svh - 296px)"] //double nav bar (223px) + image height (144px) to center the text below image
       },
       minHeight: {
-        screen: ['100vh', '100dvh'],
-        page: ["calc(100vh - 76px)", "calc(100dvh - 76px)"],
-        pageImageOffset: ["calc(100vh - 296px)", "calc(100dvh - 296px)"] //double nav bar (223px) + image height (144px) to center the text below image
+        screen: ['100vh', '100svh'],
+        page: ["calc(100vh - 76px)", "calc(100svh - 76px)"],
+        pageImageOffset: ["calc(100vh - 296px)", "calc(100svh - 296px)"] //double nav bar (223px) + image height (144px) to center the text below image
       },
       pointerEvents: ['hover', 'no-touch'],
       scale: {

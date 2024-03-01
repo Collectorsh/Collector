@@ -5,8 +5,8 @@ import {
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { LedgerWalletAdapter } from "@solana/wallet-adapter-ledger";
 import { SolflareWalletAdapter } from "@solana/wallet-adapter-solflare";
-import { GlowWalletAdapter } from "@solana/wallet-adapter-glow";
 import { useCallback, useMemo } from "react";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 
 export const WalletContextProvider = ({ children }) => {
   // Can be set to 'devnet', 'testnet', or 'mainnet-beta'
@@ -23,9 +23,9 @@ export const WalletContextProvider = ({ children }) => {
   // phantom and backpack and included by default
   const wallets = useMemo(
     () => [
-      new LedgerWalletAdapter(),
-      // new GlowWalletAdapter(),
-      // new SolflareWalletAdapter({ network }),
+      // new LedgerWalletAdapter(),
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter({ network }),
     ],
     []
   );

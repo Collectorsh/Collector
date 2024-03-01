@@ -24,6 +24,7 @@ import { UserTokensProvider } from "../contexts/userTokens";
 import { VideoFallbackProvider } from "../contexts/videoFallback";
 import { RpcHealthProvider } from "../contexts/RpcHealth";
 import { HighlightInit } from '@highlight-run/next/client'
+import { useEffect } from "react";
 
 
 // const client = new ApolloClient({
@@ -33,6 +34,24 @@ import { HighlightInit } from '@highlight-run/next/client'
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
+
+  useEffect(() => {
+    const setVhVariable = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${ vh }px`);
+    };
+
+    setVhVariable();
+    window.addEventListener('resize', setVhVariable);
+    window.addEventListener('orientationchange', setVhVariable);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', setVhVariable);
+      window.removeEventListener('orientationchange', setVhVariable);
+    };
+  }, []);
+
   return (
     <>
       <div>

@@ -235,7 +235,7 @@ function ProfilePage({ curator }) {
           text="Edit Banner"
           icon={<Icon.Image size={20} strokeWidth={2.5} />}
         >
-          <div className="w-full pb-[50%] md:pb-[33%] relative 2xl:rounded-b-2xl shadow-md overflow-hidden">
+          <div className="w-full pb-[33%] relative 2xl:rounded-b-2xl shadow-md overflow-hidden">
             {banner ? (
               <CloudinaryImage
                 className={clsx(
@@ -267,7 +267,7 @@ function ProfilePage({ curator }) {
           className="absolute -bottom-12 left-6 lg:left-16 group/pfp rounded-full"
         >
           <EditWrapper
-            isOwner={pfp && useOwnerView}
+            isOwner={useOwnerView}
             onEdit={() => setEditPfpOpen(true)}
             groupHoverClass="group-hover/pfp:opacity-100"
             buttonClassName="palette3 hoverPalette3 border-2 p-1 border-neutral-900 dark:border-neutral-100"
@@ -280,7 +280,7 @@ function ProfilePage({ curator }) {
             {pfp ? (
               <CloudinaryImage
                 className={clsx(
-                  "w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full overflow-hidden palette3 borderPalette0 border-4 ",
+                  "w-20 h-20 md:w-32 md:h-32 object-cover rounded-full overflow-hidden palette3 borderPalette0 border-4 ",
                   !pfpLoaded && "animate-pulse"
                 )}
                 id={pfpImgId}
@@ -289,8 +289,8 @@ function ProfilePage({ curator }) {
                 width={500}
               />
             ) : (
-                <div className="flex justify-center items-center w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full palette3 borderPalette0 border-4">
-                  {useOwnerView ? (
+                <div className="w-20 h-20 md:w-32 md:h-32 object-cover rounded-full palette3 borderPalette0 border-4 relative">
+                  {/* {useOwnerView ? (
                     <MainButton
                       onClick={() => setEditPfpOpen(true)}
                       className={clsx("flex items-center justify-center gap-2 absolute left-1/2 top-1/2 -translate-x-[50%] -translate-y-[50%] w-max")}
@@ -298,9 +298,9 @@ function ProfilePage({ curator }) {
                       Add Pfp
                       <Icon.Plus strokeWidth={2.5} />
                     </MainButton>
-                  ) : (
-                    <p className="collector text-8xl font-bold mb-5">c</p> 
-                  )}
+                  ) : ( */}
+                      <p className="collector text-5xl md:text-7xl font-bold absolute left-1/2 top-1/2 -translate-x-[50%] -translate-y-[60%]">c</p> 
+                  {/* )} */}
               </div>
             )}
           </EditWrapper>

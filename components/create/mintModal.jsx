@@ -305,12 +305,12 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
   const secondaryButton = useMemo(() => { 
     switch (stage) {
       case MINT_STAGE.SUCCESS: return (
-        <MainButton onClick={handleReset} size="lg" className="w-[11.5rem]">
+        <MainButton onClick={handleReset} size="lg" className="w-[11.75rem]">
           Create Another
         </MainButton>
       )
       default: return (
-        <MainButton onClick={() => handleClose(true)}  size="lg" className="w-[7.63rem]">
+        <MainButton onClick={() => handleClose(true)}  size="lg" className="w-[7.66rem]">
           Cancel
         </MainButton>
       )
@@ -320,26 +320,26 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
   const actionButton = useMemo(() => {
     switch (stage) { 
       case MINT_STAGE.INIT: return (
-        <MainButton onClick={onMint} solid size="lg" className="w-[7.63rem]">
+        <MainButton onClick={onMint} solid size="lg" className="w-[7.66rem]">
           Confirm
         </MainButton>
       )
       case MINT_STAGE.SUCCESS: return (
         <Link href={`/nft/${ mintedAddress}`} passHref>
-          <MainButton solid size="lg" className="w-[11.5rem]">
+          <MainButton solid size="lg" className="w-[11.75rem]">
             Detail Page
           </MainButton>
         </Link>
       )
       case MINT_STAGE.ERROR: return (
-        <MainButton onClick={onMint} solid size="lg" className="w-[7.63rem]">
+        <MainButton onClick={onMint} solid size="lg" className="w-[7.66rem]">
           Retry
         </MainButton>
       )
       default: return (
-        <MainButton solid disabled size="lg" className="w-[7.63rem]">
+        <MainButton solid disabled size="lg" className="w-[7.66rem]">
           <span className="inline-block translate-y-0.5">
-            <Oval color="#FFF" secondaryColor="#666" height={17} width={17} />
+            <Oval color="#FFF" secondaryColor="#666" height={17} width={17} strokeWidth={2.5}/>
           </span>
         </MainButton>
       )
@@ -358,7 +358,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         {content}
       </div>
     
-      <div className="w-full grid grid-cols-2 gap-4">
+      <div className="w-full flex flex-wrap justify-center gap-4 pb-4 md:pb-0">
         <div className="justify-self-end">
           {secondaryButton}
         </div>

@@ -47,7 +47,9 @@ const NftTypeInput = ({ maxSupply, setMaxSupply, setError, setIsMutable }) => {
                 {nftType.display} 
                 <Icon.ChevronDown size={20} strokeWidth={2.5} className={clsx("duration-300", open && "rotate-180")} />
               </Listbox.Button>
+          
               <Transition
+                className="relative"
                 enter="transition duration-100 ease-out"
                 enterFrom="transform scale-95 opacity-0"
                 enterTo="transform scale-100 opacity-100"
@@ -57,7 +59,7 @@ const NftTypeInput = ({ maxSupply, setMaxSupply, setError, setIsMutable }) => {
               >
                 <Listbox.Options className="absolute top-2 left-0 w-full palette2 p-2 rounded shadow ">
                   {types.map((type) => (
-                    <Listbox.Option key={type.type} value={type}>
+                    <Listbox.Option key={type.type} value={type} static>
                       {({ active, selected }) => (
                         <li
                           className={clsx(
@@ -73,6 +75,7 @@ const NftTypeInput = ({ maxSupply, setMaxSupply, setError, setIsMutable }) => {
                   ))}
                 </Listbox.Options>
               </Transition>
+             
             </>
           )}
         </Listbox>

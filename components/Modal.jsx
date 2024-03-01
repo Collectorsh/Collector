@@ -52,7 +52,7 @@ export default function Modal({
               <button onClick={onClose} className={clsx("palette3 hoverPalette3 rounded-full p-1 z-10", closeButtonPlacement, closeDisabled && "hidden")}>
                 <Icon.X size={24} strokeWidth={2.5} />
               </button>
-              {title ? < Dialog.Title className="text-center font-bold text-3xl pt-2 pb-4">{title}</Dialog.Title> : null}
+              {title ? < Dialog.Title className="text-center font-bold text-3xl px-7 pt-2 pb-4">{title}</Dialog.Title> : null}
             
               {children}
             </Dialog.Panel>

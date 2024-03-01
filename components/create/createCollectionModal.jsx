@@ -110,7 +110,7 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
     switch (stage) {
       case MINT_STAGE.INIT: return (
         <div className="flex flex-col gap-0">
-          {/* <p className="text-center font-bold text-lg mb-2">Collection Image</p> */}
+          
           <div className="relative mx-auto w-fit">
             <p className="font-bold bg-neutral-300 dark:bg-neutral-700 h-5">Collection Image</p>
             <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1]" />

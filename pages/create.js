@@ -108,10 +108,19 @@ export default function MintPage() {
   const categoryDisplay = category === CATEGORIES.VR ? "3D Model" : category
   const isEditions = maxSupply > 1
 
+  const permitted = user?.subscription_level == "pro"
+
   useEffect(() => {
-    if (!user) return
-    if (!user.curator_approved && user.subscription_level !== "pro") router.replace("/");
-  }, [user, router])
+    if (!user) {
+      setCreators([])
+      return
+    } 
+    if (permitted) {
+      setError(prev => ({ ...prev, "permission": null }))
+    } else {
+      setError(prev => ({ ...prev, "permission": "You must be have an approved account to mint" }))
+    }
+  }, [user, permitted])
 
   useEffect(() => {
     if (!wallet.publicKey) setError(prev => ({ ...prev, "Primary Creator": "Error Connecting Wallet" }))
@@ -127,7 +136,7 @@ export default function MintPage() {
       verified: true,
       share: 100,
     }])
-  }, [wallet.publicKey, creators])
+  }, [wallet.publicKey, creators, user?.username])
 
   useEffect(() => {
     if (!wallet.publicKey) return
@@ -190,7 +199,6 @@ export default function MintPage() {
 
   return (
     <>
-      <CheckLoggedIn />
       <MainNavigation />
       <Toaster />
       <MintModal
@@ -212,7 +220,7 @@ export default function MintPage() {
           externalUrl
         }}
       />
-      <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
+      <div className="relative w-full max-w-screen-lg mx-auto px-4 2xl:px-8 py-12">
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Mint</h2>
          
@@ -327,7 +335,7 @@ export default function MintPage() {
           <div className="h-10">
             {(errors.filter(e => !nonDisplayErrors.includes(e[1]))
               .map((e, i) => {
-              return <p key={e[0]} className="text-red-500 text-sm my-2 ml-2">{e[1]}</p>
+              return <p key={e[0]} className="text-amber-500 text-sm my-2 ml-2">{e[1]}</p>
             }))}
           </div>
         </div>

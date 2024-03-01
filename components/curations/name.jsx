@@ -16,7 +16,7 @@ const CurationName = ({ name, displayPublishedEdit, setEditNameOpen }) => {
         text="Edit Name"
         icon={<Icon.Edit size={20} strokeWidth={2.5} />}
       >
-        <h1 className="font-bold text-5xl text-center w-full break-words">{name.replaceAll("_", " ")}</h1>
+        <h1 className="font-bold text-center w-full text-4xl md:text-5xl overflow-y-hidden overflow-x-auto">{name.replaceAll("_", " ")}</h1>
       </EditWrapper>
     </div>
   )

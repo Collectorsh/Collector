@@ -12,9 +12,9 @@
     @apply dark:bg-neutral-950 dark:text-neutral-100;
   }
 
-  /* :root {
+  :root {
     --vh: 1vh
-  } */
+  }
 }
 
 @layer components {

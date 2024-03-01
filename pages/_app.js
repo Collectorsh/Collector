@@ -35,22 +35,22 @@ import { useEffect } from "react";
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
 
-  useEffect(() => {
-    const setVhVariable = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${ vh }px`);
-    };
+  // useEffect(() => {
+  //   const setVhVariable = () => {
+  //     const vh = window.innerHeight * 0.01;
+  //     document.documentElement.style.setProperty('--vh', `${ vh }px`);
+  //   };
 
-    setVhVariable();
-    window.addEventListener('resize', setVhVariable);
-    window.addEventListener('orientationchange', setVhVariable);
+  //   setVhVariable();
+  //   window.addEventListener('resize', setVhVariable);
+  //   window.addEventListener('orientationchange', setVhVariable);
 
-    // Cleanup
-    return () => {
-      window.removeEventListener('resize', setVhVariable);
-      window.removeEventListener('orientationchange', setVhVariable);
-    };
-  }, []);
+  //   // Cleanup
+  //   return () => {
+  //     window.removeEventListener('resize', setVhVariable);
+  //     window.removeEventListener('orientationchange', setVhVariable);
+  //   };
+  // }, []);
 
   return (
     <>

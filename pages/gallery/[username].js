@@ -466,7 +466,7 @@ function ProfilePage({ curator }) {
       }
 
       <div
-        className={clsx('fixed bottom-0 right-0 -rotate-45 h-10 w-10', !isOwner && "hidden")}
+        className={clsx('z-10 fixed bottom-0 right-0 -rotate-45 h-10 w-10', !isOwner && "hidden")}
       >
         <button
           onClick={toggleOwnerView}

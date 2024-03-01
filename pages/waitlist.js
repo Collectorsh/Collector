@@ -262,7 +262,7 @@ export default function WaitlistPage() {
         <div className={clsx(
           "relative flex flex-col justify-center items-center palette1",
           "h-pageImageOffset",
-          usingForm ? "min-h-[800px]" : "min-h-[425px]"
+          usingForm ? "min-h-[800px]" : "min-h-[500px]"
         )} >
           
           <div className="opacity-95 ">

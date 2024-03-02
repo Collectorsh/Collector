@@ -15,10 +15,10 @@ const WalletButton = () => {
 
   return (
     <div>
-      <div className="hidden md:block">
-        < WalletMultiButton  />
+      < WalletMultiButton  />
+      {/* <div className="hidden md:block">
       </div>
-      <MobileAppMenu />
+      <MobileAppMenu /> */}
     </div>
   )
 }
@@ -41,7 +41,6 @@ const MobileAppMenu = () => {
     <Menu as="div" className="mr-4 relative md:hidden">
       {({ open }) => (
         <>
-
           <Menu.Button className="flex rounded-md px-3 py-1 border-0 ring-0 outline-none hoverPalette1 ">
             <span className="sr-only">Open Mobile Wallet Apps menu</span>
             <p className="cursor-pointer inline-flex items-center justify-center gap-1 ">

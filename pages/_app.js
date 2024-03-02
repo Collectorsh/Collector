@@ -62,7 +62,7 @@ export default function MyApp({ Component, pageProps }) {
           <title>Collector</title>
           <meta name="author" content="Collector" />
           <meta name="keywords" content="Collect, Collector.sh, Collector, Curate, Discover, Art, Beautiful" />
-          <meta key="view" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+          <meta key="view" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
           <link key="icon" rel="icon" href="/favicon.ico" />
           <meta name="twitter:site" content="@collector_sh" />

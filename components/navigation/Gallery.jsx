@@ -35,6 +35,7 @@ export default function Gallery() {
             </Menu.Button>
            
             <Transition
+           
               as={Fragment}
               enter="transition ease-out duration-100"
               enterFrom="transform opacity-0 scale-95"

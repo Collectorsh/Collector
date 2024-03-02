@@ -11,16 +11,25 @@ const WalletMultiButton = dynamic(
   { ssr: false }
 );
 
-const WalletButton = () => {
-
+const WalletButton = ({className}) => {
+  const { setVisible } = useWalletModal();
   return (
-    <div>
-      < WalletMultiButton  />
-      {/* <div className="hidden md:block">
-      </div>
-      <MobileAppMenu /> */}
-    </div>
+    <button
+      className={className}
+      onClick={() => setVisible(true)}
+    >
+      Select Wallet
+    </button>
   )
+  // return (
+  //   <div>
+      
+  //     < WalletMultiButton  />
+  //     {/* <div className="hidden md:block">
+  //     </div>
+  //     <MobileAppMenu /> */}
+  //   </div>
+  // )
 }
 
 export default WalletButton

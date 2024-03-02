@@ -84,7 +84,7 @@ export default function MainNavigation() {
               </div>
               <div className="hidden md:flex items-center justify-end w-full">
                 <Link href="/waitlist">
-                  <a className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1">
+                  <a className="mr-4 font-bold rounded-md px-3 py-1 hoverPalette1">
                     Waitlist
                   </a>
                 </Link>
@@ -106,11 +106,9 @@ export default function MainNavigation() {
             
                 {user
                   ? <Gallery />//<Profile />
-                  : (
-                    <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-neutral-900 dark:text-neutral-100">
-                      <WalletButton /> 
-                    </div>
-                    )
+                  : <WalletButton className="font-bold rounded-md px-3 py-1 hoverPalette1 mr-4"/> 
+                 
+                    
                 }
                 <DarkMode />
               </div>
@@ -202,7 +200,7 @@ export default function MainNavigation() {
                             }
                             
                           </>)
-                          : <WalletButton />
+                          : <WalletButton className="pl-3 text-left"/>
                         }
                       </div>
                       

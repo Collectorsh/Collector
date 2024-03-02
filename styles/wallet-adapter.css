@@ -4,7 +4,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   font-weight: 600;
   height: 48px;
   padding: 0 12px;
@@ -13,8 +13,6 @@
 .wallet-adapter-button:hover {
   background-color: #1a1f2e;
 }
-
-
 
 .wallet-adapter-button-trigger {
   @apply h-fit bg-none text-neutral-900 dark:text-neutral-100 text-base font-bold hover:bg-neutral-200 hover:dark:bg-neutral-800 rounded-md px-3 py-1;
@@ -26,13 +24,9 @@
   @apply bg-none;
   cursor: not-allowed;
 }
-
-
 .wallet-adapter-button:not([disabled]):focus-visible {
   outline-color: white;
 }
-
-
 
 .wallet-adapter-button-end-icon,
 .wallet-adapter-button-start-icon,

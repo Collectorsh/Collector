@@ -65,10 +65,10 @@ const MobileAppMenu = () => {
             leaveTo="transform opacity-0 scale-95"
           >
             <Menu.Items className="palette2 origin-top-left absolute -left-0 mt-2 pt-2 w-fit overflow-hidden rounded-md shadow-md outline-none text-left">
-              <div className="px-2">    
+              <div className="p-2 pt-0">    
                 <Menu.Item>
                   <Link href={phantomLink}>
-                    <a className="block px-2 hoverPalette2 rounded-md">
+                    <a className="block p-2 hoverPalette2 rounded-md">
                       Open in Phantom App
                     </a>
                   </Link>
@@ -76,13 +76,13 @@ const MobileAppMenu = () => {
 
                 <Menu.Item>
                   <Link href={solflareLink}>
-                    <a className="block px-2 hoverPalette2 rounded-md">
+                    <a className="block p-2 hoverPalette2 rounded-md">
                       Open in Solflare App
                     </a>
                   </Link>
                 </Menu.Item>
 
-                <hr className="mt-2 borderPalette3" />
+                <hr className="my-2 borderPalette3" />
 
                 <Menu.Item>
                   <button

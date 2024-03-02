@@ -15,7 +15,7 @@ export default function Modal({
 }) {
   return (
     <Transition show={isOpen} as={Fragment}>
-      <Dialog onClose={onClose} className="z-[1001] relative w-screen h-modal">
+      <Dialog onClose={onClose} className="z-[1001] relative w-screen h-screen">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -28,7 +28,7 @@ export default function Modal({
           <div className="fixed inset-0 bg-black/50 backdrop-blur w-full h-full" />
         </Transition.Child>
 
-        <div className="p-2 fixed inset-0 w-screen h-modal flex justify-center items-center">
+        <div className="p-2 fixed inset-0 w-screen h-screen flex justify-center items-center">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

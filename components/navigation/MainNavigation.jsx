@@ -160,12 +160,12 @@ export default function MainNavigation() {
                       <div className="flex flex-col gap-2 p-4 text-xl">
                       
                         <Link href="/" passHref>
-                          <p className="">Home</p>
+                          <p className="pl-3">Home</p>
                         </Link>
                         <hr className="borderPalette3" />
 
                         <Link href="/waitlist" passHref>
-                          <p className="">Waitlist</p>
+                          <p className="pl-3">Waitlist</p>
                         </Link>
                         <hr className="borderPalette3"/>
 
@@ -180,7 +180,7 @@ export default function MainNavigation() {
                             {user.subscription_level === "pro"
                               ? (<>
                                 <Link href={`/gallery/${ user.username }`} passHref>
-                                  <p className="">My Gallery</p>
+                                  <p className="pl-3">My Gallery</p>
                                 </Link>
                                 <hr className="borderPalette3" />
                               </>)
@@ -190,11 +190,11 @@ export default function MainNavigation() {
                             {isCuratorApproved
                               ? (<>
                                 <Link href={`/create`} passHref>
-                                  <p className="">Mint</p>
+                                  <p className="pl-3">Mint</p>
                                 </Link>
                                 <hr className="borderPalette3" />
                                 <Link href={`/submissions`} passHref>
-                                  <p className="">Submit</p>
+                                  <p className="pl-3">Submit</p>
                                 </Link>
                                 <hr className="borderPalette3" />
                               </>)

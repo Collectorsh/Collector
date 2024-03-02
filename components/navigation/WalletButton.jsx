@@ -29,11 +29,11 @@ const MobileAppMenu = () => {
   const { setVisible } = useWalletModal();
 
   const phantomLink = typeof window !== "undefined"
-    ? `https://phantom.app/ul/browse/${ window.location.href }?ref=${ window.location.href }`
+    ? `https://phantom.app/ul/browse/?ref=${ window.location.href }&url=${ window.location.href }`
     : "https://phantom.app/ul/browse/";
   
   const solflareLink = typeof window !== "undefined"
-    ? `https://solflare.com/ul/browse/${ window.location.href }?ref=${ window.location.href }`
+    ? `https://solflare.com/ul/browse/?ref=${ window.location.href }&url=${ window.location.href }`
     : "https://solflare.com/ul/browse/";
   
 

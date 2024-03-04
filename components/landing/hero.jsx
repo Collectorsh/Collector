@@ -42,7 +42,7 @@ const LandingHero = () => {
         
         {/* 224 is double to size of the nav bar (76px) + 1/2 the image height 72 */}
         <div
-          className="min-h-[420px] h-pageImageOffset flex flex-col justify-center items-center gap-12 md:gap-20"
+          className="min-h-[420px] h-pageImageOffset flex flex-col justify-center items-center gap-12 md:gap-16"
         > 
           <div className="">
             <div className="opacity-95 relative">

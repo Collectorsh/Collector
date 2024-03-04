@@ -4,8 +4,8 @@ import { forwardRef } from "react"
 const MainButton = forwardRef(({ children, solid = false, className, disabled, noPadding, standardWidth, size, ...props }, ref) => {
 
   const bgClass = solid
-    ? "bg-neutral-900 dark:bg-neutral-100 text-neutral-100 dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-300"
-    : "bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800"
+    ? "bg-neutral-900 dark:bg-neutral-100 text-neutral-100 dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-300 border-neutral-900 dark:border-neutral-100"
+    : "bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 border-neutral-500 dark:border-neutral-400"
 
   const disabledClass = solid
   ? "disabled:bg-neutral-900 disabled:dark:bg-neutral-100"
@@ -14,10 +14,14 @@ const MainButton = forwardRef(({ children, solid = false, className, disabled, n
   const sizeClass = () => {
     if (noPadding) return ""
     switch (size) {
-      case "xl": return "py-3 px-8 text-xl rounded-lg"
-      case "lg": return "py-1.5 px-6 text-lg rounded-lg"
+      // case "xl": return "py-3 px-8 text-xl rounded-lg"
+      // case "lg": return "py-1.5 px-6 text-lg rounded-lg"
+      // case "md":
+      // default: return "py-1 px-4 text-base rounded-md"
+      case "xl": return "py-3.5 px-8 text-xl rounded-lg leading-none"
+      case "lg": return "py-2 px-5 text-lg rounded-lg leading-none"
       case "md":
-      default: return "py-1 px-4 text-base rounded-md"
+      default: return "py-2 px-4 text-base rounded-md leading-none"
     }
   }
   
@@ -25,7 +29,7 @@ const MainButton = forwardRef(({ children, solid = false, className, disabled, n
     <button
       ref={ref}
       disabled={disabled}
-      className={clsx("border-2 border-neutral-900 dark:border-neutral-100",
+      className={clsx("border-2 ",
         " hover:border-neutral-700 dark:hover:border-neutral-300",
         bgClass,
         "disabled:border-neutral-900 dark:disabled:border-neutral-100",

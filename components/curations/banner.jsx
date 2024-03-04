@@ -22,10 +22,10 @@ const CurationBanner = ({ setEditBannerOpen, displayDraftEdit, banner, useDraftC
       <EditWrapper
         isOwner={banner && displayDraftEdit}
         onEdit={() => setEditBannerOpen(true)}
-        placement="bottom-4 right-9 lg:right-[76px] 2xl:bottom-6 2xl:right-[44px]"
-        groupHoverClass="group-hover/banner:opacity-100"
+        placement="bottom-4 right-[16px] md:right-[32px] lg:right-[80px] 2xl:bottom-6 2xl:right-[48px]"
+        groupHoverClass="group-hover/banner:opacity-100 group-hover/banner:bg-neutral-200 dark:group-hover/banner:bg-neutral-800 group-hover/banner:border-neutral-700 dark:group-hover/banner:border-neutral-300" 
         text="Edit Banner"
-        icon={<Icon.Image size={20} strokeWidth={2.5} />}
+        icon={<Icon.Image size={23} strokeWidth={2.5} />}
       >
       <div className="w-full pb-[33%] relative 2xl:rounded-b-2xl shadow-md overflow-hidden">
           {banner ? (
@@ -33,7 +33,6 @@ const CurationBanner = ({ setEditBannerOpen, displayDraftEdit, banner, useDraftC
               className={clsx(
                 "absolute inset-0 w-full h-full object-cover ",
                 !bannerLoaded && "animate-pulse",
-                
               )}
               id={bannerImgId}
               noLazyLoad
@@ -44,7 +43,7 @@ const CurationBanner = ({ setEditBannerOpen, displayDraftEdit, banner, useDraftC
             <div className={clsx(
               "absolute inset-0 w-full h-full flex justify-center items-center bg-neutral-200 dark:bg-neutral-800",
             )}>
-                <MainButton
+              <MainButton
                 size="lg"
                 onClick={() => setEditBannerOpen(true)}
                 className={clsx("flex items-center gap-2", !displayDraftEdit && "hidden")}

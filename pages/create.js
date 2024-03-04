@@ -318,7 +318,7 @@ export default function MintPage() {
             <div className="mt-4">
               <MainButton
                 solid disabled={isError} className="w-full"
-                size="lg"
+                size="xl"
                 onClick={openMintModal}
               >
                 {mintModalOpen

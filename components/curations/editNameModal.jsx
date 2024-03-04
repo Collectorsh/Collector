@@ -16,6 +16,10 @@ export const useEditName = (name) => {
   const [debounceTimeout, setDebounceTimeout] = useState(null);
 
   useEffect(() => {
+    if (newName === name) {
+      setNameError(null);
+      return;
+    }
     // Clear the previous timeout
     if (debounceTimeout) {
       clearTimeout(debounceTimeout);
@@ -60,7 +64,7 @@ const EditNameModal = ({ name, onSave, isOpen, onClose }) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Edit Curation Name"
+      title="Editing Curation Name"
       widthClass="max-w-screen-sm"
     >
       <p className="textPalette2 text-sm my-2 text-center">Please note: changing the name here will change the published curation&apos;s url.</p>
@@ -71,8 +75,8 @@ const EditNameModal = ({ name, onSave, isOpen, onClose }) => {
         onChange={(e) => setNewName(e.target.value.replaceAll(" ", "_"))}
         value={newName}
       />
-      <p className="text-sm pl-4 text-red-500 h-4">{nameError}</p>
-      <div className="w-full flex justify-end gap-4">
+      <p className="text-sm pl-4 text-red-500 h-5">{nameError}</p>
+      <div className="w-full flex justify-center gap-4">
         <MainButton onClick={onClose} size="lg" standardWidth>
           Cancel
         </MainButton>

@@ -17,7 +17,7 @@ const EditWrapper = ({
   const getPlacement = () => {
     switch (placement) { 
       case "inside-tr": return "top-4 right-4";
-      case "tr": return "-top-2 -right-2";
+      case "tr": return "-top-1 -right-1";//"-top-2 -right-2";
       case "outside-tr": return "-top-6 -right-6";
       case "inside-br": return "bottom-6 right-6";
       default: return placement;
@@ -25,11 +25,12 @@ const EditWrapper = ({
   }
   const editButton = text
     ? (
-    <MainButton
+      <MainButton
+        size="lg"
       disabled={!isOwner}
       onClick={onEdit}
       className={clsx(
-        "flex items-center gap-3 duration-300 opacity-50",
+        "flex items-center gap-3 duration-300",
         "absolute z-[19]", getPlacement(),
         groupHoverClass, buttonClassName)}
     >
@@ -42,17 +43,28 @@ const EditWrapper = ({
         disabled={!isOwner}
         onClick={onEdit}
         className={clsx(
-          "flex items-center gap-3 duration-300 opacity-50 rounded-full",
+          "flex items-center gap-3 duration-300",
           "absolute z-[19]", getPlacement(),
-          groupHoverClass, buttonClassName)}
+          groupHoverClass,
+          buttonClassName || "rounded-lg border-4 palette1 border-neutral-200 dark:border-neutral-700 p-1 origin-top-right",
+        )}
       >
         {icon}
       </button>
     )
   return (
-    <div className={clsx("inline-block relative h-full w-full", className)}>
+    <div
+      className={clsx(
+        "relative h-full w-full",
+         isOwner && "cursor-pointer",
+        className
+      )}
+      onClick={onEdit}
+    >
       {isOwner && editButton}
-      {children}
+      <div className={isOwner && "pointer-events-none"}>
+        {children}
+      </div>
     </div>
   )
 }

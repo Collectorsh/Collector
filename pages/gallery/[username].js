@@ -26,6 +26,7 @@ import * as Icon from 'react-feather'
 
 import dynamic from 'next/dynamic';
 import EditDisplayNameModal from "../../components/curatorProfile/editDisplayNameModal";
+import Tippy from "@tippyjs/react";
 
 const QuillContent = dynamic(() => import('../../components/Quill').then(mod => mod.QuillContent), { ssr: false })
 
@@ -465,18 +466,22 @@ function ProfilePage({ curator }) {
         : null
       }
 
-      <div
-        className={clsx('z-10 fixed bottom-0 right-0 -rotate-45 h-10 w-10', !isOwner && "hidden")}
+      <Tippy
+        content={useOwnerView ? "Switch to public view" : "Switch to edit view"}
       >
-        <button
-          onClick={toggleOwnerView}
-          className='hoverPalette2 borderPalette2 border-2 palette2 absolute left-1/2 -translate-x-[50%] top-0 h-[150%] w-[300%] flex justify-center items-start pt-1'>
-          {useOwnerView
-            ? <Icon.Eye className="rotate-45"/>
-            : <Icon.Edit className="rotate-45" />
-          }
-        </button>
-      </div>
+        <div
+          className={clsx('z-10 fixed bottom-0 left-0 rotate-45 h-10 w-10', !isOwner && "hidden")}
+        >
+          <button
+            onClick={toggleOwnerView}
+            className='hoverPalette2 borderPalette2 border-2 palette2 absolute right-1/2 translate-x-[50%] top-0 h-[150%] w-[300%] flex justify-center items-start pt-1'>
+            {useOwnerView
+              ? <Icon.Eye className="-rotate-45"/>
+              : <Icon.Edit className="-rotate-45" />
+            }
+          </button>
+        </div>
+      </Tippy>
     </>
   );
 }

@@ -170,6 +170,7 @@ function CurationPage({curation}) {
           if (res?.draft_content) setDraftContent(res.draft_content)
         }
         setGlobalEditOpen(true)
+        setIsEditingDraft(true)
       })();
     }
   }, [isOwner, curation?.name, user?.api_key, viewerPasscodeQuery])
@@ -478,20 +479,20 @@ function CurationPage({curation}) {
             <div className='flex gap-4 flex-wrap justify-center md:place-self-start my-6'>
               <MainButton
                 solid
-                className="flex gap-2 items-center justify-center w-[10rem]"
+                className="flex gap-3 items-center justify-center w-[10.22rem]"
                 onClick={addArtModule}
                 disabled={addingModule}
                 size="lg"
               >
-                Add Art <Icon.Plus />
+                Add Art <Icon.Image className="relative left-1"/>
               </MainButton>
               <MainButton
-              className="flex gap-2 items-center justify-center w-[10rem]"
+              className="flex gap-3 items-center justify-center w-[10.22rem]"
                 onClick={addTextModule}
                 disabled={addingModule}
                 size="lg"
               >
-                Add Text <Icon.Plus />
+              Add Text <Icon.Type strokeWidth={2.5} size={20} />
               </MainButton>
             </div>
           ) : null

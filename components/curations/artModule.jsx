@@ -126,16 +126,16 @@ const ArtModule = ({
   return (
     <div
       ref={wrapperRef}
-      className={clsx("relative group w-full group/artRow min-h-[4rem] duration-300",
+      className={clsx("relative w-full group/artModule min-h-[4rem] duration-300",
       )}
     >
       <EditWrapper
         isOwner={isOwner}
         onEdit={() => setEditArtOpen(true)}
         placement="tr"
-        groupHoverClass="group-hover/artRow:opacity-100"
-        text="Edit Art"
-        icon={<Icon.Image size={20} strokeWidth={2.5} />}
+        groupHoverClass="group-hover/artModule:opacity-100 group-hover/artModule:scale-105"
+        // text="Edit Art"
+        icon={<Icon.Image size={26} strokeWidth={2.5} />}
       >
         {itemRows.map((row, i) => {
           return (
@@ -151,10 +151,10 @@ const ArtModule = ({
       </EditWrapper>
       {isOwner && !artModule.tokens.length
         ? (
-          <div className='absolute inset-0 w-full h-full flex justify-center items-center p-2'
+          <div className='absolute inset-0 w-full h-full flex justify-center items-center p-2 cursor-pointer'
             onClick={() => setEditArtOpen(true)}
           >
-            <p>Click the gear icon in the top right to edit this Art Module</p>
+            <p>Click this block to edit your art!</p>
           </div>
         )
         : null

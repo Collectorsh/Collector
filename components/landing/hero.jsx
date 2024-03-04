@@ -42,14 +42,13 @@ const LandingHero = () => {
         
         {/* 224 is double to size of the nav bar (76px) + 1/2 the image height 72 */}
         <div
-          className="min-h-[420px] h-pageImageOffset flex flex-col justify-center items-center gap-16"
+          className="min-h-[420px] h-pageImageOffset flex flex-col justify-center items-center gap-12 md:gap-20"
         > 
-
           <div className="">
             <div className="opacity-95 relative">
               <CloudinaryImage
                 noLoaderScreen
-                className="w-36 h-36 mx-auto dark:invert object-contain"
+                className="w-32 h-32 md:w-36 md:h-36 mx-auto dark:invert object-contain"
                 id={collectorBobId}
                 noLazyLoad
                 width={500}

@@ -223,13 +223,13 @@ export default function WaitlistPage() {
       <p className="textPalette2">Enjoy using Collector!</p>
 
       <div className="flex flex-wrap-reverse gap-x-6 gap-y-3 mt-8 md:mt-16 items-center justify-center">
-        <MainButton
+        {/* <MainButton
           onClick={handleTwitterShare}
           size="lg"
           className="w-[12.25rem]"
         >
           Share to Twitter
-        </MainButton>
+        </MainButton> */}
         <MainButton
           onClick={handleGetStarted}
           size="lg"

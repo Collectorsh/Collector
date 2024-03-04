@@ -42,8 +42,7 @@ const LandingHero = () => {
         
         {/* 224 is double to size of the nav bar (76px) + 1/2 the image height 72 */}
         <div
-       
-          className="min-h-[350px] h-pageImageOffset flex flex-col justify-center items-center gap-8 md:gap-16"
+          className="min-h-[420px] h-pageImageOffset flex flex-col justify-center items-center gap-16"
         > 
 
           <div className="">
@@ -59,6 +58,10 @@ const LandingHero = () => {
             <h1 className="text-center collector text-5xl md:text-7xl font-bold">
               Your Digital Gallery
             </h1>
+            <p className="text-center text-xl md:text-2xl mt-6 hidden md:block">
+              Curate and discover beautiful art
+              {/* Discover, Express, Connect */}
+            </p>
           </div>
           <MainButton
             onClick={getStarted}

@@ -44,7 +44,7 @@ export default function Galleries() {
   const removeElement = (e) => {
     const newDiv = document.createElement("div");
     newDiv.classList.add(
-      "bg-gray-100",
+      "bg-neutral-100",
       "dark:bg-dark3",
       "w-12",
       "h-12",
@@ -102,7 +102,7 @@ export default function Galleries() {
                             />
                           )}
                           {!item.twitter_profile_image && (
-                            <div className="bg-gray-100 dark:bg-dark3" />
+                            <div className="bg-neutral-100 dark:bg-dark3" />
                           )}
                         </div>
                         <div className="font-bold hover:underline ml-16 pt-3 align-middle">

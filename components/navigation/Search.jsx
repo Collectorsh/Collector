@@ -13,7 +13,7 @@ function Search(props) {
     <div className="relative -mt-1">
       <form id="search" onSubmit={doSearch} className="w-full">
         <div className="absolute inset-y-0 left-0 pl-0 flex items-center pointer-events-none">
-          <span className="text-gray-500 dark:text-gray-100 sm:text-sm">
+          <span className="text-neutral-500 dark:text-neutral-100 sm:text-sm">
             <svg
               width="24"
               height="24"
@@ -45,7 +45,7 @@ function Search(props) {
           name="query"
           placeholder="Search by wallet address"
           defaultValue={props.publicKey}
-          className="pl-8 md:w-[450px] lg:w-[380px] xl:w-[550px] pr-4 py-3 block border-none border search w-full outline-none text-gray-800 dark:text-gray-300 placeholder-gray-400 bg-transparent rounded-3xl"
+          className="pl-8 md:w-[450px] lg:w-[380px] xl:w-[550px] pr-4 py-3 block border-none border search w-full outline-none text-neutral-800 dark:text-neutral-300 placeholder-neutral-400 bg-transparent rounded-3xl"
         />
       </form>
     </div>

@@ -41,7 +41,7 @@ const DisplayModules = ({
 
   if (isOwner) return (
     <SortableModulesWrapper
-      className="grid grid-cols-1 gap-4 p-4"
+      className="grid grid-cols-1 gap-4 py-4 md:p-4"
       setModules={setModules}
       modules={modules}
       submittedTokens={submittedTokens}
@@ -70,7 +70,7 @@ const DisplayModules = ({
   )
 
   return (
-    <div className="grid grid-cols-1 gap-4 p-4">
+    <div className="grid grid-cols-1 gap-4 py-4 md:p-4">
       {modules?.map((module, i) => (
         <div key={module.id} className='border-4 border-transparent'>
           <Module

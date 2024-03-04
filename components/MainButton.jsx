@@ -4,12 +4,12 @@ import { forwardRef } from "react"
 const MainButton = forwardRef(({ children, solid = false, className, disabled, noPadding, standardWidth, size, ...props }, ref) => {
 
   const bgClass = solid
-    ? "bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-300"
-    : "bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+    ? "bg-neutral-900 dark:bg-neutral-100 text-neutral-100 dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-300"
+    : "bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800"
 
   const disabledClass = solid
-  ? "disabled:bg-zinc-900 disabled:dark:bg-zinc-100"
-  : "disabled:bg-zinc-100 disabled:dark:bg-zinc-900"
+  ? "disabled:bg-neutral-900 disabled:dark:bg-neutral-100"
+  : "disabled:bg-neutral-100 disabled:dark:bg-neutral-900"
   
   const sizeClass = () => {
     if (noPadding) return ""
@@ -25,10 +25,10 @@ const MainButton = forwardRef(({ children, solid = false, className, disabled, n
     <button
       ref={ref}
       disabled={disabled}
-      className={clsx("border-2 border-zinc-900 dark:border-zinc-100",
-        " hover:border-zinc-700 dark:hover:border-zinc-300",
+      className={clsx("border-2 border-neutral-900 dark:border-neutral-100",
+        " hover:border-neutral-700 dark:hover:border-neutral-300",
         bgClass,
-        "disabled:border-zinc-900 dark:disabled:border-zinc-100",
+        "disabled:border-neutral-900 dark:disabled:border-neutral-100",
         "disabled:opacity-50",
         "duration-300 transition",
         "font-bold",

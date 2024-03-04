@@ -13,10 +13,15 @@ import { twitterHandleRegex } from "../components/curatorProfile/editSocialsModa
 import { createWaitlistSignup } from "../data/waitlist_signups/createSignup";
 import { Oval } from "react-loader-spinner";
 import { error } from "../utils/toast";
+import CloudinaryImage from "../components/CloudinaryImage";
+import { displayName } from "../utils/displayName";
+import SvgCurve from "../components/svgCurve";
+import { useRouter } from "next/router";
+import { collectorBobId } from "../config/settings";
 
 export default function WaitlistPage() {
   const [user] = useContext(UserContext);
-  const wallet = useWallet();
+  const router = useRouter();
   const {setVisible} = useWalletModal()
 
   const [signup, setSignup] = useState(null);
@@ -32,6 +37,7 @@ export default function WaitlistPage() {
     email: null,
     twitterHandle: null,
     moreInfo: null,
+    username: null,
   });
 
   const isApproved = user?.subscription_level === "pro";
@@ -41,14 +47,14 @@ export default function WaitlistPage() {
       setErrors(prev => ({
         ...prev,
         user_id: null,
+        username: null
       }))
 
       if (!email) setEmail(user.email || "")
     }
 
-
     (async () => {
-      if (user?.username) { 
+      if (user?.id) { 
         const signup = await getWaitlistSignupById({ userId: user.id });
         if (signup) setSignup(signup);
       }
@@ -67,7 +73,15 @@ export default function WaitlistPage() {
       valid = false;
     }
 
-    if (!emailRegex.test(email)) {
+    if (!user?.username) { 
+      setErrors(prev => ({
+        ...prev,
+        username: "Please add a username before applying for the waitlist. Go to Settings (gear icon) in the Menu",
+      }))
+      valid = false;
+    }
+
+    if (email && !emailRegex.test(email)) {
       setErrors(prev => ({
         ...prev,
         email: "Please use a valid email",
@@ -98,8 +112,8 @@ export default function WaitlistPage() {
         setSignup(res)
         shootConfetti(2)
       }
-      setSubmitting(false)
     }
+    setSubmitting(false)
   }
 
   const handleEmailChange = (e) => { 
@@ -118,16 +132,24 @@ export default function WaitlistPage() {
     }))
   }
 
+  const handleTwitterShare = () => {
+
+  }
+
+  const handleGetStarted = () => { 
+    router.push(`/gallery/${ user.username }`)
+  }
+
   const form = (
     <>
-      <p className="font-bold text-4xl text-center mb-8">
-        longe username{user?.username ? `${ user?.username }, j` : "J"}oin the waitlist!
+      <p className="font-bold text-4xl md:text-5xl text-center mb-8 px-4 2xl:px-8 ">
+        {user?.username ? `${ displayName(user) }, j` : "J"}oin the waitlist!
       </p>
-      <div className="max-w-xs mx-auto">
+      <div className="max-w-sm w-full mx-auto palette1 px-4 2xl:px-8 pb-8">
     
         <p className="font-bold text-lg ml-4 mt-2">Twitter Handle</p>
-        <div className={clsx("my-1 border-2 rounded-lg w-full px-4 py-2", "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800", "flex gap-1 items-center")}>
-          <p className="textPalette2 text-sm">twitter.com/</p>
+        <div className={clsx("my-1 border-2 rounded-lg w-full px-4 py-2", "bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800", "flex gap-1 items-center")}>
+          <p className="textPalette2 text-sm">@</p>
           <input
             className={clsx("bg-transparent outline-none w-full")}
             onChange={handleHandleChange}
@@ -136,26 +158,25 @@ export default function WaitlistPage() {
           />
         </div >
      
-        <p className="font-bold text-lg ml-4 mt-2">Email</p>
+        <p className="font-bold text-lg ml-4 mt-2">Email <span className="text-sm textPalette2">(optional)</span></p>
         <input
-          className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800")}
+          className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", "bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800")}
           onChange={handleEmailChange}
           value={email}
           placeholder="Email"
         />
      
-        <p className="font-bold text-lg ml-4 mt-2">Additional Info</p>
-        <p className="text-sm textPalette2 ml-4">Anything else we should know about you?</p>
+        <p className="font-bold text-lg ml-4 mt-2">Additional Info <span className="text-sm textPalette2">(optional)</span></p>
         <textarea
-          className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800")}
+          className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", "bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800")}
           onChange={(e) => setMoreInfo(e.target.value)}
           value={moreInfo}
-          placeholder="Additional Info"
+          placeholder="Any additional information you'd like to share?"
         />
-        {Object.values(errors).filter(Boolean).map((error, i) => <p key={i} className="text-red-500">{error}</p>)}
+        {Object.values(errors).filter(Boolean).map((error, i) => <p key={i} className="text-amber-500">{error}</p>)}
         <MainButton
           onClick={handleSubmit}
-          disabled={Object.values(errors).filter(Boolean).length || !email || !twitterHandle || submitting}
+          disabled={submitting}
           className="w-full mt-6 flex justify-center items-center"
           size="lg"
           solid
@@ -170,11 +191,10 @@ export default function WaitlistPage() {
   )
 
   const notLoggedIn = (
-    <div className="text-center">
-      <p className="font-bold text-4xl text-center mb-8">
+    <div className="text-center px-4 2xl:px-8 ">
+      <p className="font-bold text-4xl md:text-5xl text-center mb-8">
         Join the waitlist!
       </p>
-      <p className="textPalette2">Please connect your wallet and sign in to apply</p>
       <MainButton
         onClick={() => setVisible(true)}
         className="m-auto mt-4"
@@ -186,24 +206,43 @@ export default function WaitlistPage() {
   )
 
   const waiting = (
-    <div className="text-center">
-      <p className="font-bold text-4xl text-center mb-8">
-        { user?.username }, you are on the waitlist!
+    <div className="text-center px-4 2xl:px-8 ">
+      <p className="font-bold text-4xl md:text-5xl text-center mb-8">
+        {displayName(user) || "..." }, you are on the waitlist!
       </p>
-      <p className="textPalette2">We will contact you when you get approved!</p>
+      <p className="textPalette2">We will reach out to you in 2-4 weeks!</p>
 
     </div>
   )
 
   const approved = (
-    <div className="text-center">
-      <p className="font-bold text-4xl text-center mb-8">
-        Congrats {user?.username}, you have been approved!
+    <div className="text-center px-4 2xl:px-8 ">
+      <p className="font-bold text-4xl md:text-5xl text-center mb-4 md:mb-8">
+        Congrats {displayName(user) || "..."}, <br /> you have been approved!
       </p>
       <p className="textPalette2">Enjoy using Collector!</p>
+
+      <div className="flex flex-wrap-reverse gap-x-6 gap-y-3 mt-8 md:mt-16 items-center justify-center">
+        <MainButton
+          onClick={handleTwitterShare}
+          size="lg"
+          className="w-[12.25rem]"
+        >
+          Share to Twitter
+        </MainButton>
+        <MainButton
+          onClick={handleGetStarted}
+          size="lg"
+          solid
+          className="w-[12rem]"
+        >
+          Get Started!
+        </MainButton>
+      </div> 
     </div>
   )
 
+  const usingForm = user && !isApproved && !signup;
   const content = () => {
     if (!user) return notLoggedIn;
     if (isApproved) {
@@ -218,9 +257,28 @@ export default function WaitlistPage() {
     <div>
       <MainNavigation />
       <Toaster />
-      <div className="relative max-w-lg mx-auto px-2 2xl:px-8 py-12 pt-12 md:pt-20">
-        {content()}
+      <div className="min-h-page relative">
+
+        <div className={clsx(
+          "relative flex flex-col justify-center items-center palette1",
+          "h-pageImageOffset",
+          usingForm ? "min-h-[750px]" : "min-h-[500px]"
+        )} >
+          
+          <div className="opacity-95 ">
+            <CloudinaryImage
+              className="w-32 h-32 md:w-36 md:h-36 mx-auto dark:invert object-contain"
+              id={collectorBobId}
+              noLazyLoad
+              width={500}
+              noLoaderScreen
+            />
+          </div>
+          {content()}  
+        </div>
+        
       </div>
+
     </div>
   )
 }

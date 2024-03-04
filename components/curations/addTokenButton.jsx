@@ -147,13 +147,14 @@ const AddTokenButton = ({
 
       ref={itemRef}
     >
-      <div className={clsx(!isVisible && "hidden",
+      <div className={clsx(
+        !isVisible && "hidden",
         "duration-700 opacity-0", show  && "opacity-100"
       )}>
         <div className={clsx(
           infoBadge === undefined && "hidden",
           "palette1 ",
-          "rounded-full ring-2 ring-zinc-300 dark:ring-zinc-700",
+          "rounded-full ring-2 ring-neutral-300 dark:ring-neutral-700",
           "min-w-fit w-6 h-6 absolute top-2 left-2 z-10 flex justify-center items-center",
           "text-leading-none font-bold"
         )}>
@@ -182,7 +183,7 @@ const AddTokenButton = ({
 
         {imageError ? (
           <div
-            className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-zinc-200/90 dark:bg-zinc-800/90  
+            className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90  
               flex flex-col justify-center items-center rounded-lg z-[15]
             "
           >
@@ -192,18 +193,18 @@ const AddTokenButton = ({
 
         {alreadyInUse && !token.is_edition ? (
           <div className="absolute inset-0 flex justify-center items-center z-20">
-            <p className=" bg-zinc-200 dark:bg-zinc-800 px-2 rounded-md">Already Being Used</p>
+            <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">Already Being Used</p>
           </div>
         ) : null}
 
         {token.is_edition && !availableEditions?.length ? (
           <div className="absolute inset-0 flex justify-center items-center z-20">
-            <p className=" bg-zinc-200 dark:bg-zinc-800 px-2 rounded-md">No Editions Available</p>
+            <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">No Editions Available</p>
           </div>
         ) : null}
 
         <div
-          className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-zinc-200/90 dark:bg-zinc-800/90 
+          className="absolute text-center inset-0 p-8 w-full h-full overflow-hidden bg-neutral-200/90 dark:bg-neutral-800/90 
               transition-opacity duration-300 opacity-0 hover:opacity-100
               flex flex-col justify-center items-center z-20
             "

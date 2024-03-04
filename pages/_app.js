@@ -1,6 +1,8 @@
-import "../styles/globals.css";
-import "../styles/toast.css";
+// import '@solana/wallet-adapter-react-ui/styles.css';
 import "../styles/wallet-adapter.css";
+import "../styles/toast.css";
+import "../styles/globals.css";
+
 
 import Head from "next/head";
 import { WalletContextProvider } from "/contexts/wallet";
@@ -24,6 +26,7 @@ import { UserTokensProvider } from "../contexts/userTokens";
 import { VideoFallbackProvider } from "../contexts/videoFallback";
 import { RpcHealthProvider } from "../contexts/RpcHealth";
 import { HighlightInit } from '@highlight-run/next/client'
+import { useEffect } from "react";
 
 
 // const client = new ApolloClient({
@@ -33,6 +36,24 @@ import { HighlightInit } from '@highlight-run/next/client'
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
+
+  // useEffect(() => {
+  //   const setVhVariable = () => {
+  //     const vh = window.innerHeight * 0.01;
+  //     document.documentElement.style.setProperty('--vh', `${ vh }px`);
+  //   };
+
+  //   setVhVariable();
+  //   window.addEventListener('resize', setVhVariable);
+  //   window.addEventListener('orientationchange', setVhVariable);
+
+  //   // Cleanup
+  //   return () => {
+  //     window.removeEventListener('resize', setVhVariable);
+  //     window.removeEventListener('orientationchange', setVhVariable);
+  //   };
+  // }, []);
+
   return (
     <>
       <div>
@@ -41,7 +62,7 @@ export default function MyApp({ Component, pageProps }) {
           <title>Collector</title>
           <meta name="author" content="Collector" />
           <meta name="keywords" content="Collect, Collector.sh, Collector, Curate, Discover, Art, Beautiful" />
-          <meta key="view" name="viewport" content="width=device-width, initial-scale=1" />
+          <meta key="view" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
           <link key="icon" rel="icon" href="/favicon.ico" />
           <meta name="twitter:site" content="@collector_sh" />
@@ -57,17 +78,9 @@ export default function MyApp({ Component, pageProps }) {
           <meta key="twitter-description" name="twitter:description" content={metaDescription} />
           <meta key="twitter-image" name="twitter:image" content={metaPreviewImage} />
 
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin="true"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=DM+Serif+Text&display=swap"
-            rel="stylesheet"
-          />
-          <link
+       
+         
+          {/* <link
             rel="stylesheet"
             type="text/css"
             href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
@@ -76,7 +89,7 @@ export default function MyApp({ Component, pageProps }) {
             rel="stylesheet"
             type="text/css"
             href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-          />
+          /> */}
         </Head>      
       </div>
       <HighlightInit
@@ -109,7 +122,7 @@ export default function MyApp({ Component, pageProps }) {
                                     <PlausibleProvider domain="collector.sh">
                                       <CartProvider>
                 
-                                        <div className="min-h-[100vh]">
+                                        <div className="min-h-screen h-fit">
                                           <Component {...pageProps} />
                                         </div>
                                         <Footer />

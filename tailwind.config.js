@@ -1,4 +1,6 @@
-const { fontFamily } = require('tailwindcss/defaultTheme')
+import {fontFamily} from 'tailwindcss/defaultTheme'
+
+
 module.exports = {
   darkMode: "class",
   content: [
@@ -44,9 +46,21 @@ module.exports = {
       animation: {
         enter: 'enter 1s ease-out',
       },
-      height: { screen: '100svh' },
-      maxHeight: { screen: '100svh' },
-      minHeight: { screen: '100svh' },
+      height:{
+        screen: ['100vh', '100svh'],
+        page: ["calc(100vh - 76px)", "calc(100svh - 76px)"],
+        pageImageOffset: ["calc(100vh - 296px)", "calc(100svh - 296px)"] //double nav bar (152px) + image height (144px) to center the text below image
+      },
+      maxHeight: {
+        screen: ['100vh', '100svh'],
+        page: ["calc(100vh - 76px)", "calc(100svh - 76px)"],
+        pageImageOffset: ["calc(100vh - 296px)", "calc(100svh - 296px) "] //double nav bar (152px) + image height (144px) to center the text below image
+      },
+      minHeight: {
+        screen: ['100vh', '100svh'],
+        page: ["calc(100vh - 76px)", "calc(100svh - 76px)"],
+        pageImageOffset: ["calc(100vh - 296px)", "calc(100svh - 296px)"] //double nav bar (152px) + image height (144px) to center the text below image
+      },
       pointerEvents: ['hover', 'no-touch'],
       scale: {
         '-1': '-1',
@@ -55,3 +69,9 @@ module.exports = {
   },
   plugins: [],
 };
+
+// {
+//   screen: ['100vh', '100svh', 'calc(var(--vh, 1svh) * 100)'],
+//     page: ["calc(100vh - 76px)", "calc(100svh - 76px)", 'calc((var(--vh, 1svh) * 100) - 76px)'],
+//       pageImageOffset: ["calc(100vh - 296px)", "calc(100svh - 296px)", 'calc((var(--vh, 1svh) * 100) - 296px)'] //double nav bar (223px) + image height (144px) to center the text below image
+// },

@@ -87,7 +87,7 @@ export default function CollectorListing() {
             </div>
             <div className="mt-16">
               <Link href={`/nft/${metadata.mint}`}>
-                <a className="py-3.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-gray-800 hover:dark:bg-gray-200 font-bold">
+                <a className="py-3.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-neutral-800 hover:dark:bg-neutral-200 font-bold">
                   Buy Now
                 </a>
               </Link>

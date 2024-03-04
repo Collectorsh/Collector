@@ -32,7 +32,7 @@ function Bids() {
       <div className="mt-16">
         <div className="clear-both">
           {user && noBids && (
-            <p className="dark:text-gray-100">
+            <p className="dark:text-neutral-100">
               You don&apos;t currently have any open bids
             </p>
           )}

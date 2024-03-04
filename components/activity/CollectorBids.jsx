@@ -12,7 +12,7 @@ function CollectorBids({ bids }) {
         {bids.map((auction, index) => (
           <div
             key={index}
-            className="grid-item bg-white dark:bg-dark3 rounded-2xl pt-[10px] px-[10px] border border-gray-200 dark:border-dark3"
+            className="grid-item bg-white dark:bg-dark3 rounded-2xl pt-[10px] px-[10px] border border-neutral-200 dark:border-dark3"
           >
             <div className="grid-image-container rounded-lg">
               <Link
@@ -33,7 +33,7 @@ function CollectorBids({ bids }) {
                 <h3 className="text-lg text-black dark:text-white font-medium my-2">
                   {auction.brand_name}
                 </h3>
-                <div className="bg-black rounded-b-2xl px-[10px] py-5 text-gray-50 -mx-[10px]">
+                <div className="bg-black rounded-b-2xl px-[10px] py-5 text-neutral-50 -mx-[10px]">
                   <div className="text-sm">
                     <span className="font-black">
                       ◎{roundToTwo(auction.highest_bid / 1000000000)}

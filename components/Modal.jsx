@@ -25,7 +25,7 @@ export default function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/50 backdrop-blur" />
+          <div className="fixed inset-0 bg-black/50 backdrop-blur w-full h-full" />
         </Transition.Child>
 
         <div className="p-2 fixed inset-0 w-screen h-screen flex justify-center items-center">
@@ -40,7 +40,7 @@ export default function Modal({
           >
             <Dialog.Panel
               className={clsx(
-                padding || "p-2 md:px-14 md:py-6",
+                padding || "p-2 sm:px-14 sm:py-6",
                 "relative  rounded-lg palette3",
                 "shadow-md shadow-black/25",
                 "w-full max-h-[calc(100%-1rem)]",
@@ -52,7 +52,7 @@ export default function Modal({
               <button onClick={onClose} className={clsx("palette3 hoverPalette3 rounded-full p-1 z-10", closeButtonPlacement, closeDisabled && "hidden")}>
                 <Icon.X size={24} strokeWidth={2.5} />
               </button>
-              {title ? < Dialog.Title className="text-center font-bold text-3xl pt-2 pb-4">{title}</Dialog.Title> : null}
+              {title ? < Dialog.Title className="text-center font-bold text-3xl px-7 pt-2 pb-4">{title}</Dialog.Title> : null}
             
               {children}
             </Dialog.Panel>

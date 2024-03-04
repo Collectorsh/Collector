@@ -35,12 +35,12 @@
     "@sentry/react": "^7.88.0",
     "@solana/spl-token": "^0.3.8",
     "@solana/wallet-adapter-backpack": "^0.1.13",
-    "@solana/wallet-adapter-base": "^0.9.19",
+    "@solana/wallet-adapter-base": "0.9.23",
     "@solana/wallet-adapter-glow": "^0.1.17",
     "@solana/wallet-adapter-ledger": "^0.9.24",
     "@solana/wallet-adapter-phantom": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",
-    "@solana/wallet-adapter-react-ui": "^0.9.34",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
     "@solana/wallet-adapter-solflare": "^0.6.24",
     "@solana/wallet-adapter-sollet": "^0.11.16",
     "@solana/wallet-adapter-wallets": "^0.19.7",
@@ -100,7 +100,7 @@
     "sharp": "^0.32.1",
     "swiper": "^9.3.2",
     "swr": "^2.1.5",
-    "three": "^0.158.0",
+    "three": "^0.161.0",
     "tweetnacl": "^1.0.3",
     "uuid": "^8.3.2",
     "websocket": "^1.0.34"
@@ -116,6 +116,6 @@
     "tailwindcss": "^3.0.23"
   },
   "engines": {
-    "node": ">=14.7.0 <17.0.0"
+    "node": ">=18.0.0"
   }
 }

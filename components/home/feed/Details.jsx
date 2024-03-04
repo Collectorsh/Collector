@@ -12,7 +12,7 @@ export default function Details({ item }) {
   const [user] = useContext(UserContext);
 
   return (
-    <div className="relative border border-gray-100 dark:border-dark2 rounded p-4 shadow-lg">
+    <div className="relative border border-neutral-100 dark:border-dark2 rounded p-4 shadow-lg">
       <div className="float-left w-12/12">
         {item.twitter_profile_image && (
           <img
@@ -34,7 +34,7 @@ export default function Details({ item }) {
           )}
         </div>
 
-        <p className="text-xs text-gray-400 dark:text-dark4 mb-2">
+        <p className="text-xs text-neutral-400 dark:text-dark4 mb-2">
           <Moment date={item.time} unix fromNow /> on {item.attributes.source}
         </p>
 
@@ -121,7 +121,7 @@ export default function Details({ item }) {
         )}
       </div>
 
-      <div className="clear-both border-b border-gray-100 dark:border-dark2 mb-4 -mx-4"></div>
+      <div className="clear-both border-b border-neutral-100 dark:border-dark2 mb-4 -mx-4"></div>
 
       <Link
         href={marketplaceLink(
@@ -137,7 +137,7 @@ export default function Details({ item }) {
       </Link>
 
       {user && item.artist && (
-        <div className="text-right border-t border-gray-100 dark:border-dark2 pt-4 pr-3 mt-4 -mx-4">
+        <div className="text-right border-t border-neutral-100 dark:border-dark2 pt-4 pr-3 mt-4 -mx-4">
           {item.artist && <FollowButton follow={item} />}
         </div>
       )}

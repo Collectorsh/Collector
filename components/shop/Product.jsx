@@ -74,7 +74,7 @@ export default function Product({ product, collection, wallet }) {
                 <h1 className="mt-8 sm:mt-0 text-4xl font-extrabold w-full">
                   {product.name}
                 </h1>
-                <h2 className="mt-2 text-lg font-normal w-full whitespace-pre-line pb-6 border-b border-gray-100 dark:border-dark3">
+                <h2 className="mt-2 text-lg font-normal w-full whitespace-pre-line pb-6 border-b border-neutral-100 dark:border-dark3">
                   {product.description}
                 </h2>
                 <p className="mt-10 text-lg">
@@ -91,7 +91,7 @@ export default function Product({ product, collection, wallet }) {
                       value={quantity}
                       id="qty"
                       name="qty"
-                      className="p-2 inline w-[100px] rounded-md border border-gray-300 dark:border-dark3 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                      className="p-2 inline w-[100px] rounded-md border border-neutral-300 dark:border-dark3 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       onChange={(e) => setQuantity(e.target.value)}
                     />
                   </div>
@@ -102,7 +102,7 @@ export default function Product({ product, collection, wallet }) {
                     <select
                       id="size"
                       name="size"
-                      className="p-2 inline w-fit rounded-md border border-gray-300 dark:border-dark3 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                      className="p-2 inline w-fit rounded-md border border-neutral-300 dark:border-dark3 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       onChange={(e) => setSize(e.target.value)}
                     >
                       {eval(product.sizes).map((size, index) => (

@@ -145,7 +145,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
                 className={clsx("flex-shrink-0 overflow-hidden object-cover shadow hover:shadow-md",
                   "absolute inset-0 w-full h-full",
                   isPfp ? "rounded-full " : "rounded-lg",
-                  isSelected && "ring-4 ring-zinc-700 dark:ring-zinc-300",
+                  isSelected && "ring-4 ring-neutral-700 dark:ring-neutral-300",
                 )}
                 useMetadataFallback
                 token={token}
@@ -206,7 +206,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
                 ref={(el) => (tabsRef.current[i] = el)}
                 className={clsx(
                   "px-3 py-0 my-1 capitalize font-bold duration-300",
-                  "hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded"
+                  "hover:bg-neutral-300 dark:hover:bg-neutral-700 rounded"
                 )}
                 onClick={handleClick}
               >
@@ -216,13 +216,13 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
           })}
 
         </div>
-        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700 transform scale-x-[-1]" />
-        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-zinc-300 dark:fill-zinc-700" />
+        <RoundedCurve className="absolute bottom-0 -left-5 w-5 h-2 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1]" />
+        <RoundedCurve className="absolute bottom-0 -right-5 w-5 h-2 fill-neutral-300 dark:fill-neutral-700" />
         <span
           className="absolute rounded-full bottom-0 block h-1 w-full shadow-inner palette2 shadow-black/10 dark:shadow-white/10"
         />
         <span
-          className="absolute rounded-full bottom-0 block h-1 bg-zinc-700 dark:bg-zinc-300  transition-all duration-300"
+          className="absolute rounded-full bottom-0 block h-1 bg-neutral-700 dark:bg-neutral-300  transition-all duration-300"
           style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
         />
       </div>

@@ -8,45 +8,49 @@
   }
 
   html, body {
-    @apply bg-zinc-50 text-neutral-900;
-    @apply dark:bg-zinc-950 dark:text-neutral-100;
+    @apply bg-neutral-50 text-neutral-900;
+    @apply dark:bg-neutral-950 dark:text-neutral-100;
+  }
+
+  :root {
+    --vh: 1vh
   }
 }
 
 @layer components {
   .borderPalette0 {
-    @apply border-zinc-50 dark:border-zinc-950;
+    @apply border-neutral-50 dark:border-neutral-950;
   }
 
   .palette1 {
-    @apply bg-zinc-50 text-neutral-900;
-    @apply dark:bg-zinc-950 dark:text-neutral-100;
+    @apply bg-neutral-50 text-neutral-900;
+    @apply dark:bg-neutral-950 dark:text-neutral-100;
   }
   .hoverPalette1:hover {
-    @apply bg-zinc-200 dark:bg-zinc-800;
+    @apply bg-neutral-200 dark:bg-neutral-800;
   }
   .borderPalette1 {
-    @apply border-zinc-200 dark:border-zinc-800;
+    @apply border-neutral-200 dark:border-neutral-800;
   }
 
   .palette2 {
-    @apply bg-zinc-100 dark:bg-zinc-800;
+    @apply bg-neutral-100 dark:bg-neutral-800;
   }
   .hoverPalette2:hover {
-    @apply bg-zinc-200 dark:bg-zinc-700;
+    @apply bg-neutral-200 dark:bg-neutral-700;
   }
   .borderPalette2 {
-    @apply border-zinc-200 dark:border-zinc-700;
+    @apply border-neutral-200 dark:border-neutral-700;
   }
 
   .palette3 {
-    @apply bg-zinc-200 dark:bg-zinc-900;
+    @apply bg-neutral-200 dark:bg-neutral-900;
   }
   .hoverPalette3:hover {
-    @apply bg-zinc-300 dark:bg-zinc-800;
+    @apply bg-neutral-300 dark:bg-neutral-800;
   }
   .borderPalette3 {
-    @apply border-zinc-300 dark:border-zinc-700;
+    @apply border-neutral-300 dark:border-neutral-700;
   }
 
   .hoverPalette1, .hoverPalette2, .hoverPalette3 {
@@ -64,7 +68,36 @@
     @apply text-neutral-500 dark:text-neutral-500;
   
   }
-
+}
+@layer utilities {
+  /* add ", viewport-fit=cover" to meta view script */
+/* // Older browsers (do now support CSS Environment variables).
+  .h-modal {
+    height: 100vh;
+    height: 100svh;
+  }
+  // Browsers which partially support CSS Environment variables (iOS 11.0-11.2).
+  @supports (padding-top: constant(safe-area-inset-top)) {
+    .h-modal {
+      --safe-area-inset-top: constant(safe-area-inset-top);
+      height: calc(100vh + var(--safe-area-inset-top));
+    }
+    .h-modal {
+      --safe-area-inset-top: constant(safe-area-inset-top);
+      height: calc(100svh + var(--safe-area-inset-top));
+    }
+  }
+  // Browsers which fully support CSS Environment variables (iOS 11.2+).
+  @supports (padding-top: env(safe-area-inset-top)) {
+    .h-modal {
+      --safe-area-inset-top: env(safe-area-inset-top);
+      height: calc(100vh + var(--safe-area-inset-top));
+    }
+    .h-modal {
+      --safe-area-inset-top: env(safe-area-inset-top);
+      height: calc(100svh + var(--safe-area-inset-top));
+    }
+  } */
 }
 
 
@@ -275,7 +308,7 @@ h4 {
 
 .toggle-bg:after {
   content: "";
-  @apply absolute top-0.5 left-0.5 bg-white border border-gray-300 rounded-full h-5 w-5 transition shadow-sm;
+  @apply absolute top-0.5 left-0.5 bg-white border border-neutral-300 rounded-full h-5 w-5 transition shadow-sm;
 }
 input:checked + .toggle-bg:after {
   transform: translateX(100%);
@@ -286,7 +319,7 @@ input:checked + .toggle-bg {
 }
 
 .tippy-box.tippy-box {
-  @apply bg-zinc-200 dark:bg-zinc-700;
+  @apply bg-neutral-200 dark:bg-neutral-700;
   @apply text-neutral-900 dark:text-neutral-100;
   @apply shadow dark:shadow-white/10 text-sm leading-4 px-1 py-0 h-fit;
 }
@@ -341,7 +374,7 @@ input:checked + .toggle-bg {
 }
 
 .react-select__option--is-focused {
-  @apply dark:bg-gray-700;
+  @apply dark:bg-neutral-700;
 }
 
 .slick-prev {
@@ -574,11 +607,11 @@ code {
 
 
 .ql-snow.ql-snow.ql-toolbar .ql-picker .ql-picker-options {
-  @apply bg-zinc-100 dark:bg-zinc-800 rounded shadow border-zinc-300 dark:border-zinc-700;
+  @apply bg-neutral-100 dark:bg-neutral-800 rounded shadow border-neutral-300 dark:border-neutral-700;
 }
 
 .ql-snow.ql-snow .ql-picker.ql-expanded .ql-picker-label {
-  @apply rounded border-zinc-300 dark:border-zinc-700 
+  @apply rounded border-neutral-300 dark:border-neutral-700 
 }
 
 .ql-snow.ql-snow .ql-picker .ql-picker-label {

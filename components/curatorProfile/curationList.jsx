@@ -6,9 +6,6 @@ import SortableCurationPreview from "../curations/sortableCurationPreview";
 import { useMemo } from "react";
 import * as Icon from "react-feather";
 import { defaultCollectorImageId } from "../../config/settings";
-import dynamic from 'next/dynamic';
-
-const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillContent), { ssr: false })
 
 const CurationList = ({ curations, isOwner, asSortable }) => {
   return (
@@ -45,23 +42,18 @@ export const CurationListItem = ({ curation, isOwner }) => {
 
   return (
     <Link href={`/curations/${ name }`} >
-      <a className="w-full duration-300 relative
-       group/curationItem
-      "
+      <a className="w-full duration-300 relative group/curationItem"
       >
-        <PublishedTag isPublished={is_published} isOwner={isOwner} />
-        <div className="relative shadow group-hover/curationItem:shadow-md shadow-black/20 rounded-xl overflow-hidden duration-300 " >
+        <PublishedTag isPublished={is_published} isOwner={isOwner} className="duration-300 group-hover/curationItem:-top-1.5"/>
+        <div className="top-0 group-hover/curationItem:-top-1.5  relative shadow shadow-neutral-500/20 rounded-xl overflow-hidden duration-300 pb-[33%]" >
           <CloudinaryImage
-            className="w-full h-[300px] object-cover "
+            className={clsx("w-full h-full object-cover absolute inset-0", !bannerImgId && "dark:invert")}
             id={bannerImgId || defaultCollectorImageId}
             noLazyLoad
             width={1400}
           />
-          <div className="opacity-0 group-hover/curationItem:opacity-100 duration-300 absolute inset-0 bg-zinc-200/75 dark:bg-zinc-800/75 backdrop-blur-sm p-4 h-full overflow-y-auto cursor-pointer">
-            {description_delta && <QuillContent textDelta={description_delta} />} 
-          </div>
         </div>
-        <h3 className="font-bold collector text-2xl text-center my-2 px-3 w-fit mx-auto rounded-md duration-300 group-hover/curationItem:bg-zinc-200 group-hover/curationItem:dark:bg-zinc-800">
+        <h3 className="font-bold collector text-xl text-center my-2 px-3 w-fit mx-auto rounded-md duration-300 group-hover/curationItem:bg-neutral-200 group-hover/curationItem:dark:bg-neutral-800">
           {name.replaceAll("_", " ")}
         </h3>
         {/* <p className="text-sm textPalette3 text-center mb-1">{curationText}</p> */}
@@ -70,10 +62,10 @@ export const CurationListItem = ({ curation, isOwner }) => {
   )
 } 
 
-export const PublishedTag = ({ isPublished, isOwner }) => { 
+export const PublishedTag = ({ isPublished, isOwner, className }) => { 
   if (!isOwner) return null
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden">
+    <div className={clsx("absolute inset-0 w-full h-full overflow-hidden", className)}>
       <div className={clsx(
         "rounded-md py-0.5 px-4 shadow-md shadow-black/25 dark:shadow-neutral-500/25",
         "absolute top-6 -right-11 z-10 rotate-45 w-[10rem] text-center",

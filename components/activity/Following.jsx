@@ -90,7 +90,7 @@ export default function Following() {
           <div className="flex justify-left">
             <div className="form-check form-check-inline">
               <input
-                className="form-check-input form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                className="form-check-input form-check-input appearance-none rounded-full h-4 w-4 border border-neutral-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                 type="radio"
                 name="inlineRadioOptions"
                 id="inlineRadio1"
@@ -98,7 +98,7 @@ export default function Following() {
                 defaultChecked={source === "following"}
               />
               <label
-                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                className="form-check-label inline-block text-neutral-800 dark:text-whitish"
                 htmlFor="inlineRadio10"
               >
                 Following
@@ -106,7 +106,7 @@ export default function Following() {
             </div>
             <div className="form-check form-check-inline ml-6">
               <input
-                className="form-check-input form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                className="form-check-input form-check-input appearance-none rounded-full h-4 w-4 border border-neutral-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                 type="radio"
                 name="inlineRadioOptions"
                 id="inlineRadio2"
@@ -114,7 +114,7 @@ export default function Following() {
                 defaultChecked={source === "all"}
               />
               <label
-                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                className="form-check-label inline-block text-neutral-800 dark:text-whitish"
                 htmlFor="inlineRadio20"
               >
                 All Auctions
@@ -122,14 +122,14 @@ export default function Following() {
             </div>
           </div>
         </div>
-        <h1 className="font-sans border-t border-b border-gray-200 dark:border-dark3 py-2 mt-8">
+        <h1 className="font-sans border-t border-b border-neutral-200 dark:border-dark3 py-2 mt-8">
           Sort By
         </h1>
         <div className="flex mt-2">
           <div>
             <div className="py-1">
               <input
-                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                className="form-check-input appearance-none rounded-full h-4 w-4 border border-neutral-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
@@ -137,16 +137,16 @@ export default function Following() {
                 defaultChecked={sortBy === "az"}
               />
               <label
-                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                className="form-check-label inline-block text-neutral-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
                 Artist &uarr;{" "}
-                <span className="text-gray-300 dark:text-dark3">[a-z]</span>
+                <span className="text-neutral-300 dark:text-dark3">[a-z]</span>
               </label>
             </div>
             <div className="py-1">
               <input
-                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                className="form-check-input appearance-none rounded-full h-4 w-4 border border-neutral-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
@@ -154,16 +154,16 @@ export default function Following() {
                 defaultChecked={sortBy === "za"}
               />
               <label
-                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                className="form-check-label inline-block text-neutral-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
                 Artist &darr;{" "}
-                <span className="text-gray-300 dark:text-dark3">[z-a]</span>
+                <span className="text-neutral-300 dark:text-dark3">[z-a]</span>
               </label>
             </div>
             <div className="py-1">
               <input
-                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                className="form-check-input appearance-none rounded-full h-4 w-4 border border-neutral-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
@@ -171,16 +171,16 @@ export default function Following() {
                 defaultChecked={sortBy === "lh"}
               />
               <label
-                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                className="form-check-label inline-block text-neutral-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
                 Price &uarr;{" "}
-                <span className="text-gray-300 dark:text-dark3">[lowest]</span>
+                <span className="text-neutral-300 dark:text-dark3">[lowest]</span>
               </label>
             </div>
             <div className="py-1">
               <input
-                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                className="form-check-input appearance-none rounded-full h-4 w-4 border border-neutral-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
@@ -188,16 +188,16 @@ export default function Following() {
                 defaultChecked={sortBy === "hl"}
               />
               <label
-                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                className="form-check-label inline-block text-neutral-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
                 Price &darr;{" "}
-                <span className="text-gray-300 dark:text-dark3">[highest]</span>
+                <span className="text-neutral-300 dark:text-dark3">[highest]</span>
               </label>
             </div>
             <div className="py-1">
               <input
-                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                className="form-check-input appearance-none rounded-full h-4 w-4 border border-neutral-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
@@ -205,16 +205,16 @@ export default function Following() {
                 defaultChecked={sortBy === "endasc"}
               />
               <label
-                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                className="form-check-label inline-block text-neutral-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
                 Ending &uarr;{" "}
-                <span className="text-gray-300 dark:text-dark3">[soonest]</span>
+                <span className="text-neutral-300 dark:text-dark3">[soonest]</span>
               </label>
             </div>
             <div className="py-1">
               <input
-                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                className="form-check-input appearance-none rounded-full h-4 w-4 border border-neutral-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
@@ -222,18 +222,18 @@ export default function Following() {
                 defaultChecked={sortBy === "enddesc"}
               />
               <label
-                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                className="form-check-label inline-block text-neutral-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
                 Ending &darr;{" "}
-                <span className="text-gray-300 dark:text-dark3">
+                <span className="text-neutral-300 dark:text-dark3">
                   [farthest]
                 </span>
               </label>
             </div>
             <div className="py-1">
               <input
-                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                className="form-check-input appearance-none rounded-full h-4 w-4 border border-neutral-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
@@ -241,16 +241,16 @@ export default function Following() {
                 defaultChecked={sortBy === "bidsasc"}
               />
               <label
-                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                className="form-check-label inline-block text-neutral-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
                 Bids &uarr;{" "}
-                <span className="text-gray-300 dark:text-dark3">[least]</span>
+                <span className="text-neutral-300 dark:text-dark3">[least]</span>
               </label>
             </div>
             <div className="py-1">
               <input
-                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                className="form-check-input appearance-none rounded-full h-4 w-4 border border-neutral-300 bg-white checked:bg-greeny checked:border-greeny focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
@@ -258,22 +258,22 @@ export default function Following() {
                 defaultChecked={sortBy === "bidsdesc"}
               />
               <label
-                className="form-check-label inline-block text-gray-800 dark:text-whitish"
+                className="form-check-label inline-block text-neutral-800 dark:text-whitish"
                 htmlFor="flexRadioDefault2"
               >
                 Bids &darr;{" "}
-                <span className="text-gray-300 dark:text-dark3">[most]</span>
+                <span className="text-neutral-300 dark:text-dark3">[most]</span>
               </label>
             </div>
           </div>
         </div>
-        <div className="clear-both my-4 h-[1px] w-full bg-gray-200 dark:bg-dark3"></div>
+        <div className="clear-both my-4 h-[1px] w-full bg-neutral-200 dark:bg-dark3"></div>
       </div>
       <div className="md:col-span-9">
         <div className="mb-12">
           <div className="w-full mb-6">
             {user && noAuctions && (
-              <p className="dark:text-gray-100">
+              <p className="dark:text-neutral-100">
                 There&apos;s currently no auctions
               </p>
             )}

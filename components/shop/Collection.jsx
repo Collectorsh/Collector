@@ -27,7 +27,7 @@ export default function Collection({ collection }) {
             products.map((product, index) => (
               <div
                 key={index}
-                className="mx-auto border-2 p-2 hover:bg-greenlightbg hover:dark:bg-greendarkbg hover:border-greeny hover:dark:border-greeny border-white dark:border-black text-gray-700 dark:text-white hover:dark:text-white mb-6"
+                className="mx-auto border-2 p-2 hover:bg-greenlightbg hover:dark:bg-greendarkbg hover:border-greeny hover:dark:border-greeny border-white dark:border-black text-neutral-700 dark:text-white hover:dark:text-white mb-6"
               >
                 {product.supply === 0 ? (
                   <div className="w-full sm:w-[300px] h-full sm:h-[350px] relative">

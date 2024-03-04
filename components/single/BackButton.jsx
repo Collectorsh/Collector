@@ -6,7 +6,7 @@ export default function BackButton() {
   return (
     <>
       <a
-        className="font-bold hover:text-gray-700 cursor-pointer dark:text-gray-100"
+        className="font-bold hover:text-neutral-700 cursor-pointer dark:text-neutral-100"
         onClick={() => router.back({ scroll: false })}
       >
         <svg

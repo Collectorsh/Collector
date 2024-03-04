@@ -148,20 +148,21 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
       title="Choose your curation type"
       widthClass="max-w-2xl"
     >
-      
-      {creating
-        ? (<div className="flex flex-col justify-center items-center gap-4 h-36">
-          <p className="text-xl font-bold animate-pulse">Building {curationName}...</p>
-          {curationType === "curator" ? <p className="text-center italic">This process includes several on chain transactions and could take a few minutes.</p> : null}
-        </div>)
-        : form
-      }
+      <div className="h-full overflow-y-auto p-1">
+        {creating
+          ? (<div className="flex flex-col justify-center items-center gap-4 h-36">
+            <p className="text-xl font-bold animate-pulse">Building {curationName}...</p>
+            {curationType === "curator" ? <p className="text-center italic">This process includes several on chain transactions and could take a few minutes.</p> : null}
+          </div>)
+          : form
+        }
+      </div>
     
-      <div className="w-full flex justify-center gap-4 mt-4">
-        <MainButton onClick={handleClose} disabled={creating} size="lg" className="w-[12.13rem]">
+      <div className="w-full flex flex-wrap-reverse justify-center gap-4 mt-3">
+        <MainButton onClick={handleClose} disabled={creating} size="lg" className="w-[12.42rem]">
           Cancel
         </MainButton>
-        <MainButton onClick={handleCreate} solid disabled={!curationValid || creating} size="lg" className="w-[12.13rem]">
+        <MainButton onClick={handleCreate} solid disabled={!curationValid || creating} size="lg" className="w-[12.42rem]">
           Create Curation!
         </MainButton>
       </div>
@@ -206,7 +207,7 @@ const CurationTypeButton = ({ type, selected, onChange }) => {
       className={clsx(
         "flex flex-col gap-2 items-start",
         "rounded-lg px-4 py-2",
-        "ring-zinc-300 dark:ring-zinc-700 palette2",
+        "ring-neutral-300 dark:ring-neutral-700 palette2",
         "hover:opacity-100 duration-300",
         selected ? "ring-4" : "opacity-50"
 

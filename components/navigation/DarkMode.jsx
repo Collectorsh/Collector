@@ -44,7 +44,7 @@ const DarkMode = ({withText}) => {
   };
 
   return <div className="inline-flex items-center gap-1 rounded pl-1" onClick={handleClick}>
-    <div className="rounded-md p-1 hoverPalette1">
+    <div className="rounded-md p-1 hoverPalette1 relative 2xl:left-1">
       {renderThemeChanger()}
     </div>
     {withText ? <span className="ml-1">Toggle Dark Mode</span>: null}

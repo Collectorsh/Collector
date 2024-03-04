@@ -186,7 +186,7 @@ const Submissions = ({ }) => {
               "relative shadow hover:shadow-md shadow-black/10 rounded-xl overflow-hidden hover:-translate-y-2 duration-300 block"
             )}>
               <CloudinaryImage
-                className="w-full h-[300px] object-cover"
+                className={clsx("w-full h-[300px] object-cover", !bannerImgId && "dark:invert")}
                 id={bannerImgId || defaultCollectorImageId}
                 noLazyLoad
                 width={1400}

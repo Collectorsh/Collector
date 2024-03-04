@@ -86,13 +86,13 @@ export default function Bonk({ address }) {
   return (
     <>
       {remaining && total && (
-        <p className="bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
+        <p className="bg-neutral-100 dark:bg-dark2 p-2 w-ft font-bold">
           Remaining: {remaining}/{total}
         </p>
       )}
 
       {cost && (
-        <p className="mt-4 bg-gray-100 dark:bg-dark2 p-2 w-ft font-bold">
+        <p className="mt-4 bg-neutral-100 dark:bg-dark2 p-2 w-ft font-bold">
           Price: 4M bonk
         </p>
       )}
@@ -129,7 +129,7 @@ export default function Bonk({ address }) {
                 </>
               ) : (
                 <button
-                  className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-gray-300"
+                  className="bg-greeny px-4 py-2 text-lg font-semibold text-black cursor-pointer rounded-xl disabled:bg-neutral-300"
                   onClick={() => mintNow()}
                   disabled={isMinting}
                 >

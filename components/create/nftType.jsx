@@ -42,12 +42,14 @@ const NftTypeInput = ({ maxSupply, setMaxSupply, setError, setIsMutable }) => {
           {({ open }) => (
             <>
               <Listbox.Button className={clsx("text-current flex gap-1 items-center justify-between",
-                  "w-full px-3.5 py-2 outline-none rounded-md border-2 bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 hoverPalette1"
+                  "w-full px-3.5 py-2 outline-none rounded-md border-2 bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 hoverPalette1"
               )}>
                 {nftType.display} 
                 <Icon.ChevronDown size={20} strokeWidth={2.5} className={clsx("duration-300", open && "rotate-180")} />
               </Listbox.Button>
+          
               <Transition
+                className="relative"
                 enter="transition duration-100 ease-out"
                 enterFrom="transform scale-95 opacity-0"
                 enterTo="transform scale-100 opacity-100"
@@ -57,7 +59,7 @@ const NftTypeInput = ({ maxSupply, setMaxSupply, setError, setIsMutable }) => {
               >
                 <Listbox.Options className="absolute top-2 left-0 w-full palette2 p-2 rounded shadow ">
                   {types.map((type) => (
-                    <Listbox.Option key={type.type} value={type}>
+                    <Listbox.Option key={type.type} value={type} static>
                       {({ active, selected }) => (
                         <li
                           className={clsx(
@@ -73,6 +75,7 @@ const NftTypeInput = ({ maxSupply, setMaxSupply, setError, setIsMutable }) => {
                   ))}
                 </Listbox.Options>
               </Transition>
+             
             </>
           )}
         </Listbox>
@@ -81,7 +84,7 @@ const NftTypeInput = ({ maxSupply, setMaxSupply, setError, setIsMutable }) => {
       {isEditions ? (
         <div>
           <p className="font-bold text-lg mb-1 ml-4">Max Supply</p>
-          <div className="flex px-3.5 py-2 outline-none rounded-md border-2 bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
+          <div className="flex px-3.5 py-2 outline-none rounded-md border-2 bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800">
               <input
                 type="number"
                 min={2}

@@ -13,6 +13,7 @@ import RpcHealthFeedback from "./RpcHeathFeedback";
 
 import * as Icon from 'react-feather'
 import { UserCard } from "./Gallery";
+import CloudinaryImage from "../CloudinaryImage";
 
 export default function MainNavigation() {
   const wallet = useWallet();
@@ -22,7 +23,9 @@ export default function MainNavigation() {
   const [open, setOpen] = useState(false);
 
   const isCuratorApproved = user?.curator_approved || (user?.subscription_level === "pro");
-  
+
+  const isPro = user?.subscription_level === "pro";
+
   function toggleMenu() {
     setOpen(!open);
   }
@@ -32,6 +35,15 @@ export default function MainNavigation() {
       localStorage.removeItem("api_key");
       setUser(null);
     });
+  }
+
+  const getStarted = () => {
+    if (isPro) {
+      if (!user.username) router.push("/settings");
+      else router.push(`/gallery/${ user.username }`);
+    } else {
+      router.push("/waitlist");
+    }
   }
 
   useEffect(() => {
@@ -46,41 +58,57 @@ export default function MainNavigation() {
     <div className="pb-[76px] relative">
       <ConnectWallet />
       <CreateUsernameModal />
-      <nav className="palette1 shadow-black/10 shadow py-4 md:py-2 w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
+      <nav className="palette1 shadow-neutral-500/10 shadow w-full z-20 top-0 h-[76px] fixed px-4 sm:px-8">
         <RpcHealthFeedback />
-        <div className="max-w-screen-2xl 2xl:px-8 mx-auto">
-          <div>
-            <div className="flex">
-              <div className="flex items-center col-span-1">
-                <div className="md:my-3 flex gap-4 items-end ">
-                  <Link href="/">
-                    <a className="collector text-3xl font-bold flex items-center rounded-md px-2 py-0 hoverPalette1">
-                      collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r
-                    </a>
-                  </Link>
-                  <span className="collector tracking-wide pb-[1px]">Beta</span>
-                </div>
+        <div className="max-w-screen-2xl 2xl:px-8 mx-auto h-full">
+       
+            <div className="flex items-center h-full">
+              <div className="">
+               
+                <Link href="/">
+                  <a className="rounded-md px-3 py-1 hoverPalette1 relative 2xl:-left-3 block">
+                    {/*collector text-3xl font-bold flex items-center// collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-neutral-900 dark:bg-neutral-100 inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r */}
+                    <CloudinaryImage
+                      id="global/Collector-logo_zqbljh"
+                      className="w-auto h-7 object-contain dark:invert"
+                      noLazyLoad
+                      width={500}
+                      noLoaderScreen
+                    />
+                  </a>
+              
+                  
+                </Link>
+                {/* <span className="collector tracking-wide pb-[1px]">Beta</span> */}
+                
               </div>
               <div className="hidden md:flex items-center justify-end w-full">
-                {/* <Link href="/waitlist">
-                  <a className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1">
+                <Link href="/waitlist">
+                  <a className="mr-4 font-bold rounded-md px-3 py-1 hoverPalette1">
                     Waitlist
                   </a>
-                </Link> */}
-{/* 
+                </Link>
+                {/* <button
+                  onClick={getStarted}
+                  className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1"
+                >
+                  Get Started!
+                </button> */}
+              
+
+                {/* 
                 <Link href="/about">
                   <a className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1">
                     About
                   </a>
                 </Link> */}
+
             
                 {user
                   ? <Gallery />//<Profile />
-                  : (
-                    <div className="menu mr-8 text-lg cursor-pointer inline font-normal text-gray-900 dark:text-gray-100">
-                      <WalletButton /> 
-                    </div>
-                    )
+                  : <WalletButton className="font-bold rounded-md px-3 py-1 hoverPalette1 mr-4"/> 
+                 
+                    
                 }
                 <DarkMode />
               </div>
@@ -94,7 +122,7 @@ export default function MainNavigation() {
                   <Icon.Menu />
                 </button>
               </div>
-            </div>
+            
           </div>
           <Transition.Root show={open} as={Fragment}>
             <Dialog
@@ -130,14 +158,16 @@ export default function MainNavigation() {
                       <div className="flex flex-col gap-2 p-4 text-xl">
                       
                         <Link href="/" passHref>
-                          <p className="">Home</p>
+                          <p className="pl-3">Home</p>
                         </Link>
                         <hr className="borderPalette3" />
 
-                        {/* <Link href="/waitlist" passHref>
-                          <p className="">Waitlist</p>
+                        <Link href="/waitlist" passHref>
+                          <p className="pl-3">Waitlist</p>
                         </Link>
-                        <hr className="borderPalette3"/> */}
+                        <hr className="borderPalette3"/>
+
+                 
 
                         {/* <Link href="/about" passHref>
                           <p className="">About</p>
@@ -148,7 +178,7 @@ export default function MainNavigation() {
                             {user.subscription_level === "pro"
                               ? (<>
                                 <Link href={`/gallery/${ user.username }`} passHref>
-                                  <p className="">My Gallery</p>
+                                  <p className="pl-3">My Gallery</p>
                                 </Link>
                                 <hr className="borderPalette3" />
                               </>)
@@ -158,11 +188,11 @@ export default function MainNavigation() {
                             {isCuratorApproved
                               ? (<>
                                 <Link href={`/create`} passHref>
-                                  <p className="">Mint</p>
+                                  <p className="pl-3">Mint</p>
                                 </Link>
                                 <hr className="borderPalette3" />
                                 <Link href={`/submissions`} passHref>
-                                  <p className="">Submit</p>
+                                  <p className="pl-3">Submit</p>
                                 </Link>
                                 <hr className="borderPalette3" />
                               </>)
@@ -170,7 +200,7 @@ export default function MainNavigation() {
                             }
                             
                           </>)
-                          : <WalletButton />
+                          : <WalletButton className="pl-3 text-left"/>
                         }
                       </div>
                       

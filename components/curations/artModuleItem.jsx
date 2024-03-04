@@ -181,7 +181,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
           className={clsx(
             'w-fit relative block mx-auto duration-300 overflow-hidden shadow-md rounded-lg',
             "hover:-translate-y-2 active:translate-y-0",
-            "bg-zinc-200 dark:bg-zinc-800",
+            "bg-neutral-200 dark:bg-neutral-800",
             disableLink && "hover:translate-y-0",
           )}
           style={{

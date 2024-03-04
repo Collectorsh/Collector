@@ -257,17 +257,17 @@ export default function Gallery({ tokens, user }) {
                 showAll={showAll}
               />
               <div className="hidden sm:block">
-                <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-2 mb-2">
+                <h2 className="bg-neutral-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mt-2 mb-2">
                   Hidden
                 </h2>
                 <Hidden items={items} />
               </div>
             </div>
             <div className="col-span-1 sm:col-span-9">
-              <h2 className="bg-gray-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2 relative">
+              <h2 className="bg-neutral-100 dark:bg-dark3 w-full uppercase rounded p-2 text-center mb-2 relative">
 
                 {(showProgress) ? (
-                  <div className="absolute w-full h-full bg-gray-100 dark:bg-dark3 rounded top-0 left-0 flex items-center px-4 gap-4">
+                  <div className="absolute w-full h-full bg-neutral-100 dark:bg-dark3 rounded top-0 left-0 flex items-center px-4 gap-4">
                     <p className="flex-shrink-0">Optimizing Images: <span>({completed}/{waiting})</span></p>
                     <div className="border-2 border-black dark:border-white rounded-full w-full h-3 relative" >
                       <div
@@ -284,13 +284,13 @@ export default function Gallery({ tokens, user }) {
                     <input
                       type="checkbox"
                       name="bulkedit"
-                      className="w-6 h-6 border-gray-200 cursor-pointer m-0 align-middle -mt-0.5"
+                      className="w-6 h-6 border-neutral-200 cursor-pointer m-0 align-middle -mt-0.5"
                       style={{ accentColor: "#31f292" }}
                       onClick={() => setBulkEdit(!bulkEdit)}
                     />
                     {bulkEdit ? (
                       <button
-                        className="ml-2 rounded-2xl bg-gray-300 hover:bg-gray-200 dark:bg-dark1 hover:dark:bg-black text-black dark:text-white px-4 py-1.5 -mt-0.5 align-middle text-sm font-bold"
+                        className="ml-2 rounded-2xl bg-neutral-300 hover:bg-neutral-200 dark:bg-dark1 hover:dark:bg-black text-black dark:text-white px-4 py-1.5 -mt-0.5 align-middle text-sm font-bold"
                         onClick={() => hideSelected()}
                       >
                         <span>Hide Selected</span>
@@ -303,7 +303,7 @@ export default function Gallery({ tokens, user }) {
                   </div>
                   <div className="col-span-1 text-center">Visible</div>
                   <div className="col-span-1 text-right">
-                    <span className="rounded-2xl bg-gray-300 dark:bg-black text-white px-4 py-1 -mt-1 align-middle">
+                    <span className="rounded-2xl bg-neutral-300 dark:bg-black text-white px-4 py-1 -mt-1 align-middle">
                       {items.visible.length}
                     </span>
                   </div>
@@ -353,7 +353,7 @@ const Visible = ({ items, columns, bulkEdit }) => {
   return (
     <div
       ref={setNodeRef}
-      className="bg-gray-100 dark:bg-dark2 sm:overflow-x-scroll h-full sm:h-[86vh]"
+      className="bg-neutral-100 dark:bg-dark2 sm:overflow-x-scroll h-full sm:h-[86vh]"
     >
       <SortableContext
         id="visible"
@@ -393,7 +393,7 @@ const Hidden = ({ items }) => {
   return (
     <div
       ref={setNodeRef}
-      className="bg-gray-100 dark:bg-dark2 overflow-x-scroll h-[50vh]"
+      className="bg-neutral-100 dark:bg-dark2 overflow-x-scroll h-[50vh]"
     >
       <SortableContext
         id="hidden"
@@ -418,7 +418,7 @@ const OverlayImage = ({ mint, tokens }) => {
       // mint={mint}
       token={token}
       width={500}
-      className="w-[150px] h-[150px] cursor-pointer object-center object-cover shadow-sm bg-gray-400/50 rounded-lg"
+      className="w-[150px] h-[150px] cursor-pointer object-center object-cover shadow-sm bg-neutral-400/50 rounded-lg"
       noLazyLoad
       noFallback
     />

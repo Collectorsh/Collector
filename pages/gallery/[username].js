@@ -218,7 +218,7 @@ function ProfilePage({ curator }) {
     <>
       <MainNavigation />
       <div className="max-w-7xl mx-auto">
-        <p className="dark:text-gray-100 pt-20 text-center">Sorry, we could not find a Curator with that name</p>
+        <p className="dark:text-neutral-100 pt-20 text-center">Sorry, we could not find a Curator with that name</p>
       </div>
     </>
   )
@@ -235,7 +235,7 @@ function ProfilePage({ curator }) {
           text="Edit Banner"
           icon={<Icon.Image size={20} strokeWidth={2.5} />}
         >
-          <div className="w-full pb-[50%] md:pb-[33%] relative 2xl:rounded-b-2xl shadow-md overflow-hidden">
+          <div className="w-full pb-[33%] relative 2xl:rounded-b-2xl shadow-md overflow-hidden">
             {banner ? (
               <CloudinaryImage
                 className={clsx(
@@ -249,7 +249,7 @@ function ProfilePage({ curator }) {
               />
             ) : (
                 <div className={clsx(
-                  "absolute inset-0 w-full h-full flex justify-center items-center bg-zinc-200 dark:bg-zinc-800",
+                  "absolute inset-0 w-full h-full flex justify-center items-center bg-neutral-200 dark:bg-neutral-800",
                 )}>
                   <MainButton
                     size="xl"
@@ -267,10 +267,10 @@ function ProfilePage({ curator }) {
           className="absolute -bottom-12 left-6 lg:left-16 group/pfp rounded-full"
         >
           <EditWrapper
-            isOwner={pfp && useOwnerView}
+            isOwner={useOwnerView}
             onEdit={() => setEditPfpOpen(true)}
             groupHoverClass="group-hover/pfp:opacity-100"
-            buttonClassName="palette3 hoverPalette3 border-2 p-1 border-zinc-900 dark:border-zinc-100"
+            buttonClassName="palette3 hoverPalette3 border-2 p-1 border-neutral-900 dark:border-neutral-100"
             icon={<Icon.Image size={24} strokeWidth={2.5} />}
             placement="top-0 right-0"
             // placement="top-0 sm:translate-x-1/2 "
@@ -280,7 +280,7 @@ function ProfilePage({ curator }) {
             {pfp ? (
               <CloudinaryImage
                 className={clsx(
-                  "w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full overflow-hidden palette3 borderPalette0 border-4 ",
+                  "w-20 h-20 md:w-32 md:h-32 object-cover rounded-full overflow-hidden palette3 borderPalette0 border-4 ",
                   !pfpLoaded && "animate-pulse"
                 )}
                 id={pfpImgId}
@@ -289,8 +289,8 @@ function ProfilePage({ curator }) {
                 width={500}
               />
             ) : (
-                <div className="flex justify-center items-center w-32 h-32 lg:w-40 lg:h-40 object-cover rounded-full palette3 borderPalette0 border-4">
-                  {useOwnerView ? (
+                <div className="w-20 h-20 md:w-32 md:h-32 object-cover rounded-full palette3 borderPalette0 border-4 relative">
+                  {/* {useOwnerView ? (
                     <MainButton
                       onClick={() => setEditPfpOpen(true)}
                       className={clsx("flex items-center justify-center gap-2 absolute left-1/2 top-1/2 -translate-x-[50%] -translate-y-[50%] w-max")}
@@ -298,18 +298,18 @@ function ProfilePage({ curator }) {
                       Add Pfp
                       <Icon.Plus strokeWidth={2.5} />
                     </MainButton>
-                  ) : (
-                    <p className="collector text-8xl font-bold mb-5">c</p> 
-                  )}
+                  ) : ( */}
+                      <p className="collector text-5xl md:text-7xl font-bold absolute left-1/2 top-1/2 -translate-x-[50%] -translate-y-[60%]">c</p> 
+                  {/* )} */}
               </div>
             )}
           </EditWrapper>
         </div>
       </div>
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-16">
+      <div className="max-w-screen-2xl mx-auto px-4 lg:px-16 py-16 w-full">
         <div className="px-4">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-8">
-            <div className="flex flex-wrap items-center gap-6 group/settings">
+            <div className="flex flex-wrap items-center gap-6 group/settings w-full">
 
               <EditWrapper
                 className="max-w-fit"
@@ -317,12 +317,12 @@ function ProfilePage({ curator }) {
                 onEdit={() => setEditDisplayNameOpen(true)}
                 placement="-top-3 -right-3"
                 groupHoverClass="group-hover/settings:opacity-100"
-                buttonClassName="palette3 hoverPalette3 p-1 border-2 border-zinc-900 dark:border-zinc-100"
+                buttonClassName="palette3 hoverPalette3 p-1 border-2 border-neutral-900 dark:border-neutral-100"
                 // buttonClassName="w-max"
                 // text="Edit Display Name"
                 icon={<Icon.Edit size={20} strokeWidth={2.5} />}
               >
-                <h1 className="font-bold text-5xl mr-2">{displayName}</h1>
+                <h1 className="font-bold mr-2 text-4xl md:text-5xl overflow-y-hidden overflow-x-auto w-full">{displayName}</h1>
               </EditWrapper>
 
               <EditWrapper
@@ -352,7 +352,7 @@ function ProfilePage({ curator }) {
           </div>
           <div className={clsx(
             "group/bio w-full mx-auto rounded-md border-4 border-transparent",
-            useOwnerView && "duration-300 border-dashed border-zinc-200/40 dark:border-zinc-700/40 hover:border-zinc-200 hover:dark:border-zinc-700",
+            useOwnerView && "duration-300 border-dashed border-neutral-200/40 dark:border-neutral-700/40 hover:border-neutral-200 hover:dark:border-neutral-700",
           )}>
             <EditWrapper
               isOwner={useOwnerView}
@@ -369,7 +369,7 @@ function ProfilePage({ curator }) {
 
         <hr className="mt-12 mb-6 borderPalette1" />
 
-        <div className="p-4">
+        <div className="py-4 md:p-4">
           {useOwnerView
             ? (
               <SortableCurationPreviewWrapper
@@ -466,7 +466,7 @@ function ProfilePage({ curator }) {
       }
 
       <div
-        className={clsx('fixed bottom-0 right-0 -rotate-45 h-10 w-10', !isOwner && "hidden")}
+        className={clsx('z-10 fixed bottom-0 right-0 -rotate-45 h-10 w-10', !isOwner && "hidden")}
       >
         <button
           onClick={toggleOwnerView}

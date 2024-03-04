@@ -37,7 +37,7 @@ function ProfilePage({
           className="w-16 h-16 mr-4 rounded-full -mt-8 ml-4"
         />
       ) : (
-        <div className="w-16 h-16 mr-4 rounded-full -mt-8 ml-4 bg-gray-100"></div>
+        <div className="w-16 h-16 mr-4 rounded-full -mt-8 ml-4 bg-neutral-100"></div>
       )}
 
       <div className="mb-0">

@@ -39,8 +39,6 @@ const LandingHero = () => {
       /> */}
       <div className="min-h-page mx-auto w-full max-w-screen-xl px-4 sm:px-8 relative flex flex-col items-center justify-between pb-[5%]">
         
-        
-        {/* 224 is double to size of the nav bar (76px) + 1/2 the image height 72 */}
         <div
           className="min-h-[420px] h-pageImageOffset flex flex-col justify-center items-center gap-12 md:gap-16"
         > 

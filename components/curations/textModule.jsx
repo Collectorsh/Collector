@@ -3,28 +3,32 @@ import EditWrapper from '../curatorProfile/editWrapper';
 import EditTextModuleModal from './editTextModuleModal';
 import * as Icon from 'react-feather';
 import dynamic from 'next/dynamic';
+import clsx from 'clsx';
 const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillContent), { ssr: false })
 
 const TextModule = ({ textModule, onEditTextModule, isOwner, onDeleteModule }) => { 
   const [editTextOpen, setEditTextOpen] = useState(false)
   return (
-    <div className="relative group w-full h-fit min-h-[4rem]"
-      onClick={()=> setEditTextOpen(true)}
+    <div
+      className={clsx("relative group/textModule w-full h-fit min-h-[4rem]", isOwner && "cursor-pointer")}
+      onClick={() => isOwner && setEditTextOpen(true)}
     >
       <EditWrapper
         isOwner={isOwner}
         onEdit={() => setEditTextOpen(true)}
         placement="tr"
-        groupHoverClass="group-hover:opacity-100"
-        text="Edit Text"
-        icon={<Icon.Edit size={20} strokeWidth={2.5} />}
+        groupHoverClass="group-hover/textModule:opacity-100 group-hover/textModule:scale-105"
+        // text="Edit Text"
+        icon={<Icon.Type size={24} strokeWidth={2.5} className='m-[1px]'/>}
       >
         <QuillContent textDelta={textModule.textDelta} />
       </EditWrapper>
       {isOwner && !textModule.textDelta
         ? (
-          <div className='absolute inset-0 w-full h-full flex justify-center items-center p-2'>
-            <p>Click the gear icon in the top right to edit this Text Module</p>
+          <div
+            className='absolute inset-0 w-full h-full flex justify-center items-center p-2 '
+          >
+            <p>Click this block to edit your text!</p>
           </div>
         )
         : null

@@ -79,8 +79,9 @@ const GlobalEditBar = ({
     ? (
       <MainButton
         onClick={handleInviteArtists}
-        className="flex gap-2 items-center justify-center w-[10.75rem] "
+        className="flex gap-2 items-center justify-center w-[12rem] "
         solid
+        size="lg"
       >
         Invite Artists 
         <Icon.UserPlus size={18} strokeWidth={2.5} />
@@ -89,16 +90,17 @@ const GlobalEditBar = ({
     : (
       <MainButton
         onClick={() => setEditListingsOpen(true)}
-        className="flex gap-2 items-center justify-center w-[10.25rem] "
+        className="flex gap-2 items-center justify-center w-[12rem] "
         solid
+        size="lg"
       >
-        Edit Listings 
+        List
         <Icon.Tag size={18} strokeWidth={2.5} />
       </MainButton>
     )
   
   const centralText = ( 
-    <div className='text-center relative'>
+    <div className='text-left relative'>
       <p className='text-xs textPalette3 leading-none'>viewing</p>
       <p className='font-bold textPalette2'>{getTabText()}</p>
     </div>
@@ -189,7 +191,7 @@ const GlobalEditBar = ({
   )
   return (
     <>
-      <div
+      {/* <div
         className={clsx('fixed bottom-0 right-0 -rotate-45 h-10 w-10', isOpen && "hidden")}
       >
         <button
@@ -197,28 +199,76 @@ const GlobalEditBar = ({
           className='hoverPalette2 borderPalette2 border-2 palette2 absolute left-1/2 -translate-x-[50%] top-0 h-[150%] w-[300%] flex justify-center items-start pt-1'>
           <Icon.ArrowUp strokeWidth={2.5}/>
         </button>
-      </div>
+      </div> */}
+
+      <Tippy
+        content={"Switch to edit view"}
+      >
+        <div
+          className={clsx('z-10 fixed bottom-0 left-0 rotate-45 h-10 w-10')}
+        >
+          <button
+            onClick={toggleEditOpen}
+            className={clsx(
+              'hoverPalette2 borderPalette2 border-2 palette2 absolute right-1/2 translate-x-[50%] h-[150%] w-[300%] flex justify-center items-start pt-1',
+              isOpen ? "top-full " : "top-0"
+            )} >
+            
+            <Icon.Edit className="-rotate-45" />
+            
+          </button>
+        </div>
+      </Tippy>
 
       <div className={clsx("w-full",
         'fixed bottom-0 left-0 duration-300 ',
-        isOpen ? "translate-y-0 translate-x-0" : "translate-y-full translate-x-4",
+        isOpen ? "translate-y-0 translate-x-0" : "translate-y-full -translate-x-10",
         "palette2",
         "z-[1000]"
       )}>
-        <EditListingsModal
-          isOpen={editListingsOpen}
-          onClose={() => setEditListingsOpen(false)}
-          handleEditListings={handleEditListings}
-          handleRemoveListing={handleRemoveListing}
-          curation={curationWithSubmissions}
-        />
-        <DeleteConfirmationModal
-          isOpen={deleteModalOpen}
-          onClose={() => setDeleteModalOpen(false)}
-          name={curation?.name}
-        />
-
+        {/* <button
+          className='align-right rounded-lg p-2 hoverPalette2'
+          onClick={toggleEditOpen}
+        >
+          <Icon.ArrowDownRight strokeWidth={2.5} />
+        </button> */}
         <div className={clsx(
+          'w-full py-3 px-4',
+          "borderPalette2 border-t-2 grid md:grid-cols-3"
+        )}>
+          <div className="place-self-start flex items-center gap-3"> 
+            <Tippy
+              content={"Switch to public view"}
+            >  
+              <button
+                onClick={toggleEditOpen}
+                className='hoverPalette2 p-2 rounded-full '
+              >
+                <Icon.Eye />
+              </button>
+            
+            </Tippy>
+            {centralText}
+          </div>
+          
+          <div className='place-self-center'>
+            {actionButton}
+          </div>
+
+          <MainButton
+            className="flex gap-2 items-center justify-center mr-2 place-self-end w-[12rem]"
+            onClick={openPublish}
+            solid
+            disabled={noContent}
+            size="lg"
+          >
+            Publish Draft
+            <Icon.Upload size={18} strokeWidth={2.5} />
+          </MainButton>
+
+        </div>
+
+        {/* <div className={clsx(
           'w-full py-2 px-4',
           "borderPalette2 border-t-2 flex justify-between"
         )}>
@@ -237,15 +287,21 @@ const GlobalEditBar = ({
           <div className="w-full grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] place-items-center max-w-screen-xl mx-auto gap-4 py-2 px-4">
             {isEditingDraft ? draftButtons : publishedButtons}
           </div>
-          <button
-            className='align-right rounded-lg p-2 hoverPalette2'
-            onClick={toggleEditOpen}
-          >
-            <Icon.ArrowDownRight strokeWidth={2.5} />
-          </button>
-
-        </div>
+        </div> */}
       </div>
+
+      <EditListingsModal
+        isOpen={editListingsOpen}
+        onClose={() => setEditListingsOpen(false)}
+        handleEditListings={handleEditListings}
+        handleRemoveListing={handleRemoveListing}
+        curation={curationWithSubmissions}
+      />
+      <DeleteConfirmationModal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        name={curation?.name}
+      />
     </>
   )
 }

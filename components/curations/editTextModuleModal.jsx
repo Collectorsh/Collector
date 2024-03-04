@@ -27,7 +27,7 @@ const EditTextModuleModal = ({ textModule, onEditTextModule, isOpen, onClose, on
   return (
     <Modal
       className="overflow-visible"
-      isOpen={isOpen} onClose={onClose} title="Edit Text Module">
+      isOpen={isOpen} onClose={onClose} title="Editing Text">
       <div className="my-4 border-2 rounded-xl palette2 borderPalette3
           w-full p-2 min-h-[8rem]
         ">

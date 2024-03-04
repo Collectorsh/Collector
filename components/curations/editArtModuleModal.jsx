@@ -481,7 +481,7 @@ export default function EditArtModuleModal({
     )
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="Edit Art Module">
+    <Modal isOpen={isOpen} onClose={handleClose} title="Editing Art">
       <div
         className="overflow-y-auto grid h-screen max-h-full grid-rows-[auto,auto,1fr] mt-4 relative"
       >

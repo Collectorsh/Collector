@@ -30,7 +30,7 @@ const GlobalEditBar = ({
 }) => {
   const [withdrawing, setWithdrawing] = useState(false)
   const [editListingsOpen, setEditListingsOpen] = useState(false)
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  // const [deleteModalOpen, setDeleteModalOpen] = useState(false)
 
   const curationType = curation?.curation_type
   const curationWithSubmissions = {
@@ -42,19 +42,17 @@ const GlobalEditBar = ({
   const curatorFee = roundToPrecision(curatorBalance, 3)
   const fees = collectedFees ? <span>{curatorFee}◎</span> : <span className='animate-pulse'>...</span>
 
-  //its ok to delete a group/curator curation because those listings are accessed via the submissions page
-  const hasActiveListings = curation.type !== "curator" && submittedTokens?.filter(s => s.listed_status === "listed" || s.is_master_edition && s.listed_status === "sold").length
-  const hasUncollectedFees = collectedFees?.curatorBalance
-  const disabledDelete = hasActiveListings || hasUncollectedFees
+  // //its ok to delete a group/curator curation because those listings are accessed via the submissions page
+  // const hasActiveListings = curation.type !== "curator" && submittedTokens?.filter(s => s.listed_status === "listed" || s.is_master_edition && s.listed_status === "sold").length
+  // const hasUncollectedFees = collectedFees?.curatorBalance
+  // const disabledDelete = hasActiveListings || hasUncollectedFees
   
-  const disabledDeleteText = (() => {
-    if(hasActiveListings) return "Please close active listings before deleting"
-    if (hasUncollectedFees) return "Please withdraw your fees before deleting"
-  })();
+  // const disabledDeleteText = (() => {
+  //   if(hasActiveListings) return "Please close active listings before deleting"
+  //   if (hasUncollectedFees) return "Please withdraw your fees before deleting"
+  // })();
 
-  const openDelete = () => { 
-    setDeleteModalOpen(true)
-  }
+  
 
   const toggleEditOpen = () => { 
     setOpen(prev => !prev);
@@ -66,32 +64,60 @@ const GlobalEditBar = ({
     return "Draft - Up To Date"
   }
 
-  const handleWithdraw = async () => { 
+ 
+
+  const handleEditListings = () => { }
+  const handleRemoveListing = () => { }
+
+  const handleWithdraw = async () => {
     setWithdrawing(true)
     await handleWithdrawFees()
     setWithdrawing(false)
   }
 
-  const handleEditListings = () => { }
-  const handleRemoveListing = () => { }
-
   const actionButton = curationType === "curator"
     ? (
-      <MainButton
-        onClick={handleInviteArtists}
-        className="flex gap-2 items-center justify-center w-[12rem] "
-        solid
-        size="lg"
-      >
-        Invite Artists 
-        <Icon.UserPlus size={18} strokeWidth={2.5} />
-      </MainButton>
+      <div className='flex items-center justify-center flex-wrap gap-4'>
+        <MainButton
+          onClick={handleInviteArtists}
+          className="flex gap-2 items-center justify-center w-[12.5rem] "
+          // solid
+          size="lg"
+        >
+          Invite Artists 
+          <Icon.UserPlus size={18} strokeWidth={2.5} />
+        </MainButton>
+     
+        <Tippy
+          content={!curatorBalance ? "Currently no fees have been collected" : <p>Withdraw {fees}</p>}
+          className='shadow'
+        >
+          <div>
+            <MainButton
+              size="lg"
+              solid
+              onClick={handleWithdraw}
+              disabled={withdrawing || !curatorBalance}
+              className="flex gap-2 items-center justify-center w-[12.5rem]"
+            >
+              {withdrawing
+                ? (
+                  <Oval color="#FFF" secondaryColor="#666" height={18} width={18} strokeWidth={4} className="translate-y-0.5" />
+                )
+                : "Withdraw Fees ◎"
+              }
+            </MainButton>
+
+          </div>
+        </Tippy>
+ 
+      </div>
     )
     : (
       <MainButton
         onClick={() => setEditListingsOpen(true)}
         className="flex gap-2 items-center justify-center w-[12rem] "
-        solid
+        // solid
         size="lg"
       >
         List
@@ -106,89 +132,89 @@ const GlobalEditBar = ({
     </div>
   )
 
-  const draftButtons = (
-    <>
-      <div className='flex gap-4 flex-wrap justify-center  place-self-center'>
-        <Tippy content="View Published" className='shadow'>
-          <MainButton
-            className={clsx(!isPublished && "hidden", "flex gap-2 items-center justify-center px-2 rounded-md")}
-            onClick={() => setIsEditingDraft(false)}
-            noPadding
-          >
-            {/* View Published */}
-            <Icon.Eye size={18} strokeWidth={2.5} />
-          </MainButton>
-        </Tippy>
+  // const draftButtons = (
+  //   <>
+  //     <div className='flex gap-4 flex-wrap justify-center  place-self-center'>
+  //       <Tippy content="View Published" className='shadow'>
+  //         <MainButton
+  //           className={clsx(!isPublished && "hidden", "flex gap-2 items-center justify-center px-2 rounded-md")}
+  //           onClick={() => setIsEditingDraft(false)}
+  //           noPadding
+  //         >
+  //           {/* View Published */}
+  //           <Icon.Eye size={18} strokeWidth={2.5} />
+  //         </MainButton>
+  //       </Tippy>
 
-        <MainButton
-          className="flex gap-2 items-center justify-center w-[10.25rem]"
-          onClick={openPublish}
-          solid
-          disabled={!hasChanges && isPublished || noContent}
-        >
-          Publish Draft
-          <Icon.Upload size={18} strokeWidth={2.5} />
-        </MainButton>
-      </div>
+  //       <MainButton
+  //         className="flex gap-2 items-center justify-center w-[10.25rem]"
+  //         onClick={openPublish}
+  //         solid
+  //         disabled={!hasChanges && isPublished || noContent}
+  //       >
+  //         Publish Draft
+  //         <Icon.Upload size={18} strokeWidth={2.5} />
+  //       </MainButton>
+  //     </div>
 
-      {centralText}
+  //     {centralText}
 
-      <div className='flex gap-4 flex-wrap justify-center place-self-center'>
-        {actionButton}
-      </div>
+  //     <div className='flex gap-4 flex-wrap justify-center place-self-center'>
+  //       {actionButton}
+  //     </div>
 
-    </>
-  )
+  //   </>
+  // )
 
-  const publishedButtons = (
-    <>
-      <div className='flex gap-4 flex-wrap justify-center md:place-self-start w-full'>
-        <WarningButton
-          className="w-[7.2rem]"
-          onClick={openUnpublish}
-        >
-          Unpublish
-        </WarningButton>
+  // const publishedButtons = (
+  //   <>
+  //     <div className='flex gap-4 flex-wrap justify-center md:place-self-start w-full'>
+  //       <WarningButton
+  //         className="w-[7.2rem]"
+  //         onClick={openUnpublish}
+  //       >
+  //         Unpublish
+  //       </WarningButton>
 
-        <MainButton
-          className="w-[7.2rem]"
-          solid
-          onClick={() => setIsEditingDraft(true)}
-        >
-          Edit Draft
-        </MainButton>
-      </div>
+  //       <MainButton
+  //         className="w-[7.2rem]"
+  //         solid
+  //         onClick={() => setIsEditingDraft(true)}
+  //       >
+  //         Edit Draft
+  //       </MainButton>
+  //     </div>
 
-      {centralText}
+  //     {centralText}
 
-      <div className='flex gap-4 flex-wrap justify-center place-self-center'>
-        {actionButton}
+  //     <div className='flex gap-4 flex-wrap justify-center place-self-center'>
+  //       {actionButton}
 
-        {curationType === "curator" ? (
-          <Tippy
-            content={!curatorBalance ? "Currently no fees have been collected" : <p>Withdraw {fees}</p>}
-            className='shadow'
-          >
-            <div>
-              <MainButton
-                onClick={handleWithdraw}
-                disabled={withdrawing || !curatorBalance}
-                className="flex gap-2 items-center justify-center w-[10.75rem]"
-              >
-                {withdrawing
-                  ? (
-                    <Oval color="#FFF" secondaryColor="#666" height={16} width={16} strokeWidth={4} className="translate-y-0.5" />
-                  )
-                  : "Withdraw Fees ◎"
-                }
-              </MainButton>
+  //       {curationType === "curator" ? (
+  //         <Tippy
+  //           content={!curatorBalance ? "Currently no fees have been collected" : <p>Withdraw {fees}</p>}
+  //           className='shadow'
+  //         >
+  //           <div>
+  //             <MainButton
+  //               onClick={handleWithdraw}
+  //               disabled={withdrawing || !curatorBalance}
+  //               className="flex gap-2 items-center justify-center w-[10.75rem]"
+  //             >
+  //               {withdrawing
+  //                 ? (
+  //                   <Oval color="#FFF" secondaryColor="#666" height={16} width={16} strokeWidth={4} className="translate-y-0.5" />
+  //                 )
+  //                 : "Withdraw Fees ◎"
+  //               }
+  //             </MainButton>
 
-            </div>
-          </Tippy>
-        ) : null}
-      </div>
-    </>
-  )
+  //           </div>
+  //         </Tippy>
+  //       ) : null}
+  //     </div>
+  //   </>
+  // )
   return (
     <>
       {/* <div
@@ -297,11 +323,11 @@ const GlobalEditBar = ({
         handleRemoveListing={handleRemoveListing}
         curation={curationWithSubmissions}
       />
-      <DeleteConfirmationModal
+      {/* <DeleteConfirmationModal
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
         name={curation?.name}
-      />
+      /> */}
     </>
   )
 }

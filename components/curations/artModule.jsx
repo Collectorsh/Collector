@@ -135,7 +135,7 @@ const ArtModule = ({
         placement="tr"
         groupHoverClass="group-hover/artModule:opacity-100 group-hover/artModule:scale-105"
         // text="Edit Art"
-        icon={<Icon.Image size={26} strokeWidth={2.5} />}
+        icon={<Icon.Image size={26} strokeWidth={2.25} />}
       >
         {itemRows.map((row, i) => {
           return (

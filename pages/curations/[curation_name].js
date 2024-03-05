@@ -484,7 +484,7 @@ function CurationPage({curation}) {
                 disabled={addingModule}
                 size="lg"
               >
-                Add Art <Icon.Image className="relative left-1"/>
+              Add Art <Icon.Image className="relative left-1" strokeWidth={2.25} />
               </MainButton>
               <MainButton
               className="flex gap-3 items-center justify-center w-[10.22rem]"
@@ -492,7 +492,7 @@ function CurationPage({curation}) {
                 disabled={addingModule}
                 size="lg"
               >
-              Add Text <Icon.Type strokeWidth={2.5} size={20} />
+              Add Text <Icon.Edit strokeWidth={2.5} size={22} />
               </MainButton>
             </div>
           ) : null

@@ -8,8 +8,10 @@ const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillConte
 const CurationDescription = ({ description, displayDraftEdit, setEditDescriptionOpen }) => { 
   return (
     <div className={clsx(
-      "group/description w-full mx-auto rounded-lg border-4 border-transparent",
-      displayDraftEdit && "duration-300 border-dashed border-neutral-200/60 dark:border-neutral-700/60 hover:border-neutral-200 hover:dark:border-neutral-700",
+      "group/description w-full mx-auto rounded-lg border-4",
+      displayDraftEdit
+        ? "duration-300 border-dashed border-neutral-300/60 dark:border-neutral-700/60 hover:border-neutral-300 hover:dark:border-neutral-700"
+        : "border-transparent",
     )}>
       <EditWrapper
         isOwner={displayDraftEdit}

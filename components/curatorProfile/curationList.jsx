@@ -6,6 +6,7 @@ import SortableCurationPreview from "../curations/sortableCurationPreview";
 import { useMemo } from "react";
 import * as Icon from "react-feather";
 import { defaultCollectorImageId } from "../../config/settings";
+import CurationSettingsMenu from "./curationSettingsMenu";
 
 const CurationList = ({ curations, isOwner, asSortable }) => {
   return (
@@ -44,8 +45,16 @@ export const CurationListItem = ({ curation, isOwner }) => {
     <Link href={`/curations/${ name }`} >
       <a className="w-full duration-300 relative group/curationItem"
       >
-        <PublishedTag isPublished={is_published} isOwner={isOwner} className="duration-300 group-hover/curationItem:-top-1.5"/>
-        <div className="top-0 group-hover/curationItem:-top-1.5  relative shadow shadow-neutral-500/20 rounded-xl overflow-hidden duration-300 pb-[33%]" >
+        {isOwner && <CurationSettingsMenu curation={curation} />}
+        <PublishedTag
+          isPublished={is_published}
+          isOwner={isOwner}
+          // className="duration-300 group-hover/curationItem:-top-1.5"
+        />
+        <div className={clsx(
+          "top-0 relative shadow shadow-neutral-500/20 rounded-xl overflow-hidden duration-300 pb-[33%]",
+          !isOwner && "group-hover/curationItem:-top-1.5"
+        )}>
           <CloudinaryImage
             className={clsx("w-full h-full object-cover absolute inset-0", !bannerImgId && "dark:invert")}
             id={bannerImgId || defaultCollectorImageId}
@@ -68,7 +77,7 @@ export const PublishedTag = ({ isPublished, isOwner, className }) => {
     <div className={clsx("absolute inset-0 w-full h-full overflow-hidden", className)}>
       <div className={clsx(
         "rounded-md py-0.5 px-4 shadow-md shadow-black/25 dark:shadow-neutral-500/25",
-        "absolute top-6 -right-11 z-10 rotate-45 w-[10rem] text-center",
+        "absolute top-6 -left-11 z-10 -rotate-45 w-[10rem] text-center",
         isPublished
           ? "bg-emerald-400 dark:bg-emerald-600"
           : "bg-amber-400 dark:bg-amber-600"

@@ -15,7 +15,7 @@ const EditDisplayNameModal = ({ name, onSave, isOpen, onClose }) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Edit Display Name"
+      title="Editing Display Name"
       widthClass="max-w-screen-sm"
     >
       {/* <p className="textPalette2 text-sm my-2 text-center">Changes</p> */}
@@ -27,7 +27,7 @@ const EditDisplayNameModal = ({ name, onSave, isOpen, onClose }) => {
         value={newName}
       />
   
-      <div className="w-full flex justify-end gap-4 mt-4">
+      <div className="w-full flex justify-center gap-4 mt-4">
         <MainButton onClick={onClose} size="lg" standardWidth>
           Cancel
         </MainButton>

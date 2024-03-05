@@ -20,7 +20,7 @@ const EditBioModal = ({ bio, onSave, isOpen, onClose }) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Edit Your Bio">
+    <Modal isOpen={isOpen} onClose={onClose} title="Editing Bio">
       <div className="my-4 border-4 palette2 borderPalette3 rounded-xl
           w-full p-2 min-h-[8rem]
         ">
@@ -29,7 +29,7 @@ const EditBioModal = ({ bio, onSave, isOpen, onClose }) => {
           onChange={onChange}
         />
       </div>
-      <div className="w-full flex justify-end gap-4">
+      <div className="w-full flex justify-center gap-4">
         <MainButton onClick={onClose} size="lg" standardWidth>
           Cancel
         </MainButton>

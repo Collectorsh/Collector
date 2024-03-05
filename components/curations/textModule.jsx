@@ -19,7 +19,7 @@ const TextModule = ({ textModule, onEditTextModule, isOwner, onDeleteModule }) =
         placement="tr"
         groupHoverClass="group-hover/textModule:opacity-100 group-hover/textModule:scale-105"
         // text="Edit Text"
-        icon={<Icon.Type size={24} strokeWidth={2.5} className='m-[1px]'/>}
+        icon={<Icon.Edit size={24} strokeWidth={2.5} className='m-[1px]'/>}
       >
         <QuillContent textDelta={textModule.textDelta} />
       </EditWrapper>

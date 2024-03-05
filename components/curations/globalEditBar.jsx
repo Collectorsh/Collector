@@ -248,7 +248,7 @@ const GlobalEditBar = ({
 
       <div className={clsx("w-full",
         'fixed bottom-0 left-0 duration-300 ',
-        isOpen ? "translate-y-0 translate-x-0" : "translate-y-full -translate-x-10",
+        isOpen ? "translate-y-0 translate-x-0" : "translate-y-full",
         "palette2",
         "z-[1000]"
       )}>
@@ -260,9 +260,9 @@ const GlobalEditBar = ({
         </button> */}
         <div className={clsx(
           'w-full py-3 px-4',
-          "borderPalette2 border-t-2 grid md:grid-cols-3"
+          "borderPalette2 border-t-2 grid md:grid-cols-[1fr_auto_1fr] gap-4 place-items-center justify-items-center"
         )}>
-          <div className="place-self-start flex items-center gap-3"> 
+          <div className="md:place-self-start flex items-center gap-3 my-auto"> 
             <Tippy
               content={"Switch to public view"}
             >  
@@ -277,12 +277,12 @@ const GlobalEditBar = ({
             {centralText}
           </div>
           
-          <div className='place-self-center'>
+          <div className='md:place-self-center'>
             {actionButton}
           </div>
 
           <MainButton
-            className="flex gap-2 items-center justify-center mr-2 place-self-end w-[12rem]"
+            className="md:place-self-end flex gap-2 items-center justify-center md:mr-2 w-[12rem] my-auto"
             onClick={openPublish}
             solid
             disabled={noContent}

@@ -11,7 +11,9 @@ const EditWrapper = ({
   icon = <Icon.Settings size={20} strokeWidth={2.5} />,
   groupHoverClass = "hover:opacity-100",
   className,
-  buttonClassName
+  buttonClassName,
+  buttonSize = "lg",
+  noButtonPadding
 }) => { 
   
   const getPlacement = () => {
@@ -26,7 +28,8 @@ const EditWrapper = ({
   const editButton = text
     ? (
       <MainButton
-        size="lg"
+        noPadding={noButtonPadding}
+        size={buttonSize}
       disabled={!isOwner}
       onClick={onEdit}
       className={clsx(
@@ -34,7 +37,7 @@ const EditWrapper = ({
         "absolute z-[19]", getPlacement(),
         groupHoverClass, buttonClassName)}
     >
-      {text}
+      {typeof text === "string" ? text : null}
       {icon}
     </MainButton>
     )

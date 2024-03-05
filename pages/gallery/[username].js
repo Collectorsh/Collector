@@ -231,10 +231,12 @@ function ProfilePage({ curator }) {
         <EditWrapper
           isOwner={banner && useOwnerView}
           onEdit={() => setEditBannerOpen(true)}
-          placement="bottom-4 right-9 lg:right-[76px] 2xl:bottom-6 2xl:right-[44px]"
-          groupHoverClass="group-hover/banner:opacity-100"
+          // placement="bottom-4 right-9 lg:right-[76px] 2xl:bottom-6 2xl:right-[44px]"
+
+          placement="bottom-4 right-[16px] md:right-[32px] lg:right-[80px] 2xl:bottom-6 2xl:right-[48px]"
+          groupHoverClass="group-hover/banner:opacity-100 group-hover/banner:bg-neutral-200 dark:group-hover/banner:bg-neutral-800 group-hover/banner:border-neutral-700 dark:group-hover/banner:border-neutral-300"
           text="Edit Banner"
-          icon={<Icon.Image size={20} strokeWidth={2.5} />}
+          icon={<Icon.Image size={23} strokeWidth={2.5} />}
         >
           <div className="w-full pb-[33%] relative 2xl:rounded-b-2xl shadow-md overflow-hidden">
             {banner ? (
@@ -270,13 +272,12 @@ function ProfilePage({ curator }) {
           <EditWrapper
             isOwner={useOwnerView}
             onEdit={() => setEditPfpOpen(true)}
-            groupHoverClass="group-hover/pfp:opacity-100"
-            buttonClassName="palette3 hoverPalette3 border-2 p-1 border-neutral-900 dark:border-neutral-100"
+            groupHoverClass="group-hover/pfp:opacity-100 group-hover/pfp:bg-neutral-200 dark:group-hover/pfp:bg-neutral-800 group-hover/pfp:border-neutral-700 dark:group-hover/pfp:border-neutral-300"
+            buttonClassName="rounded-full p-1.5"
+            noButtonPadding
+            text={true}
             icon={<Icon.Image size={24} strokeWidth={2.5} />}
             placement="top-0 right-0"
-            // placement="top-0 sm:translate-x-1/2 "
-            // text="Edit Profile Picture"
-            // buttonClassName="w-max"
           >
             {pfp ? (
               <CloudinaryImage
@@ -317,10 +318,10 @@ function ProfilePage({ curator }) {
                 isOwner={useOwnerView}
                 onEdit={() => setEditDisplayNameOpen(true)}
                 placement="-top-3 -right-3"
-                groupHoverClass="group-hover/settings:opacity-100"
-                buttonClassName="palette3 hoverPalette3 p-1 border-2 border-neutral-900 dark:border-neutral-100"
-                // buttonClassName="w-max"
-                // text="Edit Display Name"
+                groupHoverClass="group-hover/settings:opacity-100 group-hover/settings:bg-neutral-200 dark:group-hover/settings:bg-neutral-800 group-hover/settings:border-neutral-700 dark:group-hover/settings:border-neutral-300"
+                buttonClassName="rounded-full p-1.5"
+                noButtonPadding
+                text={true}
                 icon={<Icon.Edit size={20} strokeWidth={2.5} />}
               >
                 <h1 className="font-bold mr-2 text-4xl md:text-5xl overflow-y-hidden overflow-x-auto w-full">{displayName}</h1>
@@ -330,11 +331,12 @@ function ProfilePage({ curator }) {
                 className="max-w-fit"
                 isOwner={useOwnerView}
                 onEdit={() => setEditSocialsOpen(true)}
-                placement="top-1/2 -right-2 -translate-y-1/2 translate-x-full"
+                placement="left-0 -top-[115%]  md:left-auto  md:top-1/2 md:-right-2 md:-translate-y-1/2 md:translate-x-full "
                 groupHoverClass="group-hover/settings:opacity-100"
                 text="Edit Socials"
                 buttonClassName="w-max"
                 icon=" "
+                buttonSize="md"
               >
                 <div className="flex items-center gap-0">
                   {socials.length
@@ -352,16 +354,20 @@ function ProfilePage({ curator }) {
             </div>
           </div>
           <div className={clsx(
-            "group/bio w-full mx-auto rounded-md border-4 border-transparent",
-            useOwnerView && "duration-300 border-dashed border-neutral-200/40 dark:border-neutral-700/40 hover:border-neutral-200 hover:dark:border-neutral-700",
-          )}>
+            "group/bio w-full mx-auto rounded-md border-4 min-h-10 left",
+            useOwnerView
+              ? "duration-300 border-dashed border-neutral-300/60 dark:border-neutral-700/60 hover:border-neutral-300 hover:dark:border-neutral-700 cursor-pointer"
+              : "border-transparent",
+          )}
+            onClick={() => useOwnerView && setEditBioOpen(true)}
+          >
             <EditWrapper
               isOwner={useOwnerView}
               onEdit={() => setEditBioOpen(true)}
               placement="tr"
-              groupHoverClass="group-hover/bio:opacity-100"
-              text="Edit Bio"
-              icon={<Icon.Edit size={20} strokeWidth={2.5} />}
+              groupHoverClass="group-hover/bio:opacity-100 group-hover/bio:scale-105"
+              // text="Edit Bio"
+              icon={<Icon.Edit size={24} strokeWidth={2.5} />}
             >
               <QuillContent textDelta={bio}/>
             </EditWrapper>
@@ -426,14 +432,14 @@ function ProfilePage({ curator }) {
         ? (
           <>
             <EditImageModal
-              title="Edit Banner Image"
+              title="Editing Banner"
               isOpen={editBannerOpen}
               onClose={() => setEditBannerOpen(false)}
               onSave={handleEditBanner}
               type="banner"
             />
             <EditImageModal
-              title="Edit Profile Image"
+              title="Editing Profile Image"
               isOpen={editPfpOpen}
               onClose={() => setEditPfpOpen(false)}
               onSave={handleEditPfp}

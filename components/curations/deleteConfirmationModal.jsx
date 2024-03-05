@@ -11,6 +11,7 @@ const DeleteConfirmationModal = ({ isOpen, onClose, name }) => {
   const [user] = useContext(UserContext);
   const router = useRouter()
   const [deleting, setDeleting] = useState(false)
+
   const handleDelete = async () => {
     setDeleting(true)
     const res = await hideCuration({
@@ -25,6 +26,7 @@ const DeleteConfirmationModal = ({ isOpen, onClose, name }) => {
       setDeleting(false)
     }
   }
+  
   return (
     <Modal
       isOpen={isOpen} onClose={onClose}

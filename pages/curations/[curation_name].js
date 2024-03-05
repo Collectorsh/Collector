@@ -60,7 +60,7 @@ function CurationPage({curation}) {
   const [globalEditOpen, setGlobalEditOpen] = useState(false);
   const [inviteArtistsModalOpen, setInviteArtistsModalOpen] = useState(false);
   const [publishModalOpen, setPublishModalOpen] = useState(false);
-  const [unpublishModalOpen, setUnpublishModalOpen] = useState(false);
+  // const [unpublishModalOpen, setUnpublishModalOpen] = useState(false);
   const [isEditingDraft, setIsEditingDraft] = useState(!curation?.is_published); //defaults to true if unpublished
   const [isPublished, setIsPublished] = useState(curation?.is_published);
   const [addingModule, setAddingModule] = useState(false);
@@ -217,20 +217,20 @@ function CurationPage({curation}) {
     return false //publishConfirmationModal handles success/error
   }
 
-  const handleUnpublish = async () => { 
-    if (!isOwner) return;
-    const res = await unpublishContent({
-      apiKey: user.api_key,
-      name: curation.name
-    })
-    if (res?.status === "success") { 
-      setIsPublished(false)
-      setIsEditingDraft(true)
-      success(`${curation.name} is unpublished`)
-    } else {
-      error(`${curation.name} unpublish failed`)
-    }
-  }
+  // const handleUnpublish = async () => { 
+  //   if (!isOwner) return;
+  //   const res = await unpublishContent({
+  //     apiKey: user.api_key,
+  //     name: curation.name
+  //   })
+  //   if (res?.status === "success") { 
+  //     setIsPublished(false)
+  //     setIsEditingDraft(true)
+  //     success(`${curation.name} is unpublished`)
+  //   } else {
+  //     error(`${curation.name} unpublish failed`)
+  //   }
+  // }
 
   const handleSaveDraftContent = async (newContent) => { 
     if (!newContent || !isOwner) return
@@ -509,7 +509,7 @@ function CurationPage({curation}) {
                 setModules={handleEditModules}
                 handleInviteArtists={() => setInviteArtistsModalOpen(true)}
                 openPublish={() => setPublishModalOpen(true)}
-                openUnpublish={() => setUnpublishModalOpen(true)}
+                // openUnpublish={() => setUnpublishModalOpen(true)}
                 isEditingDraft={isEditingDraft}
                 setIsEditingDraft={setIsEditingDraft}
                 hasChanges={hasChanges}
@@ -570,12 +570,12 @@ function CurationPage({curation}) {
               onPublish={handlePublish}
               onViewPublished={() => setIsEditingDraft(false)}
             />
-            <UnpublishConfirmationModal
+            {/* <UnpublishConfirmationModal
               name={name}
               isOpen={unpublishModalOpen}
               onClose={() => setUnpublishModalOpen(false)}
               onUnpublish={handleUnpublish}
-            />
+            /> */}
             <InviteArtistsModal
               isOpen={inviteArtistsModalOpen}
               onClose={() => setInviteArtistsModalOpen(false)}

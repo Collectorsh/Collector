@@ -10,6 +10,12 @@ import * as Icon from 'react-feather'
 import Link from "next/link"
 import clsx from "clsx"
 import { unpublishContent } from "../../data/curation/publishContent"
+import Tippy from "@tippyjs/react"
+
+//TODO add submitted_token_listings to gallery fetched curations
+
+//TODO add private_key_hash to fetch values when user is owner on gallery page
+//add withdraw fees button 
 
 const CurationSettingsMenu = ({ curation}) => { 
   console.log("🚀 ~ CurationSettingsMenu ~ curation:", curation)
@@ -19,10 +25,13 @@ const CurationSettingsMenu = ({ curation}) => {
 
   const { handleCollect, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
 
+  const curatorBalance = collectedFees ? collectedFees.curatorBalance : 0
+  const curatorFee = roundToPrecision(curatorBalance, 3)
+  // const fees = collectedFees ? <span>{curatorFee}◎</span> : <span className='animate-pulse'>...</span>
+
 
   const curationType = curation?.curation_type
-  const submittedTokens = curation?.submitted_token_mints
-
+  const submittedTokens = curation?.submitted_token_listings
 
   //its ok to delete a group/curator curation because those listings are accessed via the submissions page
   const hasActiveListings = curation.type !== "curator" && submittedTokens?.filter(s => s.listed_status === "listed" || s.is_master_edition && s.listed_status === "sold").length
@@ -36,9 +45,9 @@ const CurationSettingsMenu = ({ curation}) => {
 
 
   const openDelete = (e) => {
-    // e.stopPropagation()
-    // e.preventDefault()
-    // setDeleteModalOpen(true)
+    if (disabledDelete) return
+    
+    setDeleteModalOpen(true)
   }
 
   const handleUnpublish = async () => {
@@ -53,6 +62,24 @@ const CurationSettingsMenu = ({ curation}) => {
       error(`${ curation.name } unpublish failed`)
     }
   }
+
+  // const handleWithdrawFees = async () => {
+  //   if (!privateKeyHash) return;
+  //   const res = await withdrawFromTreasury({
+  //     privateKeyHash,
+  //     curation,
+  //   })
+
+  //   if (res?.status === "success") {
+  //     success(`Successfully withdrew ${ roundToPrecision(collectedFees.curatorBalance, 3) } SOL!`)
+  //     setCollectedFees({
+  //       curatorBalance: 0,
+  //       platformBalance: 0
+  //     })
+  //   } else {
+  //     error(`Withdrawal failed`)
+  //   }
+  // }
 
   return (
     <>
@@ -72,10 +99,6 @@ const CurationSettingsMenu = ({ curation}) => {
                 "flex items-center gap-3 duration-300",
                 " hover:scale-105"
               )}
-              // onClick={(e) => {
-              //   e.stopPropagation()
-              //   e.preventDefault()
-              // }}
             >
               <span className="sr-only">Open curation settings</span>
               <Icon.Settings />
@@ -98,7 +121,7 @@ const CurationSettingsMenu = ({ curation}) => {
             >
               <Menu.Items
                
-                className="palette2 origin-top-right absolute right-2 mt-1 py-1 w-fit overflow-hidden rounded-md shadow-md outline-none text-left px-2"
+                className="palette2 origin-top-right absolute right-1 mt-1 py-1 w-fit overflow-hidden rounded-md shadow-md outline-none text-left px-2"
               >
               
                 {/* <Menu.Item>
@@ -114,11 +137,7 @@ const CurationSettingsMenu = ({ curation}) => {
                 {curation.is_published ? (
                   <Menu.Item >
                     <button
-                      onClick={(e) => {
-                        // e.stopPropagation()
-                        // e.preventDefault()
-                        // setUnpublishModalOpen(true)
-                      }}
+                      onClick={() => setUnpublishModalOpen(true)}
                       className="block p-2 hoverPalette2 rounded-md w-full text-left"
                     >
                       Unpublish
@@ -128,13 +147,17 @@ const CurationSettingsMenu = ({ curation}) => {
                 ) : null}
 
                 <Menu.Item>
-                  <button
-                    onClick={openDelete}
-                    disabled={disabledDelete}
-                    className="block p-2 hoverPalette2 rounded-md w-full text-left text-red-500"
-                  >
-                    Delete
-                  </button>
+                  <Tippy disabled={!disabledDelete} content={disabledDeleteText}>
+                    <div>
+                      <button
+                        onClick={openDelete}
+                        disabled={disabledDelete}
+                        className="block p-2 hoverPalette2 rounded-md w-full text-left text-red-500 disabled:cursor-default disabled:opacity-50"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </Tippy>
                 </Menu.Item>
       
               </Menu.Items>

@@ -30,16 +30,18 @@ const AuthorizedViewerBar = ({
   const addButton = isApproved
     ? <MainButton
         disabled
-        className="flex gap-2 items-center "
-        solid
+      className="flex gap-2 items-center justify-center w-[11.13rem]"
+      solid
+      size="lg"
       >
         Approved
         <Icon.Check strokeWidth={2.5} className="stroke-emerald-500" size={18} />
       </MainButton>
     : <MainButton
         onClick={handleInviteSelf}
-        className="flex gap-2 items-center "
-        solid
+      className="flex gap-2 items-center justify-center w-[11.13rem]"
+      solid
+      size="lg"
       >
         Add yourself 
         <Icon.UserPlus size={18} strokeWidth={2.5} />
@@ -48,13 +50,16 @@ const AuthorizedViewerBar = ({
   const viewButton = isEditingDraft 
     ? <MainButton
         disabled={!isPublished}
-        onClick={() => setIsEditingDraft(false)}
+      onClick={() => setIsEditingDraft(false)}
+      size="lg"
+      className="w-[11.13rem]"
       >
         {isPublished ? "View Published" : "Not Published"}
       </MainButton>
     : <MainButton
-        className=""
-        onClick={() => setIsEditingDraft(true)}
+      className="w-[11.13rem]"
+      onClick={() => setIsEditingDraft(true)}
+      size="lg"
       >
         View Draft
       </MainButton>
@@ -62,38 +67,39 @@ const AuthorizedViewerBar = ({
   return (
     <>
       <div
-        className={clsx('fixed bottom-0 right-0 -rotate-45 h-10 w-10', isOpen && "hidden")}
+        className={clsx('fixed bottom-0 left-0 rotate-45 h-10 w-10', isOpen && "hidden")}
       >
         <button
           onClick={toggleEditOpen}
-          className='hoverPalette2 borderPalette2 border-2 palette2 absolute left-1/2 -translate-x-[50%] top-0 h-[150%] w-[300%] flex justify-center items-start pt-1'>
+          className='hoverPalette2 borderPalette2 border-2 palette2 absolute right-1/2 translate-x-[50%] top-0 h-[150%] w-[300%] flex justify-center items-start pt-1'>
           <Icon.ArrowUp strokeWidth={2.5} />
         </button>
       </div>
 
       <div className={clsx("w-full",
         'fixed bottom-0 left-0 duration-300 ',
-        isOpen ? "translate-y-0 translate-x-0" : "translate-y-full translate-x-4",
+        isOpen ? "translate-y-0 translate-x-0" : "translate-y-full -translate-x-4",
         "palette2",
         "z-[1000]"
       )}>
         <div className={clsx(
           'w-full py-2 px-4',
-          "borderPalette2 border-t-2 flex justify-between"
+          "borderPalette2 border-t-2 flex justify-between items-center"
         )}>
-          <div className='w-10' />
-          <div className="w-full grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] place-items-center max-w-screen-xl mx-auto gap-4 py-2 px-4">
-            {viewButton}
-            {centralText}
-            {addButton}
-          </div>
           <button
-            className='align-right rounded-lg p-2 hoverPalette2'
+            className='align-left p-2 hoverPalette2 rounded-full'
             onClick={toggleEditOpen}
-          >
-            <Icon.ArrowDownRight strokeWidth={2.5} />
+            >
+            <Icon.ArrowDownLeft strokeWidth={2.5} />
           </button>
 
+          <div className="w-full grid grid-cols-1 md:grid-cols-3 place-items-center max-w-screen-xl mx-auto gap-4 py-2 px-4">
+            {addButton}
+            {centralText}
+            {viewButton}
+          </div>
+
+          <div className='w-10' />
         </div>
       </div>
     </>

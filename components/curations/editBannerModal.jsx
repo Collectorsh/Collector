@@ -237,7 +237,7 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
       <div className="h-[540px] max-h-full border-4 rounded-xl overflow-hidden palette2 borderPalette3">
         {tabContent[activeTabIndex]}
       </div>
-      <div className="w-full flex justify-end gap-4 mt-4">
+      <div className="w-full flex justify-center gap-4 mt-4">
         <MainButton onClick={handleClose} size="lg" standardWidth>
           Cancel
         </MainButton>

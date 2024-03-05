@@ -29,7 +29,7 @@ const EditDescriptionModal = ({ description, onSave, isOpen, onClose }) => {
         ">
         <QuillEditor textDelta={newDescription} onChange={onChange} />
       </div>
-      <div className="w-full flex justify-end gap-4">
+      <div className="w-full flex justify-center gap-4">
         <MainButton onClick={onClose} size="lg" standardWidth>
           Cancel
         </MainButton>

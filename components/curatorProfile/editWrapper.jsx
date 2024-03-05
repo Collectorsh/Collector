@@ -46,7 +46,7 @@ const EditWrapper = ({
           "flex items-center gap-3 duration-300",
           "absolute z-[19]", getPlacement(),
           groupHoverClass,
-          buttonClassName || "rounded-lg border-4 palette1 border-neutral-200 dark:border-neutral-700 p-1 origin-top-right",
+          buttonClassName || "rounded-lg border-4 palette1 border-neutral-300 dark:border-neutral-700 p-1 origin-top-right",
         )}
       >
         {icon}

@@ -7,30 +7,23 @@ import UserContext from "../../contexts/user"
 import { error, success } from "../../utils/toast"
 import { Oval } from "react-loader-spinner"
 
-const DeleteConfirmationModal = ({ isOpen, onClose, name }) => {
+const DeleteConfirmationModal = ({ isOpen, onClose, name, onDelete }) => {
   const [user] = useContext(UserContext);
   const router = useRouter()
   const [deleting, setDeleting] = useState(false)
 
-  const handleDelete = async () => {
+  const handleDelete = async () => { 
+   
     setDeleting(true)
-    const res = await hideCuration({
-      name,
-      apiKey: user.api_key
-    })
-    if (res?.status === "success") {
-      success(`${name.replaceAll("_", " ")} deleted`)
-      router.push(`/gallery/${user.username}`)
-    } else {
-      error(`Failed to delete ${ name.replaceAll("_", " ")}`)
-      setDeleting(false)
-    }
+    const success = await onDelete()
+    setDeleting(false)
+    if (success) onClose()
   }
-  
+
   return (
     <Modal
       isOpen={isOpen} onClose={onClose}
-      title={`Delete ${ name.replaceAll("_", " ") }`}
+      title={`Deleting ${ name.replaceAll("_", " ") }`}
       widthClass="max-w-screen-sm"
     >
       <div className="flex flex-col gap-3 pb-10 pt-6 text-center items-center justify-center min-h-[9rem]">

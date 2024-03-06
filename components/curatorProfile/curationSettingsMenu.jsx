@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react"
+import { Fragment, useContext, useState } from "react"
 import DeleteConfirmationModal from "../curations/deleteConfirmationModal"
 import withdrawFromTreasury from "../../data/curation/withdrawFromTreasury"
 import useCurationAuctionHouse from "../../hooks/useCurationAuctionHouse"
@@ -11,55 +11,82 @@ import Link from "next/link"
 import clsx from "clsx"
 import { unpublishContent } from "../../data/curation/publishContent"
 import Tippy from "@tippyjs/react"
+import UserContext from "../../contexts/user"
+import { hideCuration } from "../../data/curation/hideCuration"
 
 //TODO add submitted_token_listings to gallery fetched curations
 
-//TODO add private_key_hash to fetch values when user is owner on gallery page
-//add withdraw fees button 
 
-const CurationSettingsMenu = ({ curation}) => { 
-  console.log("🚀 ~ CurationSettingsMenu ~ curation:", curation)
+
+const CurationSettingsMenu = ({ curation, setCurations}) => { 
+  const [user] = useContext(UserContext);
   // submittedTokens,
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [unpublishModalOpen, setUnpublishModalOpen] = useState(false);
 
   const { handleCollect, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
 
-  const curatorBalance = collectedFees ? collectedFees.curatorBalance : 0
-  const curatorFee = roundToPrecision(curatorBalance, 3)
+  // const curatorBalance = collectedFees ? collectedFees.curatorBalance : 0
+  // const curatorFee = roundToPrecision(curatorBalance, 3)
   // const fees = collectedFees ? <span>{curatorFee}◎</span> : <span className='animate-pulse'>...</span>
-
 
   const curationType = curation?.curation_type
   const submittedTokens = curation?.submitted_token_listings
 
   //its ok to delete a group/curator curation because those listings are accessed via the submissions page
-  const hasActiveListings = curation.type !== "curator" && submittedTokens?.filter(s => s.listed_status === "listed" || s.is_master_edition && s.listed_status === "sold").length
-  const hasUncollectedFees = collectedFees?.curatorBalance
-  const disabledDelete = hasActiveListings || hasUncollectedFees
+  const hasActiveListings = curationType !== "curator" && submittedTokens?.filter(s => s.listed_status === "listed" || s.is_master_edition && s.listed_status === "sold").length
+  const uncollectedFees = collectedFees?.curatorBalance
+  const disabledDelete = hasActiveListings || uncollectedFees
 
   const disabledDeleteText = (() => {
     if (hasActiveListings) return "Please close active listings before deleting"
-    if (hasUncollectedFees) return "Please withdraw your fees before deleting"
+    if (uncollectedFees) return `Please withdraw your curator fees before deleting (${ uncollectedFees}◎)`
   })();
 
 
   const openDelete = (e) => {
-    if (disabledDelete) return
+    if (disabledDelete || !setCurations) return
     
     setDeleteModalOpen(true)
   }
 
+  const handleDelete = async () => { 
+    const res = await hideCuration({
+      name: curation.name,
+      apiKey: user.api_key
+    })
+    if (res?.status === "success") {
+      success(`${ curation.name.replaceAll("_", " ") } deleted`)
+      setCurations(prev => prev.filter(c => c.id !== curation.id))
+    } else {
+      error(`Failed to delete ${ curation.name.replaceAll("_", " ") }`)
+      return false
+    }
+  }
+
   const handleUnpublish = async () => {
+    if(!setCurations) return;
+
     const res = await unpublishContent({
       apiKey: user.api_key,
       name: curation.name
     })
 
     if (res?.status === "success") {
-      success(`${ curation.name } is unpublished`)
+      success(`${ curation.name.replaceAll("_", " ") } is unpublished`)
+      setCurations(prev => prev.map(c => {
+        if (c.id === curation.id) {
+          return {
+            ...c,
+            is_published: false
+          }
+        }
+        return c
+      }))
+      return true
     } else {
-      error(`${ curation.name } unpublish failed`)
+      error(`${ curation.name.replaceAll("_", " ") } unpublish failed`)
+      return false
     }
   }
 
@@ -143,7 +170,6 @@ const CurationSettingsMenu = ({ curation}) => {
                       Unpublish
                     </button>
                   </Menu.Item>
-
                 ) : null}
 
                 <Menu.Item>
@@ -166,6 +192,7 @@ const CurationSettingsMenu = ({ curation}) => {
               isOpen={deleteModalOpen}
               onClose={() => setDeleteModalOpen(false)}
               name={curation?.name}
+              onDelete={handleDelete}
             />
             <UnpublishConfirmationModal
               name={curation?.name}

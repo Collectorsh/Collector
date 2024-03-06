@@ -39,7 +39,7 @@ const AuthorizedViewerBar = ({
       </MainButton>
     : <MainButton
         onClick={handleInviteSelf}
-      className="flex gap-2 items-center justify-center w-[11.13rem]"
+      className="flex gap-2 items-center justify-center min-w-[11.13rem]"
       solid
       size="lg"
       >

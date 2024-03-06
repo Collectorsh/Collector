@@ -11,7 +11,7 @@ import CurationSettingsMenu from "./curationSettingsMenu";
 const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillContent), { ssr: false })
 
 
-const CurationHighlight = ({ curation, isOwner }) => { 
+const CurationHighlight = ({ curation, isOwner, setCurations }) => { 
   const { banner_image, name, description, description_delta, is_published, curation_type } = curation
   
   const bannerImgId = parseCloudImageId(banner_image)
@@ -28,7 +28,7 @@ const CurationHighlight = ({ curation, isOwner }) => {
     <>
       <Link href={`/curations/${ name }`} >
         <a className="block w-full group/curationItem">
-          {isOwner && <CurationSettingsMenu curation={curation} />}
+          {isOwner && <CurationSettingsMenu curation={curation} setCurations={setCurations} />}
           <div className={clsx(
             "w-full pb-[50%] md:pb-[33%] relative duration-300 rounded-xl overflow-hidden shadow-neutral-500/20 shadow-md ",
             !isOwner && "group-hover/curationItem:-translate-y-2"

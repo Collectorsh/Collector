@@ -8,13 +8,13 @@ import * as Icon from "react-feather";
 import { defaultCollectorImageId } from "../../config/settings";
 import CurationSettingsMenu from "./curationSettingsMenu";
 
-const CurationList = ({ curations, isOwner, asSortable }) => {
+const CurationList = ({ curations, isOwner, asSortable, setCurations }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
       {asSortable
         ? curations?.map(curation => (
           <SortableCurationPreview key={curation.id} id={curation.id}>
-            <CurationListItem key={curation.id} curation={curation} isOwner={isOwner} />
+            <CurationListItem key={curation.id} curation={curation} isOwner={isOwner} setCurations={setCurations} />
           </SortableCurationPreview>
         ))
         : curations?.map(curation => (
@@ -29,7 +29,7 @@ const CurationList = ({ curations, isOwner, asSortable }) => {
 
 export default CurationList;
 
-export const CurationListItem = ({ curation, isOwner }) => { 
+export const CurationListItem = ({ curation, isOwner, setCurations }) => { 
   const { banner_image, name, description_delta, is_published, curation_type } = curation
   const bannerImgId = parseCloudImageId(banner_image)
 
@@ -45,7 +45,7 @@ export const CurationListItem = ({ curation, isOwner }) => {
     <Link href={`/curations/${ name }`} >
       <a className="w-full duration-300 relative group/curationItem"
       >
-        {isOwner && <CurationSettingsMenu curation={curation} />}
+        {isOwner && <CurationSettingsMenu curation={curation} setCurations={setCurations} />}
         <PublishedTag
           isPublished={is_published}
           isOwner={isOwner}

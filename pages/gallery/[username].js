@@ -15,7 +15,7 @@ import { success, error } from "/utils/toastMessages";
 import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
 import MainButton from "../../components/MainButton";
-import CreateCurationModal from "../../components/curatorProfile/createCurationModal";
+import CreateCurationModal, { CollectorIcon } from "../../components/curatorProfile/createCurationModal";
 import getCuratorFromUsername from "../../data/user/getCuratorByUsername";
 import { getTokenCldImageId, isCustomId, parseCloudImageId } from "../../utils/cloudinary/idParsing";
 import { displayName as getDisplayName } from "../../utils/displayName";
@@ -387,12 +387,12 @@ function ProfilePage({ curator }) {
                   ? (
                     <>
                       <SortableCurationPreview id={curations[0].id}>
-                        <CurationHighlight curation={curations[0]} isOwner={isOwner} />
+                        <CurationHighlight curation={curations[0]} isOwner={isOwner} setCurations={setCurations} />
                       </SortableCurationPreview>
 
                       <div className="h-6"/>
               
-                      <CurationList asSortable curations={curations.slice(1)} isOwner={isOwner}/>
+                      <CurationList asSortable curations={curations.slice(1)} isOwner={isOwner} setCurations={setCurations} />
                     </>
                   )
                   : null
@@ -418,11 +418,12 @@ function ProfilePage({ curator }) {
           ? (
             <MainButton
               size={"xl"}
-              className="m-auto flex items-center justify-center gap-2 mt-8"
+              className="m-auto flex items-center justify-center gap-4 mt-8"
               onClick={() => setCreateCurationOpen(true)}
             >
               Create new curation 
-              <Icon.Plus  strokeWidth={2.5} />
+              {/* <Icon.Plus  strokeWidth={2.5} /> */}
+              <CollectorIcon />
             </MainButton>
           )
           : null

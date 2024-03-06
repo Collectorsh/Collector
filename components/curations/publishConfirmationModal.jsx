@@ -1,13 +1,18 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import MainButton from "../MainButton"
 import Modal from "../Modal"
 import CopyButton from "../CopyToClipboard"
 import { shootConfetti } from "../../utils/confetti"
+import { useRouter } from "next/router"
+import UserContext from "../../contexts/user"
 
 const PublishConfirmationModal = ({ isOpen, onClose, name, onPublish, onViewPublished, isPublished }) => {
   const [saving, setSaving] = useState(false)
   const [publishSuccess, setPublishSuccess] = useState(false)
   const [error, setError] = useState(false)
+
+  const router = useRouter()
+  const [user, setUser] = useContext(UserContext);
 
   const getUrl = () => {
     if (typeof window !== "undefined") {
@@ -32,9 +37,14 @@ const PublishConfirmationModal = ({ isOpen, onClose, name, onPublish, onViewPubl
     }
   }
 
-  const handleViewPublished = () => { 
-    onViewPublished()
-    handleClose()
+  // const handleViewPublished = () => { 
+  //   onViewPublished()
+  //   handleClose()
+  // }
+
+  const handleGallery = () => { 
+    router.push(`/gallery/${user.username}`)
+
   }
 
   const handleClose = () => {
@@ -77,8 +87,8 @@ const PublishConfirmationModal = ({ isOpen, onClose, name, onPublish, onViewPubl
         <MainButton onClick={handleClose} className="w-[12.2rem]" size="lg">
           Continue Editing
         </MainButton>
-        <MainButton onClick={handleViewPublished} className="w-[12.2rem]"  solid  size="lg">
-          View Published
+        <MainButton onClick={handleGallery} className="w-[12.2rem]"  solid  size="lg">
+          View Gallery
         </MainButton>
       </>
     )
@@ -98,7 +108,7 @@ const PublishConfirmationModal = ({ isOpen, onClose, name, onPublish, onViewPubl
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose}
-      title={`Publish ${ name.replaceAll("_", " ") }`}
+      title={`Publishing ${ name.replaceAll("_", " ") }`}
       widthClass="max-w-screen-sm"
     >
       <div className="flex flex-col gap-3 pb-10 pt-6 text-center items-center justify-center min-h-[9rem]">

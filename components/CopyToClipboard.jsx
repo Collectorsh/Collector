@@ -21,7 +21,7 @@ const CopyButton = ({ textToCopy, className }) => {
 
   return (
     <button
-      className={clsx("p-1 rounded flex items-center space-x-2 hoverPalette3", className)}
+      className={clsx("p-2 rounded-full flex items-center space-x-2 hoverPalette3", className)}
       onClick={() => copyToClipboard(textToCopy)}
     >
       {copied ? (

@@ -232,7 +232,7 @@ export default function WaitlistPage() {
         </MainButton> */}
         <MainButton
           onClick={handleGetStarted}
-          size="lg"
+          size="xl"
           solid
           className="w-[12rem]"
         >

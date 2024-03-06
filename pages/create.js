@@ -108,7 +108,7 @@ export default function MintPage() {
   const categoryDisplay = category === CATEGORIES.VR ? "3D Model" : category
   const isEditions = maxSupply > 1
 
-  const permitted = user?.subscription_level == "pro"
+  const permitted = user?.subscription_level === "pro" || user?.curator_approved
 
   useEffect(() => {
     if (!user) {

@@ -220,11 +220,9 @@ export default function MintPage() {
           externalUrl
         }}
       />
-      <div className="relative w-full max-w-screen-lg mx-auto px-4 2xl:px-8 py-12">
-        <div className="flex justify-between items-center flex-wrap gap-4 px-4">
-          <h2 className="text-5xl font-bold">Mint</h2>
-         
-        </div>
+      <div className="relative w-full max-w-screen-lg  mx-auto px-6 sm:px-11 py-12">
+        <h2 className="text-5xl font-bold">Mint</h2>
+        
 
         <hr className="mt-6 mb-12 borderPalette2" />
 

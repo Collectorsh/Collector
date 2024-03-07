@@ -81,6 +81,7 @@ export const adminIDs = [
   5421, //Scott (username: EV3)
 ]
 
+export const collectorLogoId = "global/Collector-logo_zqbljh"
 export const collectorBobId = "global/collector-bob_qfxfdz"
 export const defaultCollectorImageId = "global/Collector_Hero_btrh4t"
 export const metaPreviewImage = baseCloudImageUrl(defaultCollectorImageId)

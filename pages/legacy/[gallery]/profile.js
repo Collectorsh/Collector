@@ -5,7 +5,8 @@ import getFollowingById from "/data/artists/getFollowingById";
 import ProfilePage from "/components/profile/ProfilePage";
 import MainNavigation from "/components/navigation/MainNavigation";
 import { useRouter } from "next/router";
-import NotFound from "../../components/404";
+import NotFound from "../../../components/404";
+
 
 function Profile({ profileUser }) {
   return <NotFound />

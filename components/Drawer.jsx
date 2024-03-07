@@ -10,7 +10,7 @@ const Drawer = ({ children, title, wrapperClass, drawerClass, buttonClass }) => 
         onClick={() => setOpen(prev => !prev)}
       >
         {title}
-        <Icon.ChevronDown size={18} strokeWidth={2.5} className={clsx("duration-300", open ? "-rotate-180": "rotate-0")} />
+        <Icon.ChevronDown size={18} strokeWidth={2.5} className={clsx("duration-300 flex-shrink-0", open ? "-rotate-180": "rotate-0")} />
       </button>
 
       <div

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import NotFound from "../components/404";
 
 
 const Submissions = () => {

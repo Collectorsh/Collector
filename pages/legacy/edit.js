@@ -4,8 +4,10 @@ import EditGallery from "/components/edit/EditGallery";
 import MainNavigation from "/components/navigation/MainNavigation";
 import Settings from "/components/edit/Settings";
 import clsx from "clsx";
+import NotFound from "../../components/404";
 
 function Edit() {
+  return <NotFound />
   const [selected, setSelected] = useState("gallery");
 
   const changeSelected = (sel) => {
@@ -14,7 +16,7 @@ function Edit() {
 
   return (
     <div>
-      <CheckLoggedIn />
+      {/* <CheckLoggedIn /> */}
       <MainNavigation />
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-8">
         <div className="mx-auto pt-3 md:px-0">

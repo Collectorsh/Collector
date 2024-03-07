@@ -26,7 +26,7 @@ const CurationHighlight = ({ curation, isOwner, setCurations }) => {
   }, [curation_type])
   return (
     <>
-      <Link href={`/curations/${ name }`} >
+      <Link href={`/${curation?.curator?.username || "curations"}/${ name }`} >
         <a className="block w-full group/curationItem">
           {isOwner && <CurationSettingsMenu curation={curation} setCurations={setCurations} />}
           <div className={clsx(

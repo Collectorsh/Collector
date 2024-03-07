@@ -152,7 +152,7 @@ const CurationSettingsMenu = ({ curation, setCurations}) => {
               >
               
                 {/* <Menu.Item>
-                  <Link href={`/curations/${ curation.name }`} passHref>
+                  <Link href={`/${curation?.curator?.username || "curations"}/${ curation.name }`} passHref>
                     <p className="p-2 hoverPalette2 rounded-md">
                       Edit Draft
                     </p>

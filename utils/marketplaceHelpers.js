@@ -17,7 +17,7 @@ export function marketplaceLink(
     return `https://formfunction.xyz/@/${mint}`;
   }
   if (source === "collector") {
-    return `/nft/${mint}`;
+    return `/art/${mint}`;
   }
   if (source === "magiceden") {
     return `https://magiceden.io/item-details/${mint}`;

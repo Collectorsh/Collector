@@ -4,7 +4,6 @@ const nextConfig = {
   experimental: {
     instrumentationHook: true,
   },
-  // ...additional config
 }
 
 export default withHighlightConfig(nextConfig)

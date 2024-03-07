@@ -19,7 +19,7 @@ export default function Listings({ token }) {
   return (
     <>
       {listing && (
-        <Link href={`/nft/${token.mint}`} title="">
+        <Link href={`/art/${token.mint}`} title="">
           <a>
             <div className="text-sm cursor-pointer text-dark3 dark:text-neutral-300 bg-whitish dark:bg-dark3 w-fit px-2 py-1 rounded absolute top-3 right-3">
               Buy Now ◎{roundToTwo(listing.price / 1000000000)}

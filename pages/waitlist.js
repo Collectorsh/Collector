@@ -137,7 +137,7 @@ export default function WaitlistPage() {
   }
 
   const handleGetStarted = () => { 
-    router.push(`/gallery/${ user.username }`)
+    router.push(`/${ user.username }`)
   }
 
   const form = (

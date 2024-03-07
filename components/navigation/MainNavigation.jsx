@@ -40,7 +40,7 @@ export default function MainNavigation() {
   const getStarted = () => {
     if (isPro) {
       if (!user.username) router.push("/settings");
-      else router.push(`/gallery/${ user.username }`);
+      else router.push(`/${ user.username }`);
     } else {
       router.push("/waitlist");
     }
@@ -177,7 +177,7 @@ export default function MainNavigation() {
                           ? (<>
                             {user.subscription_level === "pro"
                               ? (<>
-                                <Link href={`/gallery/${ user.username }`} passHref>
+                                <Link href={`/${ user.username }`} passHref>
                                   <p className="pl-3">My Gallery</p>
                                 </Link>
                                 <hr className="borderPalette3" />
@@ -187,11 +187,11 @@ export default function MainNavigation() {
                               
                             {isCuratorApproved
                               ? (<>
-                                <Link href={`/create`} passHref>
+                                <Link href={`/mint`} passHref>
                                   <p className="pl-3">Mint</p>
                                 </Link>
                                 <hr className="borderPalette3" />
-                                <Link href={`/submissions`} passHref>
+                                <Link href={`/submit`} passHref>
                                   <p className="pl-3">Submit</p>
                                 </Link>
                                 <hr className="borderPalette3" />

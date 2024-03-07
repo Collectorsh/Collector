@@ -84,7 +84,7 @@ export default function GalleryImages() {
                   {metadata.artist_name ? metadata.artist_name : "???"}
                 </div>
                 <div className="mt-16">
-                  <Link href={`/nft/${metadata.mint}`}>
+                  <Link href={`/art/${metadata.mint}`}>
                     <a className="py-3.5 px-4 rounded-lg border-2 duration-300 border-black dark:border-white text-black dark:text-white cursor-pointer hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-bold">
                       View Artwork
                     </a>

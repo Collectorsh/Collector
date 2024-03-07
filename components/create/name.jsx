@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { REQUIRED } from "../../pages/create"
+import { REQUIRED } from "../../pages/mint"
 
 const NameInput = ({
   name, setName, setError,

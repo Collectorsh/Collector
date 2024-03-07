@@ -70,7 +70,7 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
     if (res?.status === "success") {
       success(`${ curationName } has been created!`)
       shootConfetti(3)
-      router.push(`/curations/${curationName}`)
+      router.push(`/${user.username}/${curationName}`)
     } else {
       error(`${ curationName } creation failed`)
       setCreating(false)
@@ -104,7 +104,7 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
         <div>
           <div className="relative mb-1">
             <p className="font-bold">Curation Name</p>
-            <p className="text-xs textPalette2">Also your curation&apos;s url (e.g. https://collector.sh/curations/curation_name)</p>
+            <p className="text-xs textPalette2">Also your curation&apos;s url (e.g. https://collector.sh/username/curation_name)</p>
           </div>
           <input
             type="text"

@@ -119,7 +119,7 @@ export default function CreateUsernameModal() {
           </p>
 
           <div className="w-full flex justify-center gap-4">
-            <Link href={`/gallery/${ username }`} passHref>
+            <Link href={`/${ username }`} passHref>
               <MainButton solid>
                 View Gallery
               </MainButton>

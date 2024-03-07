@@ -16,7 +16,7 @@ const LandingHero = () => {
     router.push("/waitlist");
     // if (isPro) {
     //   if (!user.username) router.push("/settings");
-    //   else router.push(`/gallery/${user.username}`);
+    //   else router.push(`/${user.username}`);
     // } else {
     //   router.push("/waitlist");
     // }

@@ -64,7 +64,7 @@ export default function MintedModal({ open, nft, updateOpen }) {
                     className="rounded-lg w-64 h-64 mx-auto mt-4"
                   />
                   <p className="mt-4">
-                    <Link href={`/nft/${nft && nft.mint.address.toBase58()}`}>
+                    <Link href={`/art/${nft && nft.mint.address.toBase58()}`}>
                       <a className="text-blue-500">Go to the artwork</a>
                     </Link>
                   </p>

@@ -89,7 +89,7 @@ export default function Wallets() {
 
       </div>
 
-      <div className="flex justify-start items-center gap-4 pl-1 mt-4">
+      <div className="flex justify-start flex-wrap items-center gap-4 pl-1 mt-4">
         <MainButton
           solid
           onClick={addWallet}
@@ -115,9 +115,9 @@ const AddressCard = ({ pubKey, isPrimary, onRemove }) => {
     <div className={clsx(
       "flex justify-between items-center gap-2 w-full palette2 px-4 py-2 rounded-lg shadow",
     )}>
-      <p>
+      <p className="w-full">
         <span className={clsx(!isPrimary && "hidden", "font-bold")}>Primary:  </span>
-        <span className="textPalette2">{pubKey}</span>
+        <span className="textPalette2 truncate inline-block w-full">{pubKey}</span>
       </p>
      
       <button onClick={onRemove} className={clsx("duration-300 opacity-50 hover:opacity-100", isPrimary && "hidden")}>

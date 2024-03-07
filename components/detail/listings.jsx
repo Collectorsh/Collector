@@ -47,7 +47,7 @@ export default function DetailListings({ curation, mint }) {
   }
 
   return (
-    <div className="flex flex-wrap justify-between items-center">
+    <div className="flex flex-wrap justify-between items-center gap-2">
       <Link href={`/${ curation?.curator?.username || "curations"}/${curation.name}`}>
         <a className="hoverPalette1 px-2 rounded-md duration-300 relative -left-2">
           <p className="font-bold text-xl">{curation.name.replaceAll("_", " ")}</p>

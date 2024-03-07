@@ -30,7 +30,6 @@ const GlobalEditBar = ({
 }) => {
   const [withdrawing, setWithdrawing] = useState(false)
   const [editListingsOpen, setEditListingsOpen] = useState(false)
-  // const [deleteModalOpen, setDeleteModalOpen] = useState(false)
 
   const curationType = curation?.curation_type
   const curationWithSubmissions = {
@@ -41,18 +40,6 @@ const GlobalEditBar = ({
   const curatorBalance = collectedFees ? collectedFees.curatorBalance : 0
   const curatorFee = roundToPrecision(curatorBalance, 3)
   const fees = collectedFees ? <span>{curatorFee}◎</span> : <span className='animate-pulse'>...</span>
-
-  // //its ok to delete a group/curator curation because those listings are accessed via the submissions page
-  // const hasActiveListings = curation.type !== "curator" && submittedTokens?.filter(s => s.listed_status === "listed" || s.is_master_edition && s.listed_status === "sold").length
-  // const hasUncollectedFees = collectedFees?.curatorBalance
-  // const disabledDelete = hasActiveListings || hasUncollectedFees
-  
-  // const disabledDeleteText = (() => {
-  //   if(hasActiveListings) return "Please close active listings before deleting"
-  //   if (hasUncollectedFees) return "Please withdraw your fees before deleting"
-  // })();
-
-  
 
   const toggleEditOpen = () => { 
     setOpen(prev => !prev);
@@ -124,109 +111,9 @@ const GlobalEditBar = ({
         <Icon.Tag size={18} strokeWidth={2.5} />
       </MainButton>
     )
-  
-  const centralText = ( 
-    <div className='text-left relative'>
-      <p className='text-xs textPalette3 leading-none'>viewing</p>
-      <p className='font-bold textPalette2'>{getTabText()}</p>
-    </div>
-  )
 
-  // const draftButtons = (
-  //   <>
-  //     <div className='flex gap-4 flex-wrap justify-center  place-self-center'>
-  //       <Tippy content="View Published" className='shadow'>
-  //         <MainButton
-  //           className={clsx(!isPublished && "hidden", "flex gap-2 items-center justify-center px-2 rounded-md")}
-  //           onClick={() => setIsEditingDraft(false)}
-  //           noPadding
-  //         >
-  //           {/* View Published */}
-  //           <Icon.Eye size={18} strokeWidth={2.5} />
-  //         </MainButton>
-  //       </Tippy>
-
-  //       <MainButton
-  //         className="flex gap-2 items-center justify-center w-[10.25rem]"
-  //         onClick={openPublish}
-  //         solid
-  //         disabled={!hasChanges && isPublished || noContent}
-  //       >
-  //         Publish Draft
-  //         <Icon.Upload size={18} strokeWidth={2.5} />
-  //       </MainButton>
-  //     </div>
-
-  //     {centralText}
-
-  //     <div className='flex gap-4 flex-wrap justify-center place-self-center'>
-  //       {actionButton}
-  //     </div>
-
-  //   </>
-  // )
-
-  // const publishedButtons = (
-  //   <>
-  //     <div className='flex gap-4 flex-wrap justify-center md:place-self-start w-full'>
-  //       <WarningButton
-  //         className="w-[7.2rem]"
-  //         onClick={openUnpublish}
-  //       >
-  //         Unpublish
-  //       </WarningButton>
-
-  //       <MainButton
-  //         className="w-[7.2rem]"
-  //         solid
-  //         onClick={() => setIsEditingDraft(true)}
-  //       >
-  //         Edit Draft
-  //       </MainButton>
-  //     </div>
-
-  //     {centralText}
-
-  //     <div className='flex gap-4 flex-wrap justify-center place-self-center'>
-  //       {actionButton}
-
-  //       {curationType === "curator" ? (
-  //         <Tippy
-  //           content={!curatorBalance ? "Currently no fees have been collected" : <p>Withdraw {fees}</p>}
-  //           className='shadow'
-  //         >
-  //           <div>
-  //             <MainButton
-  //               onClick={handleWithdraw}
-  //               disabled={withdrawing || !curatorBalance}
-  //               className="flex gap-2 items-center justify-center w-[10.75rem]"
-  //             >
-  //               {withdrawing
-  //                 ? (
-  //                   <Oval color="#FFF" secondaryColor="#666" height={16} width={16} strokeWidth={4} className="translate-y-0.5" />
-  //                 )
-  //                 : "Withdraw Fees ◎"
-  //               }
-  //             </MainButton>
-
-  //           </div>
-  //         </Tippy>
-  //       ) : null}
-  //     </div>
-  //   </>
-  // )
   return (
     <>
-      {/* <div
-        className={clsx('fixed bottom-0 right-0 -rotate-45 h-10 w-10', isOpen && "hidden")}
-      >
-        <button
-          onClick={toggleEditOpen}
-          className='hoverPalette2 borderPalette2 border-2 palette2 absolute left-1/2 -translate-x-[50%] top-0 h-[150%] w-[300%] flex justify-center items-start pt-1'>
-          <Icon.ArrowUp strokeWidth={2.5}/>
-        </button>
-      </div> */}
-
       <Tippy
         content={"Switch to edit view"}
       >
@@ -252,17 +139,11 @@ const GlobalEditBar = ({
         "palette2",
         "z-[1000]"
       )}>
-        {/* <button
-          className='align-right rounded-lg p-2 hoverPalette2'
-          onClick={toggleEditOpen}
-        >
-          <Icon.ArrowDownRight strokeWidth={2.5} />
-        </button> */}
         <div className={clsx(
           'w-full py-3 px-4',
-          "borderPalette2 border-t-2 grid md:grid-cols-[1fr_auto_1fr] gap-4 place-items-center justify-items-center"
+          "borderPalette2 border-t-2 grid grid-cols-[auto_1fr] md:grid-cols-[1fr_auto_1fr] gap-4 place-items-center"
         )}>
-          <div className="md:place-self-start flex items-center gap-3 my-auto"> 
+          <div className="place-self-start flex items-center gap-3 my-auto"> 
             <Tippy
               content={"Switch to public view"}
             >  
@@ -274,15 +155,24 @@ const GlobalEditBar = ({
               </button>
             
             </Tippy>
-            {centralText}
+            <div className='text-left relative hidden md:block'>
+              <p className='text-xs textPalette3 leading-none'>viewing</p>
+              <p className='font-bold textPalette2'>{getTabText()}</p>
+            </div>
+          </div>
+
+          <div className='md:hidden'>
+            <p className='text-center text-sm'>
+              Editing curations is currently supported on desktop only. Please switch to a desktop to continue. Thank you!
+            </p>
           </div>
           
-          <div className='md:place-self-center'>
+          <div className='hidden md:block md:place-self-center'>
             {actionButton}
           </div>
 
           <MainButton
-            className="md:place-self-end flex gap-2 items-center justify-center md:mr-2 w-[12rem] my-auto"
+            className="hidden md:flex md:place-self-end gap-2 items-center justify-center md:mr-2 w-[12rem] my-auto"
             onClick={openPublish}
             solid
             disabled={noContent}
@@ -293,27 +183,6 @@ const GlobalEditBar = ({
           </MainButton>
 
         </div>
-
-        {/* <div className={clsx(
-          'w-full py-2 px-4',
-          "borderPalette2 border-t-2 flex justify-between"
-        )}>
-          <Tippy disabled={!disabledDelete} content={disabledDeleteText}>
-            <div>
-              <button
-                className={clsx('h-full align-left rounded-lg p-2 hoverPalette2 disabled:opacity-50 disabled:palette2')}
-                onClick={openDelete}
-                disabled={disabledDelete}
-              >
-                <Icon.Trash2 strokeWidth={2.5} size={22} color="red"/>
-              </button>
-
-            </div>
-          </Tippy>
-          <div className="w-full grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] place-items-center max-w-screen-xl mx-auto gap-4 py-2 px-4">
-            {isEditingDraft ? draftButtons : publishedButtons}
-          </div>
-        </div> */}
       </div>
 
       <EditListingsModal
@@ -323,11 +192,6 @@ const GlobalEditBar = ({
         handleRemoveListing={handleRemoveListing}
         curation={curationWithSubmissions}
       />
-      {/* <DeleteConfirmationModal
-        isOpen={deleteModalOpen}
-        onClose={() => setDeleteModalOpen(false)}
-        name={curation?.name}
-      /> */}
     </>
   )
 }

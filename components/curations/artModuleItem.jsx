@@ -255,7 +255,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
         }}
       >
         <div
-          className={clsx('flex gap-1', "flex-col items-start relative")}
+          className={clsx('flex md:gap-0.5', "flex-col items-start relative")}
         >
 
           <p className='textPalette2 font-bold text-sm mt-1 flex gap-1'>{supplyText}{secondaryListingInfo}</p>

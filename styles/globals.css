@@ -319,12 +319,14 @@ input:checked + .toggle-bg {
 }
 
 .tippy-box.tippy-box {
+  @apply invisible md:visible;
   @apply bg-neutral-200 dark:bg-neutral-700;
   @apply text-neutral-900 dark:text-neutral-100;
   @apply shadow dark:shadow-white/10 text-sm leading-4 px-1 py-0 h-fit;
 }
 
 .tippy-arrow.tippy-arrow {
+  @apply invisible md:visible;
   @apply text-neutral-200 dark:text-neutral-700;
 }
 

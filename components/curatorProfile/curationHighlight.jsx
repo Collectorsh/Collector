@@ -30,7 +30,7 @@ const CurationHighlight = ({ curation, isOwner, setCurations }) => {
         <a className="block w-full group/curationItem">
           {isOwner && <CurationSettingsMenu curation={curation} setCurations={setCurations} />}
           <div className={clsx(
-            "w-full pb-[50%] md:pb-[33%] relative duration-300 rounded-xl overflow-hidden shadow-neutral-500/20 shadow-md ",
+            "w-full pb-[33%] relative duration-300 rounded-xl overflow-hidden shadow-neutral-500/20 shadow-md ",
             !isOwner && "group-hover/curationItem:-translate-y-2"
           )}> 
             <PublishedTag isPublished={is_published} isOwner={isOwner} />

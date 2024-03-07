@@ -286,11 +286,11 @@ export default function DetailPage({token, curations}) {
         </div>
 
         <div
-          className={clsx("mt-2 px-4 mx-auto")}
+          className={clsx("mt-8 px-4 mx-auto")}
         >
           <p className='text-sm textPalette2 font-bold'>{supplyText}</p>
           <div className="flex justify-between items-center">
-            <h1 className="collector text-4xl leading-9">{token?.name}</h1>
+            <h1 className="text-4xl leading-9">{token?.name}</h1>
             
             {showUpdateButton ? (
               <MainButton

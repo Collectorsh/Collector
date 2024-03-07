@@ -148,7 +148,27 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
       title="Choose your curation type"
       widthClass="max-w-2xl"
     >
-      <div className="h-full overflow-y-auto p-1">
+      
+      <div className="md:hidden h-full flex justify-center items-center py-10 px-4 overflow-y-auto">
+        <p className="text-center">
+          Creating curations is currently supported on desktop only. Please switch to a desktop to continue. Thank you!
+        </p>
+      </div>
+
+      <div className="md:hidden flex justify-center my-3 w-full">
+        <MainButton
+          className=""
+          onClick={handleClose}
+          size="lg"
+        >
+          Ok
+        </MainButton>
+
+      </div>
+     
+
+   
+      <div className="hidden md:block h-full overflow-y-auto p-1">
         {creating
           ? (<div className="flex flex-col justify-center items-center gap-4 h-36">
             <p className="text-xl font-bold animate-pulse">Building {curationName}...</p>
@@ -157,8 +177,8 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
           : form
         }
       </div>
-    
-      <div className="w-full flex flex-wrap-reverse justify-center gap-4 mt-3">
+      
+      <div className="hidden md:flex w-full flex-wrap-reverse justify-center gap-4 mt-3">
         <MainButton onClick={handleClose} disabled={creating} size="lg" className="w-[12.42rem]">
           Cancel
         </MainButton>

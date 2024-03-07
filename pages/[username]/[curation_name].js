@@ -44,6 +44,7 @@ import MainButton from "../../components/MainButton";
 
 import * as Icon from 'react-feather'
 import { displayName } from "../../utils/displayName";
+import useBreakpoints from "../../hooks/useBreakpoints";
 
 const descriptionPlaceholder = "Tell us about this curation."
 
@@ -51,6 +52,9 @@ function CurationPage({curation}) {
   const [user] = useContext(UserContext);
   const router = useRouter();
   const curationDetails = useCurationDetails(router.query?.curation_name)
+
+  const breakpoint = useBreakpoints()
+  const isMobile = ["", "sm", "md"].includes(breakpoint)
 
   const { handleCollect, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
 
@@ -111,7 +115,7 @@ function CurationPage({curation}) {
   
   const modules = useDraftContent ? draftContent?.modules : publishedContent?.modules;
 
-  const displayDraftEdit = globalEditOpen && useDraftContent && isOwner;
+  const displayDraftEdit = !isMobile && globalEditOpen && useDraftContent && isOwner;
   const displayCuration = Boolean(curation?.is_published || isOwner || isAuthorizedViewer);
 
   const hasChanges = JSON.stringify(draftContent) !== JSON.stringify(publishedContent);
@@ -169,11 +173,11 @@ function CurationPage({curation}) {
           })
           if (res?.draft_content) setDraftContent(res.draft_content)
         }
-        setGlobalEditOpen(true)
+        setGlobalEditOpen(isMobile ? false : true) //disable global edit on mobile
         setIsEditingDraft(true)
       })();
     }
-  }, [isOwner, curation?.name, user?.api_key, viewerPasscodeQuery])
+  }, [isOwner, curation?.name, user?.api_key, viewerPasscodeQuery, isMobile])
 
   const handlePublish = async () => { 
     if (!isOwner) return;

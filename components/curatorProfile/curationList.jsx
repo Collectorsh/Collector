@@ -42,7 +42,7 @@ export const CurationListItem = ({ curation, isOwner, setCurations }) => {
   }, [curation_type])
 
   return (
-    <Link href={`/curations/${ name }`} >
+    <Link href={`/${ curation?.curator?.username || "curations"}/${ name }`} >
       <a className="w-full duration-300 relative group/curationItem"
       >
         {isOwner && <CurationSettingsMenu curation={curation} setCurations={setCurations} />}

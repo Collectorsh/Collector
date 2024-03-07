@@ -6,10 +6,16 @@ import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
 import MainButton from "../MainButton";
 
 import * as Icon from 'react-feather'
+import { defaultCollectorImageId } from "../../config/settings";
 
 const CurationBanner = ({ setEditBannerOpen, displayDraftEdit, banner, useDraftContent, publishedBanner}) => {
   const [bannerLoaded, setBannerLoaded] = useState(true);
-  const bannerImgId = parseCloudImageId(banner)
+  // const bannerImgId = parseCloudImageId(banner)
+  const [bannerImgId, setBannerImgId] = useState(parseCloudImageId(banner));
+
+  const handleError = () => {
+    setBannerImgId(defaultCollectorImageId)
+  }
 
   useEffect(() => {
     if (!useDraftContent || !publishedBanner || !banner) return;
@@ -38,6 +44,7 @@ const CurationBanner = ({ setEditBannerOpen, displayDraftEdit, banner, useDraftC
               noLazyLoad
               onLoad={() => setBannerLoaded(true)}
               width={3000}
+              onError={handleError}
             />
           ) : (
             <div className={clsx(

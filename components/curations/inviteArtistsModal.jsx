@@ -65,7 +65,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
 
   const getUrl = () => {
     if (typeof window !== "undefined") {
-      return `${ host }/submissions/?passcode=${ passcode }`;
+      return `${ host }/submit/?passcode=${ passcode }`;
     } else return ""
   }
 

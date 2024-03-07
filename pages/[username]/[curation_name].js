@@ -44,24 +44,12 @@ import MainButton from "../../components/MainButton";
 
 import * as Icon from 'react-feather'
 import { displayName } from "../../utils/displayName";
-import NotFound from "../../components/404";
 
 const descriptionPlaceholder = "Tell us about this curation."
 
 function CurationPage({curation}) {
-  const router = useRouter();
-
-  useEffect(() => {
-    
-    router.replace(`/${curation.curator.username}/${ curation.name }`)
-    
-  }, [router, curation])
-
-  return <NotFound />
-
-
-
   const [user] = useContext(UserContext);
+  const router = useRouter();
   const curationDetails = useCurationDetails(router.query?.curation_name)
 
   const { handleCollect, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
@@ -302,7 +290,7 @@ function CurationPage({curation}) {
 
     if (res?.status === "success") {
       success(`${ newName } updated!`)
-      router.replace(`/curations/${ newName }`)
+      router.replace(`/${ curation?.curator?.username || "curations"}/${ newName }`)
     } else {
       error(`${ curation.name } name update failed`)
     }
@@ -609,7 +597,6 @@ function CurationPage({curation}) {
 export async function getServerSideProps(context) {
   try {
     const name = context.params.curation_name;
-
     const curation = await getCurationByName(name)
 
     if (curation) {

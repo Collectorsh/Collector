@@ -30,7 +30,7 @@ const LandingCurationListItem = ({ curation }) => {
   }, [curation.curation_type])
 
   return (
-    <Link href={`/curations/${ name }`} >
+    <Link href={`/${ curation?.curator?.username || "curations"}/${ name }`} >
       <a className="w-full duration-300 hover:scale-[102%] active:scale-100 relative
        group
       "

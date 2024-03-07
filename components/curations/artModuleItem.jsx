@@ -116,7 +116,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
       return (owner?.username && owner.username !== artist?.username) ? (
         <ToggleLink
           disabled={!useOwnerLink}  
-          href={`/gallery/${ owner?.username }`}
+          href={`/${ owner?.username }`}
           passHref
         > 
           <p className={clsx(useOwnerLink && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer")}>Owned by {displayName(owner)}</p>
@@ -128,7 +128,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
       return (
         <ToggleLink
           disabled={!useArtistLink}
-          href={`/gallery/${ artist?.username }`}
+          href={`/${ artist?.username }`}
           passHref
         >
           <p className={clsx(useArtistLink && "relative -left-2 rounded-md px-2 py-0 hoverPalette1 cursor-pointer")}> by {artistName}</p>
@@ -173,7 +173,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
       className={clsx("relative duration-300 w-fit mx-auto",)}
     >
       <ToggleLink
-        href={`/nft/${ token.mint }`}
+        href={`/art/${ token.mint }`}
         disabled={disableLink}
       >
         <a
@@ -261,7 +261,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
           <p className='textPalette2 font-bold text-sm mt-1 flex gap-1'>{supplyText}{secondaryListingInfo}</p>
 
       
-          <Link href={`/nft/${ token.mint }`} disabled={disableLink} passHref>
+          <Link href={`/art/${ token.mint }`} disabled={disableLink} passHref>
             <p
               className='font-bold text-2xl leading-7 truncate cursor-pointer px-2 relative -left-2 hoverPalette1 rounded-md'
               style={{

@@ -43,7 +43,7 @@ const PublishConfirmationModal = ({ isOpen, onClose, name, onPublish, onViewPubl
   // }
 
   const handleGallery = () => { 
-    router.push(`/gallery/${user.username}`)
+    router.push(`/${user.username}`)
 
   }
 

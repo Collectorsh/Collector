@@ -1,5 +1,5 @@
 import Tippy from "@tippyjs/react"
-import { REQUIRED } from "../../pages/create"
+import { REQUIRED } from "../../pages/mint"
 import * as Icon from 'react-feather'
 const RoyaltiesInput = ({ royalties, setRoyalties, setError }) => { 
   const max = 90

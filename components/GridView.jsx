@@ -58,7 +58,7 @@ export default function GridView({
               </Link>
             )}
             {type === "collected" && (
-              <Link href={`/nft/${item.attributes.mint}`}>
+              <Link href={`/art/${item.attributes.mint}`}>
                 <a>
                   <Image
                     token={{

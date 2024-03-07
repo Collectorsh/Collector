@@ -48,7 +48,7 @@ export default function Gallery() {
                 <div className="px-2">
                   {user.subscription_level === "pro" ? (
                     <Menu.Item>
-                      <Link href={`/gallery/${ user.username }`}>
+                      <Link href={`/${ user.username }`}>
                         <a className="block p-2 hoverPalette2 rounded-md">
                           My Gallery
                         </a>
@@ -62,14 +62,14 @@ export default function Gallery() {
                   {isCuratorApproved ? (
                     <>
                       <Menu.Item>
-                        <Link href={`/create`}>
+                        <Link href={`/mint`}>
                           <a className="block p-2 hoverPalette2 rounded-md">
                             Mint
                           </a>
                         </Link>
                       </Menu.Item>
                       <Menu.Item>
-                        <Link href={`/submissions`}>
+                        <Link href={`/submit`}>
                           <a className="block p-2 hoverPalette2 rounded-md">
                             Submit
                           </a>

@@ -25,9 +25,9 @@ const SortableModule = ({id, children}) => {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}
-      className={clsx("relative rounded-lg border-4",
+      className={clsx("relative rounded-lg border-4 duration-300",
         "border-neutral-300/60 dark:border-neutral-700/60 hover:border-neutral-300 hover:dark:border-neutral-700 border-dashed",
-        "duration-300 group/module",
+        "group/module",
         "cursor-default",
         active && "cursor-pointer pointer-events-none",
         isActive && "opacity-60 blur-[2px]",

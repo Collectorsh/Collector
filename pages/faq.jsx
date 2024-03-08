@@ -4,6 +4,7 @@ import MainNavigation from "../components/navigation/MainNavigation";
 import { TwitterIcon } from "../components/SocialLink";
 import CloudinaryImage from "../components/CloudinaryImage";
 import { collectorBobId } from "../config/settings";
+import MainButton from "../components/MainButton";
 export default function FaqPage() {
   return (
     <>
@@ -45,13 +46,13 @@ export default function FaqPage() {
           answer={<>
             <p>Yes! When editing a curation, you can list any piece for a fixed price sale.</p>
       
-            <p className="textPalette3 text-sm">Please note: listings won&apos;t remain active if they also get listed on platforms that freeze nfts or use escrow</p>
+            <p className="textPalette3 text-sm">Please note: listings won&apos;t stay active if they also get listed on custodial marketplaces, like Exchange Art.</p>
           </>}
         />
 
         <QuestionAnswer
           question="How does listing a Master Edition work?"
-          answer="When you list a Master Edition (enabling collectors to mint editions) our smart contract will temporarily hold onto it. You can stop the sale at any time to reclaim the Master Edition as well as the sales generated from the edition mints."
+          answer="When you list a Master Edition for sale, our smart contract holds it. You can end the sale anytime to recover the Master Edition and any earnings from sales."
         />
 
         <QuestionAnswer
@@ -87,7 +88,12 @@ export default function FaqPage() {
         />
         <QuestionAnswer
           question="Who’s the team behind Collector?"
-          answer="EV3 & Nate."
+          answer={<p className="flex gap-1">
+            <a href="https://twitter.com/EV3RETH" target="_blank" rel="noreferrer" className="underline inline-block">EV3 </a>
+            &
+            <a href="https://twitter.com/N8Solomon" target="_blank" rel="noreferrer" className="underline inline-block"> Nate</a>
+          </p>
+          }
         />
 
         <div className="opacity-95 ">
@@ -107,8 +113,16 @@ export default function FaqPage() {
         <br />
       
         <p className="textPalette2 text-xl">We&apos;re constantly looking to improve our FAQ. Drop us a message on <a href="https://twitter.com/collector_sh" target="_blank" rel="noreferrer" className="underline">Twitter</a> with your question or feedback. Your input helps us serve you better!</p>
-        <a href="https://twitter.com/collector_sh" target="_blank" rel="noreferrer" className="hoverPalette2 rounded-full p-1.5 block w-fit mt-2">
-          <TwitterIcon className="w-5 h-5" />
+        <a href="https://twitter.com/collector_sh" target="_blank" rel="noreferrer">
+          <MainButton
+            className="flex items-center justify-center gap-3 mt-4"
+            solid
+            size="lg"
+          >
+            Contact us
+            <TwitterIcon className="w-4 h-4" />
+
+          </MainButton>
         </a>
       </div>
     </>

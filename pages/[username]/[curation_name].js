@@ -401,7 +401,7 @@ function CurationPage({curation}) {
     </>
   )
 
-  const curationMetaDescription = `${ curation.name.replaceAll("_", " ") } by ${ curation.curator?.username }`
+  const curationMetaDescription = `${ curation.name.replaceAll("_", " ") } by ${ curation?.curator?.username }`
 
   return (
     <>
@@ -432,9 +432,9 @@ function CurationPage({curation}) {
             displayPublishedEdit={displayDraftEdit}//{displayPublishedEdit}
           />
           {/* <p className="font-xs textPalette3 text-center">{curatorText}</p> */}
-          <Link href={`/${ curation.curator?.username }`} >
+          <Link href={`/${ curation?.curator?.username }`} >
             <a className="flex gap-3 items-center justify-center mb-8 hoverPalette1 rounded-md px-4 py-2 w-fit mx-auto ">
-              {curation.curator?.profile_image
+              {curation?.curator?.profile_image
                 ? (<div className="relative">
                     <CloudinaryImage
                       className={clsx(

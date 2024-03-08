@@ -275,7 +275,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
           {userText}
         </div>
         <div>
-          {(isListed || isSold)
+          {(isListed || isSold && !sellingSecondaryFromMaster)
             ? (
               
                 <Tippy

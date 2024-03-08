@@ -13,7 +13,6 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import deleteSubmission from "../../data/curationListings/deleteSubmission";
-import LogRocket from "logrocket";
 
 import { setTxFailed } from "../../utils/cookies";
 import * as Icon from "react-feather";
@@ -291,12 +290,6 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
       await onList(token, listingPrice)
     } catch (err) {
       console.log("Handle List error: ", err)
-      LogRocket.captureException(err, {
-        extra: {
-          tokenMint: token.mint,
-          listingPrice,
-        }
-      })
     }
     setListing(false)
   }
@@ -307,11 +300,6 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
       await onDelist(token)
     } catch (err) {
       console.log("handleDelist error: ", err)
-      LogRocket.captureException(err, {
-        extra: {
-          tokenMint: token.mint,
-        }
-      })
     }
     setListing(false)
   }

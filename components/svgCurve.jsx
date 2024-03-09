@@ -12,13 +12,6 @@ const SvgCurve = ({
   const ref = useRef(null)
   const { isVisible } = useElementObserver(ref, "200px")
 
-  const transform = () => {
-    const x = turned ? "scaleX(-100%)" : "scaleX(100%)"
-    const y = isVisible ? "scaleY(90%)" : "scaleY(0)"
-    const f= flipped ? "rotate(0)" : "rotate(180deg)"
-    return `${x} ${y} ${f}`
-  }
-
   return (
     <div
       className={clsx(
@@ -27,13 +20,7 @@ const SvgCurve = ({
         color,
         flipped ? "rotate-0" : "rotate-180",
         turned ? "scale-x-[-1]" : "scale-x-100",
-        // isVisible ? "h-full" : "h-0",
-       
-        // "scale-75"
       )}
-      // style={{
-      //   transform: transform()
-      // }}
       ref={ref}
     >
       <svg

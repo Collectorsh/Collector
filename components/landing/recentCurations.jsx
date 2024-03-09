@@ -5,9 +5,8 @@ import { homepageWidthClass } from "../../pages";
 
 
 export default function LandingRecentCurations({curations}) {
-  //pt-28 pb-60
   return (
-    <div className="pt-12 pb-40 relative"> 
+    <div className="pt-12 pb-40 2xl:pb-44 relative"> 
       <SvgCurve
         turned
       />
@@ -18,14 +17,6 @@ export default function LandingRecentCurations({curations}) {
           {/* <p className="textPalette2 text-center mb-8">Hot off the presses</p> */}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-6">
-            {/* {curations.map(curation => (
-              <LandingCurationItem
-                key={curation.id}
-                curation={curation}
-                
-              />
-            ))} */}
-
             {curations.length
               ? (
                 curations.map(curation => (

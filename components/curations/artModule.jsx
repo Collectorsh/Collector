@@ -20,7 +20,8 @@ const ArtModule = ({
   curationType,
   curationId,
   setSubmittedTokens,
-  owners
+  owners,
+  disabled
 }) => {
   const breakpoint = useBreakpoints()  
   const isMobile = ["", "sm", "md"].includes(breakpoint)
@@ -34,6 +35,8 @@ const ArtModule = ({
 
   const gapSize = 24 //in pixels (must be inline styled so that row height calculations can take the exact number into account)
   const maxHeightRatio = 0.75 //in percentage of window height
+
+  const allowOpen = isOwner && !disabled
 
   useEffect(() => { 
     const getDimensions = () => { 
@@ -131,7 +134,7 @@ const ArtModule = ({
     >
       <EditWrapper
         isOwner={isOwner}
-        onEdit={() => setEditArtOpen(true)}
+        onEdit={() => allowOpen && setEditArtOpen(true)}
         placement="tr"
         groupHoverClass="group-hover/artModule:opacity-100 group-hover/artModule:scale-105"
         // text="Edit Art"
@@ -151,8 +154,8 @@ const ArtModule = ({
       </EditWrapper>
       {isOwner && !artModule.tokens.length
         ? (
-          <div className='absolute inset-0 w-full h-full flex justify-center items-center p-2 cursor-pointer'
-            onClick={() => setEditArtOpen(true)}
+          <div className={clsx('absolute inset-0 w-full h-full flex justify-center items-center p-2', allowOpen && "cursor-pointer" )}
+            onClick={() => allowOpen && setEditArtOpen(true)}
           >
             <p>Click this block to edit your art!</p>
           </div>

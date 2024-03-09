@@ -14,8 +14,8 @@ const LandingCurationItem = ({
   hoverClass = "group-hover/curationItem:bg-neutral-200 group-hover/curationItem:dark:bg-neutral-800 hover:bg-neutral-200 hover:dark:bg-neutral-800"
 }) => { 
   const { banner_image, name } = curation
-  // const bannerImgId = parseCloudImageId(banner_image)
   const [bannerImgId, setBannerImgId] = useState(parseCloudImageId(banner_image) || defaultCollectorImageId);
+  const usingDefault = bannerImgId === defaultCollectorImageId
 
   const pfpImgId = parseCloudImageId(curation?.curator?.profile_image)
 
@@ -33,7 +33,7 @@ const LandingCurationItem = ({
         >
           <div className="top-0 group-hover/curationItem:-top-1.5  relative shadow shadow-neutral-500/20 rounded-xl overflow-hidden duration-300 pb-[33%]" >
             <CloudinaryImage
-              className={clsx("w-full h-full object-cover absolute inset-0", !bannerImgId && "dark:invert")}
+              className={clsx("w-full h-full object-cover absolute inset-0", usingDefault && "dark:invert")}
               id={bannerImgId}
               noLazyLoad
               width={1400}

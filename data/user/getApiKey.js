@@ -3,6 +3,7 @@ import apiClient from "/data/client/apiClient";
 
 async function getApiKey(publicKey, signMessage) {
   let nonce = await requestApiKey(publicKey.toBase58());
+  
   if (typeof nonce === "string") {
     let signature = await signMessage(Buffer.from(loginMessage + nonce));
     let res = await createApiKey(

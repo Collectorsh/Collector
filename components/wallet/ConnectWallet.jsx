@@ -74,6 +74,7 @@ export default function ConnectWallet() {
   useEffect(() => {
     if (user?.api_key) return;
     if (fetching || apiError) return;
+  
     if (!wallet?.publicKey || !wallet?.signMessage) return;
     
     (async () => {
@@ -92,6 +93,8 @@ export default function ConnectWallet() {
         if (e.message.includes("rejected")) {
           //on rejected message, disconnect wallet
           await wallet.disconnect()
+        } else if (e.message.includes("Ledger")) {
+          error("Ledger not supported for signing in")
         } else {
           setApiError(true);
           error("Error Signing In")
@@ -104,4 +107,22 @@ export default function ConnectWallet() {
   }, [wallet, user]);
 
   return null
+}
+
+const handleLedgerSignIn = async ({wallet}) => { 
+  //TODO get nonce from ledger Memo signing
+
+  if (!wallet.signTransaction) return { data: { msg: "Wallet not supported" } }
+  const signedTx = await signLedgerAuthTx({
+    publicKey: wallet.publicKey,
+    signTransaction: wallet.signTransaction,
+    nonce: nonce,
+  })
+
+  let res = await axios.post(
+    "/api/verifyLedger",
+    {
+      nonce: nonce,
+      tx: signedTx.serialize(),
+    })
 }

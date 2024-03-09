@@ -12,19 +12,32 @@ const SvgCurve = ({
   const ref = useRef(null)
   const { isVisible } = useElementObserver(ref, "200px")
 
+  const transform = () => {
+    const x = turned ? "scaleX(-100%)" : "scaleX(100%)"
+    const y = isVisible ? "scaleY(90%)" : "scaleY(0)"
+    const f= flipped ? "rotate(0)" : "rotate(180deg)"
+    return `${x} ${y} ${f}`
+  }
+
   return (
     <div
       className={clsx(
-        "w-full absolute origin-top duration-[3s] transition-transform",
+        "w-full absolute origin-top",
         position,
         color,
         flipped ? "rotate-0" : "rotate-180",
         turned ? "scale-x-[-1]" : "scale-x-100",
-        isVisible ? "scale-y-[90%] md:scale-y-[70%]" : "scale-y-0"
+        // isVisible ? "h-full" : "h-0",
+       
+        // "scale-75"
       )}
+      // style={{
+      //   transform: transform()
+      // }}
       ref={ref}
     >
       <svg
+        className={clsx("origin-top duration-[3s]", isVisible ? "scale-y-90 md:scale-y-75" : "scale-y-0")}
         id="eXG2ySV0chP1"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1600 150"

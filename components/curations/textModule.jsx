@@ -6,16 +6,17 @@ import dynamic from 'next/dynamic';
 import clsx from 'clsx';
 const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillContent), { ssr: false })
 
-const TextModule = ({ textModule, onEditTextModule, isOwner, onDeleteModule }) => { 
+const TextModule = ({ textModule, onEditTextModule, isOwner, onDeleteModule, disabled }) => { 
   const [editTextOpen, setEditTextOpen] = useState(false)
+  const allowOpen = isOwner && !disabled
   return (
     <div
-      className={clsx("relative group/textModule w-full h-fit min-h-[4rem]", isOwner && "cursor-pointer")}
-      onClick={() => isOwner && setEditTextOpen(true)}
+      className={clsx("relative group/textModule w-full h-fit min-h-[4rem]", allowOpen  && "cursor-pointer")}
+      onClick={() => allowOpen && setEditTextOpen(true)}
     >
       <EditWrapper
         isOwner={isOwner}
-        onEdit={() => setEditTextOpen(true)}
+        onEdit={() => allowOpen && setEditTextOpen(true)}
         placement="tr"
         groupHoverClass="group-hover/textModule:opacity-100 group-hover/textModule:scale-105"
         // text="Edit Text"

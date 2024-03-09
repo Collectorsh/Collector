@@ -27,6 +27,7 @@ import * as Icon from 'react-feather'
 import dynamic from 'next/dynamic';
 import EditDisplayNameModal from "../components/curatorProfile/editDisplayNameModal";
 import Tippy from "@tippyjs/react";
+import { defaultCollectorImageId } from "../config/settings";
 
 const QuillContent = dynamic(() => import('../components/Quill').then(mod => mod.QuillContent), { ssr: false })
 
@@ -68,9 +69,18 @@ function ProfilePage({ curator }) {
   const [socials, setSocials] = useState(curator?.socials || []);
   const [displayName, setDisplayName] = useState(getDisplayName(curator));
 
-  const [bannerLoaded, setBannerLoaded] = useState(true);
   const [pfpLoaded, setPfpLoaded] = useState(true);
   const [useOwnerView, setUseOwnerView] = useState(false)
+  const [bannerLoaded, setBannerLoaded] = useState(true);
+  const [bannerImgId, setBannerImgId] = useState();
+
+  const usingDefaultBanner = bannerImgId === defaultCollectorImageId
+
+  const [curations, setCurations] = useState([]);
+  const workingCurationsRef = useRef([])
+
+  const pfpImgId = parseCloudImageId(pfp)
+
   
   const getCurationsInit = useCallback((baseCurations, curationOrder, useOwnerView) => {
     const curations = useOwnerView
@@ -89,11 +99,21 @@ function ProfilePage({ curator }) {
     }
   }, [])
  
-  const [curations, setCurations] = useState([]);
-  const workingCurationsRef = useRef([])
 
-  const bannerImgId = parseCloudImageId(banner)
-  const pfpImgId = parseCloudImageId(pfp)
+  useEffect(() => {
+    let timer
+
+    if (!banner) {
+      timer = setTimeout(() => {
+        setBannerImgId(defaultCollectorImageId)
+      }, 500)
+    } else {
+      const userBannerImgId = parseCloudImageId(banner)
+      setBannerImgId(userBannerImgId || defaultCollectorImageId)
+    }
+
+    return () => clearTimeout(timer)
+  }, [banner])
   
   useEffect(() => {
     //set up the initial state
@@ -110,6 +130,7 @@ function ProfilePage({ curator }) {
       setPfp(curator.profile_image);
       setBio(getBioDelta(curator, isOwner));
       setSocials(curator.socials || []);
+      setDisplayName(getDisplayName(curator));
     }
   }, [curator, isOwner])
  
@@ -123,7 +144,12 @@ function ProfilePage({ curator }) {
     if (pfp !== curator?.profile_image) setPfpLoaded(false);
   }, [pfp, curator?.profile_image])
 
-
+  const handleBannerError = () => {
+    if (useOwnerView) {
+      error("Failed to load banner image")
+    }
+    setBannerImgId(defaultCollectorImageId)
+  }
 
   const handleSaveCurationOrder = async (curationIds) => {
     if (!isOwner || !curationIds) return
@@ -239,31 +265,35 @@ function ProfilePage({ curator }) {
           icon={<Icon.Image size={23} strokeWidth={2.5} />}
         >
           <div className="w-full pb-[33%] relative 2xl:rounded-b-2xl shadow-md overflow-hidden">
-            {banner ? (
-              <CloudinaryImage
-                className={clsx(
-                  "absolute inset-0 w-full h-full object-cover",
-                  !bannerLoaded && "animate-pulse"
-                )}
-                id={bannerImgId}
-                noLazyLoad
-                onLoad={() => setBannerLoaded(true)}
-                width={2000}
-              />
-            ) : (
-                <div className={clsx(
-                  "absolute inset-0 w-full h-full flex justify-center items-center bg-neutral-200 dark:bg-neutral-800",
-                )}>
-                  <MainButton
-                    size="xl"
-                    onClick={() => setEditBannerOpen(true)}
-                    className={clsx("flex items-center gap-2", !useOwnerView && "hidden")}
-                  >
-                    Add Banner
-                    <Icon.Plus strokeWidth={2.5} />
-                  </MainButton>
-                </div>
-            )}
+     
+            <CloudinaryImage
+              className={clsx(
+                "absolute inset-0 w-full h-full object-cover",
+                !bannerLoaded && "animate-pulse",
+                usingDefaultBanner && "dark:invert"
+              )}
+              id={bannerImgId}
+              noLazyLoad
+              onLoad={() => setBannerLoaded(true)}
+              width={2000}
+              onError={handleBannerError}
+            />
+            
+            {(usingDefaultBanner && useOwnerView) ? (
+              <div className={clsx(
+                "absolute inset-0 w-full h-full flex justify-center items-center",
+                "bg-neutral-500/50 backdrop-blur-sm",
+              )}>
+                <MainButton
+                  size="xl"
+                  onClick={() => setEditBannerOpen(true)}
+                  className={clsx("flex items-center gap-2", !useOwnerView && "hidden")}
+                >
+                  Add Banner
+                  <Icon.Plus strokeWidth={2.5} />
+                </MainButton>
+              </div>
+            ) : null}
           </div>
         </EditWrapper>
         <div

@@ -473,6 +473,7 @@ function CurationPage({curation}) {
             curationId={curation.id}
             setSubmittedTokens={setSubmittedTokens}
             owners={owners}
+            disabled={addingModule}
           />
 
         )

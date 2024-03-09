@@ -12,19 +12,23 @@ export default async function handler(req, res) {
     tx = Transaction.from(Buffer.from(tx));
     const inx = tx.instructions.find(inx => inx.programId.toBase58() == MEMO_PROGRAM_ID)
     
-    if (!inx)
+    if (!inx) {
       return res
         .status(200)
         .json({ status: "error", msg: "Incorrect program ID" });
-    if (Buffer.from(inx.data.toString()) != loginMessage + req.body.nonce)
+    }
+    if (Buffer.from(inx.data.toString()) != loginMessage + req.body.nonce) {
       return res.status(200).json({
         status: "error",
         msg: "Incorrect message",
       });
-    if (!tx.verifySignatures())
+    }
+    if (!tx.verifySignatures()) {
       return res
         .status(200)
-        .json({ status: "error", msg: "Signature verifcation failed" });
+        .json({ status: "error", msg: "Signature verification failed" });
+    }
+
     const resp = await apiClient
       .post("/add_wallet_with_secret", {
         api_key: req.body.apiKey,

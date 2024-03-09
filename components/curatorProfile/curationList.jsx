@@ -3,7 +3,7 @@ import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
 import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
 import SortableCurationPreview from "../curations/sortableCurationPreview";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import * as Icon from "react-feather";
 import { defaultCollectorImageId } from "../../config/settings";
 import CurationSettingsMenu from "./curationSettingsMenu";
@@ -31,15 +31,13 @@ export default CurationList;
 
 export const CurationListItem = ({ curation, isOwner, setCurations }) => { 
   const { banner_image, name, description_delta, is_published, curation_type } = curation
-  const bannerImgId = parseCloudImageId(banner_image)
 
-  const curationText = useMemo(() => {
-    switch (curation_type) {
-      case "artist": return "an artist curation"
-      case "collector": return "a collector curation"
-      case "curator": return "a group curation"
-    }
-  }, [curation_type])
+  const [bannerImgId, setBannerImgId] = useState(parseCloudImageId(banner_image) || defaultCollectorImageId);
+  const usingDefault = bannerImgId === defaultCollectorImageId
+
+  const handleError = () => {
+    setBannerImgId(defaultCollectorImageId)
+  }
 
   return (
     <Link href={`/${ curation?.curator?.username || "curations"}/${ name }`} >
@@ -56,10 +54,11 @@ export const CurationListItem = ({ curation, isOwner, setCurations }) => {
           !isOwner && "group-hover/curationItem:-top-1.5"
         )}>
           <CloudinaryImage
-            className={clsx("w-full h-full object-cover absolute inset-0", !bannerImgId && "dark:invert")}
-            id={bannerImgId || defaultCollectorImageId}
+            className={clsx("w-full h-full object-cover absolute inset-0", usingDefault && "dark:invert")}
+            id={bannerImgId }
             noLazyLoad
             width={1400}
+            onError={handleError}
           />
         </div>
         <h3 className="font-bold collector text-xl text-center my-2 px-3 w-fit mx-auto rounded-md duration-300 group-hover/curationItem:bg-neutral-200 group-hover/curationItem:dark:bg-neutral-800">

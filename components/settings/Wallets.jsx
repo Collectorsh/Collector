@@ -21,6 +21,7 @@ export default function Wallets() {
 
   // Detect publicKey change and add wallet
   useEffect(() => {
+    console.log("🚀 ~ useEffect ~ wallet :", wallet)
     if (!wallet || !wallet.publicKey || !user || !addingWallet) return;
     wallet.connect().then(() => {
       if(!wallet.connected) return
@@ -42,10 +43,16 @@ export default function Wallets() {
         } else {
           error(res.data.msg);
         }
-      });      
+      }).catch((err) => { 
+        console.log(err);
+        const errorMessage = err.message.includes("Ledger") ? "Please select the Ledger checkbox to continue" : err.message
+        error(errorMessage)
+      })
+              
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet?.connected, user]);
+    
 
   const addWallet = () => {
     wallet.disconnect().then(() => {

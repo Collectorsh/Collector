@@ -15,7 +15,8 @@ const DisplayModules = ({
   curationType,
   curationId,
   setSubmittedTokens,
-  owners
+  owners,
+  disabled
 }) => {
   const handleEditModule = (newModule) => {
     const newModules = [...modules];
@@ -63,6 +64,7 @@ const DisplayModules = ({
             curationId={curationId}
             setSubmittedTokens={setSubmittedTokens}
             owners={owners}
+            disabled={disabled}
           />
         </SortableModule>
       ))}
@@ -101,7 +103,8 @@ export const Module = ({
   curationType,
   curationId,
   setSubmittedTokens,
-  owners
+  owners,
+  disabled
 }) => {
   switch (module.type) {
     case "text": {
@@ -111,6 +114,7 @@ export const Module = ({
           textModule={module}
           onEditTextModule={handleEditModule}
           isOwner={isOwner}
+          disabled={disabled}
         />
       )
     }
@@ -129,6 +133,7 @@ export const Module = ({
           curationId={curationId}
           setSubmittedTokens={setSubmittedTokens}
           owners={owners}
+          disabled={disabled}
         />
       )
     }

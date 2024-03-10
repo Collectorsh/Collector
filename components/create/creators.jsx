@@ -1,6 +1,6 @@
 import clsx from "clsx"
 import { PublicKey } from "@solana/web3.js"
-import { REQUIRED } from "../../pages/create"
+import { REQUIRED } from "../../pages/mint"
 import Tippy from "@tippyjs/react"
 import * as Icon from 'react-feather'
 

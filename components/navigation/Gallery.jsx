@@ -48,7 +48,7 @@ export default function Gallery() {
                 <div className="px-2">
                   {user.subscription_level === "pro" ? (
                     <Menu.Item>
-                      <Link href={`/gallery/${ user.username }`}>
+                      <Link href={`/${ user.username }`}>
                         <a className="block p-2 hoverPalette2 rounded-md">
                           My Gallery
                         </a>
@@ -62,14 +62,14 @@ export default function Gallery() {
                   {isCuratorApproved ? (
                     <>
                       <Menu.Item>
-                        <Link href={`/create`}>
+                        <Link href={`/mint`}>
                           <a className="block p-2 hoverPalette2 rounded-md">
                             Mint
                           </a>
                         </Link>
                       </Menu.Item>
                       <Menu.Item>
-                        <Link href={`/submissions`}>
+                        <Link href={`/submit`}>
                           <a className="block p-2 hoverPalette2 rounded-md">
                             Submit
                           </a>
@@ -108,33 +108,43 @@ export const UserCard = ({inset}) => {
   }
   return (
     <div className={clsx("palette3 p-2 grid grid-cols-3 overflow-hidden", inset && "rounded-md shadow-inner")}>
-    <div className=" px-2 pb-1 flex flex-col items-start col-span-2">
-      <p className="truncate w-full">{displayName(user)}</p>
-      <p className="text-xs opacity-50">
-        {publicKey?.toBase58().slice(0, 4)}...
-        {publicKey?.toBase58().slice(-4)}
-      </p>
-    </div>
-    <div className="flex justify-end">
-      <Tippy content="Settings" className="shadow">
-        <div className="">
-          <Link href="/settings">
-            <a className="h-full  p-1 rounded-md flex items-center hoverPalette3">
-              <Icon.Settings size={inset ? 24 : 20} />
-            </a>
-          </Link>
-        </div>
-      </Tippy>
+      <div className=" px-2 pb-1 flex flex-col items-start col-span-2">
+        <p className="truncate w-full">{displayName(user)}</p>
+        <p className="text-xs opacity-50">
+          {publicKey?.toBase58().slice(0, 4)}...
+          {publicKey?.toBase58().slice(-4)}
+        </p>
+      </div>
+      <div className="flex justify-end items-center">
+        <Tippy content="FAQ" className="shadow">
+          <div className="">
+            <Link href="/faq">
+              <a className="h-full p-1.5 rounded-full flex items-center hoverPalette3">
+                <Icon.HelpCircle size={inset ? 24 : 20} />
+              </a>
+            </Link>
+          </div>
+        </Tippy>
+          
+        <Tippy content="Settings" className="shadow">
+          <div className="">
+            <Link href="/settings">
+              <a className="h-full  p-1.5 rounded-full flex items-center hoverPalette3">
+                <Icon.Settings size={inset ? 24 : 20} />
+              </a>
+            </Link>
+          </div>
+        </Tippy>
 
-      <Tippy content="Log out" className="shadow">
-        <button className="block text-left p-1 rounded-md hoverPalette3"
-          onClick={signOut}
-        >
-          {/* Sign out */}
-          <Icon.LogOut size={inset ? 24 : 20} />
-        </button>
-      </Tippy>
-    </div>
+        <Tippy content="Log out" className="shadow">
+          <button className="block text-left p-1.5 rounded-full hoverPalette3"
+            onClick={signOut}
+          >
+            {/* Sign out */}
+            <Icon.LogOut size={inset ? 24 : 20} />
+          </button>
+        </Tippy>
+      </div>
     </div>
   )
 }

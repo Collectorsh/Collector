@@ -14,6 +14,8 @@ import RpcHealthFeedback from "./RpcHeathFeedback";
 import * as Icon from 'react-feather'
 import { UserCard } from "./Gallery";
 import CloudinaryImage from "../CloudinaryImage";
+import Tippy from "@tippyjs/react";
+import { collectorLogoId } from "../../config/settings";
 
 export default function MainNavigation() {
   const wallet = useWallet();
@@ -40,7 +42,7 @@ export default function MainNavigation() {
   const getStarted = () => {
     if (isPro) {
       if (!user.username) router.push("/settings");
-      else router.push(`/gallery/${ user.username }`);
+      else router.push(`/${ user.username }`);
     } else {
       router.push("/waitlist");
     }
@@ -69,7 +71,7 @@ export default function MainNavigation() {
                   <a className="rounded-md px-3 py-1 hoverPalette1 relative 2xl:-left-3 block">
                     {/*collector text-3xl font-bold flex items-center// collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-neutral-900 dark:bg-neutral-100 inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r */}
                     <CloudinaryImage
-                      id="global/Collector-logo_zqbljh"
+                      id={collectorLogoId}
                       className="w-auto h-7 object-contain dark:invert"
                       noLazyLoad
                       width={500}
@@ -79,8 +81,6 @@ export default function MainNavigation() {
               
                   
                 </Link>
-                {/* <span className="collector tracking-wide pb-[1px]">Beta</span> */}
-                
               </div>
               <div className="hidden md:flex items-center justify-end w-full">
                 <Link href="/waitlist">
@@ -106,11 +106,10 @@ export default function MainNavigation() {
             
                 {user
                   ? <Gallery />//<Profile />
-                  : <WalletButton className="font-bold rounded-md px-3 py-1 hoverPalette1 mr-4"/> 
-                 
-                    
-                }
-                <DarkMode />
+                  : <WalletButton className="font-bold rounded-md px-3 py-1 hoverPalette1 mr-4"/>   
+              }
+              
+              <DarkMode />
               </div>
               {/* <!-- Mobile menu button --> */}
               <div className="flex md:hidden text-right items-center col-span-1 justify-end w-full">
@@ -177,7 +176,7 @@ export default function MainNavigation() {
                           ? (<>
                             {user.subscription_level === "pro"
                               ? (<>
-                                <Link href={`/gallery/${ user.username }`} passHref>
+                                <Link href={`/${ user.username }`} passHref>
                                   <p className="pl-3">My Gallery</p>
                                 </Link>
                                 <hr className="borderPalette3" />
@@ -187,11 +186,11 @@ export default function MainNavigation() {
                               
                             {isCuratorApproved
                               ? (<>
-                                <Link href={`/create`} passHref>
+                                <Link href={`/mint`} passHref>
                                   <p className="pl-3">Mint</p>
                                 </Link>
                                 <hr className="borderPalette3" />
-                                <Link href={`/submissions`} passHref>
+                                <Link href={`/submit`} passHref>
                                   <p className="pl-3">Submit</p>
                                 </Link>
                                 <hr className="borderPalette3" />
@@ -200,8 +199,15 @@ export default function MainNavigation() {
                             }
                             
                           </>)
-                          : <WalletButton className="pl-3 text-left"/>
-                        }
+                          : (<>
+                            
+                            <Link href="/faq" passHref>
+                              <p className="pl-3">FAQ</p>
+                            </Link>
+                            <hr className="borderPalette3" />
+                          <WalletButton className="pl-3 text-left"/>
+                          </>
+                        )}
                       </div>
                       
                       {user

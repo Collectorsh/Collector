@@ -106,7 +106,6 @@ async function getTokens(publicKeys, options) {
     }
   }
 
-
   const creatorFilteredTokens = !justCreator
     ? baseTokens
     : baseTokens.filter((token) => { 
@@ -240,6 +239,7 @@ async function getTokens(publicKeys, options) {
   DEBUG && console.timeEnd("getTokens Time")
   return results;
 }
+  
 
 export default getTokens;
 

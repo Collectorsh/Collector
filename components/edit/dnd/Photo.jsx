@@ -85,7 +85,7 @@ export const Photo = forwardRef(
                 <Menu.Item>
                   {({ active }) => (
                     <a
-                      href={`/nft/${token.mint}`}
+                      href={`/art/${token.mint}`}
                       target="_blank"
                       rel="noreferrer"
                       className={classNames(

@@ -21,6 +21,7 @@ export default function Wallets() {
 
   // Detect publicKey change and add wallet
   useEffect(() => {
+    console.log("🚀 ~ useEffect ~ wallet :", wallet)
     if (!wallet || !wallet.publicKey || !user || !addingWallet) return;
     wallet.connect().then(() => {
       if(!wallet.connected) return
@@ -42,10 +43,16 @@ export default function Wallets() {
         } else {
           error(res.data.msg);
         }
-      });      
+      }).catch((err) => { 
+        console.log(err);
+        const errorMessage = err.message.includes("Ledger") ? "Please select the Ledger checkbox to continue" : err.message
+        error(errorMessage)
+      })
+              
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet?.connected, user]);
+    
 
   const addWallet = () => {
     wallet.disconnect().then(() => {
@@ -89,7 +96,7 @@ export default function Wallets() {
 
       </div>
 
-      <div className="flex justify-start items-center gap-4 pl-1 mt-4">
+      <div className="flex justify-start flex-wrap items-center gap-4 pl-1 mt-4">
         <MainButton
           solid
           onClick={addWallet}
@@ -115,9 +122,9 @@ const AddressCard = ({ pubKey, isPrimary, onRemove }) => {
     <div className={clsx(
       "flex justify-between items-center gap-2 w-full palette2 px-4 py-2 rounded-lg shadow",
     )}>
-      <p>
+      <p className="w-full">
         <span className={clsx(!isPrimary && "hidden", "font-bold")}>Primary:  </span>
-        <span className="textPalette2">{pubKey}</span>
+        <span className="textPalette2 truncate inline-block w-full">{pubKey}</span>
       </p>
      
       <button onClick={onRemove} className={clsx("duration-300 opacity-50 hover:opacity-100", isPrimary && "hidden")}>

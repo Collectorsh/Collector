@@ -4,37 +4,41 @@ import { PublishedTag } from "./curationList";
 import { parseCloudImageId } from "../../utils/cloudinary/idParsing";
 
 import dynamic from 'next/dynamic';
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { defaultCollectorImageId } from "../../config/settings";
 import clsx from "clsx";
+import CurationSettingsMenu from "./curationSettingsMenu";
 const QuillContent = dynamic(() => import('../Quill').then(mod => mod.QuillContent), { ssr: false })
 
 
-const CurationHighlight = ({ curation, isOwner, withCurator }) => { 
+const CurationHighlight = ({ curation, isOwner, setCurations }) => { 
   const { banner_image, name, description, description_delta, is_published, curation_type } = curation
   
-  const bannerImgId = parseCloudImageId(banner_image)
+  const [bannerImgId, setBannerImgId] = useState(parseCloudImageId(banner_image) || defaultCollectorImageId);
+  const usingDefault = bannerImgId === defaultCollectorImageId
+
+  const handleError = () => {
+    setBannerImgId(defaultCollectorImageId)
+  }
 
 
-  const curationText = useMemo(() => {
-    switch (curation_type) {
-      case "artist": return "an artist curation"
-      case "collector": return "a collector curation"
-      case "curator": return "a group curation"
-    }
-  }, [curation_type])
   return (
     <>
-      <Link href={`/curations/${ name }`} >
+      <Link href={`/${curation?.curator?.username || "curations"}/${ name }`} >
         <a className="block w-full group/curationItem">
-          <div className="w-full pb-[50%] md:pb-[33%] relative duration-300 rounded-xl overflow-hidden shadow-neutral-500/20 shadow-md group-hover/curationItem:-translate-y-2"> 
+          {isOwner && <CurationSettingsMenu curation={curation} setCurations={setCurations} />}
+          <div className={clsx(
+            "w-full pb-[33%] relative duration-300 rounded-xl overflow-hidden shadow-neutral-500/20 shadow-md ",
+            !isOwner && "group-hover/curationItem:-translate-y-2"
+          )}> 
             <PublishedTag isPublished={is_published} isOwner={isOwner} />
 
             <CloudinaryImage
-              className={clsx(" absolute inset-0 w-full h-full object-cover", !bannerImgId && "dark:invert")}
-              id={bannerImgId || defaultCollectorImageId}
+              className={clsx(" absolute inset-0 w-full h-full object-cover", usingDefault && "dark:invert")}
+              id={bannerImgId}
               noLazyLoad
               width={2000}
+              onError={handleError}
             />
           </div>
           <h2

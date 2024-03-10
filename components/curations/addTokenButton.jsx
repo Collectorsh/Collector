@@ -23,9 +23,9 @@ const AddTokenButton = ({
 
   const imageRef = useRef(null)
   const { videoUrl } = useNftFiles(token)
-  const [loadingAspectRatio, setLoadingAspectRatio] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
+  const [adding, setAdding] = useState(false)
 
   const itemRef = useRef(null)
 
@@ -52,12 +52,18 @@ const AddTokenButton = ({
   }, [mintsInUse, token])
 
   const alreadyUsed = token.is_edition ? !availableEditions?.length : alreadyInUse
-  const disableAdd = alreadyUsed || moduleFull || loadingAspectRatio || !imageLoaded
+  const disableAdd = alreadyUsed || moduleFull || !imageLoaded || adding
 
   const isMasterEdition = token.is_master_edition
 
   const handleAdd = async () => {
-    if (alreadyUsed || moduleFull) return
+    if (alreadyUsed || moduleFull || adding) return;
+
+    if (imageError) {
+      error("Error loading image")
+      return
+    }
+
     let newToken;
     if (token.is_edition) {
       newToken = availableEditions[0]
@@ -69,14 +75,17 @@ const AddTokenButton = ({
       newToken = { ...token }
     }
 
+
+    setAdding(true)
+
     if (curationType !== "curator") {//"artist" || "collector" 
       // needs to add aspect ratio to token for when it gets auto submitted
-      setLoadingAspectRatio(true)
-      const aspectRatio = await getAspectRatio(imageRef.current)
-      setLoadingAspectRatio(false)
 
+      const aspectRatio = await getAspectRatio(imageRef.current)
+  
       if (!aspectRatio) {
         error(`Unable to process ${ videoUrl ? "video" : "image" }`)
+        setAdding(false)
         console.log("Error getting aspect ratio")
         return
       }
@@ -92,7 +101,9 @@ const AddTokenButton = ({
         }
       }
 
-      handleTokenToSubmit(newToken)
+      await handleTokenToSubmit(newToken)
+
+      setAdding(false)
     }
 
     setNewArtModule(prev => ({
@@ -161,7 +172,7 @@ const AddTokenButton = ({
           {infoBadge}
         </div>
 
-        {loadingAspectRatio ? (
+        {adding ? (
           <div className="absolute inset-0 w-full h-full flex justify-center items-center z-10">
             <Oval color="#FFF" secondaryColor="#666" height={48} width={48} />
           </div>

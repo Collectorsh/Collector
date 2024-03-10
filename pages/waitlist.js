@@ -137,7 +137,7 @@ export default function WaitlistPage() {
   }
 
   const handleGetStarted = () => { 
-    router.push(`/gallery/${ user.username }`)
+    router.push(`/${ user.username }`)
   }
 
   const form = (
@@ -232,7 +232,7 @@ export default function WaitlistPage() {
         </MainButton> */}
         <MainButton
           onClick={handleGetStarted}
-          size="lg"
+          size="xl"
           solid
           className="w-[12rem]"
         >

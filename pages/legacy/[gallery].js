@@ -4,16 +4,11 @@ import getUserFromUsername from "/data/user/getUserFromUsername";
 import GalleryContainer from "/components/gallery/GalleryContainer";
 import GalleryNavigation from "/components/gallery/navigation/GalleryNavigation";
 import MainNavigation from "/components/navigation/MainNavigation";
-import ListingsContext from "/contexts/listings";
-import OffersContext from "/contexts/offers";
 import { cdnImage } from "/utils/cdnImage";
 import { pluralize } from "/utils/pluralize";
-import { auctionHousesArray } from "/config/settings";
-import { Metaplex } from "@metaplex-foundation/js";
-import { connection } from "/config/settings";
-import { useTokens } from "../data/nft/getTokens";
-import { useImageFallbackContext } from "../contexts/imageFallback";
-import { getTokenCldImageId } from "../utils/cloudinary/idParsing";
+import { useTokens } from "../../data/nft/getTokens";
+import { useImageFallbackContext } from "../../contexts/imageFallback";
+import { getTokenCldImageId } from "../../utils/cloudinary/idParsing";
 
 
 function Gallery({user}) {

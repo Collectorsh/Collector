@@ -289,8 +289,13 @@ export default function Dashboard() {
       </div>
     </>
   )
-  const waitlistTable = waitlist?.map(signup => <SingupItem key={signup.id} signup={signup} setWaitlist={setWaitlist} />)
-
+  const waitlistTable = (
+    <>
+      <p className="text-center text-2xl font-bold mb-5">Total - {waitlist?.length}</p>
+      <p className="text-center text-2xl font-bold mb-5">Approved - {waitlist?.filter(signup => signup.user.subscription_level === "pro").length}</p>
+      {waitlist?.map(signup => <SingupItem key={signup.id} signup={signup} setWaitlist={setWaitlist} />)}
+    </>
+  )
   const content = [stats, fees, waitlistTable];
 
 

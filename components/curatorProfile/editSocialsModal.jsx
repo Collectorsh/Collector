@@ -33,7 +33,7 @@ const EditSocialsModal = ({ socials, onSave, isOpen, onClose }) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="Edit Socials" widthClass="max-w-lg">
+    <Modal isOpen={isOpen} onClose={handleClose} title="Editing Socials" widthClass="max-w-lg">
 
       <div className="pb-6">
         {newSocials.map((social, i) => (<SocialItem key={i} {...social} index={i} setNewSocials={setNewSocials} />))}
@@ -49,7 +49,7 @@ const EditSocialsModal = ({ socials, onSave, isOpen, onClose }) => {
           <Icon.Plus size={20} />
         </MainButton>
       </div>
-      <div className="w-full flex justify-end gap-4">
+      <div className="w-full flex justify-center gap-4">
         <MainButton onClick={handleClose} size="lg" standardWidth>
           Cancel
         </MainButton>

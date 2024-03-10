@@ -325,7 +325,7 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
         </MainButton>
       )
       case MINT_STAGE.SUCCESS: return (
-        <Link href={`/nft/${ mintedAddress}`} passHref>
+        <Link href={`/art/${ mintedAddress}`} passHref>
           <MainButton solid size="lg" className="w-[11.75rem]">
             Detail Page
           </MainButton>

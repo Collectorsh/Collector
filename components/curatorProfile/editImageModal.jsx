@@ -231,7 +231,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
         {tabContent[activeTabIndex]}
       </div>
       
-      <div className="w-full flex justify-end gap-4 mt-4">
+      <div className="w-full flex justify-center gap-4 mt-4">
         <MainButton onClick={handleClose} size="lg" standardWidth>
           Cancel
         </MainButton>

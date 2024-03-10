@@ -23,9 +23,9 @@ export const WalletContextProvider = ({ children }) => {
   // phantom and backpack and included by default
   const wallets = useMemo(
     () => [
-      // new LedgerWalletAdapter(),
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter({ network }),
+      // new LedgerWalletAdapter(),
     ],
     []
   );

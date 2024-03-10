@@ -108,8 +108,8 @@ const FileDrop = ({
       maxSize={maxFileSizeBytes}
     >
     {({ getRootProps, getInputProps }) => (
-        <section className='w-full h-full border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-lg overflow-y-auto '>
-        <div {...getRootProps()} className='w-full h-full min-h-[300px] flex flex-col gap-2 justify-center items-center relative cursor-pointer'>
+        <section className='w-full h-full border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-lg overflow-y-auto relative'>
+        <div {...getRootProps()} className='w-full h-full flex flex-col gap-2 md:justify-center items-center relative cursor-pointer'>
           <input {...getInputProps()} />
          
           {(!image && !altMedia) ? textDisplay : null}

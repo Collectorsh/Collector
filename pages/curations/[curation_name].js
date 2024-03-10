@@ -44,12 +44,24 @@ import MainButton from "../../components/MainButton";
 
 import * as Icon from 'react-feather'
 import { displayName } from "../../utils/displayName";
+import NotFound from "../../components/404";
 
 const descriptionPlaceholder = "Tell us about this curation."
 
 function CurationPage({curation}) {
-  const [user] = useContext(UserContext);
   const router = useRouter();
+
+  useEffect(() => {
+    
+    router.replace(`/${curation.curator.username}/${ curation.name }`)
+    
+  }, [router, curation])
+
+  return <NotFound />
+
+
+
+  const [user] = useContext(UserContext);
   const curationDetails = useCurationDetails(router.query?.curation_name)
 
   const { handleCollect, collectedFees, setCollectedFees } = useCurationAuctionHouse(curation)
@@ -60,7 +72,7 @@ function CurationPage({curation}) {
   const [globalEditOpen, setGlobalEditOpen] = useState(false);
   const [inviteArtistsModalOpen, setInviteArtistsModalOpen] = useState(false);
   const [publishModalOpen, setPublishModalOpen] = useState(false);
-  const [unpublishModalOpen, setUnpublishModalOpen] = useState(false);
+  // const [unpublishModalOpen, setUnpublishModalOpen] = useState(false);
   const [isEditingDraft, setIsEditingDraft] = useState(!curation?.is_published); //defaults to true if unpublished
   const [isPublished, setIsPublished] = useState(curation?.is_published);
   const [addingModule, setAddingModule] = useState(false);
@@ -170,6 +182,7 @@ function CurationPage({curation}) {
           if (res?.draft_content) setDraftContent(res.draft_content)
         }
         setGlobalEditOpen(true)
+        setIsEditingDraft(true)
       })();
     }
   }, [isOwner, curation?.name, user?.api_key, viewerPasscodeQuery])
@@ -216,20 +229,20 @@ function CurationPage({curation}) {
     return false //publishConfirmationModal handles success/error
   }
 
-  const handleUnpublish = async () => { 
-    if (!isOwner) return;
-    const res = await unpublishContent({
-      apiKey: user.api_key,
-      name: curation.name
-    })
-    if (res?.status === "success") { 
-      setIsPublished(false)
-      setIsEditingDraft(true)
-      success(`${curation.name} is unpublished`)
-    } else {
-      error(`${curation.name} unpublish failed`)
-    }
-  }
+  // const handleUnpublish = async () => { 
+  //   if (!isOwner) return;
+  //   const res = await unpublishContent({
+  //     apiKey: user.api_key,
+  //     name: curation.name
+  //   })
+  //   if (res?.status === "success") { 
+  //     setIsPublished(false)
+  //     setIsEditingDraft(true)
+  //     success(`${curation.name} is unpublished`)
+  //   } else {
+  //     error(`${curation.name} unpublish failed`)
+  //   }
+  // }
 
   const handleSaveDraftContent = async (newContent) => { 
     if (!newContent || !isOwner) return
@@ -403,7 +416,7 @@ function CurationPage({curation}) {
       <Head>
         <meta key="description" name="description" content={curationMetaDescription} />
         <meta key="og-description" property="og:description" content={curationMetaDescription} />
-        <meta key="og-url" property="og:url" content={`https://collector.sh/curations/${ curation.name }`} />
+        <meta key="og-url" property="og:url" content={`https://collector.sh/${ curation?.curator?.username || "curations"}/${ curation.name }`} />
         <meta key="og-image" property="og:image" content={metaImage} />
 
         <meta key="twitter-description" name="twitter:description" content={curationMetaDescription} />
@@ -427,7 +440,7 @@ function CurationPage({curation}) {
             displayPublishedEdit={displayDraftEdit}//{displayPublishedEdit}
           />
           {/* <p className="font-xs textPalette3 text-center">{curatorText}</p> */}
-          <Link href={`/gallery/${ curation.curator?.username }`} >
+          <Link href={`/${ curation.curator?.username }`} >
             <a className="flex gap-3 items-center justify-center mb-8 hoverPalette1 rounded-md px-4 py-2 w-fit mx-auto ">
               {curation.curator?.profile_image
                 ? (<div className="relative">
@@ -478,20 +491,20 @@ function CurationPage({curation}) {
             <div className='flex gap-4 flex-wrap justify-center md:place-self-start my-6'>
               <MainButton
                 solid
-                className="flex gap-2 items-center justify-center w-[10rem]"
+                className="flex gap-3 items-center justify-center w-[10.22rem]"
                 onClick={addArtModule}
                 disabled={addingModule}
                 size="lg"
               >
-                Add Art <Icon.Plus />
+              Add Art <Icon.Image className="relative left-1" strokeWidth={2.25} />
               </MainButton>
               <MainButton
-              className="flex gap-2 items-center justify-center w-[10rem]"
+              className="flex gap-3 items-center justify-center w-[10.22rem]"
                 onClick={addTextModule}
                 disabled={addingModule}
                 size="lg"
               >
-                Add Text <Icon.Plus />
+              Add Text <Icon.Edit strokeWidth={2.5} size={22} />
               </MainButton>
             </div>
           ) : null
@@ -508,7 +521,7 @@ function CurationPage({curation}) {
                 setModules={handleEditModules}
                 handleInviteArtists={() => setInviteArtistsModalOpen(true)}
                 openPublish={() => setPublishModalOpen(true)}
-                openUnpublish={() => setUnpublishModalOpen(true)}
+                // openUnpublish={() => setUnpublishModalOpen(true)}
                 isEditingDraft={isEditingDraft}
                 setIsEditingDraft={setIsEditingDraft}
                 hasChanges={hasChanges}
@@ -569,12 +582,12 @@ function CurationPage({curation}) {
               onPublish={handlePublish}
               onViewPublished={() => setIsEditingDraft(false)}
             />
-            <UnpublishConfirmationModal
+            {/* <UnpublishConfirmationModal
               name={name}
               isOpen={unpublishModalOpen}
               onClose={() => setUnpublishModalOpen(false)}
               onUnpublish={handleUnpublish}
-            />
+            /> */}
             <InviteArtistsModal
               isOpen={inviteArtistsModalOpen}
               onClose={() => setInviteArtistsModalOpen(false)}
@@ -596,6 +609,7 @@ function CurationPage({curation}) {
 export async function getServerSideProps(context) {
   try {
     const name = context.params.curation_name;
+
     const curation = await getCurationByName(name)
 
     if (curation) {

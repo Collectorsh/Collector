@@ -141,7 +141,7 @@ export default function EditArtModuleModal({
       })
 
       if (!res || res?.status !== "success") {
-        error(`Failed to submit tokens`)
+        error(`Failed to save artworks`)
         setSaving(false)
         return
       } 

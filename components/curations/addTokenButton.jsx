@@ -29,8 +29,7 @@ const AddTokenButton = ({
 
   const itemRef = useRef(null)
 
-  const [lazyLoadBuffer, setLazyLoadBuffer] = useState("500px")
-  const { isVisible } = useElementObserver(itemRef, lazyLoadBuffer)
+  const { isVisible } = useElementObserver(itemRef, "500px")
   const [show, setShow] = useState(false)
 
   useEffect(() => {
@@ -39,12 +38,6 @@ const AddTokenButton = ({
     }, 4)
     return () => clearTimeout(timeId)
   }, [isVisible])
-
-  useEffect(() => {
-    //check screen height and set lazy load buffer to screen height
-    const windowHeight = window.innerHeight
-    setLazyLoadBuffer(`${ windowHeight/2 }px`)
-  }, [])
 
   const availableEditions = useMemo(() => { 
     if (!token.is_edition) return null;
@@ -93,23 +86,28 @@ const AddTokenButton = ({
 
       if (isMasterEdition) {
         //fetch live supply count
-        const metaplex = new Metaplex(connection)
-        const trueSupply = await getMasterEditionSupply(token.mint, metaplex)
+        try {
+          const metaplex = new Metaplex(connection)
+          const trueSupply = await getMasterEditionSupply(token.mint, metaplex)
+  
+          if (trueSupply !== undefined) {
+            newToken.supply = trueSupply
+          }
 
-        if (trueSupply !== undefined) {
-          newToken.supply = trueSupply
+        } catch (err) {
+          console.log("Error fetching live supply: ", err)
         }
       }
 
-      await handleTokenToSubmit(newToken)
-
-      setAdding(false)
+      handleTokenToSubmit(newToken) //adds token to list to be submitted when the module is saved
     }
-
+    
     setNewArtModule(prev => ({
       ...prev,
       tokens: [...(prev?.tokens || []), newToken.mint]
     }))
+    
+    setAdding(false)
   }
 
   const getAspectRatio = async (imageElement) => {

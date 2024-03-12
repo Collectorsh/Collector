@@ -49,6 +49,8 @@ export default function EditArtModuleModal({
   const [tokensToSubmit, setTokensToSubmit] = useState([]);//only used for personal curations
   const [saving, setSaving] = useState(false);
 
+  const [page, setPage] = useState(0);
+  const perPage = 30;
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(49);
@@ -109,6 +111,8 @@ export default function EditArtModuleModal({
   const loadingCounter = total ? ` (${ current }/${ total })` : "..."
 
   const gapSize = 24
+
+  const useGroupedTokens = groupByCollection && useUserTokens && !search
 
   useEffect(() => {
     setTimeout(handleResize, 500)
@@ -301,10 +305,10 @@ export default function EditArtModuleModal({
       default: return submittedTokens || []
     }
   }, [curationType, submittedTokens, userTokensSplit, activeTabIndex])
-
+  
   const availableTokenButtons = useMemo(() => {
     //if searching or not userTokens don't group
-    const useGroupedTokens = groupByCollection && useUserTokens && !search
+    
 
 
     const makeTokenButtons = (tokensToMake) => tokensToMake.map((token, i) => {
@@ -382,20 +386,23 @@ export default function EditArtModuleModal({
 
     } else {
       //all together
-      const filteredTokens = availableTokens.filter((token) => { 
+      const spotInList = page * perPage;
+      const tokens = !search
+        ? availableTokens.slice(spotInList, spotInList + perPage)
+        : availableTokens.filter((token) => { 
 
-        if (!search) return true;
-        const artistUsername = useUserTokens
-          ? token.artist_name
-          : approvedArtists.find(artist => artist.id === token.artist_id).username;
-      
-        return token.name.toLowerCase().includes(search.toLowerCase())
-          || artistUsername?.toLowerCase().includes(search.toLowerCase())
-      })
+          if (!search) return true;
+          const artistUsername = useUserTokens
+            ? token.artist_name
+            : approvedArtists.find(artist => artist.id === token.artist_id).username;
+        
+          return token.name.toLowerCase().includes(search.toLowerCase())
+            || artistUsername?.toLowerCase().includes(search.toLowerCase())
+        })
 
-      return makeTokenButtons(filteredTokens)
+      return makeTokenButtons(tokens)
     }
-  }, [availableTokens, search, useUserTokens, approvedArtists, tokens, tokenMintsInUse, moduleFull, handleTokenToSubmit, curationType, newArtModule.id, groupByCollection])
+  }, [availableTokens, search, useUserTokens, approvedArtists, tokens, tokenMintsInUse, moduleFull, handleTokenToSubmit, curationType, newArtModule.id, page, useGroupedTokens])
 
   const content = (
     <div className="relative h-full max-h-[333px] min-h-[200px] min border-4 rounded-xl palette2 borderPalette3"//max-h-[333px]  h-full min-h-[200px]
@@ -428,7 +435,13 @@ export default function EditArtModuleModal({
               }
             </div>
           )
-          : availableTokenButtons
+          : !search || availableTokenButtons.length
+            ? availableTokenButtons
+            : (
+              <div className="col-span-5 flex justify-center items-center">
+                <p className="font-bold">No results found</p>
+              </div>
+            )
         }
       </div>
     </div>
@@ -480,6 +493,83 @@ export default function EditArtModuleModal({
       </div>
     )
 
+  function generateArrayAroundNumber(num, lowerBound = 0, upperBound = Math.floor(availableTokens.length / perPage)) {
+    // Ensure the given number is within bounds
+    num = Math.max(lowerBound, Math.min(num, upperBound));
+
+    let start = num;
+    let end = num;
+
+    // Extend the range to include up to two numbers on either side of num,
+    // prioritizing filling the range towards the upper bound first.
+    while ((end - start) < 4 && (start > lowerBound || end < upperBound)) {
+      if (start > lowerBound) start--;
+      if ((end - start) < 4 && end < upperBound) end++;
+    }
+
+    // Generate the array
+    const result = [];
+    for (let i = start; i <= end; i++) {
+      result.push(i);
+    }
+
+    return result;
+  }
+  
+  const pagination = (
+    <div className="relative mx-auto w-fit">
+      <div className="bg-neutral-300 dark:bg-neutral-700 h-7 flex justify-center items-center pb-1 font-bold text-small">
+        <button
+          className="rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300"
+          onClick={() => setPage(0)}
+          disabled={page === 0}
+        >
+          <Icon.ChevronsLeft/>
+        </button>
+        <button
+          className="rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300"
+          onClick={() => setPage(prev => prev - 1)}
+          disabled={page === 0}
+        >
+          <Icon.ChevronLeft />
+        </button>
+        {/* <p className="px-1 leading-none">
+          {page + 1} / {Math.floor(availableTokens.length / perPage) + 1}
+        </p> */}
+        {generateArrayAroundNumber(page).map((num, i) => (
+          <button
+            key={i}
+            className={clsx(
+              "rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none w-7 h-7 hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300",
+              num === page ? "bg-neutral-200 dark:bg-neutral-800" : ""
+            )}
+            onClick={() => setPage(num)}
+          >
+            {num + 1}
+          </button>
+        ))}
+        <button
+          className="rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300"
+          onClick={() => setPage(prev => prev + 1)}
+          disabled={page >= Math.floor(availableTokens.length / perPage)}
+        >
+          <Icon.ChevronRight />
+        </button>
+        <button
+          className="rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300"
+          onClick={() => setPage(Math.floor(availableTokens.length / perPage))}
+          disabled={page >= Math.floor(availableTokens.length / perPage)}
+        >
+          <Icon.ChevronsRight />
+        </button>
+      </div>
+      <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-7 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1] rotate-180" />
+      <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-7 fill-neutral-300 dark:fill-neutral-700 rotate-180" />
+    </div>
+  )
+
+  const showPagination = !search && !useGroupedTokens && availableTokens?.length > perPage;
+
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Editing Art">
       <div
@@ -504,6 +594,7 @@ export default function EditArtModuleModal({
           </div>
           {tokensLabel}
           {content}
+          {showPagination ? pagination : null}
         </div>
 
         <button

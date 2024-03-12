@@ -108,18 +108,18 @@ export default function MintPage() {
   const categoryDisplay = category === CATEGORIES.VR ? "3D Model" : category
   const isEditions = maxSupply > 1
 
-  const permitted = user?.subscription_level === "pro" || user?.curator_approved
+  const permitted = true//user?.subscription_level === "pro" || user?.curator_approved
 
   useEffect(() => {
     if (!user) {
       setCreators([])
       return
     } 
-    if (permitted) {
-      setError(prev => ({ ...prev, "permission": null }))
-    } else {
-      setError(prev => ({ ...prev, "permission": "You must be have an approved account to mint" }))
-    }
+    // if (permitted) {
+    //   setError(prev => ({ ...prev, "permission": null }))
+    // } else {
+    //   setError(prev => ({ ...prev, "permission": "You must be have an approved account to mint" }))
+    // }
   }, [user, permitted])
 
   useEffect(() => {

@@ -27,9 +27,13 @@ import { getWaitlistSignups } from "../data/waitlist_signups/getAllSignups";
 import CopyButton from "../components/CopyToClipboard";
 import { approveWaitlistSignup } from "../data/waitlist_signups/approveSignup";
 import * as Icon from "react-feather";
+import { getHighlightedCurations, saveHighlightedCurations } from "../data/curation/getHighlightedCurations";
+import SearchBar from "../components/SearchBar";
+import { searchCurationsByName } from "../data/curation/getCurationByName";
+import debounce from "lodash.debounce";
 
 
-const tabs = ["Stats", "Fees", "Waitlist"]
+const tabs = ["Stats", "Fees", "Waitlist", "Curation Highlights"];
 
 export default function Dashboard() { 
   const [user] = useContext(UserContext);
@@ -52,7 +56,10 @@ export default function Dashboard() {
   const [curations, setCurations] = useState([]);
 
   const [collectedFees, setCollectedFees] = useState(0)
-  const [withdrawing, setWithdrawing] = useState(false)
+
+  const [highlightedCurations, setHighlightedCurations] = useState([])
+  const [curationSearch, setCurationSearch] = useState("")
+  const [searchedCurations, setSearchedCurations] = useState([])
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(49);
@@ -60,6 +67,14 @@ export default function Dashboard() {
   const tabsRef = useRef([]);
 
   const isAdmin = adminIDs.includes(user?.id)
+
+  useEffect(() => {
+    const fetchCurations = async () => {
+      const featured = await getHighlightedCurations()
+      if (featured) setHighlightedCurations(featured)
+    }
+    fetchCurations()
+  }, [])
 
   useEffect(() => {
     function setTabPosition() {
@@ -149,7 +164,9 @@ export default function Dashboard() {
   }
 
   const handleWithdrawFees = async () => {
-    setWithdrawing(true)
+    if (!isAdmin) return
+
+    setFetching(true)
     const res = await withdrawFromPlatformTreasury()
 
     if (res?.status === "success") {
@@ -158,8 +175,36 @@ export default function Dashboard() {
     } else {
       error(`Withdrawal failed`)
     }
-    setWithdrawing(false)
+    setFetching(false)
   }
+
+  const handleSaveHighlights = async () => {
+    setFetching(true)
+    const ids = highlightedCurations.map(c => c.id)
+    const res = await saveHighlightedCurations(ids, user.api_key)
+
+    if (res?.status === "success") {
+      success("Successfully saved highlights")
+    } else {
+      error("Failed to save highlights")
+    }
+    setFetching(false)
+  }
+
+  
+  useEffect(() => {
+    if (!curationSearch) return
+    if (!isAdmin) return
+    const handleCurationSearch = async () => { 
+      setFetching(true)
+      const res = await searchCurationsByName(curationSearch.replaceAll(" ", "_"))
+      if (res.error) error("Failed to search")
+      else setSearchedCurations(res)
+      setFetching(false)
+    }
+  
+    handleCurationSearch()
+  } , [curationSearch, isAdmin])
 
   const { totalSales, uniqueArtists, uniqueCollectors } = useMemo(() => {
     let totalSales = 0;
@@ -277,9 +322,9 @@ export default function Dashboard() {
           solid
           onClick={handleWithdrawFees}
           className="mt-2"
-          disabled={withdrawing || !collectedFees}
+          disabled={fetching || !collectedFees}
         >
-          {withdrawing ? (
+          {fetching ? (
             <Oval color="#FFF" secondaryColor="#666" height={20} width={20} />
           ) : "Withdraw Fees"}
 
@@ -296,7 +341,54 @@ export default function Dashboard() {
       {waitlist?.map(signup => <SingupItem key={signup.id} signup={signup} setWaitlist={setWaitlist} />)}
     </>
   )
-  const content = [stats, fees, waitlistTable];
+
+  const curationHighlights = (
+    <>
+      <p className="text-2xl text-center font-bold">
+        Currently highlighted
+      </p>
+      <p className="text-sm textPalette2 text-center">Only the first four will show</p>
+      <div className="border-2 borderPalette1 rounded-md grid grid-cols-4 place-items-center">
+        {highlightedCurations.map(curation => <CurationHighlightItem
+          key={curation.id}
+          curation={curation}
+          onClick={() => {
+            setHighlightedCurations(prev => prev.filter(c => c.id !== curation.id))
+          }}
+        />)}
+      </div>
+      <MainButton
+        onClick={handleSaveHighlights}
+        size="lg"
+        className="mx-auto my-4 block"
+        disabled={fetching}
+      >
+        Save
+      </MainButton>   
+      <hr className="border-neutral-200 dark:border-neutral-800 my-4" />
+      <SearchBar
+        className="w-56 mx-auto my-4"
+        search={curationSearch}
+        setSearch={(search) => setCurationSearch(search)}
+        placeholder="Search curations"
+      />
+      <div className="border-2 borderPalette1 rounded-md grid grid-cols-4 place-items-center">
+        {searchedCurations.length
+          ? searchedCurations.map(curation => <CurationHighlightItem
+          key={curation.id}
+          curation={curation}
+          onClick={() => {
+            setHighlightedCurations(prev => [...prev, curation])
+          }}
+          />)
+          : (
+            <p className="text-center textPalette2 col-span-4">No results</p>
+          )}
+      </div>
+    </>
+  )
+
+  const content = [stats, fees, waitlistTable, curationHighlights];
 
 
   return (
@@ -512,5 +604,15 @@ const SingupItem = ({ signup, setWaitlist }) => {
         </MainButton>
       )}
     </div>
+  )
+}
+
+const CurationHighlightItem = ({ curation, onClick }) => {
+  return (
+    <button className="rounded-md hoverPalette1 px-2 py-1" onClick={onClick}>
+      <p>
+        <span className="font-bold">{curation.name.replaceAll("_", " ")}</span> by {curation.curator.username}
+      </p>
+    </button>
   )
 }

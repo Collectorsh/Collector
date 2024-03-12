@@ -14,6 +14,17 @@ async function getCurationByName(name) {
 
 export default getCurationByName;
 
+export async function searchCurationsByName(name) {
+  try {
+    let res = await apiClient.post("/curation/search_by_name", {
+      name: name,
+    });
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 
 async function getCurationDetailsByName(name) {
   try {

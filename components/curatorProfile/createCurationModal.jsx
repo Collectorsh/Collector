@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react"
 import MainButton from "../MainButton"
-import Modal from "../Modal"
+import Modal, { modalActionDivClass } from "../Modal"
 import { useRouter } from "next/router"
 import "tippy.js/dist/tippy.css";
 import { useEditName } from "../curations/editNameModal"
@@ -101,19 +101,19 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
       <hr className="my-5 borderPalette3" />
 
       <div className="px-4">
-        <div>
+        <div className="">
           <div className="relative mb-1">
             <p className="font-bold">Curation Name</p>
             <p className="text-xs textPalette2">Also your curation&apos;s url (e.g. https://collector.sh/username/curation_name)</p>
           </div>
           <input
             type="text"
-            className="w-full border-2 px-3 py-2 rounded-lg palette2 borderPalette3 outline-none"
+            className="w-full border-2 px-3 py-2 rounded-lg bg-neutral-200 dark:bg-neutral-900 borderPalette3 outline-none"
             placeholder="Curation Name"
             onChange={(e) => setNewName(e.target.value.replace(" ", "_"))}
             value={curationName}
           />
-          <p className="text-sm pl-4 italic text-red-500 h-4">{nameError}</p>
+          <p className="text-sm pl-4 italic text-red-500 h-5">{nameError}</p>
         </div>
 
         <div className={curationType !== "curator" && "hidden"}>
@@ -121,7 +121,7 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
             <p className="font-bold">Curator Fee</p>
             <p className="text-xs textPalette2">Percentage of sales allocated to you as the curator (average fee is 5-10%)</p>
           </div>
-          <div className="flex w-full border-2 px-3 py-2 rounded-lg palette2 borderPalette3">
+          <div className="flex w-full border-2 px-3 py-2 rounded-lg bg-neutral-200 dark:bg-neutral-900 borderPalette3">
             <input
               type="number"
               step={0.1}
@@ -178,7 +178,7 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
         }
       </div>
       
-      <div className="hidden md:flex w-full flex-wrap-reverse justify-center gap-4 mt-3">
+      <div className="hidden md:flex w-full justify-center flex-wrap gap-4 sm:gap-8 mt-1 sm:mt-3">
         <MainButton onClick={handleClose} disabled={creating} size="lg" className="w-[12.42rem]">
           Cancel
         </MainButton>
@@ -227,7 +227,7 @@ const CurationTypeButton = ({ type, selected, onChange }) => {
       className={clsx(
         "flex flex-col gap-2 items-start",
         "rounded-lg px-4 py-2",
-        "ring-neutral-300 dark:ring-neutral-700 palette2",
+        "ring-neutral-300 dark:ring-neutral-700 bg-neutral-200 dark:bg-neutral-900",
         "hover:opacity-100 duration-300",
         selected ? "ring-4" : "opacity-50"
 
@@ -245,13 +245,6 @@ const CurationTypeButton = ({ type, selected, onChange }) => {
 
 export const CollectorIcon = ({className = "w-6 h-6"}) => { 
   return (
-    // <svg
-    //   className={clsx("fill-current", className)}
-    //   xmlns="http://www.w3.org/2000/svg"
-    //   viewBox="0 0 24 24"
-    // >
-    //   <g id="Museum-Painting--Streamline-Ultimate.svg"><path d="M22 0H2a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h20a2 2 0 0 0 2 -2V2a2 2 0 0 0 -2 -2Zm0 10.5a0.5 0.5 0 0 1 -0.5 0.5h-19a0.5 0.5 0 0 1 -0.5 -0.5v-8a0.5 0.5 0 0 1 0.5 -0.5h19a0.5 0.5 0 0 1 0.5 0.5Z" ></path><path d="M17.54 4.53a0.55 0.55 0 0 0 -0.45 -0.28 0.55 0.55 0 0 0 -0.48 0.24l-2.4 3.61a0.5 0.5 0 0 1 -0.4 0.24 0.52 0.52 0 0 1 -0.43 -0.15l-1.84 -1.85a0.6 0.6 0 0 0 -0.41 -0.16 0.58 0.58 0 0 0 -0.39 0.19L8.63 8.85a0.55 0.55 0 0 0 0.41 0.9h10.42a0.52 0.52 0 0 0 0.46 -0.27 0.52 0.52 0 0 0 0 -0.54Z" ></path><path d="M4.5 5A1.75 1.75 0 1 0 8 5a1.75 1.75 0 1 0 -3.5 0" ></path><path d="M23.45 18.92a8 8 0 0 1 -1.75 -1.18 0.27 0.27 0 0 1 -0.07 -0.27 2.13 2.13 0 0 0 0.12 -0.72 2.25 2.25 0 0 0 -4.5 0 2.13 2.13 0 0 0 0.12 0.72 0.27 0.27 0 0 1 -0.07 0.27 8 8 0 0 1 -10.6 0 0.27 0.27 0 0 1 -0.07 -0.27 2.13 2.13 0 0 0 0.12 -0.72 2.25 2.25 0 0 0 -4.5 0 2.13 2.13 0 0 0 0.12 0.72 0.27 0.27 0 0 1 -0.07 0.27 8 8 0 0 1 -1.75 1.18A1 1 0 0 0 1 20.81a1 1 0 0 0 0.45 -0.1 10.16 10.16 0 0 0 1.65 -1 0.27 0.27 0 0 1 0.26 0 0.24 0.24 0 0 1 0.14 0.22V23a1 1 0 0 0 2 0v-3.13a0.24 0.24 0 0 1 0.14 -0.22 0.27 0.27 0 0 1 0.26 0 10 10 0 0 0 12.2 0 0.27 0.27 0 0 1 0.26 0 0.24 0.24 0 0 1 0.14 0.22V23a1 1 0 0 0 2 0v-3.13a0.24 0.24 0 0 1 0.14 -0.22 0.27 0.27 0 0 1 0.26 0 10.16 10.16 0 0 0 1.65 1 1 1 0 0 0 0.45 0.1 1 1 0 0 0 0.45 -1.89Z" ></path></g>
-    // </svg>
     <svg
       className={clsx("fill-current", className)}
       xmlns="http://www.w3.org/2000/svg"

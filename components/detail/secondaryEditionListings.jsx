@@ -33,7 +33,7 @@ export default function SecondaryEditionListings({ editionListings }) {
     <div className="flex flex-wrap justify-between gap-2 items-center">
       <div>
         <p className="font-bold text-lg">Secondary Editions</p>
-        <p className="font-sm textPalette2 flex gap-1">{displayedEditionListings.length || "None"} available{info}</p>
+        <p className="font-sm textPalette2 flex gap-1 items-center">{displayedEditionListings.length || "None"} available{info}</p>
       </div>
    
       {displayedEditionListings?.length

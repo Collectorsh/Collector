@@ -287,13 +287,25 @@ export default function MintPage() {
           <DescriptionInput description={description} setDescription={setDescription} setError={setError}/>
         
           <div className="grid lg:grid-cols-2 gap-4">
-            <RoyaltiesInput royalties={royalties} setRoyalties={setRoyalties} setError={setError} />
+            <div className="flex flex-col gap-4">
+              <RoyaltiesInput royalties={royalties} setRoyalties={setRoyalties} setError={setError} />
+              <CollectionDropDown
+                className="hidden lg:block"
+                selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError}
+              />
+            </div>
+
             <CreatorsInput creators={creators} setCreators={setCreators} setError={setError} />
+
+            <CollectionDropDown
+              className="lg:hidden"
+              selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError}
+            />
           </div>  
 
-          <div className="flex justify-center w-full lg:w-[calc(50%-8px)] mx-auto">
+          {/* <div className="flex justify-center w-full lg:w-[calc(50%-8px)] mx-auto">
             <CollectionDropDown selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError} />
-          </div>
+          </div> */}
 
           <Drawer
             title="Extras"

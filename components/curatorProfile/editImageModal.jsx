@@ -4,7 +4,7 @@ import UserContext from "../../contexts/user";
 import { useTokens } from "../../data/nft/getTokens";
 import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
-import Modal from "../Modal";
+import Modal, { modalActionDivClass } from "../Modal";
 import SearchBar from "../SearchBar";
 import { useImageFallbackContext } from "../../contexts/imageFallback";
 import { RoundedCurve } from "../curations/roundedCurveSVG";
@@ -186,7 +186,7 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title={title}>
       <SearchBar
-        className="ml-2 pl-4 w-full max-w-[20rem] mt-4"
+        className="pl-4 w-full max-w-[20rem] mt-4 mb-3 lg:mb-0 bg-neutral-200 dark:bg-neutral-900"
         search={search}
         setSearch={setSearch}
         placeholder="Search By Artwork"
@@ -227,11 +227,11 @@ export default function EditImageModal({ title, isOpen, onClose, onSave, type })
         />
       </div>
 
-      <div className="h-[540px] max-h-full border-4 rounded-xl overflow-hidden palette2 borderPalette3">
+      <div className="h-[540px] max-h-full border-4 rounded-xl overflow-hidden bg-neutral-200 dark:bg-neutral-900 borderPalette3">
         {tabContent[activeTabIndex]}
       </div>
       
-      <div className="w-full flex justify-center gap-4 mt-4">
+      <div className={modalActionDivClass}>
         <MainButton onClick={handleClose} size="lg" standardWidth>
           Cancel
         </MainButton>

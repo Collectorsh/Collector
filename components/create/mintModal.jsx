@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react"
 import MainButton from "../MainButton"
-import Modal from "../Modal"
+import Modal, { modalActionDivClass } from "../Modal"
 import apiClient, { apiNodeClient } from "../../data/client/apiClient"
 import { Metaplex, PublicKey, toBigNumber, walletAdapterIdentity } from "@metaplex-foundation/js"
 import { connection } from "../../config/settings"
@@ -354,11 +354,11 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       title={`Minting ${ nftProps.name }`}
       widthClass={usingAltMedia && stage === MINT_STAGE.INIT ? "max-w-screen-xl" : "max-w-screen-sm"}
     >
-      <div className="h-full overflow-y-auto my-2">
+      <div className="h-full overflow-y-auto mt-4">
         {content}
       </div>
     
-      <div className="w-full flex flex-wrap justify-center gap-4 pb-4 md:pb-0">
+      <div className={modalActionDivClass}>
         <div className="justify-self-end">
           {secondaryButton}
         </div>

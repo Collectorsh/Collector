@@ -1,5 +1,5 @@
 import { useWallet } from "@solana/wallet-adapter-react";
-import Modal from "../Modal";
+import Modal, { modalActionDivClass } from "../Modal";
 import { useCallback, useContext, useMemo, useState } from "react";
 import UserContext from "../../contexts/user";
 import MainButton from "../MainButton";
@@ -116,11 +116,11 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
             <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-5 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1]" />
             <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-5 fill-neutral-300 dark:fill-neutral-700" />
           </div>
-          <div className="h-[40vh] w-full mb-4 palette2 borderPalette3 border-4 rounded-lg p-2">
+          <div className="h-[40vh] w-full mb-4 bg-neutral-200 dark:bg-neutral-900 borderPalette3 border-4 rounded-lg p-2">
 
             <FileDrop
               onDrop={setImageFile}
-              imageClass="object-contain p-2 mx-auto"
+              imageClass="object-contain p-2 mx-auto "
               maxFileSize={50}
             />
           </div>
@@ -129,14 +129,14 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
             setName={setCollectionName}
             setError={() => { }}
             placeholder="The title of your collection"
-            paletteClass="palette2 borderPalette3"
+            paletteClass="bg-neutral-200 border-neutral-300 dark:bg-neutral-900 dark:border-neutral-700"
           />
           <DescriptionInput
             description={collectionDescription}
             setDescription={setCollectionDescription}
             setError={() => { }}
             placeholder="Your collection's description"
-            paletteClass="palette2 borderPalette3"
+            paletteClass="bg-neutral-200 border-neutral-300 dark:bg-neutral-900 dark:border-neutral-700"
           />
           
         </div>
@@ -200,11 +200,11 @@ const CreateCollectionModal = ({ isOpen, onClose, setCollections }) => {
       title={`Create A New Collection`}
       widthClass={"max-w-screen-sm"}
     >
-      <div className="h-full overflow-y-auto my-2">
+      <div className="h-full overflow-y-auto mt-4">
         {content}
       </div>
 
-      <div className="w-full grid grid-cols-2 gap-4">
+      <div className={modalActionDivClass}>
         <div className={clsx(
             "justify-self-end",
           MINT_STAGE.SUCCESS === stage && "col-span-2 w-full flex justify-center"

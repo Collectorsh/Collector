@@ -52,7 +52,6 @@ export default function Wallets() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet?.connected, user]);
-    
 
   const addWallet = () => {
     wallet.disconnect().then(() => {

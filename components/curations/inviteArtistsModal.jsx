@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import MainButton from "../MainButton"
-import Modal from "../Modal"
+import Modal, { modalActionDivClass } from "../Modal"
 import { RoundedCurve } from "./roundedCurveSVG"
 import SearchBar from "../SearchBar"
 import getUserFromUsername from "../../data/user/getUserFromUsername"
@@ -82,14 +82,14 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
     <Modal isOpen={isOpen} onClose={handleClose} title="Invite Artists" widthClass="max-w-screen-md">
 
       <div className="flex flex-col items-center mt-4">
-        <p className="text-lg flex gap-1">
+        <p className="text-lg flex gap-1 items-center">
           Invite Link
           {info}
         </p>
         {passcode ? (
           <div className="flex items-center gap-2">
             <p className="text-sm textPalette2">{getUrl()}</p>
-            <CopyButton textToCopy={getUrl()} />
+            <CopyButton textToCopy={getUrl()} className="hover:bg-neutral-200 dark:hover:bg-neutral-700" />
           </div>
         ) : (
           <MainButton
@@ -105,12 +105,12 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
 
       <hr className="my-5 borderPalette3" />
  
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex items-center gap-2">
         <SearchBar
           search={search}
           setSearch={setSearch}
           placeholder="Add by username or address"
-          className="w-full max-w-lg"
+          className="w-full bg-neutral-200 dark:bg-neutral-900"
           onEnter={handleSearch}
         />
         <MainButton
@@ -134,7 +134,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
         <RoundedCurve className="absolute bottom-0 -right-8 w-8 h-6 fill-neutral-300 dark:fill-neutral-700" />
       </div>
       <div className="mb-6 min-h-[5.5rem] border-4 rounded-xl p-2
-       border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900
+       border-neutral-300 dark:border-neutral-700 bg-neutral-200 dark:bg-neutral-900
        flex items-start flex-wrap gap-2
        ">
         {newApproveArtists.map((artist, i) => {
@@ -148,7 +148,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
         })}
       </div>
       
-      <div className="w-full flex justify-center gap-4">
+      <div className={modalActionDivClass}>
         <MainButton onClick={handleClose} standardWidth size="lg">
           Cancel
         </MainButton>

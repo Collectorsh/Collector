@@ -50,7 +50,7 @@ export default function EditArtModuleModal({
   const [saving, setSaving] = useState(false);
 
   const [page, setPage] = useState(0);
-  const perPage = 30;
+  const perPage = 20;
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(49);
@@ -405,7 +405,7 @@ export default function EditArtModuleModal({
   }, [availableTokens, search, useUserTokens, approvedArtists, tokens, tokenMintsInUse, moduleFull, handleTokenToSubmit, curationType, newArtModule.id, page, useGroupedTokens])
 
   const content = (
-    <div className="relative h-full max-h-[333px] min-h-[200px] min border-4 rounded-xl palette2 borderPalette3"//max-h-[333px]  h-full min-h-[200px]
+    <div className="relative h-full max-h-[333px] min-h-[200px] min border-4 rounded-xl bg-neutral-200 dark:bg-neutral-900 borderPalette3"//max-h-[333px]  h-full min-h-[200px]
       ref={divRef}
     >
       {moduleFull ?
@@ -413,7 +413,7 @@ export default function EditArtModuleModal({
           <div className="absolute inset-0 z-50 h-full flex justify-center items-center backdrop-blur-sm">
             <p
               className="shadow-lg
-              bg-neutral-200 dark:bg-neutral-800 px-5 py-2 rounded-lg font-bold"
+              bg-neutral-100 dark:bg-neutral-800 px-5 py-2 rounded-lg font-bold"
             >Module Full (max 4 pieces)</p>
            </div> 
         )
@@ -576,17 +576,19 @@ export default function EditArtModuleModal({
         className="overflow-y-auto grid h-screen max-h-full grid-rows-[auto,auto,1fr] mt-4 relative"
       >
         <div className="relative flex flex-col">
-          <div className="flex items-center justify-between flex-wrap px-4 gap-2">
+          <div className="flex items-center justify-between flex-wrap gap-2 lg:mb-0 mb-3">
             <SearchBar
-              className="w-full max-w-[20rem]"
+              className="w-full max-w-[20rem] bg-neutral-200 dark:bg-neutral-900"
               search={search}
               setSearch={setSearch}
               placeholder="Search"
             />
             <Checkbox
               className={clsx(
+                "pr-3 ",
                 !useUserTokens && "hidden",
               )}
+              checkboxClassName="borderPalette3 bg-neutral-200 dark:bg-neutral-900"
               label="Group by Collection"
               checked={groupByCollection}
               onChange={() => setGroupByCollection(prev => !prev)}
@@ -629,7 +631,7 @@ export default function EditArtModuleModal({
               >
                 {itemsInModule.length
                   ? itemsInModule      
-                  : <p className="text-center">Click an artwork above to add it to this module</p>
+                  : <p className="text-center">Click an artwork above to add it to this block</p>
                 } 
               </div>
             </SortableArtWrapper>
@@ -637,11 +639,11 @@ export default function EditArtModuleModal({
         </div>
       </div>
       
-      <div className="w-full flex justify-center md:justify-between items-center gap-4 mt-4 flex-wrap">
+      <div className="w-full flex justify-center md:justify-between items-center gap-4 sm:gap-8 mt-6 sm:mt-8">
         <WarningButton onClick={onDeleteModule} size="lg">
           Delete
         </WarningButton>
-        <div className="flex gap-4">
+        <div className="flex gap-8 flex-wrap">
           <MainButton onClick={handleClose} size="lg" standardWidth>
             Cancel
           </MainButton>

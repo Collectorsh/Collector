@@ -20,7 +20,7 @@ const SocialLink = ({
   const href = link.includes("//") ? link : `//${ link }`
   return (
     <Tippy content={link} className="shadow">
-      <a href={href} className={clsx("opacity-75 hover:opacity-100 transition hoverPalette1 rounded-md p-1.5",className)}>
+      <a href={href} className={clsx("opacity-75 hover:opacity-100 transition hoverPalette1 rounded-full p-1.5",className)}>
         {icon}
       </a>
 

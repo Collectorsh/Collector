@@ -578,7 +578,7 @@ code {
 }
 
 .ql-toolbar.ql-toolbar.ql-snow {
-  @apply border-b-2 border-neutral-200 dark:border-neutral-700;
+  @apply border-b-2 border-neutral-300 dark:border-neutral-800;
 }
 
 .ql-snow.ql-snow .ql-picker{
@@ -609,11 +609,11 @@ code {
 
 
 .ql-snow.ql-snow.ql-toolbar .ql-picker .ql-picker-options {
-  @apply bg-neutral-100 dark:bg-neutral-800 rounded shadow border-neutral-300 dark:border-neutral-700;
+  @apply bg-neutral-100 dark:bg-neutral-800 rounded shadow border-neutral-300 dark:border-neutral-800;
 }
 
 .ql-snow.ql-snow .ql-picker.ql-expanded .ql-picker-label {
-  @apply rounded border-neutral-300 dark:border-neutral-700 
+  @apply rounded border-neutral-300 dark:border-neutral-800 
 }
 
 .ql-snow.ql-snow .ql-picker .ql-picker-label {

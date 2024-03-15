@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useState, useEffect } from "react";
 import * as Icon from "react-feather";
-const CopyButton = ({ textToCopy, className }) => {
+const CopyButton = ({ textToCopy, className = "hoverPalette3" }) => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = async (text) => {
@@ -21,7 +21,7 @@ const CopyButton = ({ textToCopy, className }) => {
 
   return (
     <button
-      className={clsx("p-2 rounded-full flex items-center space-x-2 hoverPalette3", className)}
+      className={clsx("p-2 rounded-full flex items-center space-x-2", className)}
       onClick={() => copyToClipboard(textToCopy)}
     >
       {copied ? (

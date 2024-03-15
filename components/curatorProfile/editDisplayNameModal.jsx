@@ -1,6 +1,6 @@
 import { useState } from "react"
 import MainButton from "../MainButton"
-import Modal from "../Modal"
+import Modal, { modalActionDivClass } from "../Modal"
 
 
 const EditDisplayNameModal = ({ name, onSave, isOpen, onClose }) => {
@@ -18,16 +18,15 @@ const EditDisplayNameModal = ({ name, onSave, isOpen, onClose }) => {
       title="Editing Display Name"
       widthClass="max-w-screen-sm"
     >
-      {/* <p className="textPalette2 text-sm my-2 text-center">Changes</p> */}
       <input
-        className="my-1 border-2 rounded-lg
-        palette2 borderPalette3 outline-none
+        className="mt-3 sm:mt-6 border-2 rounded-lg
+        bg-neutral-200 dark:bg-neutral-900 borderPalette3 outline-none
         w-full px-4 py-2"
         onChange={(e) => setNewName(e.target.value.replaceAll(" ", "_"))}
         value={newName}
       />
   
-      <div className="w-full flex justify-center gap-4 mt-4">
+      <div className={modalActionDivClass}>
         <MainButton onClick={onClose} size="lg" standardWidth>
           Cancel
         </MainButton>

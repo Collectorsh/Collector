@@ -28,7 +28,7 @@ const EditTextModuleModal = ({ textModule, onEditTextModule, isOpen, onClose, on
     <Modal
       className="overflow-visible"
       isOpen={isOpen} onClose={onClose} title="Editing Text">
-      <div className="my-4 border-2 rounded-xl palette2 borderPalette3
+      <div className="mt-3 sm:mt-6 border-2 rounded-xl bg-neutral-200 dark:bg-neutral-900 borderPalette3
           w-full p-2 min-h-[8rem]
         ">
         <QuillEditor
@@ -37,7 +37,7 @@ const EditTextModuleModal = ({ textModule, onEditTextModule, isOpen, onClose, on
         />
       </div>
 
-      <div className="w-full flex justify-center md:justify-between items-center gap-4 mt-4 flex-wrap">
+      <div className="w-full flex justify-center md:justify-between items-center gap-4 sm:gap-8 mt-6 sm:mt-8">
         <WarningButton onClick={onDeleteModule} size="lg">
           Delete
         </WarningButton>

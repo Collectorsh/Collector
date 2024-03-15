@@ -8,7 +8,7 @@ import Tippy from '@tippyjs/react'
 
 import * as Icon from 'react-feather'
 
-const CollectionDropDown = ({ selectedCollection, setCollection, setError, existingCollections }) => {
+const CollectionDropDown = ({ selectedCollection, setCollection, setError, existingCollections, className }) => {
   const [collectionModalOpen, setCollectionModalOpen] = useState(false)
   const [collections, setCollections] = useState(undefined)
 
@@ -32,9 +32,9 @@ const CollectionDropDown = ({ selectedCollection, setCollection, setError, exist
   )
 
   return (
-    <div className="relative mb-4 w-full">
+    <div className={clsx("relative mb-4 w-full", className)}>
       <CreateCollectionModal isOpen={collectionModalOpen} onClose={() => setCollectionModalOpen(false)} setCollections={setCollections} />
-      <p className="font-bold text-lg mb-1 ml-3 flex gap-1">
+      <p className="font-bold text-lg mb-1 ml-3 flex items-center gap-1">
         Collection
         {info}
       </p>

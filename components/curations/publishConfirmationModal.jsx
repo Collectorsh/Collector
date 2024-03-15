@@ -1,6 +1,6 @@
 import { useContext, useState } from "react"
 import MainButton from "../MainButton"
-import Modal from "../Modal"
+import Modal, { modalActionDivClass } from "../Modal"
 import CopyButton from "../CopyToClipboard"
 import { shootConfetti } from "../../utils/confetti"
 import { useRouter } from "next/router"
@@ -111,10 +111,10 @@ const PublishConfirmationModal = ({ isOpen, onClose, name, onPublish, onViewPubl
       title={`Publishing ${ name.replaceAll("_", " ") }`}
       widthClass="max-w-screen-sm"
     >
-      <div className="flex flex-col gap-3 pb-10 pt-6 text-center items-center justify-center min-h-[9rem]">
+      <div className="flex flex-col gap-3 pt-4 text-center items-center justify-center min-h-[9rem]">
         { getContent()}
       </div>
-      <div className="w-full flex justify-center flex-wrap gap-4">
+      <div className={modalActionDivClass}>
         { getButtons()}
       </div>
     </Modal>

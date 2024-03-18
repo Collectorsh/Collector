@@ -35,7 +35,7 @@ const LandingCurationHighlight = ({ curation, isOwner, withCurator }) => {
   )
   
   return (
-    <Link href={`/${ curation?.curator?.username || "curations"}/${ name }`} >
+    <Link href={`/${ curation?.curator?.username || "curations"}/${ name }`} legacyBehavior>
       <a className="block w-full">
         <div className="w-full pb-[50%] md:pb-[33%] relative duration-300 hover:scale-[102%] active:scale-100"> 
           <CloudinaryImage
@@ -50,7 +50,7 @@ const LandingCurationHighlight = ({ curation, isOwner, withCurator }) => {
           <h2 className="font-bold text-4xl collector text-center">{name.replaceAll("_", " ")}</h2>
           
           {withCurator && curator          
-            ? (<Link href={`/${ curator.username }`} passHref>
+            ? (<Link href={`/${ curator.username }`} passHref legacyBehavior>
                 <div className="flex gap-2 items-center justify-center mt-4 hover:scale-105 duration-300 w-fit mx-auto">
                 <p className="text-lg">{curationTypeText} {curator.username}</p>
                 {pfpImgId

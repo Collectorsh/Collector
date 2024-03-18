@@ -432,7 +432,7 @@ function CurationPage({curation}) {
             displayPublishedEdit={displayDraftEdit}//{displayPublishedEdit}
           />
           {/* <p className="font-xs textPalette3 text-center">{curatorText}</p> */}
-          <Link href={`/${ curation?.curator?.username }`} >
+          <Link href={`/${ curation?.curator?.username }`} legacyBehavior>
             <a className="flex gap-3 items-center justify-center mb-8 hoverPalette1 rounded-md px-4 py-2 w-fit mx-auto ">
               {curation?.curator?.profile_image
                 ? (<div className="relative">

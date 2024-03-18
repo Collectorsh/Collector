@@ -14,7 +14,7 @@ import {
 
 import { concat } from "ramda";
 
-const web3 = require("@solana/web3.js");
+const web3 = {}//require("@solana/web3.js");
 
 const {
   createPublicBuyInstruction,

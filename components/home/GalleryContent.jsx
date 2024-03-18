@@ -97,7 +97,7 @@ const ImageSlide = ({ item }) => {
       <div
         className="bg-neutral-300/20 md:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
       >
-        <Link href={`/${ item.username }`}>
+        <Link href={`/${ item.username }`} legacyBehavior>
           <a >
             {/* <div className="w-full h-full"> */}
               <CloudinaryImage
@@ -114,7 +114,7 @@ const ImageSlide = ({ item }) => {
           </a>
         </Link>
         <div className="mt-2">
-          <Link href={`/${ item.username }`}>
+          <Link href={`/${ item.username }`} legacyBehavior>
             <a>
               {/* {item.twitter_profile_image && (
                 <img

@@ -22,6 +22,7 @@ function FollowingAuctions({ auctions, user }) {
                 item.brand_name,
                 item.highest_bidder_username
               )}
+              legacyBehavior
             >
               <a>
                 <Image token={item} />

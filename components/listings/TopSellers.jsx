@@ -42,7 +42,7 @@ export default function TopSellers({ listings }) {
         <Slider {...settings}>
           {listings.map((item, index) => (
             <div key={index} className="px-4">
-              <Link href={`/art/${item.listing.mintAddress}`}>
+              <Link href={`/art/${item.listing.mintAddress}`} legacyBehavior>
                 <a>
                   <div className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl border border-neutral-200 dark:border-dark3">
                     <div className="pb-4" key={item.listing.mintAddress}>

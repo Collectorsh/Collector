@@ -210,7 +210,7 @@ export default function EditArtModuleModal({
     const cols = isMobile ? 1 : tokens.length
     
     const mappedAspectRatios = {}
-    const totalAspectRatio = 0;
+    let totalAspectRatio = 0;
     
     tokens.forEach(token => {
       const mint = token.mint;
@@ -313,7 +313,7 @@ export default function EditArtModuleModal({
 
     const makeTokenButtons = (tokensToMake) => tokensToMake.map((token, i) => {
       const inUseHere = tokens.findIndex(t => t.mint === token.mint) >= 0 //in this module currently
-      const inUseElseWhere = false;
+      let inUseElseWhere = false;
       Object.entries(tokenMintsInUse).forEach(([moduleId, mints]) => { //used in other modules
         if (moduleId === newArtModule.id) return;
         if (mints.includes(token.mint)) inUseElseWhere = true;

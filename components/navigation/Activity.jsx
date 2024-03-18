@@ -31,28 +31,28 @@ export default function Activity() {
         >
           <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none text-left">
             <Menu.Item>
-              <Link href="/activity?id=buynow">
+              <Link href="/activity?id=buynow" legacyBehavior>
                 <a className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                   Buy Now
                 </a>
               </Link>
             </Menu.Item>
             <Menu.Item>
-              <Link href="/activity?id=following">
+              <Link href="/activity?id=following" legacyBehavior>
                 <a className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                   Auctions
                 </a>
               </Link>
             </Menu.Item>
             <Menu.Item>
-              <Link href="/activity?id=bids">
+              <Link href="/activity?id=bids" legacyBehavior>
                 <a className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                   My Bids
                 </a>
               </Link>
             </Menu.Item>
             <Menu.Item>
-              <Link href="/activity?id=follow">
+              <Link href="/activity?id=follow" legacyBehavior>
                 <a className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                   Follow Artists
                 </a>

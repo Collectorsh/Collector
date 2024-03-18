@@ -48,6 +48,7 @@ export default function Details({ item }) {
                 item.attributes.brand_name,
                 item.attributes.highest_bidder_username
               )}
+              legacyBehavior
             >
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>{" "}
@@ -66,6 +67,7 @@ export default function Details({ item }) {
                 item.artist,
                 item.attributes.highest_bidder_username
               )}
+              legacyBehavior
             >
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>{" "}
@@ -88,6 +90,7 @@ export default function Details({ item }) {
                 item.artist,
                 item.attributes.highest_bidder_username
               )}
+              legacyBehavior
             >
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>
@@ -113,6 +116,7 @@ export default function Details({ item }) {
                 item.artist,
                 item.attributes.highest_bidder_username
               )}
+              legacyBehavior
             >
               <a className="hover:underline">{item.attributes.name}</a>
             </Link>{" "}
@@ -130,6 +134,7 @@ export default function Details({ item }) {
           item.artist,
           item.attributes.highest_bidder_username
         )}
+        legacyBehavior
       >
         <a>
           <Image token={item.attributes} size="medium" />

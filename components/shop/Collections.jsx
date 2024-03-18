@@ -34,6 +34,7 @@ export default function Collections() {
                     href={`/shop/collection/${collection.uuid}`}
                     title=""
                     key={index}
+                    legacyBehavior
                   >
                     <a>
                       <img

@@ -14,11 +14,6 @@ const MainButton = forwardRef(({ children, solid = false, className, disabled, n
   const sizeClass = () => {
     if (noPadding) return ""
     switch (size) {
-      // case "xl": return "py-3 px-8 text-xl rounded-lg"
-      // case "lg": return "py-1.5 px-6 text-lg rounded-lg"
-      // case "md":
-      // default: return "py-1 px-4 text-base rounded-md"
-
       case "xl": return "py-3.5 px-8 text-xl rounded-lg leading-none"
       case "lg": return "py-2 px-5 text-lg rounded-lg leading-none"
       case "md":
@@ -35,7 +30,7 @@ const MainButton = forwardRef(({ children, solid = false, className, disabled, n
         "",
         "disabled:opacity-50",
         "duration-300 transition",
-        "font-bold",
+        "font-semibold",
         sizeClass(),
         disabledClass,
         standardWidth && "w-28",
@@ -57,10 +52,6 @@ export const WarningButton = ({ children, className, disabled, noPadding, warnin
   const sizeClass = () => {
     if (noPadding) return ""
     switch (size) {
-      // case "xl": return "py-3 px-8 text-xl rounded-lg "
-      // case "lg": return "py-1.5 px-6 text-lg rounded-lg "
-      // case "md":
-      // default: return "py-1 px-4 text-base rounded-md"
       case "xl": return "py-3.5 px-8 text-xl rounded-lg leading-none"
       case "lg": return "py-2 px-5 text-lg rounded-lg leading-none"
       case "md":

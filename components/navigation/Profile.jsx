@@ -66,14 +66,14 @@ export default function MainNavigation() {
               </Link>
             </Menu.Item> */}
             <Menu.Item>
-              <Link href="/settings">
+              <Link href="/settings" legacyBehavior>
                 <a className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                   Settings
                 </a>
               </Link>
             </Menu.Item>
             <Menu.Item>
-              <Link href="#">
+              <Link href="#" legacyBehavior>
                 <a
                   onClick={signOut}
                   className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100"

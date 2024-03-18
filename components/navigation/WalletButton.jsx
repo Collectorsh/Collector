@@ -75,7 +75,7 @@ const MobileAppMenu = () => {
             <Menu.Items className="palette2 origin-top-left absolute -left-0 mt-2 pt-2 w-fit overflow-hidden rounded-md shadow-md outline-none text-left">
               <div className="p-2 pt-0">    
                 <Menu.Item>
-                  <Link href={phantomLink}>
+                  <Link href={phantomLink} legacyBehavior>
                     <a className="block p-2 hoverPalette2 rounded-md">
                       Open in Phantom App
                     </a>
@@ -83,7 +83,7 @@ const MobileAppMenu = () => {
                 </Menu.Item>
 
                 <Menu.Item>
-                  <Link href={solflareLink}>
+                  <Link href={solflareLink} legacyBehavior>
                     <a className="block p-2 hoverPalette2 rounded-md">
                       Open in Solflare App
                     </a>

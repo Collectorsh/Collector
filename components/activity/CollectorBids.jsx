@@ -22,6 +22,7 @@ function CollectorBids({ bids }) {
                   auction.brand_name,
                   auction.highest_bidder_username
                 )}
+                legacyBehavior
               >
                 <a>
                   <Image token={auction} />

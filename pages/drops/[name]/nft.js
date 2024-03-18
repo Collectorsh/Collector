@@ -48,7 +48,7 @@ export default function Nft({ mint }) {
       {token && (
         <div className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl rounded-2xl pt-[10px] px-[10px] border border-neutral-200 dark:border-dark3">
           <div className="rounded-lg overflow-hidden">
-            <Link href={link}>
+            <Link href={link} legacyBehavior>
               <a>
                 <Image token={token} />
               </a>

@@ -34,6 +34,7 @@ function Exchange(props) {
           <Link
             href={`https://exchange.art/single/${props.mint}`}
             title={collection.brandName}
+            legacyBehavior
           >
             <a className="bg-exchange w-fit px-3 py-3 rounded-lg align-middle cursor-pointer text-slate-900 font-semibold">
               <span className="align-top">Make an Offer</span>

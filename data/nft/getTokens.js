@@ -179,7 +179,7 @@ async function getTokens(publicKeys, options) {
 
   const { visibilities, optimizations, user_default } = visResults
 
-  const results = []  
+  let results = []  
 
   for (const token of mungedTokens) {
     let result = { ...token }

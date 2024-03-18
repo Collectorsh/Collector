@@ -15,6 +15,7 @@ export default function BuynowListings({ listings, user }) {
         >
           <div className="rounded-lg overflow-hidden">
             <Link
+              legacyBehavior
               href={marketplaceLink(item.source, item.mint, item.artist_name)}
             >
               <a>

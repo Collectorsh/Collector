@@ -5,7 +5,7 @@ export default function AcceptOffers({ token }) {
 
   return (
     <div className="text-sm cursor-pointer text-dark3 dark:text-neutral-300 bg-whitish dark:bg-dark3 w-fit px-2 py-1 rounded cursor-pointer absolute top-3 right-3">
-      <Link href={`/art/${token.mint}`} title="">
+      <Link href={`/art/${token.mint}`} title="" legacyBehavior>
         <a>Accepting Offers</a>
       </Link>
     </div>

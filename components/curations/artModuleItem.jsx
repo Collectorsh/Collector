@@ -324,5 +324,5 @@ export default ArtItem
 
 export const ToggleLink = ({ disabled, children, ...props }) => {
   if (disabled) return <Fragment>{children}</Fragment>
-  return <Link {...props}>{children}</Link>
+  return <Link {...props} legacyBehavior>{children}</Link>
 }

@@ -212,7 +212,7 @@ export default function Gacha({ address, drop }) {
 
       {mintState !== "pre" && (
         <p className="mt-6 float-right text-normal tracking-wide font-semibold text-neutral-800 dark:text-neutral-100 hover:underline">
-          <Link href={`/drops/${drop.slug}/market`}>
+          <Link href={`/drops/${drop.slug}/market`} legacyBehavior>
             <a>Go to Market</a>
           </Link>
           {/* <ArrowRightIcon
@@ -265,7 +265,7 @@ export default function Gacha({ address, drop }) {
                   <p className="text-sm">
                     You need to be a Collector Signature holder in order to mint
                     now. You can mint your Signature{" "}
-                    <Link href="/mint">
+                    <Link href="/mint" legacyBehavior>
                       <a target="_blank" className="font-bold underline">
                         here
                       </a>

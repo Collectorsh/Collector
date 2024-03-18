@@ -103,7 +103,6 @@ export default function MyApp({ Component, pageProps }) {
           urlBlocklist: [],
         }}
       />
-
       {/* <ApolloProvider client={client}> */}
         <RpcHealthProvider>
           <WalletContextProvider>
@@ -142,7 +141,7 @@ export default function MyApp({ Component, pageProps }) {
             </UserProvider>
           </WalletContextProvider>
         </RpcHealthProvider>
-      {/* </ApolloProvider> */}
+        {/* </ApolloProvider> */}
     </>
   );
 }

@@ -48,7 +48,7 @@ export default function Gallery() {
                 <div className="px-2">
                   {user.subscription_level === "pro" ? (
                     <Menu.Item>
-                      <Link href={`/${ user.username }`}>
+                      <Link href={`/${ user.username }`} legacyBehavior>
                         <a className="block p-2 hoverPalette2 rounded-md">
                           My Gallery
                         </a>
@@ -62,14 +62,14 @@ export default function Gallery() {
                   {isCuratorApproved ? (
                     <>
                       <Menu.Item>
-                        <Link href={`/mint`}>
+                        <Link href={`/mint`} legacyBehavior>
                           <a className="block p-2 hoverPalette2 rounded-md">
                             Mint
                           </a>
                         </Link>
                       </Menu.Item>
                       <Menu.Item>
-                        <Link href={`/submit`}>
+                        <Link href={`/submit`} legacyBehavior>
                           <a className="block p-2 hoverPalette2 rounded-md">
                             Submit
                           </a>
@@ -118,7 +118,7 @@ export const UserCard = ({inset}) => {
       <div className="flex justify-end items-center">
         <Tippy content="FAQ" className="shadow">
           <div className="">
-            <Link href="/faq">
+            <Link href="/faq" legacyBehavior>
               <a className="h-full p-1.5 rounded-full flex items-center hoverPalette3">
                 <Icon.HelpCircle size={inset ? 24 : 20} />
               </a>
@@ -128,7 +128,7 @@ export const UserCard = ({inset}) => {
           
         <Tippy content="Settings" className="shadow">
           <div className="">
-            <Link href="/settings">
+            <Link href="/settings" legacyBehavior>
               <a className="h-full  p-1.5 rounded-full flex items-center hoverPalette3">
                 <Icon.Settings size={inset ? 24 : 20} />
               </a>

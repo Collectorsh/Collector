@@ -13,7 +13,7 @@ import {
   SYSVAR_INSTRUCTIONS_PUBKEY,
 } from "@solana/web3.js";
 
-const web3 = require("@solana/web3.js");
+const web3 = {}//require("@solana/web3.js");
 
 const { createSellInstruction, createPrintListingReceiptInstruction } =
   AuctionHouseProgram.instructions;

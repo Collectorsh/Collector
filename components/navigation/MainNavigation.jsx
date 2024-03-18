@@ -14,7 +14,7 @@ import RpcHealthFeedback from "./RpcHeathFeedback";
 import * as Icon from 'react-feather'
 import { UserCard } from "./Gallery";
 import CloudinaryImage from "../CloudinaryImage";
-import Tippy from "@tippyjs/react";
+// import Tippy from "@tippyjs/react";
 import { collectorLogoId } from "../../config/settings";
 
 export default function MainNavigation() {
@@ -67,7 +67,7 @@ export default function MainNavigation() {
             <div className="flex items-center h-full">
               <div className="">
                
-                <Link href="/">
+                <Link href="/" legacyBehavior>
                   <a className="rounded-md px-3 py-1 hoverPalette1 relative 2xl:-left-3 block">
                     {/*collector text-3xl font-bold flex items-center// collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-neutral-900 dark:bg-neutral-100 inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r */}
                     <CloudinaryImage
@@ -83,7 +83,7 @@ export default function MainNavigation() {
                 </Link>
               </div>
               <div className="hidden md:flex items-center justify-end w-full">
-                <Link href="/waitlist">
+                <Link href="/waitlist" legacyBehavior>
                   <a className="mr-4 font-bold rounded-md px-3 py-1 hoverPalette1">
                     Waitlist
                   </a>

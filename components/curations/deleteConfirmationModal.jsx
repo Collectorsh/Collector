@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import { hideCuration } from "../../data/curation/hideCuration"
 import MainButton, { WarningButton } from "../MainButton"
-import Modal from "../Modal"
+import Modal, { modalActionDivClass } from "../Modal"
 import { useContext, useState } from "react"
 import UserContext from "../../contexts/user"
 import { error, success } from "../../utils/toast"
@@ -26,11 +26,11 @@ const DeleteConfirmationModal = ({ isOpen, onClose, name, onDelete }) => {
       title={`Deleting ${ name.replaceAll("_", " ") }`}
       widthClass="max-w-screen-sm"
     >
-      <div className="flex flex-col gap-3 pb-10 pt-6 text-center items-center justify-center min-h-[9rem]">
+      <div className="flex flex-col gap-3 pt-4 text-center items-center justify-center min-h-[9rem]">
         <p className="text-xl font-bold">Are you sure?</p>
         <p className="textPalette2">Once deleted you will not be able to access this curation again</p>
       </div>
-      <div className="w-full flex justify-center flex-wrap gap-4">
+      <div className={modalActionDivClass}>
         <MainButton onClick={onClose} size="lg" className="w-28">
           Cancel
         </MainButton>

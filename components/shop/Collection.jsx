@@ -45,7 +45,8 @@ export default function Collection({ collection }) {
                     <Link
                       href={`/shop/product/${product.uuid}`}
                       title=""
-                      key={index}
+                        key={index}
+                        legacyBehavior
                     >
                       <a>
                         <img

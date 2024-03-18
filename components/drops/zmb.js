@@ -249,7 +249,7 @@ export default function ZmbMint({ address, drop }) {
             {(mintState !== "pre" ||
               (mintState === "pre" && drop && drop.market === true)) && (
               <p className="mt-3 float-right text-normal tracking-wide font-semibold text-neutral-800 dark:text-neutral-100 hover:underline">
-                <Link href={`/drops/${drop.slug}/market`}>
+                <Link href={`/drops/${drop.slug}/market`} legacyBehavior>
                   <a>Go to Market</a>
                 </Link>
                 {/* <ArrowRightIcon

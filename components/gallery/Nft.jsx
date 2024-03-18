@@ -67,7 +67,7 @@ export default function Nft({ user, token, onLoad, columns, onError }) {
           user && user.rounded && "rounded-2xl"
           }`}
       >
-        <Link href={`/art/${ token.mint }`} title="">
+        <Link href={`/art/${ token.mint }`} title="" legacyBehavior>
           <a className={loaded ? "animate-enter" : "opacity-0"}>
             {videoUrl && loaded ? (
               <>

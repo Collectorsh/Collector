@@ -165,7 +165,7 @@ const ImageCard = ({ item }) => {
         className="bg-neutral-300/20 sm:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
       >
         <div className="mb-4 relative h-[250px]">
-          <Link href={`/${ item.username }`}>
+          <Link href={`/${ item.username }`} legacyBehavior>
             <a>
               <CloudinaryImage
                 // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ item.mint }`}
@@ -180,7 +180,7 @@ const ImageCard = ({ item }) => {
           </Link>
         </div>
         <div className="mt-2">
-          <Link href={`/${ item.username }`}>
+          <Link href={`/${ item.username }`} legacyBehavior>
             <a>
               {/* {item.twitter_profile_image && (
                 <img

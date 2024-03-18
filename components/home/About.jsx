@@ -86,7 +86,7 @@ export default function About() {
           </Slider>
         </div>
         <div className="mt-12 text-center">
-          <Link href="/pricing">
+          <Link href="/pricing" legacyBehavior>
             <a className="py-3 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer">
               View Pricing
             </a>

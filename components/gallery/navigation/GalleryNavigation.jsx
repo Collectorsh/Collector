@@ -66,6 +66,7 @@ export default function GalleryNavigation({ user }) {
                 href={`https://twitter.com/${user.twitter_screen_name}`}
                 title="Twitter"
                 className="align-middle inline"
+                legacyBehavior
               >
                 <a target="_blank" className="cursor-pointer">
                   <Tippy
@@ -210,6 +211,7 @@ export default function GalleryNavigation({ user }) {
                               href="/"
                               title="Collector Home"
                               className="align-middle inline"
+                              legacyBehavior
                             >
                               <a>
                                 {/* <HomeIcon

@@ -41,7 +41,7 @@ export default function Recent({ listings }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 justify-center sm:justify-start mb-12">
           {listings.map((item, index) => (
             <div key={index} className="px-4">
-              <Link href={`/art/${item.mintAddress}`}>
+              <Link href={`/art/${item.mintAddress}`} legacyBehavior>
                 <a>
                   <div className="relative bg-white dark:bg-dark3 shadow-lg sm:shadow-xl border border-neutral-200 dark:border-dark3">
                     <div className="pb-4" key={item.mintAddress}>

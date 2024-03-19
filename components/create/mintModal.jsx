@@ -282,9 +282,9 @@ const MintModal = ({ nftProps, isOpen, onClose, onReset }) => {
       )
       case MINT_STAGE.ERROR: return (
         <div className="h-56 flex flex-col gap-2 justify-center">
-          <p className="text-center text-2xl font-bold">Sorry, there was an error minting your art onchain.</p>
+          <p className="text-center text-2xl font-bold">Sorry, we could not confirm if your mint was successful.</p>
           
-          {/* <p className="text-center">Please, make sure your internet connection is stable and then try again.</p> */}
+          <p className="text-center textPalette2">Please check your wallet to see if the NFT arrived. If you did not receive your NFT, please try to mint again.</p>
         </div>
       )
       

@@ -57,7 +57,7 @@ export const getAltFileTypes = (token) => {
         }
       } else {
         token.files?.forEach(f => {
-          if (f.type?.includes("video")) videoUrl = f.uri
+          if (f.type?.includes("video") && !videoUrl) videoUrl = f.uri
           if (f.type?.includes("html")) htmlUrl = f.uri
           if (f.type?.includes("model")) vrUrl = f.uri
         })

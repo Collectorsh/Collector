@@ -16,7 +16,7 @@ export const ProfileDisplayName = ({
   )
   return (
     <div>
-      <p className="font-bold text-lg ml-4 mt-2 flex gap-1">Display Name {info}</p>
+      <p className="font-bold text-lg ml-4 mt-2 flex gap-1 items-center">Display Name {info}</p>
       <input
         className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", paletteClass)}
         onChange={(e) => setDisplayName(e.target.value)}
@@ -41,7 +41,7 @@ export const ProfileUsername = ({
 
   return (
     <div>
-      <p className="font-bold text-lg ml-4 mt-2 flex gap-1">Username {info}</p>
+      <p className="font-bold text-lg ml-4 mt-2 flex gap-1 items-center">Username {info}</p>
       <input
         className={clsx("my-1 border-2 rounded-lg outline-none w-full px-4 py-2", paletteClass)}
         onChange={(e) => setUsername(e.target.value.replaceAll(" ", "_"))}

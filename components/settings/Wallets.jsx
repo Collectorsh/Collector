@@ -52,7 +52,6 @@ export default function Wallets() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet?.connected, user]);
-    
 
   const addWallet = () => {
     wallet.disconnect().then(() => {
@@ -97,13 +96,22 @@ export default function Wallets() {
       </div>
 
       <div className="flex justify-start flex-wrap items-center gap-4 pl-1 mt-4">
+        <p className="md:hidden">To add additional wallets please use a computer.</p>
+        <MainButton
+          solid
+          disabled
+          className="gap-2 items-center justify-center md:hidden flex"
+        >
+          Link New Wallet
+          <Icon.Plus size={20} strokeWidth={2.5} />
+        </MainButton>
         <MainButton
           solid
           onClick={addWallet}
-          className="flex gap-2 items-center justify-center"
+          className="gap-2 items-center justify-center md:flex hidden"
         >
           Link New Wallet
-          <Icon.Plus size={20} strokeWidth={2.5}/>
+          <Icon.Plus size={20} strokeWidth={2.5} />
         </MainButton>
 
         <Checkbox

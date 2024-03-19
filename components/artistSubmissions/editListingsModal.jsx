@@ -348,8 +348,8 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
     : "Delist"
 
   return (
-    <div className="relative h-fit shadow  rounded-lg
-      palette2
+    <div className="relative h-fit shadow-md rounded-lg
+      bg-neutral-200 dark:bg-neutral-700
     ">
       <Tippy
         className="shadow"
@@ -363,8 +363,8 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
           <button
             className={clsx(
                "p-1",
-              "bg-neutral-300/50 dark:bg-neutral-700/50 rounded-full shadow-md",
-              "duration-300 hover:bg-neutral-300 dark:hover:bg-neutral-700",
+              "bg-neutral-300/50 dark:bg-neutral-900/50 rounded-full shadow-md",
+              "duration-300 hover:bg-neutral-300 dark:hover:bg-neutral-900",
               isPersonalCuration && "hidden"
             )}
             onClick={handleDelete}
@@ -423,7 +423,7 @@ const Submission = ({ token, onList, onDelist, onDelete, isPersonalCuration }) =
           )
           : (
             <div className="flex gap-3 w-full">
-              <div className="flex w-full items-center border-2 px-3 py-0 rounded-lg borderPalette3 palette1">
+              <div className="flex w-full items-center border-2 px-3 py-0 rounded-lg border-neutral-400 dark:border-neutral-600 bg-neutral-300 dark:bg-neutral-800">
                 <input
                   type="number"
                   min={0}

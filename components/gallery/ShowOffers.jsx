@@ -28,7 +28,7 @@ export default function Offers({ token }) {
   return (
     <div>
       {offer && (
-        <Link href={`/art/${getMint(token)}`} title="">
+        <Link href={`/art/${getMint(token)}`} title="" legacyBehavior>
           <a>
             <div className="text-sm cursor-pointer text-dark3 dark:text-neutral-300 bg-whitish dark:bg-dark3 w-fit px-2 py-1 rounded cursor-pointer absolute top-3 left-3">
               Offer ◎{roundToTwo(offer.price / 1000000000)}

@@ -19,6 +19,7 @@ import getListingsByParent from "../../data/curationListings/getListingsByParent
 import { EditionListing } from "../detail/secondaryEditionListings";
 import * as Icon from "react-feather";
 import { displayName } from "../../utils/displayName";
+import { SolanaIcon } from "../SocialLink";
 
 const ModelViewer = dynamic(() => import('../artDisplay/modelDisplay'), {
   ssr: false
@@ -258,7 +259,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
           className={clsx('flex md:gap-0.5', "flex-col items-start relative")}
         >
 
-          <p className='textPalette2 font-bold text-sm mt-1 flex gap-1'>{supplyText}{secondaryListingInfo}</p>
+          <p className='textPalette2 font-bold text-sm mt-1 flex gap-1 items-center'>{supplyText}{secondaryListingInfo}</p>
 
       
           <Link href={`/art/${ token.mint }`} disabled={disableLink} passHref>
@@ -297,8 +298,8 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
                           </span>
                         )
                         : isSold
-                          ? <p>Sold{isMasterEdition ? " Out" : ""} {roundToPrecision(price, 2)}◎</p>
-                          : <p>Collect {roundToPrecision(price, 2) }◎</p>
+                        ? <p>Sold{isMasterEdition ? " Out" : ""} {roundToPrecision(price, 2)}◎</p>
+                        : <p>Collect {roundToPrecision(price, 2)}◎</p>
                       }
                
                     </MainButton>
@@ -324,5 +325,5 @@ export default ArtItem
 
 export const ToggleLink = ({ disabled, children, ...props }) => {
   if (disabled) return <Fragment>{children}</Fragment>
-  return <Link {...props}>{children}</Link>
+  return <Link {...props} legacyBehavior>{children}</Link>
 }

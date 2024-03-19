@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "r
 import MainButton from "../MainButton";
 import CloudinaryImage from "../CloudinaryImage";
 import clsx from "clsx";
-import Modal from "../Modal";
+import Modal, { modalActionDivClass } from "../Modal";
 import { RoundedCurve } from "../curations/roundedCurveSVG";
 import { Oval } from "react-loader-spinner";
 import SearchBar from "../SearchBar";
@@ -109,7 +109,7 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
 
         
         <SearchBar
-          className="ml-2 pl-4 w-full max-w-[20rem]"
+          className="pl-4 w-full max-w-[20rem] bg-neutral-200 dark:bg-neutral-900"
           search={search}
           setSearch={setSearch}
           placeholder="Search By Artwork"
@@ -151,7 +151,7 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
           />
         </div>
 
-        <div className="border-4 rounded-xl overflow-hidden flex-shrink-0 palette2 borderPalette3">
+        <div className="border-4 rounded-xl overflow-hidden flex-shrink-0 bg-neutral-200 dark:bg-neutral-900 borderPalette3">
           <div className={clsx("w-full flex-shrink-0 h-[266px] p-2 overflow-auto grid gap-4 rounded-lg",
             "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           )}>
@@ -172,7 +172,7 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
           <RoundedCurve className="absolute bottom-0 -right-8 w-8 h-6 fill-neutral-300 dark:fill-neutral-700" />
         </div>
         <div className="min-h-[5.5rem] border-4 rounded-xl p-2
-        palette2 borderPalette3
+        bg-neutral-200 dark:bg-neutral-900 borderPalette3
         flex items-start flex-wrap gap-2
         ">
           {selectedTokens.map((token, i) => {
@@ -187,7 +187,7 @@ export default function SubmitArtModal({ isOpen, onClose, onSubmit, curation, to
           })}
         </div>
       </div>
-      <div className="w-full flex justify-end gap-4 relative mt-4">
+      <div className={modalActionDivClass}>
         <MainButton onClick={handleClose} size="lg" className="w-[7.5rem]">
           Cancel
         </MainButton>

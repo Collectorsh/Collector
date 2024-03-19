@@ -9,7 +9,7 @@ import { Oval } from "react-loader-spinner";
 import { ProfileDisplayName, ProfileEmail, ProfileUsername } from "../onboarding/ProfileInputs";
 
 
-export const usernameError = 'Must be 2 to 31 characters and only contain letters, numbers, "_" and "-"'
+export const usernameError = 'Must be 2 to 31 characters and only contain letters, numbers, "_" and "-". Cant begin or end with "_" or "-"'
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export default function Settings() {
@@ -43,18 +43,18 @@ export default function Settings() {
     if (disableSave) return;
     setSaving(true)
 
-    const res = await saveUser(user.api_key, {
-      username: username,
-      email: email,
-      name: displayName,
-    });
+    // const res = await saveUser(user.api_key, {
+    //   username: username,
+    //   email: email,
+    //   name: displayName,
+    // });
 
-    if (res.data && res.data.status === "success") {
-      setUser({ ...user, ...res.data.user });
-      success("User settings saved!");
-    } else {
-      setError(res?.data?.msg || "An error occurred while saving user settings");
-    }
+    // if (res.data && res.data.status === "success") {
+    //   setUser({ ...user, ...res.data.user });
+    //   success("User settings saved!");
+    // } else {
+    //   setError(res?.data?.msg || "An error occurred while saving user settings");
+    // }
 
     setSaving(false)
   };

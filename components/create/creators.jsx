@@ -4,7 +4,7 @@ import { REQUIRED } from "../../pages/mint"
 import Tippy from "@tippyjs/react"
 import * as Icon from 'react-feather'
 
-const CreatorsInput = ({ creators, setCreators, setError }) => {
+const CreatorsInput = ({ creators, setCreators, setError, className }) => {
   
   const handleChange = (callback) => {
     setCreators(prev => {
@@ -67,8 +67,8 @@ const CreatorsInput = ({ creators, setCreators, setError }) => {
 
 
   return (
-    <div>
-      <p className="font-bold text-lg mb-1 ml-4 flex gap-1">Creators {info}</p>
+    <div className={className}>
+      <p className="font-bold text-lg mb-1 ml-4 flex gap-1 items-center">Creators {info}</p>
       <div className="w-full px-3.5 py-2 outline-none rounded-md border-2 bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 min-h-[100px]">
         {creators.map((creator, i) => (<CreatorItem key={"creator"+i} index={i} handleChange={handleChange} creator={creator} />))}
         <button

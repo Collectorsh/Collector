@@ -1,6 +1,6 @@
 import { Oval } from "react-loader-spinner"
 import MainButton, { WarningButton } from "../MainButton"
-import Modal from "../Modal"
+import Modal, { modalActionDivClass } from "../Modal"
 import { useState } from "react"
 
 const UnpublishConfirmationModal = ({ onUnpublish, isOpen, onClose, name }) => {
@@ -18,11 +18,11 @@ const UnpublishConfirmationModal = ({ onUnpublish, isOpen, onClose, name }) => {
       title={`Unpublishing ${ name.replaceAll("_", " ") }`}
       widthClass="max-w-screen-sm"
     >
-      <div className="flex flex-col gap-3 pb-10 pt-6 text-center items-center justify-center min-h-[9rem]">
+      <div className="flex flex-col gap-3  pt-4 text-center items-center justify-center min-h-[9rem]">
         <p className="text-xl font-bold">Are you sure?</p>
         <p className="textPalette2">Unpublishing {name.replaceAll("_", " ")} means no one will be able to view it.</p>
       </div>
-      <div className="w-full flex justify-center flex-wrap gap-4">
+      <div className={modalActionDivClass}>
         <MainButton onClick={onClose} size="lg" className="w-[8.75rem]">
           Cancel
         </MainButton>

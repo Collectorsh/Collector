@@ -3,6 +3,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import * as Icon from "react-feather";
 
+export const modalActionDivClass = "w-full flex justify-center flex-wrap gap-4 sm:gap-8 mt-6 sm:mt-8"
+
 export default function Modal({
   title,
   isOpen,
@@ -10,7 +12,7 @@ export default function Modal({
   closeDisabled,
   children,
   widthClass = "max-w-screen-xl",
-  closeButtonPlacement = "absolute top-2 right-2",
+  closeButtonPlacement = "absolute top-4 right-4",
   padding
 }) {
   return (
@@ -40,8 +42,8 @@ export default function Modal({
           >
             <Dialog.Panel
               className={clsx(
-                padding || "p-2 sm:px-14 sm:py-6",
-                "relative  rounded-lg palette3",
+                padding || "py-7 px-3 sm:p-14",
+                "relative  rounded-lg palette2",
                 "shadow-md shadow-black/25",
                 "w-full max-h-[calc(100%-1rem)]",
                 "flex flex-col",
@@ -49,10 +51,10 @@ export default function Modal({
               )}
             >
           
-              <button onClick={onClose} className={clsx("palette3 hoverPalette3 rounded-full p-1 z-10", closeButtonPlacement, closeDisabled && "hidden")}>
+              <button onClick={onClose} className={clsx("palette2 hoverPalette2 rounded-full p-1 z-10", closeButtonPlacement, closeDisabled && "hidden")}>
                 <Icon.X size={24} strokeWidth={2.5} />
               </button>
-              {title ? < Dialog.Title className="text-center font-bold text-3xl px-7 pt-2 pb-4">{title}</Dialog.Title> : null}
+              {title ? < Dialog.Title className="text-center font-bold text-3xl sm:text-4xl px-7 pt-0 pb-4">{title}</Dialog.Title> : null}
             
               {children}
             </Dialog.Panel>

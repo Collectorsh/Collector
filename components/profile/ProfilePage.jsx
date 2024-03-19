@@ -49,7 +49,7 @@ function ProfilePage({
 
         <div className="float-right relative">
           <div className="inline">
-            <Link href={`/${profileUser.username}`}>
+            <Link href={`/${profileUser.username}`} legacyBehavior>
               <a className="align-middle cursor-pointer rounded-3xl text-sm xl:text-md py-2.5 px-3 font-bold border border-4 bg-black text-white border-black dark:bg-whitish dark:text-black dark:border-whitish">
                 {/* <ViewGridIcon
                   className="h-5 w-5 inline mr-2"

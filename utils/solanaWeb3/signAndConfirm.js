@@ -1,5 +1,6 @@
 import { sendAndConfirmRawTransaction } from "@solana/web3.js"
 import { connection } from "../../config/settings"
+import { warning } from "../../utils/toast";
 
 //commitment: 'processed' | 'confirmed' | 'finalized'
 export const signAndConfirmTx = async ({
@@ -22,7 +23,18 @@ export const signAndConfirmTx = async ({
     console.error("Error simulating transaction", error)
   }
 
-  const signature = await sendAndConfirmRawTransaction(connection, signedTx.serialize(), { commitment, skipPreflight })
+  let signature;
+
+  try {
+    signature = await sendAndConfirmRawTransaction(connection, signedTx.serialize(), { commitment, skipPreflight })
+  } catch (err) {
+    console.log(err)
+    if (err.message.includes("not confirmed")) warning("Your transaction didn't go through. Please try again.")
+    throw new Error(err)
+  }
+
   if (!signature) throw new Error(errorMessage)
   return signature;
 }
+
+export const timeoutError = "Transaction timed out. Please try again."

@@ -58,7 +58,7 @@ export default function FaqPage() {
         <QuestionAnswer
           question="Can I mint on Collector?"
           answer={<p>
-            Yes! Head to <Link href="/mint" ><a className="underline">our mint page</a></Link> and go crazy!
+            Yes! Head to <Link href="/mint" className="underline">our mint page</Link> and go crazy!
           </p>}
         />
 

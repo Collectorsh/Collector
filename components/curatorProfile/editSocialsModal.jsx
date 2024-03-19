@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react"
 import MainButton from "../MainButton"
-import Modal from "../Modal"
+import Modal, { modalActionDivClass } from "../Modal"
 import { getIcon, socialTypes } from "../SocialLink"
 import { Menu, Transition } from "@headlessui/react"
 import clsx from "clsx"
@@ -35,7 +35,7 @@ const EditSocialsModal = ({ socials, onSave, isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Editing Socials" widthClass="max-w-lg">
 
-      <div className="pb-6">
+      <div className="mt-3 sm:mt-6">
         {newSocials.map((social, i) => (<SocialItem key={i} {...social} index={i} setNewSocials={setNewSocials} />))}
         <MainButton
           onClick={addSocial}
@@ -49,7 +49,7 @@ const EditSocialsModal = ({ socials, onSave, isOpen, onClose }) => {
           <Icon.Plus size={20} />
         </MainButton>
       </div>
-      <div className="w-full flex justify-center gap-4">
+      <div className={modalActionDivClass}>
         <MainButton onClick={handleClose} size="lg" standardWidth>
           Cancel
         </MainButton>
@@ -102,8 +102,8 @@ const SocialItem = ({ type, link, setNewSocials, index }) => {
   }
 
   return (
-    <div className="w-full my-3 shadow rounded p-2 flex justify-between items-center gap-8
-      palette2
+    <div className="w-full my-3 shadow rounded-md p-2 flex justify-between items-center gap-8
+      bg-neutral-200 dark:bg-neutral-700
     "
     >
       <div className="flex justify-between items-center gap-2 w-full">

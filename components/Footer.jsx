@@ -15,7 +15,7 @@ export default function Footer() {
                 collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-black dark:bg-white inline-block -mb-[0.02rem] mx-[0.06rem]"></span>r
               </a>
             </Link> */}
-            <Link href="/">
+            <Link href="/" legacyBehavior>
               <a className="rounded-md px-3 py-2 hoverPalette1 relative -left-3 block w-fit">
                 {/*collector text-3xl font-bold flex items-center// collect<span className="w-[1.05rem] h-[1rem] rounded-[0.5rem] bg-neutral-900 dark:bg-neutral-100 inline-block -mb-[0.35rem] mx-[0.06rem]"></span>r */}
                 <CloudinaryImage
@@ -36,16 +36,16 @@ export default function Footer() {
               {/* <Link href="/about">
                 <a className="">About</a>
               </Link> */}
-              <Link href="/faq">
+              <Link href="/faq" legacyBehavior>
                 <a className="hoverPalette2 rounded px-2">FAQ</a>
               </Link>
-              <Link href="/terms">
+              <Link href="/terms" legacyBehavior>
                 <a className="hoverPalette2 rounded px-2">Terms</a>
               </Link>
-              <Link href="/privacy">
+              <Link href="/privacy" legacyBehavior>
                 <a className="hoverPalette2 rounded px-2">Privacy</a>
               </Link>
-              <Link href="https://twitter.com/collector_sh">
+              <Link href="https://twitter.com/collector_sh" legacyBehavior>
                 <a target="_blank" className="hoverPalette2 rounded-full p-1.5">
                   <TwitterIcon className="w-5 h-5" />
                 </a>

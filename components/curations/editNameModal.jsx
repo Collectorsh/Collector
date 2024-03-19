@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
 import MainButton from "../MainButton"
-import Modal from "../Modal"
+import Modal, { modalActionDivClass } from "../Modal"
 import { checkCurationNameAvailability } from "../../data/curation/updateCurationName";
 
-export const urlRegex = /^(?!.*[_-]{2})[a-zA-Z0-9_-]{2,31}$/;
+// export const urlRegex = /^(?!.*[_-]{2})[a-zA-Z0-9_-]{2,31}$/;
+export const urlRegex = /^(?!.*[_-]{2})(?![_-])[a-zA-Z0-9_-]{1,29}(?<![_-])$/;
 
 const DEBOUNCE_TIME = 500;
 
@@ -67,16 +68,16 @@ const EditNameModal = ({ name, onSave, isOpen, onClose }) => {
       title="Editing Curation Name"
       widthClass="max-w-screen-sm"
     >
-      <p className="textPalette2 text-sm my-2 text-center">Please note: changing the name here will change the published curation&apos;s url.</p>
+      <p className="textPalette2 text-sm mt-4 text-center mb-2">Please note: changing the name here will change the published curation&apos;s url.</p>
       <input
-        className="my-1 border-2 rounded-lg
-        palette2 borderPalette3 outline-none
+        className="border-2 rounded-lg
+      bg-neutral-200 dark:bg-neutral-900 borderPalette3 outline-none
         w-full px-4 py-2"
         onChange={(e) => setNewName(e.target.value.replaceAll(" ", "_"))}
         value={newName}
       />
-      <p className="text-sm pl-4 text-red-500 h-5">{nameError}</p>
-      <div className="w-full flex justify-center gap-4">
+      <p className="text-sm pl-4 text-red-500 h-0">{nameError}</p>
+      <div className={modalActionDivClass}>
         <MainButton onClick={onClose} size="lg" standardWidth>
           Cancel
         </MainButton>

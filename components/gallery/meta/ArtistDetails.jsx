@@ -12,7 +12,8 @@ export default function ArtistDetails({ token }) {
                   <Link
                     href={`https://twitter.com/${token.artist_twitter.substring(
                       1
-                    )}`}
+                    ) }`}
+                    legacyBehavior
                   >
                     <a
                       className="cursor-pointer hover:underline"

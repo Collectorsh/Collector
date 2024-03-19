@@ -222,6 +222,10 @@ export default function MintPage() {
       />
       <div className="relative w-full max-w-screen-lg  mx-auto px-6 sm:px-11 py-12">
         <h2 className="text-5xl font-bold">Mint</h2>
+
+        <p className="my-4">
+          Due to the current network congestion, minting may fail. We apologize for this inconvenience and recommend trying again later if your mint fails. If you continue to experience issues please contact us on <a href="https://twitter.com/collector_sh" target="_blank" rel="noreferrer" className="underline">Twitter</a>
+        </p>
         
 
         <hr className="mt-6 mb-12 borderPalette2" />
@@ -287,13 +291,25 @@ export default function MintPage() {
           <DescriptionInput description={description} setDescription={setDescription} setError={setError}/>
         
           <div className="grid lg:grid-cols-2 gap-4">
-            <RoyaltiesInput royalties={royalties} setRoyalties={setRoyalties} setError={setError} />
+            <div className="flex flex-col gap-4">
+              <RoyaltiesInput royalties={royalties} setRoyalties={setRoyalties} setError={setError} />
+              <CollectionDropDown
+                className="hidden lg:block"
+                selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError}
+              />
+            </div>
+
             <CreatorsInput creators={creators} setCreators={setCreators} setError={setError} />
+
+            <CollectionDropDown
+              className="lg:hidden"
+              selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError}
+            />
           </div>  
 
-          <div className="flex justify-center w-full lg:w-[calc(50%-8px)] mx-auto">
+          {/* <div className="flex justify-center w-full lg:w-[calc(50%-8px)] mx-auto">
             <CollectionDropDown selectedCollection={collection} setCollection={setCollection} existingCollections={existingCollections} setError={setError} />
-          </div>
+          </div> */}
 
           <Drawer
             title="Extras"

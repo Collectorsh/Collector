@@ -74,7 +74,7 @@ export default function UpcomingDrop({ drop }) {
           </h2>
           <p className="mt-4 whitespace-pre-line">{drop.description}</p>
           <div className="mt-8">
-            <Link href={`/drops/${drop.slug}`} title="See the Drop">
+            <Link href={`/drops/${drop.slug}`} title="See the Drop" legacyBehavior>
               <a className="bg-greeny px-4 py-3 text-lg font-semibold text-black cursor-pointer rounded-xl">
                 See the Drop
               </a>

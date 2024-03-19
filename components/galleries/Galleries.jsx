@@ -91,7 +91,7 @@ export default function Galleries() {
                     key={item.username}
                     className="mb-6 w-fit py-2 px-4 cursor-pointer dark:text-whitish align-middle"
                   >
-                    <Link href={`/${item.username}`} title="">
+                    <Link href={`/${item.username}`} title="" legacyBehavior>
                       <a>
                         <div className="w-12 h-12 rounded-full overflow-hidden mx-auto float-left align-middle">
                           {item.twitter_profile_image && (

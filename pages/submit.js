@@ -179,7 +179,7 @@ const Submissions = ({ }) => {
       const passcodeQuery = curation.viewer_passcode ? `?passcode=${ curation.viewer_passcode }` : ""
       return (
         <div key={id} className="relative">
-          <Link href={`/${ curation?.curator?.username || "curations"}/${ name }${ passcodeQuery }`} >
+          <Link href={`/${ curation?.curator?.username || "curations"}/${ name }${ passcodeQuery }`} legacyBehavior>
             <a
               className={clsx(
                 curation.hidden && "pointer-events-none",
@@ -231,7 +231,7 @@ const Submissions = ({ }) => {
       <div className="relative w-full max-w-screen-2xl mx-auto 2xl:px-8 py-12">
         <div className="flex justify-between items-center flex-wrap gap-4 px-4">
           <h2 className="text-5xl font-bold">Submit</h2>
-          <Link href="/mint" passHref>
+          <Link href="/mint" passHref legacyBehavior>
             <MainButton size="lg" solid disabled={!approvedCurations?.length}>
               Mint
             </MainButton>

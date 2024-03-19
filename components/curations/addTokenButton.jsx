@@ -144,7 +144,7 @@ const AddTokenButton = ({
   return (
     <button
       className={clsx(
-        "relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden palette3",
+        "relative flex justify-center flex-shrink-0 rounded-lg overflow-hidden palette2",
         "duration-300 shadow hover:shadow-md",
         "inset-0 w-full pb-[100%]",
         imageError && "hidden"

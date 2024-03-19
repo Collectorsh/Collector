@@ -47,7 +47,7 @@ export default function DropSecondary() {
         Drops Secondary
       </h2>
       <p className="font-semibold mb-2 hover:underline dark:text-white">
-        <Link href="/drops">
+        <Link href="/drops" legacyBehavior>
           <a>See all Drops</a>
         </Link>
         {/* <ArrowRightIcon
@@ -64,7 +64,7 @@ export default function DropSecondary() {
                 key={index}
                 className="overflow-hidden relative h-[385px] sm:h-[315px] w-[375px] sm:w-[315px] px-4"
               >
-                <Link href={marketplaceLink(l.source, l.mint)}>
+                <Link href={marketplaceLink(l.source, l.mint)} legacyBehavior>
                   <a>
                     <img
                       src={l.image}
@@ -74,7 +74,7 @@ export default function DropSecondary() {
                   </a>
                 </Link>
                 <div className="mt-2 text-center dark:text-white font-semibold">
-                  <Link href={marketplaceLink(l.source, l.mint)}>
+                  <Link href={marketplaceLink(l.source, l.mint)} legacyBehavior>
                     <a>
                       <div className="w-full">{l.name}</div>
                       <div className="inline middle">

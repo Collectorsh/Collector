@@ -86,7 +86,7 @@ export default function CollectorListing() {
               ◎{roundToTwo(metadata.amount / 1000000000)}
             </div>
             <div className="mt-16">
-              <Link href={`/art/${metadata.mint}`}>
+              <Link href={`/art/${metadata.mint}`} legacyBehavior>
                 <a className="py-3.5 px-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black cursor-pointer hover:bg-neutral-800 hover:dark:bg-neutral-200 font-bold">
                   Buy Now
                 </a>

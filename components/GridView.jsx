@@ -51,6 +51,7 @@ export default function GridView({
             {type === "listing" && (
               <Link
                 href={marketplaceLink(item.source, item.mint, item.artist_name)}
+                legacyBehavior
               >
                 <a>
                   <Image token={item} />
@@ -58,7 +59,7 @@ export default function GridView({
               </Link>
             )}
             {type === "collected" && (
-              <Link href={`/art/${item.attributes.mint}`}>
+              <Link href={`/art/${item.attributes.mint}`} legacyBehavior>
                 <a>
                   <Image
                     token={{
@@ -71,6 +72,7 @@ export default function GridView({
             )}
             {type === "auction" && (
               <Link
+                legacyBehavior
                 href={marketplaceLink(
                   item.source,
                   item.mint,

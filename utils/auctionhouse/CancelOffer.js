@@ -10,7 +10,7 @@ import {
   Transaction,
 } from "@solana/web3.js";
 
-const web3 = require("@solana/web3.js");
+const web3 = {}//require("@solana/web3.js");
 
 const {
   createCancelInstruction,

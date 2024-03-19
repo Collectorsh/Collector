@@ -26,7 +26,7 @@ const LandingCurationItem = ({
 
   return (
     <div>
-      <Link href={`/${ curation?.curator?.username || "curations"}/${ name }`} >
+      <Link href={`/${ curation?.curator?.username || "curations"}/${ name }`} legacyBehavior>
         <a className="w-full duration-300 relative
         group/curationItem
         "
@@ -46,7 +46,7 @@ const LandingCurationItem = ({
         </a>
       </Link>
 
-      <Link href={`/${ curation.curator?.username }`} >
+      <Link href={`/${ curation.curator?.username }`} legacyBehavior>
         <a className={clsx("flex gap-2 items-center justify-center rounded-md px-3 py-1 w-fit mx-auto mt-1", hoverClass)}>
           {curation.curator?.profile_image
             ? (<div className="relative">

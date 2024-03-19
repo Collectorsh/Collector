@@ -1,4 +1,4 @@
-const { default: apiClient } = require("../client/apiClient");
+import apiClient from "../client/apiClient";
 
 
 export async function updateEditionListing({ token, supply, apiKey }) {

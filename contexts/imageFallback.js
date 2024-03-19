@@ -4,7 +4,7 @@ import { OptimizeSingleToken, OptimizeWithTokens } from "../utils/imageFallback"
 import { useCallback } from "react";
 import { useRouter } from "next/router";
 import UserContext from "./user";
-import useActionCable, { makeNotificationsSocketID } from "../hooks/useWebsocket";
+// import useActionCable, { makeNotificationsSocketID } from "../hooks/useWebsocket";
 import { getTokenCldImageId } from "../utils/cloudinary/idParsing";
 
 const ImageFallbackContext = createContext();
@@ -22,7 +22,7 @@ export const ImageFallbackProvider = ({ children }) => {
   const [completed, setCompleted] = useState(0);
   const [uploadAllCompleted, setUploadAllCompleted] = useState(false);
 
-  const socket_id = useMemo(() => makeNotificationsSocketID(router.asPath, user?.username), [user?.username, router.asPath])
+  const socket_id = "deprecated"//useMemo(() => makeNotificationsSocketID(router.asPath, user?.username), [user?.username, router.asPath])
 
   useEffect(() => {
     //reset fallback image state when changing pages
@@ -33,39 +33,39 @@ export const ImageFallbackProvider = ({ children }) => {
     setUploadAllCompleted(false)
   },[router.asPath])
 
-  const handleWebsocketMessages = useCallback(({ message, data }) => {
-    switch (message) {
-      case "Image Optimized": {
-        const { cld_id, imageId } = data;
-        setCloudinaryCompleted(prev => [...prev, { cld_id, imageId }])
-        setCompleted(prev => prev + 1)
-        break;
-      }
-      case "Optimizing Error": {
-        const { cld_id, error } = data;
-        setCloudinaryError(prev => [...prev, { cld_id, error }])
-        setCompleted(prev => prev + 1)
-        break;
-      }
-      case "Image Metadata Errors": {
-        const { tokens, error } = data;
-        setCloudinaryError(prev => [...prev, ...tokens])
-        setCompleted(prev => prev + tokens.length)
-        break;
-      }
-      case "Resizing Images": {
-        const { resizing } = data;
-        console.log("Resizing Images", resizing)
-        break;
-      }
-      case "TEST": {
-        console.log("TEST", data)
-        break;
-      }
-    }
-  }, [])
+  // const handleWebsocketMessages = useCallback(({ message, data }) => {
+  //   switch (message) {
+  //     case "Image Optimized": {
+  //       const { cld_id, imageId } = data;
+  //       setCloudinaryCompleted(prev => [...prev, { cld_id, imageId }])
+  //       setCompleted(prev => prev + 1)
+  //       break;
+  //     }
+  //     case "Optimizing Error": {
+  //       const { cld_id, error } = data;
+  //       setCloudinaryError(prev => [...prev, { cld_id, error }])
+  //       setCompleted(prev => prev + 1)
+  //       break;
+  //     }
+  //     case "Image Metadata Errors": {
+  //       const { tokens, error } = data;
+  //       setCloudinaryError(prev => [...prev, ...tokens])
+  //       setCompleted(prev => prev + tokens.length)
+  //       break;
+  //     }
+  //     case "Resizing Images": {
+  //       const { resizing } = data;
+  //       console.log("Resizing Images", resizing)
+  //       break;
+  //     }
+  //     case "TEST": {
+  //       console.log("TEST", data)
+  //       break;
+  //     }
+  //   }
+  // }, [])
 
-  useActionCable(socket_id, { received: handleWebsocketMessages })
+  // useActionCable(socket_id, { received: handleWebsocketMessages })
 
   //upload all with optiomized as nil
   const uploadAll = async (tokens) => { 

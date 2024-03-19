@@ -6,7 +6,8 @@ import { connection } from "../../config/settings";
 const defaultPriorityFee = 70000 //microlamports
 // priorityLevel: "MIN", "LOW", "MEDIUM", "HIGH", "VERY_HIGH", "UNSAFEMAX"
 export async function getPriorityFeeInstruction(transaction, priorityLevel = "VERY_HIGH") {
-  let fee = defaultPriorityFee
+  let fee = defaultPriorityFee;
+  
   try {
     let serializedTx = transaction.serialize({
       requireAllSignatures: false,
@@ -36,9 +37,9 @@ export async function getPriorityFeeInstruction(transaction, priorityLevel = "VE
     console.log("Error getting priority fee estimate: ", error);
   }
 
-  const priorityFeeIx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: fee })
+  // const priorityFeeIx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: fee })
+  const priorityFeeIx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 0 })
   return priorityFeeIx
-
 }
 
 export const makeTxWithPriorityFeeFromMetaplexBuilder = async (builder, feePayer) => {

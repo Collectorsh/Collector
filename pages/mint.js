@@ -222,6 +222,10 @@ export default function MintPage() {
       />
       <div className="relative w-full max-w-screen-lg  mx-auto px-6 sm:px-11 py-12">
         <h2 className="text-5xl font-bold">Mint</h2>
+
+        <p className="my-4">
+          Due to the current network congestion, minting may fail. We apologize for this inconvenience and recommend trying again later if your mint fails. If you continue to experience issues please contact us on <a href="https://twitter.com/collector_sh" target="_blank" rel="noreferrer" className="underline">Twitter</a>
+        </p>
         
 
         <hr className="mt-6 mb-12 borderPalette2" />

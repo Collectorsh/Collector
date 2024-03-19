@@ -2,19 +2,19 @@ import { useEffect, useRef, useContext, useState, useCallback } from 'react';
 
 import { ActionCableContext } from '../contexts/webSocket';
 
-export const makeNotificationsSocketID = (pathname, username) => {
-  if (pathname.includes("curations")) return null //curations has its own handler  
-  if (pathname.includes("gallery")) return null //galleries profiles dont need a socket
-  switch (pathname) { 
-    case "/edit": {
-      if (!username) return null
-      return `${ username }-edit`
-    }
-    case "/": return null //no socket needed for home page
-    case "/dashboard": return null //no socket needed for dashboard
-    default: return pathname.replace("/", "")
-  }
-}
+// export const makeNotificationsSocketID = (pathname, username) => {
+//   if (pathname.includes("curations")) return null //curations has its own handler  
+//   if (pathname.includes("gallery")) return null //galleries profiles dont need a socket
+//   switch (pathname) { 
+//     case "/edit": {
+//       if (!username) return null
+//       return `${ username }-edit`
+//     }
+//     case "/": return null //no socket needed for home page
+//     case "/dashboard": return null //no socket needed for dashboard
+//     default: return pathname.replace("/", "")
+//   }
+// }
 
 const useActionCable = (socket_id, handlers = {}, channelName = "NotificationsChannel") => {
   const cable = useContext(ActionCableContext);

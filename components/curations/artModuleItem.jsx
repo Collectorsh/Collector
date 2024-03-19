@@ -19,6 +19,7 @@ import getListingsByParent from "../../data/curationListings/getListingsByParent
 import { EditionListing } from "../detail/secondaryEditionListings";
 import * as Icon from "react-feather";
 import { displayName } from "../../utils/displayName";
+import { SolanaIcon } from "../SocialLink";
 
 const ModelViewer = dynamic(() => import('../artDisplay/modelDisplay'), {
   ssr: false
@@ -297,8 +298,8 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
                           </span>
                         )
                         : isSold
-                          ? <p>Sold{isMasterEdition ? " Out" : ""} {roundToPrecision(price, 2)}◎</p>
-                          : <p>Collect {roundToPrecision(price, 2) }◎</p>
+                        ? <p>Sold{isMasterEdition ? " Out" : ""} {roundToPrecision(price, 2)}◎</p>
+                        : <p>Collect {roundToPrecision(price, 2)}◎</p>
                       }
                
                     </MainButton>

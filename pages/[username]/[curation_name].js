@@ -143,7 +143,7 @@ function CurationPage({curation}) {
     }
   }, [])
 
-  const socketId = curation?.name ? `listings_${ curation.name }` : null
+  const socketId = curation?.name ? `listings_${curation.curator?.username}-${ curation.name }` : null
   useActionCable(socketId, { received: handleWebsocketMessages })
 
   useEffect(() => {

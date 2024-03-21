@@ -25,7 +25,7 @@ const curationTypes = [
 const CreateCurationModal = ({ isOpen, onClose }) => {
   const [user] = useContext(UserContext);
   const router = useRouter()
-  const { newName: curationName, nameError, nameValid, setNewName } = useEditName("")
+  const { newName: curationName, nameError, nameValid, setNewName } = useEditName("", user?.id)
 
   const [curatorFee, setCuratorFee] = useState(undefined)
   const [curatorFeeError, setCuratorFeeError] = useState(null)

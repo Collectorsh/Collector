@@ -1,11 +1,12 @@
 import apiClient from "../client/apiClient";
 
-async function publishContent({ draftContent, name, apiKey }) {
+async function publishContent({ draftContent, name, apiKey, curationId }) {
   try {
     let res = await apiClient.post("/curation/publish_content", {
       name: name,
       draft_content: draftContent,
-      api_key: apiKey
+      api_key: apiKey,
+      curation_id: curationId
     });
     return res.data;
   } catch (err) {
@@ -15,11 +16,12 @@ async function publishContent({ draftContent, name, apiKey }) {
 
 export default publishContent;
 
-export async function unpublishContent({ name, apiKey }) {
+export async function unpublishContent({ name, apiKey, curationId }) {
   try {
     let res = await apiClient.post("/curation/unpublish_content", {
       name: name,
-      api_key: apiKey
+      api_key: apiKey,
+      curation_id: curationId
     });
     return res.data;
   } catch (err) {

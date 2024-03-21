@@ -65,7 +65,7 @@ const EditWrapper = ({
       onClick={onEdit}
     >
       {isOwner && editButton}
-      <div className={isOwner && "pointer-events-none"}>
+      <div className={isOwner ? "pointer-events-none" : ""}>
         {children}
       </div>
     </div>

@@ -1,5 +1,4 @@
 import { useRouter } from "next/router"
-import { hideCuration } from "../../data/curation/hideCuration"
 import MainButton, { WarningButton } from "../MainButton"
 import Modal, { modalActionDivClass } from "../Modal"
 import { useContext, useState } from "react"

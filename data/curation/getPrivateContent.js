@@ -1,10 +1,11 @@
 import apiClient from "../client/apiClient";
 
-async function getPrivateContent({ name, apiKey }) {
+async function getPrivateContent({ name, apiKey, curationId }) {
   try {
     let res = await apiClient.post("/curation/get_private_content", {
       name: name,
-      api_key: apiKey
+      api_key: apiKey,
+      curation_id: curationId
     });
     return res.data;
   } catch (err) {

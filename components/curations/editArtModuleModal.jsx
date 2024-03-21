@@ -92,10 +92,10 @@ export default function EditArtModuleModal({
     debouncedResize()
   }
 
-  const tabs = curationType === "collector" ? ["1/1", "Editions"] : ["1/1", "Master Editions"]
+  const tabs = curationType === "collector" ? ["1/1", "Editions", "Compressed"] : ["1/1", "Master Editions", "Compressed"]
   
   //Dont fetch user tokens if this is a curator curation
-  const useUserTokens = curationType !== "curator"
+  const useUserTokens = curationType !== "curator" 
 
   // if collector curation, fetch all owned tokens like normal;
   // if artist curation, user creator query
@@ -198,7 +198,9 @@ export default function EditArtModuleModal({
     const groupedEditions = groupEditions(editions)
     return {
       masterEditions,
-      editions: [...groupedEditions, ...compressedTokens],
+      // editions: filterCompressed ? groupedEditions : [...groupedEditions, ...compressedTokens],
+      editions: groupedEditions,
+      compressedTokens,
       artTokens,
       remainingTokens,
     }
@@ -285,12 +287,13 @@ export default function EditArtModuleModal({
   }, [curationType])
 
   const availableTokens = useMemo(() => {
-    const { masterEditions, editions, artTokens } = userTokensSplit;
+    const { masterEditions, editions, artTokens, compressedTokens } = userTokensSplit;
     switch (curationType) {
       case "artist": {
         switch (activeTabIndex) {
           case 0: return artTokens
           case 1: return masterEditions
+          case 2: return compressedTokens
           default: return []
         }
       }
@@ -298,6 +301,7 @@ export default function EditArtModuleModal({
         switch (activeTabIndex) {
           case 0: return artTokens
           case 1: return editions
+          case 2: return compressedTokens
           default: return []
         }
       }
@@ -309,8 +313,6 @@ export default function EditArtModuleModal({
   const availableTokenButtons = useMemo(() => {
     //if searching or not userTokens don't group
     
-
-
     const makeTokenButtons = (tokensToMake) => tokensToMake.map((token, i) => {
       const inUseHere = tokens.findIndex(t => t.mint === token.mint) >= 0 //in this module currently
       let inUseElseWhere = false;
@@ -396,8 +398,10 @@ export default function EditArtModuleModal({
             ? token.artist_name
             : approvedArtists.find(artist => artist.id === token.artist_id).username;
         
-          return token.name.toLowerCase().includes(search.toLowerCase())
+          return token.mint === search
+            || token.name.toLowerCase().includes(search.toLowerCase())
             || artistUsername?.toLowerCase().includes(search.toLowerCase())
+          
         })
 
       return makeTokenButtons(tokens)
@@ -454,6 +458,7 @@ export default function EditArtModuleModal({
         <div className="flex justify-center space-x-2 border-b-8 borderPalette3">
           {tabs.map((tab, i) => {
             const handleClick = () => {
+              setPage(0);
               setActiveTabIndex(i);
             }
             const isSelected = activeTabIndex === i;
@@ -583,6 +588,7 @@ export default function EditArtModuleModal({
               setSearch={setSearch}
               placeholder="Search"
             />
+
             <Checkbox
               className={clsx(
                 "pr-3 ",
@@ -593,6 +599,7 @@ export default function EditArtModuleModal({
               checked={groupByCollection}
               onChange={() => setGroupByCollection(prev => !prev)}
             />
+         
           </div>
           {tokensLabel}
           {content}

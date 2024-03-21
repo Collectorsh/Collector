@@ -1,11 +1,12 @@
 import apiClient from "../client/apiClient";
 
-async function updateCurationName({ newName, name, apiKey }) {
+async function updateCurationName({ newName, name, apiKey, curationId }) {
   try {
     let res = await apiClient.post("/curation/update_name", {
       new_name: newName,
       name: name,
-      api_key: apiKey
+      api_key: apiKey,
+      curation_id: curationId
     });
     return res.data;
   } catch (err) {
@@ -15,10 +16,11 @@ async function updateCurationName({ newName, name, apiKey }) {
 
 export default updateCurationName;
 
-export async function checkCurationNameAvailability(name) {
+export async function checkCurationNameAvailability(name, curatorId) {
   try {
     let res = await apiClient.post("/curation/check_name_availability", {
-      new_name: name
+      new_name: name,
+      curator_id: curatorId
     });
     return res.data;
   } catch (err) {

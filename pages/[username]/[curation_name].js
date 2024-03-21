@@ -16,7 +16,7 @@ import UnpublishConfirmationModal from "../../components/curations/unpublishConf
 import InviteArtistsModal from "../../components/curations/inviteArtistsModal";
 import getCurationByName, { useCurationDetails } from "../../data/curation/getCurationByName";
 import getPrivateContent, { getViewerPrivateContent } from "../../data/curation/getPrivateContent";
-import publishContent, { unpublishContent } from "../../data/curation/publishContent";
+import publishContent from "../../data/curation/publishContent";
 import { success, error } from "../../utils/toast";
 import updateApprovedArtists, { addSelfApprovedArtists } from "../../data/curation/updateApprovedArtists";
 import updateCurationName from "../../data/curation/updateCurationName";
@@ -51,7 +51,7 @@ const descriptionPlaceholder = "Tell us about this curation."
 function CurationPage({curation}) {
   const [user] = useContext(UserContext);
   const router = useRouter();
-  const curationDetails = useCurationDetails(router.query?.curation_name)
+  const curationDetails = useCurationDetails(router.query?.username, router.query?.curation_name)
 
   const breakpoint = useBreakpoints()
   const isMobile = ["", "sm", "md"].includes(breakpoint)
@@ -160,6 +160,7 @@ function CurationPage({curation}) {
           const { draft_content, private_key_hash, viewer_passcode } = await getPrivateContent({
             name: curation.name,
             apiKey: user.api_key,
+            curationId: curation.id
           })
           setDraftContent(draft_content)
           setPrivateKeyHash(private_key_hash)
@@ -186,7 +187,8 @@ function CurationPage({curation}) {
     const res = await publishContent({
       draftContent: draftContent,
       apiKey: user.api_key,
-      name: curation.name
+      name: curation.name,
+      curationId: curation.id
     })
 
     if (res?.status === "success") { 
@@ -221,21 +223,7 @@ function CurationPage({curation}) {
     return false //publishConfirmationModal handles success/error
   }
 
-  // const handleUnpublish = async () => { 
-  //   if (!isOwner) return;
-  //   const res = await unpublishContent({
-  //     apiKey: user.api_key,
-  //     name: curation.name
-  //   })
-  //   if (res?.status === "success") { 
-  //     setIsPublished(false)
-  //     setIsEditingDraft(true)
-  //     success(`${curation.name} is unpublished`)
-  //   } else {
-  //     error(`${curation.name} unpublish failed`)
-  //   }
-  // }
-
+ 
   const handleSaveDraftContent = async (newContent) => { 
     if (!newContent || !isOwner) return
 
@@ -254,7 +242,8 @@ function CurationPage({curation}) {
     const res = await saveDraftContent({
       draftContent: newDraft,
       apiKey: user.api_key,
-      name: curation.name
+      name: curation.name,
+      curationId: curation.id
     })
 
     if (res?.status !== "success") error("Content update failed")
@@ -265,7 +254,8 @@ function CurationPage({curation}) {
     const res = await updateApprovedArtists({
       artistIds: newArtists.map((artist) => artist.id),
       apiKey: user.api_key,
-      name: curation.name
+      name: curation.name,
+      curationId: curation.id
     })
 
     if (res?.status !== "success") error("Artist invitation failed");
@@ -290,6 +280,7 @@ function CurationPage({curation}) {
       newName: newName,
       apiKey: user.api_key,
       name: curation.name,
+      curationId: curation.id
     })
 
     if (res?.status === "success") {
@@ -553,6 +544,7 @@ function CurationPage({curation}) {
               onClose={() => setEditNameOpen(false)}
               onSave={handleEditName}
               name={name}
+              curatorId={curation?.curator?.id}
             />
             <EditDescriptionModal
               isOpen={editDescriptionOpen}
@@ -575,19 +567,14 @@ function CurationPage({curation}) {
               onPublish={handlePublish}
               onViewPublished={() => setIsEditingDraft(false)}
             />
-            {/* <UnpublishConfirmationModal
-              name={name}
-              isOpen={unpublishModalOpen}
-              onClose={() => setUnpublishModalOpen(false)}
-              onUnpublish={handleUnpublish}
-            /> */}
             <InviteArtistsModal
               isOpen={inviteArtistsModalOpen}
               onClose={() => setInviteArtistsModalOpen(false)}
               onInvite={handleInviteArtists}
               approvedArtists={approvedArtists}
               viewerPasscode={viewerPasscode}
-              name={curation.name}
+              curationId={curation.id}
+              // name={curation.name}
             />
           </>
         )
@@ -602,7 +589,8 @@ function CurationPage({curation}) {
 export async function getServerSideProps(context) {
   try {
     const name = context.params.curation_name;
-    const curation = await getCurationByName(name)
+    const username = context.params.username;
+    const curation = await getCurationByName(username, name)
 
     if (curation) {
       return { props: { curation } };

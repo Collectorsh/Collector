@@ -1,11 +1,12 @@
 import apiClient from "../client/apiClient";
 
-async function updateApprovedArtists({ artistIds, name, apiKey }) {
+async function updateApprovedArtists({ artistIds, name, apiKey, curationId }) {
   try {
     let res = await apiClient.post("/curation/update_approved_artists", {
       name: name,
       artist_ids: artistIds,
-      api_key: apiKey
+      api_key: apiKey,
+      curation_id: curationId
     });
     return res.data;
   } catch (err) {

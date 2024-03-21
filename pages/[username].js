@@ -28,6 +28,7 @@ import dynamic from 'next/dynamic';
 import EditDisplayNameModal from "../components/curatorProfile/editDisplayNameModal";
 import Tippy from "@tippyjs/react";
 import { defaultCollectorImageId } from "../config/settings";
+import useSWR from "swr";
 
 const QuillContent = dynamic(() => import('../components/Quill').then(mod => mod.QuillContent), { ssr: false })
 
@@ -51,9 +52,15 @@ const getBioDelta = (curator, isOwner) => {
   else return JSON.stringify({ ops: [{ insert: "" }] })
 }
 
-function ProfilePage({ curator }) {
+function ProfilePage(
+  { curator }
+) {
   const router = useRouter();
   const [user, setUser] = useContext(UserContext);
+
+  //TODO change to only get curations after load , with base curator info being available on load
+  // const { data: curator } = useSWR(router.query.username, getCuratorFromUsername)
+
   const isOwner = Boolean(user && user.public_keys.includes(curator?.public_keys?.[0]) && user.api_key);
 
   const [editBannerOpen, setEditBannerOpen] = useState(false);

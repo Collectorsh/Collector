@@ -8,7 +8,7 @@ export const urlRegex = /^(?!.*[_-]{2})(?![_-])[a-zA-Z0-9_-]{1,29}(?<![_-])$/;
 
 const DEBOUNCE_TIME = 500;
 
-export const useEditName = (name) => { 
+export const useEditName = (name, curatorId) => { 
   const [newName, setNewName] = useState(name || "")
   const [nameError, setNameError] = useState(null)
 
@@ -33,7 +33,7 @@ export const useEditName = (name) => {
 
     // Set a new timeout to execute the logic after 500ms
     const newTimeout = setTimeout(async () => {
-      const availabilityRes = await checkCurationNameAvailability(newName);
+      const availabilityRes = await checkCurationNameAvailability(newName, curatorId);
       const isUnique = availabilityRes.status === "success";
 
       if (!isUnique) setNameError("Sorry this curation name is already taken");
@@ -53,8 +53,8 @@ export const useEditName = (name) => {
   return {newName, nameError, nameValid, setNewName}
 }
 
-const EditNameModal = ({ name, onSave, isOpen, onClose }) => {
-  const {newName, nameError, nameValid, setNewName} = useEditName(name)
+const EditNameModal = ({ name, curatorId, onSave, isOpen, onClose }) => {
+  const {newName, nameError, nameValid, setNewName} = useEditName(name, curatorId)
 
   const handleSave = () => {
     onSave(newName)

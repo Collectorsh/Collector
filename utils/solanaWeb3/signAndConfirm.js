@@ -29,8 +29,11 @@ export const signAndConfirmTx = async ({
     signature = await sendAndConfirmRawTransaction(connection, signedTx.serialize(), { commitment, skipPreflight })
   } catch (err) {
     console.log(err)
-    if (err.message.includes("not confirmed")) warning("Your transaction didn't go through. Please try again.")
-    throw new Error(err)
+    if (err.message.includes("not confirmed")) {
+      warning("Your transaction didn't go through. Please try again.")
+    } else {
+      throw new Error(err)
+    }
   }
 
   if (!signature) throw new Error(errorMessage)

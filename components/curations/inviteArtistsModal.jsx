@@ -11,7 +11,7 @@ import UserContext from "../../contexts/user"
 import { host } from "../../config/settings"
 import * as Icon from "react-feather"
 
-const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewerPasscode, name }) => {
+const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewerPasscode, curationId }) => {
 
   const [user] = useContext(UserContext);
 
@@ -59,7 +59,7 @@ const InviteArtistsModal = ({ approvedArtists, onInvite, isOpen, onClose, viewer
   }
 
   const handleGeneratePasscode = async () => {
-    const passcode = await generateViewerPasscode({ apiKey: user.api_key, name });
+    const passcode = await generateViewerPasscode({ apiKey: user.api_key, curationId });
     if (passcode) setPasscode(passcode)
   }
 

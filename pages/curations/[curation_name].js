@@ -21,7 +21,9 @@ export async function getServerSideProps(context) {
   try {
     const name = context.params.curation_name;
 
-    const curation = await getCurationByName(name)
+    const username = undefined; //not available with this url path (TODO, maybe add options to link to?)
+
+    const curation = await getCurationByName(username, name)
 
     if (curation) {
       return { props: { curation } };

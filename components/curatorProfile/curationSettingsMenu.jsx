@@ -53,11 +53,13 @@ const CurationSettingsMenu = ({ curation, setCurations}) => {
   const handleDelete = async () => { 
     const res = await hideCuration({
       name: curation.name,
-      apiKey: user.api_key
+      apiKey: user.api_key,
+      curationId: curation.id
     })
     if (res?.status === "success") {
       success(`${ curation.name.replaceAll("_", " ") } deleted`)
       setCurations(prev => prev.filter(c => c.id !== curation.id))
+      return true
     } else {
       error(`Failed to delete ${ curation.name.replaceAll("_", " ") }`)
       return false
@@ -69,7 +71,8 @@ const CurationSettingsMenu = ({ curation, setCurations}) => {
 
     const res = await unpublishContent({
       apiKey: user.api_key,
-      name: curation.name
+      name: curation.name,
+      curationId: curation.id
     })
 
     if (res?.status === "success") {

@@ -1,9 +1,10 @@
 import apiClient from "../client/apiClient";
 import useSWR from 'swr'
 
-async function getCurationByName(name) {
+async function getCurationByName(username, name) {
   try {
     let res = await apiClient.post("/curation/get_by_name", {
+      username: username,
       name: name,
     });
     return res.data;
@@ -26,9 +27,10 @@ export async function searchCurationsByName(name) {
 }
 
 
-async function getCurationDetailsByName(name) {
+async function getCurationDetailsByName({ username, name}) {
   try {
     let res = await apiClient.post("/curation/get_listings_and_artists_by_name", {
+      username: username,
       name: name,
     });
     return res.data;
@@ -37,10 +39,10 @@ async function getCurationDetailsByName(name) {
   }
 } 
 
-const fetcher = async (name) => {
-  return getCurationDetailsByName(name)
+const fetcher = async (props) => {
+  return getCurationDetailsByName(props)
 }
-export const useCurationDetails = (name) => {
-  const { data: curation, error } = useSWR(name, fetcher)
+export const useCurationDetails = (username, name) => {
+  const { data: curation, error } = useSWR({ username, name }, fetcher)
   return curation
 }

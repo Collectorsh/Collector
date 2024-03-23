@@ -81,7 +81,8 @@ function CurationPage({curation}) {
 
   const viewerPasscodeQuery = router.query?.passcode;
 
-  const isOwner = Boolean(user && user.api_key && user.public_keys.includes(curation?.curator.public_keys[0]));
+  const isOwner = Boolean(user && user.api_key && user.public_keys.some(key => curation?.curator.public_keys.includes(key)));
+
   const isAuthorizedViewer = Boolean(!isOwner && user && viewerPasscodeQuery && draftContent)
  
   const useDraftContent = isEditingDraft && (isOwner || isAuthorizedViewer);

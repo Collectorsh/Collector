@@ -11,6 +11,7 @@ import { Switch } from "@headlessui/react";
 import clsx from "clsx";
 import * as Icon from 'react-feather'
 import Checkbox from "../checkbox";
+import MergeAccountsModal from "./MergeAccountsModal";
 
 export default function Wallets() {
   const wallet = useWallet();
@@ -18,10 +19,13 @@ export default function Wallets() {
   const [user, setUser] = useContext(UserContext);
   const [addingWallet, setAddingWallet] = useState(false);
   const [usingLedger, setUsingLedger] = useState(false);
+  const [mergeAccountsModalOpen, setMergeAccountsModalOpen] = useState(false);
+  console.log("🚀 ~ Wallets ~ mergeAccountsModalOpen:", mergeAccountsModalOpen)
+  const [existingUser, setExistingUser] = useState(null);
+  console.log("🚀 ~ Wallets ~ existingUser:", existingUser)
 
   // Detect publicKey change and add wallet
   useEffect(() => {
-    console.log("🚀 ~ useEffect ~ wallet :", wallet)
     if (!wallet || !wallet.publicKey || !user || !addingWallet) return;
     wallet.connect().then(() => {
       if(!wallet.connected) return
@@ -35,11 +39,15 @@ export default function Wallets() {
         wallet.signTransaction,
         usingLedger
       ).then((res) => {
+        console.log("🚀 ~ ).then ~ res:", res)
         if (!res) {
           console.log("No response from verifyAddress")
         } else if (res?.data?.status === "success") {
           success("Wallet added successfully");
           setUser(res.data.user);
+        } else if (res.data.existing_user) { 
+          setExistingUser(res.data.existing_user)
+          setMergeAccountsModalOpen(true)
         } else {
           error(res.data.msg);
         }
@@ -120,6 +128,12 @@ export default function Wallets() {
           onChange={() => setUsingLedger(prev => !prev)}
         />
       </div>
+      <MergeAccountsModal
+        isOpen={mergeAccountsModalOpen && Boolean(existingUser)}
+        onClose={() => setMergeAccountsModalOpen(false)}
+        existingUser={existingUser}
+        attemptingAddress={wallet?.publicKey?.toString()}
+      />
     </div>
   )
 

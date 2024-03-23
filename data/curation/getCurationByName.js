@@ -27,7 +27,8 @@ export async function searchCurationsByName(name) {
 }
 
 
-async function getCurationDetailsByName({ username, name}) {
+async function getCurationDetailsByName({ username, name }) {
+  if (!username || !name) return null;
   try {
     let res = await apiClient.post("/curation/get_listings_and_artists_by_name", {
       username: username,

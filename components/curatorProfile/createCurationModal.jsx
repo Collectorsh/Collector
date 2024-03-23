@@ -11,6 +11,7 @@ import { error, success } from "../../utils/toast"
 import { shootConfetti } from "../../utils/confetti"
 import clsx from "clsx"
 import { PLATFORM_AUCTION_HOUSE_1_ADDRESS } from "../../config/settings"
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const decimalRegex = /^\d+(\.\d+)?$/;
 
@@ -24,6 +25,7 @@ const curationTypes = [
 
 const CreateCurationModal = ({ isOpen, onClose }) => {
   const [user] = useContext(UserContext);
+  const wallet = useWallet();
   const router = useRouter()
   const { newName: curationName, nameError, nameValid, setNewName } = useEditName("", user?.id)
 
@@ -47,7 +49,7 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
   },[curatorFee])
 
   const handleCreate = async () => {
-    if (!curationValid) return;
+    if (!curationValid || !wallet.publicKey) return;
     setCreating(true)
 
     let res;
@@ -56,7 +58,7 @@ const CreateCurationModal = ({ isOpen, onClose }) => {
         curationName: curationName,
         curatorFee: curatorFee,
         apiKey: user.api_key,
-        curatorWithdrawalPubkey: user.public_keys[0]
+        curatorWithdrawalPubkey: wallet.publicKey.toString()
       })
     } else {
       res = await createPersonalCuration({

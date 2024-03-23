@@ -61,8 +61,8 @@ function ProfilePage(
   //TODO change to only get curations after load , with base curator info being available on load
   // const { data: curator } = useSWR(router.query.username, getCuratorFromUsername)
 
-  const isOwner = Boolean(user && user.public_keys.includes(curator?.public_keys?.[0]) && user.api_key);
-
+  const isOwner = Boolean(user && user.api_key && user.public_keys.some(key => curator.public_keys.includes(key)));
+  
   const [editBannerOpen, setEditBannerOpen] = useState(false);
   const [editPfpOpen, setEditPfpOpen] = useState(false);
   const [editBioOpen, setEditBioOpen] = useState(false);
@@ -361,7 +361,7 @@ function ProfilePage(
                 text={true}
                 icon={<Icon.Edit size={20} strokeWidth={2.5} />}
               >
-                <h1 className="font-bold mr-2 text-4xl md:text-5xl overflow-y-hidden overflow-x-auto w-full">{displayName}</h1>
+                <h1 className="font-bold mr-2 text-4xl md:text-5xl overflow-y-hidden overflow-x-auto w-full pb-1.5">{displayName}</h1>
               </EditWrapper>
 
               <EditWrapper

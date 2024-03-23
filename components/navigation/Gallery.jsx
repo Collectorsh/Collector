@@ -44,7 +44,7 @@ export default function Gallery() {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Menu.Items className="palette2 origin-top-right absolute right-0 mt-2 pt-2 w-56 overflow-hidden rounded-md shadow-md outline-none text-left">
+              <Menu.Items className="palette2 origin-top-right absolute right-0 mt-2 pt-2 w-60 overflow-hidden rounded-md shadow-md outline-none text-left">
                 <div className="px-2">
                   {user.subscription_level === "pro" ? (
                     <Menu.Item>
@@ -82,8 +82,7 @@ export default function Gallery() {
 
                 <hr className="mt-2 borderPalette3"/>
 
-                
-               <UserCard />
+                <UserCard />
             
                 
               </Menu.Items>
@@ -107,15 +106,15 @@ export const UserCard = ({inset}) => {
     });
   }
   return (
-    <div className={clsx("palette3 p-2 grid grid-cols-3 overflow-hidden", inset && "rounded-md shadow-inner")}>
-      <div className=" px-2 pb-1 flex flex-col items-start col-span-2">
+    <div className={clsx("palette3 p-2 grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden w-full", inset && "rounded-md shadow-inner")}>
+      <div className="pl-2 pb-1 flex flex-col items-start">
         <p className="truncate w-full">{displayName(user)}</p>
         <p className="text-xs opacity-50">
           {publicKey?.toBase58().slice(0, 4)}...
           {publicKey?.toBase58().slice(-4)}
         </p>
       </div>
-      <div className="flex justify-end items-center">
+      <div className="flex items-center flex-shrink-0 w-full">
         <Tippy content="FAQ" className="shadow">
           <div className="">
             <Link href="/faq" legacyBehavior>

@@ -40,6 +40,7 @@ const Submissions = ({ }) => {
 
   const viewerPasscodeQuery = router.query?.passcode;
 
+
   const submissionMints = useMemo(() => { 
     const mints = new Set()
     approvedCurations?.forEach(curation => { 
@@ -163,6 +164,9 @@ const Submissions = ({ }) => {
 
       const bannerImgId = parseCloudImageId(banner_image)
 
+      const curationName = name.replaceAll("_", " ").split("-hidden")[0]
+
+
       const artistSubmissions = curation.submitted_token_listings.filter(listing => {
         const creatorsAddresses = listing.creators?.map((creator) => creator.address)
         const userKeys = user?.public_keys || []
@@ -195,7 +199,7 @@ const Submissions = ({ }) => {
           </Link>
           <div className="my-2 px-3 gap-3 flex justify-between flex-wrap">
             <div>
-              <h3 className="font-bold collector text-2xl">{name.replaceAll("_", " ")}</h3>
+              <h3 className="font-bold collector text-2xl">{curationName}</h3>
               <p>Curated by {displayName(curator)}</p>
             </div>
             <div className="flex gap-2 items-center flex-wrap">

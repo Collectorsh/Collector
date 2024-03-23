@@ -430,12 +430,13 @@ export default function EditArtModuleModal({
           "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
         )}
       >
+       
         {!availableTokens?.length 
           ? (
             <div className="col-span-5 flex justify-center items-center">
-              {useUserTokens 
+              {(useUserTokens && !userTokens?.length)
                 ? <p className="animate-pulse">Gathering your digital assets{loadingCounter}</p>
-                : <p>It looks like nothing has been submitted yet.</p>
+                : <p>Looks like nothing is here yet.</p>
               }
             </div>
           )

@@ -20,9 +20,7 @@ export default function Wallets() {
   const [addingWallet, setAddingWallet] = useState(false);
   const [usingLedger, setUsingLedger] = useState(false);
   const [mergeAccountsModalOpen, setMergeAccountsModalOpen] = useState(false);
-  console.log("🚀 ~ Wallets ~ mergeAccountsModalOpen:", mergeAccountsModalOpen)
   const [existingUser, setExistingUser] = useState(null);
-  console.log("🚀 ~ Wallets ~ existingUser:", existingUser)
 
   // Detect publicKey change and add wallet
   useEffect(() => {

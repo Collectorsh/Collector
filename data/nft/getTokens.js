@@ -144,14 +144,13 @@ async function getTokens(publicKeys, options) {
       image_cdn,
       collection: collectionInfo,
       compressed: compression.compressed,
+
       //TODO Get from Helius when available and remove useTokenMetadata
       // is_edition:
       // parent:
       // is_master_edition:
       // supply:
       // max_supply:
-      //compressed:
-      //is_collection_nft
     }
   }).filter((item) => {
     const notUsable = !item.uri || !item.artist_address || !item.mint || !item.image
@@ -239,6 +238,7 @@ async function getTokens(publicKeys, options) {
   DEBUG && console.timeEnd("getTokens Time")
   return results;
 }
+    
   
 
 export default getTokens;
@@ -247,6 +247,7 @@ const fetcher = async ({ publicKeys, options }) => {
   if(!publicKeys) return undefined
   return await getTokens(publicKeys, options)
 }
+
 export function useTokens(publicKeys, options) {
   const { data, error } = useSWR({ publicKeys, options }, fetcher)
   const [user] = useContext(UserContext);

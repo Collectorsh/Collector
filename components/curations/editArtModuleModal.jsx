@@ -15,7 +15,7 @@ import SortableArtWrapper from "./sortableArtWrapper";
 import { submitTokens } from "../../data/curationListings/submitToken";
 import { error } from "../../utils/toast";
 import { Oval } from "react-loader-spinner";
-import { groupEditions } from "../../utils/groupEditions";
+import { groupCompressed, groupEditions } from "../../utils/groupEditions";
 import GroupedCollection from "./groupedCollection";
 import AddTokenButton from "./addTokenButton";
 import Checkbox from "../checkbox";
@@ -195,12 +195,13 @@ export default function EditArtModuleModal({
       else remainingTokens.push(token)
     })
 
+    const groupedCompressed = groupCompressed(compressedTokens)
     const groupedEditions = groupEditions(editions)
     return {
       masterEditions,
       // editions: filterCompressed ? groupedEditions : [...groupedEditions, ...compressedTokens],
       editions: groupedEditions,
-      compressedTokens,
+      compressedTokens: groupedCompressed,
       artTokens,
       remainingTokens,
     }

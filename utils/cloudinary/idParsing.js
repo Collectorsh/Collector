@@ -23,5 +23,9 @@ export const getTokenCldImageId = (token) => {
     if (token.image) return `edition-${ clean(token.image) }`
   }
 
+  if (token.compressed) {
+    if (token.image) return `compressed-${ clean(token.image) }`
+  }
+
   return token.mint
 }

@@ -13,7 +13,7 @@ import { customIdPrefix } from "../../utils/cloudinary/idParsing";
 import uploadCldImage from "../../data/cloudinary/uploadCldImage";
 import { error } from "../../utils/toast";
 import { truncate } from "../../utils/truncate";
-import { groupEditions } from "../../utils/groupEditions";
+import { groupCompressed, groupEditions } from "../../utils/groupEditions";
 import Tippy from "@tippyjs/react";
 
 const uploadTabTitle = "Upload"
@@ -119,9 +119,19 @@ export default function EditBannerModal({ isOpen, onClose, onSave, submittedToke
 
   const orderedTokens = useMemo(() => {
     if (!tokens) return null;
-    const editions = groupEditions(tokens.filter(searchFilter).filter(token => token.is_edition))
-    const others = tokens.filter(searchFilter).filter(token => !token.is_edition)
-    return [...others, ...editions]
+    // const editions = groupEditions(tokens.filter(searchFilter).filter(token => token.is_edition))
+    // const compressed = groupCompressed(tokens.filter(searchFilter).filter(token => token.compressed))
+    // const others = tokens.filter(searchFilter).filter(token => !token.is_edition && !token.compressed)
+
+    const editions = []
+    const compressed = []
+    const others = []
+    tokens.filter(searchFilter).forEach(token => { 
+      if (token.is_edition) editions.push(token)
+      else if (token.compressed) compressed.push(token)
+      else others.push(token)
+    })
+    return [...others, ...editions, ...compressed]
   }, [tokens, searchFilter])
 
   const gridColumns = "grid-cols-1 md:grid-cols-2";

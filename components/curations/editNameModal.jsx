@@ -3,8 +3,10 @@ import MainButton from "../MainButton"
 import Modal, { modalActionDivClass } from "../Modal"
 import { checkCurationNameAvailability } from "../../data/curation/updateCurationName";
 
-// export const urlRegex = /^(?!.*[_-]{2})[a-zA-Z0-9_-]{2,31}$/;
-export const urlRegex = /^(?!.*[_-]{2})(?![_-])[a-zA-Z0-9_-]{1,29}(?<![_-])$/;
+// export const urlRegex = /^(?!.*[_-]{2})[a-zA-Z0-9_-]{2,31}$/; //allows _ and - begin and end
+// export const urlRegex = /^(?!.*[_-]{2})(?![_-])[a-zA-Z0-9_-]{1,29}(?<![_-])$/; // not compatable with safari
+export const urlRegex = /^(?![_-])(?!.*[_-]{2})[a-zA-Z0-9_-]+[^_-]$/
+
 
 const DEBOUNCE_TIME = 500;
 

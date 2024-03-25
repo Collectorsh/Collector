@@ -51,7 +51,6 @@ const CloudinaryImage = ({
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null) 
-  console.log("🚀 ~ error:", error)
 
   const internalRef = useRef(null)
 

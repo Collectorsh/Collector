@@ -61,7 +61,7 @@ function ProfilePage(
   //TODO change to only get curations after load , with base curator info being available on load
   // const { data: curator } = useSWR(router.query.username, getCuratorFromUsername)
 
-  const isOwner = Boolean(user && user.api_key && user.public_keys.some(key => curator.public_keys.includes(key)));
+  const isOwner = Boolean(user && user.api_key && user.public_keys.some(key => curator?.public_keys.includes(key)));
   
   const [editBannerOpen, setEditBannerOpen] = useState(false);
   const [editPfpOpen, setEditPfpOpen] = useState(false);

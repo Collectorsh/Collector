@@ -29,6 +29,7 @@ async function getTokens(publicKeys, options) {
   const justCreator = options.justCreator ?? false
   const useTokenMetadata = options.useTokenMetadata ?? false
   const queryByCreator = options.queryByCreator ?? false
+  const legacy = options.legacy ?? false
 
   const baseTokens = []
   const mintedIndexerTokens = []
@@ -114,7 +115,7 @@ async function getTokens(publicKeys, options) {
       })
 
   const mungedTokens = creatorFilteredTokens.map((token) => { 
-    const { content, creators, ownership, id, grouping, compression } = token
+    const { content, creators, ownership, id, grouping, compression, supply } = token
     const files = content?.files?.map((file) => ({
       ...file,
       type: file.mime
@@ -146,11 +147,11 @@ async function getTokens(publicKeys, options) {
       compressed: compression.compressed,
 
       //TODO Get from Helius when available and remove useTokenMetadata
-      // is_edition:
       // parent:
-      // is_master_edition:
-      // supply:
-      // max_supply:
+      is_edition: supply.edition_number !== undefined,
+      is_master_edition: supply.print_max_supply && supply.edition_number === undefined,
+      supply: supply.print_current_supply,
+      max_supply: supply.print_max_supply
     }
   }).filter((item) => {
     const notUsable = !item.uri || !item.artist_address || !item.mint || !item.image
@@ -170,50 +171,62 @@ async function getTokens(publicKeys, options) {
   }
 
 
-  //TODO get rid of once gallery 1.0 are sunsetted <>
-  const visResults = await apiClient.post("/get_visibility_and_order", {
-    public_key: publicKeys[0],
-    cld_ids: mungedTokens.map(token => getTokenCldImageId(token)),
-  }).then(res => res.data)
-
-  const { visibilities, optimizations, user_default } = visResults
-
   let results = []  
 
-  for (const token of mungedTokens) {
-    let result = { ...token }
-    const cld_id = getTokenCldImageId(token)
-    const visibility = visibilities[token.mint]
-    const optimization = optimizations[cld_id]
-
-    const metadata = mintedIndexerTokens.find((t) => t.mint === token.mint)
-
-    if (metadata) { 
-      result = { ...metadata, ...result}
-    }
-
-    if (!visibility) {
-      result.order_id = null;
-      result.visible = false //user_default; //forcing to false 
-      result.span = 1;
-    } else {
-      result.order_id = visibility.order_id;
-      result.visible = visibility.visible;
-      result.span = visibility.span;
-    }
-
-    if (optimization) {
-      result.optimized = optimization.optimized;
-      result.optimization_error = optimization.error_message;
+  if (legacy) {
+    //TODO get rid of once gallery 1.0 are sunsetted <>
+    const visResults = await apiClient.post("/get_visibility_and_order", {
+      public_key: publicKeys[0],
+      cld_ids: mungedTokens.map(token => getTokenCldImageId(token)),
+    }).then(res => res.data)
+  
+    const { visibilities, optimizations, user_default } = visResults
+  
+  
+    for (const token of mungedTokens) {
+      let result = { ...token }
+      const cld_id = getTokenCldImageId(token)
+      const visibility = visibilities[token.mint]
+      const optimization = optimizations[cld_id]
+  
+      const metadata = mintedIndexerTokens.find((t) => t.mint === token.mint)
+  
+      if (metadata) { 
+        result = { ...metadata, ...result}
+      }
+  
+      if (!visibility) {
+        result.order_id = null;
+        result.visible = false //user_default; //forcing to false 
+        result.span = 1;
+      } else {
+        result.order_id = visibility.order_id;
+        result.visible = visibility.visible;
+        result.span = visibility.span;
+      }
+  
+      if (optimization) {
+        result.optimized = optimization.optimized;
+        result.optimization_error = optimization.error_message;
+      }
+      
+      results.push(result)
     }
     
-    results.push(result)
+    if (justVisible) {
+      results = results.filter((r) => r.visible);
+    }
+    //TODO get rid of once gallery 1.0 are sunsetted ^^^<>
+  } else {
+    results = mungedTokens
+
+    //Might need?
+    // const metadata = mintedIndexerTokens.find((t) => t.mint === token.mint)
+
+    // if (metadata) {
+    //   result = { ...metadata, ...result }
+    // }
   }
-  
-  if (justVisible) {
-    results = results.filter((r) => r.visible);
-  }
-  //TODO get rid of once gallery 1.0 are sunsetted ^^^<>
 
 
   //KEEP this block though
@@ -227,13 +240,15 @@ async function getTokens(publicKeys, options) {
   }
 
 
-  //TODO get rid of once gallery 1.0 are sunsetted <>
-  results = results.sort((a, b) => {
-    const aOrderId = coalesce(a.order_id, +Infinity);
-    const bOrderId = coalesce(b.order_id, +Infinity);
-
-    return aOrderId > bOrderId ? 1 : bOrderId > aOrderId ? -1 : 0;
-  });
+  if (legacy) {
+    //TODO get rid of once gallery 1.0 are sunsetted <>
+    results = results.sort((a, b) => {
+      const aOrderId = coalesce(a.order_id, +Infinity);
+      const bOrderId = coalesce(b.order_id, +Infinity);
+  
+      return aOrderId > bOrderId ? 1 : bOrderId > aOrderId ? -1 : 0;
+    });
+  }
 
   DEBUG && console.timeEnd("getTokens Time")
   return results;
@@ -250,118 +265,123 @@ const fetcher = async ({ publicKeys, options }) => {
 
 export function useTokens(publicKeys, options) {
   const { data, error } = useSWR({ publicKeys, options }, fetcher)
-  const [user] = useContext(UserContext);
 
-  const { allTokens, setAllTokens, indexedRef } = useContext(UserTokensContext)
+  const tokens = useMemo(() => !data ? undefined : data.sort((a, b) => a.name.localeCompare(b.name)), [data]);
+
   const [fetched, setFetched] = useState(0)
-  const metadataRef = useRef([]);
-
   const loading = !data && !error || fetched > 0
 
-  const useTokenMetadata = useMemo(() => options?.useTokenMetadata ?? false, [options])
 
-  const tokenKey = useMemo(() => {
-    const keys = publicKeys?.join("-")
-    const optionKey = Object.entries(options ?? {}).reduce((acc, curr) => { 
-      const [key, value] = curr
-      if(value) acc += key + "-"
-      return acc
-    }, "")
-    return `${keys}_${optionKey}`
-  }, [publicKeys, options])
+  // const [user] = useContext(UserContext);
 
-  const alreadySet = useMemo(() => Object.keys(allTokens ?? {}).includes(tokenKey), [allTokens, tokenKey])
+  // const { allTokens, setAllTokens, indexedRef } = useContext(UserTokensContext)
+  // const metadataRef = useRef([]);
 
 
-  const tokens = useMemo(() => allTokens?.[tokenKey], [allTokens, tokenKey])
+  // const useTokenMetadata = useMemo(() => options?.useTokenMetadata ?? false, [options])
+
+  // const tokenKey = useMemo(() => {
+  //   const keys = publicKeys?.join("-")
+  //   const optionKey = Object.entries(options ?? {}).reduce((acc, curr) => { 
+  //     const [key, value] = curr
+  //     if(value) acc += key + "-"
+  //     return acc
+  //   }, "")
+  //   return `${keys}_${optionKey}`
+  // }, [publicKeys, options])
+
+  // const alreadySet = useMemo(() => Object.keys(allTokens ?? {}).includes(tokenKey), [allTokens, tokenKey])
+
   
-  useEffect(() => {    
-    if (data && !alreadySet) {
-      if (!useTokenMetadata) {
-        setAllTokens((prevTokens) => {
-          const newTokens = { ...prevTokens, [tokenKey]: data }
-          return newTokens
-        })
-      } else {
-        //if using token metadata, set the tokens as they are fetched
-        const metaplex = Metaplex.make(connection);
+  // const tokens = useMemo(() => allTokens?.[tokenKey], [allTokens, tokenKey])
+  
+  // useEffect(() => {    
+  //   if (data && !alreadySet) {
+  //     if (!useTokenMetadata) {
+  //       setAllTokens((prevTokens) => {
+  //         const newTokens = { ...prevTokens, [tokenKey]: data }
+  //         return newTokens
+  //       })
+  //     } else {
+  //       //if using token metadata, set the tokens as they are fetched
+  //       const metaplex = Metaplex.make(connection);
 
-        metadataRef.current = []
-        const nameSorted = data.sort((a, b) => a.name.localeCompare(b.name));
+  //       metadataRef.current = []
+  //       const nameSorted = data.sort((a, b) => a.name.localeCompare(b.name));
         
-        (async () => {
-          let fetchedLocal = 0;
+  //       (async () => {
+  //         let fetchedLocal = 0;
 
-          const withMetadata = [];
-          const remaining = [];
-          nameSorted.forEach((token) => {
-            //using .id for now because it means we've recorded/indexed the edition metadata,
-            //but once we have that + the collection metadata from helius, we can use something else (or not need this useEffect at all maybe?)
-            if(token?.id !== undefined) {
-              withMetadata.push(token)
-            } else {
-              remaining.push(token)
-            }
-          })
+  //         const withMetadata = [];
+  //         const remaining = [];
+  //         nameSorted.forEach((token) => {
+  //           //using .id for now because it means we've recorded/indexed the edition metadata,
+  //           //but once we have that + the collection metadata from helius, we can use something else (or not need this useEffect at all maybe?)
+  //           if(token?.id !== undefined) {
+  //             withMetadata.push(token)
+  //           } else {
+  //             remaining.push(token)
+  //           }
+  //         })
   
-          fetchedLocal += withMetadata.length
-          setFetched(fetchedLocal) //update count state with all tokens that have metadata ()
+  //         fetchedLocal += withMetadata.length
+  //         setFetched(fetchedLocal) //update count state with all tokens that have metadata ()
 
-          // update ref with metadata tokens (but not collection nfts)
-          metadataRef.current = withMetadata.filter((item) => { 
-            return !item.is_collection_nft
-          })
+  //         // update ref with metadata tokens (but not collection nfts)
+  //         metadataRef.current = withMetadata.filter((item) => { 
+  //           return !item.is_collection_nft
+  //         })
           
-          //fetch metadata from tokens missing edition info
-          for (const t of remaining) {
+  //         //fetch metadata from tokens missing edition info
+  //         for (const t of remaining) {
         
-            let fullToken = { ...t }
-            //compressed nfts dont have the same metadata structure
-            if (!t.compressed) {
-              const metadata = await getMetadata(metaplex, t.mint)
-              const token = remaining.find((t) => t.mint === metadata.mint) //finding token again incase of race condition
-              fullToken = { ...token, ...metadata }
-            } 
-            //update indexer with full token
+  //           let fullToken = { ...t }
+  //           //compressed nfts dont have the same metadata structure
+  //           if (!t.compressed) {
+  //             const metadata = await getMetadata(metaplex, t.mint)
+  //             const token = remaining.find((t) => t.mint === metadata.mint) //finding token again incase of race condition
+  //             fullToken = { ...token, ...metadata }
+  //           } 
+  //           //update indexer with full token
        
-            const artistId = user?.public_keys.includes(fullToken.artist_address) ? user.id : null;
-            const ownerId = user?.public_keys.includes(fullToken.owner_address) ? user.id : null;
+  //           const artistId = user?.public_keys.includes(fullToken.artist_address) ? user.id : null;
+  //           const ownerId = user?.public_keys.includes(fullToken.owner_address) ? user.id : null;
 
-            if (!indexedRef.current.includes(fullToken.mint)) {
-              indexedRef.current.push(fullToken.mint)
+  //           if (!indexedRef.current.includes(fullToken.mint)) {
+  //             indexedRef.current.push(fullToken.mint)
 
-              await createIndex({
-                apiKey: user?.api_key,
-                artistId,
-                ownerId,
-                token: fullToken
-              })
-            }
+  //             await createIndex({
+  //               apiKey: user?.api_key,
+  //               artistId,
+  //               ownerId,
+  //               token: fullToken
+  //             })
+  //           }
           
-            // //dont add collection nfts to metadataRef
-            if (!fullToken.is_collection_nft) {
-              const newTokens = [...metadataRef.current, fullToken]
-              metadataRef.current = newTokens.sort((a, b) => a.name.localeCompare(b.name))
-            }
+  //           // //dont add collection nfts to metadataRef
+  //           if (!fullToken.is_collection_nft) {
+  //             const newTokens = [...metadataRef.current, fullToken]
+  //             metadataRef.current = newTokens.sort((a, b) => a.name.localeCompare(b.name))
+  //           }
 
-            fetchedLocal++;
-            setFetched(fetchedLocal)
-          }
+  //           fetchedLocal++;
+  //           setFetched(fetchedLocal)
+  //         }
 
-          //update state once done
-          setAllTokens((prevTokens) => {
-            const newTokens = { ...prevTokens, [tokenKey]: metadataRef.current }
-            return newTokens
-          })
+  //         //update state once done
+  //         setAllTokens((prevTokens) => {
+  //           const newTokens = { ...prevTokens, [tokenKey]: metadataRef.current }
+  //           return newTokens
+  //         })
 
-          setFetched(fetchedLocal) //update state at the end again just in case
-          setTimeout(() => setFetched(0), 100) //reset state after 0.1 second (for future fetches)
-        })();
-      }
-    }
+  //         setFetched(fetchedLocal) //update state at the end again just in case
+  //         setTimeout(() => setFetched(0), 100) //reset state after 0.1 second (for future fetches)
+  //       })();
+  //     }
+  //   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, tokenKey, useTokenMetadata, alreadySet, setAllTokens, user])
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [data, tokenKey, useTokenMetadata, alreadySet, setAllTokens, user])
 
   return {
     tokens,

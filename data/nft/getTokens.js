@@ -107,7 +107,6 @@ async function getTokens(publicKeys, options) {
     }
   }
 
-  console.log("baseTokens", baseTokens.find(t => t.id ==='Dm8AoHZVa3aARZP8Bn6sPagB4YqNUVSu7e31iuyXvpNF'))
   const creatorFilteredTokens = !justCreator
     ? baseTokens
     : baseTokens.filter((token) => { 

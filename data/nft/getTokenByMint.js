@@ -29,8 +29,8 @@ async function getTokenByMint(tokenMint) {
     });  
    
     if (!token) throw new Error("No token found");
-      
-    const { content, creators, ownership, id } = token
+
+    const { content, creators, ownership, id, compression, supply, grouping } = token
   
     const files = content?.files?.map((file) => ({
       ...file,
@@ -38,6 +38,11 @@ async function getTokenByMint(tokenMint) {
     }))
   
     const image_cdn = content?.files?.find((file) => file.cdn_uri)?.cdn_uri
+
+    const collectionInfo = (grouping.length && grouping[0].collection_metadata) ? {
+      ...grouping[0].collection_metadata,
+      verified: grouping[0].verified,
+    } : undefined
   
     mungedToken = {
       artist_address: creators[0]?.address,
@@ -58,13 +63,15 @@ async function getTokenByMint(tokenMint) {
       isMutable: token?.mutable,
       attributes: content.metadata?.attributes,
       externalUrl: content.links?.external_url,
+      collection: collectionInfo,
+      compressed: compression.compressed,
       
       //TODO Get from Helius when available and remove seperate edition call
-      // is_edition: 
       // parent:
-      // is_master_edition:
-      // supply:
-      // max_supply:
+      is_edition: supply.edition_number !== undefined,
+      is_master_edition: supply.print_max_supply && supply.edition_number === undefined,
+      supply: supply.print_current_supply,
+      max_supply: supply.print_max_supply
     }
   } catch (e) {
     console.error("Error getting token by mint: ", e);

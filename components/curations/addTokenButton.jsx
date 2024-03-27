@@ -40,11 +40,12 @@ const AddTokenButton = ({
   }, [isVisible])
 
   const availableEditions = useMemo(() => { 
-    if (!token.is_edition) return null;
-    return token.editions?.filter(edition => !mintsInUse.includes(edition.mint))
+    if (token.is_edition) return token.editions?.filter(edition => !mintsInUse.includes(edition.mint))
+    if (token.compressed) return token.cNFTs?.filter(cNFT => !mintsInUse.includes(cNFT.mint))
+    return null
   }, [mintsInUse, token])
 
-  const alreadyUsed = token.is_edition ? !availableEditions?.length : alreadyInUse
+  const alreadyUsed = (token.is_edition || token.compressed) ? !availableEditions?.length : alreadyInUse
   const disableAdd = alreadyUsed || moduleFull || !imageLoaded || adding
 
   const isMasterEdition = token.is_master_edition
@@ -58,7 +59,7 @@ const AddTokenButton = ({
     }
 
     let newToken;
-    if (token.is_edition) {
+    if (token.is_edition || token.compressed) {
       newToken = availableEditions[0]
       if (!newToken) {
         error("No available editions")
@@ -137,10 +138,10 @@ const AddTokenButton = ({
   }
 
   const infoBadge = useMemo(() => {
-    if (token.compressed) return "C"
+    // if (token.compressed) return "C"
 
     return availableEditions?.length
-  }, [token, availableEditions])
+  }, [availableEditions])
   return (
     <button
       className={clsx(
@@ -200,15 +201,15 @@ const AddTokenButton = ({
           </div>
         ) : null}
 
-        {alreadyInUse && !token.is_edition ? (
+        {alreadyInUse && !token.is_edition && !token.compressed ? (
           <div className="absolute inset-0 flex justify-center items-center z-20">
-            <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">Already Being Used</p>
+            <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">Already being used</p>
           </div>
         ) : null}
 
-        {token.is_edition && !availableEditions?.length ? (
+        {(token.is_edition || token.compressed) && !availableEditions?.length ? (
           <div className="absolute inset-0 flex justify-center items-center z-20">
-            <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">No Editions Available</p>
+            <p className=" bg-neutral-200 dark:bg-neutral-800 px-2 rounded-md">All in use</p>
           </div>
         ) : null}
 

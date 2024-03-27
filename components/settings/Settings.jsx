@@ -43,18 +43,18 @@ export default function Settings() {
     if (disableSave) return;
     setSaving(true)
 
-    // const res = await saveUser(user.api_key, {
-    //   username: username,
-    //   email: email,
-    //   name: displayName,
-    // });
+    const res = await saveUser(user.api_key, {
+      username: username,
+      email: email,
+      name: displayName,
+    });
 
-    // if (res.data && res.data.status === "success") {
-    //   setUser({ ...user, ...res.data.user });
-    //   success("User settings saved!");
-    // } else {
-    //   setError(res?.data?.msg || "An error occurred while saving user settings");
-    // }
+    if (res.data && res.data.status === "success") {
+      setUser({ ...user, ...res.data.user });
+      success("User settings saved!");
+    } else {
+      setError(res?.data?.msg || "An error occurred while saving user settings");
+    }
 
     setSaving(false)
   };

@@ -112,7 +112,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
 
   const userText = useMemo(() => {
     if (curationType === "artist") {
-      const useOwnerLink = owner && owner.subscription_level === "pro" && owner.username
+      const useOwnerLink = owner && owner.username
 
       return (owner?.username && owner.username !== artist?.username) ? (
         <ToggleLink
@@ -125,7 +125,7 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
       )
         : null
     } else if (artistName) {
-      const useArtistLink = artist && artist.subscription_level === "pro" && artist.username
+      const useArtistLink = artist && artist.username
       return (
         <ToggleLink
           disabled={!useArtistLink}

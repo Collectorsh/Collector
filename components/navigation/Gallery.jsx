@@ -13,7 +13,7 @@ export default function Gallery() {
   const [user, setUser] = useContext(UserContext);
   
 
-  const isCuratorApproved = user?.curator_approved || (user?.subscription_level === "pro");
+  const isCuratorApproved = true//user?.curator_approved || (user?.subscription_level === "pro");
 
   return (
     <div className="absolute inset-y-0 right-0 flex items-center sm:static sm:inset-auto sm:pr-0 z-20">
@@ -46,7 +46,7 @@ export default function Gallery() {
             >
               <Menu.Items className="palette2 origin-top-right absolute right-0 mt-2 pt-2 w-60 overflow-hidden rounded-md shadow-md outline-none text-left">
                 <div className="px-2">
-                  {user.subscription_level === "pro" ? (
+                  
                     <Menu.Item>
                       <Link href={`/${ user.username }`} legacyBehavior>
                         <a className="block p-2 hoverPalette2 rounded-md">
@@ -54,29 +54,24 @@ export default function Gallery() {
                         </a>
                       </Link>
                     </Menu.Item>
-                  ) : (
-                    <a className="block p-2">
-                      My Gallery <span className="text-xs">(coming soon!)</span>
-                    </a>
-                  )}
-                  {isCuratorApproved ? (
-                    <>
-                      <Menu.Item>
-                        <Link href={`/mint`} legacyBehavior>
-                          <a className="block p-2 hoverPalette2 rounded-md">
-                            Mint
-                          </a>
-                        </Link>
-                      </Menu.Item>
-                      <Menu.Item>
-                        <Link href={`/submit`} legacyBehavior>
-                          <a className="block p-2 hoverPalette2 rounded-md">
-                            Submit
-                          </a>
-                        </Link>
-                      </Menu.Item>
-                    </>
-                  ) : null}
+                  
+                
+                    <Menu.Item>
+                      <Link href={`/mint`} legacyBehavior>
+                        <a className="block p-2 hoverPalette2 rounded-md">
+                          Mint
+                        </a>
+                      </Link>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <Link href={`/submit`} legacyBehavior>
+                        <a className="block p-2 hoverPalette2 rounded-md">
+                          Submit
+                        </a>
+                      </Link>
+                    </Menu.Item>
+           
+   
 
                 </div>
 

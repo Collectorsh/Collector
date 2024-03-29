@@ -146,18 +146,7 @@ export default function MainNavigation() {
                           <p className="pl-3">Home</p>
                         </Link>
                         <hr className="borderPalette3" />
-
-                        <Link href="/waitlist" passHref>
-                          <p className="pl-3">Waitlist</p>
-                        </Link>
-                        <hr className="borderPalette3"/>
-
-                 
-
-                        {/* <Link href="/about" passHref>
-                          <p className="">About</p>
-                        </Link>
-                        <hr className="borderPalette3" /> */}
+                        
                         {user
                           ? (<>
                             

@@ -83,8 +83,8 @@ export default function DetailPage({token, curations}) {
         ? token.owner_name
         : truncate(token?.owner_address, 4)
 
-  const useArtistLink = token?.artist_account?.username && token?.artist_account?.subscription_level === "pro"
-  const useOwnerLink = token?.owner_account?.username && token?.owner_account?.subscription_level === "pro"
+  const useArtistLink = token?.artist_account?.username 
+  const useOwnerLink = token?.owner_account?.username
 
   const supplyText = isMasterEdition
     ? `${ maxSupply - supply }/${ maxSupply } Editions Available`

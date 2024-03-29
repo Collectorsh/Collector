@@ -40,12 +40,10 @@ export default function MainNavigation() {
   }
 
   const getStarted = () => {
-    if (isPro) {
-      if (!user.username) router.push("/settings");
-      else router.push(`/${ user.username }`);
-    } else {
-      router.push("/waitlist");
-    }
+
+    if (!user?.username) router.push("/settings");
+    else router.push(`/${ user.username }`);
+  
   }
 
   useEffect(() => {
@@ -83,30 +81,18 @@ export default function MainNavigation() {
                 </Link>
               </div>
               <div className="hidden md:flex items-center justify-end w-full">
-                <Link href="/waitlist" legacyBehavior>
-                  <a className="mr-4 font-bold rounded-md px-3 py-1 hoverPalette1">
-                    Waitlist
-                  </a>
-                </Link>
-                {/* <button
-                  onClick={getStarted}
-                  className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1"
-                >
-                  Get Started!
-                </button> */}
-              
-
-                {/* 
-                <Link href="/about">
-                  <a className="mr-5 font-bold rounded-md px-3 py-1 hoverPalette1">
-                    About
-                  </a>
-                </Link> */}
-
-            
                 {user
-                  ? <Gallery />//<Profile />
-                  : <WalletButton className="font-bold rounded-md px-3 py-1 hoverPalette1 mr-4"/>   
+                ? <Gallery />//<Profile />
+                : (
+                  <>
+                    <Link href="/faq" legacyBehavior>
+                      <a className="mr-4 font-bold rounded-md px-3 py-1 hoverPalette1">
+                        FAQ
+                      </a>
+                    </Link>
+                    <WalletButton className="font-bold rounded-md px-3 py-1 hoverPalette1 mr-4" />   
+                  </>
+                )
               }
               
               <DarkMode />
@@ -160,43 +146,25 @@ export default function MainNavigation() {
                           <p className="pl-3">Home</p>
                         </Link>
                         <hr className="borderPalette3" />
-
-                        <Link href="/waitlist" passHref>
-                          <p className="pl-3">Waitlist</p>
-                        </Link>
-                        <hr className="borderPalette3"/>
-
-                 
-
-                        {/* <Link href="/about" passHref>
-                          <p className="">About</p>
-                        </Link>
-                        <hr className="borderPalette3" /> */}
+                        
                         {user
                           ? (<>
-                            {user.subscription_level === "pro"
-                              ? (<>
-                                <Link href={`/${ user.username }`} passHref>
-                                  <p className="pl-3">My Gallery</p>
-                                </Link>
-                                <hr className="borderPalette3" />
-                              </>)
-                              : null
-                            }
-                              
-                            {isCuratorApproved
-                              ? (<>
-                                <Link href={`/mint`} passHref>
-                                  <p className="pl-3">Mint</p>
-                                </Link>
-                                <hr className="borderPalette3" />
-                                <Link href={`/submit`} passHref>
-                                  <p className="pl-3">Submit</p>
-                                </Link>
-                                <hr className="borderPalette3" />
-                              </>)
-                              : null
-                            }
+                            
+                            <Link href={`/${ user.username }`} passHref>
+                              <p className="pl-3">My Gallery</p>
+                            </Link>
+                            <hr className="borderPalette3" />
+                      
+                            
+                            <Link href={`/mint`} passHref>
+                              <p className="pl-3">Mint</p>
+                            </Link>
+                            <hr className="borderPalette3" />
+                            <Link href={`/submit`} passHref>
+                              <p className="pl-3">Submit</p>
+                            </Link>
+                            <hr className="borderPalette3" />
+                            
                             
                           </>)
                           : (<>

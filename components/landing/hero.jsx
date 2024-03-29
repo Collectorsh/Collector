@@ -2,25 +2,39 @@ import { useRouter } from "next/router";
 import CloudinaryImage from "../CloudinaryImage";
 import MainButton from "../MainButton";
 import * as Icon from "react-feather";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import UserContext from "../../contexts/user";
 import SvgCurve from "../svgCurve";
 import { collectorBobId } from "../../config/settings";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 const LandingHero = () => { 
   const [user] = useContext(UserContext);
+  const wallet = useWallet();
+  const {setVisible}=  useWalletModal()
   const router = useRouter();
-  const isPro = user?.subscription_level === "pro";
+  const isPro = true//user?.subscription_level === "pro";
+
+  const [justConnected, setJustConnected] = useState(false)
 
   const getStarted = () => {
-    router.push("/waitlist");
-    // if (isPro) {
-    //   if (!user.username) router.push("/settings");
-    //   else router.push(`/${user.username}`);
-    // } else {
-    //   router.push("/waitlist");
-    // }
+    if (!wallet.connected) {
+      setVisible(true)
+      setJustConnected(true)
+      setTimeout(() => {
+        setJustConnected(false)
+      }, 30000) //timeout after 30 seconds
+    }
+    else if (!user?.username) router.push("/settings");
+    else router.push(`/${user?.username}`);
   }
+
+  useEffect(() => {
+    if(user?.username && wallet?.connected && justConnected) {
+      router.push(`/${user.username}`)
+    }
+  },[user, justConnected, wallet.connected, router])
 
   const scrollDown = () => { 
     document.getElementById('featuredCurations').scrollIntoView({ behavior: 'smooth'})
@@ -66,7 +80,7 @@ const LandingHero = () => {
             size="xl"
             // className="mt-8 md:mt-16 mx-auto block"
           >
-            Join Waitlist!
+            Get Started!
           </MainButton>
         </div>
 

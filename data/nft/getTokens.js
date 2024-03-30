@@ -35,7 +35,7 @@ async function getTokens(publicKeys, options) {
   const mintedIndexerTokens = []
  
   const maxBatch = 1000
-  for (const publicKey of ["6bNnb8D3RXeCbnZZsgcbsj2yGs7bDE9iQB9ZUdtNBrXB", "GvmRVidQfFBN6f3xjNZC4zpRTbwjsDJQiUSkiXrZNuvb"]) {
+  for (const publicKey of publicKeys) {
     let page = 1 // Starts at 1
     let continueFetching = true;
     while (continueFetching) {

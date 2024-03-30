@@ -137,11 +137,7 @@ export const AltMedia = ({ category, mediaUrl }) => {
   const [loaded, setLoaded] = useState(false)
   const [contentInUse, setContentInUse] = useState(null)
 
-  useEffect(() => {
-    setTimeout(() => setContentInUse(content), 50)
-    
-    return () => setContentInUse(null)
-  }, [content])
+  
 
   const content = useMemo(() => {
     switch (category) {
@@ -173,6 +169,13 @@ export const AltMedia = ({ category, mediaUrl }) => {
     }
 
   }, [category, mediaUrl])
+
+  useEffect(() => {
+    setTimeout(() => setContentInUse(content), 50)
+
+    return () => setContentInUse(null)
+  }, [content])
+  
   const preventPropAndDefault = (e) => {
     e.preventDefault();
     e.stopPropagation()

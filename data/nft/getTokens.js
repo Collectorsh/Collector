@@ -81,8 +81,11 @@ async function getTokens(publicKeys, options) {
           
           return undefined;
         });
-      
-      if (!res) break;
+    
+      if (!res || res.items.length === 0) {
+        continueFetching = false
+        break;
+      };
 
       baseTokens.push(...res?.items)
 
@@ -95,24 +98,26 @@ async function getTokens(publicKeys, options) {
     }
 
     
+    
     //get items from minted_indexer to suppliment edition data, or in case helius missed them entirely
     let indexerRes
     if (queryByCreator) {
-      indexerRes = await getMintedIndexerByCreator(publicKey)
+      indexerRes = await getMintedIndexerByCreator(publicKey) // Deprecate if no more minting on site
     } else {
-      indexerRes = await getMintedIndexerByOwner(publicKey)
+      // indexerRes = await getMintedIndexerByOwner(publicKey) //Deprecating
     }
     if (indexerRes?.mints?.length) {
       mintedIndexerTokens.push(...indexerRes.mints)
     }
   }
-
+  
   const creatorFilteredTokens = !justCreator
     ? baseTokens
     : baseTokens.filter((token) => { 
         const creatorsAddresses = token.creators.map((creator) => creator.address)
         return Boolean(creatorsAddresses.find(address => publicKeys.includes(address)))
       })
+
 
   const mungedTokens = creatorFilteredTokens.map((token) => { 
     const { content, creators, ownership, id, grouping, compression, supply } = token
@@ -121,7 +126,7 @@ async function getTokens(publicKeys, options) {
       type: file.mime
     }))
 
-    const collectionInfo = (grouping.length && grouping[0].collection_metadata) ? {
+    const collectionInfo = (grouping?.length && grouping[0].collection_metadata) ? {
       ...grouping[0].collection_metadata,
       verified: grouping[0].verified,
     } : undefined
@@ -148,10 +153,10 @@ async function getTokens(publicKeys, options) {
 
       //TODO Get from Helius when available and remove useTokenMetadata
       // parent:
-      is_edition: supply.edition_number !== undefined,
-      is_master_edition: supply.print_max_supply && supply.edition_number === undefined,
-      supply: supply.print_current_supply,
-      max_supply: supply.print_max_supply
+      is_edition: supply?.edition_number !== undefined,
+      is_master_edition: supply?.print_max_supply && supply?.edition_number === undefined,
+      supply: supply?.print_current_supply,
+      max_supply: supply?.print_max_supply
     }
   }).filter((item) => {
     const notUsable = !item.uri || !item.artist_address || !item.mint || !item.image
@@ -259,7 +264,7 @@ async function getTokens(publicKeys, options) {
 export default getTokens;
 
 const fetcher = async ({ publicKeys, options }) => {
-  if(!publicKeys) return undefined
+  if(!publicKeys) return null
   return await getTokens(publicKeys, options)
 }
 
@@ -269,7 +274,7 @@ export function useTokens(publicKeys, options) {
   const tokens = useMemo(() => !data ? undefined : data.sort((a, b) => a.name.localeCompare(b.name)), [data]);
 
   const [fetched, setFetched] = useState(0)
-  const loading = !data && !error || fetched > 0
+  const loading = !data && !error// || fetched > 0
 
 
   // const [user] = useContext(UserContext);

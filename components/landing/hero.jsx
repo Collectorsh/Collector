@@ -22,9 +22,6 @@ const LandingHero = () => {
     if (!wallet.connected) {
       setVisible(true)
       setJustConnected(true)
-      setTimeout(() => {
-        setJustConnected(false)
-      }, 30000) //timeout after 30 seconds
     }
     else if (!user?.username) router.push("/settings");
     else router.push(`/${user?.username}`);

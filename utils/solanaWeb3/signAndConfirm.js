@@ -25,6 +25,8 @@ export const signAndConfirmTx = async ({
 
   let signature;
 
+
+
   try {
     signature = await sendAndConfirmRawTransaction(connection, signedTx.serialize(), { commitment, skipPreflight })
   } catch (err) {

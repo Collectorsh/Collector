@@ -22,7 +22,7 @@ export default function TestPage() {
 
   async function getEditionMarket() {
 
-    const marketPubkey = new PublicKey("CHE8uSAGLqcfg9SKVgPA8apdLzZaSbiFBDzyYNbSurWV"); 
+    const marketPubkey = new PublicKey("FeMGT2sspzCVy6nbj6kXwRcCW4JmjRcpvW2XNHWUmj1R"); 
 
     const marketAccount = await connection.getAccountInfo(marketPubkey);
     const [marketData] = Market.deserialize(marketAccount?.data);

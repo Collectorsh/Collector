@@ -85,7 +85,7 @@ export const LandingCurationItemPlaceholder = () => {
               <rect className="w-full h-full" />
             </ContentLoader>
           </div>
-          <div className={clsx("font-bold h-7 w-24 text-center mt-2 mx-auto rounded-md")}>
+          <div className={clsx("font-bold h-8 w-24 text-center mt-2 mx-auto rounded-md")}>
             <ContentLoader
               title=""
               speed={2}
@@ -100,7 +100,7 @@ export const LandingCurationItemPlaceholder = () => {
 
       <div>
         <div className={clsx("flex gap-2 items-center justify-center rounded-md w-fit mx-auto mt-1")}>
-          <div className="w-6 h-6 object-cover rounded-full">
+          <div className="w-7 h-7 object-cover rounded-full">
             <ContentLoader
               title=""
               speed={2}
@@ -111,7 +111,7 @@ export const LandingCurationItemPlaceholder = () => {
               <rect className="w-full h-full rounded-full" />
             </ContentLoader>
           </div>
-          <div className="h-4 w-14">
+          <div className="h-5 w-14">
             <ContentLoader
               title=""
               speed={2}

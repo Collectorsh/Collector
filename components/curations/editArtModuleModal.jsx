@@ -21,6 +21,7 @@ import AddTokenButton from "./addTokenButton";
 import Checkbox from "../checkbox";
 
 import * as Icon from "react-feather";
+import { generateArrayAroundNumber } from "../../utils/maths";
 
 
 export default function EditArtModuleModal({
@@ -500,28 +501,7 @@ export default function EditArtModuleModal({
       </div>
     )
 
-  function generateArrayAroundNumber(num, lowerBound = 0, upperBound = Math.floor(availableTokens.length / perPage)) {
-    // Ensure the given number is within bounds
-    num = Math.max(lowerBound, Math.min(num, upperBound));
 
-    let start = num;
-    let end = num;
-
-    // Extend the range to include up to two numbers on either side of num,
-    // prioritizing filling the range towards the upper bound first.
-    while ((end - start) < 4 && (start > lowerBound || end < upperBound)) {
-      if (start > lowerBound) start--;
-      if ((end - start) < 4 && end < upperBound) end++;
-    }
-
-    // Generate the array
-    const result = [];
-    for (let i = start; i <= end; i++) {
-      result.push(i);
-    }
-
-    return result;
-  }
   
   const pagination = (
     <div className="relative mx-auto w-fit">
@@ -543,7 +523,11 @@ export default function EditArtModuleModal({
         {/* <p className="px-1 leading-none">
           {page + 1} / {Math.floor(availableTokens.length / perPage) + 1}
         </p> */}
-        {generateArrayAroundNumber(page).map((num, i) => (
+        {generateArrayAroundNumber({
+          num: page,
+          lowerBound: 0,
+          upperBound: Math.floor(availableTokens.length / perPage)
+        }).map((num, i) => (
           <button
             key={i}
             className={clsx(

@@ -136,7 +136,7 @@ export default function Discover() {
         <>
           <Listbox.Button className="text-current 
                     w-full h-fit flex justify-between items-center gap-2 flex-shrink-0
-                    px-3.5 py-2 outline-none rounded-md border-2 bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 hoverPalette1
+                    px-3.5 py-2 outline-none rounded-md border-2 bg-neutral-200 border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 hoverPalette1
                   "
           >
             <p className="">

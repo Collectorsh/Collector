@@ -11,8 +11,18 @@ import * as Icon from "react-feather";
 import { RoundedCurve } from "../components/curations/roundedCurveSVG";
 import { generateArrayAroundNumber } from "../utils/maths";
 import clsx from "clsx";
+import { Listbox, Transition } from "@headlessui/react";
 
 const totalPerPage = 12
+
+const orderByOptions = [
+  { name: "Most Recent", value: "recent" },
+  { name: "Oldest", value: "oldest" },
+  { name: "A to Z", value: "a-z" },
+  { name: "Z to A", value: "z-a" },
+  // { name: "most-sales", value: "most-sales" },
+  // { name: "popular", value: "popular" }
+]
 
 export default function Discover() {
   const [search, setSearch] = useState();
@@ -53,6 +63,11 @@ export default function Discover() {
     }
     setSearching(false)
   }
+  const handleOrderChange = (value) => {
+    setSearch("")
+    setOrderBy(value)
+    setPage(0)
+  }
 
   const curations = searchResults?.length
     ? searchResults
@@ -68,7 +83,7 @@ export default function Discover() {
 
   const pagination = (
     <div className="relative mx-auto w-fit my-4">
-      <div className="bg-neutral-300 dark:bg-neutral-700 h-7 flex justify-center items-center px-6 py-4 font-bold text-small rounded-full">
+      <div className="bg-neutral-300 dark:bg-neutral-700 h-7 flex justify-center items-center px-4 py-4 font-bold text-small rounded-full">
         <button
           className="rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300"
           onClick={() => setPage(0)}
@@ -114,16 +129,62 @@ export default function Discover() {
       <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-7 fill-neutral-300 dark:fill-neutral-700 rotate-180" /> */}
     </div>
   )
+
+  const orderDropDown = (
+    <Listbox value={orderBy} onChange={handleOrderChange}>
+      {({ open }) => (
+        <>
+          <Listbox.Button className="text-current 
+                    w-full h-fit flex justify-between items-center gap-2 flex-shrink-0
+                    px-3.5 py-2 outline-none rounded-md border-2 bg-neutral-100 border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 hoverPalette1
+                  "
+          >
+            <p className="">
+              {orderByOptions.find(option => option.value === orderBy)?.name || "Order By"}
+            </p>
+            <Icon.ChevronDown size={20} strokeWidth={2.5} className={clsx("duration-300", open && "rotate-180")} />
+          </Listbox.Button>
+          <Transition
+            className="relative z-10"
+            enter="transition duration-100 ease-out"
+            enterFrom="transform scale-95 opacity-0"
+            enterTo="transform scale-100 opacity-100"
+            leave="transition duration-75 ease-out"
+            leaveFrom="transform scale-100 opacity-100"
+            leaveTo="transform scale-95 opacity-0"
+          >
+            <Listbox.Options className="mt-2 absolute top-0 left-0 w-full palette2 p-2 rounded shadow z-30">
+                {orderByOptions.map((option) => (
+                  <Listbox.Option key={option.value} value={option.value}>
+                    <div
+                      className={clsx(
+                        "p-2 flex gap-1 items-center w-full cursor-pointer rounded",
+                        'hoverPalette2'
+                      )}
+                    >
+                      <p>
+                        {option.name}
+                      </p>
+                    </div>
+                  </Listbox.Option>
+                ))}
+
+            </Listbox.Options>
+          </Transition>
+        </>
+      )}
+    </Listbox>
+  )
   return (
     <>
       <MainNavigation />
 
       <div className="relative w-full max-w-screen-2xl  mx-auto px-6 sm:px-11 pt-12 pb-28" >
         <h2 className="text-5xl font-bold mb-5">Discover</h2>
-        <div className="flex justify-between items-center">
+        <div className="grid md:grid-cols-[2fr_auto] gap-2">
           <div className="flex gap-2 w-full">
             <SearchBar
-              className="w-full max-w-[20rem] bg-neutral-200 dark:bg-neutral-900 flex-shrink-0"
+              className="w-full max-w-[20rem] bg-neutral-200 dark:bg-neutral-900"
               search={search}
               setSearch={setSearch}
               onEnter={handleSearch}
@@ -140,8 +201,8 @@ export default function Discover() {
               }
             </MainButton>
           </div>
-          <div className="w-20">
-            order by
+          <div className="w-48 relative place-self-end">
+            {orderDropDown}
           </div>
         </div>
         <hr className="mt-6 mb-12 borderPalette2" />

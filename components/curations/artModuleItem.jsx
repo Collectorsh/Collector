@@ -298,8 +298,8 @@ const ArtItem = ({ token, artist, handleCollect, height, width, curationType, ow
                           </span>
                         )
                         : isSold
-                        ? <p>Sold{isMasterEdition ? " Out" : ""} {roundToPrecision(price, 2)}◎</p>
-                        : <p>Collect {roundToPrecision(price, 2)}◎</p>
+                        ? <p>Sold{isMasterEdition ? " Out" : ""} {roundToPrecision(price, 3)}◎</p>
+                        : <p>Collect {roundToPrecision(price, 3)}◎</p>
                       }
                
                     </MainButton>

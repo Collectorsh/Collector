@@ -23,7 +23,7 @@ const RpcHealthFeedback = () => {
       <div className="relative bg-amber-400 p-1.5 px-2 sm:px-0 w-full sm:w-fit grid grid-cols-[1fr_auto]">
         <p className="text-center text-sm text-neutral-800">
           {/* Transactions may be delayed or fail due to network issues. We appreciate your understanding. */}
-          Transactions may fail due to network congestion. We appreciate your understanding.
+          Solana is experiencing network congestion. Please retry failed transactions.
         </p>
         <button
           onClick={() => setShow(false)}

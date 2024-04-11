@@ -1,208 +1,230 @@
+import MainButton from "../components/MainButton";
+import SearchBar from "../components/SearchBar";
 import MainNavigation from "../components/navigation/MainNavigation";
-import ContentLoader from "react-content-loader";
-import Link from "next/link";
-import { useAllGalleries } from "../data/home/getAllGalleries";
-import { useEffect, useRef, useState } from "react";
-import debounce from "lodash.debounce";
-
-import CloudinaryImage from "../components/CloudinaryImage";
-import NotFound from "../components/404";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { searchPublishedCurations } from "../data/curation/searchCurations";
+import { Oval } from "react-loader-spinner";
+import LandingCurationItem, { LandingCurationItemPlaceholder } from "../components/landing/curationItem";
+import useSWR from 'swr'
+import { getAllPublished } from "../data/curation/getAllPublished";
+import * as Icon from "react-feather";
+import { RoundedCurve } from "../components/curations/roundedCurveSVG";
+import { generateArrayAroundNumber } from "../utils/maths";
+import clsx from "clsx";
+import { Listbox, Transition } from "@headlessui/react";
 
 const totalPerPage = 12
 
+const orderByOptions = [
+  { name: "Most Recent", value: "recent" },
+  { name: "Oldest", value: "oldest" },
+  { name: "A to Z", value: "a-z" },
+  { name: "Z to A", value: "z-a" },
+  { name: "Sales (High to Low)", value: "most-sales" },
+  // { name: "Most Viewed", value: "popular" }
+]
+
 export default function Discover() {
-  return <NotFound />; //DEPRECATED - TO BE DELETED
-  const searchRef = useRef()
   const [search, setSearch] = useState();
-  const [page, setPage] = useState(1);
-  const {galleries, total} = useAllGalleries(page, totalPerPage, search)
+  const [page, setPage] = useState(0);
+  const [searchResults, setSearchResults] = useState(null);
+  const [searching, setSearching] = useState(false);
+  const [orderBy, setOrderBy] = useState("recent"); //"recent", "a-z", "z-a", "oldest", "most-sales"? "popular"?
+  const [pages, setPages] = useState([0, 1, 2, 3, 4])
+  const { data, error } = useSWR({ page: page + 1, perPage: totalPerPage, orderBy }, getAllPublished)
 
+  const discoverResults = data?.curation_results;
+  const total = data?.total
   const totalPages = Math.ceil(total / totalPerPage)
+
+
+
+  useEffect(() => {
+    if (!search) setSearchResults(null)
+  }, [search])
   
-  const searchDebounce = debounce((text) => {
-    setSearch(text);
-    setPage(1)
-  }, 300)
-
-  const handleSearch = (e) => {
-    searchDebounce(e.target.value);
-  }
-
-  const loadingCards = () => {
-    return Array.from({ length: totalPerPage }, (_, index) => (
-      <div className="" key={index}>
-        <div
-          className="bg-neutral-300/20 lg:shadow-lg rounded-xl relative p-3 mx-auto"
-        >
-          <ContentLoader
-            speed={2}
-            className="w-full mb-4 h-[250px] rounded-lg"
-            backgroundColor="rgba(120,120,120,0.2)"
-            foregroundColor="rgba(120,120,120,0.1)"
-          >
-            <rect className="w-full h-full" />
-          </ContentLoader>
-          <ContentLoader
-            speed={2}
-            className="w-full h-8 mt-2"
-            backgroundColor="rgba(120,120,120,0.2)"
-            foregroundColor="rgba(120,120,120,0.1)"
-          >
-            <circle cx="16" cy="16" r="16" />
-            <rect x="46" y="5" className="w-[80%] h-3/4" rx="4" />
-          </ContentLoader>
-        </div>
-      </div>
-    ))
-  }
-
-  const imageCards = () => {
-    return galleries.map((item, index) => {
-      return <ImageCard key={item.mint} item={item}/>
+  useEffect(() => {
+    if(!total) return
+    const genPages = generateArrayAroundNumber({
+      num: page,
+      lowerBound: 0,
+      upperBound: Math.floor(total / totalPerPage)
     })
+    setPages(genPages)
+  }, [page, total]) 
+
+  const handleSearch = async () => {
+    setSearching(true)
+    const results = await searchPublishedCurations(search)
+    if (results?.curation_results) {
+      setSearchResults(results.curation_results)
+    } else {
+      setSearchResults([])
+    }
+    setSearching(false)
+  }
+  const handleOrderChange = (value) => {
+    setSearch("")
+    setOrderBy(value)
+    setPage(0)
   }
 
+  const curations = searchResults?.length
+    ? searchResults
+    : discoverResults
+  
+  const curationContent = curations?.length
+    ? curations.map(curation => (
+      <LandingCurationItem
+        key={curation.id}
+        curation={curation}
+      />))
+    : Array.from({ length: totalPerPage }).map((_, i) => <LandingCurationItemPlaceholder key={i} />)
+
+  const pagination = (
+    <div className="relative mx-auto w-fit my-8">
+      <div className="bg-neutral-300 dark:bg-neutral-700 h-7 flex justify-center items-center px-4 py-4 font-bold text-small rounded-full">
+        <button
+          className="rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300"
+          onClick={() => setPage(0)}
+          disabled={page === 0}
+        >
+          <Icon.ChevronsLeft />
+        </button>
+        <button
+          className="rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300"
+          onClick={() => setPage(prev => prev - 1)}
+          disabled={page === 0}
+        >
+          <Icon.ChevronLeft />
+        </button>
+        {pages.map((num, i) => (
+          <button
+            key={i}
+            className={clsx(
+              "rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none w-7 h-7 hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300",
+              num === page ? "bg-neutral-200 dark:bg-neutral-800" : ""
+            )}
+            onClick={() => setPage(num)}
+          >
+            {num + 1}
+          </button>
+        ))}
+        <button
+          className="rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300"
+          onClick={() => setPage(prev => prev + 1)}
+          disabled={page >= Math.floor(total / totalPerPage)}
+        >
+          <Icon.ChevronRight />
+        </button>
+        <button
+          className="rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300"
+          onClick={() => setPage(Math.floor(total / totalPerPage))}
+          disabled={page >= Math.floor(total / totalPerPage)}
+        >
+          <Icon.ChevronsRight />
+        </button>
+      </div>
+      {/* <RoundedCurve className="absolute bottom-0 -right-10 w-10 h-7 fill-neutral-300 dark:fill-neutral-700 transform scale-x-[-1] rotate-180" />
+      <RoundedCurve className="absolute bottom-0 -left-10 w-10 h-7 fill-neutral-300 dark:fill-neutral-700 rotate-180" /> */}
+    </div>
+  )
+
+  const orderDropDown = (
+    <Listbox value={orderBy} onChange={handleOrderChange}>
+      {({ open }) => (
+        <>
+          <Listbox.Button className="text-current 
+                    w-full h-fit flex justify-between items-center gap-2 flex-shrink-0
+                    px-3.5 py-2 outline-none rounded-md border-2 bg-neutral-200 border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 hoverPalette1
+                  "
+          >
+            <p className="">
+              {orderByOptions.find(option => option.value === orderBy)?.name || "Order By"}
+            </p>
+            <Icon.ChevronDown size={20} strokeWidth={2.5} className={clsx("duration-300", open && "rotate-180")} />
+          </Listbox.Button>
+          <Transition
+            className="relative z-10"
+            enter="transition duration-100 ease-out"
+            enterFrom="transform scale-95 opacity-0"
+            enterTo="transform scale-100 opacity-100"
+            leave="transition duration-75 ease-out"
+            leaveFrom="transform scale-100 opacity-100"
+            leaveTo="transform scale-95 opacity-0"
+          >
+            <Listbox.Options className="mt-2 absolute top-0 left-0 w-full palette2 p-2 rounded shadow z-30">
+                {orderByOptions.map((option) => (
+                  <Listbox.Option key={option.value} value={option.value}>
+                    <div
+                      className={clsx(
+                        "p-2 flex gap-1 items-center w-full cursor-pointer rounded",
+                        'hoverPalette2'
+                      )}
+                    >
+                      <p>
+                        {option.name}
+                      </p>
+                    </div>
+                  </Listbox.Option>
+                ))}
+
+            </Listbox.Options>
+          </Transition>
+        </>
+      )}
+    </Listbox>
+  )
   return (
-    <div>
+    <>
       <MainNavigation />
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 clear-both">
-        <div className="mx-auto pt-3 md:px-0">
-          <h2 className="mt-8 mb-12 text-5xl font-semibold text-neutral-800 w-full py-1 inline-block dark:text-white">
-            Discover
-          </h2>
-          <div className="grid content-center gap-2 md:grid-cols-3">
-            <div className="flex items-center justify-between gap-1 border-black dark:border-white border-2 rounded-md p-2 mb-4 ">
-              <input
-                ref={searchRef}
-                className="border-none bg-transparent w-full outline-none"
-                placeholder="Search by Username"
-                onChange={handleSearch}
-                onKeyDown={(e) => {
-                  if (e.key === "Escape") {
-                    setSearch("")
-                    e.target.value = ""
-                  }
-                }}
-              />
-              {search
-                ? (
-                  <button
-                    onClick={() => {
-                      setSearch("")
-                      if (searchRef.current) {
-                        searchRef.current.value = ""
-                      }
-                    }}
-                  >
-                    {/* <XCircleIcon className="fill-black dark:fill-white" width={20} height={20} /> */}
-                  </button>
-                )
-                : null
+
+      <div className="relative w-full max-w-screen-2xl  mx-auto px-6 sm:px-11 pt-12 pb-28" >
+        <h2 className="text-5xl font-bold ">Discover</h2>
+        <hr className="mt-6 mb-10 borderPalette2" />
+        <div className="grid md:grid-cols-[2fr_auto] gap-2 mb-8">
+          <div className="flex gap-2 w-full">
+            <SearchBar
+              className="w-full max-w-[20rem] bg-neutral-200 dark:bg-neutral-900"
+              search={search}
+              setSearch={setSearch}
+              onEnter={handleSearch}
+              placeholder="Curation or curator name"
+            />
+            <MainButton
+              onClick={handleSearch}
+              solid
+              className="w-[5.65rem] flex justify-center items-center"
+            >
+              {searching
+                ? <Oval color="#FFF" secondaryColor="#666" height={22} width={22} strokeWidth={2.5}/>
+                : "Search"
               }
-            </div>
-            <div className="mb-4 flex justify-center items-center gap-2">
-              <button
-               className="disabled:invert-[0.5]"
-                disabled={Boolean(page === 1)}
-                onClick={() => setPage(1)}
-              >
-                {/* <ChevronDoubleLeftIcon className="fill-black dark:fill-white" width={16} height={16} /> */}
-              </button>
-              <button
-                className="disabled:invert-[0.5]"
-                disabled={Boolean(page === 1)}
-                onClick={() => setPage(prev => prev-1)}
-              >
-                {/* <ArrowLeftIcon className="fill-black dark:fill-white" width={16} height={16}/> */}
-              </button>
-
-              {total ? <span className="mx-2">{page} / {total ? totalPages : "..."}</span> : null}
-
-              <button
-                className="disabled:invert-[0.5]"
-                disabled={Boolean(page >= totalPages)}
-                onClick={() => setPage(prev => prev+1)}
-              >
-                {/* <ArrowRightIcon className="fill-black dark:fill-white" width={16} height={16} /> */}
-              </button>
-              <button
-                 className="disabled:invert-[0.5]"
-                disabled={Boolean(page >= totalPages)}
-                onClick={() => setPage(totalPages)}
-              >
-                {/* <ChevronDoubleRightIcon className="fill-black dark:fill-white" width={16} height={16} /> */}
-              </button>
-            </div>
-
-            <div />
+            </MainButton>
           </div>
-
-
-          {galleries && !total
-            ? (
-              <div className="w-full h-full flex items-center justify-center">
-                <p className="text-center mt-10">Sorry, we were not able to find any results 🥲</p>
-              </div>
-            )
-            : null
-          }
-          <div className="pb-3 gap-3 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {galleries
-              ? imageCards()
-              : loadingCards()
-            }
+          <div className="w-52 relative place-self-end">
+            {orderDropDown}
           </div>
         </div>
+       
+
+        {searchResults && !searchResults.length
+          ? (
+            <div className="h-full flex items-center justify-center">
+              <p className="text-xl font-bold">
+                Sorry, no curations found for &quot;{search}&quot;
+              </p>
+            </div>
+          )
+          : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-6">
+              {curationContent}
+            </div>
+          )
+        }
+        {pagination}
       </div>
-    </div>
+    </>
   )
 }
 
-const ImageCard = ({ item }) => {
-  return (
-    <div key={item.image} className="">
-      <div
-        className="bg-neutral-300/20 sm:shadow-lg rounded-xl overflow-hidden relative p-3 mx-auto"
-      >
-        <div className="mb-4 relative h-[250px]">
-          <Link href={`/${ item.username }`} legacyBehavior>
-            <a>
-              <CloudinaryImage
-                // id={`${ process.env.NEXT_PUBLIC_CLOUDINARY_NFT_FOLDER }/${ item.mint }`}
-                // mint={item.mint}
-                token={token}
-                width={700}
-                noLazyLoad
-                useUploadFallback
-                className="flex-shrink-0 w-full h-full object-cover rounded-lg"
-              />
-            </a>
-          </Link>
-        </div>
-        <div className="mt-2">
-          <Link href={`/${ item.username }`} legacyBehavior>
-            <a>
-              {/* {item.twitter_profile_image && (
-                <img
-                  src={item.twitter_profile_image}
-                  className="w-8 h-8 mr-1.5 rounded-full float-left"
-                  onError={(e) => {
-                    e.target.className = "hidden"
-                  }}
-                />
-              )} */}
-
-              <div className="mt-2">
-                {item.username && (
-                  <p className="inline font-bold leading-7">
-                    {item.username}
-                  </p>
-                )}
-              </div>
-            </a>
-          </Link>
-        </div>
-      </div>
-    </div>
-  )
-}

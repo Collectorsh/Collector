@@ -20,8 +20,8 @@ const orderByOptions = [
   { name: "Oldest", value: "oldest" },
   { name: "A to Z", value: "a-z" },
   { name: "Z to A", value: "z-a" },
-  // { name: "most-sales", value: "most-sales" },
-  // { name: "popular", value: "popular" }
+  { name: "Sales", value: "most-sales" },
+  { name: "Most Viewed", value: "popular" }
 ]
 
 export default function Discover() {

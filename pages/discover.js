@@ -20,7 +20,7 @@ const orderByOptions = [
   { name: "Oldest", value: "oldest" },
   { name: "A to Z", value: "a-z" },
   { name: "Z to A", value: "z-a" },
-  { name: "Sales", value: "most-sales" },
+  { name: "Sales (High to Low)", value: "most-sales" },
   // { name: "Most Viewed", value: "popular" }
 ]
 
@@ -82,7 +82,7 @@ export default function Discover() {
     : Array.from({ length: totalPerPage }).map((_, i) => <LandingCurationItemPlaceholder key={i} />)
 
   const pagination = (
-    <div className="relative mx-auto w-fit my-4">
+    <div className="relative mx-auto w-fit my-8">
       <div className="bg-neutral-300 dark:bg-neutral-700 h-7 flex justify-center items-center px-4 py-4 font-bold text-small rounded-full">
         <button
           className="rounded-full p-0.5 disabled:opacity-50 disabled:pointer-events-none hover:bg-neutral-200 dark:hover:bg-neutral-800 duration-300"
@@ -180,8 +180,9 @@ export default function Discover() {
       <MainNavigation />
 
       <div className="relative w-full max-w-screen-2xl  mx-auto px-6 sm:px-11 pt-12 pb-28" >
-        <h2 className="text-5xl font-bold mb-5">Discover</h2>
-        <div className="grid md:grid-cols-[2fr_auto] gap-2">
+        <h2 className="text-5xl font-bold ">Discover</h2>
+        <hr className="mt-6 mb-10 borderPalette2" />
+        <div className="grid md:grid-cols-[2fr_auto] gap-2 mb-8">
           <div className="flex gap-2 w-full">
             <SearchBar
               className="w-full max-w-[20rem] bg-neutral-200 dark:bg-neutral-900"
@@ -201,11 +202,11 @@ export default function Discover() {
               }
             </MainButton>
           </div>
-          <div className="w-48 relative place-self-end">
+          <div className="w-52 relative place-self-end">
             {orderDropDown}
           </div>
         </div>
-        <hr className="mt-6 mb-12 borderPalette2" />
+       
 
         {searchResults && !searchResults.length
           ? (

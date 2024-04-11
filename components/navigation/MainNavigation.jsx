@@ -80,7 +80,13 @@ export default function MainNavigation() {
                   
                 </Link>
               </div>
-              <div className="hidden md:flex items-center justify-end w-full">
+            <div className="hidden md:flex items-center justify-end w-full">
+              
+              <Link href="/discover" legacyBehavior>
+                <a className="mr-4 font-bold rounded-md px-3 py-1 hoverPalette1">
+                  Discover
+                </a>
+              </Link>
                 {user
                 ? <Gallery />//<Profile />
                 : (
@@ -144,6 +150,11 @@ export default function MainNavigation() {
                       
                         <Link href="/" passHref>
                           <p className="pl-3">Home</p>
+                        </Link>
+                        <hr className="borderPalette3" />
+
+                        <Link href="/discover" passHref>
+                          <p className="pl-3">Discover</p>
                         </Link>
                         <hr className="borderPalette3" />
                         

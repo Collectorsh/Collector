@@ -7,6 +7,7 @@ import { LedgerWalletAdapter } from "@solana/wallet-adapter-ledger";
 import { SolflareWalletAdapter } from "@solana/wallet-adapter-solflare";
 import { useCallback, useMemo } from "react";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
+import { clusterApiUrl } from "@solana/web3.js";
 
 export const WalletContextProvider = ({ children }) => {
   // Can be set to 'devnet', 'testnet', or 'mainnet-beta'
@@ -14,6 +15,7 @@ export const WalletContextProvider = ({ children }) => {
 
   // You can also provide a custom RPC endpoint
   // const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  // console.log("🚀 ~ WalletContextProvider ~ endpoint:", endpoint)
 
   const endpoint = process.env.NEXT_PUBLIC_RPC;
 
@@ -28,7 +30,7 @@ export const WalletContextProvider = ({ children }) => {
       // new LedgerWalletAdapter(),
     ],
     []
-  );
+  ); 
 
   const onError = useCallback((error) => {
     console.error(error);

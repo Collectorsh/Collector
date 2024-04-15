@@ -5,6 +5,7 @@ import crypto from 'crypto'
 import { formatRSAPrivateKey } from "../../../utils/formatRSA";
 import { platformWithdrawalPubkey } from "./createCuration";
 import getKeyHash from "../../../data/key_hash/getHash";
+import { signAndConfirmTxWithKeypairs } from "../../../utils/solanaWeb3/signAndConfirm";
 
 export default async function handler(req, res) {
   const { auctionHouseAddress, keyHashName } = req.body;
@@ -58,11 +59,10 @@ export default async function handler(req, res) {
     );
 
     // Sign transaction, broadcast, and confirm
-    const signature = await sendAndConfirmTransaction(
-      connection,
-      withdrawTX,
-      [authorityKeypair],
-    );
+    const signature = await signAndConfirmTxWithKeypairs({
+      tx: withdrawTX,
+      keypairs: [authorityKeypair],
+    });
 
     console.log("Withdrew from authority, signature:", signature)
 

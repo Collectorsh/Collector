@@ -27,7 +27,7 @@ export const signAndConfirmTx = async ({
 
   signature = await connection.sendRawTransaction(signedTx.serialize(), { commitment, skipPreflight });
   let final = await txFinalized(signature);
-
+  
   //Second try
   if (final !== "finalized") {
     await new Promise(_ => setTimeout(_, 3000));
@@ -40,26 +40,43 @@ export const signAndConfirmTx = async ({
     warning("Your transaction didn't go through. Please try again.")
   }
 
-
-
-  //OLD WAY
-  // try {
-  //   signature = await sendAndConfirmRawTransaction(connection, signedTx.serialize(), { commitment, skipPreflight })
-  // } catch (err) {
-  //   console.log(err)
-  //   if (err.message.includes("not confirmed")) {
-  //     warning("Your transaction didn't go through. Please try again.")
-  //   } else {
-  //     throw new Error(err)
-  //   }
-  // }
-
-  // if (!signature) throw new Error(errorMessage)
+  if (!signature) throw new Error(errorMessage)
   return signature;
 }
 
 export const timeoutError = "Transaction timed out. Please try again."
 
+
+export async function signAndConfirmTxWithKeypairs({
+  tx,
+  keypairs,
+  commitment = "finalized",
+}) {
+  let signature = await connection.sendTransaction(
+    tx,
+    keypairs,
+    { commitment}
+  );
+
+  let final = await txFinalized(signature);
+
+  //Second try
+  if (final !== "finalized") {
+    await new Promise(_ => setTimeout(_, 3000));
+    signature = await connection.sendTransaction(
+      tx,
+      keypairs,
+      { commitment: 'finalized' }
+    );
+    final = await txFinalized(signature);
+  }
+
+  if (final !== "finalized") {
+    throw new Error("Your transaction didn't go through. Please try again.")
+  }
+  
+  return signature;
+}
 
 // verifies finalized status of signature
 // https://github.com/McDegens-DAO/txFinalized/blob/main/README.md

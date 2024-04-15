@@ -1,12 +1,12 @@
 import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
-import { connection } from "/config/settings";
+import { connection } from "../../../config/settings";
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, Transaction, sendAndConfirmTransaction, SystemProgram, Connection, sendAndConfirmRawTransaction } from "@solana/web3.js";
 import { formatRSAPrivateKey, formatRSAPublicKey } from "../../../utils/formatRSA";
 import getKeyHash from "../../../data/key_hash/getHash";
 import apiClient from "../../../data/client/apiClient";
 import crypto from 'crypto'
 import { getPriorityFeeInstruction, makeTxWithPriorityFeeFromMetaplexBuilder } from "../../../utils/solanaWeb3/priorityFees";
-import { signAndConfirmTx } from "../../../utils/solanaWeb3/signAndConfirm";
+import { signAndConfirmTx, signAndConfirmTxWithKeypairs, txFinalized } from "../../../utils/solanaWeb3/signAndConfirm";
 
 export const PLATFORM_FEE_POINTS = 500 //5%
 export const MAX_CURATOR_FEE_POINTS = 7500 //75%
@@ -30,12 +30,11 @@ const fundAccount = async (fundingKeypair, recipientPubkey, lamportsToFund = AUT
   fundingTX.add(priorityFeeIx)
 
   // Sign transaction, broadcast, and confirm
-  const signature = await sendAndConfirmTransaction(
-    connection,
-    fundingTX,
-    [fundingKeypair],
-    { commitment: 'finalized' }
-  );
+
+  let signature = await signAndConfirmTxWithKeypairs({
+    tx: fundingTX,
+    keypairs: [fundingKeypair],
+  });
 
   console.log(`Funds sent to ${ recipientPubkey.toString() }`);
   console.log(`tx hash: ${ signature }`);
@@ -97,12 +96,10 @@ export default async function handler(req, res) {
 
     const createAuctionHouseTx = await makeTxWithPriorityFeeFromMetaplexBuilder(auctionHouseBuilder, authorityKeypair.publicKey)
     
-    const signature = await sendAndConfirmTransaction(
-      connection,
-      createAuctionHouseTx,
-      [authorityKeypair],
-      { commitment: 'finalized' }
-    );
+    let signature = await signAndConfirmTxWithKeypairs({
+      tx: createAuctionHouseTx,
+      keypairs: [authorityKeypair],
+    });
 
     console.log("createCuration ~ signature:", signature)
     console.log("Auction house created:", auctionHouseAddress.toString())

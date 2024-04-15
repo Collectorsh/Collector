@@ -5,6 +5,7 @@ import crypto from 'crypto'
 import { formatRSAPrivateKey } from "../../../utils/formatRSA";
 import { PLATFORM_FEE_POINTS, platformWithdrawalPubkey } from "./createCuration";
 import { getPriorityFeeInstruction } from "../../../utils/solanaWeb3/priorityFees";
+import { signAndConfirmTxWithKeypairs } from "../../../utils/solanaWeb3/signAndConfirm";
 
 export const getSplitBalance = async (connection, treasuryAccountAddress, curatorFee) => {
   const balanceLamports = await connection.getBalance(new PublicKey(treasuryAccountAddress));
@@ -98,11 +99,11 @@ export default async function handler(req, res) {
     withdrawTX.add(priorityFeeIx)
       
     // Sign transaction, broadcast, and confirm
-    const signature = await sendAndConfirmTransaction(
-      connection,
-      withdrawTX,
-      [authorityKeypair],
-    );
+    const signature = await signAndConfirmTxWithKeypairs({
+      tx: withdrawTX,
+      keypairs:[authorityKeypair],
+    });
+    
     console.log("Withdrew from authority, signature:", signature )
 
     return res.status(200).json({ status: "success" });

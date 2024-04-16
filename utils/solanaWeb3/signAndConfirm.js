@@ -52,13 +52,11 @@ export async function signAndConfirmTxWithKeypairs({
   keypairs,
   commitment = "finalized",
 }) {
-  console.log("sending")
   let signature = await connection.sendTransaction(
     tx,
     keypairs,
     { commitment}
   );
-  console.log("sent")
 
   let final = await txFinalized(signature);
 

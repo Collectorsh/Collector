@@ -52,17 +52,23 @@ export async function signAndConfirmTxWithKeypairs({
   keypairs,
   commitment = "finalized",
 }) {
+  console.log("sending")
   let signature = await connection.sendTransaction(
     tx,
     keypairs,
     { commitment}
   );
+  console.log("sent")
 
   let final = await txFinalized(signature);
 
   //Second try
   if (final !== "finalized") {
     await new Promise(_ => setTimeout(_, 3000));
+    const block = await connection.getLatestBlockhash();
+    withdrawTX.recentBlockhash = block.blockhash
+    tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+
     signature = await connection.sendTransaction(
       tx,
       keypairs,
@@ -74,7 +80,7 @@ export async function signAndConfirmTxWithKeypairs({
   if (final !== "finalized") {
     throw new Error("Your transaction didn't go through. Please try again.")
   }
-  
+
   return signature;
 }
 

@@ -89,7 +89,7 @@ export default function FaqPage() {
         <QuestionAnswer
           question="Who’s the team behind Collector?"
           answer={<p className="flex gap-1">
-            <a href="https://twitter.com/EV3RETH" target="_blank" rel="noreferrer" className="underline inline-block">EV3 </a>
+            <a href="https://twitter.com/EV3_art" target="_blank" rel="noreferrer" className="underline inline-block">EV3 </a>
             &
             <a href="https://twitter.com/N8Solomon" target="_blank" rel="noreferrer" className="underline inline-block"> Nate</a>
           </p>

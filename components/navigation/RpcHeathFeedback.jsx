@@ -7,7 +7,8 @@ import * as Icon from 'react-feather'
 const RpcHealthFeedback = () => {
   const rpcStatus = useContext(RpcHealthContext)
   const badHealth = rpcStatus === RPC_HEALTH.ERROR 
-  const[show, setShow] = useState(true)
+  // const [show, setShow] = useState(true)
+  const show = badHealth
   return (
     <Transition
       // show={badHealth}
@@ -25,12 +26,12 @@ const RpcHealthFeedback = () => {
           {/* Transactions may be delayed or fail due to network issues. We appreciate your understanding. */}
           Solana is experiencing network congestion. Please retry failed transactions.
         </p>
-        <button
+        {/* <button
           onClick={() => setShow(false)}
           className="opacity-75 hover:opacity-100 duration-300"
         >
           <Icon.X size={20} strokeWidth={2.5} color="gray"/>
-        </button>
+        </button> */}
         <RoundedCurve className="absolute top-0 -left-8 w-8 h-full fill-amber-400  transform scale-x-[-1] scale-y-[-1]" />
         <RoundedCurve className="absolute top-0 -right-8 w-8 h-full fill-amber-400 transform scale-y-[-1]" />
       </div>

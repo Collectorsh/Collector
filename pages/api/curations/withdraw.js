@@ -55,13 +55,10 @@ export default async function handler(req, res) {
     if (balance <= 0) {
       //   //TODO split authority funds between curator and platform and withdraw those from authority, check this doesnt make accounts go negative
       const authorityBalance = await connection.getBalance(authorityKeypair.publicKey)
-      console.log("🚀 ~ handler ~ authorityBalance:", authorityBalance / LAMPORTS_PER_SOL)
       const initFunds = AUTHORITY_INIT_FUNDS / LAMPORTS_PER_SOL;
       if (authorityBalance > initFunds) {
         const authSplitBalance = await getSplitBalance(connection, authorityKeypair.publicKey, curatorFee)
-        console.log("🚀 ~ handler ~ authSplitBalance :", authSplitBalance )
         curatorBalance = authSplitBalance.curatorBalance - (initFunds / 2)
-        console.log("🚀 ~ handler ~ curatorBalance:", curatorBalance)
         platformBalance = authSplitBalance.platformBalance - (initFunds / 2)
       } else {
         throw new Error("No funds available to withdraw")
@@ -83,9 +80,7 @@ export default async function handler(req, res) {
     const AHwithdrawalFee = 0.000005
     const transferFee = 0.000005
     const curatorWithdrawalAmount = Math.floor((curatorBalance - transferFee) * LAMPORTS_PER_SOL)
-    console.log("🚀 ~ handler ~  curatorWithdrawalAmount:",  curatorWithdrawalAmount / LAMPORTS_PER_SOL)
     const platformWithdrawalAmount = Math.floor((platformBalance - AHwithdrawalFee) * LAMPORTS_PER_SOL)
-    console.log("🚀 ~ handler ~ platformWithdrawalAmount:", platformWithdrawalAmount / LAMPORTS_PER_SOL)
     
     const withdrawTX = new Transaction().add(
       SystemProgram.transfer({

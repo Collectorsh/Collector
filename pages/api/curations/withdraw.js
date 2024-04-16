@@ -1,10 +1,11 @@
 import { Metaplex, keypairIdentity, Hydra, sol, lamports } from "@metaplex-foundation/js";
-import { connection } from "/config/settings";
+import { connection } from "../../../config/settings";
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, sendAndConfirmTransaction } from "@solana/web3.js";
 import crypto from 'crypto' 
 import { formatRSAPrivateKey } from "../../../utils/formatRSA";
-import { PLATFORM_FEE_POINTS, platformWithdrawalPubkey } from "./createCuration";
+import { AUTHORITY_INIT_FUNDS, PLATFORM_FEE_POINTS, platformWithdrawalPubkey } from "./createCuration";
 import { getPriorityFeeInstruction } from "../../../utils/solanaWeb3/priorityFees";
+import { signAndConfirmTxWithKeypairs } from "../../../utils/solanaWeb3/signAndConfirm";
 
 export const getSplitBalance = async (connection, treasuryAccountAddress, curatorFee) => {
   const balanceLamports = await connection.getBalance(new PublicKey(treasuryAccountAddress));
@@ -53,15 +54,16 @@ export default async function handler(req, res) {
 
     if (balance <= 0) {
       //   //TODO split authority funds between curator and platform and withdraw those from authority, check this doesnt make accounts go negative
-      // const authorityBalance = await connection.getBalance(authorityKeypair.publicKey)
-      // if (authorityBalance > AUTHORITY_INIT_FUNDS) {
-      //   const authSplitBalance = await getSplitBalance(connection, auctionHouse.treasuryAccountAddress, curatorFee)
-      //   curatorBalance = authSplitBalance.curatorBalance - AUTHORITY_INIT_FUNDS / 2
-      //   platformBalance = authSplitBalance.platformBalance - AUTHORITY_INIT_FUNDS / 2
-      // } else {
-      //   throw new Error("No funds available to withdraw")
-      // }
-      throw new Error("No funds available to withdraw")
+      const authorityBalance = await connection.getBalance(authorityKeypair.publicKey)
+      const initFunds = AUTHORITY_INIT_FUNDS / LAMPORTS_PER_SOL;
+      if (authorityBalance > initFunds) {
+        const authSplitBalance = await getSplitBalance(connection, authorityKeypair.publicKey, curatorFee)
+        curatorBalance = authSplitBalance.curatorBalance - (initFunds / 2)
+        platformBalance = authSplitBalance.platformBalance - (initFunds / 2)
+      } else {
+        throw new Error("No funds available to withdraw")
+      }
+      // throw new Error("No funds available to withdraw")
     } else {
       await metaplex
         .auctionHouse()
@@ -79,6 +81,7 @@ export default async function handler(req, res) {
     const transferFee = 0.000005
     const curatorWithdrawalAmount = Math.floor((curatorBalance - transferFee) * LAMPORTS_PER_SOL)
     const platformWithdrawalAmount = Math.floor((platformBalance - AHwithdrawalFee) * LAMPORTS_PER_SOL)
+    
     const withdrawTX = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: authorityKeypair.publicKey,
@@ -92,17 +95,18 @@ export default async function handler(req, res) {
       }),
     );
 
-    withdrawTX.recentBlockhash = (await connection.getRecentBlockhash()).blockhash
+    const block = await connection.getLatestBlockhash()
+    withdrawTX.recentBlockhash = block.blockhash
     withdrawTX.feePayer = authorityKeypair.publicKey
     const priorityFeeIx = await getPriorityFeeInstruction(withdrawTX)
     withdrawTX.add(priorityFeeIx)
       
     // Sign transaction, broadcast, and confirm
-    const signature = await sendAndConfirmTransaction(
-      connection,
-      withdrawTX,
-      [authorityKeypair],
-    );
+    const signature = await signAndConfirmTxWithKeypairs({
+      tx: withdrawTX,
+      keypairs:[authorityKeypair],
+    });
+
     console.log("Withdrew from authority, signature:", signature )
 
     return res.status(200).json({ status: "success" });

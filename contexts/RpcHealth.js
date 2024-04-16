@@ -16,6 +16,7 @@ export const RpcHealthProvider = ({ children }) => {
   const [rpcStatus, setRpcStatus] = useState(RPC_HEALTH.UNKNOWN);
 
   useEffect(() => {
+    // setRpcStatus(RPC_HEALTH.ERROR);
     const setStatus = async () => { 
       const health = await getHealth();
       setRpcStatus(health);

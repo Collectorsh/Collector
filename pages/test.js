@@ -68,13 +68,25 @@ export default function TestPage() {
 
  
   
-  return <NotFound />
+  // return <NotFound />
   return (
     <div>
       <MainNavigation />
       <h1 className="text-center my-20 ">Test Page</h1>
       <MainButton onClick={getEditionMarket} className="mx-auto block">Get Market</MainButton>
       <MainButton onClick={getOwner} className="mx-auto block">Get Owner</MainButton>
+      <iframe
+        // onLoad={handleLoad}
+        src={"https://ordiscan.com/content/37dc8be76b30e1142b829f2fcbaf3a45942f0aec71963d504901236bf1f86f07i301"}
+        // className={clsx(
+        //   "w-full h-full",
+        //   "rounded-lg",
+        //   "touch-none block duration-500",
+        //   // loading ? "opacity-0" : "opacity-100"
+        // )}
+        // style={style}
+      />
+
     </div>
   )
 }

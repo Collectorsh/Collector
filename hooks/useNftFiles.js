@@ -27,6 +27,7 @@ export default useNftFiles
 
 
 export const getAltFileTypes = (token) => {
+  console.log("🚀 ~ getAltFileTypes ~ token:", token)
   let videoUrl, htmlUrl, vrUrl;
 
   if (typeof token === "object") {

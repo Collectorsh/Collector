@@ -22,6 +22,9 @@ import Checkbox from "../checkbox";
 
 import * as Icon from "react-feather";
 import { generateArrayAroundNumber } from "../../utils/maths";
+import { useOrdinals } from "../../data/nft/getOrdinals";
+import Toggle from "../Toggle";
+import { Switch } from "@headlessui/react";
 
 
 export default function EditArtModuleModal({
@@ -62,6 +65,9 @@ export default function EditArtModuleModal({
   const expandRef = useRef(null)
   const startYRef = useRef(null)
   const startHeightRef = useRef(null)
+
+  // const ordinals = useOrdinals()
+  // const [usingOrdinals, setUsingOrdinals] = useState(false)
 
 
   const handleResize = () => {
@@ -574,6 +580,35 @@ export default function EditArtModuleModal({
               setSearch={setSearch}
               placeholder="Search"
             />
+
+            {/* <div>
+              <Switch.Group>
+                <div className="flex items-center">
+                  <Switch.Label className="mr-4">Use Ordinals</Switch.Label>
+                  <Switch
+                    checked={usingOrdinals}
+                    onChange={setUsingOrdinals}
+                    className={`${ usingOrdinals ? 'bg-blue-600' : 'bg-gray-200'
+                      } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+                  >
+                    <span
+                      className={`${ usingOrdinals ? 'translate-x-6' : 'translate-x-1'
+                        } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                    />
+                  </Switch>
+                </div>
+              </Switch.Group>
+              <Checkbox
+                className={clsx(
+                  "pr-3 ",
+                  !useUserTokens && "hidden",
+                )}
+                checkboxClassName="borderPalette3 bg-neutral-200 dark:bg-neutral-900"
+                label="Group by Collection"
+                checked={groupByCollection}
+                onChange={() => setGroupByCollection(prev => !prev)}
+              />
+            </div> */}
 
             <Checkbox
               className={clsx(

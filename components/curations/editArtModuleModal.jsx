@@ -327,7 +327,7 @@ export default function EditArtModuleModal({
 
       const artistUsername = useUserTokens
         ? token.artist_name
-        : approvedArtists.find(artist => artist.id === token.artist_id).username;
+        : approvedArtists.find(artist => artist.id === token.artist_id)?.username;
 
       const mintsInUse = [
         ...Object.values(tokenMintsInUse),
